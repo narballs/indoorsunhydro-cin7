@@ -1322,20 +1322,3 @@ input[type=number] {
     font-size: 18px;
 
 }
-.in-stock {
-    width:82px !important; 
-    height:34px !important;
-    background-color: #7BC533;
-    color: #FFFFFF !important;
-    border: none;
-}
-.out-of-stock {
-    width:133px !important; 
-    height:34px !important;
-     background-color: #7BC533;
-    color: #FFFFFF !important;
-    border: none;
-}
-.dd-horizontal {
-   display: flex !important;
-}
