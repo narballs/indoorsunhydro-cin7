@@ -1,0 +1,175 @@
+<?php
+namespace App\Http\Controllers\Admin;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Models\Contact;
+use App\Models\Order;
+use App\Models\OrderStatus;
+use App\Models\ApiOrder;
+use App\Jobs\SyncContacts;
+
+
+
+class ContactController extends Controller
+{
+    public function supplier() {
+        $contacts = Contact::where('type', 'Supplier')->get();
+        return view('admin/contacts', compact('contacts'));
+    }
+
+    public function customer(Request $request) {
+        $perPage = $request->get('perPage');
+        //echo $perPage;exit;
+        $search = $request->get('search');
+        $contact_query = Contact::where('type', 'Customer');
+        if (!empty($contact_query)) {
+            $contact_query->where('firstName', 'LIKE', '%' . $search . '%')
+            ->orWhere('lastName', 'like', '%' . $search . '%')
+            ->orWhere('email', 'like', '%' . $search . '%')
+            ->orWhere('company', 'like', '%' . $search . '%')
+            ->orWhere('phone', 'like', '%' . $search . '%')
+            ->orWhere('mobile', 'like', '%' . $search . '%')
+            ;
+        }
+     
+        $contacts = $contact_query->paginate($perPage);
+        return view('admin/customers', compact(
+            'contacts', 
+            'search',
+            'perPage'
+        ));
+    }
+
+    public function customer_create() {
+        return view('admin/customer-create');
+    }
+
+    public function customer_store(Request $request) {
+        $company = $request->input('company');
+        $mobile = $request->input('mobile');
+        $first_name = $request->input('first_name');
+        $phone = $request->input('phone');
+        $last_name = $request->input('last_name');
+        $fax = $request->input('fax');
+        $job_title = $request->input('job_title');
+        $website = $request->input('website');
+        $city = $request->input('city');
+        $email = $request->input('email');
+        $status = $request->input('status');
+        $type = $request->input('type');
+        $pricing_tier = $request->input('priceCol');
+        $billing_address_1 = $request->input('billing_address_1');
+        $billing_address_2 = $request->input('billing_address_2');
+        $billing_city = $request->input('billing_city');
+        $billing_state = $request->input('billing_state');
+        $billing_postal_code = $request->input('billing_postal_code');
+        $delivery_address_1 = $request->input('delivery_address_1');
+        $delivery_address_2 = $request->input('delivery_address_2');
+        $delivery_city = $request->input('delivery_city');
+        $delivery_state = $request->input('delivery_state');
+        $delivery_postal_code = $request->input('delivery_postal_code');
+        $notes = $request->input('notes');
+        $contact = new Contact;
+        $contact->status = $status;
+        $contact->fax = $fax;
+        $contact->website = $website;
+        $contact->email = $email;
+        $contact->type = $type;
+        $contact->phone = $phone;
+        $contact->priceColumn = $pricing_tier;
+        $contact->company = $company;
+        $contact->firstName = $first_name;
+        $contact->lastName = $last_name;
+        $contact->jobTitle = $job_title;
+        $contact->mobile = $mobile;
+        $contact->address1 = $delivery_address_1;
+        $contact->address2 = $delivery_address_2;
+        $contact->city = $delivery_city;
+        $contact->state = $delivery_state;
+        $contact->postCode = $delivery_postal_code;
+        $contact->postalAddress1 = $billing_postal_code;
+        $contact->postalAddress2 = $billing_address_2;
+        $contact->postalCity = $billing_city;
+        $contact->postalPostCode = $billing_postal_code;
+        $contact->postalState = $billing_state;
+        $contact->notes = $notes;
+        $api_contact = $contact;
+        $client = new \GuzzleHttp\Client();
+        $url = "https://api.cin7.com/api/v1/Contacts/";
+        $response = $client->post($url, [
+            'headers' => ['Content-type' => 'application/json'],
+            'auth' => [
+                'IndoorSunHydro2US', 
+                '764c3409324f4c14b5eadf8dcdd7dd2f'
+            ],
+            'json' => [
+                $api_contact
+            ], 
+        ]);
+        $contact->save();
+
+        $customer_id = $contact->id;
+
+        $api_response = $response->getBody();
+       
+        $decoded_response = json_decode($api_response);
+        $customer = Contact::find($customer_id);
+        $customer->contact_id = $decoded_response[0]->id;
+        $customer->save();
+        return redirect('admin/customers');
+    }
+
+    public function show_customer($id){
+        $customer = Contact::where('id', $id)->first();
+        $customer_orders =  ApiOrder::where('user_id', $customer->user_id)->with(['createdby','processedby'])->get();
+        $statuses = OrderStatus::all();
+        return view('admin/customer-details',compact('customer', 'statuses', 'customer_orders'));
+    }
+
+    public function activate_customer(Request $request) {
+        $contact_id = $request->input('contact_id');
+        $currentContact = Contact::where('id', $contact_id)->first()->toArray();
+        unset($currentContact['id']);
+        unset($currentContact['contact_id']);
+        unset($currentContact['user_id']);
+        $json_encode = json_encode($currentContact);
+        $contact = [
+            $currentContact
+        ];
+        SyncContacts::dispatch('create_contact', $contact);
+        sleep(10);
+        $is_updated = Contact::where('id', $contact_id)->pluck('contact_id')->first();
+
+        if ($is_updated) {
+            return response()->json(['success' => true, 'created'=> true, 'msg' => 'Welcome, new player.']);
+        }
+        else {
+             return response()->json(['success' => false, 'created'=> true, 'msg' => 'failed.']);
+        }
+    }
+
+    public function update_pricing_column(Request $request) {
+        $contact_id = $request->contact_id;
+        $priceColumn = $request->pricingCol;
+        $first_name = $request->first_name;
+        $last_name = $request->last_name;
+        $contact = Contact::where('contact_id', $contact_id)->first();
+        if ($priceColumn) {
+            $contact->update(
+                [
+                    'priceColumn' => $priceColumn
+                ]
+            );
+        return response()->json(['success' => true, 'created'=> true, 'msg' => 'Pricing Column Updated']);
+        }
+        else {
+            $contact->update(
+                [
+                    'firstName' => $first_name,
+                    'lastName' => $last_name
+                ]
+            );
+        return response()->json(['success' => true, 'created'=> true, 'msg' => 'name updated']);
+        }
+    }
+}

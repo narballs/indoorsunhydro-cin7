@@ -1,0 +1,98 @@
+[18-Aug-2022 13:45:24 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Illuminate\Support\Collection::getArrayableItems() in /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Collections/Collection.php:31
+Stack trace:
+#0 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Collections/helpers.php(15): Illuminate\Support\Collection->__construct(Array)
+#1 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Support/Traits/ReflectsClosures.php(49): collect(Array)
+#2 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/ReportableHandler.php(62): Illuminate\Foundation\Exceptions\ReportableHandler->firstClosureParameterTypes(Object(Closure))
+#3 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(234): Illuminate\Foundation\Exceptions\ReportableHandler->handles(Object(Error))
+#4 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions. in /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Collections/Collection.php on line 31
+[24-Aug-2022 00:33:38 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Illuminate\Support\Collection::getArrayableItems() in /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Collections/Collection.php:31
+Stack trace:
+#0 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Collections/helpers.php(15): Illuminate\Support\Collection->__construct(Array)
+#1 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Support/Traits/ReflectsClosures.php(49): collect(Array)
+#2 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/ReportableHandler.php(62): Illuminate\Foundation\Exceptions\ReportableHandler->firstClosureParameterTypes(Object(Closure))
+#3 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(234): Illuminate\Foundation\Exceptions\ReportableHandler->handles(Object(Error))
+#4 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions. in /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Collections/Collection.php on line 31
+[27-Aug-2022 06:14:18 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Illuminate\Support\Collection::getArrayableItems() in /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Collections/Collection.php:31
+Stack trace:
+#0 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Collections/helpers.php(15): Illuminate\Support\Collection->__construct(Array)
+#1 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Support/Traits/ReflectsClosures.php(49): collect(Array)
+#2 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/ReportableHandler.php(62): Illuminate\Foundation\Exceptions\ReportableHandler->firstClosureParameterTypes(Object(Closure))
+#3 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(234): Illuminate\Foundation\Exceptions\ReportableHandler->handles(Object(Error))
+#4 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions. in /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Collections/Collection.php on line 31
+[28-Aug-2022 18:32:59 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Illuminate\Support\Collection::getArrayableItems() in /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Collections/Collection.php:31
+Stack trace:
+#0 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Collections/helpers.php(15): Illuminate\Support\Collection->__construct(Array)
+#1 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Support/Traits/ReflectsClosures.php(49): collect(Array)
+#2 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/ReportableHandler.php(62): Illuminate\Foundation\Exceptions\ReportableHandler->firstClosureParameterTypes(Object(Closure))
+#3 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(234): Illuminate\Foundation\Exceptions\ReportableHandler->handles(Object(Error))
+#4 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions. in /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Collections/Collection.php on line 31
+[30-Aug-2022 19:00:40 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Illuminate\Support\Collection::getArrayableItems() in /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Collections/Collection.php:31
+Stack trace:
+#0 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Collections/helpers.php(15): Illuminate\Support\Collection->__construct(Array)
+#1 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Support/Traits/ReflectsClosures.php(49): collect(Array)
+#2 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/ReportableHandler.php(62): Illuminate\Foundation\Exceptions\ReportableHandler->firstClosureParameterTypes(Object(Closure))
+#3 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(234): Illuminate\Foundation\Exceptions\ReportableHandler->handles(Object(Error))
+#4 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions. in /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Collections/Collection.php on line 31
+[30-Aug-2022 19:00:40 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Illuminate\Support\Collection::getArrayableItems() in /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Collections/Collection.php:31
+Stack trace:
+#0 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Collections/helpers.php(15): Illuminate\Support\Collection->__construct(Array)
+#1 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Support/Traits/ReflectsClosures.php(49): collect(Array)
+#2 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/ReportableHandler.php(62): Illuminate\Foundation\Exceptions\ReportableHandler->firstClosureParameterTypes(Object(Closure))
+#3 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(234): Illuminate\Foundation\Exceptions\ReportableHandler->handles(Object(Error))
+#4 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions. in /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Collections/Collection.php on line 31
+[02-Sep-2022 15:22:27 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Illuminate\Support\Collection::getArrayableItems() in /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Collections/Collection.php:31
+Stack trace:
+#0 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Collections/helpers.php(15): Illuminate\Support\Collection->__construct(Array)
+#1 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Support/Traits/ReflectsClosures.php(49): collect(Array)
+#2 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/ReportableHandler.php(62): Illuminate\Foundation\Exceptions\ReportableHandler->firstClosureParameterTypes(Object(Closure))
+#3 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(234): Illuminate\Foundation\Exceptions\ReportableHandler->handles(Object(Error))
+#4 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions. in /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Collections/Collection.php on line 31
+[12-Sep-2022 00:57:06 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Illuminate\Support\Collection::getArrayableItems() in /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Collections/Collection.php:31
+Stack trace:
+#0 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Collections/helpers.php(15): Illuminate\Support\Collection->__construct(Array)
+#1 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Support/Traits/ReflectsClosures.php(49): collect(Array)
+#2 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/ReportableHandler.php(62): Illuminate\Foundation\Exceptions\ReportableHandler->firstClosureParameterTypes(Object(Closure))
+#3 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(234): Illuminate\Foundation\Exceptions\ReportableHandler->handles(Object(Error))
+#4 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions. in /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Collections/Collection.php on line 31
+[12-Sep-2022 00:57:07 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Illuminate\Support\Collection::getArrayableItems() in /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Collections/Collection.php:31
+Stack trace:
+#0 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Collections/helpers.php(15): Illuminate\Support\Collection->__construct(Array)
+#1 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Support/Traits/ReflectsClosures.php(49): collect(Array)
+#2 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/ReportableHandler.php(62): Illuminate\Foundation\Exceptions\ReportableHandler->firstClosureParameterTypes(Object(Closure))
+#3 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(234): Illuminate\Foundation\Exceptions\ReportableHandler->handles(Object(Error))
+#4 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions. in /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Collections/Collection.php on line 31
+[16-Sep-2022 02:10:18 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Illuminate\Support\Collection::getArrayableItems() in /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Collections/Collection.php:31
+Stack trace:
+#0 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Collections/helpers.php(15): Illuminate\Support\Collection->__construct(Array)
+#1 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Support/Traits/ReflectsClosures.php(49): collect(Array)
+#2 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/ReportableHandler.php(62): Illuminate\Foundation\Exceptions\ReportableHandler->firstClosureParameterTypes(Object(Closure))
+#3 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(234): Illuminate\Foundation\Exceptions\ReportableHandler->handles(Object(Error))
+#4 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions. in /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Collections/Collection.php on line 31
+[22-Sep-2022 14:22:52 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Illuminate\Support\Collection::getArrayableItems() in /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Collections/Collection.php:31
+Stack trace:
+#0 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Collections/helpers.php(15): Illuminate\Support\Collection->__construct(Array)
+#1 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Support/Traits/ReflectsClosures.php(49): collect(Array)
+#2 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/ReportableHandler.php(62): Illuminate\Foundation\Exceptions\ReportableHandler->firstClosureParameterTypes(Object(Closure))
+#3 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(234): Illuminate\Foundation\Exceptions\ReportableHandler->handles(Object(Error))
+#4 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions. in /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Collections/Collection.php on line 31
+[22-Sep-2022 14:22:52 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Illuminate\Support\Collection::getArrayableItems() in /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Collections/Collection.php:31
+Stack trace:
+#0 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Collections/helpers.php(15): Illuminate\Support\Collection->__construct(Array)
+#1 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Support/Traits/ReflectsClosures.php(49): collect(Array)
+#2 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/ReportableHandler.php(62): Illuminate\Foundation\Exceptions\ReportableHandler->firstClosureParameterTypes(Object(Closure))
+#3 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(234): Illuminate\Foundation\Exceptions\ReportableHandler->handles(Object(Error))
+#4 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions. in /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Collections/Collection.php on line 31
+[21-Oct-2022 01:33:52 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Illuminate\Support\Collection::getArrayableItems() in /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Collections/Collection.php:31
+Stack trace:
+#0 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Collections/helpers.php(15): Illuminate\Support\Collection->__construct(Array)
+#1 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Support/Traits/ReflectsClosures.php(49): collect(Array)
+#2 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/ReportableHandler.php(62): Illuminate\Foundation\Exceptions\ReportableHandler->firstClosureParameterTypes(Object(Closure))
+#3 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(234): Illuminate\Foundation\Exceptions\ReportableHandler->handles(Object(Error))
+#4 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions. in /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Collections/Collection.php on line 31
+[21-Oct-2022 11:09:20 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Illuminate\Support\Collection::getArrayableItems() in /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Collections/Collection.php:31
+Stack trace:
+#0 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Collections/helpers.php(15): Illuminate\Support\Collection->__construct(Array)
+#1 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Support/Traits/ReflectsClosures.php(49): collect(Array)
+#2 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/ReportableHandler.php(62): Illuminate\Foundation\Exceptions\ReportableHandler->firstClosureParameterTypes(Object(Closure))
+#3 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php(234): Illuminate\Foundation\Exceptions\ReportableHandler->handles(Object(Error))
+#4 /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions. in /home/stageindoorsun/public_html/vendor/laravel/framework/src/Illuminate/Collections/Collection.php on line 31

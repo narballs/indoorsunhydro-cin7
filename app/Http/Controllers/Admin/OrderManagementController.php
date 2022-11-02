@@ -1,0 +1,400 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use \App\Http\Controllers\Controller;
+use App\Http\Middleware\IsAdmin;
+use Illuminate\Http\Request;
+use App\Models\Order;
+use App\Models\OrderItem;
+use App\Models\OrderComment;
+use App\Models\OrderStatus;
+use GuzzleHttp\Client;
+use App\Models\ApiOrder;
+use App\Models\ApiOrderItem;
+use App\Models\Contact;
+use App\Jobs\SalesOrders;
+use Carbon\Carbon;
+
+class OrderManagementController extends Controller
+{
+    // public function __construct()
+    // {
+    //     $this->middleware('admin');
+    // }
+    
+    public function index() {
+        //$orders = Order::all();
+        $orders = ApiOrder::with(['createdby','processedby','contact'])->get();
+        //dd($orders);
+        return view('admin/orders', compact('orders'));
+    }
+
+    public function show($id) {
+        $statuses = OrderStatus::all();
+        $order = ApiOrder::where('id', $id)->first();
+        $createdDate = $order->created_at;
+        $formatedDate = $createdDate->format('jS \of F Y h:i:s A');
+        $customer = Contact::where('user_id', $order->user_id)->first();
+        $option_ids = ApiOrderItem::where('order_id', $id)->pluck('option_id')->toArray();
+        $orderitems = $this->option_ids = $option_ids;
+            $orderitems = ApiOrderItem::with(['product.options' => function ($q) {
+                $q->whereIn('option_id', $this->option_ids);
+            }])->where('order_id', $id)->get();
+            
+
+        //dd($orderitems);
+       
+        $orderComment = OrderComment::where('order_id', $id)->with('comment')->get();
+        return view('admin/order-details', compact('order', 'orderitems', 'orderComment', 'statuses', 'customer', 'formatedDate')); 
+    }
+
+    public function addComments(Request $request)
+    {
+        $comment = $request->input('comment');
+        $order_id = $request->input('order_id');
+        //dd($request->input('order_id'));
+        $order_comment = new OrderComment;
+        $order_comment->order_id = $order_id;
+        $order_comment->comment = $comment;
+        $order_comment->save();
+    }
+
+    public function updateStatus(Request $request) {
+        $order_id = $request->input('order_id');
+        $status = $request->input('status');
+        //dd($request->all());
+        $order = Order::find($order_id);
+        $order->status = $status;
+        $order->save();
+        $order_comment = new OrderComment;
+        $comment = 'Status changed to '.$status;
+        $order_comment->order_id = $order_id;
+        $order_comment->comment = $comment;
+        $order_comment->save();
+    }
+
+    public function create() {
+    $order = [];
+
+    $order = [
+        [
+            "createdDate" => "2022-07-13T15:21:16.1946848+12:00",
+            "modifiedDate" => "2022-07-13T15:21:16.1946848+12:00",
+            "createdBy" => 17,
+            "processedBy" => 18,
+            "isApproved" => true,
+            "reference" => "",
+            "memberId" => 7,
+            "firstName" => "sample string 22",
+            "lastName" => "sample string 23",
+            "company" => "sample string 24",
+            "email" => "wqszeeshan@gmail.com",
+            "phone" => "sample string 26",
+            "mobile" => "sample string 27",
+            "fax" => "sample string 28",
+            "deliveryFirstName" => "sample string 29",
+            "deliveryLastName" => "sample string 30",
+            "deliveryCompany" => "sample string 31",
+            "deliveryAddress1" => "sample string 32",
+            "deliveryAddress2" => "sample string 33",
+            "deliveryCity" => "sample string 34",
+            "deliveryState" => "sample string 35",
+            "deliveryPostalCode" => "sample string 36",
+            "deliveryCountry" => "sample string 37",
+            "billingFirstName" => "sample string 38",
+            "billingLastName" => "sample string 39",
+            "billingCompany" => "sample string 40",
+            "billingAddress1" => "sample string 41",
+            "billingAddress2" => "sample string 42",
+            "billingCity" => "sample string 43",
+            "billingPostalCode" => "sample string 44",
+            "billingState" => "sample string 45",
+            "billingCountry" => "sample string 46",
+            "branchId" => 47,
+            "branchEmail" => "wqszeeshan@gmail.com",
+            "projectName" => "sample string 49",
+            "trackingCode" => "sample string 50",
+            "internalComments" => "sample string 51",
+            "productTotal" => 52.0,
+            "freightTotal" => 1.0,
+            "freightDescription" => "sample string 53",
+            "surcharge" => 1.0,
+            "surchargeDescription" => "sample string 54",
+            "discountTotal" => 1.0,
+            "discountDescription" => "sample string 55",
+            "total" => 56.0,
+            "currencyCode" => "USD",
+            "currencyRate" => 59.0,
+            "currencySymbol" => "sample string 60",
+            "taxStatus" => "Undefined",
+            "taxRate" => 61.0,
+            "source" => "sample string 62",
+            "isVoid" => true,
+            "accountingAttributes" => 
+                [
+                    "importDate" => "2022-07-13T15:21:16.1946848+12:00",
+                    "accountingImportStatus" => "NotImported"
+                ],
+            "memberEmail" => "wqszeeshan@gmail.com",
+            "memberCostCenter" => "sample string 6",
+            "memberAlternativeTaxRate" => "sample string 7",
+            "costCenter" => "sample string 8",
+            "alternativeTaxRate" => "sample string 9",
+            "estimatedDeliveryDate" => "2022-07-13T15:21:16.1946848+12:00",
+            "salesPersonId" => 10,
+            "salesPersonEmail" => "wqszeeshan@gmail.com",
+            "paymentTerms" => "sample string 12",
+            "customerOrderNo" => "sample string 13",
+            "voucherCode" => "sample string 14",
+            "deliveryInstructions" => "sample string 15",
+            "status" => "DRAFT",
+            "stage" => "sample string 4",
+            "invoiceDate" => null,
+            "invoiceNumber" => null,
+            "dispatchedDate" => "",
+            "logisticsCarrier" => "sample string 2",
+            "logisticsStatus" => 1,
+            "distributionBranchId" => 1,
+            "lineItems" => 
+                [
+                    [
+                        "id" => 10,
+                        "createdDate" => "2022-07-13T15:21:16.1946848+12:00",
+                        "transactionId" => 12,
+                        "parentId" => 1,
+                        "productId" => 13,
+                        "productOptionId" => 14,
+                        "integrationRef" => "sample string 15",
+                        "sort" => 16,
+                        "code" => "sample string 17",
+                        "name" => "sample string 18",
+                        "option1" => "sample string 19",
+                        "option2" => "sample string 20",
+                        "option3" => "sample string 21",
+                        "qty" => 1.0,
+                        "styleCode" => "sample string 1",
+                        "barcode" => "sample string 2",
+                        "sizeCodes" => "sample string 4",
+                        "lineComments" => "sample string 5",
+                        "unitCost" => 1.0,
+                        "unitPrice" => 1.0,
+                        "discount" => 6.0,
+                        "qtyShipped" => 7.0,
+                        "holdingQty" => 8.0,
+                        "accountCode" => "sample string 9",
+                        "stockControl" => "Undefined",
+                        "stockMovements" => [
+                            [
+                                "batch" => "sample string 1",
+                                "quantity" => 2.0,
+                                "serial" => "sample string 3"
+
+                            ],
+                            [
+                                "batch" => "sample string 1",
+                                "quantity" => 2.0,
+                                "serial" => "sample string 3"
+                            ],
+                        ],
+                        "sizes" => [
+                            [
+                                "name" => "sample string 1",
+                                "code" => "sample string 2",
+                                "barcode" => "sample string 3",
+                                "qty" => 4.0
+                            ]
+                        ]
+                    ],
+                 
+                ]   
+        ],
+    ];
+     SalesOrders::dispatch('create_order', [
+            'json' => 
+                $order
+        ]);
+     exit;
+    //  $order_encoded = json_encode($order);
+
+    // echo '<pre>';var_dump($order);echo '<pre>';
+    // exit();
+
+        $client = new \GuzzleHttp\Client();
+        $url = "https://api.cin7.com/api/v1/SalesOrders/";
+        $response = $client->post($url, [
+            'headers' => ['Content-type' => 'application/json'],
+            'auth' => [
+                env('API_USER'), 
+                env('API_PASSWORD')
+            ],
+            'json' => 
+                $order
+            , 
+        ]);
+
+        echo $response->getBody();
+
+    }
+
+    public function show_api_order($id) {
+        $order = ApiOrder::with(['createdby', 'processedby'])->where('id', $id)->first();
+        //dd($order);
+        $statuses = OrderStatus::all();
+        //dd($order);
+        $customer = Contact::where('contact_id', $order->memberId)->first();
+        //dd($customer_details);
+         $orderitems = ApiOrderItem::where('order_id', $id)->with('product')->get();
+        //dd($orderitems);
+        return view('admin/api-order-details',compact('order', 'statuses', 'orderitems', 'customer'));
+    }
+
+
+    public function order_full_fill(Request $request) {
+        
+        $order_id = $request->input('order_id');
+        // var_dump($order_id);exit;
+        $currentOrder = ApiOrder::where('id', $order_id)->first();
+        $memberId = $currentOrder->memberId;
+        $order_items = ApiOrderItem::with('product')->where('order_id', $order_id)->get();
+        $dateCreated = Carbon::now();
+        $lineItems = [];
+        foreach($order_items as $order_item) {
+            //dd($order_item->product->product_id);
+            $lineItems[] = [
+                "id" => $order_item->product->product_id,
+                "createdDate" => '2022-07-31T23:43:38Z',
+                "transaction" => '12',
+                "parentId" => 1,
+                "productId" => $order_item->product->product_id,
+                "productOptionId" => null,
+                "integrationRef" => "sample string 15",
+                "sort" => 16,
+                "code" => $order_item->product->code,
+                "name" => $order_item->product->name,
+                "option1" => "sample string 19",
+                "option2" => "sample string 20",
+                "option3" => "sample string 21",
+                "qty" => $order_item->quantity,
+                "styleCode" => "sample string 1",
+                "barcode" => "sample string 2",
+                "sizeCodes" => "sample string 4",
+                "lineComments" => "sample string 5",
+                "unitCost" => $order_item->price,
+                "unitPrice" => $order_item->price,
+                "discount" => 6,
+                "qtyShipped" => 7,
+                "holdingQty" => 8,
+                "accountCode" => "sample string 9",
+                "stockControl" => "Undefined",
+                "stockMovements" => [
+                    [
+                        "batch" => "sample string 1",
+                        "quantity" => 2.0,
+                        "serial" => "sample string 3"
+                    ],
+                    [
+                        "batch" => "sample string 1",
+                        "quantity" => 2.0,
+                        "serial" => "sample string 3"
+                    ],
+                ],
+                "sizes" => [
+                    [
+                        "name" => "sample string 1",
+                        "code" => "sample string 2",
+                        "barcode" => "sample string 3",
+                        "qty" => 4.0
+                    ]
+                ],
+            ];
+        }
+        //var_export($currentOrder);exit;
+        $order = [];
+        $order = [
+                    [
+                        $currentOrder,
+                        "createdDate" => $dateCreated,
+                        "modifiedDate" => "",
+                        "createdBy" => 79914,
+                        "processedBy" => 79914,
+                        "isApproved" => true,
+                        "reference" => 'DEV2'.'-QCOM-'.$order_id,
+                        "memberId" => $memberId,
+                        // "firstName" => $request->input('firstName'),
+                        // "lastName" => $request->input('lastName'),
+                        // "company" => $request->input('company'),
+                        // "email" => $request->input('email'),
+                        // "phone" => $request->input('phone'),
+                        // "mobile" => $request->input('phone'),
+                        // "fax" => "",
+                        // "deliveryFirstName" => $request->input('firstName'),
+                        // "deliveryLastName" => $request->input('lastName'),
+                        // "deliveryCompany" => $request->input('company'),
+                        // "deliveryAddress1" => $request->input('address'),
+                        // "deliveryAddress2" => $request->input('address2'),
+                        // "deliveryCity" => $request->input('town_city'),
+                        // "deliveryState" => $request->input('state'),
+                        // "deliveryPostalCode" => $request->input('zip'),
+                        // "deliveryCountry" => $request->input('country'),
+                        // "billingFirstName" => $request->input('firstName'),
+                        // "billingLastName" => $request->input('lastName'),
+                        // "billingCompany" => $request->input('company'),
+                        // "billingAddress1" => $request->input('address'),
+                        // "billingAddress2" => $request->input('address2'),
+                        // "billingCity" => $request->input('town_city'),
+                        // "billingPostalCode" => $request->input('zip'),
+                        // "billingState" => $request->input('state'),
+                        // "billingCountry" => $request->input('country'),
+                        "branchId" => 3,
+                        "branchEmail" => "wqszeeshan@gmail.com",
+                        "projectName" => "sample string 49",
+                        "trackingCode" => "sample string 50",
+                        "internalComments" => "sample string 51",
+                        "productTotal" => 100,
+                        "freightTotal" => 1.0,
+                        "freightDescription" => "sample string 53",
+                        "surcharge" => 1.0,
+                        "surchargeDescription" => "sample string 54",
+                        "discountTotal" => 1.0,
+                        "discountDescription" => "sample string 55",
+                        "total" => 100,
+                        "currencyCode" => "USD",
+                        "currencyRate" => 59.0,
+                        "currencySymbol" => "sample string 60",
+                        "taxStatus" => "Undefined",
+                        "taxRate" => null,
+                        "source" => "sample string 62",
+                        "isVoid" => true,
+                        "accountingAttributes" => 
+                            [
+                                "importDate" => "2022-07-13T15:21:16.1946848+12:00",
+                                "accountingImportStatus" => "NotImported"
+                            ],
+                        "memberEmail" => "wqszeeshan@gmail.com",
+                        "memberCostCenter" => "sample string 6",
+                        "memberAlternativeTaxRate" => "sample string 7",
+                        "costCenter" => "sample string 8",
+                        "alternativeTaxRate" => "sample string 9",
+                        "estimatedDeliveryDate" => "2022-07-13T15:21:16.1946848+12:00",
+                        "salesPersonId" => 10,
+                        "salesPersonEmail" => "wqszeeshan@gmail.com",
+                        "paymentTerms" => $currentOrder->paymentTerms,
+                        "customerOrderNo" => "sample string 13",
+                        "voucherCode" => "sample string 14",
+                        "deliveryInstructions" => "sample string 15",
+                        "status" => "DRAFT",
+                        "stage" => "sample string 4",
+                        "invoiceDate" => now(),
+                        "invoiceNumber" => 4232,
+                        "dispatchedDate" => null,
+                        "logisticsCarrier" => "sample string 2",
+                        "logisticsStatus" => 1,
+                        "distributionBranchId" => 1,
+                        "lineItems" => $lineItems
+         
+                        ],
+                     ];
+                    SalesOrders::dispatch('create_order', $order);
+    }
+}
