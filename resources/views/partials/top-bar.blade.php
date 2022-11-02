@@ -1,5 +1,5 @@
 <?php //dd(Session::forget('cart'));?>
-<header class="p-2 bg-dark text-white top-bar-height">
+<header class="p-2 bg-dark text-white top-bar-height w-100">
 
     <div class="container">
 

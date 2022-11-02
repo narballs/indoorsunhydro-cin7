@@ -6,6 +6,9 @@
 # Node artifact files
 node_modules/
 dist/
+vendor/
+.env
+composer.lock
 
 # Compiled Java class files
 *.class
