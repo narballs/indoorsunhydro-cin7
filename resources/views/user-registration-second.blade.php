@@ -8,13 +8,15 @@
 	<strong>{{ $message }}</strong>
 </div>
 @endif
+
 <div class="row">
 	<!-- <meta name="csrf-token" content="{{ csrf_token() }}"> -->
 	<div class="col-md-12 bg-light text-center d-none">
 		<h2 style="color:#25529F; font-weight:700" class="text-center pt-5 ">Have an account</h2>
 		<div class="col-md-4">
 			<p class="text-center pb-5" style="font-size: 16px">Your personal data will be used to support your
-				experience throughout this website, to manage access to your account, and for other purposes described
+				experience throughout this website, to manage access to your account, and for other purposes
+				described
 				in our privacy policy.</p>
 		</div>
 	</div>
@@ -40,58 +42,47 @@
 				<figcaption id="address-bold" class="mt-3">Location</figcaption>
 			</figure>
 			<figure>
-				<img class="img-fluid" src="/theme/img/round-border.png" id="finish-round">
+				<img src="/theme/img/round-border.png" id="finish-round">
 				<img class="img-fluid" src="/theme/img/finish.png" style="margin-left: -36px" id="tick">
 				<figcaption id=thankyou-bold class="mt-3">Finish</figcaption>
 			</figure>
 		</div>
-		<!-- <div class="row w-50 mx-auto">
-			<div class="col-3">
-				<div class="icon-div rounded-circle bg-success">
-					<img class="img-fluid" src="/theme/img/white-arrow.png" id="arrow">
-				</div>
-				<h5>Signup</h5>
-			</div>
-			<div class="col-3">
-				<div class="icon-div">
-					<img class="img-fluid" src="/theme/img/white-arrow.png" style="margin-left: -41px;" id="arrow">
-				</div>
-				<h5>Signup</h5>
-			</div>
-			<div class="col-3">
-				<div class="icon-div">
-					<img class="img-fluid" src="/theme/img/white-arrow.png" style="margin-left: -41px;" id="arrow">
-				</div>
-				<h5>Signup</h5>
-			</div>
-			<div class="col-3">
-				<div class="icon-div">
-					<img class="img-fluid" src="/theme/img/white-arrow.png" style="margin-left: -41px;" id="arrow">
-				</div>
-				<h5>Signup</h5>
-			</div>
-		</div> -->
 	</div>
 </div>
-<div class="row mt-5" style="background-image: url('/theme/img/img_12.png');">
-	<div class="login-reg-panel" style="margin-top:260px;">
+
+<div class="row mt-5 ml-0 pr-0 w-100" style="background-image: url('/theme/img/img_12.png');">
+	<div class="login-reg-panel" style="margin-top:400px;">
 		<div class="register-info-box text-center">
-			<h2 class="text-white">Don't have an account?</h2>
-			<p class="text-white">Your personal data will be used to support your experience throughout this website, to
+			<h2 class=" dont-have-an-account">Don't have an account?</h2>
+			<p class=" dont-have-an-account-pra">Your personal data will be used to support your experience
+				throughout
+				this website, to
 				manage access to your account, and for other purposes described in our privacy policy.</p>
-			<label id="label-login" for="log-login-show">Sign up</label>
+			<label id="label-login" for="log-login-show" class="sing-up-label"><span class="sign-up">SIGN UP</span>
+			</label>
 			<input type="radio" name="active-log-panel" id="log-login-show">
 		</div>
 		<div class="white-panel">
 			<div class="login-show">
-				<h2 class="text-center">LOG IN</h2>
+				<h2 class="text-center login-title">LOG IN</h2>
 				<form method="POST" action="{{ route('login') }}">
 					@csrf
 					<div class=" form-login">
-						<input type="text" class="fontAwesome" placeholder="&#xf0e0;  Email *" name="email">
-						<input type="password" class="fontAwesome" placeholder="&#xf023;  Password *" name="password">
+						<div class="input-placeholder">
+							<input type="text" name="email" required>
+							<div class="placeholder fontAwesome">
+								&#xf0e0; Email
+							</div>
+						</div>
+						<div class="input-placeholder">
+							<input type="password" name="password" required>
+							<div class="placeholder fontAwesome">
+								&#xf023; Password
+							</div>
+						</div>
+
 					</div>
-					<input type="submit" value="Login" class="btn-login info">
+					<button type="submit" class="btn-login info login-button">LOG IN</button>
 
 				</form>
 				<div class="row">
@@ -108,22 +99,27 @@
 				<hr>
 				<div class="row">
 					<div class="col-md-6">
-						<p><span class="req">*</span> Required field</p>
+						<p class="required-field"><span class="req">*</span> Required field</p>
 					</div>
 				</div>
 			</div>
 			<div class="register-show mt-5">
 				<form id="email-registration" class="mt-5 form-signup">
 					@csrf
-					<h2 class="text-center">SIGN UP</h2>
-					<input type="text" name="email" id="email" class="fontAwesome" placeholder="&#xf0e0;  Email *"
-						required>
+					<h2 class="text-center login-singup ">SIGN UP</h2>
+					<div class="input-placeholder">
+						<input type="text" id="email" name="email" required>
+						<div class="placeholder fontAwesome">
+							&#xf0e0; Email
+						</div>
+					</div>
 
-					<button type="button" name="save" id="save" onclick="signUp2()" class="btn-login">Sign up</button>
+					<button type="button" name="save" id="save" onclick="signUp2()" class="btn-login">Sign
+						up</button>
 				</form>
 				<div class="row">
-					<div class="col-md-6">
-						<p><span class="req">*</span> Required field</p>
+					<div class="col-md-6 mt-5">
+						<p class="required-field"><span class="req">*</span> Required field</p>
 					</div>
 				</div>
 				<div id="signup_error" class="text-danger"></div>
@@ -132,9 +128,12 @@
 
 		</div>
 		<div class="login-info-box text-white">
-			<h2 class="text-center">Have an account?</h2>
-			<p class="text-center" id="account">Your personal data will be used to support your experience throughout
-				this website, to manage access to your account, and for other purposes described in our privacy policy.
+			<h2 class=" dont-have-an-account text-center">Have an account?</h2>
+			<p class=" dont-have-an-account-pra text-center" id="account">Your personal data will be used to support
+				your experience
+				throughout
+				this website, to manage access to your account, and for other purposes described in our privacy
+				policy.
 			</p>
 			<label id="label-register" for="log-reg-show">Login</label>
 			<input type="radio" name="active-log-panel" id="log-reg-show" checked="checked">
@@ -143,10 +142,12 @@
 		<div class="row company-row bg-light">
 			<div class="col-md-12 d-none company-detail" id="company-detail">
 				<div class="col-md-12 bg-light text-center">
-					<h2 style="color:#25529F; font-size:30px" class="text-center mt-3">Company Detail</h2>
+					<h2 style="color:#25529F; font-size:30px" class="text-center mt-3 dont-have-an-account">Company
+						Detail</h2>
 				</div>
 
-				<p class="text-center text-dark" class="signup-intro mt-2">Please tell us some information about your
+				<p class="text-center text-dark" class="signup-intro mt-2">Please tell us some information about
+					your
 					company and website</p>
 				<div class="form-signup-secondary">
 					<div class="row col-md-12 user-info mt-3">
@@ -177,16 +178,16 @@
 
 			<div class="col-md-12 ms-2 company-loc d-none login-form-section" id="login-form-section">
 				<div class="col-md-12 bg-light text-center">
-					<h2 style="color:#25529F; font-size:30px" class="text-center pt-5">SIGN UP</h2>
+					<h2 style="color:#25529F; font-size:30px" class="text-center pt-5 dont-have-an-account">SIGN UP
+					</h2>
 				</div>
-				<div class="col-md-12 signup-intro p-0">
-					Please tell us about yourself so we can get to know your better. Your data will be used to create an
-					account so that you can make purchases through our system.
+				<div class="col-md-12 signup-intro p-0 ">
+					<p class="please-tell-us">Please tell us about yourself so we can get to know your better.
+						Your data will be used to create an
+						account so that you can make purchases through our system.</p>
+
 
 				</div>
-				<!-- <form method="POST" class="form-group"  action="{{ route('login') }}">
-					@csrf -->
-
 				<div class="form-signup-secondary">
 					<div class="user-info">
 						<div class="row mt-3">
@@ -220,8 +221,8 @@
 
 				<div id="user-info-error" class="text-danger"></div>
 				<div class="col-md-12 mb-5 mt-5">
-					<input type="submit" value="SAVE AND CONTINUE" style="width:15rem" class="btn-login mb-5"
-						onclick="signup()">
+					<button type="submit" value="" style="" class="btn-login sing-up-continue  mb-5" onclick="signup()">
+						SING UP & CONTINUE</button>
 				</div>
 			</div>
 
@@ -234,12 +235,12 @@
 				<h2 style="color:#25529F; font-size:30px" class="text-center pt-5">Your Business Location</h2>
 			</div>
 			<div class="col-md-12 signup-intro">
-				<p class="text-center text-dark">Knowing where you are located is also helpful to approve your account
+				<p class="text-center text-dark">Knowing where you are located is also helpful to approve your
+					account
 					faster.
 				</p>
 			</div>
 			<div class="col-md-12 company-address" id="address-form-section">
-				<!-- 	<form method="POST" class="form-group"  action="{{ route('login') }}"> -->
 				@csrf
 				<div class="ms-4">
 					<div class="form-signup-secondary">
@@ -291,7 +292,8 @@
 				<h2 style="color:#25529F; font-size:30px" class="text-center pt-5">Finish</h2>
 			</div>
 			<div class="col-md-12">
-				<p class="text-center col-md-12 pb-2 text-dark">Thank you for registering, please allow us sometime to
+				<p class="text-center col-md-12 pb-2 text-dark">Thank you for registering, please allow us sometime
+					to
 					review your subbmission.</p>
 			</div>
 			<div>
@@ -305,6 +307,7 @@
 		</div>
 
 	</div>
+</div>
 </div>
 <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
 
@@ -341,8 +344,6 @@
 				}
    			},
    			error: function (response) {
-   				// var error = Error(response)
-
    				console.log(response)
 
    				var error_message = response.responseJSON;
@@ -354,18 +355,9 @@
 
    				$('#signup_error').html(error_text);
 
-   				// for (let i = 0; i < error_message.errors.length; i++) {
-   				// 	console.log('here')
-   				// 	error_text += '<br />' + error_message.errors[i][0];
-   				// }
-
-   				// console.log(error_message)
-   				// console.log(error_text)
 
    			}
        });
-		
-		// console.log(data.success);
 		
 	}
 
@@ -478,8 +470,7 @@
 		var company_website = $('input[name=company_website]').val();
 		var company_name = $('input[name=company_name]').val();
 		var phone = $('input[name=phone').val();
-		// alert(company_website);
-		// alert(phone);
+		
 		jQuery.ajax({
 				method: 'post',
 		        url: "{{ url('/user-contact/') }}",
@@ -498,7 +489,7 @@
 						$(".company-detail").hide();
 						$(".login-form-section").hide();
 						$( ".white-panel" ).removeClass();
-						//$("#address").removeClass('d-none');
+						
 						$("#business-row").removeClass('d-none');
 		    		}
 		    	},
@@ -620,7 +611,6 @@
    						$('#zip_errors').html(error_text5);
    					}
 
-   					//$('#address-info-error').html(error_text);
    				},
 	    });
 	}
