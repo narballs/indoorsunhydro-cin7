@@ -17,39 +17,40 @@
                 <div class="row">
                     <div class="col-sm-8 pr-0">
                         <div class="card mt-5">
-                            <div class="card-body p-0 text-center">
+                            <div class="card-body p-0 text-center" id="superior_brands" style="cursor: pointer;">
                                 {{-- <img class="img-fluid" src="theme/img/warehouse.png" class="img-fluid"
                                     width="100%"> --}}
+                                
                                 <h4 class="text-center p-2 mt-3">We stock all superior brands!</h4>
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="row pl-4 pr-4">
                                             <div class="col thumb">
-                                                <a class="thumbnail" href="#">
+                                                <a class="thumbnail">
                                                     <img class="img-responsive img-fluid" src="theme/img/nutrients.png"
                                                         width="102px" height="86px">
                                                 </a>
                                             </div>
                                             <div class="col p-0 my-4 thumb">
-                                                <a class="thumbnail" href="#">
+                                                <a class="thumbnail">
                                                     <img class="img-fluid" src="theme/img/mills.png"
                                                         class="img-responsive img-fluid" width="142px"
                                                         height="59px"></a>
                                             </div>
                                             <div class="col thumb my-5">
-                                                <a class="thumbnail" href="#">
+                                                <a class="thumbnail">
                                                     <img src="theme/img/troll.png" width="165px" height="24px"
                                                         class="img-responsive img-fluid">
                                                 </a>
                                             </div>
                                             <div class="col thumb p-0">
-                                                <a class="thumbnail" href="#">
+                                                <a class="thumbnail">
                                                     <img src="theme/img/elite.png" width="79px" height="88px"
                                                         class="img-responsive img-fluid">
                                                 </a>
                                             </div>
                                             <div class="col thumb my-5 p-0">
-                                                <a class="thumbnail" href="#">
+                                                <a class="thumbnail">
                                                     <img src="theme/img/lux.png" width="107px" height="33px"
                                                         class="img-responsive img-fluid">
                                                 </a>
@@ -61,24 +62,24 @@
                                     <div class="col-md-12">
                                         <div class="row  pl-4 pr-4">
                                             <div class="col thumb">
-                                                <a class="thumbnail" href="#">
+                                                <a class="thumbnail">
                                                     <img class="img-responsive img-fluid" src="theme/img/titan.png"
                                                         width="130px" height="65px">
                                                 </a>
                                             </div>
                                             <div class="col p-0 thumb">
-                                                <a class="thumbnail" href="#">
+                                                <a class="thumbnail">
                                                     <img class="img-fluid" src="theme/img/quest_small.png" width="143px"
                                                         height="44px" class="img-responsive img-fluid"></a>
                                             </div>
                                             <div class="col thumb">
-                                                <a class="thumbnail" href="#">
+                                                <a class="thumbnail">
                                                     <img class="img-fluid" src="theme/img/hydroponics.png" width="167px"
                                                         height="72px" class="img-responsive img-fluid">
                                                 </a>
                                             </div>
                                             <div class="col thumb p-0">
-                                                <a class="thumbnail" href="#">
+                                                <a class="thumbnail">
                                                     <img class="img-fluid" src="theme/img/botanicare.png" width="200px"
                                                         height="64px" class="img-responsive img-fluid">
                                                 </a>
@@ -341,4 +342,10 @@
     </div>
 
 </body>
+
 @include('partials.footer')
+<script>
+    $("#superior_brands").on('click', function(){ 
+        window.location.href = '/products/';
+    });
+</script>
