@@ -4,7 +4,7 @@
 		<!--Grid row-->
 		<div class="row">
 			<!--Grid column-->
-			<div class="col-lg-6 col-md-12 mb-4 mb-md-0">
+			<div class="col-lg-6 col-md-12 mb-4 mb-md-0" style="margin-top: 50px;">
 				<h5 class="text-uppercase mb-4" style="letter-spacing: 1px;">Contact us</h5>
 				<span><img src="/theme/img/map-pin.png"></span><span class="ms-2 fw-bold">Los Angeles Warehouse
 					(HQ)</span>
@@ -24,8 +24,8 @@
 			</div>
 			<!--Grid column-->
 			<!--Grid column-->
-			<div class="col-lg-3 col-md-6 mb-4 mb-md-0">
-				<h5 class="text-uppercase mb-4">Customer Service</h5>
+			<div class="col-lg-3 col-md-6 mb-4 mb-md-0" style="margin-top: 50px;>
+				<h5 class=" text-uppercase mb-4">Customer Service</h5>
 				<p class="card-text">Returns</p>
 				<p class="card-text">Customer Support</p>
 				<p class="card-text">Hydro Guide and Tips</p>
@@ -34,8 +34,8 @@
 			</div>
 			<!--Grid column-->
 			<!--Grid column-->
-			<div class="col-lg-3 col-md-6 mb-4 mb-md-0">
-				<h5 class="text-uppercase mb-4">Payment Methods</h5>
+			<div class="col-lg-3 col-md-6 mb-4 mb-md-0" style="margin-top: 50px;>
+				<h5 class=" text-uppercase mb-4">Payment Methods</h5>
 				<table class=" text-center">
 					<tbody>
 						<tr cellspacing="10">
