@@ -338,20 +338,17 @@ a {
     font-size: 10px;
 }
 
-/* .placeholder{
-    color: white;
-    position: relative;
-    top: -30px;
-  } */
-
 .fontAwesome:after {
     content: '*';
-    color: red
+    color: red;
+    font-family: 'Poppins';
 }
 
 
 .form-control:focus+.placeholder {
     display: none;
+    font-family: 'Poppins';
+    ;
 }
 
 .needs-validation label {
@@ -366,7 +363,7 @@ a {
 }
 
 .fontAwesome {
-    font-family: 'Helvetica', FontAwesome, sans-serif;
+    font-family: 'Poppins', FontAwesome, sans-serif;
 }
 
 .form-signup input {
@@ -1195,10 +1192,12 @@ input[type=number] {
 
 .input-placeholder {
     position: relative;
+    font-family: 'Poppins';
 }
 
 .input-placeholder input:valid+.placeholder {
     display: none;
+    font-family: 'Poppins';
 }
 
 .placeholder {
@@ -1322,20 +1321,23 @@ input[type=number] {
     font-size: 18px;
 
 }
+
 .in-stock {
-    width:82px !important; 
-    height:34px !important;
+    width: 82px !important;
+    height: 34px !important;
     background-color: #7BC533;
     color: #FFFFFF !important;
     border: none;
 }
+
 .out-of-stock {
-    width:133px !important; 
-    height:34px !important;
-     background-color: #7BC533;
+    width: 133px !important;
+    height: 34px !important;
+    background-color: #7BC533;
     color: #FFFFFF !important;
     border: none;
 }
+
 .dd-horizontal {
-   display: flex !important;
+    display: flex !important;
 }
