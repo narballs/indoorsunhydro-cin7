@@ -1,10 +1,10 @@
 <div class="col-sm-12 col-md-6 col-lg-3 d-flex align-self-stretch mt-3 mb-3">
-	<?php //dd($brand);?>
+	<?php //dd($product);?>
 		<div class="card shadow-sm mb-4 w-100 h-100">
 			@if($option->image != '')
-				<img src="{{$option->image}}" class="col-md-10 img-fluid offset-1 mt-2" onclick="showdetails({{$product->id}},{{$option->option_id}})" style="max-height:210px;min-height:180px;width:201px" />
+				<img src="{{$option->image}}" class="col-md-10 img-fluid offset-1 mt-2" onclick="showdetails({{$product->id}},{{$option->option_id}},'{{$product->slug}}')" style="max-height:210px;min-height:180px;width:201px"/>
 			@else
-				<img src="{{ asset('theme/img/image_not_available.png') }}" class="w-100 img-fluid h-75 w-75" onclick="showdetails({{$product->id}})"/>
+				<img src="{{ asset('theme/img/image_not_available.png') }}" class="w-100 img-fluid h-75 w-75" onclick="showdetails({{$product->id}}')"/>
 			@endif
 			<div class="card-body d-flex flex-column text-center mt-2">
 				<h5 class="card-title" style="font-weight: 500;font-size: 16px;" id="product_name_{{$product->id}}"><a href="{{ url('product-detail/'.$product->id.'/'.$option->option_id.'/'.$product->slug) }}">{{$product->name}}</a></h5>

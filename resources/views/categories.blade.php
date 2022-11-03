@@ -122,8 +122,9 @@
   });
 </script>
 		<script>
-			function showdetails(id, option_id) {
-				window.location.href = '/product-detail/'+ id +'/'+option_id;
+			function showdetails(id, option_id, slug) {
+            //alert(slug);
+				window.location.href = '/product-detail/'+ id +'/'+option_id+'/'+slug;
 			}
          function categoryChange() {
             var categories = jQuery('#categories').val();
