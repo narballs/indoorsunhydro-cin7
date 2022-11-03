@@ -136,7 +136,10 @@
                             </div>
                         </div>
                         <div class="mt-3">
-                            <img class="img-fluid" src="theme/img/all_products.png">
+                            <a class="link-dark text-decoration-none text-white"
+                                    href="{{ url('products')}}">
+                                    <img class="img-fluid" src="theme/img/all_products.png">
+                            </a>
                         </div>
                     </div>
                     <div class="col-md-12">
@@ -148,7 +151,7 @@
                                 </a>
                             </div>
                             <div class="col-md-4">
-                                <a class="link-dark text-decoration-none text-white" href="{{ url('products/253')}}">
+                                <a class="link-dark text-decoration-none text-white" href="{{ url('products/253/ac-dehumidification-humidification')}}">
                                     <img class="img-fluid" src="theme/img/quest.png">
                                 </a>
                             </div>
@@ -164,7 +167,7 @@
                     <div class="col-md-12">
                         <div class="row mt-3 gx-5">
                             <div class="col-md-4">
-                                <a class="link-dark text-decoration-none text-white" href="{{ url('products/7')}}">
+                                <a class="link-dark text-decoration-none text-white" href="{{ url('products/7/lighting')}}">
                                     <img class="img-fluid" src="theme/img/lightening.png">
                                 </a>
                                 {{-- <a class="link-dark text-decoration-none text-white"
@@ -183,12 +186,10 @@
                                 </a> --}}
                             </div>
                             <div class="col-md-4">
-                                <a class="link-dark text-decoration-none text-white" href="{{ url('products/7')}}">
+                                <a class="link-dark text-decoration-none text-white" href="{{ url('products/7/lighting')}}">
                                     <img class="img-fluid" src="theme/img/lux_lightening.png">
                                 </a>
-                                {{-- <a class="link-dark text-decoration-none text-white" href="{{ url('products/7')}}">
-                                    <img class="img-fluid" src="theme/img/lightening.png">
-                                </a> --}}
+                               
                             </div>
 
                         </div>
