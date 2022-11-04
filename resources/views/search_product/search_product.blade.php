@@ -1,7 +1,6 @@
 @include('partials.header')
 @include('partials.top-bar')
 @include('partials.search-bar')
-@include('partials.nav')
 <div class="mb-5">
     <p style="line-height: 95px;" class="fw-bold fs-2 product-btn my-auto border-0 text-white text-center align-middle">
         SEARCHED PRODUCTS
@@ -11,15 +10,15 @@
 <div class="container">
     <div class="row">
         @foreach ($products as $key => $product)
-            @foreach($product->options as $option)
-                <?php $count ++; ?>
-                @include('product_row')
-            @endforeach
+        @foreach($product->options as $option)
+        <?php $count ++; ?>
+        @include('product_row')
+        @endforeach
         @endforeach
     </div>
 </div>
-        <script>
-            function showdetails(id) {
+<script>
+    function showdetails(id) {
                 window.location.href = '/product-detail/'+ id;
 
             }
