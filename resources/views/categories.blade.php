@@ -15,6 +15,12 @@
             <div class="col">
                <label>Sort by</label>
                <select class="form-select" id="search_price" onchange="handleSelectChange('best_selling')">
+                  <option value="0">Select Option</option>
+                  <option class="form-group" value="best-selling" {{ $price_creteria }} {{ isset($price_creteria) && $price_creteria == 'best-selling' ? 'selected="selected"' : '' }}>Best Selling</option>
+                   <option class="form-group" value="price-low-to-high" {{ $price_creteria }} {{ isset($price_creteria) && $price_creteria == 'price-low-to-high' ? 'selected="selected"' : '' }}>Price Low to High</option>
+                   <option class="form-group" value="price-high-to-low"  {{ $price_creteria }} {{ isset($price_creteria) && $price_creteria == 'price-high-to-low' ? 'selected="selected"' : '' }}>Price High to Low</option>
+                   <option class="form-group" value="brand-a-to-z" {{ $price_creteria }} {{ isset($price_creteria) && $price_creteria == 'brand-a-to-z' ? 'selected="selected"' : '' }}>Product A to Z</option>
+                   <option class="form-group" value="brand-z-to-a"  {{ $price_creteria }} {{ isset($price_creteria) && $price_creteria == 'brand-z-to-a' ? 'selected="selected"' : '' }}>Product Z to A</option>
                   <option class="form-group" value="price">Best Selling</option>
                   <option class="form-group" value="price-low-to-high" {{ $price_creteria }} {{ isset($price_creteria)
                      && $price_creteria=='price-low-to-high' ? 'selected="selected"' : '' }}>Price Low to High</option>
@@ -24,6 +30,7 @@
                      $price_creteria=='brand-a-to-z' ? 'selected="selected"' : '' }}>Product A to Z</option>
                   <option class="form-group" value="brand-z-to-a" {{ $price_creteria }} {{ isset($price_creteria) &&
                      $price_creteria=='brand-z-to-a' ? 'selected="selected"' : '' }}>Product Z to A</option>
+
                </select>
             </div>
             <div class="col">
