@@ -1,7 +1,6 @@
 @include('partials.header')
 @include('partials.top-bar')
 @include('partials.search-bar')
-@include('partials.nav')
 @if ($message = Session::get('message'))
 <div class="alert alert-danger alert-block">
 	<button type="button" class="close" data-dismiss="alert">×</button>

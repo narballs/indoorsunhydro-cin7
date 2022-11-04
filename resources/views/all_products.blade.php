@@ -1,28 +1,30 @@
 @include('partials.header')
 @include('partials.top-bar')
 @include('partials.search-bar')
-@include('partials.nav')
 <div class="mb-5">
    <p style="line-height: 95px;" class="fw-bold fs-2 product-btn my-auto border-0 text-white text-center align-middle">
-		PRODUCTS
-	</p>
+      PRODUCTS
+   </p>
 </div>
 <?php //dd($products);?>
 <div class="container">
    <form id="form-filter">
       <div class="col-md-12">
-      <div class="row pl-5 pr-5 pb-4 pt-3" style="border: 1px solid rgba(0,0,0,.125);">
-            <input type="hidden" id="category_id" value="{{ $category_id }}">
-            <input type="hidden" id="parent_category_slug" value="{{ $parent_category_slug }}">
-            <div class="col"> 
+
+         <div class="row pl-5 pr-5 pb-4 pt-3" style="border: 1px solid rgba(0,0,0,.125);">
+            <div class="col">
                <label>Sort by</label>
                <select class="form-select" id="search_price" onchange="handleSelectChange()">
                   <option value="0">Select Option</option>
                   <option class="form-group" value="price">Best Selling</option>
-                   <option class="form-group" value="price-low-to-high" {{ $price_creteria }} {{ isset($price_creteria) && $price_creteria == 'price-low-to-high' ? 'selected="selected"' : '' }}>Price Low to High</option>
-                   <option class="form-group" value="price-high-to-low"  {{ $price_creteria }} {{ isset($price_creteria) && $price_creteria == 'price-high-to-low' ? 'selected="selected"' : '' }}>Price High to Low</option>
-                   <option class="form-group" value="brand-a-to-z" {{ $price_creteria }} {{ isset($price_creteria) && $price_creteria == 'brand-a-to-z' ? 'selected="selected"' : '' }}>Brand A to Z</option>
-                   <option class="form-group" value="brand-z-to-a"  {{ $price_creteria }} {{ isset($price_creteria) && $price_creteria == 'brand-z-to-a' ? 'selected="selected"' : '' }}>Brand Z to A</option>
+                  <option class="form-group" value="price-low-to-high" {{ $price_creteria }} {{ isset($price_creteria)
+                     && $price_creteria=='price-low-to-high' ? 'selected="selected"' : '' }}>Price Low to High</option>
+                  <option class="form-group" value="price-high-to-low" {{ $price_creteria }} {{ isset($price_creteria)
+                     && $price_creteria=='price-high-to-low' ? 'selected="selected"' : '' }}>Price High to Low</option>
+                  <option class="form-group" value="brand-a-to-z" {{ $price_creteria }} {{ isset($price_creteria) &&
+                     $price_creteria=='brand-a-to-z' ? 'selected="selected"' : '' }}>Brand A to Z</option>
+                  <option class="form-group" value="brand-z-to-a" {{ $price_creteria }} {{ isset($price_creteria) &&
+                     $price_creteria=='brand-z-to-a' ? 'selected="selected"' : '' }}>Brand Z to A</option>
                </select>
             </div>
             <div class="col"> 
@@ -46,7 +48,8 @@
                <select class="form-select" id="brand" name="brands[]" onchange="handleSelectChange()">
                   <option value="0">Select Brand</option>
                   @foreach($brands as $_brand_id => $brand_name)
-                        <option value="{{ $_brand_id }}" {{ isset($brand_id) && $brand_id == $_brand_id ? 'selected="selected"' : '' }} >{{ $brand_name }}</option>
+                  <option value="{{ $_brand_id }}" {{ isset($brand_id) && $brand_id==$_brand_id ? 'selected="selected"'
+                     : '' }}>{{ $brand_name }}</option>
                   @endforeach
 
                   <!-- @foreach($products as $key=>$product)
@@ -54,15 +57,18 @@
                   @endforeach -->
                </select>
             </div>
-            <div class="col"> 
+            <div class="col">
                <label>Result per page</label>
                <select id="per_page" class="form-select" onchange="handleSelectChange()">
-                  <option value="10" {{ $per_page }} {{ isset($per_page) && $per_page == 10 ? 'selected="selected"' : '' }}>10</option>
-                  <option value="20" {{ $per_page }} {{ isset($per_page) && $per_page == 20 ? 'selected="selected"' : '' }}>20</option>
-                   <option value="30" {{ $per_page }} {{ isset($per_page) && $per_page == 30 ? 'selected="selected"' : '' }}>30</option>
+                  <option value="10" {{ $per_page }} {{ isset($per_page) && $per_page==10 ? 'selected="selected"' : ''
+                     }}>10</option>
+                  <option value="20" {{ $per_page }} {{ isset($per_page) && $per_page==20 ? 'selected="selected"' : ''
+                     }}>20</option>
+                  <option value="30" {{ $per_page }} {{ isset($per_page) && $per_page==30 ? 'selected="selected"' : ''
+                     }}>30</option>
                </select>
             </div>
-          <div class="col"> 
+            <div class="col">
                <label>Show Only</label>
                <div id="stock">
                   <?php if(empty($stock) || $stock == 'in-stock') {
@@ -73,49 +79,52 @@
                      $text = 'Out of Stock';
                      $danger = 'bg-danger';
                   }   
-                  ?>             
-                  <button class="{{ $stock ? $stock : 'in-stock'  }} {{$danger}} in-stock" type="button" id="in-stock" onclick="inStockOutstock('instock'), handleSelectChange()" value="{{$stock}}">{{$text}}</button>
-                 <!--  <button class="button-cards bg-danger d-none" type="button" id="out-stock" onclick="inStockOutstock('outstock')" style="width:133px !important; height:34px !important;" value="outstock">Out of Stock</button> -->
+                  ?>
+                  <button class="{{ $stock ? $stock : 'in-stock'  }} {{$danger}} in-stock" type="button" id="in-stock"
+                     onclick="inStockOutstock('instock'), handleSelectChange()" value="{{$stock}}">{{$text}}</button>
+                  <!--  <button class="button-cards bg-danger d-none" type="button" id="out-stock" onclick="inStockOutstock('outstock')" style="width:133px !important; height:34px !important;" value="outstock">Out of Stock</button> -->
 
                </div>
+            </div>
+         </div>
+      </div>
+   </form>
+   <div class="row" id="product_rows">
+      @foreach ($products as $key => $product)
+      @foreach($product->options as $option)
+      @include('product_row')
+      @endforeach
+      @endforeach
+   </div>
+   <!--    {{$products->links('pagination::bootstrap-4')}} -->
+   {{$products->appends(Request::all())->links()}}
+</div>
+<div class="py-5 bg-light">
+   <div class="col-md-12 text-center text-uppercase fs-4 mt-5">
+      Subscribe to news letter
+      <div class="fs-6 mt-1">
+         Signup now for additional information or new products
+         <div class="mt-3 mb-5">
+            <input type="text" name="serach-prduct" placeholder="Enter your email">
+            <button class="btn-outline-secondary text-white bg-dark h-35" type="button" id="button-addon1">
+               SUBSCRIBE
+            </button>
          </div>
       </div>
    </div>
-</form>
-   <div class="row" id="product_rows">
-   	@foreach ($products as $key => $product)
-         @foreach($product->options as $option)
-   			 @include('product_row')
-          @endforeach
-   	@endforeach
-   </div>
-<!--    {{$products->links('pagination::bootstrap-4')}} -->
-      {{$products->appends(Request::all())->links()}}
-</div>
-<div class="py-5 bg-light">
-	<div class="col-md-12 text-center text-uppercase fs-4 mt-5">
-		Subscribe to news letter
-		<div class="fs-6 mt-1">
-			Signup now for additional information or new products
-			<div class="mt-3 mb-5">
-				<input type="text" name="serach-prduct" placeholder="Enter your email">
-				<button class="btn-outline-secondary text-white bg-dark h-35" type="button" id="button-addon1" >
-					SUBSCRIBE
-				</button>
-			</div>
-		</div>
-	</div>
 </div>
 <script>
-  $('#brand').select2({
+   $('#brand').select2({
     width: '100%',
     placeholder: "Select an Option",
     allowClear: true
   });
 </script>
-		<script>
-			function showdetails(id, option_id) {
-				window.location.href = '/product-detail/'+ id +'/'+option_id  ;
+
+<script>
+   function showdetails(id, option_id) {
+				window.location.href = '/product-detail/'+ id +'/'+option_id;
+
 			}
 
          function inStockOutstock() {
@@ -222,9 +231,9 @@
 
 			    return false;
 			}
-		</script>
-	<script>
-         jQuery(document).ready(function(){
+</script>
+<script>
+   jQuery(document).ready(function(){
             jQuery('.ajaxSubmit11').click(function(e){ alert('xxxxxxxxxx')
                e.preventDefault();
                //alert('here');
@@ -250,9 +259,9 @@
             });
 </script>
 
-		<!-- Remove the container if you want to extend the Footer to full width. -->
-		
-  		@include('partials.product-footer')
-		
+<!-- Remove the container if you want to extend the Footer to full width. -->
+
+@include('partials.product-footer')
+
 <!-- End of .container -->
 @include('partials.footer')
