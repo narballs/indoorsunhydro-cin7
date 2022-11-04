@@ -1,7 +1,7 @@
 @include('partials.header')
 
 <body>
-    <main class="container-fluid">
+    <main>
         @include('partials.top-bar')
         @include('partials.search-bar')
 
