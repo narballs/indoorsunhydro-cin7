@@ -1253,16 +1253,7 @@ input[type=number] {
     color: #FFFFFF;
 }
 
-/* .login-button {
-    position: absolute;
-    width: 496px;
-    height: 79px;
-    left: 458px;
-    top: 744px;
-    background: #7BC533;
-} */
 .sing-up-label {
-    /* position: absolute; */
     width: 100%;
     height: 79px;
     top: 788px;
@@ -1337,4 +1328,13 @@ input[type=number] {
 .ms-4-footer {
     font-size: 16px;
     margin-top: 8px;
+}
+
+.top-header-navigation {
+    font-family: 'Poppins' !important;
+    font-style: normal !important;
+    font-weight: 700 !important;
+    font-size: 50px !important;
+
+    color: #373737;
 }

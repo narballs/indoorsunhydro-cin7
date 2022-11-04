@@ -1,14 +1,9 @@
 <?php 
 	$categories = NavHelper::getCategories();
 ?>
-{{-- <div class="container">
-	<div class="row">
-		<div class="col-md-12"></div>
-	</div>
-</div> --}}
-<nav class="navbar navbar-expand-lg navbar-light bg-transparent pb-0">
-	<div class="container-fluid">
 
+<nav class="navbar navbar-expand-lg navbar-light bg-transparent pb-0">
+	<div class="container">
 		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
 			aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
@@ -79,13 +74,16 @@
 								@endforeach
 							</ul>
 						</li>
-						<li class="nav-item me-4">
+
+						<li class="nav-item me-3">
 							<a class="nav-link text-uppercase fw-bold" href="#">About</a>
 						</li>
+
 						<li class="nav-item me-4">
 							<a class="nav-link text-uppercase fw-bold" href="#">Contact</a>
 						</li>
-						<li class="nav-item me-4">
+
+						<li class="nav-item me-3">
 							<a class="nav-link text-uppercase fw-bold" href="{{ url('my-account') }} ">My account</a>
 						</li>
 					</ul>
