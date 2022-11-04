@@ -120,22 +120,10 @@
 
 .footer-days {
     color: #7BC533 !important;
-
 }
-
 
 @import url('https://fonts.googleapis.com/css?family=Mukta');
 
-/*body{
-  font-family: 'Mukta', sans-serif;
-	height:100vh;
-	min-height:550px;
-	background-repeat: no-repeat;
-	background-size:cover;
-	background-position:center;
-	position:relative;
-    overflow-y: hidden;
-}*/
 a {
     text-decoration: none;
     color: #444444;
@@ -242,7 +230,6 @@ a {
 }
 
 .login-show input[type="button"] {
-
     width: 100%;
     background: #444444;
     color: #FFFFFF;
@@ -1340,4 +1327,14 @@ input[type=number] {
 
 .dd-horizontal {
     display: flex !important;
+}
+
+.main-page-footer-section {
+    margin-top: 39px;
+    font-family: 'Poppins';
+}
+
+.ms-4-footer {
+    font-size: 16px;
+    margin-top: 8px;
 }
