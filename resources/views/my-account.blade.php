@@ -1,12 +1,12 @@
 @include('partials.header')
 @include('partials.top-bar')
 @include('partials.search-bar')
-@include('partials.nav')
 <div class="bg-light">
 	<div class="mb-5">
-			<p style="line-height: 95px;" class="fw-bold fs-2 product-btn my-auto border-0 text-white text-center align-middle">
+		<p style="line-height: 95px;"
+			class="fw-bold fs-2 product-btn my-auto border-0 text-white text-center align-middle">
 			MY ACCOUNT
-		 </p>
+		</p>
 	</div>
 
 	<?php //dd($user_address);?>
@@ -28,125 +28,148 @@
 						</div>
 					</div>
 
-					<div class="col-md-6 col-xl-6 col-xs-12 col-sm-12 p-0 align-middle d-flex justify-content-center align-items-center" style="background: #F4FFEC; color: #7BC743; border-top-right-radius: 0.5rem !important;border-bottom-right-radius: 0.5rem !important">
+					<div class="col-md-6 col-xl-6 col-xs-12 col-sm-12 p-0 align-middle d-flex justify-content-center align-items-center"
+						style="background: #F4FFEC; color: #7BC743; border-top-right-radius: 0.5rem !important;border-bottom-right-radius: 0.5rem !important">
 						<span style="font-family: 'Roboto';font-style: normal;font-weight: 500;font-size: 40px;">
 							My Account
 						</span>
 					</div>
 				</div>
 				<div class="row flex-xl-nowrap p-0 m-0 mr-3">
-	  				<div class="col-xl-3 col-sm-12 col-xs-12 p-0 bg-white" style="border-radius: 10px !important;">
-						<div class="d-flex flex-column align-items-center align-items-sm-start pt-2 text-white min-vh-100">
-							<a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-								  <span class="fs-5 d-none d-sm-inline">Menu</span>
+					<div class="col-xl-3 col-sm-12 col-xs-12 p-0 bg-white" style="border-radius: 10px !important;">
+						<div
+							class="d-flex flex-column align-items-center align-items-sm-start pt-2 text-white min-vh-100">
+							<a href="/"
+								class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+								<span class="fs-5 d-none d-sm-inline">Menu</span>
 							</a>
-							<ul class="nav nav-pills flex-column w-100 mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+							<ul class="nav nav-pills flex-column w-100 mb-sm-auto mb-0 align-items-center align-items-sm-start"
+								id="menu">
 								<li class="nav-item w-100 text-dark active mb-3">
 									<a href="#" class="nav-link align-middle px-0 ms-3">
 										<i class="fs-4 bi-house"></i>
 										<div class="row">
 											<div class="col-md-2">
 												<span>
-												<img src="theme/img/home_nav.png" id="home_active" style="display: none;" >
-												<img src="theme/img/home_unvisited.png" id="home_inactive">
-											</span>
+													<img src="theme/img/home_nav.png" id="home_active"
+														style="display: none;">
+													<img src="theme/img/home_unvisited.png" id="home_inactive">
+												</span>
 											</div>
 											<div class="col-md-10">
-												<span class=" ms-1 d-none d-sm-inline   fs-5 ms-3 mt-1 ml-0 pl-0 nav-items-link" onclick="dashboard()" id="dashboard">
-												Dashboard
-											</span>
+												<span
+													class=" ms-1 d-none d-sm-inline   fs-5 ms-3 mt-1 ml-0 pl-0 nav-items-link"
+													onclick="dashboard()" id="dashboard">
+													Dashboard
+												</span>
 											</div>
-											
-												
+
+
 										</div>
 									</a>
 								</li>
 								<li class="nav-item w-100 mb-3" id="recent_orders">
 									<a href="#" class="nav-link px-0 align-middle  px-0 ms-3">
-										<i class="fs-4 bi-table"></i> <!-- <span class="ms-1 d-none d-sm-inline  text-dark fs-5" onclick="showOrders()">Orders</span> -->
+										<i class="fs-4 bi-table"></i>
+										<!-- <span class="ms-1 d-none d-sm-inline  text-dark fs-5" onclick="showOrders()">Orders</span> -->
 										<div class="row">
 											<div class="col-md-2">
 												<span>
-												<img src="theme/img/order_visited.png" id="order_active" style="display: none;" >
-												<img src="theme/img/order_unvisited.png" id="order_inactive">
-											</span>
+													<img src="theme/img/order_visited.png" id="order_active"
+														style="display: none;">
+													<img src="theme/img/order_unvisited.png" id="order_inactive">
+												</span>
 											</div>
 											<div class="col-md-10">
-												<span class="ms-1 d-none d-sm-inline  fs-5 ms-3 mt-1 ml-0 pl-0 nav-items-link" onclick="showOrders()">
-												Orders
-											</span>
+												<span
+													class="ms-1 d-none d-sm-inline  fs-5 ms-3 mt-1 ml-0 pl-0 nav-items-link"
+													onclick="showOrders()">
+													Orders
+												</span>
 											</div>
-											
-												
+
+
 										</div>
 
 									</a>
 								</li>
 								<li class="nav-item w-100 mb-3" id="current_address">
-									<a href="#"  class="nav-link px-0 align-middle  px-0 ms-3">
-										<i class="fs-4 bi-bootstrap"></i> <!-- <span class="ms-1 d-none d-sm-inline text-dark fs-5" onclick="edit_address()">Addresses</span> -->
+									<a href="#" class="nav-link px-0 align-middle  px-0 ms-3">
+										<i class="fs-4 bi-bootstrap"></i>
+										<!-- <span class="ms-1 d-none d-sm-inline text-dark fs-5" onclick="edit_address()">Addresses</span> -->
 										<div class="row">
 											<div class="col-md-2">
 												<span>
-													<img src="theme/img/address_active.png" id="order_active" style="display: none;" >
+													<img src="theme/img/address_active.png" id="order_active"
+														style="display: none;">
 													<img src="theme/img/address_inactive.png" id="order_inactive">
 												</span>
 											</div>
 											<div class="col-md-10">
-												<span class="ms-1 d-none d-sm-inline fs-5 ms-3 mt-1 ml-0 pl-0 nav-items-link" onclick="edit_address()">
-												Addresses
+												<span
+													class="ms-1 d-none d-sm-inline fs-5 ms-3 mt-1 ml-0 pl-0 nav-items-link"
+													onclick="edit_address()">
+													Addresses
 												</span>
 											</div>
-											
-												
+
+
 										</div>
 									</a>
 								</li>
 								<li class="w-100 mb-3" id="account_details">
-									<a href="#submenu3"  class="nav-link px-0 align-middle  px-0 ms-3">
-										<i class="fs-4 bi-grid"></i> <!-- <span class="ms-1 d-none d-sm-inline text-dark fs-5" onclick="accountDetails()">Account Details</span> --> 
+									<a href="#submenu3" class="nav-link px-0 align-middle  px-0 ms-3">
+										<i class="fs-4 bi-grid"></i>
+										<!-- <span class="ms-1 d-none d-sm-inline text-dark fs-5" onclick="accountDetails()">Account Details</span> -->
 										<div class="row">
 											<div class="col-md-2">
 												<span>
-													<img src="theme/img/account_active.png" id="order_active" style="display: none;" >
+													<img src="theme/img/account_active.png" id="order_active"
+														style="display: none;">
 													<img src="theme/img/account_inactive.png" id="order_inactive">
 												</span>
 											</div>
 											<div class="col-md-10">
-												<span class="ms-1 d-none d-sm-inline  fs-5 ms-3 mt-1 ml-0 pl-0 nav-items-link" onclick="accountDetails()">
-												Account Details
+												<span
+													class="ms-1 d-none d-sm-inline  fs-5 ms-3 mt-1 ml-0 pl-0 nav-items-link"
+													onclick="accountDetails()">
+													Account Details
 												</span>
 											</div>
-											
-												
+
+
 										</div>
 									</a>
-								
+
 								</li>
-								<li class="border-bottom border-4" style="width: 240px; font-family: Roboto;margin: auto; "></li>
+								<li class="border-bottom border-4"
+									style="width: 240px; font-family: Roboto;margin: auto; "></li>
 								<li class="w-100">
-									<a class="text-white nav-link px-0 align-middle  px-0 ms-3 " href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('frm-logout').submit();">
-				        			<div class="row">
+									<a class="text-white nav-link px-0 align-middle  px-0 ms-3 "
+										href="{{ route('logout') }}"
+										onclick="event.preventDefault(); document.getElementById('frm-logout').submit();">
+										<div class="row">
 											<div class="col-md-2 mt-1">
 												<span class="">
 													<img src="theme/img/logout.png" id="order_inactive">
 												</span>
 											</div>
 											<div class="col-md-10">
-												<span class="ms-1  d-sm-inline text-dark fs-5 ms-3 mt-1 ml-0 pl-0 nav-items-link">
-												Logout
+												<span
+													class="ms-1  d-sm-inline text-dark fs-5 ms-3 mt-1 ml-0 pl-0 nav-items-link">
+													Logout
 												</span>
 											</div>
-											
-												
+
+
 										</div>
-			  						</a>
-			  
-			  						<form id="frm-logout" action="{{ route('logout') }}" method="POST">
-			        				{{ csrf_field() }}
-			        					<!-- <button class="" type="submit" style="width:100px;height:30px;">Logout</button> -->
-			    					</form>
-							<!-- 		<div class="col-md-1">
+									</a>
+
+									<form id="frm-logout" action="{{ route('logout') }}" method="POST">
+										{{ csrf_field() }}
+										<!-- <button class="" type="submit" style="width:100px;height:30px;">Logout</button> -->
+									</form>
+									<!-- 		<div class="col-md-1">
 										<a href="{{ route('logout') }}">
 											<button class="btn-login" type="button" style="width:100px;height:30px;">Logout</button>
 										</a>
@@ -156,10 +179,11 @@
 							<div class="dropdown pb-4">
 							</div>
 						</div>
-	  				</div>
-	 
-	  				<div class="col-xl-9 col-sm-12 col-xs-12 py-3 bg-white ms-3" style="border-radius: 10px !important;">
-			  			<div class="intro" id="intro">
+					</div>
+
+					<div class="col-xl-9 col-sm-12 col-xs-12 py-3 bg-white ms-3"
+						style="border-radius: 10px !important;">
+						<div class="intro" id="intro">
 							<div class="col-md-12">
 								<div class="row mb-4 mt-3">
 									<div class="col-md-4 ">
@@ -167,26 +191,33 @@
 										<span class="pt-1 my-account-content-heading">Dashboard</span>
 									</div>
 									<div class="col-md-8">
-										
+
 									</div>
-								
+
 								</div>
 							</div>
 							<div class="border-bottom border-4 ms-3 mr-3"></div>
 							<div class="row mt-3">
 								<div class="col-md-8 ms-3 mt-3">
-				
-									<span class="dashboard-heading">Hello <span class="text-capitalize user_names_dashboard"><strong>{{$user->first_name}}</strong></span> 
+
+									<span class="dashboard-heading">Hello <span
+											class="text-capitalize user_names_dashboard"><strong>{{$user->first_name}}</strong></span>
+								</div>
+								<div class="col-md-1">
+									<form id="frm-logout" action="{{ route('logout') }}" method="POST">
+										{{ csrf_field() }}
+										<!-- 	<button class="btn-login" type="submit" style="width:100px;height:30px;">Logout</button> -->
+									</form>
+								</div>
 							</div>
-							<div class="col-md-1">
-								<form id="frm-logout" action="{{ route('logout') }}" method="POST">
-							{{ csrf_field() }}
-							<!-- 	<button class="btn-login" type="submit" style="width:100px;height:30px;">Logout</button> -->
-							</form>
-							</div>	
-							</div>
-							<div class="col-md-12  mt-4 dashboard-content pl-1 ms-3" >
-								From your account dashboard you can view your <span class="dashboard-link-text text-decoration-underline" onclick="showOrders()">Recent orders</span> manage your <span class="dashboard-link-text text-decoration-underline" onclick="edit_address()">Shipping and billing addresses</span> and <span class="dashboard-link-text text-decoration-underline" onclick="accountDetails()">Edit your password and account details.</span>
+							<div class="col-md-12  mt-4 dashboard-content pl-1 ms-3">
+								From your account dashboard you can view your <span
+									class="dashboard-link-text text-decoration-underline" onclick="showOrders()">Recent
+									orders</span> manage your <span
+									class="dashboard-link-text text-decoration-underline"
+									onclick="edit_address()">Shipping and billing addresses</span> and <span
+									class="dashboard-link-text text-decoration-underline"
+									onclick="accountDetails()">Edit your password and account details.</span>
 							</div>
 						</div>
 						<div class="d-none mt-3 mb-3 pr-4 pl-4" id="orders">
@@ -195,20 +226,27 @@
 								<span class="pt-1 my-account-content-heading ">Orders</span>
 							</div>
 							<!-- <div class="border-bottom border-4 ms-3 mr-3"></div> -->
-							
-							<table cellpadding="10" cellspacing="10" class="w-100" class="mt-3">
-									<tr class="order-table-heading border-bottom"><td class="pl-0" style="width:90px;">Order</td><td style="width: 200px;">Date</td><td style="width: 185px">Status</td><td style="width:350px">Total</td><td class="text-center pr-0" style="width:103px;">Action</td></tr>
-									<!-- <tr class="border-bottom ms-3 mr-3"></tr> -->
-								<tbody id="order_table" class="">	
 
-							
+							<table cellpadding="10" cellspacing="10" class="w-100" class="mt-3">
+								<tr class="order-table-heading border-bottom">
+									<td class="pl-0" style="width:90px;">Order</td>
+									<td style="width: 200px;">Date</td>
+									<td style="width: 185px">Status</td>
+									<td style="width:350px">Total</td>
+									<td class="text-center pr-0" style="width:103px;">Action</td>
+								</tr>
+								<!-- <tr class="border-bottom ms-3 mr-3"></tr> -->
+								<tbody id="order_table" class="">
+
+
 								</tbody>
 							</table>
 						</div>
 						<div class="order-detail" id="order_details">
-							<div class="col-md-12 mt-4 d-none order-detail-container pl-4 pr-4" id="order-detail-container">
+							<div class="col-md-12 mt-4 d-none order-detail-container pl-4 pr-4"
+								id="order-detail-container">
 								<div class="row mt-3 d-none detail-heading" id="detail-heading">
-										<div class="row mb-4 mt-3 pr-0">
+									<div class="row mb-4 mt-3 pr-0">
 										<div class="col-md-4">
 											<img src="theme/img/order_details.png" style="margin: -1px 2px 1px 1px;">
 											<span class="pt-1 my-account-content-heading">Order Details
@@ -222,7 +260,9 @@
 								<div class="border-bottom"></div>
 								<div class="mt-3">
 									<table class="w-100">
-										<tr class="border-bottom order-table-heading"><td class="address-weight">Products</td></tr>
+										<tr class="border-bottom order-table-heading">
+											<td class="address-weight">Products</td>
+										</tr>
 										<tbody id="lineitems" class="d-none">
 										</tbody>
 									</table>
@@ -232,14 +272,20 @@
 								<div class="col-md-12 border-bottom border-4">
 									<h2>Orders</h2>
 								</div>
-								
+
 								<table cellpadding="10" cellspacing="10" class="w-100">
-										<tr class="border-bottom"><th>Ordesdsddr#</th><th>Date</th><th>Status</th><th>Total</th><th class="text-center">Acdddtion</th></tr>
-									<tbody id="order_table" class="">	
+									<tr class="border-bottom">
+										<th>Ordesdsddr#</th>
+										<th>Date</th>
+										<th>Status</th>
+										<th>Total</th>
+										<th class="text-center">Acdddtion</th>
+									</tr>
+									<tbody id="order_table" class="">
 									</tbody>
 								</table>
 							</div>
-			<!-- 				<div class="col-md-9 pl-1">
+							<!-- 				<div class="col-md-9 pl-1">
 								<div class="row mt-3 " style="margin:auto;">
 									<div class="col bg-white mr-3" style="border-radius: 10px !important;">
 		  								<div class="mt-4 mb-4"><img src="theme/img/user_address.png"><span class="billing-address-heading-subtitle pt-2 ms-2 align-middle address-weight">Order Details</span>
@@ -273,28 +319,32 @@
 								<span class="billing-address-heading">Billing Address</span>
 							</div>
 							<div class="ms-3 mt-3">
-								<p class="table-row-content">The following addresses will be used on the checkout page by default.</p>
+								<p class="table-row-content">The following addresses will be used on the checkout page
+									by default.</p>
 							</div>
 							<div class="row table-row-content">
-							    <div class="col-md-5">
-			    					<div class="p-3">
-			    						<div class="row">
-			                				<div class="col-md-10 billing-address-heading-subtitle">Billing Address</div>
-			                				<div class="col-md-2">@include('modal.my-account-modal')</div>
-			                			</div>
-				                		<div class="row mt-2">
-				                    		<div class="col-md-12 name">
-				                    			<span class="user_names">{{$user_address->firstName}} {{$user_address->lastName}}</span>
-				                    			{{$user_address->postalAddress1}}{{$user_address->postalAddress2}}
-				                    		</div>
-				                		</div>
-				                		<div class="name">
-							                
-							            </div>
-							            <div class="row m-0">
-							               	{{$user_address->postalCity}} {{$user_address->postalState}} {{$user_address->postalPostCode}}
-							            </div>
-			                				
+								<div class="col-md-5">
+									<div class="p-3">
+										<div class="row">
+											<div class="col-md-10 billing-address-heading-subtitle">Billing Address
+											</div>
+											<div class="col-md-2">@include('modal.my-account-modal')</div>
+										</div>
+										<div class="row mt-2">
+											<div class="col-md-12 name">
+												<span class="user_names">{{$user_address->firstName}}
+													{{$user_address->lastName}}</span>
+												{{$user_address->postalAddress1}}{{$user_address->postalAddress2}}
+											</div>
+										</div>
+										<div class="name">
+
+										</div>
+										<div class="row m-0">
+											{{$user_address->postalCity}} {{$user_address->postalState}}
+											{{$user_address->postalPostCode}}
+										</div>
+
 									</div>
 									<div style="display:none">@include('modal.my-account-modal')</div>
 									<!-- <div class="ms-3"><button class="edit-button">Edit</button></div> -->
@@ -303,34 +353,36 @@
 
 
 								<div class="col-md-5 border-start ms-4">
-			        				<div class="p-3">
-			        					<div class="row">
-			                    			<div class="col-md-10 billing-address-heading-subtitle">
-			                    				Shipping Address
-			                    			</div>
-			                    			<div class="col-md-2">@include('modal.my-account-modal')</div>
-			                    		</div>
-				                		<div class="row mt-2">
-				                    		<div class="col-md-12 name">
-				                    			<span class="user_names">{{$user_address->firstName}} {{$user_address->lastName}}</span>
-				                    			{{$user_address->postalAddress1}}{{$user_address->postalAddress2}}
-				                    		</div>
-				                		</div>
-				                		<div class="name">
-							                
-							            </div>
-							            <div class="row m-0">
-							               	{{$user_address->postalCity}} {{$user_address->postalState}} {{$user_address->postalPostCode}}
-							            </div>	
-			    					</div>
+									<div class="p-3">
+										<div class="row">
+											<div class="col-md-10 billing-address-heading-subtitle">
+												Shipping Address
+											</div>
+											<div class="col-md-2">@include('modal.my-account-modal')</div>
+										</div>
+										<div class="row mt-2">
+											<div class="col-md-12 name">
+												<span class="user_names">{{$user_address->firstName}}
+													{{$user_address->lastName}}</span>
+												{{$user_address->postalAddress1}}{{$user_address->postalAddress2}}
+											</div>
+										</div>
+										<div class="name">
+
+										</div>
+										<div class="row m-0">
+											{{$user_address->postalCity}} {{$user_address->postalState}}
+											{{$user_address->postalPostCode}}
+										</div>
+									</div>
 								</div>
 								<!-- 	<div class="ms-3"><button class="edit-button" style="">Edit</button></div> -->
 							</div>
 						</div>
 						<div class="customer-details d-none pr-2" id="customer-address">
 							<div class="row mt-3 detail-heading ms-2 mr-0 ml-0 p-0" id="detail-heading">
-								
-									<div class="col-md-12 border-bottom border-4 p-0 mr-3">
+
+								<div class="col-md-12 border-bottom border-4 p-0 mr-3">
 									<div class="row mb-4 mt-3">
 										<div class="col-md-4 ">
 											<img src="theme/img/account_details.png" style="margin: -1px 2px 1px 1px;">
@@ -344,22 +396,28 @@
 							<div class="col-md-12 pl-0 pr-0 mr-0 ml-0 w-100">
 								<div class="row mt-4  mr-0 ml-0 align-items-center">
 									<div class="col-auto">
-									<!-- <label for="inputPassword6" class="col-form-label">Password</label> -->
+										<!-- <label for="inputPassword6" class="col-form-label">Password</label> -->
 									</div>
-									<div class="bg-success text-white" id="updated-success" style="background-color: #7BC743 !important;">
+									<div class="bg-success text-white" id="updated-success"
+										style="background-color: #7BC743 !important;">
 									</div>
-										@csrf
+									@csrf
 									<div class="col-md-6 pl-0 mt-2 ">
-										<label for="first_name" class="col-form-label dashboard-content">First Name</label>
-										<input type="text" id="first_name" name="first_name" value="{{$user_address->firstName}}" class="bg-light form-control">
+										<label for="first_name" class="col-form-label dashboard-content">First
+											Name</label>
+										<input type="text" id="first_name" name="first_name"
+											value="{{$user_address->firstName}}" class="bg-light form-control">
 									</div>
 									<div class="col-md-6 mt-2 pr-0">
-										<label for="last_name" class="col-form-label dashboard-content">Last Name</label>
-										<input type="text" id="last_name" name="last_name" value="{{$user_address->lastName}}" class="form-control bg-light">
+										<label for="last_name" class="col-form-label dashboard-content">Last
+											Name</label>
+										<input type="text" id="last_name" name="last_name"
+											value="{{$user_address->lastName}}" class="form-control bg-light">
 									</div>
 									<div class="col-md-12 mt-2 pl-0 pr-0">
 										<label for="last_name" class="col-form-label dashboard-content">Email</label>
-										<input type="text" id="email_address" value="{{$user->email}}" name="email_address" class="form-control bg-light">
+										<input type="text" id="email_address" value="{{$user->email}}"
+											name="email_address" class="form-control bg-light">
 									</div>
 								</div>
 							</div>
@@ -369,57 +427,73 @@
 									<!-- <label for="inputPassword6" class="col-form-label">Password</label> -->
 								</div>
 								<div class="billing-address-heading-subtitle ms-3 pl-0">Password Change</div>
-			  					<div class="col-md-12">
-			  						<label for="first_name" class="col-form-label dashboard-content">Current password <span class="text-uppercase">(<i class="unchanged-blank">leave blank to leave unchanged</i>)</span></label>
-			  						<div class="password-container">
+								<div class="col-md-12">
+									<label for="first_name" class="col-form-label dashboard-content">Current password
+										<span class="text-uppercase">(<i class="unchanged-blank">leave blank to leave
+												unchanged</i>)</span></label>
+									<div class="password-container">
 
 
-				    					<input type="password" id="current_password" name="current_password" class="fontAwesome form-control bg-light" placeholder="">
-				    					<i class="text-dark eye fa-solid fa-eye" onclick="showHidePassword('current_password')" id="eye"></i>
-			    					</div>
-			    				</div>
-				    			<div class="text-danger" id="password-match-fail"></div>
-			    					<div class="col-md-6">
-			  							<label for="first_name" class="col-form-label dashboard-content">New Password (<i class="unchanged-blank">LEAVE BLANK TO LEAVE UNCHANGED</i>)</label>
-			  							<div class="password-container">
-			    							<input type="password" id="new_password" name="new_password" class="bg-light form-control ms-1">
-			    							<i class="text-dark eye fa-solid fa-eye" onclick="showHidePassword('new_password')" id="eye2"></i>
-			    						</div>
-			    					</div>
-			    					<div class="col-md-6">
-			  							<label for="first_name" class="col-form-label dashboard-content">Confirm New Password</label>
-			  							<div class="password-container">
-				    						<input type="password" id="new_confirm_password" name="new_confirm_password" class="bg-light form-control ms-1">
-				    						<i class="text-dark eye fa-solid fa-eye" id="eye2" onclick="showHidePassword('new_confirm_password')"></i>
-			    						</div>
-			    					</div>
-				    				<div class="text-danger" id="errors_password_comfimation"></div>
-					  				<div class="mt-5 ms-2">
-					    				<button type="button" class="btn-save btn col-md-2 text-align-middle p-0" value="Save" onclick="change_password()">SAVE CHANGES</button>
-					    			</div>
-				    			</div>
+										<input type="password" id="current_password" name="current_password"
+											class="fontAwesome form-control bg-light" placeholder="">
+										<i class="text-dark eye fa-solid fa-eye"
+											onclick="showHidePassword('current_password')" id="eye"></i>
+									</div>
+								</div>
+								<div class="text-danger" id="password-match-fail"></div>
+								<div class="col-md-6">
+									<label for="first_name" class="col-form-label dashboard-content">New Password (<i
+											class="unchanged-blank">LEAVE BLANK TO LEAVE UNCHANGED</i>)</label>
+									<div class="password-container">
+										<input type="password" id="new_password" name="new_password"
+											class="bg-light form-control ms-1">
+										<i class="text-dark eye fa-solid fa-eye"
+											onclick="showHidePassword('new_password')" id="eye2"></i>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<label for="first_name" class="col-form-label dashboard-content">Confirm New
+										Password</label>
+									<div class="password-container">
+										<input type="password" id="new_confirm_password" name="new_confirm_password"
+											class="bg-light form-control ms-1">
+										<i class="text-dark eye fa-solid fa-eye" id="eye2"
+											onclick="showHidePassword('new_confirm_password')"></i>
+									</div>
+								</div>
+								<div class="text-danger" id="errors_password_comfimation"></div>
+								<div class="mt-5 ms-2">
+									<button type="button" class="btn-save btn col-md-2 text-align-middle p-0"
+										value="Save" onclick="change_password()">SAVE CHANGES</button>
+								</div>
 							</div>
 						</div>
 					</div>
-					<div class="row ms-2 mb-5 d-none" id="address_row">
+				</div>
+				<div class="row ms-2 mb-5 d-none" id="address_row">
 					<div class="col-md-3">
 					</div>
 					<div class="col-md-9 pl-1">
 						<div class="row mt-3 " style="margin:auto;">
 							<div class="col bg-white mr-3" style="border-radius: 10px !important;">
-  								<div class="mt-4 mb-4"><img src="theme/img/user_address.png"><span class="billing-address-heading-subtitle pt-2 ms-2 align-middle address-weight">Order Details</span>
-  								</div>
-  								<div class="border-bottom"></div>
-  								<div id="address_table" class="mt-3 mb-4"></div>
+								<div class="mt-4 mb-4"><img src="theme/img/user_address.png"><span
+										class="billing-address-heading-subtitle pt-2 ms-2 align-middle address-weight">Order
+										Details</span>
+								</div>
+								<div class="border-bottom"></div>
+								<div id="address_table" class="mt-3 mb-4"></div>
 							</div>
-							<div class="col pl-1 bg-white" style="border-radius: 10px; border: 1px solid #008AD0!important;">
-  								<div class="mt-4 mb-4 ms-3"><img src="theme/img/shipping_address2.png"><span class="billing-address-heading-subtitle pt-2 ms-2 align-middle address-weight">Order Details</span>
-  								</div>
-  								<div class="border-bottom ms-3"></div>
-  								<div class="ms-3">
-  									<div id="shipping_table" class="mt-3 mb-4"></div>
-  								</div>
-  							</div>
+							<div class="col pl-1 bg-white"
+								style="border-radius: 10px; border: 1px solid #008AD0!important;">
+								<div class="mt-4 mb-4 ms-3"><img src="theme/img/shipping_address2.png"><span
+										class="billing-address-heading-subtitle pt-2 ms-2 align-middle address-weight">Order
+										Details</span>
+								</div>
+								<div class="border-bottom ms-3"></div>
+								<div class="ms-3">
+									<div id="shipping_table" class="mt-3 mb-4"></div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -429,8 +503,8 @@
 </div>
 
 
-		<script>
-			function replaceEye(val) {
+<script>
+	function replaceEye(val) {
         		$('#eye_icon_'+val).attr("src", "theme/img/white_eye.png").css('width' , '20px');
 			}
 			function replaceEye2(val) {
@@ -802,10 +876,10 @@
            			}
       			});
     		}
-		</script>
-		<!-- Remove the container if you want to extend the Footer to full width. -->
-		
-		@include('partials.product-footer')
-		
+</script>
+<!-- Remove the container if you want to extend the Footer to full width. -->
+
+@include('partials.product-footer')
+
 <!-- End of .container -->
 @include('partials.footer')

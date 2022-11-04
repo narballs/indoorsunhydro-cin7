@@ -1,140 +1,153 @@
 @include('partials.header')
 @include('partials.top-bar')
 @include('partials.search-bar')
-@include('partials.nav')
-<?php //dd($productOption);?>
 <div class="container">
     @if(session('success'))
-        <div class="alert alert-success">
-          {{ session('success') }}
-        </div> 
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
     @endif
-   
+
     @yield('content')
 </div>
 <div class="row bg-light">
 
-<div class="container mt-5 mb-5">
-    
-    <div class="row d-flex justify-content-center">
+    <div class="container mt-5 mb-5">
 
-        <div class="col-md-12">
-            <div class="card">
-                <div class="row ms-0">
-                    <div class="col-md-5">
-                        <div class="images">
-                            @if($productOption->image)
-                                <div class="text-center mt-5"> 
-                                    <img id="main-image" src="{{$productOption->image}}" class="img-fluid"/> 
+        <div class="row d-flex justify-content-center">
+
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="row ms-0">
+                        <div class="col-md-5">
+                            <div class="images">
+                                @if($productOption->image)
+                                <div class="text-center mt-5">
+                                    <img id="main-image" src="{{$productOption->image}}" class="img-fluid" />
                                 </div>
-                            @else
-                                <div class="text-center mt-5"> 
-                                    <img id="main-image" src="/theme/img/image_not_available.png" class="img-fluid w-75 h-75"/> 
+                                @else
+                                <div class="text-center mt-5">
+                                    <img id="main-image" src="/theme/img/image_not_available.png"
+                                        class="img-fluid w-75 h-75" />
                                 </div>
-                            @endif
+                                @endif
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-7 product-detail-content">
-                        <div class="product pr-1 pt-4 product-detail-content1">
-                            <div class="d-flex row">
+                        <div class="col-md-7 product-detail-content">
+                            <div class="product pr-1 pt-4 product-detail-content1">
+                                <div class="d-flex row">
                                     <?php $retail_prices = $productOption->retailPrice;?>
-                                <div class="product-detail-heading col-md-8" id="product_name">{{$productOption->products->name}}</span>
-                                </div>
-                             
-                                <div class="col-md-4 d-flex justify-content-end">
-                                    <span class="text-danger product-detail-price">      ${{number_format($retail_prices,2)}}</span>
-                                </div>
-                            </div>
-                             
-                            
-                            <div class="mt-4 mb-3"> <span class="text-uppercase text-muted brand"></span>
-                                
-                                <div class="price d-flex flex-row align-items-center"> 
-                                    <?php //dd($productOption->stockAvailable);?>
-                                	@if ($productOption->stockAvailable > 0)
-                                	<span class="rounded-pill product-detail-quantity d-flex justify-content-center align-items-center"><span class="">{{$productOption->stockAvailable}}</span></span>
-                                    	<div> 
-                                    		<small class="dis-price">&nbsp;</small> <span class="instock-label">IN STOCK</span> 
-                                    	</div>
-                                    @else 
-                                    		<div> 
-                                    			<small class="dis-price">&nbsp;</small><span class="text-danger">OUT OF STOCK</span> 
-                                    		</div>
-                                    @endif
-                                </div>
-                            </div>
-                            <form id="cart">
-                                @csrf
-                            <div class="cart row mt-4 align-items-center">
-                                <div class="col-md-3">
-                                    <div class="quantity" style="width:144px">
-                                        <input type="number" name="quantity" id="quantity" min="1" max="{{$productOption->stockAvailable}}" step="1" value="1">
-                                        <input type="hidden" name="p_id" id="p_id" value="{{$productOption->products->id}}">
-                                         <input type="hidden" name="p_id" id="option_id" value="{{$productOption->option_id}}">
-                                        <div class="quantity-nav">
-                                            <div class="quantity-div quantity-up"></div>
-                                            <div class="quantity-div quantity-down"></div>
-                                        </div>
+                                    <div class="product-detail-heading col-md-8" id="product_name">
+                                        {{$productOption->products->name}}</span>
+                                    </div>
+
+                                    <div class="col-md-4 d-flex justify-content-end">
+                                        <span class="text-danger product-detail-price">
+                                            ${{number_format($retail_prices,2)}}</span>
                                     </div>
                                 </div>
-                                <div class="col-md-9 d-flex justify-content-end" style="">
-                                    @if($productOption->stockAvailable > 0)
-                                        <button class=" button-cards product-detail-button-cards text-uppercase" style="" type="button" id="ajaxSubmit"><a class="text-white">Add to cart</a></button>  
-                                    @else
-                                         <button class="button-cards product-detail-button-cards opacity-50 text-uppercase"  type="submit"><a class="text-white">Add to cart</a></button> 
-                                    @endif
+
+
+                                <div class="mt-4 mb-3"> <span class="text-uppercase text-muted brand"></span>
+
+                                    <div class="price d-flex flex-row align-items-center">
+                                        <?php //dd($productOption->stockAvailable);?>
+                                        @if ($productOption->stockAvailable > 0)
+                                        <span
+                                            class="rounded-pill product-detail-quantity d-flex justify-content-center align-items-center"><span
+                                                class="">{{$productOption->stockAvailable}}</span></span>
+                                        <div>
+                                            <small class="dis-price">&nbsp;</small> <span class="instock-label">IN
+                                                STOCK</span>
+                                        </div>
+                                        @else
+                                        <div>
+                                            <small class="dis-price">&nbsp;</small><span class="text-danger">OUT OF
+                                                STOCK</span>
+                                        </div>
+                                        @endif
+                                    </div>
                                 </div>
-                            </div>
-                            <span class="text-uppercase text-muted brand"></span>
-
-                            </form>
-
-                            <div>
-                                <div class="price"> 
-                                    <div class="row p-3">
-                                        <div class="col-md-10 pl-0 ms-0 pr-0"> 
-                                        	<span class="category-title-heading">Category</span> : 
-                                            @if($pname)
-                                                <span class="category-title">{{$pname}}</span>
+                                <form id="cart">
+                                    @csrf
+                                    <div class="cart row mt-4 align-items-center">
+                                        <div class="col-md-3">
+                                            <div class="quantity" style="width:144px">
+                                                <input type="number" name="quantity" id="quantity" min="1"
+                                                    max="{{$productOption->stockAvailable}}" step="1" value="1">
+                                                <input type="hidden" name="p_id" id="p_id"
+                                                    value="{{$productOption->products->id}}">
+                                                <input type="hidden" name="p_id" id="option_id"
+                                                    value="{{$productOption->option_id}}">
+                                                <div class="quantity-nav">
+                                                    <div class="quantity-div quantity-up"></div>
+                                                    <div class="quantity-div quantity-down"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-9 d-flex justify-content-end" style="">
+                                            @if($productOption->stockAvailable > 0)
+                                            <button class=" button-cards product-detail-button-cards text-uppercase"
+                                                style="" type="button" id="ajaxSubmit"><a class="text-white">Add to
+                                                    cart</a></button>
+                                            @else
+                                            <button
+                                                class="button-cards product-detail-button-cards opacity-50 text-uppercase"
+                                                type="submit"><a class="text-white">Add to cart</a></button>
                                             @endif
                                         </div>
-                                       
-                                        <div class="col-md-2 d-flex justify-content-end pr-0">
-                                        	<span class="category-title-heading">SKU</span> : <span class="category-title">{{$productOption->code}}</span>
+                                    </div>
+                                    <span class="text-uppercase text-muted brand"></span>
+
+                                </form>
+
+                                <div>
+                                    <div class="price">
+                                        <div class="row p-3">
+                                            <div class="col-md-10 pl-0 ms-0 pr-0">
+                                                <span class="category-title-heading">Category</span> :
+                                                @if($pname)
+                                                <span class="category-title">{{$pname}}</span>
+                                                @endif
+                                            </div>
+
+                                            <div class="col-md-2 d-flex justify-content-end pr-0">
+                                                <span class="category-title-heading">SKU</span> : <span
+                                                    class="category-title">{{$productOption->code}}</span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            
-                            <div class="product-detail-content-dec">
-                                <div class="category-title mt-3"><strong>Description</strong></div>
-                                <p class="about mt-3">
-                                    <?php
+
+                                    <div class="product-detail-content-dec">
+                                        <div class="category-title mt-3"><strong>Description</strong></div>
+                                        <p class="about mt-3">
+                                            <?php
 $desctiption = strip_tags($productOption->products->description, "<h2>");
 ?>
-                                    {!!$desctiption!!}
-                                </p>
-                            </div>
-                      <!--       <div class="sizes mt-5">
+                                            {!!$desctiption!!}
+                                        </p>
+                                    </div>
+                                    <!--       <div class="sizes mt-5">
                                 <h6 class="text-uppercase">Size</h6> <label class="radio"> <input type="radio" name="size" value="S" checked> <span>S</span> </label> <label class="radio"> <input type="radio" name="size" value="M"> <span>M</span> </label> <label class="radio"> <input type="radio" name="size" value="L"> <span>L</span> </label> <label class="radio"> <input type="radio" name="size" value="XL"> <span>XL</span> </label> <label class="radio"> <input type="radio" name="size" value="XXL"> <span>XXL</span> </label>
                             </div> -->
-                            
+
+                                </div>
+                            </div>
                         </div>
-                    </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-@include('partials.product-footer')
-@include('partials.footer')
-<!-- <script type="text/javascript" charset="utf-8">
+    @include('partials.product-footer')
+    @include('partials.footer')
+    <!-- <script type="text/javascript" charset="utf-8">
     <script src="http://code.jquery.com/jquery-3.3.1.min.js"
       integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
       crossorigin="anonymous">
 </script> -->
-<script>
-         jQuery(document).ready(function(){
+    <script>
+        jQuery(document).ready(function(){
             jQuery('#ajaxSubmit').click(function(e){
                e.preventDefault();
                $.ajaxSetup({
@@ -224,4 +237,4 @@ $desctiption = strip_tags($productOption->products->description, "<h2>");
 
               });
             });
-</script>
+    </script>

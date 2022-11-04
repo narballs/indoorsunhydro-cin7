@@ -4,10 +4,7 @@
     <main>
         @include('partials.top-bar')
         @include('partials.search-bar')
-
-        @include('partials.nav')
         @include('partials.banner')
-
         <div class="bg-light pb-5">
             <div class="container-sm bg-light">
                 <div class="row">
