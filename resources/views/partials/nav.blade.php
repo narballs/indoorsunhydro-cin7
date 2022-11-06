@@ -43,7 +43,7 @@
 											@else
 											<ul class="dd-horizontal" style="width:200px">
 												@endif
-												<div class="row">
+												<div class="row border-start">
 
 													@foreach($category->children as $key=>$cat)
 													<?php //echo $cat->count();?>
