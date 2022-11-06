@@ -15,7 +15,7 @@ class ProductController extends Controller
     public function showProductByCategory(Request $request, $category_id) {
         $selected_category_id = $request->get('selected_category_id');
         if (!empty($selected_category_id)) {
-            
+
         }
 
         $parent_category = Category::find($category_id);
@@ -46,9 +46,6 @@ class ProductController extends Controller
             $per_page = 10;
         }
         $price_creteria = $request->get('search_price');
-        // dd($price_creteria);
- 
-
         if (!empty($category_ids)) {
             $products_query = Product::where('status', '!=' ,'Inactive')
                 ->whereIn('category_id', $category_ids)
@@ -90,15 +87,7 @@ class ProductController extends Controller
             }
 
             if (!empty($selected_category_id)) {
-                //echo $selected_category_id; exit;
-                //dd($selected_category_id);
-
-                //$sub_category_ids = Category::where('parent_id', $selected_category_id)->pluck('id');
                 $sub_category_ids = Category::where('parent_id', $selected_category_id)->pluck('id')->toArray();
-
-                //echo '<pre>'; var_export($sub_category_ids); exit;
-
-                //$products_query->whereIn('category_id', $sub_category_ids);
             }
            // echo '<pre>'; var_dump($products_query);'<pre>';exit;
              //dd($selected_category_id);
@@ -124,53 +113,84 @@ class ProductController extends Controller
     }
 
     public function showAllProducts(Request $request) {
-
-   $selected_category_id = $request->get('selected_category_id');
-        if (!empty($selected_category_id)) {
-            //$category_id = $selected_category_id;
-        }
-
-        $category_id = $request->get('selected_category');
-        //echo $category_id;exit;
-        
-
-
-        $categories = Category::where('parent_id',0)->get();
-     
-
-        //git switch branch
-        $category_ids = Category::where('parent_id', $category_id)->pluck('id')->toArray();
-        array_push($category_ids, $category_id);
-
-        $products = [];
-
-        $all_product_ids = Product::whereIn('category_id', $category_ids)->pluck('id')->toArray();
-        $brand_ids = Product::whereIn('id', $all_product_ids)->pluck('brand_id')->toArray();
-
-        //echo '<pre>'; var_export($category_ids);
-        //echo '<pre>'; var_export($brand_ids); exit;
-
-        $brand_id = $request->get('brand_id');
-        
-
-        $stock = $request->get('stock');
-        
-
-        $stock = $request->get('stock');
-
         if ($request->get('per_page')) {
             $per_page = $request->get('per_page');
         }
         else {
             $per_page = 10;
         }
+        $selected_category_id = $request->get('selected_category');
+        if(empty($selected_category_id)) {
+            $products_query  = Product::with('options','brand');
+        }
+        $category_id = $selected_category_id;
+        $brand_ids = Product::where('category_id', $selected_category_id)->pluck('brand_id', 'brand_id')->toArray();
+        if (empty($brand_ids)) {
+            $sub_category_ids = Category::where('parent_id', $selected_category_id)->pluck('id', 'id')->toArray();
+            $brand_ids = Product::whereIn('category_id', $sub_category_ids)->pluck('brand_id', 'brand_id')->toArray();
+            $products_query = Product::whereIn('category_id', $sub_category_ids);
+        }
+        else {
+            $products_query = Product::where('category_id', $selected_category_id)->with('brand', 'options');
+        }
+        $brand_id = $request->get('brand_id');
+        if (!empty($brand_id)) {
+            $products_query->where('brand_id', $brand_id);
+            }
         $price_creteria = $request->get('search_price');
-        //dd($price_creteria);
- 
-
+        if (!empty($price_creteria)) {
+            if ($price_creteria == 'brand-a-to-z') {
+                $products_query->orderBy('name', 'ASC');
+            }
+            if ($price_creteria == 'brand-z-to-a') {
+                $products_query->orderBy('name', 'DESC');
+            }
+        }
+        if (!empty($price_creteria)) {
+            if ($price_creteria == 'best-selling') {
+                $products_query->orderBy('views', 'DESC');
+            }
+        }
+        if (!empty($price_creteria)) {
+            if ($price_creteria == 'price-low-to-high') {
+                $products_query->orderBy('retail_price', 'ASC');
+            }
+            if ($price_creteria == 'price-high-to-low') {
+                $products_query->orderBy('retail_price', 'DESC');
+            }
+        }
+        $stock = $request->get('stock');
+        if(empty($stock)) {
+            $products_query->where('stockAvailable','>',0); 
+        }
+        if (!empty($stock && $stock == 'in-stock')) {
+            $products_query->where('stockAvailable','>',0);
+        }
+        if (!empty($stock && $stock == 'out-of-stock')) {
+            $products_query->where('stockAvailable','<',1);
+        }
+        if(empty($request->get('selected_category'))) {
+            $products = Product::with('options', 'brand')->paginate($per_page);
+        }
+        else{
+            $products = $products_query->with('options', 'brand')->paginate($per_page);
+        }
+        $brands = [];
+        if (!empty($brand_ids)) {
+            $brands = Brand::whereIn('id', $brand_ids)->pluck('name', 'id')->toArray();
+        }
+        $categories = Category::where('parent_id',0)->get();
+        $category_ids = Category::where('parent_id', $category_id)->pluck('id')->toArray();
+        array_push($category_ids, $category_id);
+        $all_product_ids = Product::whereIn('category_id', $category_ids)->pluck('id')->toArray();
+        $brand_ids = Product::whereIn('id', $all_product_ids)->pluck('brand_id')->toArray();
+        $brand_id = $request->get('brand_id');
+        $stock = $request->get('stock');
+        $stock = $request->get('stock');
+        $price_creteria = $request->get('search_price');
         if (!empty($category_ids)) {
             $products_query = Product::where('status', '!=' ,'Inactive')
-                ->whereIn('category_id', $category_ids)
+                ->where('category_id', $category_id)
                 ->with('options', 'brand');    
 
             if (!empty($brand_id)) {
@@ -209,18 +229,8 @@ class ProductController extends Controller
             }
 
             if (!empty($selected_category_id)) {
-                //echo $selected_category_id; exit;
-                //dd($selected_category_id);
-
-                //$sub_category_ids = Category::where('parent_id', $selected_category_id)->pluck('id');
                 $sub_category_ids = Category::where('parent_id', $selected_category_id)->pluck('id')->toArray();
-
-                //echo '<pre>'; var_export($sub_category_ids); exit;
-
-                //$products_query->whereIn('category_id', $sub_category_ids);
             }
-           // echo '<pre>'; var_dump($products_query);'<pre>';exit;
-             //dd($selected_category_id);
                if ($category_id = '') {
                     $parent_category = Category::find($category_id);
                     $parent_category_slug = $parent_category->slug;
@@ -229,25 +239,25 @@ class ProductController extends Controller
             else {
                 $parent_category_slug  ='';
             }
-
-
         }
-        $products_query = Product::with('options', 'brand');
-            $products = $products_query->with('options', 'brand')->paginate($per_page);
+        //$products_query = Product::with('options', 'brand');
+            //$products = $products_query->with('options', 'brand')->paginate($per_page);
             //dd($products);
-        $brands = Brand::pluck('name', 'id')->toArray();
-        // dd($brands);
+        //$brands = Brand::pluck('name', 'id')->toArray();
+
+        $category_id = $selected_category_id;
+     
         return view('all_products', compact(
             'products', 
-            'brands', 
+            'brands',
+            'price_creteria',
+            'categories',
+            'per_page',
+            'stock',
             'category_id', 
             'parent_category_slug',
             'brand_id',
-            'per_page',
-            'price_creteria',
-            'categories',
-            'stock',
-            'selected_category_id'
+            'per_page'
             )
         );
     }
@@ -261,10 +271,23 @@ class ProductController extends Controller
         }
         //dd($product);
         $productOption = ProductOption::where('option_id', $option_id)->with('products.categories')->first();
-        $category = Category::where('category_id', $productOption->products->categories->category_id)->first();
-        $parent_category = Category::where('category_id', $category->parent_id)->first();
-        if ($parent_category) {
-            $pname =  $parent_category->name;
+        // if ($productOption->products->categories != '') {
+        //     echo 'yes';
+        // }
+        // else {
+        //     echo 'no';
+        // }
+        // exit;
+        if ($productOption->products->categories != '') {
+            $category = Category::where('category_id', $productOption->products->categories->category_id)->first();
+            $parent_category = Category::where('category_id', $category->parent_id)->first();
+            $pname = '';  
+            if ($parent_category) {
+                $pname =  $parent_category->name;
+            }
+            else {
+                $pname = '';
+            }
         }
         else {
             $pname = '';

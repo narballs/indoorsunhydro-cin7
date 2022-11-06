@@ -55,7 +55,7 @@
             <div class="col">
                <label>Brand</label>
                <select class="form-select" id="brand" name="brands[]" onchange="handleSelectChange('brand')">
-                  <option value="0">Select Brand</option>
+                  <option>Select Brand</option>
                   @foreach($brands as $_brand_id => $brand_name)
                   <option value="{{ $_brand_id }}" {{ isset($brand_id) && $brand_id==$_brand_id ? 'selected="selected"'
                      : '' }}>{{ $brand_name }}</option>
@@ -173,9 +173,6 @@
          }
 
          function handleSelectChange(searchedOption = '') {
-
-
-
             var category_id = jQuery('#categories').val();
             var selected_cat_id = jQuery('#selected_cat').val();
             var price = jQuery('#search_price').val();

@@ -6,7 +6,7 @@
       PRODUCTS
    </p>
 </div>
-<?php //dd($products);?>
+<?php //dd($category_id);?>
 <div class="container">
    <form id="form-filter">
       <div class="col-md-12">
@@ -16,7 +16,8 @@
                <label>Sort by</label>
                <select class="form-select" id="search_price" onchange="handleSelectChange()">
                   <option value="0">Select Option</option>
-                  <option class="form-group" value="price">Best Selling</option>
+                  <option class="form-group" value="best-selling" {{ $price_creteria }} {{ isset($price_creteria)
+                     && $price_creteria=='best-selling' ? 'selected="selected"' : '' }}>Best Selling</option>
                   <option class="form-group" value="price-low-to-high" {{ $price_creteria }} {{ isset($price_creteria)
                      && $price_creteria=='price-low-to-high' ? 'selected="selected"' : '' }}>Price Low to High</option>
                   <option class="form-group" value="price-high-to-low" {{ $price_creteria }} {{ isset($price_creteria)
@@ -33,14 +34,8 @@
                <select class="form-select" id="selected_cat" name="selected_cat" onchange="handleSelectChange('category')">
                   <option value="0">Select Category</option>
                   @foreach($categories as $category)
-
-                        <option value="{{$category->id}}" {{ isset($category_id) && $category_id == $category->id ? 'selected="selected"' : '' }}>{{ $category->name }}</option>
-                        <!-- <option value="{{$category->id}}/{{$category->slug}}" {{ isset($selected_category_id) && $selected_category_id == $selected_category_id ? 'selected="selected"' : '' }}>{{ $category->name }}</option> -->
+                     <option value="{{$category->id}}" {{ isset($category_id) && $category_id == $category->id ? 'selected="selected"' : '' }}>{{ $category->name }}</option>
                   @endforeach
-
-                  <!-- @foreach($products as $key=>$product)
-                        <option value="{{$product->brand_id}}" >{{$product->brand}}</option>
-                  @endforeach -->
                </select>
             </div>
              <div class="col"> 
@@ -51,10 +46,6 @@
                   <option value="{{ $_brand_id }}" {{ isset($brand_id) && $brand_id==$_brand_id ? 'selected="selected"'
                      : '' }}>{{ $brand_name }}</option>
                   @endforeach
-
-                  <!-- @foreach($products as $key=>$product)
-                        <option value="{{$product->brand_id}}" >{{$product->brand}}</option>
-                  @endforeach -->
                </select>
             </div>
             <div class="col">
@@ -96,7 +87,6 @@
       @endforeach
       @endforeach
    </div>
-   <!--    {{$products->links('pagination::bootstrap-4')}} -->
    {{$products->appends(Request::all())->links()}}
 </div>
 <div class="py-5 bg-light">
@@ -122,8 +112,8 @@
 </script>
 
 <script>
-   function showdetails(id, option_id) {
-				window.location.href = '/product-detail/'+ id +'/'+option_id;
+   function showdetails(id, option_id, slug) {
+				window.location.href = '/product-detail/'+ id +'/'+option_id+'/'+slug;
 
 			}
 
@@ -150,35 +140,29 @@
 
          function handleSelectChange() {
             var selected_category = jQuery('#selected_cat').val();
-            // alert(selected_category);
-
-            // var price = jQuery('#search_price').val();
-            // var brand = jQuery('#brand').val();
-            // var per_page = jQuery('#per_page').val();
-            // var stock = jQuery('#in-stock').val();
-            // var search_price = jQuery('#search_price').val();
-            // var category_id = jQuery('#category_id').val();
-            // var parent_category_slug = jQuery('#parent_category_slug').val();
-
-            var basic_url = '/products/?'+selected_category;
-            // alert(basic_url);
+            var brand = jQuery('#brand').val();
+            var per_page = jQuery('#per_page').val();
+            var stock = jQuery('#in-stock').val();
+            var search_price = jQuery('#search_price').val();
+            var category_id = jQuery('#category_id').val();
+ 
             if (selected_category != '') {
                basic_url = `?selected_category=${selected_category}`;
             }
+            if (brand != '') {
+               basic_url = basic_url+`&brand_id=${brand}`;
+            }
             // alert(basic_url);
-            // if (per_page != '') {
-            //    basic_url = basic_url+`&per_page=${per_page}`;
-            // }
-            // if (search_price != '') {
-            //    basic_url = basic_url+`&search_price=${search_price}`;
-            // }
-            // if (stock != '') {
-            //    basic_url = basic_url+`&stock=${stock}`;
-            // }
-
-
+            if (per_page != '') {
+               basic_url = basic_url+`&per_page=${per_page}`;
+            }
+            if (search_price != '') {
+               basic_url = basic_url+`&search_price=${search_price}`;
+            }
+            if (stock != '') {
+               basic_url = basic_url+`&stock=${stock}`;
+            }
             window.location.href = basic_url
-
          }
 
 			function updateCart(id, option_id) {
