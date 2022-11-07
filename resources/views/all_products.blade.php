@@ -65,10 +65,12 @@
                   <?php if(empty($stock) || $stock == 'in-stock') {
                      $text = 'In stock';
                      $danger = '';
+                     $stock = 'in-stock';
                   }
                   else {
                      $text = 'Out of Stock';
                      $danger = 'bg-danger';
+                     $stock = 'out-of-stock';
                   }   
                   ?>
                   <button class="{{ $stock ? $stock : 'in-stock'  }} {{$danger}} in-stock" type="button" id="in-stock"
@@ -118,7 +120,7 @@
 			}
 
          function inStockOutstock() {
-            var value = jQuery('#in-stock').val();
+             var value = jQuery('#in-stock').val();
             if (value == 'in-stock') {
                jQuery('#in-stock').addClass('bg-danger');
                jQuery('#in-stock').addClass('out-of-stock');
@@ -130,8 +132,9 @@
                jQuery('#in-stock').removeClass('bg-danger');
                jQuery('#in-stock').removeClass('out-of-stock');
                jQuery('#in-stock').addClass('in-stock');
-               $("#in-stock").html("In Stock");
                $("#in-stock").prop("value", "in-stock");
+               $("#in-stock").html("In Stock");
+               
             }
 
              
