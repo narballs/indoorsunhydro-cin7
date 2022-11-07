@@ -31,12 +31,7 @@ class ProductController extends Controller
         $all_product_ids = Product::whereIn('category_id', $category_ids)->pluck('id')->toArray();
         $brand_ids = Product::whereIn('id', $all_product_ids)->pluck('brand_id')->toArray();
 
-        //echo '<pre>'; var_export($category_ids);
-        //echo '<pre>'; var_export($brand_ids); exit;
-
         $brand_id = $request->get('brand_id');
-        
-
         $stock = $request->get('stock');
 
         if ($request->get('per_page')) {
@@ -89,8 +84,6 @@ class ProductController extends Controller
             if (!empty($selected_category_id)) {
                 $sub_category_ids = Category::where('parent_id', $selected_category_id)->pluck('id')->toArray();
             }
-           // echo '<pre>'; var_dump($products_query);'<pre>';exit;
-             //dd($selected_category_id);
             $products = $products_query->with('options', 'brand')->paginate($per_page);
 
         }
@@ -119,24 +112,27 @@ class ProductController extends Controller
         else {
             $per_page = 10;
         }
+
+        $search_queries = $request->all();
+
+        $products_query  = Product::with('options','brand');
+       
         $selected_category_id = $request->get('selected_category');
-        if(empty($selected_category_id)) {
-            $products_query  = Product::with('options','brand');
-        }
+        
         $category_id = $selected_category_id;
         $brand_ids = Product::where('category_id', $selected_category_id)->pluck('brand_id', 'brand_id')->toArray();
-        if (empty($brand_ids)) {
+        if (empty($brand_ids) && !empty($search_queries)) {
             $sub_category_ids = Category::where('parent_id', $selected_category_id)->pluck('id', 'id')->toArray();
             $brand_ids = Product::whereIn('category_id', $sub_category_ids)->pluck('brand_id', 'brand_id')->toArray();
             $products_query = Product::whereIn('category_id', $sub_category_ids);
         }
-        else {
+        elseif (!empty($selected_category_id)) {
             $products_query = Product::where('category_id', $selected_category_id)->with('brand', 'options');
         }
         $brand_id = $request->get('brand_id');
         if (!empty($brand_id)) {
             $products_query->where('brand_id', $brand_id);
-            }
+        }
         $price_creteria = $request->get('search_price');
         if (!empty($price_creteria)) {
             if ($price_creteria == 'brand-a-to-z') {
@@ -160,17 +156,20 @@ class ProductController extends Controller
             }
         }
         $stock = $request->get('stock');
-        if(empty($stock)) {
+     
+        if (empty($stock)) {
             $products_query->where('stockAvailable','>',0); 
         }
+
         if (!empty($stock && $stock == 'in-stock')) {
             $products_query->where('stockAvailable','>',0);
         }
         if (!empty($stock && $stock == 'out-of-stock')) {
             $products_query->where('stockAvailable','<',1);
         }
-        if(empty($request->get('selected_category'))) {
-            $products = Product::with('options', 'brand')->paginate($per_page);
+
+        if (empty($search_queries)) {
+            $products = $products_query->paginate($per_page);
         }
         else{
             $products = $products_query->with('options', 'brand')->paginate($per_page);
@@ -179,6 +178,9 @@ class ProductController extends Controller
         if (!empty($brand_ids)) {
             $brands = Brand::whereIn('id', $brand_ids)->pluck('name', 'id')->toArray();
         }
+        elseif (empty($search_queries)) {
+            $brands = Brand::orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+        }
         $categories = Category::where('parent_id',0)->get();
         $category_ids = Category::where('parent_id', $category_id)->pluck('id')->toArray();
         array_push($category_ids, $category_id);
@@ -186,8 +188,8 @@ class ProductController extends Controller
         $brand_ids = Product::whereIn('id', $all_product_ids)->pluck('brand_id')->toArray();
         $brand_id = $request->get('brand_id');
         $stock = $request->get('stock');
-        $stock = $request->get('stock');
         $price_creteria = $request->get('search_price');
+        
         if (!empty($category_ids)) {
             $products_query = Product::where('status', '!=' ,'Inactive')
                 ->where('category_id', $category_id)
@@ -218,24 +220,26 @@ class ProductController extends Controller
                     $products_query->orderBy('retail_price', 'DESC');
                 }
             }
-            if(empty($stock)) {
-               $products_query->where('stockAvailable','>',0); 
+
+            if (empty($stock)) {
+               $products_query->where('stockAvailable','>', 0);
             }
             if (!empty($stock && $stock == 'in-stock')) {
-                $products_query->where('stockAvailable','>',0);
+                $products_query->where('stockAvailable', '>', 0);
             }
             if (!empty($stock && $stock == 'out-of-stock')) {
-                $products_query->where('stockAvailable','<',1);
+                $products_query->where('stockAvailable', '<', 1);
             }
 
             if (!empty($selected_category_id)) {
                 $sub_category_ids = Category::where('parent_id', $selected_category_id)->pluck('id')->toArray();
             }
-               if ($category_id = '') {
-                    $parent_category = Category::find($category_id);
-                    $parent_category_slug = $parent_category->slug;
-                    $products_query = $products_query->where('category_id', $category_id);
-                }
+
+           if ($category_id = '') {
+                $parent_category = Category::find($category_id);
+                $parent_category_slug = $parent_category->slug;
+                $products_query = $products_query->where('category_id', $category_id);
+            }
             else {
                 $parent_category_slug  ='';
             }
@@ -269,15 +273,7 @@ class ProductController extends Controller
             $product->views = $views+1;
             $product->save();
         }
-        //dd($product);
         $productOption = ProductOption::where('option_id', $option_id)->with('products.categories')->first();
-        // if ($productOption->products->categories != '') {
-        //     echo 'yes';
-        // }
-        // else {
-        //     echo 'no';
-        // }
-        // exit;
         if ($productOption->products->categories != '') {
             $category = Category::where('category_id', $productOption->products->categories->category_id)->first();
             $parent_category = Category::where('category_id', $category->parent_id)->first();
