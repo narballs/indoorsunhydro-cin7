@@ -34,11 +34,11 @@
 									<?php $count = count($category->children);?>
 									<ul class="dropdown-menu-dark  mt-0 pr-4 pl-4 dropdown-submenu">
 										@if($count > 10 )
-										<ul class="dd-horizontal" style="width:800px">
+										<ul class="dd-horizontal p-0 border" style="width:800px">
 											@else
 											<ul class="dd-horizontal" style="width:200px">
 												@endif
-												<div class="row border-start">
+												<div class="row p-4">
 
 													@foreach($category->children as $key=>$cat)
 													<?php //echo $cat->count();?>
