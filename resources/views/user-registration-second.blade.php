@@ -7,7 +7,6 @@
 	<strong>{{ $message }}</strong>
 </div>
 @endif
-
 <div class="row">
 	<!-- <meta name="csrf-token" content="{{ csrf_token() }}"> -->
 	<div class="col-md-12 bg-light text-center d-none">
@@ -307,7 +306,7 @@
 
 	</div>
 </div>
-</div>
+
 <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
 
 <script type="text/javascript">
