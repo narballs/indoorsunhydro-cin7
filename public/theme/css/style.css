@@ -134,25 +134,22 @@ a {
     top: 50%;
     transform: translateY(-40%);
     text-align: center;
-    width: 65%;
-    right: 0;
-    left: 0;
+    width: 80%;
     margin: auto;
-    height: 400px;
+    height: 500px;
     background-color: #7BC533;
 }
 
 .white-panel {
     background-color: rgba(255, 255, 255, 1);
-    height: 600px;
     position: absolute;
-    top: -100px;
-    width: 650px;
+    top: -90px;
     right: calc(50% - 30px);
     transition: .3s ease-in-out;
     z-index: 0;
     box-shadow: 0 0 15px 9px #00000096;
-    width: 580px;
+    width: 500px;
+    height: 650px;
 }
 
 .login-reg-panel input[type="radio"] {
@@ -295,7 +292,7 @@ a {
 
 .btn-login {
     width: 100%;
-    height: 79px;
+    height: 60px;
     color: #FFFF;
     background: #7BC533;
     border: none;
@@ -1255,7 +1252,7 @@ input[type=number] {
 
 .sing-up-label {
     width: 100%;
-    height: 79px;
+    height: 69px;
     top: 788px;
     font-family: 'Poppins';
     font-style: normal;
