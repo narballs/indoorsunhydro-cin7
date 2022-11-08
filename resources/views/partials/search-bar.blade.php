@@ -1,11 +1,12 @@
 <div class="container-fluid">
     <div class="row">
-        <div class="col-xl-2 col-lg-2 col-md-12 col-sm-12 col-xs-12">
+        <div class="col-xl-1 col-lg-1 col-md-0 col-sm-0 col-xs-0 "></div>
+        <div class="col-xl-2 col-lg-2 col-md-6 col-sm-12 col-xs-12">
             <a class="navbar-brand" href="/">
-                <img class="top-img" src="/theme/img/indoor_sun.png" ;>
+                <img class="top-img img-fluid" src="/theme/img/indoor_sun.png" ;>
             </a>
         </div>
-        <div class="col-lg-7 col-xl-7 col-md-12 col-sm-12 col-xs-12 mt-2 top-header-navigation">
+        <div class="col-lg-5 col-xl-5 col-md-12 col-sm-12 col-xs-12 mt-2 top-header-navigation">
             @include('partials.nav')
         </div>
         <div class=" col-xl-3 col-lg-3 col-md-12 col-sm-12 col-xs-12">
@@ -22,7 +23,6 @@
                 </div>
             </form>
         </div>
-
-
+        <div class="col-xl-1 col-lg-1 col-md-0 col-sm-0 col-xs-0"></div>
     </div>
 </div>
