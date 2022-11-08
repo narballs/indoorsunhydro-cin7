@@ -385,6 +385,10 @@ a {
     border-radius: 5px 5px 0px 0px !important;
 }
 
+.nav-item-links {
+    border-radius: 5px 5px 0px 0px !important;
+}
+
 .navbar-light .navbar-nav {
     color: rgba(0, 0, 0, .9) !important;
     font-style: normal;
@@ -1419,6 +1423,7 @@ input[type=number] {
 
     .top-img {
         width: 100%;
+        padding-top: 11px;
     }
 
     .banner-img {
