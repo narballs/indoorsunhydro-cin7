@@ -29,7 +29,8 @@
 			<div class="row company-row">
 				<div class="col-md-6">
 
-					<h2 class="text-white company d-none  text-center" id="company" style="margin-top:150px">Please tell
+					<h2 class="text-white company d-none  justify-content-center align-items-center" id="company"
+						style="margin-top:150px">Please tell
 						us
 						some information about your company and website</h2>
 				</div>
@@ -76,11 +77,6 @@
 						<div>&nbsp;
 						</div>
 					</div>
-
-
-					<!-- <input type="submit" value="Login" class="btn-login" onclick="loadAddress()"> -->
-					<!-- </form> -->
-					<!-- <a href="">Forgot password?</a> -->
 				</div>
 
 			</div>
@@ -135,10 +131,6 @@
 						<div class="mt-3">
 							<strong class="text-dark" style="margin-left:-327px">Country : </strong>United Stated
 						</div>
-
-
-
-
 						<div>&nbsp;
 						</div>
 					</div>

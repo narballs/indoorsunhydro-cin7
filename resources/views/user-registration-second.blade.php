@@ -56,7 +56,9 @@
 				throughout
 				this website, to
 				manage access to your account, and for other purposes described in our privacy policy.</p>
-			<label id="label-login" for="log-login-show" class="sing-up-label"><span class="sign-up">SIGN UP</span>
+			<label id="label-login" for="log-login-show"
+				class="sing-up-label d-flex justify-content-center align-items-center"><span class="sign-up">SIGN
+					UP</span>
 			</label>
 			<input type="radio" name="active-log-panel" id="log-login-show">
 		</div>
@@ -96,7 +98,7 @@
 				</div>
 				<hr>
 				<div class="row">
-					<div class="col-md-6">
+					<div class=" col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
 						<p class="required-field"><span class="req">*</span> Required field</p>
 					</div>
 				</div>
@@ -104,7 +106,7 @@
 			<div class="register-show mt-5">
 				<form id="email-registration" class="mt-5 form-signup">
 					@csrf
-					<h2 class="text-center login-singup ">SIGN UP</h2>
+					<h2 class="d-flex justify-content-center align-items-center login-singup">SIGN UP</h2>
 					<div class="input-placeholder">
 						<input type="text" id="email" name="email" required>
 						<div class="placeholder fontAwesome">
@@ -126,14 +128,16 @@
 
 		</div>
 		<div class="login-info-box text-white">
-			<h2 class=" dont-have-an-account text-center">Have an account?</h2>
-			<p class=" dont-have-an-account-pra text-center" id="account">Your personal data will be used to support
+			<h2 class=" dont-have-an-account d-flex justify-content-center align-items-center">Have an account?</h2>
+			<p class=" dont-have-an-account-pra d-flex justify-content-center align-items-center" id="account">Your
+				personal data will be used to support
 				your experience
 				throughout
 				this website, to manage access to your account, and for other purposes described in our privacy
 				policy.
 			</p>
-			<label id="label-register" for="log-reg-show">Login</label>
+			<label id="label-register" for="log-reg-show"
+				class="d-flex justify-content-center align-items-center">Login</label>
 			<input type="radio" name="active-log-panel" id="log-reg-show" checked="checked">
 		</div>
 
@@ -144,7 +148,8 @@
 						Detail</h2>
 				</div>
 
-				<p class="text-center text-dark" class="signup-intro mt-2">Please tell us some information about
+				<p class="d-flex justify-content-center align-items-center text-dark" class="signup-intro mt-2">Please
+					tell us some information about
 					your
 					company and website</p>
 				<div class="form-signup-secondary">
@@ -173,18 +178,16 @@
 				</div>
 			</div>
 
-
 			<div class="col-md-12 ms-2 company-loc d-none login-form-section" id="login-form-section">
 				<div class="col-md-12 bg-light text-center">
 					<h2 style="color:#25529F; font-size:30px" class="text-center pt-5 dont-have-an-account">SIGN UP
 					</h2>
 				</div>
 				<div class="col-md-12 signup-intro p-0 ">
-					<p class="please-tell-us">Please tell us about yourself so we can get to know your better.
+					<p class="please-tell-us d-flex justify-content-center align-items-center">Please tell us about
+						yourself so we can get to know your better.
 						Your data will be used to create an
 						account so that you can make purchases through our system.</p>
-
-
 				</div>
 				<div class="form-signup-secondary">
 					<div class="user-info">
@@ -200,13 +203,10 @@
 								<div class="text-danger" id="last_name_errors"></div>
 							</div>
 							<div class="col-md-12">
-
 								<input type="password" placeholder="&#xf023;  Password" id="company_name"
 									name="password" class="form-control mt-2 company-info fontAwesome mt-3">
 								<div class="text-danger" id="password_errors"></div>
 							</div>
-
-
 							<div class="col-md-12">
 								<input type="password" placeholder="&#xf023;  Confirm Password" id="confirm_password"
 									name="confirm_password" class="form-control mt-3 company-info fontAwesome" required>
@@ -219,7 +219,9 @@
 
 				<div id="user-info-error" class="text-danger"></div>
 				<div class="col-md-12 mb-5 mt-5">
-					<button type="submit" value="" style="" class="btn-login sing-up-continue  mb-5" onclick="signup()">
+					<button type="submit" value="" style=""
+						class="btn-login sing-up-continue  mb-5 d-flex justify-content-center align-items-center"
+						onclick="signup()">
 						SING UP & CONTINUE</button>
 				</div>
 			</div>
