@@ -19,7 +19,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="row ms-0">
-                        <div class="col-md-5">
+                        <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 col-xs-12">
                             <div class="images">
                                 @if($productOption->image)
                                 <div class="text-center mt-5">
@@ -33,12 +33,14 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="col-md-7 product-detail-content">
+                        <div class="col-xl-7 col-lg-7  col-md-12 col-sm-12 col-xs-12 product-detail-content">
                             <div class="product pr-1 pt-4 product-detail-content1">
                                 <div class="d-flex row">
                                     <?php $retail_prices = $productOption->retailPrice;?>
-                                    <div class="product-detail-heading col-md-8" id="product_name">
-                                        {{$productOption->products->name}}</span>
+                                    <div class="product-detail-heading col-xl-8 col-lg-8 col-md-12 col-xs-12"
+                                        id="product_name">
+                                        <h3 class="product-detail-heading">{{$productOption->products->name}}</h3>
+
                                     </div>
 
                                     <div class="col-md-4 d-flex justify-content-end">
@@ -51,7 +53,6 @@
                                 <div class="mt-4 mb-3"> <span class="text-uppercase text-muted brand"></span>
 
                                     <div class="price d-flex flex-row align-items-center">
-                                        <?php //dd($productOption->stockAvailable);?>
                                         @if ($productOption->stockAvailable > 0)
                                         <span
                                             class="rounded-pill product-detail-quantity d-flex justify-content-center align-items-center"><span
@@ -120,7 +121,7 @@
 
                                     <div class="product-detail-content-dec">
                                         <div class="category-title mt-3"><strong>Description</strong></div>
-                                        <p class="about mt-3">
+                                        <p class="about product-details-description mt-3">
                                             <?php
 $desctiption = strip_tags($productOption->products->description, "<h2>");
 ?>
