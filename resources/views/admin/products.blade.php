@@ -12,11 +12,11 @@
 
     <div class="table-wrapper">
         <div class="table-title">
-            <span><h1>Customer</h1></span>
+            <span><h1>Products</h1></span>
             <div class="row justify-content-between mb-2">
                 <div class="col-sm-2">
                     <div class="search-box">
-                        <a href="{{'customer/create'}}"><input type="button" value="Create New Customer" class="form-control btn btn-primary" placeholder="Create New">
+                        <a href="{{'customer/create'}}"><input type="button" value="Create New Product" class="form-control btn btn-primary" placeholder="Create New">
                         </a>
                     </div>
                 </div>
