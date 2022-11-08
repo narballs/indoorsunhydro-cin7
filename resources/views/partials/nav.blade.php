@@ -31,10 +31,10 @@
 										{{$category->name}}
 									</a>
 									@endif
-									@if(isset($category->children))
 									<?php $count = count($category->children);?>
+									@if(isset($category->children) && $count > 0)
 									<ul class="dropdown-menu-dark pl-0 pr-0 border mt-0 dropdown-submenu rounded-2 text-center">
-										@if($count > 10 )
+										@if($count > 10)
 										<ul class="dd-horizontal border p-0 pr-4" style="width:800px">
 											@else
 											<ul class="dd-horizontal pl-0 pr-0" style="width:200px">
@@ -50,7 +50,8 @@
 													<div class="col-md-3 pl-0 pr-0" style="width:600px">
 														@else
 														<div class="col-md-12 pl-0 pr-0" style="width:100%">
-															@endif
+														@endif
+														@if ($count > 0)
 															<li class="dropdown-item" id="category_{{$cat->id}}"
 																href="{{ url('products/'.$category->id) }}">
 
@@ -59,6 +60,7 @@
 																	href="{{ url('products/'.$cat->id.'/'.$category->slug.'-'.$cat->slug) }}">{{$cat->name}}</a>
 
 															</li>
+															@endif
 														</div>
 
 
