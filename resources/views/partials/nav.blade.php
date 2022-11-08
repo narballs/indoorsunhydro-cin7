@@ -37,7 +37,7 @@
 										@if($count > 10)
 										<ul class="dd-horizontal border p-0 pr-4" style="width:800px">
 											@else
-											<ul class="dd-horizontal pl-0 pr-0" style="width:200px">
+											<ul class="dd-horizontal pl-0 pr-0" style="width:100%">
 												@endif
 												<div class="row pl-4 pt-0 pr-4">
 
