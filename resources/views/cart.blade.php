@@ -23,7 +23,7 @@
 				<div class="container h-100 py-5">
 					<div class="row d-flex justify-content-center align-items-center">
 						<div class="col">
-							<div class="table-responsive">
+							<div class="table-responsive" style=" font-family:'Poppins">
 								<table class="table" id="cart_table">
 									<thead>
 										<tr>
@@ -44,7 +44,7 @@
 			            							$total_quatity =  $cart['quantity'];
 													$total_price = $cart['price'] * $total_quatity;
 													$cart_total  = $cart_total + $total_price ;
-			            						?>
+			            				?>
 
 										<tr id="{{'row_'.$pk_product_id}}" class="quantities">
 											<th scope="row">
@@ -75,13 +75,29 @@
 														<i class="fas fa-plus"></i>
 													</button>
 												</div>
+												{{-- <div class="d-flex flex-row" style="width:144px">
+													<input type="number" name="quantity" id="quantity" min="1"
+														max="{{$productOption->stockAvailable}}" step="1" value="1">
+													<input type="hidden" name="p_id" id="p_id"
+														value="{{$productOption->products->id}}">
+													<input type="hidden" name="p_id" id="option_id"
+														value="{{$productOption->option_id}}">
+													<div class="quantity-nav">
+														<div class="quantity-div quantity-up"></div>
+														<div class="quantity-div quantity-down"></div>
+													</div>
+												</div> --}}
 											</td>
 											<td class="align-middle">
-												<p class="mb-0" style="font-weight: 500;"><span
-														id="subtotal_{{ $pk_product_id }}">${{$cart['price'] *
-														$cart['quantity'] }}</span></p>
-												<p class="text-center">
-													<a href="{{ url('remove/'.$pk_product_id) }}" id="remove">Remove</a>
+												<p class="mb-0 text-danger "
+													style="font-weight: 600; font-size: 20; font-family:'Poppins'">
+													<span id="subtotal_{{ $pk_product_id }}">${{$cart['price'] *
+														$cart['quantity'] }}</span>
+												</p>
+												<p class="text-center remove-item-cart">
+													<a style="color:#b5b5b5;  font-family:'Poppins"
+														href="{{ url('remove/'.$pk_product_id) }}"
+														id="remove">Remove</a>
 												</p>
 											</td>
 										</tr>
@@ -89,9 +105,19 @@
 										@endif
 									</tbody>
 								</table>
-								<div><button class="button-cards col w-25" style="float:right" type="submit"
-										class="update_cart" id="update_cart" onclick="update_cart()">Update
-										Cart</button></div>
+								<div class="row">
+									<div class="col-md-7 coupan-code">
+										<span>coupan code</span>&nbsp;&nbsp;<input type="text"
+											placeholder="Your Code"><span>&nbsp;&nbsp;<button
+												class="apply-coupan-code-button">APPLY
+												COUPAN</button></span>
+									</div>
+									<div class="col-md-5">
+										<button class="button-cards w-50" type="submit" class="update_cart"
+											style="float:right" id="update_cart" onclick="update_cart()">Update
+											Cart</button>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -110,18 +136,7 @@
 							Subtotal
 							<span id="cart_subtotal">${{$cart_total}}</span>
 						</li>
-						<!-- 	<li class="list-group-item d-flex justify-content-between align-items-center px-0" style="font-weight: 500;">
-	                	Shipping
-	                	<span></span>
-	              	</li>
-	              	<li class=" d-flex justify-content-between align-items-center px-0">
-	                	<p style="font-size: 14px">Enter your address to view shipping options</p>
-	               
-	              	</li> -->
-						<!-- 	<li class="list-group-item p-0"><input type="text" name ="email" class="w-100"></li>
-              		<li class="list-group-item p-0" style="font-size: 14px">Calculate Shipping</li>
-             		<li class="list-group-item d-flex justify-content-between align-items-center px-0" style="font-weight: 500;">
-                	Markup</li> -->
+
 						<li
 							class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3 mt-5">
 							<div>
