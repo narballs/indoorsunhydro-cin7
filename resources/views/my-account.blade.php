@@ -17,7 +17,6 @@
 					<div class="col-md-6 col-xl-6 col-xs-12 col-sm-12">
 						<div class="row bg-white">
 							<div class="col-md-2">
-								<!-- <img src="/theme/img/my-account_user.png"> -->
 							</div>
 							<div class="col-md-4 text-left mt-2">
 								<span class="d-block my-acount-profile text-capitalize">{{$user->first_name}}</span>
@@ -58,7 +57,7 @@
 											</div>
 											<div class="col-md-10">
 												<span
-													class=" ms-1 d-none d-sm-inline   fs-5 ms-3 mt-1 ml-0 pl-0 nav-items-link"
+													class=" ms-1 d-none d-sm-inline fs-5 ms-3 mt-1 ml-0 pl-0 nav-items-link"
 													onclick="dashboard()" id="dashboard">
 													Dashboard
 												</span>
@@ -71,7 +70,6 @@
 								<li class="nav-item w-100 mb-3" id="recent_orders">
 									<a href="#" class="nav-link px-0 align-middle  px-0 ms-3">
 										<i class="fs-4 bi-table"></i>
-										<!-- <span class="ms-1 d-none d-sm-inline  text-dark fs-5" onclick="showOrders()">Orders</span> -->
 										<div class="row">
 											<div class="col-md-2">
 												<span>
@@ -167,13 +165,9 @@
 
 									<form id="frm-logout" action="{{ route('logout') }}" method="POST">
 										{{ csrf_field() }}
-										<!-- <button class="" type="submit" style="width:100px;height:30px;">Logout</button> -->
+
 									</form>
-									<!-- 		<div class="col-md-1">
-										<a href="{{ route('logout') }}">
-											<button class="btn-login" type="button" style="width:100px;height:30px;">Logout</button>
-										</a>
-									</div> -->
+
 								</li>
 							</ul>
 							<div class="dropdown pb-4">
@@ -191,9 +185,7 @@
 										<span class="pt-1 my-account-content-heading">Dashboard</span>
 									</div>
 									<div class="col-md-8">
-
 									</div>
-
 								</div>
 							</div>
 							<div class="border-bottom border-4 ms-3 mr-3"></div>
@@ -206,7 +198,6 @@
 								<div class="col-md-1">
 									<form id="frm-logout" action="{{ route('logout') }}" method="POST">
 										{{ csrf_field() }}
-										<!-- 	<button class="btn-login" type="submit" style="width:100px;height:30px;">Logout</button> -->
 									</form>
 								</div>
 							</div>
@@ -225,7 +216,7 @@
 								<img src="theme/img/orders_main.png" style="margin: -6px 1px 1px 1px;">
 								<span class="pt-1 my-account-content-heading ">Orders</span>
 							</div>
-							<!-- <div class="border-bottom border-4 ms-3 mr-3"></div> -->
+
 
 							<table cellpadding="10" cellspacing="10" class="w-100" class="mt-3">
 								<tr class="order-table-heading border-bottom">
