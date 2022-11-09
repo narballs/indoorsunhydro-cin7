@@ -268,21 +268,25 @@ class ProductController extends Controller
 
     public function showProductDetail($id, $option_id) {
         $product = Product::where('id', $id)->first();
+
         if ($product) {
             $views = $product->views;
             $product->views = $views+1;
             $product->save();
         }
         $productOption = ProductOption::where('option_id', $option_id)->with('products.categories')->first();
+        //dd($product);
         if ($productOption->products->categories != '') {
             $category = Category::where('category_id', $productOption->products->categories->category_id)->first();
+            //dd($category);
             $parent_category = Category::where('category_id', $category->parent_id)->first();
             $pname = '';  
             if ($parent_category) {
                 $pname =  $parent_category->name;
             }
             else {
-                $pname = '';
+                $category = Category::where('category_id', $category->category_id)->first();
+                $pname = $category->name;
             }
         }
         else {
