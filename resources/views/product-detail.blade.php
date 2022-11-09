@@ -23,7 +23,7 @@
                             <div class="images">
                                 @if($productOption->image)
                                 <div class="text-center mt-5">
-                                    <img id="main-image" src="{{$productOption->image}}" class="img-fluid" />
+                                    <img id="main-image" src="{{$productOption->image}}" class="img-fluid        " />
                                 </div>
                                 @else
                                 <div class="text-center mt-5">
@@ -42,7 +42,7 @@
                                         <h3 class="product-detail-heading">{{$productOption->products->name}}</h3>
                                     </div>
 
-                                    <div class="col-md-4 d-flex">
+                                    <div class="col-md-12 d-flex">
                                         <span class="text-danger product-detail-price">
                                             ${{number_format($retail_prices,2)}}</span>
                                     </div>
