@@ -228,13 +228,9 @@
 								</div>
 							</div>
 						</div>
-
-
 						<div id="user-info-error" class="text-danger"></div>
-						<div class="col-md-12 mb-5 mt-5">
-							<button type="submit" value="" style="margin-left:600px"
-								class="btn-login sing-up-continue  mb-5 d-flex justify-content-center align-items-center"
-								onclick="signup()">
+						<div class="col-md-12 mb-5 mt-5 text-center">
+							<button type="submit" value="" class="btn-login sing-up-continue" onclick="signup()">
 								SING UP & CONTINUE</button>
 						</div>
 					</div>
