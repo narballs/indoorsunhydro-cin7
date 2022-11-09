@@ -22,7 +22,7 @@ class HomeController extends Controller
     //   session()->forget('cart');
        
     //     session()->flush();
-       
+        
         //dd($user_id);
         $categories = Category::orderBy('name', 'ASC')
             ->with('products')->where('is_active', 1)

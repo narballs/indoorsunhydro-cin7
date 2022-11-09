@@ -8,11 +8,11 @@ use App\Models\Contact;
 use App\Models\ApiOrder;
 use App\Models\ApiOrderItem;
 use App\Models\State;
-
-
 use App\Http\Requests\Users\UserSignUpRequest;
 use App\Http\Requests\Users\CompanyInfoRequest;
 use App\Http\Requests\Users\UserAddressRequest;
+use Auth;
+
 
 
 class UserController extends Controller
@@ -65,7 +65,7 @@ class UserController extends Controller
                             "password" => bcrypt($request->get('password'))
                         ]);
         }
-
+        
         return response()->json(['success' => true, 'created'=> true, 'msg' => 'Welcome, new player.']);
   
     }
@@ -78,9 +78,9 @@ class UserController extends Controller
     }
 
     public function save_contact(CompanyInfoRequest $request) {
-
         $user = User::latest()->first();
         $user_id = $user->id;
+        Auth::loginUsingId($user_id);
         if (!empty($request->input('company_website'))) {
             $contact = new Contact;
             $contact->website = $request->input('company_website');
@@ -110,7 +110,10 @@ class UserController extends Controller
     }
 
     public function my_account(Request $request) {
-
+        // $user = User::latest()->first();
+        // $user_id = $user->id;
+        // Auth::loginUsingId($user_id);
+      
         $user_id = auth()->id();
         if (!$user_id) {
             return redirect('/user/');
