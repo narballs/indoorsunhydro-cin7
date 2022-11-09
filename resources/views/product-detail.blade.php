@@ -33,17 +33,16 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="col-xl-7 col-lg-7  col-md-12 col-sm-12 col-xs-12 product-detail-content">
+                        <div class="col-xl-7 col-lg-7 col-md-12 col-sm-12 col-xs-12 product-detail-content">
                             <div class="product pr-1 pt-4 product-detail-content1">
                                 <div class="d-flex row">
                                     <?php $retail_prices = $productOption->retailPrice;?>
-                                    <div class="product-detail-heading col-xl-8 col-lg-8 col-md-12 col-xs-12"
+                                    <div class="product-detail-heading col-xl-12 col-lg-12 col-md-12 col-xs-12"
                                         id="product_name">
                                         <h3 class="product-detail-heading">{{$productOption->products->name}}</h3>
-
                                     </div>
 
-                                    <div class="col-md-4 d-flex justify-content-end">
+                                    <div class="col-md-4 d-flex">
                                         <span class="text-danger product-detail-price">
                                             ${{number_format($retail_prices,2)}}</span>
                                     </div>
@@ -104,15 +103,15 @@
 
                                 <div>
                                     <div class="price">
-                                        <div class="row p-3">
-                                            <div class="col-md-10 pl-0 ms-0 pr-0">
+                                        <div class="row mt-5">
+                                            <div class="col-md-8">
                                                 <span class="category-title-heading">Category</span> :
                                                 @if($pname)
                                                 <span class="category-title">{{$pname}}</span>
                                                 @endif
                                             </div>
 
-                                            <div class="col-md-2 d-flex justify-content-end pr-0">
+                                            <div class="col-md-4 d-flex justify-content-end pr-0">
                                                 <span class="category-title-heading">SKU</span> : <span
                                                     class="category-title">{{$productOption->code}}</span>
                                             </div>
@@ -123,15 +122,11 @@
                                         <div class="category-title mt-3"><strong>Description</strong></div>
                                         <p class="about product-details-description mt-3">
                                             <?php
-$desctiption = strip_tags($productOption->products->description, "<h2>");
-?>
+                                            $desctiption = strip_tags($productOption->products->description, "<h2>");
+                                            ?>
                                             {!!$desctiption!!}
                                         </p>
                                     </div>
-                                    <!--       <div class="sizes mt-5">
-                                <h6 class="text-uppercase">Size</h6> <label class="radio"> <input type="radio" name="size" value="S" checked> <span>S</span> </label> <label class="radio"> <input type="radio" name="size" value="M"> <span>M</span> </label> <label class="radio"> <input type="radio" name="size" value="L"> <span>L</span> </label> <label class="radio"> <input type="radio" name="size" value="XL"> <span>XL</span> </label> <label class="radio"> <input type="radio" name="size" value="XXL"> <span>XXL</span> </label>
-                            </div> -->
-
                                 </div>
                             </div>
                         </div>
@@ -142,19 +137,11 @@ $desctiption = strip_tags($productOption->products->description, "<h2>");
     </div>
     @include('partials.product-footer')
     @include('partials.footer')
-    <!-- <script type="text/javascript" charset="utf-8">
-    <script src="http://code.jquery.com/jquery-3.3.1.min.js"
-      integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-      crossorigin="anonymous">
-</script> -->
     <script>
         jQuery(document).ready(function(){
             jQuery('#ajaxSubmit').click(function(e){
                e.preventDefault();
                $.ajaxSetup({
-                  // headers: {
-                  //     'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-                  // }
               });
                jQuery.ajax({
                   url: "{{ url('add-to-cart') }}",
