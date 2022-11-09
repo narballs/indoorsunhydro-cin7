@@ -7,8 +7,8 @@
 	<strong>{{ $message }}</strong>
 </div>
 @endif
-<div class="container-fluid">
-	<div class="col-xl-12 col-lg-12  col-md-12 col-sm-12 col-xs-12">
+<div class="container-fluid pl-0 pr-0">
+	<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 pl-0 pr-0">
 		<div class="row">
 
 			<div class="col-md-12 bg-light text-center d-none">
@@ -52,7 +52,7 @@
 
 		</div>
 
-		<div class="row mt-5 ml-0 pr-0 w-100" style="background-image: url('/theme/img/img_12.png');">
+		<div class="row mt-5 ml-0 pr-0 w-100 " style="background-image: url('/theme/img/img_12.png');">
 			<div class="login-reg-panel">
 				<div class="register-info-box text-center">
 					<h2 class=" dont-have-an-account">Don't have an account?</h2>
