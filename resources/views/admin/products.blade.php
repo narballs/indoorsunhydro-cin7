@@ -23,14 +23,14 @@
                 <div class="col-md-4">
                     <div id="custom-search-input">
                         <div class="input-group col-md-12">
-                            <span class="input-group-btn">
-                                <button class="btn btn-info btn-lg" type="button">
+                          <!--   <span class="input-group-btn">
+                                <button class="btn btn-info" type="button">
                                     <i class="fa fa-search"></i>
                                 </button>
-                            </span>
+                            </span> -->
                             <!-- <input type="text" class="form-control input-lg" id="search" placeholder="Search" onkeydown="customer_search()" /> -->
-                            <form method="get" action="/admin/customers">
-                                <input type="text" class="form-control input-lg" id="search" name="search" placeholder="Search" value="{{ isset($search) ? $search : '' }}" />
+                            <form method="get" action="/admin/products" class="w-100">
+                                <input type="text" class="form-control" id="search" name="search" placeholder="Search" value="{{ isset($search) ? $search : '' }}" />
                             </form>
                             
                         </div>

@@ -313,7 +313,6 @@ class ProductController extends Controller
 
     public function addToCart(Request $request)
     {
-        // dd($request->all());
         $id = $request->p_id;
         $option_id = $request->option_id;
 
