@@ -237,6 +237,8 @@ class SyncAPiData extends Command
                                     $priceColumn = new Pricingnew([
                                         'option_id' => $api_productOption->id,
                                         'retailUSD' => $api_productOption->priceColumns->retailUSD,
+                                        'terraInternUSD' => $api_productOption->priceColumns->terraInternUSD,
+                                        'sacramentoUSD' => $api_productOption->priceColumns->terraInternUSD,
                                         'wholesaleUSD' => $api_productOption->priceColumns->wholesaleUSD,
                                         'oklahomaUSD' => $api_productOption->priceColumns->oklahomaUSD,
                                         'tier1USD' => $api_productOption->priceColumns->tier1USD,
@@ -252,6 +254,8 @@ class SyncAPiData extends Command
                                 else {
                                     $priceColumn->retailUSD = $api_productOption->priceColumns->retailUSD;
                                     $priceColumn->wholesaleUSD = $api_productOption->priceColumns->wholesaleUSD;
+                                    $priceColumn->terraInternUSD = $api_productOption->priceColumns->terraInternUSD;
+                                    $priceColumn->sacramentoUSD = $api_productOption->priceColumns->sacramentoUSD;
                                     $priceColumn->calaverasUSD = $api_productOption->priceColumns->calaverasUSD;
                                     $priceColumn->tier1USD = $api_productOption->priceColumns->tier1USD;
                                     $priceColumn->tier2USD = $api_productOption->priceColumns->tier2USD;
@@ -291,6 +295,8 @@ class SyncAPiData extends Command
                                     'option_id' => $api_productOption->id,
                                     'retailUSD' => $api_productOption->priceColumns->retailUSD,
                                     'wholesaleUSD' => $api_productOption->priceColumns->wholesaleUSD,
+                                    'terraInternUSD' => $api_productOption->priceColumns->terraInternUSD,
+                                    'sacramentoUSD' => $api_productOption->priceColumns->sacramentoUSD,
                                     'oklahomaUSD' => $api_productOption->priceColumns->oklahomaUSD,
                                     'tier1USD' => $api_productOption->priceColumns->tier1USD,
                                     'calaverasUSD' => $api_productOption->priceColumns->calaverasUSD,
