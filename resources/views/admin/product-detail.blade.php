@@ -14,17 +14,16 @@
   		<div class="d-flex justify-content-between align-items-center py-3">
     		<h2 class="h5 mb-0"><a href="#" class="text-muted"></a>Product Details</h2>
   		</div>
+
   	<!-- Main content -->
   	<div class="row">
     	<div class="col-lg-12">
       		<!-- Details -->
       		<div class="card mb-4">
         		<div class="card-body">
-         
           			<div>
 	              		<h4><b>{{$product->name}}</b></h4>
 	            	</div>
-	            	
 	            	<div class="row mt-3">
 		          		<div class="col-md-1">
 		              		<h5><b>Status</b></h5>	
@@ -151,6 +150,8 @@
 	            	<tr>
 	            		<th class="text-center">retailUSD</th>
 	            		<th class="text-center">wholesaleUSD</th>
+	            		<th class="text-center">sacramentoUSD</th>
+	            		<th class="text-center">terraInternUSD</th>
 	            		<th class="text-center">oklahomaUSD</th>
 	            		<th class="text-center">calaverasUSD</th>
 	            		<th class="text-center">tier1USD</th>
@@ -160,11 +161,27 @@
 	            		<th class="text-center">costUSD</th>
 	            		<th class="text-center">specialPrice</th>
 	            	</tr>
+	            	<?php 
+	            	// foreach($product->options as $option) {
+	            	// 	foreach($option->price as $price)
+	            	// 	echo $price->retailUSD;
+	            	// }
+	            	// exit;
+	            	?>
 	            	@foreach($product->options as $option)
 	            		@foreach($option->price as $price)
 		            		<tr>
 		            			<td class="text-center">
 		            				${{$price->retailUSD}}
+		            			</td>
+		            			<td class="text-center">
+		            				${{$price->wholesaleUSD}}
+		            			</td>
+		            			<td class="text-center">
+		            				${{$price->sacramentoUSD}}
+		            			</td>
+		            			<td class="text-center">
+		            				${{$price->terraInternUSD}}
 		            			</td>
 		            			<td class="text-center">
 		            				${{$price->oklahomaUSD}}
