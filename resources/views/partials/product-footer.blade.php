@@ -1,30 +1,30 @@
-<footer class="text-white text-center text-lg-start bg-dark ">
+{{-- <footer class="text-white text-center text-lg-start bg-dark ">
 	<!-- Grid container -->
 	<div class="container">
 		<!--Grid row-->
 		<div class="row">
 			<!--Grid column-->
-			<div class="col-lg-6 col-md-12 mb-4 mb-md-0" style="margin-top: 50px;">
+			<div class="col-lg-6 col-md-12 mb-12 col-sm-12 col-xs-12 md-0" style="margin-top: 50px;">
 				<h5 class="text-uppercase mb-4" style="letter-spacing: 1px;">Contact us</h5>
-				<span><img src="/theme/img/map-pin.png"></span><span class="ms-2 fw-bold">Los Angeles Warehouse
+				<span><img src="/theme/img/map-pin.png"></span><span class="ms-2 fw-bold">Los Angeles
+					Warehouse
 					(HQ)</span>
 				<p class="ms-4">&nbsp;
 					13310 S. Figueroa St. Los Angeles, CA 90061
 				</p>
-				{{-- <span><img src="/theme/img/map-pin.png"></span><span class="ms-2 fw-bold"> San Fernando Valley
-					Warehouse</span>
+				<span>
+					<img src="/theme/img/phone-call.png">
+				</span>
+				<span class="ms-2 fw-bold">
+					(916) 281-3090
+				</span>
 				<p class="ms-4">&nbsp;
-					9019 Oso Ave, Chatsworth, CA 91311
-				</p> --}}
-				{{-- <p class="card-text fs-6 ms-4">&nbsp;&nbsp;<span class="footer-days">M-F</span> 10AM-6PM | <span
-						class="footer-days">Sat</span> 12PM-6PM |<span class="footer-days"> Sun</span>12PM-5PM</p> --}}
-				<span><img src="/theme/img/phone-call.png"></span><span class="ms-2 fw-bold">(213) 410 5912</span>
-				{{-- <p class="card-text fs-6 ms-4"><span class="footer-days">&nbsp;&nbsp;M-F</span> 10AM-6PM | <span
-						class="footer-days">Sat-Sun</span> 10AM-5PM --}}
+					<span class="text-success">MONDAY-SUNDAY 7 Dayes</span> 9AM-5pm
+				</p>
 			</div>
 			<!--Grid column-->
 			<!--Grid column-->
-			<div class="col-lg-3 col-md-6 mb-4 mb-md-0" style="margin-top: 50px;>
+			<div class="col-lg-3 col-xl-3 col-md-12 mb-12 mb-md-0" style="margin-top: 50px;">
 				<h5 class=" text-uppercase mb-4">Customer Service</h5>
 				<p class="card-text">Returns</p>
 				<p class="card-text">Customer Support</p>
@@ -34,7 +34,7 @@
 			</div>
 			<!--Grid column-->
 			<!--Grid column-->
-			<div class="col-lg-3 col-md-6 mb-4 mb-md-0" style="margin-top: 50px;>
+			<div class="col-lg-3  col-md-6 mb-4 mb-md-0" style="margin-top: 50px;">
 				<h5 class=" text-uppercase mb-4">Payment Methods</h5>
 				<table class=" text-center">
 					<tbody>
@@ -50,15 +50,71 @@
 					</tbody>
 				</table>
 			</div>
-			<!--Grid column-->
 
-			<!-- Grid container -->
-			<!-- Copyright -->
-			<div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+			<div class="text-center p-3 w-100" style="background-color: rgba(0, 0, 0, 0.2);">
 				Copyright:
 				<a class="text-white text-decoration-none" href="https://mdbootstrap.com/">@La Garden Supply. All right
 					reserved</a>
 			</div>
-			<!-- Copyright -->
 		</div>
+</footer> --}}
+<style>
+	.footer-section-product {
+		margin-top: 153px !important;
+	}
+</style>
+
+<footer class="text-white text-lg-start bg-dark h-50">
+	<div class="container-fluid">
+		<div class="row ">
+			<div class=" col-xl-2 col-lg-2 col-md-0 col-sm-0 col-xs-0 text-dark ">
+				.
+			</div>
+
+			<div class="col-xl-3 col-lg-3 col-md-0 col-sm-0 col-xs-0 main-page-footer-section footer-section-product">
+				<h5 class="mb-4 contact-us-footer">CONTACT US</h5>
+				<span><img src="/theme/img/map-pin.png" class="img-fluid"></span><span class="ms-2 fw-bold">Los Angeles
+					Warehouse
+					(HQ)</span>
+				<p class="ms-4 ms-4-footer">&nbsp;
+					13310 S. Figueroa St. Los Angeles, CA 90061
+				</p>
+				<span><img src="/theme/img/phone-call.png" class="img-fluid"></span><span class="ms-2 fw-bold">(916)
+					281-3090</span>
+				<p class="ms-4 ms-4-footer">&nbsp;
+					<span class="text-success">
+						MONDAY-SUNDAY 7 Dayes</span> 9AM-5pm
+				</p>
+
+			</div>
+
+			<div class="col-xl-1 col-lg-1 col-md-0 col-sm-0 col-xs-0 text-dark ">
+				.
+			</div>
+			<div
+				class="col-xl-2 col-lg-2 col-md-0 col-sm-0 col-xs-0 mb-4 mb-md-0 main-page-footer-section footer-section-product">
+				<div class="d-flex">
+					<div class="justify-content-end">
+						<h5 class="text-uppercase mb-4">Customer Service</h5>
+						<p class="card-text justify-content-end">Returns</p>
+						<p class="card-text justify-content-end">Customer Support</p>
+						<p class="card-text justify-content-end">Hydro Guide and Tips</p>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-xl-1 col-lg-1 col-md- col-sm-0 col-xs-0 text-dark">
+				.
+			</div>
+
+			<div class="col-lg-3 col-md-3 mb-4 mb-md-0 main-page-footer-section footer-section-product">
+				<h5 class=" text-uppercase mb-4"> PAYMENT METHOD</h5>
+				<img class="img-fluid" src="/theme/img/paypal.png">&nbsp; &nbsp;&nbsp; &nbsp;
+				<img class="img-fluid" src="/theme/img/discover.png">&nbsp; &nbsp;&nbsp; &nbsp;
+				<img class="img-fluid" src="/theme/img/curus.png">&nbsp; &nbsp;&nbsp; &nbsp;
+				<img class="img-fluid" src="/theme/img/visa.png">&nbsp; &nbsp;&nbsp; &nbsp;
+			</div>
+
+		</div>
+
 </footer>

@@ -53,7 +53,7 @@
 		</div>
 
 		<div class="row mt-5 ml-0 pr-0 w-100 " style="background-image: url('/theme/img/img_12.png');">
-			<div class="login-reg-panel">
+			<div class="login-reg-panel col-xs-6">
 				<div class="register-info-box text-center">
 					<h2 class=" dont-have-an-account">Don't have an account?</h2>
 					<p class=" dont-have-an-account-pra">Your personal data will be used to support your experience
@@ -76,13 +76,13 @@
 							<div class=" form-login">
 								<div class="input-placeholder">
 									<input type="text" name="email" required>
-									<div class="placeholder fontAwesome">
+									<div class="placeholder pl-3 fontAwesome">
 										&#xf0e0; Email
 									</div>
 								</div>
 								<div class="input-placeholder">
 									<input type="password" name="password" required>
-									<div class="placeholder fontAwesome">
+									<div class="placeholder pl-3 fontAwesome">
 										&#xf023; Password
 									</div>
 								</div>
@@ -95,7 +95,7 @@
 							<div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12 mt-4">
 								<div class="form-check checkbox-lg form-login">
 									<input class="form-check-input aling-items-center justify-conent-center d-flex"
-										type="checkbox" value="" id="checkbox-2" />&nbsp;&nbsp;
+										type="checkbox" value="" id="checkbox-2" />&nbsp;
 									<label class="form-check-label" for="checkbox-2">Remember me</label>
 								</div>
 							</div>
@@ -116,7 +116,7 @@
 							<h2 class="d-flex justify-content-center align-items-center sing-up-label">SIGN UP</h2>
 							<div class="input-placeholder">
 								<input type="text" id="email" name="email" required>
-								<div class="placeholder fontAwesome">
+								<div class="placeholder pl-3 fontAwesome">
 									&#xf0e0; Email
 								</div>
 							</div>
