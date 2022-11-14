@@ -76,15 +76,15 @@
                 <div class="col-md-10">
                   {{$products->appends(Request::all())->links()}}
                 </div>
-                <div class="col-md-2">
-                    <select name="per_page" id="per_page" onchange="perPage()">
+<!--                 <div class="col-md-2">
+ -->    <!--                 <select name="per_page" id="per_page" onchange="perPage()">
                         <option value="10" {{ isset($perPage) && $perPage == 10 ? 'selected="selected"' : '' }}>10</option>
                         <option value="20" {{ isset($perPage) && $perPage == 20 ? 'selected="selected"' : '' }}>20</option>
                         <option value="30" {{ isset($perPage) && $perPage == 30 ? 'selected="selected"' : '' }}>30</option>
                         <option value="30">30</option>
                     </select>
                     
-                </div>
+                </div> -->
             </div>
         </div>
 @stop

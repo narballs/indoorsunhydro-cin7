@@ -17,7 +17,7 @@ class CustomerSearchController extends Controller
 
 	public function customerSearch(Request $request) {
 		$rows = 6;
-echo 'here';exit;
+
 		$contacts = DB::table('contacts')->where('firstName', 'LIKE', '%' . $request->value . '%')->get();
 
 		return view('admin.customers.search_results', compact('contacts'));

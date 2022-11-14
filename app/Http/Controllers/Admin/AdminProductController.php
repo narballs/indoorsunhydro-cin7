@@ -21,7 +21,9 @@ class AdminProductController extends Controller
         $search = $request->get('search');
         $products = Product::with('categories', 'options')->paginate(10);
         if(isset($search)) {
-            $products = Product::with('categories', 'options')->where('name', 'LIKE', '%' . $search . '%')->paginate(10);
+            $products = Product::with('categories', 'options')->where('name', 'LIKE', '%' . $search . '%')
+            ->orWhere('code', 'like', '%' . $search . '%')
+            ->paginate(10);
         }
         
          return view('admin/products', compact('products'));
