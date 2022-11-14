@@ -43,6 +43,8 @@
     margin-left: 10px !important;
 }
 
+
+
 #search-addon {
     background-color: #7BC533;
 }
@@ -498,6 +500,48 @@ a {
 .images {
     display: flex;
     justify-content: space-around;
+}
+
+.contact-us-footer {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 30px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #FFFFFF;
+}
+
+.pra-footer {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    color: #FFFFFF;
+}
+
+.sm-4-footer {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 24px;
+    color: #FFFFFF;
+}
+
+.footer-end {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 20px;
+    color: #767676;
+    text-align: center;
+    margin-top: 70px;
+    background-color: rgba(0, 0, 0, 0.888);
+    height: 7vh;
 }
 
 @media (max-width: 600px) {
