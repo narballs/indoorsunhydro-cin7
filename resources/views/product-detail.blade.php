@@ -121,10 +121,7 @@
                                     <div class="product-detail-content-dec">
                                         <div class="category-title mt-3"><strong>Description</strong></div>
                                         <p class="about product-details-description mt-3">
-                                            <?php
-                                            $desctiption = strip_tags($productOption->products->description, "<h2>");
-                                            ?>
-                                            {!!$desctiption!!}
+                                            {{ strip_tags( $productOption->products->description ) }}
                                         </p>
                                     </div>
                                 </div>
