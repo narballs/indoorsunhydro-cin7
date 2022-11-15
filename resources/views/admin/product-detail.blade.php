@@ -80,13 +80,13 @@
                 				<td class="ms-2 text-center">
                 					{{$option->code}}
                 				</td>
-                				@if($option->status)
+                				@if($option->status == 'Active' || $option->status == 'Primary')
                 				<td class="ms-2 text-center">
                 					<span class="badge bg-success">{{$option->status}}</span>
                 				</td>
                 				@else
                 					<td class="ms-2 text-center">
-                						<span class="badge bg-success">{{$option->status}}</span>
+                						<span class="badge bg-danger">{{$option->status}}</span>
                 				</td>
                 				@endif
                 				<td class="text-center">
@@ -179,7 +179,9 @@
 	            	// exit;
 	            	?>
 	            	@foreach($product->options as $option)
+	            		@if($option->status != 'Disabled')
 	            		@foreach($option->price as $price)
+
 		            		<tr>
 		            			<td class="text-center"><b>retailUSD</b></td>
 
@@ -249,6 +251,7 @@
 		            			</td> -->
 		            	
 	            		@endforeach
+	            		@endif
 	            	@endforeach
 	            </table>
 	          	</div>
