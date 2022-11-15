@@ -147,20 +147,30 @@
 	          	<div class="row">
 	          		<div class="col-md-12 text-center"><h5><b>Pricing Column</b></h5></div>
 	            <table class="table">
+	      <!--       	<tr>
+	            		<td class="text-center">retailUSD</td>
+	            	</tr>
 	            	<tr>
-	            		<th class="text-center">retailUSD</th>
-	            		<th class="text-center">wholesaleUSD</th>
-	            		<th class="text-center">sacramentoUSD</th>
-	            		<th class="text-center">terraInternUSD</th>
-	            		<th class="text-center">oklahomaUSD</th>
-	            		<th class="text-center">calaverasUSD</th>
-	            		<th class="text-center">tier1USD</th>
+	            		<td class="text-center">wholesaleUSD</td>
+	            	</tr>
+	            	<tr>
+	            		<td class="text-center">sacramentoUSD</td>
+	            	</tr>
+	            	<tr>
+	            		<td class="text-center">terraInternUSD</td>
+	            	</tr>
+	            	<tr>
+	            		<td class="text-center">oklahomaUSD</td>
+	            	</tr>
+	            	<tr>
+	            		<td class="text-center">calaverasUSD</td> -->
+	     <!--        		<th class="text-center">tier1USD</th>
 	            		<th class="text-center">tier2USD</th>
 	            		<th class="text-center">tier3USD</th>
 	            		<th class="text-center">commercialOKUSD</th>
 	            		<th class="text-center">costUSD</th>
-	            		<th class="text-center">specialPrice</th>
-	            	</tr>
+	            		<th class="text-center">specialPrice</th> -->
+	           <!--  	</tr> -->
 	            	<?php 
 	            	// foreach($product->options as $option) {
 	            	// 	foreach($option->price as $price)
@@ -171,32 +181,59 @@
 	            	@foreach($product->options as $option)
 	            		@foreach($option->price as $price)
 		            		<tr>
+		            			<td class="text-center"><b>retailUSD</b></td>
+
 		            			<td class="text-center">
 		            				${{$price->retailUSD}}
 		            			</td>
-		            			<td class="text-center">
+		            			<td class="text-center"><b>tier1USD</b></td>
+		            			<td class="text-center">${{$price->tier1USD}}</td>
+		            		</tr>
+		            		<tr>
+		            			<td class="text-center"><b>wholesaleUSD</b><b></td>
+		</b>            			<td class="text-center">
 		            				${{$price->wholesaleUSD}}
 		            			</td>
+		            			<td class="text-center"><b>tier2USD</b></td>
+		            			<td class="text-center">${{$price->tier2USD}}</td>
+		            		</tr>
+		            		<tr>
+		            				<td class="text-center"><b>sacramentoUSD</b></td>
 		            			<td class="text-center">
 		            				${{$price->sacramentoUSD}}
 		            			</td>
+		            			<td class="text-center"><b>tier3USD</b></td>
+		            			<td class="text-center">${{$price->tier3USD}}</td>
+		            		</tr>
+		            		<tr>
+		            			<td class="text-center"><b>terraInternUSD</b></td>
 		            			<td class="text-center">
 		            				${{$price->terraInternUSD}}
 		            			</td>
+		            			<td class="text-center"><b>commercialOKUSD</b></td>
+		            			<td class="text-center">${{$price->commercialOKUSD}}</td>
+		            		</tr>
+		            		<tr>
+		            			<td class="text-center"><b>oklahomaUSD</b></td>
 		            			<td class="text-center">
 		            				${{$price->oklahomaUSD}}
 		            			</td>
+		            			<td class="text-center"><b>costUSD</b></td>
+		            			<td class="text-center">${{$price->costUSD}}</td>
+		            		</tr>
+		            		<tr>
+		            			<td class="text-center"><b>calaverasUSD</b></td>
 		            			<td class="text-center">
 		            				${{$price->calaverasUSD}}
 		            			</td>
-		            			<td class="text-center">
+		            			<td class="text-center"><b>specialPrice</b></td>
+		            			<td class="text-center">${{$price->specialPrice}}</td>
+		            		</tr>
+		        <!--     			<td class="text-center">
 		            				${{$price->tier1USD}}
 		            			</td>
 		            			<td class="text-center">
 		            				${{$price->tier2USD}}
-		            			</td>
-		            			<td class="text-center">
-		            				${{$price->tier3USD}}
 		            			</td>
 		            			<td class="text-center">
 		            				${{$price->tier3USD}}
@@ -209,8 +246,8 @@
 		            			</td>
 		            			<td class="text-center">
 		            				${{$price->specialPrice}}
-		            			</td>
-		            		</tr>
+		            			</td> -->
+		            	
 	            		@endforeach
 	            	@endforeach
 	            </table>
