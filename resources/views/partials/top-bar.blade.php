@@ -33,7 +33,7 @@
             </div>
             <div class="col-md-2 d-flex justify-content-center align-items-center mt-2">
                 <div>
-                    <img class="img-fluid" src="/theme/img/Bascket.png" width="35px" height="35px">
+                    <img class="basket-icon" src="/theme/img/Bascket.png">
                     <span
                         class="cart-basket d-flex align-items-center justify-content-center float-sm-end cart-counter rounded-circle"
                         id="top_cart_quantity">

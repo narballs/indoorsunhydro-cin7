@@ -1,9 +1,10 @@
 @include('partials.header')
 @include('partials.top-bar')
 @include('partials.search-bar')
-<div class="mb-5">
-	<p style="line-height: 95px;" class="fw-bold fs-2 product-btn my-auto border-0 text-white text-center align-middle">
-		Cart
+<div class="mb-5 cart-title">
+	<p style="line-height: 95px;"
+		class=" fs-2 product-btn my-auto border-0 text-white text-center align-middle cart-title">
+		CART
 	</p>
 </div>
 @if (session('success'))
@@ -22,16 +23,28 @@
 
 				<div class="container h-100 py-5">
 					<div class="row d-flex justify-content-center align-items-center">
-						<div class="col">
-							<div class="table-responsive" style=" font-family:'Poppins">
+						<div class="col-md-12">
+							<div class="" style=" font-family:'Poppins">
 								<table class="table" id="cart_table">
 									<thead>
-										<tr>
-											<th scope="col" class="h5">Product</th>
-											<th scope="col">Price</th>
-											<th scope="col">Quantity</th>
-											<th scope="col">Total</th>
-										</tr>
+
+										<th scope="col">
+											<span>
+												<img class="img-fluid" src="theme/img/box.png">
+											</span>
+											Product
+										</th>
+										<th scope="col">
+											<span>
+												<img class=" cart-icons-cart " src="theme/img/dollar.png">
+											</span>
+											Price
+										</th>
+										<th scope="col">Quantity</th>
+										<th scope="col">
+											<img class=" cart-icons-cart " src="theme/img/pricing_tag.png">
+											Total
+
 									</thead>
 									<tbody>
 										<?php 
@@ -106,15 +119,31 @@
 									</tbody>
 								</table>
 								<div class="row">
-									<div class="col-md-7 coupan-code">
-										<span>coupan code</span>&nbsp;&nbsp;<input type="text"
-											placeholder="Your Code"><span>&nbsp;&nbsp;<button
-												class="apply-coupan-code-button">APPLY
-												COUPAN</button></span>
+									<div class="col-md-8 coupon-code">
+										<div class="row">
+											<div class="col-sm">
+												<span class="coupon-code-label"><img class="img-fluid"
+														src="theme/img/Vector.png" class="img-fluid">&nbsp;&nbsp;Coupon
+													code</span>
+											</div>
+											<div class="col-sm">
+												{{-- <input type="text" placeholder="Your Code" id="coupon_code"
+													name="coupon_code" class="form-control "> --}}<div
+													class="form-signup">
+													<input type="text" name="code" id="code"
+														class="fontAwesome form-control" placeholder="Your code"
+														required>
+												</div>
+											</div>
+											<div class="col-sm">
+												<span><button class="apply-coupon-code-button">APPLY
+														COUPAN</button></span>
+											</div>
+										</div>
 									</div>
-									<div class="col-md-5">
-										<button class="button-cards w-50" type="submit" class="update_cart"
-											style="float:right" id="update_cart" onclick="update_cart()">Update
+									<div class="col-md-4">
+										<button class="button-cards w-75 cart-updated" type="submit" id="update_cart"
+											onclick="update_cart()">Update
 											Cart</button>
 									</div>
 								</div>
@@ -127,23 +156,61 @@
 		<div class="col-md-4 d-flex align-self-stretch mt-5">
 			<div class="card mb-4  col-md-12">
 				<div class="card-header py-3 bg-transparent">
-					<h5 class="mb-0">Cart Total</h5>
+					<h5 class="mb-0 cart-total">Cart Total</h5>
 				</div>
 				<div class="card-body ">
 					<ul class="list-group list-group-flush">
-						<li class="h-5 list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0 "
-							style="font-weight: 500;">
-							Subtotal
-							<span id="cart_subtotal">${{$cart_total}}</span>
+						<li
+							class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
+							<div>
+								<img class="img-fluid" src="theme/img/dollar.png"
+									class="img-fluid"><strong>Subtotal</strong>
+							</div>
+							<span id="cart_subtotal"><strong>${{$cart_total}}</strong></span>
+						</li>
+
+						<li class="list-group-item  justify-content-between align-items-center border-0 px-0 mb-3">
+							<div>
+								<img class="img-fluid" src="theme/img/shipping.png" class="img-fluid"><strong>
+									&nbsp;&nbsp;Shipping</strong>
+							</div>
+							<div class="mt-2">
+								<p class="cart-shipping-option">Enter your address to view shipping options.
+								</p>
+							</div>
+							<div class="form-signup">
+								<input type="text" name="email" id="email" class="fontAwesome form-control"
+									placeholder="&#xf0e0; Your email" required>
+							</div>
+						</li>
+
+						<li class="list-group-item  justify-content-between align-items-center border-0 px-0 mb-3">
+							<div>
+								<img class="img-fluid" src="theme/img/calculator.png" class="img-fluid"><span
+									class="cart-calculator">
+									&nbsp;Calculate shipping
+								</span>
+							</div>
 						</li>
 
 						<li
-							class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3 mt-5">
+							class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
 							<div>
+								<img class="img-fluid" src="theme/img/FrameCart.png" class="img-fluid">
+								<strong>Markup</strong>
+							</div>
+							<span id="cart_grand_total"><strong class="">${{$cart_total}}</strong></span>
+						</li>
+
+						<li
+							class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
+							<div>
+								<img class="img-fluid" src="theme/img/pricing_tag.png" class="img-fluid">
 								<strong>Total</strong>
 							</div>
-							<span id="cart_grand_total"><strong>${{$cart_total}}</strong></span>
+							<span id="cart_grand_total"><strong class="text-danger">${{$cart_total}}</strong></span>
 						</li>
+
 					</ul>
 					@if (Auth::check() == true && !empty($contact->contact_id))
 					<a href="{{ url('/checkout')}}">
@@ -169,8 +236,27 @@
 		</div>
 	</div>
 </div>
+<div class="py-5 bg-light">
+	<div class="col-md-12 text-center text-uppercase fs-4 mt-5">
+		<h5 class="subscribe-to-cart">SUBSCRIBE TO NEWSLETTER
+		</h5>
+		<div class="fs-6 mt-1">
+			<p class="cart-pra-sing">
+				Sign up now for additional information or new products
+			</p>
+			<div class="mt-3 mb-5" class="subscribe-cart-input">
+				<input type="text" name="serach-prduct" placeholder="Enter your email">
+				<button class="btn-outline-secondary text-white bg-dark h-35 subscribe-cart-button" type="button"
+					id="button-addon1">
+					SUBSCRIBE
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+@include('partials.product-footer')
 
-
+@include('partials.footer')
 <script>
 	function update_cart() {
 	var items_quantity = [];
@@ -217,9 +303,4 @@
     });
 
 }
-
-
 </script>
-@include('partials.product-footer')
-
-@include('partials.footer')
