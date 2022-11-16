@@ -2087,6 +2087,58 @@ input[type=number] {
         border: none !important;
     }
 
+
+    .login-show-btn input[type="email"] {
+        font-family: 'Poppins';
+        font-style: normal;
+        width: 12px;
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 27px;
+        text-align: center;
+        color: #878787;
+    }
+
+    .bnt-outline-secondary {
+
+        font-family: 'Poppins';
+        font-style: normal;
+        font-weight: 600;
+        font-size: 14px;
+        line-height: 21px;
+        text-align: center;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #FFFFFF;
+    }
+
+    .subscribe-heading {
+        font-family: 'Poppins';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 24px;
+        line-height: 36px;
+        text-align: center;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #000000;
+    }
+
+    .subscribe-pra {
+        position: absolute;
+        width: 501px;
+        height: 27px;
+        left: 710px;
+        top: 1209px;
+        font-family: 'Poppins';
+        font-style: normal;
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 27px;
+        text-align: center;
+        color: #7B7B7B;
+    }
+
     .form-login input {
         background-color: #EBEBEB !important;
         border: none !important;
