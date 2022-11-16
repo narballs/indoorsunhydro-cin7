@@ -313,14 +313,6 @@
 
    				$('#signup_error').html(error_text);
 
-   				// for (let i = 0; i < error_message.errors.length; i++) {
-   				// 	console.log('here')
-   				// 	error_text += '<br />' + error_message.errors[i][0];
-   				// }
-
-   				// console.log(error_message)
-   				// console.log(error_text)
-
    			}
        });
 		
