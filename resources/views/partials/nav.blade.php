@@ -8,6 +8,7 @@
 			aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
+
 		<div class="collapse navbar-collapse justify-content-center collapse show" id="navbarNav">
 			<div class="collapse navbar-collapse justify-content-center collapse show" id="navbarNavDarkDropdown">
 				<div class="collapse navbar-collapse justify-content-center collapse show" id="navbarNavDarkDropdown">
@@ -55,14 +56,10 @@
 																<a class="link-dark text-decoration-none nav-link product-mega-menu"
 																	id="category_{{$category->id}}"
 																	href="{{ url('products/'.$cat->id.'/'.$category->slug.'-'.$cat->slug) }}">{{$cat->name}}</a>
-
 															</li>
 															@endif
 														</div>
-
-
 														@endif
-
 														@endforeach
 													</div>
 											</ul>

@@ -1,4 +1,5 @@
 <div class="container-fluid">
+
     <div class="row">
         <div class="col-xl-1 col-lg-1 col-md-0 col-sm-0 col-xs-0 "></div>
         <div class="col-xl-2 col-lg-2 col-md-6 col-sm-12 col-xs-12">
@@ -6,9 +7,11 @@
                 <img class="top-img img-fluid" src="/theme/img/indoor_sun.png" ;>
             </a>
         </div>
+
         <div class="col-lg-5 col-xl-5 col-md-12 col-sm-12 col-xs-12 mt-2 top-header-navigation">
             @include('partials.nav')
         </div>
+
         <div class=" col-xl-3 col-lg-3 col-md-12 col-sm-12 col-xs-12">
             <form class="d-flex mt-3" method="get" action="{{route('product_search')}}">
                 <div class="input-group top-search-group">
@@ -23,6 +26,8 @@
                 </div>
             </form>
         </div>
+
         <div class="col-xl-1 col-lg-1 col-md-0 col-sm-0 col-xs-0"></div>
     </div>
+
 </div>

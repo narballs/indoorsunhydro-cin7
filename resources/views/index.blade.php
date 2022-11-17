@@ -8,6 +8,7 @@
         <div class="bg-light pb-5">
             <div class="container-sm bg-light">
                 <div class="row">
+
                     <div class="col-sm-8 pr-0">
                         <div class="card mt-5">
                             <div class="card-body p-0 text-center">
@@ -174,18 +175,21 @@
 
                         </div>
                     </div>
+
+                </div>
+            </div>
+        </div>
     </main>
-    </div>
 
     <div class="row">
         <img class="img-fluid" src="theme/img/advantages.png">
     </div>
 
     </div>
-    @include('partials.main-page-footer')
+    @include('partials.product-footer')
+    @include('partials.footer');
 </body>
 
-@include('partials.footer')
 <script>
     $("#superior_brands").on('click', function(){ 
         window.location.href = '/products/';
