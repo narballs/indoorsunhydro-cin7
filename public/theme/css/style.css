@@ -988,12 +988,7 @@ label {
     visibility: center;
 }
 
-@media (max-width: 1200px) {
-    .col-sm-12 {
-        margin-top: 10px;
-        margin-left: 0rem !important;
-    }
-}
+
 
 .swal2-title {
     font-weight: 200 !important;
@@ -1509,6 +1504,13 @@ input[type=number] {
     font-size: 12px;
     line-height: 21px;
     color: #505050;
+}
+
+@media (max-width: 1200px) {
+    .col-sm-12 {
+        margin-top: 10px;
+        margin-left: 0rem !important;
+    }
 }
 
 @media only screen and (max-width: 2560px) and (min-width: 1441px) {
