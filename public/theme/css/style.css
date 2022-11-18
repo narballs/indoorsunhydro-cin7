@@ -1241,6 +1241,7 @@ input[type=number] {
 .input-placeholder {
     position: relative;
     font-family: 'Poppins';
+
 }
 
 .input-placeholder input:valid+.placeholder {
@@ -1284,7 +1285,17 @@ input[type=number] {
     text-transform: uppercase;
 }
 
-
+.contact-us {
+    position: relative;
+    top: 50%;
+    align-items: center !important;
+    text-align: center;
+    width: 1171px;
+    margin: auto;
+    height: 404px;
+    background-color: #7BC533;
+}
+}
 .sing-up-label {
     width: 100%;
     height: 69px;
@@ -1369,6 +1380,7 @@ input[type=number] {
     font-size: 1px !important;
     color: #373737 !important;
 }
+
 
 .top-img {
     width: 375px;
@@ -2342,4 +2354,23 @@ input[type=number] {
         padding: 20px !important;
 
     }
+}
+.contact-form .form-login input{
+    width: 100% !important;
+    height: 80px !important;
+}
+.message {
+    width: 496px;
+    height: 177px;
+    left: 979px;
+    top: 599px;
+}
+.input-placeholder .btn-login {
+    width: 496px !important;
+    height: 79px;
+}
+.contact-row {
+    width: 1171px;
+    margin: auto;
+    height: 615px;
 }

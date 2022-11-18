@@ -23,6 +23,7 @@ class AdminProductController extends Controller
         if(isset($search)) {
             $products = Product::with('categories', 'options')->where('name', 'LIKE', '%' . $search . '%')
             ->orWhere('code', 'like', '%' . $search . '%')
+            ->orWhere('status', 'like', '%' . $search . '%')
             ->paginate(10);
         }
         
