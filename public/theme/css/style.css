@@ -380,12 +380,12 @@ a {
 }
 
 .form-signup input {
-    background-color: lightgray !important;
+    background-color: #EBEBEB !important;
     border: none !important;
 }
 
 .form-login input {
-    background-color: lightgray !important;
+    background-color: #EBEBEB !important;
     border: none !important;
 }
 
@@ -2361,6 +2361,8 @@ input[type=number] {
 .contact-form .form-login input {
     width: 100% !important;
     height: 80px !important;
+    background-color: #EBEBEB !important;
+    outline: none;
 }
 
 .message {
@@ -2369,7 +2371,11 @@ input[type=number] {
     left: 979px;
     top: 599px;
 }
-
+#contact_message {
+    background-color: #EBEBEB;
+    outline: none;
+    border: none;
+}
 .input-placeholder .btn-login {
     width: 496px !important;
     height: 79px;
