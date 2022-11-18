@@ -488,7 +488,6 @@ font-size: 20px;">Shipping Address</div>
         }
 
         else {
-            alert('kkkk');
         $("#order_form").submit(); // Submit the for
         }
     }
