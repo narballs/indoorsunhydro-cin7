@@ -301,6 +301,10 @@ a {
     z-index: 99;
 }
 
+.company-detail {
+    height: auto;
+}
+
 a {
     text-decoration: none;
     color: #2c7715;
@@ -376,12 +380,12 @@ a {
 }
 
 .form-signup input {
-    background-color: #EBEBEB !important;
+    background-color: lightgray !important;
     border: none !important;
 }
 
 .form-login input {
-    background-color: #EBEBEB !important;
+    background-color: lightgray !important;
     border: none !important;
 }
 
@@ -443,7 +447,7 @@ a {
 
 
 .form-signup-secondary input {
-    background-color: #EBEBEB !important;
+    background-color: lightgray !important;
     border: none !important;
     border-radius: 0 !important;
 }
@@ -1211,13 +1215,13 @@ input[type=number] {
 }
 
 .form-select {
-    background-color: #EBEBEB !important;
+    background-color: lightgray !important;
     border: none !important;
     border-radius: 0;
 }
 
 #select2-brand-container {
-    background-color: #EBEBEB !important;
+    background-color: lightgray !important;
     border: none !important;
     padding: 0.375rem 2.25rem 0.375rem 0.75rem !important;
     border-radius: 0;
@@ -1513,9 +1517,94 @@ input[type=number] {
     }
 }
 
-@media only screen and (max-width: 2560px) and (min-width: 1441px) {
+@media only screen and (max-width: 2560px) and (min-width: 1921px) {
     .top-img {
-        margin-top: 10px;
+        margin-bottom: 12px;
+        width: 100% !important;
+        float: left;
+    }
+
+    .banner-img {
+        width: 100%;
+    }
+
+    .top-header-navigation {
+        width: 100% !important;
+        font-size: 10px;
+        /* background-color: aqua; */
+    }
+
+    .login-reg-panel {
+        position: relative;
+        top: 50%;
+        align-items: center !important;
+        /* transform: translateY(-40%); */
+        text-align: center;
+        width: 44% !important;
+        margin: auto;
+        height: 404px;
+        background-color: #7BC533;
+    }
+
+    .white-panel {
+        background-color: rgba(255, 255, 255, 1);
+        position: absolute;
+        top: -90px;
+        transition: .3s ease-in-out;
+        z-index: 0;
+        box-shadow: 0 0 15px 9px #00000096;
+        width: 535px !important;
+        height: 426px;
+    }
+
+    .login-info-box {
+        width: 46%;
+        padding: 0 50px;
+        top: 20%;
+        left: 0;
+        position: absolute;
+        text-align: right;
+        text-align: center;
+    }
+
+    .register-info-box {
+        width: 46%;
+        padding: 0 50px;
+        top: 20%;
+        right: 0;
+        position: absolute;
+        text-align: right;
+
+    }
+
+    .dont-have-an-account {
+        font-family: 'Poppins' !important;
+        font-style: normal !important;
+        font-weight: 700 !important;
+        font-size: 22px !important;
+        line-height: 48px !important;
+        letter-spacing: 0.05em !important;
+        color: #FFFFFF !important;
+    }
+
+    .dont-have-an-account-pra {
+        font-family: 'Poppins' !important;
+        font-style: normal !important;
+        font-weight: 500 !important;
+        font-size: 16px !important;
+        line-height: 27px !important;
+        text-align: center !important;
+        letter-spacing: 0.05em;
+        color: #FFFFFF !important;
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+    }
+
+}
+
+@media only screen and (max-width: 1920px) and (min-width: 1441px) {
+    .top-img {
+        margin-bottom: 12px;
         width: 100% !important;
         float: left;
     }
@@ -1597,6 +1686,8 @@ input[type=number] {
     }
 
 }
+
+
 
 @media only screen and (max-width: 1440px) and (min-width: 1025) {
     .top-header-navigation {
@@ -2085,7 +2176,7 @@ input[type=number] {
     }
 
     .form-signup input {
-        background-color: #EBEBEB !important;
+        background-color: lightgray !important;
         border: none !important;
     }
 
@@ -2142,7 +2233,7 @@ input[type=number] {
     }
 
     .form-login input {
-        background-color: #EBEBEB !important;
+        background-color: lightgray !important;
         border: none !important;
     }
 
