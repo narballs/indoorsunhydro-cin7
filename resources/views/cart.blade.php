@@ -34,9 +34,10 @@
 											</span>
 											Product
 										</th>
-										<th scope="col" class="th-lg">
+										<th scope="col" class="th-lg" width="20%">
 											<span>
-												<img class=" cart-icons-cart " src="/theme/img/dollar.png">
+												<img class=" cart-icons-cart " src="/theme/img/dollar.png"
+													style="width: 22px;">
 											</span>
 											Price
 										</th>
