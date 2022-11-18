@@ -35,6 +35,17 @@ Route::get('/',[ HomeController::class,
 // Route::resource('/abc', ProductController::class)->only([
 //     'abc'
 // ]);
+Route::get('send-mail', function () {
+   
+    $details = [
+        'title' => 'Mail from waqas',
+        'body' => 'This is for testing email using smtp'
+    ];
+   
+    \Mail::to('wqszeeshan@gmail.com')->send(new \App\Mail\Subscribe($details));
+   
+    dd("Email is Sent.");
+});
 //Route::get('/category/{id}', 'CategoryController@showCategory');
 Route::get('/products/{id}/{slug}', [ProductController::class, 'showProductByCategory']);
 Route::get('/products/', [ProductController::class, 'showAllProducts']);
