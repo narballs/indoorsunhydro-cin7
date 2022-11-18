@@ -16,11 +16,16 @@
                <label>Sort by</label>
                <select class="form-select" id="search_price" onchange="handleSelectChange('best_selling')">
                   <option value="0">Select Option</option>
-                  <option class="form-group" value="best-selling" {{ $price_creteria }} {{ isset($price_creteria) && $price_creteria == 'best-selling' ? 'selected="selected"' : '' }}>Best Selling</option>
-                   <option class="form-group" value="price-low-to-high" {{ $price_creteria }} {{ isset($price_creteria) && $price_creteria == 'price-low-to-high' ? 'selected="selected"' : '' }}>Price Low to High</option>
-                   <option class="form-group" value="price-high-to-low"  {{ $price_creteria }} {{ isset($price_creteria) && $price_creteria == 'price-high-to-low' ? 'selected="selected"' : '' }}>Price High to Low</option>
-                   <option class="form-group" value="brand-a-to-z" {{ $price_creteria }} {{ isset($price_creteria) && $price_creteria == 'brand-a-to-z' ? 'selected="selected"' : '' }}>Product A to Z</option>
-                   <option class="form-group" value="brand-z-to-a"  {{ $price_creteria }} {{ isset($price_creteria) && $price_creteria == 'brand-z-to-a' ? 'selected="selected"' : '' }}>Product Z to A</option>
+                  <option class="form-group" value="best-selling" {{ $price_creteria }} {{ isset($price_creteria) &&
+                     $price_creteria=='best-selling' ? 'selected="selected"' : '' }}>Best Selling</option>
+                  <option class="form-group" value="price-low-to-high" {{ $price_creteria }} {{ isset($price_creteria)
+                     && $price_creteria=='price-low-to-high' ? 'selected="selected"' : '' }}>Price Low to High</option>
+                  <option class="form-group" value="price-high-to-low" {{ $price_creteria }} {{ isset($price_creteria)
+                     && $price_creteria=='price-high-to-low' ? 'selected="selected"' : '' }}>Price High to Low</option>
+                  <option class="form-group" value="brand-a-to-z" {{ $price_creteria }} {{ isset($price_creteria) &&
+                     $price_creteria=='brand-a-to-z' ? 'selected="selected"' : '' }}>Product A to Z</option>
+                  <option class="form-group" value="brand-z-to-a" {{ $price_creteria }} {{ isset($price_creteria) &&
+                     $price_creteria=='brand-z-to-a' ? 'selected="selected"' : '' }}>Product Z to A</option>
                   <option class="form-group" value="price">Best Selling</option>
                   <option class="form-group" value="price-low-to-high" {{ $price_creteria }} {{ isset($price_creteria)
                      && $price_creteria=='price-low-to-high' ? 'selected="selected"' : '' }}>Price Low to High</option>
@@ -112,20 +117,6 @@
    <!--    {{$products->links('pagination::bootstrap-4')}} -->
    {{$products->appends(Request::all())->links()}}
 </div>
-<div class="py-5 bg-light">
-   <div class="col-md-12 text-center text-uppercase fs-4 mt-5">
-      Subscribe to news letter
-      <div class="fs-6 mt-1">
-         Signup now for additional information or new products
-         <div class="mt-3 mb-5">
-            <input type="text" name="serach-prduct" placeholder="Enter your email">
-            <button class="btn-outline-secondary text-white bg-dark h-35" type="button" id="button-addon1">
-               SUBSCRIBE
-            </button>
-         </div>
-      </div>
-   </div>
-</div>
 <script>
    $('#brand').select2({
     width: '100%',
@@ -139,13 +130,12 @@
   });
 </script>
 <script>
-   function showdetails(id, option_id, slug) {
-            //alert(slug);
+   function showdetails(id, option_id, slug) 
+   {
 				window.location.href = '/product-detail/'+ id +'/'+option_id+'/'+slug;
 			}
          function categoryChange() {
             var categories = jQuery('#categories').val();
-            //alert(category_id);
             window.location.href =  window.location.origin+'/products/'+category_id;
 
          } 

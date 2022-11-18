@@ -37,20 +37,6 @@
 		@endforeach
 	</div>
 </div>
-<div class="py-5 bg-light">
-	<div class="col-md-12 text-center text-uppercase fs-4 mt-5">
-		Subscribe to news letter
-		<div class="fs-6 mt-1">
-			Signup now for additional information or new products
-			<div class="mt-3 mb-5">
-				<input type="text" name="serach-prduct" placeholder="Enter your email"><button
-					class="btn-outline-secondary text-white bg-dark h-35" type="button" id="button-addon1">
-					SUBSCRIBE
-				</button>
-			</div>
-		</div>
-	</div>
-</div>
 
 <!-- Remove the container if you want to extend the Footer to full width. -->
 <script>
