@@ -80,7 +80,7 @@
 						</li>
 
 						<li class="nav-item me-4">
-							<a class="nav-link text-uppercase nav-item-links" href="#">Contact</a>
+							<a class="nav-link text-uppercase nav-item-links" href="{{url('contact-us')}}">Contact</a>
 						</li>
 
 						<li class="nav-item me-3">

@@ -6,6 +6,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ContactUsController;
 use App\Http\Controllers\Admin\TestController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\OrderManagementController;
@@ -58,7 +59,8 @@ Route::post('order', [OrderController::class, 'store'])->name('order');
 Route::get('/thankyou/{id}', [CheckoutController::class, 'thankyou'])->name('thankyou');
 Route::post('order-status-update', [OrderController::class, 'updateStatus'])->name('order.status.update');
 Route::post('change-password', [ChangePasswordController::class, 'store'])->name('change.password');
-
+Route::get('/contact-us/', [ContactUsController::class, 'index']);
+Route::post('/contact-us-store/', [ContactUsController::class, 'store'])->name('contact.us.store');
 //Route::post('/',[UserController::class, 'logout'])->name('logout');
 
 
