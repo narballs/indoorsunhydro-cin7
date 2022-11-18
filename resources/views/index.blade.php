@@ -119,7 +119,7 @@
                     </div>
 
                     <div class="col-sm-4">
-                        <div class="mt-3">
+                        <div class="mt-5">
                             <a class="link-dark text-decoration-none text-white" href="{{ url('products')}}">
                                 <img class="img-fluid" src="theme/img/all_products.png">
                             </a>
