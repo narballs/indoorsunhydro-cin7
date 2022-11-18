@@ -34,7 +34,7 @@
 											</span>
 											Product
 										</th>
-										<th scope="col">
+										<th scope="col" with="40%">
 											<span>
 												<img class=" cart-icons-cart " src="/theme/img/dollar.png">
 											</span>
