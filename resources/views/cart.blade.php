@@ -30,19 +30,19 @@
 
 										<th scope="col">
 											<span>
-												<img class="img-fluid" src="theme/img/box.png">
+												<img class="img-fluid" src="/theme/img/box.png">
 											</span>
 											Product
 										</th>
 										<th scope="col">
 											<span>
-												<img class=" cart-icons-cart " src="theme/img/dollar.png">
+												<img class=" cart-icons-cart " src="/theme/img/dollar.png">
 											</span>
 											Price
 										</th>
 										<th scope="col">Quantity</th>
 										<th scope="col">
-											<img class=" cart-icons-cart " src="theme/img/pricing_tag.png">
+											<img class=" cart-icons-cart " src="/theme/img/pricing_tag.png">
 											Total
 
 									</thead>
@@ -123,7 +123,7 @@
 										<div class="row">
 											<div class="col-sm">
 												<span class="coupon-code-label"><img class="img-fluid"
-														src="theme/img/Vector.png" class="img-fluid">&nbsp;&nbsp;Coupon
+														src="/theme/img/Vector.png" class="img-fluid">&nbsp;&nbsp;Coupon
 													code</span>
 											</div>
 											<div class="col-sm">
@@ -163,7 +163,7 @@
 						<li
 							class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
 							<div>
-								<img class="img-fluid" src="theme/img/dollar.png"
+								<img class="img-fluid" src="/theme/img/dollar.png"
 									class="img-fluid"><strong>Subtotal</strong>
 							</div>
 							<span id="cart_subtotal"><strong>${{$cart_total}}</strong></span>
@@ -171,7 +171,7 @@
 
 						<li class="list-group-item  justify-content-between align-items-center border-0 px-0 mb-3">
 							<div>
-								<img class="img-fluid" src="theme/img/shipping.png" class="img-fluid"><strong>
+								<img class="img-fluid" src="/theme/img/shipping.png" class="img-fluid"><strong>
 									&nbsp;&nbsp;Shipping</strong>
 							</div>
 							<div class="mt-2">
@@ -186,7 +186,7 @@
 
 						<li class="list-group-item  justify-content-between align-items-center border-0 px-0 mb-3">
 							<div>
-								<img class="img-fluid" src="theme/img/calculator.png" class="img-fluid"><span
+								<img class="img-fluid" src="/theme/img/calculator.png" class="img-fluid"><span
 									class="cart-calculator">
 									&nbsp;Calculate shipping
 								</span>
@@ -196,7 +196,7 @@
 						<li
 							class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
 							<div>
-								<img class="img-fluid" src="theme/img/FrameCart.png" class="img-fluid">
+								<img class="img-fluid" src="/theme/img/FrameCart.png" class="img-fluid">
 								<strong>Markup</strong>
 							</div>
 							<span id="cart_grand_total"><strong class="">${{$cart_total}}</strong></span>
@@ -205,7 +205,7 @@
 						<li
 							class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
 							<div>
-								<img class="img-fluid" src="theme/img/pricing_tag.png" class="img-fluid">
+								<img class="img-fluid" src="/theme/img/pricing_tag.png" class="img-fluid">
 								<strong>Total</strong>
 							</div>
 							<span id="cart_grand_total"><strong class="text-danger">${{$cart_total}}</strong></span>
