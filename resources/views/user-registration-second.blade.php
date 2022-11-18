@@ -52,7 +52,7 @@
 
 		</div>
 
-		<div class="row mt-5 ml-0 pr-0 w-100 " style="background-image: url('/theme/img/img_12.png');">
+		<div class="row ml-0 pr-0 w-100 " style="background-image: url('/theme/img/img_12.png');">
 			<div class="login-reg-panel col-xs-6">
 				<div class="register-info-box text-center">
 					<h2 class=" dont-have-an-account">Don't have an account?</h2>
@@ -150,7 +150,7 @@
 				</div>
 
 				<div class="row company-row bg-light">
-					<div class="col-md-12 d-none company-detail" id="company-detail">
+					<div class="col-md-12 d-none company-detail" id="company-detail" style="margin: auto">
 						<div class="col-md-12 bg-light text-center">
 							<h2 style="color:#25529F; font-size:30px" class="text-center mt-3 dont-have-an-account">
 								Company
@@ -234,7 +234,6 @@
 								SING UP & CONTINUE</button>
 						</div>
 					</div>
-
 				</div>
 
 				<div class="row business-row bg-light d-none" id="business-row">
@@ -319,7 +318,8 @@
 		</div>
 	</div>
 </div>
-
+@include('partials.footer')
+@include('partials.product-footer')
 <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
 
 <script type="text/javascript">
@@ -627,5 +627,3 @@
 	}
 
 </script>
-@include('partials.footer')
-@include('partials.product-footer')

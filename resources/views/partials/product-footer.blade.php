@@ -119,7 +119,7 @@
 			</div>
 			<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 footer-end ">
 				<p class="mt-4">
-					copayright @ La Garden Supplay. All right reserved
+					Copyright @ LA Garden Supply. All right reserved
 				</p>
 			</div>
 

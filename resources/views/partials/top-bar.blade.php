@@ -1,6 +1,6 @@
 <header class="p-2 bg-dark text-white top-bar-height w-100">
 
-    <div class="container-fluid">
+    <div class="container">
         <div class="row">
             <div class="col-md-4"></div>
             <div class="col-md-2">
