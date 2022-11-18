@@ -1277,6 +1277,7 @@ input[type=number] {
     background-color: #7BC533;
 }
 }
+
 .sing-up-label {
     width: 100%;
     height: 69px;
@@ -2098,21 +2099,25 @@ input[type=number] {
 
     }
 }
-.contact-form .form-login input{
+
+.contact-form .form-login input {
     width: 100% !important;
     height: 80px !important;
     outline: none !important;
 }
+
 .message {
     width: 496px;
     height: 177px;
     left: 979px;
     top: 599px;
 }
+
 .input-placeholder .btn-login {
     width: 496px !important;
     height: 79px;
 }
+
 .contact-row {
     width: 1171px;
     margin: auto;
