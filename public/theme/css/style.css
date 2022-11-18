@@ -390,7 +390,11 @@ a {
     font-size: 16px;
     line-height: 24px;
 }
-
+#contact_message {
+    background-color: #EBEBEB !important;
+    outline: none !important;
+    border: none;
+}
 .dropdown-menu-dark .dropdown-item {
     color: #333333 !important;
     border-bottom: 1px solid #DADADA;
@@ -2097,6 +2101,7 @@ input[type=number] {
 .contact-form .form-login input{
     width: 100% !important;
     height: 80px !important;
+    outline: none !important;
 }
 .message {
     width: 496px;
