@@ -28,20 +28,20 @@
 								<table class="table" id="cart_table">
 									<thead>
 
-										<th scope="col">
+										<th scope="col" class="th-lg">
 											<span>
 												<img class="img-fluid" src="/theme/img/box.png">
 											</span>
 											Product
 										</th>
-										<th scope="col" with="40%">
+										<th scope="col" class="th-lg">
 											<span>
 												<img class=" cart-icons-cart " src="/theme/img/dollar.png">
 											</span>
 											Price
 										</th>
-										<th scope="col">Quantity</th>
-										<th scope="col">
+										<th scope="col" class="th-lg">Quantity</th>
+										<th scope="col" class="th-lg">
 											<img class=" cart-icons-cart " src="/theme/img/pricing_tag.png">
 											Total
 
