@@ -1257,7 +1257,7 @@ input[type=number] {
     height: 25px;
     left: 10px;
     margin: auto;
-    background: #fffdfd7a;
+    background: #EBEBEB !important;
 }
 
 .placeholder span {
