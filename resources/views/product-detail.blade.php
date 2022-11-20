@@ -13,9 +13,7 @@
 <div class="row bg-light">
 
     <div class="container mt-5 mb-5">
-
         <div class="row d-flex justify-content-center">
-
             <div class="col-md-12">
                 <div class="card">
                     <div class="row ms-0">
@@ -23,7 +21,7 @@
                             <div class="images">
                                 @if($productOption->image)
                                 <div class="text-center mt-5">
-                                    <img id="main-image" src="{{$productOption->image}}" class="img-fluid        " />
+                                    <img id="main-image" src="{{$productOption->image}}" class="img-fluid" />
                                 </div>
                                 @else
                                 <div class="text-center mt-5">
@@ -67,6 +65,7 @@
                                         </div>
                                         @endif
                                     </div>
+
                                 </div>
                                 <form id="cart">
                                     @csrf
@@ -159,6 +158,7 @@
                         for (var key in cart_items) {
                             var item = cart_items[key];
 
+                            var code =parseFloat(item.code)
                             var product_id = item.prd_id;
                             var price = parseFloat(item.price);
                             var quantity = parseFloat(item.quantity);
