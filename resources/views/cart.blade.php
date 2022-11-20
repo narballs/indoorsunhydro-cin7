@@ -164,78 +164,48 @@
 						<li
 							class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
 							<div>
-								<img class="img-fluid" src="/theme/img/dollar.png"
-									class="img-fluid"><strong>Subtotal</strong>
+								<img class=" img-fluid" src="/theme/img/dollar.png"><strong>Subtotal</strong>
 							</div>
 							<span id="cart_subtotal"><strong>${{$cart_total}}</strong></span>
 						</li>
 
-						<li class="list-group-item  justify-content-between align-items-center border-0 px-0 mb-3">
-							<div>
-								<img class="img-fluid" src="/theme/img/shipping.png" class="img-fluid"><strong>
-									&nbsp;&nbsp;Shipping</strong>
-							</div>
-							<div class="mt-2">
-								<p class="cart-shipping-option">Enter your address to view shipping options.
-								</p>
-							</div>
-							<div class="form-signup">
-								<input type="text" name="email" id="email" class="fontAwesome form-control"
-									placeholder="&#xf0e0; Your email" required>
-							</div>
-						</li>
-
-						<li class="list-group-item  justify-content-between align-items-center border-0 px-0 mb-3">
-							<div>
-								<img class="img-fluid" src="/theme/img/calculator.png" class="img-fluid"><span
-									class="cart-calculator">
-									&nbsp;Calculate shipping
-								</span>
-							</div>
-						</li>
-
-						<li
-							class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
-							<div>
-								<img class="img-fluid" src="/theme/img/FrameCart.png" class="img-fluid">
-								<strong>Markup</strong>
-							</div>
-							<span id="cart_grand_total"><strong class="">${{$cart_total}}</strong></span>
-						</li>
-
-						<li
-							class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
-							<div>
-								<img class="img-fluid" src="/theme/img/pricing_tag.png" class="img-fluid">
-								<strong>Total</strong>
-							</div>
-							<span id="cart_grand_total"><strong class="text-danger">${{$cart_total}}</strong></span>
-						</li>
-
-					</ul>
-					@if (Auth::check() == true && !empty($contact->contact_id))
-					<a href="{{ url('/checkout')}}">
-						<button class="button-cards col w-100 mt-4" style="max-height: 46px;">
-							Proceed to checkout
-						</button>
-					</a>
-					@elseif(Auth::check() == true && empty($contact->contact_id))
-					<a href="{{ url('/checkout/')}}">
-						<button class="button-cards col w-100 mt4" style="max-height: 46px;">
-							Proceed to checkout
-						</button>
-					</a>
-					@elseif (Auth::check() != true)
-					<a href="{{ url('/user/')}}">
-						<button class="button-cards col w-100 mt-4" style="max-height: 46px;">
-							Login/Signup
-						</button>
-					</a>
-					@endif
 				</div>
+				</li>
+
+
+
+				<li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
+					<div>
+						<img class="img-fluid pl-4" src="/theme/img/pricing_tag.png">
+						<strong>Total</strong>
+					</div>
+					<span id="cart_grand_total"><strong class="text-danger">${{$cart_total}}</strong></span>
+				</li>
+
+				</ul>
+				@if (Auth::check() == true && !empty($contact->contact_id))
+				<a href="{{ url('/checkout')}}">
+					<button class="button-cards col w-100 mt-4" style="max-height: 46px;">
+						Proceed to checkout
+					</button>
+				</a>
+				@elseif(Auth::check() == true && empty($contact->contact_id))
+				<a href="{{ url('/checkout/')}}">
+					<button class="button-cards col w-100 mt4" style="max-height: 46px;">
+						Proceed to checkout
+					</button>
+				</a>
+				@elseif (Auth::check() != true)
+				<a href="{{ url('/user/')}}">
+					<button class="button-cards col w-100 mt-4" style="max-height: 46px;">
+						PROCEED TO CHECKOUT
+					</button>
+				</a>
+				@endif
 			</div>
 		</div>
 	</div>
+</div>
 </div>
 <div class="py-5 bg-light">
 	<div class="col-md-12 text-center text-uppercase fs-4 mt-5">

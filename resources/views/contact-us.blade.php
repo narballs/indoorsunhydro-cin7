@@ -19,8 +19,8 @@
 				<div class="form-signup-secondary mt-5">
 					<div class="px-3">
 						<form id="contact-us" class="w-100" name="contact-us" method="POST"
-						action="{{ route('contact.us.store') }}">
-						 @csrf
+							action="{{ route('contact.us.store') }}">
+							@csrf
 							<div class="row contact-form px-5">
 								<div class="col-md-6 ">
 									<div class="form-login">
@@ -30,7 +30,7 @@
 												 Name
 											</div>
 										</div>
-											<div class="input-placeholder mt-3 ">
+										<div class="input-placeholder mt-3 ">
 											<input type="text" name="email" required="">
 											<div class="placeholder pl-3 mt-4 fontAwesome">
 												 Email
@@ -45,11 +45,12 @@
 									</div>
 								</div>
 								<div class="col-md-6 col-sm-12">
-								 	<div class="input-placeholder mt-3">
-										<textarea type="text" name="message" required="" id="contact_message" class="message"></textarea>
-										<div class="placeholder pl-3 fontAwesome placeholder pl-3 fontAwesome m-0 mt-2">
-												 Message
-										</div>
+									<div class="input-placeholder mt-3">
+										<textarea type="text" name="message" required="" id="contact_message"
+											class="message fontAwesome pl-4" placeholder=" Message"></textarea>
+										{{-- <div class="placeholder pl-3  fontAwesome m-0 mt-2">
+											 Message
+										</div> --}}
 										<button type="submit" name="save" class="btn-login mt-3" id="save">SEND</button>
 									</div>
 								</div>
@@ -64,5 +65,5 @@
 	</div>
 </div>
 
-	@include('partials.footer')
-	@include('partials.product-footer')
+@include('partials.footer')
+@include('partials.product-footer')
