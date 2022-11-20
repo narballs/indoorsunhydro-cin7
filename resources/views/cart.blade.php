@@ -29,6 +29,9 @@
 									<thead>
 
 										<th scope="col" class="th-lg">
+											SKU
+										</th>
+										<th scope="col" class="th-lg">
 											<span>
 												<img class="img-fluid" src="/theme/img/box.png">
 											</span>
@@ -61,6 +64,10 @@
 			            				?>
 
 										<tr id="{{'row_'.$pk_product_id}}" class="quantities">
+											<td class="align-middle">
+												<p class="mb-0" style="font-weight: 500;">{{$cart['code']}}</p>
+
+											</td>
 											<th scope="row">
 												<div class="d-flex align-items-center">
 													<img src="{{$cart['image']}}" class="img-fluid rounded-3"
