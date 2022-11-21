@@ -60,7 +60,7 @@
 </footer> --}}
 <style>
 	.footer-section-product {
-		margin-top: 153px !important;
+		margin-top: 160px !important;
 	}
 </style>
 
