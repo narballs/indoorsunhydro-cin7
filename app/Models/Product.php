@@ -13,14 +13,14 @@ class Product extends Model
     {
         return $this->belongsTo('App\Models\Category','category_id');
     }
-    public function getProductsByBrand($brand = [])
-    {
-        return Product::select('id', 'images', 'brand')
-        ->whereIn('brand', $brand)
-        ->where('images', '<>', '')
-        ->take(50)
-        ->get()->toArray();
-    }
+    // public function getProductsByBrand($brand = [])
+    // {
+    //     return Product::select('id', 'images', 'brand')
+    //     ->whereIn('brand', $brand)
+    //     ->where('images', '<>', '')
+    //     ->take(50)
+    //     ->get()->toArray();
+    // }
 
     public function orderItem()
     {

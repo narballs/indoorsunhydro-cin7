@@ -38,6 +38,7 @@ class ProductController extends Controller
         return view('categories', compact('products'));
     }
     public function showProductByBrands($name) {
+     echo 'dsssd';exit;
         $products = Product::where('brand', $name)->get(); 
         return view('products-by-brand', compact('products'));
     }
