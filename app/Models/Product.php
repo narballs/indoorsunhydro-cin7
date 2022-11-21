@@ -21,6 +21,14 @@ class Product extends Model
         ->take(50)
         ->get()->toArray();
     }
+    // public function getProductsByBrand($brand = [])
+    // {
+    //     return Product::select('id', 'images', 'brand')
+    //     ->whereIn('brand', $brand)
+    //     ->where('images', '<>', '')
+    //     ->take(50)
+    //     ->get()->toArray();
+    // }
 
     public function orderItem()
     {
