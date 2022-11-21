@@ -184,19 +184,19 @@
 				</ul>
 				@if (Auth::check() == true && !empty($contact->contact_id))
 				<a href="{{ url('/checkout')}}">
-					<button class="button-cards col w-100 mt-4" style="max-height: 46px;">
-						Proceed to checkout
+					<button class="button-cards col w-100 mt-4" style="max-height: 46px;font-size: 17px; ">
+						PROCEED TO CHECKOUT
 					</button>
 				</a>
 				@elseif(Auth::check() == true && empty($contact->contact_id))
 				<a href="{{ url('/checkout/')}}">
-					<button class="button-cards col w-100 mt4" style="max-height: 46px;">
-						Proceed to checkout
+					<button class="button-cards col w-100 mt4" style="max-height: 46px; font-size: 17px;">
+						PROCEED TO CHECKOUT
 					</button>
 				</a>
 				@elseif (Auth::check() != true)
 				<a href="{{ url('/user/')}}">
-					<button class="button-cards col w-100 mt-4" style="max-height: 46px;">
+					<button class="button-cards col w-100 mt-4" style="max-height: 46px; font-size: 17px;">
 						PROCEED TO CHECKOUT
 					</button>
 				</a>

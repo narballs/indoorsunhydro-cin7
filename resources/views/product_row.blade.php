@@ -10,6 +10,7 @@
         @endif
         <div class="card-body d-flex flex-column text-center mt-2">
             <h5 class="card-title" style="font-weight: 500;font-size: 16px;" id="product_name_{{$product->id}}"><a
+                    class="product-row-product-title"
                     href="{{ url('product-detail/'.$product->id.'/'.$option->option_id.'/'.$product->slug) }}">{{$product->name}}</a>
             </h5>
 
@@ -19,7 +20,11 @@
             <div class="mt-auto">
                 <?php $retail_prices = $option->retailPrice;
 						?>
-                <p class="text-uppercase mb-0 text-center text-danger">${{ number_format($retail_prices,2)}}</p>
+                <h4 class="text-uppercase mb-0 text-center text-danger">${{ number_format($retail_prices,2)}}</h4>
+                @if($product->categories)
+                <p class="category-cart-page">
+                    Category:&nbsp;&nbsp;{{$product->categories->name}}</p>
+                @endif
                 @if($option->stockAvailable > 0)
                 <button class="ajaxSubmit button-cards col w-100" type="submit" style="max-height: 46px;"
                     id="ajaxSubmit_{{$product->id}}"
