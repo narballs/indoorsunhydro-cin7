@@ -639,20 +639,29 @@ a {
 .pagination {
     justify-content: center;
     margin-top: 50px !important;
+
 }
+
 
 .page-item {
     margin-left: 10px !important;
 }
 
+
 .page-item.active .page-link {
     background-color: #7BC533 !important;
-    color: #fff !important;
+    color: #ffff !important;
 }
 
 .page-item .page-link {
     border: none !important;
     color: lightgray;
+}
+
+.page-item .page-link a :hover {
+    border: none !important;
+    background-color: #7BC533 !important;
+    color: #fff;
 }
 
 .page-item:first-child .page-link {
@@ -665,17 +674,13 @@ a {
     color: #ffff;
 }
 
-/* .pagination .disable {
-    background-color: lightgray !important;
-} */
+
 
 .navbar-light .navbar-nav .nav-link {
     color: #000 !important;
 }
 
-/* .cart-item {
-    border-bottom: ;
-} */
+
 #circle {
     width: 20px;
     height: 20;
@@ -764,9 +769,7 @@ label {
     cursor: pointer;
 }
 
-/*.inline-flex > w-5 > h-5 {
-    width: 100px !important;
-}*/
+
 @media screen and (min-width: 992px) {
     #shipping_address {
         margin-left: -41px !important;
