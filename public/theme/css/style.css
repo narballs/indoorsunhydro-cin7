@@ -638,10 +638,11 @@ a {
 } */
 .pagination {
     justify-content: center;
+    margin-top: 50px !important;
 }
 
 .page-item {
-    margin-left: 40px !important;
+    margin-left: 10px !important;
 }
 
 .page-item.active .page-link {
@@ -654,10 +655,14 @@ a {
     color: lightgray;
 }
 
+.page-item:first-child .page-link {
+    background-color: lightgray !important;
+    color: #ffff;
+}
+
 .page-item:last-child .page-link {
     background-color: lightgray !important;
     color: #ffff;
-    font-size: 50px !important;
 }
 
 /* .pagination .disable {
