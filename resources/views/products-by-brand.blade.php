@@ -16,11 +16,16 @@
                <label>Sort by</label>
                <select class="form-select" id="search_price" onchange="handleSelectChange('best_selling')">
                   <option value="0">Select Option</option>
-                  <option class="form-group" value="best-selling" {{ $price_creteria }} {{ isset($price_creteria) && $price_creteria == 'best-selling' ? 'selected="selected"' : '' }}>Best Selling</option>
-                   <option class="form-group" value="price-low-to-high" {{ $price_creteria }} {{ isset($price_creteria) && $price_creteria == 'price-low-to-high' ? 'selected="selected"' : '' }}>Price Low to High</option>
-                   <option class="form-group" value="price-high-to-low"  {{ $price_creteria }} {{ isset($price_creteria) && $price_creteria == 'price-high-to-low' ? 'selected="selected"' : '' }}>Price High to Low</option>
-                   <option class="form-group" value="brand-a-to-z" {{ $price_creteria }} {{ isset($price_creteria) && $price_creteria == 'brand-a-to-z' ? 'selected="selected"' : '' }}>Product A to Z</option>
-                   <option class="form-group" value="brand-z-to-a"  {{ $price_creteria }} {{ isset($price_creteria) && $price_creteria == 'brand-z-to-a' ? 'selected="selected"' : '' }}>Product Z to A</option>
+                  <option class="form-group" value="best-selling" {{ $price_creteria }} {{ isset($price_creteria) &&
+                     $price_creteria=='best-selling' ? 'selected="selected"' : '' }}>Best Selling</option>
+                  <option class="form-group" value="price-low-to-high" {{ $price_creteria }} {{ isset($price_creteria)
+                     && $price_creteria=='price-low-to-high' ? 'selected="selected"' : '' }}>Price Low to High</option>
+                  <option class="form-group" value="price-high-to-low" {{ $price_creteria }} {{ isset($price_creteria)
+                     && $price_creteria=='price-high-to-low' ? 'selected="selected"' : '' }}>Price High to Low</option>
+                  <option class="form-group" value="brand-a-to-z" {{ $price_creteria }} {{ isset($price_creteria) &&
+                     $price_creteria=='brand-a-to-z' ? 'selected="selected"' : '' }}>Product A to Z</option>
+                  <option class="form-group" value="brand-z-to-a" {{ $price_creteria }} {{ isset($price_creteria) &&
+                     $price_creteria=='brand-z-to-a' ? 'selected="selected"' : '' }}>Product Z to A</option>
                   <option class="form-group" value="price">Best Selling</option>
                   <option class="form-group" value="price-low-to-high" {{ $price_creteria }} {{ isset($price_creteria)
                      && $price_creteria=='price-low-to-high' ? 'selected="selected"' : '' }}>Price Low to High</option>
@@ -57,7 +62,7 @@
                <select class="form-select" id="brand" name="brands[]" onchange="handleSelectChange('brand')">
                   <option>Select Brand</option>
                   @foreach($brands as $_brand_id => $brand_name)
-                  
+
                   <option value="{{ $_brand_id }}" {{ isset($brand_id) && $brand_id==$_brand_id ? 'selected="selected"'
                      : '' }}>{{ $brand_name }}</option>
                   @endforeach
@@ -109,8 +114,8 @@
       <div class="col-sm-12 col-md-6 col-lg-3 d-flex align-self-stretch">
          <div class="card shadow-sm mb-4 w-100">
             @if($option->image != '')
-            <a href="{{ url('product-detail/'.$product->id.'/'.$option->option_id) }}"><img
-                  src="{{$option['image']}}" class="col-md-10 offset-1" /></a>
+            <a href="{{ url('product-detail/'.$product->id.'/'.$option->option_id) }}"><img src="{{$option['image']}}"
+                  class="col-md-10 offset-1" /></a>
             @else
             <img src="{{ asset('theme/img/image_not_available.png') }}" class="w-100 img-fluid h-75 w-75"
                onclick="showdetails({{$product->id}})" />
@@ -131,20 +136,6 @@
       </div>
       @endforeach
       @endforeach
-   </div>
-</div>
-<div class="py-5 bg-light">
-   <div class="col-md-12 text-center text-uppercase fs-4 mt-5">
-      Subscribe to news letter
-      <div class="fs-6 mt-1">
-         Signup now for additional information or new products
-         <div class="mt-3 mb-5">
-            <input type="text" name="serach-prduct" placeholder="Enter your email"><button
-               class="btn-outline-secondary text-white bg-dark h-35" type="button" id="button-addon1">
-               SUBSCRIBE
-            </button>
-         </div>
-      </div>
    </div>
 </div>
 

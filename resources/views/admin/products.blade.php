@@ -8,8 +8,6 @@
 
 @section('content')
 
-<?php //dd($products);exit;?>
-
 <div class="table-wrapper">
     <div class="table-title">
         <span>
