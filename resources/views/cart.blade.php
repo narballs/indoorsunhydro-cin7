@@ -18,7 +18,7 @@
 	<p class="alert {{ Session::get('alert-class', 'alert-danger') }}">{{ Session::get('message') }}</p>
 	@endif
 	<div class="row">
-		<div class="col-sm-8 col-md-6 col-lg-8 d-flex align-self-stretch">
+		<div class="col-sm-8 col-md-6 col-lg-9 d-flex align-self-stretch">
 			<section class="h-100 h-custom">
 
 				<div class="container h-100 py-5">
@@ -70,8 +70,13 @@
 											</td>
 											<th scope="row">
 												<div class="d-flex align-items-center">
+													@if(!empty($cart['image']))
 													<img src="{{$cart['image']}}" class="img-fluid rounded-3"
 														style="width: 120px;" alt="Book">
+													@else
+													<img src="/theme/img/image_not_available.png"
+														class="img-fluid rounded-3" style="width: 120px;" alt="Book">
+													@endif
 													<div class="flex-column ms-4">
 														<p class="mb-2">{{$cart['name']}}</p>
 													</div>
@@ -96,18 +101,7 @@
 														<i class="fas fa-plus"></i>
 													</button>
 												</div>
-												{{-- <div class="d-flex flex-row" style="width:144px">
-													<input type="number" name="quantity" id="quantity" min="1"
-														max="{{$productOption->stockAvailable}}" step="1" value="1">
-													<input type="hidden" name="p_id" id="p_id"
-														value="{{$productOption->products->id}}">
-													<input type="hidden" name="p_id" id="option_id"
-														value="{{$productOption->option_id}}">
-													<div class="quantity-nav">
-														<div class="quantity-div quantity-up"></div>
-														<div class="quantity-div quantity-down"></div>
-													</div>
-												</div> --}}
+
 											</td>
 											<td class="align-middle">
 												<p class="mb-0 text-danger "
@@ -135,9 +129,7 @@
 													code</span>
 											</div>
 											<div class="col-sm">
-												{{-- <input type="text" placeholder="Your Code" id="coupon_code"
-													name="coupon_code" class="form-control "> --}}<div
-													class="form-signup">
+												<div class="form-signup">
 													<input type="text" name="code" id="code"
 														class="fontAwesome form-control" placeholder="Your code"
 														required>
@@ -161,7 +153,7 @@
 				</div>
 			</section>
 		</div>
-		<div class="col-md-4 d-flex align-self-stretch mt-5">
+		<div class="col-md-3 d-flex align-self-stretch mt-5">
 			<div class="card mb-4  col-md-12">
 				<div class="card-header py-3 bg-transparent">
 					<h5 class="mb-0 cart-total">Cart Total</h5>
