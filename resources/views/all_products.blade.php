@@ -10,7 +10,6 @@
 <div class="container">
    <form id="form-filter">
       <div class="col-md-12">
-
          <div class="row pl-5 pr-5 pb-4 pt-3" style="border: 1px solid rgba(0,0,0,.125);">
             <div class="col">
                <label>Sort by</label>
@@ -91,7 +90,13 @@
       @endforeach
       @endforeach
    </div>
-   {{$products->appends(Request::all())->links()}}
+   <div class="row">
+      <div class="container">
+         <div class="col-md-6 m-auto">
+            {{$products->appends(Request::all())->links()}}
+         </div>
+      </div>
+   </div>
 </div>
 <script>
    $('#brand').select2({
