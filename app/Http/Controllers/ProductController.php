@@ -383,12 +383,18 @@ class ProductController extends Controller
         $products_in_brand = Product::where('brand_id', $brand_id)->pluck('category_id', 'category_id')->toArray();
         $parent_ids = Category::whereIn('category_id', $products_in_brand)->pluck('parent_id', 'parent_id');
         $parent_names = Category::whereIn('category_id', $parent_ids)->pluck('name', 'id');
-        //dd($parent_names);
+        // dd($parent_names);
         $category_ids = Category::where('parent_id', $category_id)->pluck('id')->toArray();
         array_push($category_ids, $category_id);
         $all_product_ids = Product::whereIn('category_id', $category_ids)->pluck('id')->toArray();
         $brand_ids = Product::whereIn('id', $all_product_ids)->pluck('brand_id')->toArray();
-        $brand_id = $request->get('brand_id');
+        if (!empty($name)) {
+            $brand = Brand::where('name', $name)->first();
+            $brand_id = $brand->id;
+        }
+        else {
+            $brand_id = $request->get('brand_id');
+        }
         $stock = $request->get('stock');
         $price_creteria = $request->get('search_price');
         
