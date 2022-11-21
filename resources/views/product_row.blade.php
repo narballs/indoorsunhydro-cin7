@@ -23,7 +23,12 @@
                 <h4 class="text-uppercase mb-0 text-center text-danger">${{ number_format($retail_prices,2)}}</h4>
                 @if($product->categories)
                 <p class="category-cart-page">
-                    Category:&nbsp;&nbsp;{{$product->categories->name}}</p>
+                    Category:&nbsp;&nbsp;{{$product->categories->name}}
+                </p>
+                @else
+                    <p class="category-cart-page">
+                    Category:&nbsp;&nbsp;Unassigned
+                </p>
                 @endif
                 @if($option->stockAvailable > 0)
                 <button class="ajaxSubmit button-cards col w-100" type="submit" style="max-height: 46px;"
