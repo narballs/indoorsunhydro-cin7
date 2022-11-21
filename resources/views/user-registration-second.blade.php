@@ -150,9 +150,10 @@
 				</div>
 
 				<div class="row company-row bg-light">
-					<div class="col-md-12 d-none company-detail" id="company-detail" style="margin: auto">
+					<div class="col-md-12 d-none company-detail" id="company-detail"
+						style="margin: auto; height: 504px;">
 						<div class="col-md-12 bg-light text-center">
-							<h2 style="color:#25529F; font-size:30px" class="text-center mt-3 dont-have-an-account">
+							<h2 class="text-center mt-5" style="color:#25529F; font-size:30px">
 								Company
 								Detail</h2>
 						</div>
@@ -190,7 +191,7 @@
 
 					<div class="col-md-12 ms-2 company-loc d-none login-form-section" id="login-form-section">
 						<div class="col-md-12 bg-light text-center">
-							<h2 style="color:#25529F; font-size:30px" class="text-center pt-5 dont-have-an-account">SIGN
+							<h2 style="color:#25529F; font-size:30px" class="text-center pt-5">SIGN
 								UP
 							</h2>
 						</div>
@@ -236,7 +237,7 @@
 					</div>
 				</div>
 
-				<div class="row business-row bg-light d-none" id="business-row">
+				<div class="row business-row bg-light d-none" id="business-row" style="margin-top: -121px">
 					<div class="col-md-12 text-center">
 						<h2 style="color:#25529F; font-size:30px" class="text-center pt-5">Your Business Location</h2>
 					</div>

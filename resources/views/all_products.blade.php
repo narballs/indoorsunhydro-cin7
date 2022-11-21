@@ -10,14 +10,13 @@
 <div class="container">
    <form id="form-filter">
       <div class="col-md-12">
-
          <div class="row pl-5 pr-5 pb-4 pt-3" style="border: 1px solid rgba(0,0,0,.125);">
             <div class="col">
                <label>Sort by</label>
                <select class="form-select" id="search_price" onchange="handleSelectChange()">
                   <option value="0">Select Option</option>
-                  <option class="form-group" value="best-selling" {{ $price_creteria }} {{ isset($price_creteria)
-                     && $price_creteria=='best-selling' ? 'selected="selected"' : '' }}>Best Selling</option>
+                  <option class="form-group" value="best-selling" {{ $price_creteria }} {{ isset($price_creteria) &&
+                     $price_creteria=='best-selling' ? 'selected="selected"' : '' }}>Best Selling</option>
                   <option class="form-group" value="price-low-to-high" {{ $price_creteria }} {{ isset($price_creteria)
                      && $price_creteria=='price-low-to-high' ? 'selected="selected"' : '' }}>Price Low to High</option>
                   <option class="form-group" value="price-high-to-low" {{ $price_creteria }} {{ isset($price_creteria)
@@ -28,17 +27,19 @@
                      $price_creteria=='brand-z-to-a' ? 'selected="selected"' : '' }}>Brand Z to A</option>
                </select>
             </div>
-            <div class="col"> 
+            <div class="col">
                <?php //dd($category_id);?>
                <label>Categories</label>
-               <select class="form-select" id="selected_cat" name="selected_cat" onchange="handleSelectChange('category')">
+               <select class="form-select" id="selected_cat" name="selected_cat"
+                  onchange="handleSelectChange('category')">
                   <option value="0">Select Category</option>
                   @foreach($categories as $category)
-                     <option value="{{$category->id}}" {{ isset($category_id) && $category_id == $category->id ? 'selected="selected"' : '' }}>{{ $category->name }}</option>
+                  <option value="{{$category->id}}" {{ isset($category_id) && $category_id==$category->id ?
+                     'selected="selected"' : '' }}>{{ $category->name }}</option>
                   @endforeach
                </select>
             </div>
-             <div class="col"> 
+            <div class="col">
                <label>Brand</label>
                <select class="form-select" id="brand" name="brands[]" onchange="handleSelectChange()">
                   <option value="0">Select Brand</option>
@@ -89,18 +90,10 @@
       @endforeach
       @endforeach
    </div>
-   {{$products->appends(Request::all())->links()}}
-</div>
-<div class="py-5 bg-light">
-   <div class="col-md-12 text-center text-uppercase fs-4 mt-5">
-      Subscribe to news letter
-      <div class="fs-6 mt-1">
-         Signup now for additional information or new products
-         <div class="mt-3 mb-5">
-            <input type="text" name="serach-prduct" placeholder="Enter your email">
-            <button class="btn-outline-secondary text-white bg-dark h-35" type="button" id="button-addon1">
-               SUBSCRIBE
-            </button>
+   <div class="row">
+      <div class="container">
+         <div class="col-md-6 m-auto">
+            {{$products->appends(Request::all())->links()}}
          </div>
       </div>
    </div>
