@@ -300,7 +300,7 @@ class ProductController extends Controller
         }
         return view('categories', compact('products'));
     }
-<<<<<<< HEAD
+
     public function showProductByBrands(Request $request, $name) {
        if ($request->get('per_page')) {
             $per_page = $request->get('per_page');
@@ -383,7 +383,7 @@ class ProductController extends Controller
         $products_in_brand = Product::where('brand_id', $brand_id)->pluck('category_id', 'category_id')->toArray();
         $parent_ids = Category::whereIn('category_id', $products_in_brand)->pluck('parent_id', 'parent_id');
         $parent_names = Category::whereIn('category_id', $parent_ids)->pluck('name', 'id');
-        dd($parent_names);
+        //dd($parent_names);
         $category_ids = Category::where('parent_id', $category_id)->pluck('id')->toArray();
         array_push($category_ids, $category_id);
         $all_product_ids = Product::whereIn('category_id', $category_ids)->pluck('id')->toArray();
@@ -468,13 +468,6 @@ class ProductController extends Controller
             'name'
             )
         );
-=======
-    public function showProductByBrands($name)
-    {
-        // $products = Product::where('brand', $name)->where('status', 'Public')->get(); 
-        $products = Product::where('brand', $name)->with('options')->get();
-        return view('products-by-brand', compact('products'));
->>>>>>> 2c328b79de64cca7b6abb72387452d66533efd6e
     }
 
     public function addToCart(Request $request)
