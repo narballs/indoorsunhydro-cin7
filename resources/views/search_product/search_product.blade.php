@@ -22,23 +22,6 @@
                 window.location.href = '/product-detail/'+ id;
 
             }
-            // function updateCart(id) {
-            //     jQuery.ajax({
-            //    url: "{{ url('/add-to-cart/') }}",
-            //    method: 'post',
-            //    data: {
-            //      "_token": "{{ csrf_token() }}",
-            //       p_id: jQuery('#p_'+id).val(),
-            //       quantity: 1
-            //    },
-            //    success: function(result){
-            //             console.log(result);
-            //             jQuery('.alert').html(result.success);
-            //             //window.location.reload();
-            //    }});
-
-            //     return false;
-            // }
        
             function updateCart(id, option_id) {
                 jQuery.ajax({

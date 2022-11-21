@@ -67,7 +67,7 @@
     </table>
     <div class="clearfix">
         <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
-        <ul class="pagination">
+        <ul class="pagination justify-content-between">
             <li class="page-item disabled"><a href="#"><i class="fa fa-angle-double-left"></i></a></li>
             <li class="page-item"><a href="#" class="page-link">1</a></li>
             <li class="page-item"><a href="#" class="page-link">2</a></li>
