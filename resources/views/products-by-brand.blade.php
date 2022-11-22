@@ -41,9 +41,10 @@
             <div class="col">
                <?php //dd($category_id);?>
                <label>Categories</label>
+
                <select class="form-select" id="selected_cat" name="selected_cat"
                   onchange="handleSelectChange('category')">
-
+               <option>Select Category</option>
                   @foreach($categories as $category)
 
                   <option value="{{$category->id}}/{{$category->slug}}" {{ isset($category_id) &&
