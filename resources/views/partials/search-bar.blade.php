@@ -17,7 +17,7 @@
                 <input type="hidden" id="is_search" name="is_search" value="1">
                 <div class="input-group top-search-group">
                     <input type="text" class="form-control" placeholder="What are you searching for" aria-label="Search"
-                        aria-describedby="basic-addon2" id="search" name="value">
+                        aria-describedby="basic-addon2" id="search" name="value" value="{{ isset($searched_value) ? $searched_value : '' }}">
                     <span class="input-group-text" id="search-addon">
                         <button class="btn-info" type="submit" id="search" style="background: transparent;border:none">
                             <i class="text-white" data-feather="search"></i>

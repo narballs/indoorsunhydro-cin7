@@ -579,14 +579,14 @@ class ProductController extends Controller
             //$perpage = $request->input('perPage');
             $products = Product::with(['options' => function ($q) use ($price, $instock) {
                 $q->where('status', '!=', 'Disabled')->where('retailPrice', '>=', $price)->where('stockAvailable', '>', 0);
-            }])->where('status', '!=', 'Inactive')->where('brand_id', $brand)->paginate(10);
+            }])->where('status', '!=', 'Inactive')->where('brand_id', $brand)->paginate(12);
             $count = 0;
             return view('search_product.filters', compact('products', 'count', 'brand'))->render();
         }
         if ($request->get('per_page')) {
             $per_page = $request->get('per_page');
         } else {
-            $per_page = 10;
+            $per_page = 12;
         }
 
         $search_queries = $request->all();
@@ -723,10 +723,10 @@ class ProductController extends Controller
                 $q->where('status', '!=', 'Disabled');
             }])->where('status', '!=', 'Inactive')
             ->where('name', 'LIKE', '%' . $request->value . '%')
-            ->orWhere('code', 'LIKE', '%' . $request->value . '%')->paginate(10);
+            ->orWhere('code', 'LIKE', '%' . $request->value . '%')->paginate(12);
         }
 
-        
+        $searched_value = $request->value;
 
         $category_id = $selected_category_id;
 
@@ -757,7 +757,8 @@ class ProductController extends Controller
                 'category_id',
                 'parent_category_slug',
                 'brand_id',
-                'per_page'
+                'per_page',
+                'searched_value'
             ));
     }
 }

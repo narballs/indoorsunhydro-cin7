@@ -52,12 +52,12 @@
             <div class="col">
                <label>Result per page</label>
                <select id="per_page" class="form-select" onchange="handleSelectChange()">
-                  <option value="10" {{ $per_page }} {{ isset($per_page) && $per_page==10 ? 'selected="selected"' : ''
-                     }}>10</option>
                   <option value="20" {{ $per_page }} {{ isset($per_page) && $per_page==20 ? 'selected="selected"' : ''
                      }}>20</option>
-                  <option value="30" {{ $per_page }} {{ isset($per_page) && $per_page==30 ? 'selected="selected"' : ''
-                     }}>30</option>
+                  <option value="40" {{ $per_page }} {{ isset($per_page) && $per_page==40 ? 'selected="selected"' : ''
+                     }}>40</option>
+                  <option value="60" {{ $per_page }} {{ isset($per_page) && $per_page==60 ? 'selected="selected"' : ''
+                     }}>60</option>
                </select>
             </div>
             <div class="col">
