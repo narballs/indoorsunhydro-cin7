@@ -631,11 +631,6 @@ a {
     margin-left: -25em !important;
 }
 
-/* .custom-pagination-brand-blue .pagination li.active .page-link {
-    background: red;
-    border-color: orange;
-    color: #fff;
-} */
 .pagination {
     justify-content: center;
     margin-top: 50px !important;

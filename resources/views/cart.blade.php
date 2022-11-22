@@ -25,103 +25,101 @@
 					<div class="row d-flex justify-content-center align-items-center">
 						<div class="col-md-12">
 							<div class="" style=" font-family:'Poppins">
-								<div class="table-responsive">
-									<table class="table" id="cart_table">
-										<thead>
-											<th scope="col" class="th-lg">
-												SKU
-											</th>
-											<th scope="col" class="th-lg">
-												<span>
-													<img class="img-fluid" src="/theme/img/box.png">
-												</span>
-												Product
-											</th>
-											<th scope="col" class="th-lg">
-												<span>
-													<img class=" cart-icons-cart img-fluid " src="/theme/img/dollar.png"
-														style="width: 22px;">
-												</span>
-												Price
-											</th>
-											<th scope="col" class="th-lg">Quantity</th>
-											<th scope="col" class="th-lg">
-												<img class=" cart-icons-cart " src="/theme/img/pricing_tag.png">
-												Total
 
-										</thead>
-										<tbody>
-											<?php 
+								<table class="table table-responsive" id="cart_table">
+									<thead>
+										<th scope="col" class="th-lg">
+											SKU
+										</th>
+										<th scope="col" class="th-lg">
+											<span>
+												<img class="img-fluid" src="/theme/img/box.png">
+											</span>
+											Product
+										</th>
+										<th scope="col" class="th-lg" width="20%">
+											<span>
+												<img class=" cart-icons-cart " src="/theme/img/dollar.png"
+													style="width: 22px;">
+											</span>
+											Price
+										</th>
+										<th scope="col" class="th-lg">Quantity</th>
+										<th scope="col" class="th-lg">
+											<img class=" cart-icons-cart " src="/theme/img/pricing_tag.png">
+											Total
+
+									</thead>
+									<tbody>
+										<?php 
             								$cart_total = 0;
             								$cart_price = 0;
             							?>
-											@if ($cart_items)
-											@foreach ($cart_items as $pk_product_id => $cart)
-											<?php 
+										@if ($cart_items)
+										@foreach ($cart_items as $pk_product_id => $cart)
+										<?php 
 			            							$total_quatity =  $cart['quantity'];
 													$total_price = $cart['price'] * $total_quatity;
 													$cart_total  = $cart_total + $total_price ;
 			            				?>
 
-											<tr id="{{'row_'.$pk_product_id}}" class="quantities">
-												<td class="align-middle">
-													<p class="mb-0" style="font-weight: 500;">{{$cart['code']}}</p>
+										<tr id="{{'row_'.$pk_product_id}}" class="quantities">
+											<td class="align-middle">
+												<p class="mb-0" style="font-weight: 500;">{{$cart['code']}}</p>
 
-												</td>
-												<th scope="row">
-													<div class="d-flex align-items-center">
-														@if(!empty($cart['image']))
-														<img src="{{$cart['image']}}" class="img-fluid rounded-3"
-															style="width: 120px;" alt="Book">
-														@else
-														<img src="/theme/img/image_not_available.png"
-															class="img-fluid rounded-3" style="width: 120px;"
-															alt="Book">
-														@endif
-														<div class="flex-column ms-4">
-															<p class="mb-2">{{$cart['name']}}</p>
-														</div>
+											</td>
+											<th scope="row">
+												<div class="d-flex align-items-center">
+													@if(!empty($cart['image']))
+													<img src="{{$cart['image']}}" class="img-fluid rounded-3"
+														style="width: 120px;" alt="Book">
+													@else
+													<img src="/theme/img/image_not_available.png"
+														class="img-fluid rounded-3" style="width: 120px;" alt="Book">
+													@endif
+													<div class="flex-column ms-4">
+														<p class="mb-2">{{$cart['name']}}</p>
 													</div>
-												</th>
-												<td class="align-middle">
-													<p class="mb-0" style="font-weight: 500;">${{$cart['price']}}</p>
+												</div>
+											</th>
+											<td class="align-middle">
+												<p class="mb-0" style="font-weight: 500;">${{$cart['price']}}</p>
 
-												</td>
-												<td class="align-middle">
-													<div class="d-flex flex-row">
-														<button class="btn btn-link px-2"
-															onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
-															<i class="fas fa-minus"></i>
-														</button>
-														<input id="{{'row_quantity_'.$pk_product_id}}" min="0"
-															name="quantity" value="{{$cart['quantity']}}" type="number"
-															class="form-control form-control-sm quantity"
-															style="width: 50px;" />
-														<button class="btn btn-link px-2"
-															onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
-															<i class="fas fa-plus"></i>
-														</button>
-													</div>
+											</td>
+											<td class="align-middle">
+												<div class="d-flex flex-row">
+													<button class="btn btn-link px-2"
+														onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
+														<i class="fas fa-minus"></i>
+													</button>
+													<input id="{{'row_quantity_'.$pk_product_id}}" min="0"
+														name="quantity" value="{{$cart['quantity']}}" type="number"
+														class="form-control form-control-sm quantity"
+														style="width: 50px;" />
+													<button class="btn btn-link px-2"
+														onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
+														<i class="fas fa-plus"></i>
+													</button>
+												</div>
 
-												</td>
-												<td class="align-middle">
-													<p class="mb-0 text-danger "
-														style="font-weight: 600; font-size: 20; font-family:'Poppins'">
-														<span id="subtotal_{{ $pk_product_id }}">${{$cart['price'] *
-															$cart['quantity'] }}</span>
-													</p>
-													<p class="text-center remove-item-cart">
-														<a style="color:#b5b5b5;  font-family:'Poppins"
-															href="{{ url('remove/'.$pk_product_id) }}"
-															id="remove">Remove</a>
-													</p>
-												</td>
-											</tr>
-											@endforeach
-											@endif
-										</tbody>
-									</table>
-								</div>
+											</td>
+											<td class="align-middle">
+												<p class="mb-0 text-danger "
+													style="font-weight: 600; font-size: 20; font-family:'Poppins'">
+													<span id="subtotal_{{ $pk_product_id }}">${{$cart['price'] *
+														$cart['quantity'] }}</span>
+												</p>
+												<p class="text-center remove-item-cart">
+													<a style="color:#b5b5b5;  font-family:'Poppins"
+														href="{{ url('remove/'.$pk_product_id) }}"
+														id="remove">Remove</a>
+												</p>
+											</td>
+										</tr>
+										@endforeach
+										@endif
+									</tbody>
+								</table>
 								<div class="row">
 									<div class="col-md-8 coupon-code">
 										<div class="row">
