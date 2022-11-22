@@ -14,6 +14,7 @@
 
         <div class=" col-xl-3 col-lg-3 col-md-12 col-sm-12 col-xs-12">
             <form class="d-flex mt-3" method="get" action="{{route('product_search')}}">
+                <input type="hidden" id="is_search" name="is_search" value="1">
                 <div class="input-group top-search-group">
                     <input type="text" class="form-control" placeholder="What are you searching for" aria-label="Search"
                         aria-describedby="basic-addon2" id="search" name="value">
