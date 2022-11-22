@@ -22,11 +22,11 @@
 						?>
                 <h4 class="text-uppercase mb-0 text-center text-danger">${{ number_format($retail_prices,2)}}</h4>
                 @if($product->categories)
-                <p class="category-cart-page">
+                <p class="category-cart-page mt-4">
                     Category:&nbsp;&nbsp;{{$product->categories->name}}
                 </p>
                 @else
-                    <p class="category-cart-page">
+                <p class="category-cart-page mt-4">
                     Category:&nbsp;&nbsp;Unassigned
                 </p>
                 @endif
