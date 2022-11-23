@@ -69,30 +69,33 @@
 
 										<tr id="{{'row_'.$pk_product_id}}" class="quantities">
 											<td class="align-middle">
-												<p class="mb-0" style="font-weight: 500;"> <a class="text-dark"
-														href="{{ url('product-detail/'.$cart['product_id'].'/'.$cart['option_id'].'/'.$cart['slug']) }}">{{$cart['code']}}</a>
+												<p class="mb-0" style="font-weight: 500;"> <a
+														class="text-dark cart-page-items"
+														href="{{ url('product-detail/'.$cart['product_id'].'/'.$cart['option_id'].'/'.$cart['slug']) }}" ">{{$cart['code']}}</a>
 												</p>
 
 											</td>
-											<th scope="row">
-												<div class="d-flex align-items-center">
-													@if(!empty($cart['image']))
-													<img src="{{$cart['image']}}" class="img-fluid rounded-3"
-														style="width: 120px;" alt="Book">
-													@else
-													<img src="/theme/img/image_not_available.png"
-														class="img-fluid rounded-3" style="width: 78px;
+											<td scope=" row">
+														<div class="d-flex align-items-center">
+															@if(!empty($cart['image']))
+															<img src="{{$cart['image']}}" class="img-fluid rounded-3"
+																style="width: 120px;" alt="Book">
+															@else
+															<img src="/theme/img/image_not_available.png"
+																class="img-fluid rounded-3" style="width: 78px;
 														height: 83px;" alt="Book">
-													@endif
-													<div class="flex-column ms-4">
-														<p class="mb-2"><a class="text-dark pe-3"
-																href="{{ url('product-detail/'.$cart['product_id'].'/'.$cart['option_id'].'/'.$cart['slug']) }}">{{$cart['name']}}</a>
-														</p>
-													</div>
-												</div>
-											</th>
-											<td class="align-middle">
-												<p class="mb-0 ps-2" style="font-weight: 500;">${{$cart['price']}}</p>
+															@endif
+															<div class="flex-column ms-4">
+																<p class="mb-2">
+																	<a class="text-dark pe-3 cart-page-items"
+																		href="{{ url('product-detail/'.$cart['product_id'].'/'.$cart['option_id'].'/'.$cart['slug']) }}">{{$cart['name']}}
+																	</a>
+																</p>
+															</div>
+														</div>
+											</td>
+											<td class=" align-middle">
+												<p class="mb-0 ps-2  cart-page-items">${{$cart['price']}}</p>
 
 											</td>
 											<td class="align-middle">
@@ -145,22 +148,17 @@
 												</div>
 											</div>
 											<div class="col-5 p-0">
-												<span><button class="apply-coupon-code-button w-100" style="width: 147px;
-													height: 44px;
-													left: 714px;
-													top: 779px;
-													text-transform: uppercase;
-													background: #E74B3B;">
-														Apply Coupon</button></span>
+												<span>
+													<button class="apply-coupon-code-button w-100">
+														Apply Coupon
+													</button>
+												</span>
 											</div>
 										</div>
 									</div>
 									<div class="col-md-4 p-0">
 										<button class="button-cards w-75 cart-updated" type="submit" id="update_cart"
-											onclick="update_cart()" style="width: 147px;
-											height: 44px;
-											left: 714px;
-											top: 779px;">Update
+											onclick="update_cart()">Update
 											Cart</button>
 									</div>
 								</div>
