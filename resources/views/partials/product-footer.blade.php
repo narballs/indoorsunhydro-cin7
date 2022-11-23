@@ -58,13 +58,7 @@
 			</div>
 		</div>
 </footer> --}}
-<style>
-	.footer-section-product {
-		margin-top: 160px !important;
-	}
-</style>
-
-<footer class="text-white text-lg-start bg-dark h-900">
+<footer class="text-white text-lg-start bg-dark mt-5 h-900">
 	<div class="container-fluid">
 		<div class="row ">
 			<div class=" col-xl-2 col-lg-2 col-md-0 col-sm-0 col-xs-0 text-dark ">

@@ -1688,6 +1688,10 @@ input[type=number] {
     padding-left: 164px;
 }
 
+.footer-section-product {
+    margin-top: 160px !important;
+}
+
 @media (max-width: 1200px) {
     .col-sm-12 {
         margin-top: 10px;
