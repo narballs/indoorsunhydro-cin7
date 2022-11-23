@@ -69,7 +69,6 @@
                                     class="cart-counter-details">{{$total_quantity}}</span>&nbsp;<span
                                     class="cart-counter-details">items</span> )</a>
                 </div>
-
             </div>
         </div>
     </div>
