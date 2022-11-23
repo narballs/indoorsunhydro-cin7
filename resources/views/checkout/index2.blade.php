@@ -141,7 +141,7 @@
                     <span class="cart-subtitles">Subtotal</span>
                 </div>
                 <div class="col-md-2">
-                    <span class="totals">${{$cart_total}}</span>
+                    <span class="totals">$ {{ number_format($cart_total,2)}}</span>
                 </div>
             </div>
             <div class="border-bottom mt-4"></div>
@@ -151,7 +151,7 @@
                     <img src="theme/img/pricing_tag.png">
                     <span class="totals">Total</span>
                 </div>
-                <div class="col-md-2 text-danger totals">${{$cart_total}}</div>
+                <div class="col-md-2 text-danger totals">${{ number_format($cart_total,2)}}</div>
             </div>
             <div class="border-bottom mt-4"></div>
 

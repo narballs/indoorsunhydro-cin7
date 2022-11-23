@@ -100,7 +100,8 @@
 														</div>
 											</td>
 											<td class=" align-middle">
-												<p class="mb-0 ps-2  cart-page-items">${{$cart['price']}}</p>
+												<p class="mb-0 ps-2  cart-page-items">${{number_format(
+													$cart['price'],2)}} </p>
 
 											</td>
 											<td class="align-middle">
@@ -123,8 +124,9 @@
 											<td class="align-middle">
 												<p class="mb-0 text-danger ps-2"
 													style="font-weight: 600; font-size: 20; font-family:'Poppins'">
-													<span id="subtotal_{{ $pk_product_id }}">${{$cart['price'] *
-														$cart['quantity'] }}</span>
+													<span
+														id="subtotal_{{ $pk_product_id }}">${{number_format($cart['price']
+														*$cart['quantity'],2 )}}</span>
 												</p>
 												<p class="text-center remove-item-cart">
 													<a style="color:#b5b5b5;  font-family:'Poppins"
@@ -188,7 +190,9 @@
 							<div>
 								<img class=" img-fluid" src="/theme/img/dollar.png"><strong>Subtotal</strong>
 							</div>
-							<span id="cart_subtotal"><strong>${{$cart_total}}</strong></span>
+							<span id="cart_subtotal"><strong>${{ number_format($cart_total,2)}}</strong></span>
+
+
 						</li>
 						<li
 							class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
@@ -196,7 +200,8 @@
 								<img class="img-fluid" src="/theme/img/pricing_tag.png">
 								<strong>Total</strong>
 							</div>
-							<span id="cart_grand_total"><strong class="text-danger">${{$cart_total}}</strong></span>
+							<span id="cart_grand_total"><strong class="text-danger">${{
+									number_format($cart_total,2)}}</strong></span>
 						</li>
 						<li
 							class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
