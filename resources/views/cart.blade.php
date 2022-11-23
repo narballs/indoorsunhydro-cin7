@@ -13,12 +13,12 @@
 </div>
 @endif
 
-<div class="container-fluid w-75">
+<div class="container">
 	@if (Session::has('message'))
 	<p class="alert {{ Session::get('alert-class', 'alert-danger') }}">{{ Session::get('message') }}</p>
 	@endif
 	<div class="row">
-		<div class="col-sm-9 col-md-9 col-lg-9 col-xl-9">
+		<div class="" style="width: 75%">
 			<section class="h-100 h-custom">
 
 				<div class="h-100 py-5">
@@ -37,14 +37,18 @@
 											</span>
 											Product
 										</th>
-										<th scope="col" class="th-lg" width="20%">
+										<th scope="col" class="th-lg" width="15%">
 											<span>
-												<img class=" cart-icons-cart " src="/theme/img/dollar.png"
-													style="width: 22px;">
+												<img class=" cart-icons-cart " src="/theme/img/Price_Target.png">
 											</span>
 											Price
 										</th>
-										<th scope="col" class="th-lg">Quantity</th>
+										<th scope="col" class="th-lg">
+											<span>
+												<img src="/theme/img/Arrows_Down_Up.png" alt="">
+											</span>
+											Quantity
+										</th>
 										<th scope="col" class="th-lg">
 											<img class=" cart-icons-cart " src="/theme/img/pricing_tag.png">
 											Total
@@ -65,7 +69,9 @@
 
 										<tr id="{{'row_'.$pk_product_id}}" class="quantities">
 											<td class="align-middle">
-												<p class="mb-0" style="font-weight: 500;">{{$cart['code']}}</p>
+												<p class="mb-0" style="font-weight: 500;"> <a class="text-dark"
+														href="{{ url('product-detail/'.$cart['product_id'].'/'.$cart['option_id'].'/'.$cart['slug']) }}">{{$cart['code']}}</a>
+												</p>
 
 											</td>
 											<th scope="row">
@@ -75,15 +81,18 @@
 														style="width: 120px;" alt="Book">
 													@else
 													<img src="/theme/img/image_not_available.png"
-														class="img-fluid rounded-3" style="width: 120px;" alt="Book">
+														class="img-fluid rounded-3" style="width: 78px;
+														height: 83px;" alt="Book">
 													@endif
 													<div class="flex-column ms-4">
-														<p class="mb-2">{{$cart['name']}}</p>
+														<p class="mb-2"><a class="text-dark pe-3"
+																href="{{ url('product-detail/'.$cart['product_id'].'/'.$cart['option_id'].'/'.$cart['slug']) }}">{{$cart['name']}}</a>
+														</p>
 													</div>
 												</div>
 											</th>
 											<td class="align-middle">
-												<p class="mb-0" style="font-weight: 500;">${{$cart['price']}}</p>
+												<p class="mb-0 ps-2" style="font-weight: 500;">${{$cart['price']}}</p>
 
 											</td>
 											<td class="align-middle">
@@ -104,7 +113,7 @@
 
 											</td>
 											<td class="align-middle">
-												<p class="mb-0 text-danger "
+												<p class="mb-0 text-danger ps-2"
 													style="font-weight: 600; font-size: 20; font-family:'Poppins'">
 													<span id="subtotal_{{ $pk_product_id }}">${{$cart['price'] *
 														$cart['quantity'] }}</span>
@@ -120,30 +129,38 @@
 										@endif
 									</tbody>
 								</table>
-								<div class="row">
+								<div class="w-100 d-flex">
 									<div class="col-md-8 coupon-code">
-										<div class="row">
-											<div class="col-sm">
+										<div class=" align-items-center d-flex">
+											<div>
 												<span class="coupon-code-label"><img class="img-fluid"
 														src="/theme/img/Vector.png" class="img-fluid">&nbsp;&nbsp;Coupon
 													code</span>
 											</div>
-											<div class="col-sm">
-												<div class="form-signup">
+											<div class="col-4 ps-3">
+												<div class="form-signupp">
 													<input type="text" name="code" id="code"
 														class="fontAwesome form-control" placeholder="Your code"
 														required>
 												</div>
 											</div>
-											<div class="col-sm">
-												<span><button class="apply-coupon-code-button">APPLY
-														COUPAN</button></span>
+											<div class="col-5 p-0">
+												<span><button class="apply-coupon-code-button w-100" style="width: 147px;
+													height: 44px;
+													left: 714px;
+													top: 779px;
+													text-transform: uppercase;
+													background: #E74B3B;">
+														Apply Coupon</button></span>
 											</div>
 										</div>
 									</div>
-									<div class="col-md-4">
+									<div class="col-md-4 p-0">
 										<button class="button-cards w-75 cart-updated" type="submit" id="update_cart"
-											onclick="update_cart()">Update
+											onclick="update_cart()" style="width: 147px;
+											height: 44px;
+											left: 714px;
+											top: 779px;">Update
 											Cart</button>
 									</div>
 								</div>
@@ -153,8 +170,11 @@
 				</div>
 			</section>
 		</div>
-		<div class="col-md-3  mt-5">
-			<div class="card mb-4  col-md-12">
+
+
+		<div class="col-md-3 p-0  mt-5">
+			<div class="card mb-4 p-0 col-md-12 h-100">
+
 				<div class="card-header py-3 bg-transparent">
 					<h5 class="mb-0 cart-total">Cart Total</h5>
 				</div>
@@ -167,42 +187,49 @@
 							</div>
 							<span id="cart_subtotal"><strong>${{$cart_total}}</strong></span>
 						</li>
+						<li
+							class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
+							<div>
+								<img class="img-fluid" src="/theme/img/pricing_tag.png">
+								<strong>Total</strong>
+							</div>
+							<span id="cart_grand_total"><strong class="text-danger">${{$cart_total}}</strong></span>
+						</li>
+						<li
+							class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
+							@if (Auth::check() == true && !empty($contact->contact_id))
+							<a href="{{ url('/checkout')}}">
+								<button class="procedd-to-checkout col w-100 tm-5">
+									PROCEED TO CHECKOUT
+								</button>
+							</a>
+							@elseif(Auth::check() == true && empty($contact->contact_id))
+							<a href="{{ url('/checkout/')}}">
+								<button class="procedd-to-checkout col w-100 tm-5">
+									PROCEED TO CHECKOUT
+								</button>
+							</a>
+							@elseif (Auth::check() != true)
+							<a href="{{ url('/user/')}}">
+								<button class="procedd-to-checkout col w-100 tm-5">
+									PROCEED TO CHECKOUT
+								</button>
+							</a>
+							@endif
+						</li>
 
+
+
+					</ul>
 				</div>
-				</li>
 
 
 
-				<li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
-					<div>
-						<img class="img-fluid pl-4" src="/theme/img/pricing_tag.png">
-						<strong>Total</strong>
-					</div>
-					<span id="cart_grand_total"><strong class="text-danger">${{$cart_total}}</strong></span>
-				</li>
-
-				</ul>
-				@if (Auth::check() == true && !empty($contact->contact_id))
-				<a href="{{ url('/checkout')}}">
-					<button class="button-cards col w-100 mt-4" style="max-height: 46px;font-size: 17px; ">
-						PROCEED TO CHECKOUT
-					</button>
-				</a>
-				@elseif(Auth::check() == true && empty($contact->contact_id))
-				<a href="{{ url('/checkout/')}}">
-					<button class="button-cards col w-100 mt4" style="max-height: 46px; font-size: 17px;">
-						PROCEED TO CHECKOUT
-					</button>
-				</a>
-				@elseif (Auth::check() != true)
-				<a href="{{ url('/user/')}}">
-					<button class="button-cards col w-100 mt-4" style="max-height: 46px; font-size: 17px;">
-						PROCEED TO CHECKOUT
-					</button>
-				</a>
-				@endif
 			</div>
 		</div>
+
+
+
 	</div>
 </div>
 </div>

@@ -489,7 +489,8 @@ class ProductController extends Controller
                 "price" => $productOption->retailPrice,
                 "code" => $productOption->code,
                 "image" => $productOption->image,
-                'option_id' => $productOption->option_id
+                'option_id' => $productOption->option_id,
+                "slug" => $productOption->products->slug,
             ];
         }
         $request->session()->put('cart', $cart);
@@ -722,8 +723,8 @@ class ProductController extends Controller
             $products = Product::with(['options' => function ($q) {
                 $q->where('status', '!=', 'Disabled');
             }])->where('status', '!=', 'Inactive')
-            ->where('name', 'LIKE', '%' . $request->value . '%')
-            ->orWhere('code', 'LIKE', '%' . $request->value . '%')->paginate($per_page);
+                ->where('name', 'LIKE', '%' . $request->value . '%')
+                ->orWhere('code', 'LIKE', '%' . $request->value . '%')->paginate($per_page);
         }
 
         $searched_value = $request->value;
@@ -746,19 +747,19 @@ class ProductController extends Controller
         // );
 
 
-        
+
 
         return view('search_product.search_product', compact(
-                'products',
-                'brands',
-                'price_creteria',
-                'categories',
-                'stock',
-                'category_id',
-                'parent_category_slug',
-                'brand_id',
-                'per_page',
-                'searched_value'
-            ));
+            'products',
+            'brands',
+            'price_creteria',
+            'categories',
+            'stock',
+            'category_id',
+            'parent_category_slug',
+            'brand_id',
+            'per_page',
+            'searched_value'
+        ));
     }
 }
