@@ -1507,7 +1507,6 @@ input[type=number] {
     font-weight: 600;
     font-size: 14px;
     line-height: 21px;
-    /* identical to box height */
     color: #FFFFFF;
 
 }
@@ -1542,17 +1541,21 @@ input[type=number] {
 }
 
 .apply-coupon-code-button {
-    background-color: #dc3545 !important;
+    background: #E74B3B;
     color: #FFFFFF !important;
     border: none;
     font: Poppins;
     font-weight: 600;
     font-size: 15px;
-    height: 40px;
-    line-height: 27px
+    height: 44px;
+    line-height: 27px;
+    text-transform: uppercase;
+    width: 147px;
+    height: 44px;
+    letter-spacing: 0.05em;
+
 }
 
-/* klsdfldk */
 
 .coupon-code {
     font-family: 'Poppins';
@@ -1563,9 +1566,17 @@ input[type=number] {
 
 .cart-updated {
     float: right;
-    font-size: 15px;
-    height: 39px;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 18px;
+    display: flex;
+    align-items: center;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
+    color: #FFFFFF;
+    justify-content: center;
 }
 
 .coupon-code-label {
@@ -1661,6 +1672,16 @@ input[type=number] {
     height: 44px;
     text-decoration: none;
     margin-top: 47px;
+}
+
+.cart-page-items {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+
+    color: #131313;
 }
 
 .thumbnail-img {
