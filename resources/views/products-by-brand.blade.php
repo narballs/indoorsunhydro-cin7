@@ -6,6 +6,7 @@
       PRODUCTS
    </p>
 </div>
+<?php //dd($products);?>
 <div class="container">
    <form id="form-filter">
       <div class="col-md-12">
@@ -125,7 +126,7 @@
                <input type="hidden" name="quantity" value="1" id="quantity">
                <input type="hidden" name="p_id" id="p_{{$product->id}}" value="{{$product->id}}">
                <h5 class="card-title" style="font-weight: 500;
-                        font-size: 16px;"><a href="{{ url('product-detail/'.$product->id.'/'.$option->option_id) }}"
+                        font-size: 16px;"><a href="{{ url('product-detail/'.$product->id.'/'.$option->option_id.'/'.$product->slug) }}"
                      id=product_name_{{$product->id}}>{{$product->name}}</a></h5>
                <div class="mt-auto">
                   <p class="text-uppercase mb-0 text-center text-danger">${{$product->retail_price}}</p>
@@ -155,7 +156,7 @@
                },
 
                success: function(response){
-                                   if(response.status == 'success'){
+                        if(response.status == 'success'){
                         var cart_items = response.cart_items;
                         var cart_total = 0;
                         var total_cart_quantity = 0;
