@@ -530,7 +530,6 @@ class ProductController extends Controller
         } else {
             $view = 'empty-cart';
         }
-
         return view($view, compact(
             'cart_items',
             'contact'
