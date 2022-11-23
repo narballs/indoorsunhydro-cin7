@@ -212,14 +212,10 @@
             </div>
         </div>
     </main>
-    {{--
-    <div class="row">
-        <img class="img-fluid" src="theme/img/advantages.png">
-    </div> --}}
 
     </div>
     @include('partials.product-footer')
-    @include('partials.footer');
+    @include('partials.footer')
 </body>
 
 <script>

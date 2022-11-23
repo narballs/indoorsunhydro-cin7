@@ -19,7 +19,7 @@
 	@endif
 	<div class="row">
 
-		<div class="" style="width: 75%">
+		<div style="width: 75%">
 			<section class="h-100 h-custom">
 
 				<div class="h-100 py-5">
@@ -172,7 +172,7 @@
 
 
 		<div class="col-md-3 p-0  mt-5">
-			<div class="card mb-4 p-0 col-md-12 h-100">
+			<div class="card mb-4 p-0 col-md-12">
 
 				<div class="card-header py-3 bg-transparent">
 					<h5 class="mb-0 cart-total">Cart Total</h5>

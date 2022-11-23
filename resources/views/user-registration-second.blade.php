@@ -21,7 +21,7 @@
 				</div>
 			</div>
 
-			<div class="col-md-12 col-xs-6 mt-5 d-none" id="icons">
+			<div class="col-md-12 col-xs-6 mt-5 d-none" id="icons" style="padding-right: 47px;">
 				<div class="icon-container d-flex">
 					<figure>
 						<img class="img-fluid" src="/theme/img/round-solid.png" id="sign-up">

@@ -1653,7 +1653,6 @@ input[type=number] {
     border: none;
     height: 44px;
     text-decoration: none;
-    margin-top: 47px;
 }
 
 .procedd-to-checkout:hover {
@@ -1692,6 +1691,10 @@ input[type=number] {
     margin-top: 160px !important;
 }
 
+.banner-img {
+    width: 100%;
+}
+
 @media (max-width: 1200px) {
     .col-sm-12 {
         margin-top: 10px;
@@ -1713,7 +1716,6 @@ input[type=number] {
     .top-header-navigation {
         width: 100% !important;
         font-size: 10px;
-        /* background-color: aqua; */
     }
 
     .login-reg-panel {
