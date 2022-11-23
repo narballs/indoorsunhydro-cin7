@@ -128,19 +128,19 @@
 
                     <div class="col-md-12">
                         <div class="row mt-3">
-                            <div class="col-md-4">
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                                 <a class="link-dark text-decoration-none text-white"
                                     href="{{ url('product-brand/Trolmaster')}}">
                                     <img class="img-fluid" src="theme/img/troll_master.png">
                                 </a>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                                 <a class="link-dark text-decoration-none text-white"
                                     href="{{ url('products/253/ac-dehumidification-humidification')}}">
                                     <img class="img-fluid" src="theme/img/quest.png">
                                 </a>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                                 <a class="link-dark text-decoration-none text-white"
                                     href="{{ url('product-brand/Advanced Nutrients')}}">
                                     <img class="img-fluid" src="theme/img/nutrients_box.png">
@@ -151,39 +151,71 @@
 
                     <div class="col-md-12">
                         <div class="row mt-3 gx-5">
+
                             <div class="col-md-4">
                                 <a class="link-dark text-decoration-none text-white"
                                     href="{{ url('products/7/lighting')}}">
                                     <img class="img-fluid" src="theme/img/lightening.png">
                                 </a>
-
                             </div>
+
                             <div class="col-md-4">
                                 <a class="link-dark text-decoration-none text-white"
                                     href="{{ url('product-brand/Mills Nutrients')}}">
                                     <img class="img-fluid" src="theme/img/can.png">
                                 </a>
-
                             </div>
+
                             <div class="col-md-4">
                                 <a class="link-dark text-decoration-none text-white"
                                     href="{{ url('products/7/lighting')}}">
                                     <img class="img-fluid" src="theme/img/lux_lightening.png">
                                 </a>
-
                             </div>
 
                         </div>
+                    </div>
+                    <div class="col-md-12">
+                        <h1 class="text-center our-advantages">Our advantages</h1>
+                    </div>
+
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xs-12 mt-5 ">
+                        <div class="thumbnail-img">
+                            <img src="/theme/img/National shipping.png" alt="">
+                        </div>
+
+                        <h4 class="thumbnail-items text-center mt-5">Nationwide Shipping</h4>
+                        <p class="thumbnail-pra mt-3 ">with multiple warehouses you can get the supplies you need
+                            delivered to
+                            your door faster</p>
+                    </div>
+
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xs-12 mt-5">
+
+                        <div class="thumbnail-img">
+                            <img src="/theme/img/Icon_lowest_prices.png" alt="">
+                        </div>
+                        <h4 class="thumbnail-items text-center mt-5">Lowest Prices</h4>
+                        <p class="thumbnail-pra mt-3">we purchase in bulk so you don’t have to</p>
+                    </div>
+
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xs-12 mt-5">
+                        <div class="thumbnail-img">
+                            <img src="/theme/img/Icon_quality.png" alt="">
+                        </div>
+                        <h4 class="thumbnail-items text-center mt-5">Quality Products</h4>
+                        <p class="thumbnail-pra mt-3">we only carry products that we stand by, we honor all manufacturer
+                            warranties</p>
                     </div>
 
                 </div>
             </div>
         </div>
     </main>
-
+    {{--
     <div class="row">
         <img class="img-fluid" src="theme/img/advantages.png">
-    </div>
+    </div> --}}
 
     </div>
     @include('partials.product-footer')
