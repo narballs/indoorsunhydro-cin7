@@ -1,5 +1,4 @@
 @include('partials.header')
-
 <body>
     <main>
         @include('partials.top-bar')
