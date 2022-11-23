@@ -1055,15 +1055,25 @@ label {
 
 
 
-.swal2-title {
+.swal2-html {
     font-weight: 200 !important;
     color: blue !important;
+}
+
+
+.body.swal2-toast-shown .swal2-container.swal2-top {
+    width: 500px !important;
 }
 
 .swal2-radio {
     display: grid !important;
     text-align: left !important;
 }
+
+.swal2-title .product-detail-heading {
+    font-size: 14px !important;
+}
+
 
 .dropdown-menu-dark li {
     position: relative;
@@ -1670,7 +1680,6 @@ input[type=number] {
     border: none;
     height: 44px;
     text-decoration: none;
-    margin-top: 47px;
 }
 
 .cart-page-items {

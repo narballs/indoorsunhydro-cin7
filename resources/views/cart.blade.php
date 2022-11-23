@@ -27,9 +27,13 @@
 						<div class="col-md-12">
 							<div class="" style=" font-family:'Poppins">
 
-								<table class="table table-responsive" id="cart_table">
+								<table class="table table-responsive border" id="cart_table">
 									<thead>
 										<th scope="col" class="th-lg">
+											<span>
+												<img class="img-fluid" src="/theme/img/barcode.png" style="    width: 29px;
+												">
+											</span>
 											SKU
 										</th>
 										<th scope="col" class="th-lg">
