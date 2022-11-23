@@ -18,6 +18,7 @@
 	<p class="alert {{ Session::get('alert-class', 'alert-danger') }}">{{ Session::get('message') }}</p>
 	@endif
 	<div class="row">
+
 		<div class="" style="width: 75%">
 			<section class="h-100 h-custom">
 
@@ -230,38 +231,8 @@
 
 	</div>
 </div>
-</div>
-<div class="py-5 bg-light">
-	<div class="col-md-12 text-center text-uppercase fs-4 mt-5">
-		<h5 class="subscribe-heading">SUBSCRIBE TO NEWSLETTER</h5>
-		<div class="fs-6 mt-1">
-			<p class="subscribe-pra">Sign up now for additional information or new products</p>
 
-			<div class="mt-3 mb-5">
-				<div class="login-show-btn">
-					<input type="text" name="email" id="email" class="fontAwesome pl-4" placeholder="Enter your email"
-						required style="    font-family: 'Poppins', FontAwesome, 'Poppins';
-						padding: 6px;
-						/* padding: 1; */
-						height: 61px;
-						width: 307px;
-						border: none;
-						border-radius: 4px;">
-					<button class="btn-outline-secondary text-white bg-dark h-35" type="button" id="button-addon1"
-						style="width: 170px;
-					height: 60px;
-					left: 1075px;
-					top: 1268px;
-					background: #000000;
-					border-radius: 0px 5px 5px 0px;">
-						SUBSCRIBE
-					</button>
-				</div>
 
-			</div>
-		</div>
-	</div>
-</div>
 @include('partials.product-footer')
 
 @include('partials.footer')
