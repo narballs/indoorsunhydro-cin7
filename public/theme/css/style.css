@@ -1055,14 +1055,20 @@ label {
 
 
 
-.swal2-html {
+.swal2-title {
     font-weight: 200 !important;
+    font-size: 20px;
     color: blue !important;
 }
 
 
 .body.swal2-toast-shown .swal2-container.swal2-top {
     width: 500px !important;
+    margin-top: 10px;
+}
+
+.swal2-container {
+    width: 482px !important;
 }
 
 .swal2-radio {
@@ -1071,9 +1077,16 @@ label {
 }
 
 .swal2-title .product-detail-heading {
-    font-size: 14px !important;
+    font-size: 12px !important;
+
 }
 
+.swal2-image {
+    width: 150px;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    margin-right: 186px !important;
+}
 
 .dropdown-menu-dark li {
     position: relative;
@@ -1476,8 +1489,8 @@ input[type=number] {
 
 .coupon-code input[type="text"] {
     height: 44px;
-    background-color: #f7eded !important;
-    border-color: #b5b5b5;
+    background: #F5F5F5;
+    border: 1px solid #EBEBEB;
 }
 
 .update_cart {
@@ -1590,8 +1603,12 @@ input[type=number] {
 }
 
 .coupon-code-label {
-    color: lightgray;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 600;
     font-size: 14px;
+    line-height: 24px;
+    color: #9A9A9A;
 }
 
 .footer-container-section {
@@ -1688,7 +1705,6 @@ input[type=number] {
     font-weight: 600;
     font-size: 16px;
     line-height: 24px;
-
     color: #131313;
 }
 
