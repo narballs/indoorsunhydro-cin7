@@ -17,3 +17,6 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
+<div class="spinner-border text-success hide_default" role="status" id="spinner-global">
+					<span class="sr-only">Loading...</span>
+				</div>
