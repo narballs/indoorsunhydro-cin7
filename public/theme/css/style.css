@@ -1053,7 +1053,54 @@ label {
     visibility: center;
 }
 
+.thank-you-page-body {
+    position: absolute;
+    width: 1094px;
+    height: 689px;
+    left: 213px;
+    top: 22px;
 
+    background: #FFFFFF;
+    opacity: 0.1;
+}
+
+.thank-you-page-heading {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 25px;
+    line-height: 29px;
+    color: #000000;
+}
+
+.thnak-you-page-top-section {
+    width: 1015px;
+    height: 120px;
+    left: 245px;
+    top: 134px;
+    background: #FAFAFA;
+    border-radius: 5px;
+}
+
+.thank-you-page-product-name {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 18px;
+    color: #0096DE;
+}
+
+.thank-you-page-product-price {
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 300;
+    font-size: 20px;
+    line-height: 23px;
+
+    color: #000000;
+}
 
 .swal2-title {
     font-weight: 200 !important;
