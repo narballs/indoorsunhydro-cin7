@@ -7,6 +7,7 @@ use App\Models\ContactUs;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\JsonResponse;
 use App\Mail\Subscribe;
+use App\Http\Requests\Users\ContactUsRequest;
 
 class ContactUsController extends Controller
 {
@@ -14,13 +15,7 @@ class ContactUsController extends Controller
         return view('contact-us');
     }
 
-    public function store(Request $request) {
-          $this->validate($request, [
-            'name' => 'required',
-            'email' => 'required|email',
-            'subject'=>'required',
-            'message' => 'required'
-         ]);
+    public function store(ContactUsRequest $request) {
         $contact = new ContactUs([
             'name' => $request->get('name'),
             'email' => $request->get('email'),
@@ -54,6 +49,8 @@ class ContactUsController extends Controller
         // //     ], 
         // //     200
         // // );
-    return back()->with('success', 'We have received your message and would like to thank you for writing to us.');
+         return response()->json(['success' => true, 'created'=> true, 'msg' => 'Thank you for subscribing to our email, please check your inbox.']);
+    // return back()->with('success', 'We have received your message and would like to thank you for writing to us.');
     }
 }
+

@@ -1,5 +1,4 @@
 <header class="p-2 bg-dark text-white top-bar-height w-100">
-
     <div class="container">
         <div class="row">
             <div class="col-md-4"></div>
@@ -67,7 +66,8 @@
                                     id="topbar_cart_total" class="ms-2 cart-counter-details">
                                     {{number_format($grand_total, 2)}}</span>&nbsp;(<span id="cart_items_quantity"
                                     class="cart-counter-details">{{$total_quantity}}</span>&nbsp;<span
-                                    class="cart-counter-details">items</span> )</a>
+                                    class="cart-counter-details">items</span> )
+                                </a>
                 </div>
             </div>
         </div>

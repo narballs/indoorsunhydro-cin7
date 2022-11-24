@@ -46,7 +46,11 @@
     line-height: 1rem;
     margin-left: 10px !important;
 }
-
+#success {
+    background-color: #7BC533 !important;
+    font-size: 21px !important;
+    font-family: 'Poppins';
+}
 
 
 #search-addon {
@@ -628,7 +632,7 @@ a {
 
 .spinner-border {
     left: 50% !important;
-    margin-left: -25em !important;
+    /*margin-left: -25em !important;*/
 }
 
 .pagination {
@@ -2542,7 +2546,7 @@ input[type=number] {
     top: 599px;
 }
 
-#contact_message {
+#message {
     background-color: #EBEBEB;
     outline: none;
     border: none;
@@ -2557,4 +2561,14 @@ input[type=number] {
     width: 1171px;
     margin: auto;
     height: 615px;
+}
+
+#spinner-global{
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    z-index: 1000;
+}
+.hide_default{
+    display: none;
 }
