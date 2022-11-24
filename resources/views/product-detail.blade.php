@@ -164,7 +164,7 @@
                                 var cart_total = cart_total + subtotal;
                                 var total_cart_quantity = total_cart_quantity + quantity;
 
-                                
+
                             $('#subtotal_' + product_id).html('$'+subtotal);
                            
                         }
@@ -175,7 +175,7 @@
                             toast: true,
                             icon: 'success',
                             title: jQuery('#quantity').val() + ' X ' + product_name + '<div class="text-dark fw-bold fs-5">'+ product_price +'</div>'+ '<br>' + 'added to your cart',
-                            timer: 30000000,
+                            timer: 3000,
                             imageUrl: $src,
                             showConfirmButton: false,
                             position: 'top',
