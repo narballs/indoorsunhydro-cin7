@@ -17,47 +17,48 @@
 	@if (Session::has('message'))
 	<p class="alert {{ Session::get('alert-class', 'alert-danger') }}">{{ Session::get('message') }}</p>
 	@endif
-	<div class="row">
 
+
+	<div class="row">
 		<div style="width: 75%">
 			<section class="h-100 h-custom">
-
 				<div class="h-100 py-5">
 					<div class="row d-flex justify-content-center align-items-center">
 						<div class="col-md-12">
 							<div class="" style=" font-family:'Poppins">
-
 								<table class="table table-responsive border" id="cart_table">
 									<thead>
-										<th scope="col" class="th-lg">
-											<span>
-												<img class="img-fluid" src="/theme/img/barcode.png" style="    width: 29px;
+										<tr>
+											<th scope="col" class="th-lg">
+												<span>
+													<img class="img-fluid" src="/theme/img/barcode.png" style="    width: 29px;
 												">
-											</span>
-											SKU
-										</th>
-										<th scope="col" class="th-lg">
-											<span>
-												<img class="img-fluid" src="/theme/img/box.png">
-											</span>
-											Product
-										</th>
-										<th scope="col" class="th-lg" width="15%">
-											<span>
-												<img class=" cart-icons-cart " src="/theme/img/Price_Target.png">
-											</span>
-											Price
-										</th>
-										<th scope="col" class="th-lg">
-											<span>
-												<img src="/theme/img/Arrows_Down_Up.png" alt="">
-											</span>
-											Quantity
-										</th>
-										<th scope="col" class="th-lg">
-											<img class=" cart-icons-cart " src="/theme/img/pricing_tag.png">
-											Total
-
+												</span>
+												SKU
+											</th>
+											<th scope="col" class="th-lg">
+												<span>
+													<img class="img-fluid" src="/theme/img/box.png">
+												</span>
+												Product
+											</th>
+											<th scope="col" class="th-lg" width="15%">
+												<span>
+													<img class=" cart-icons-cart " src="/theme/img/Price_Target.png">
+												</span>
+												Price
+											</th>
+											<th scope="col" class="th-lg">
+												<span>
+													<img src="/theme/img/Arrows_Down_Up.png" alt="">
+												</span>
+												Quantity
+											</th>
+											<th scope="col" class="th-lg">
+												<img class=" cart-icons-cart " src="/theme/img/pricing_tag.png">
+												Total
+											</th>
+										</tr>
 									</thead>
 									<tbody>
 										<?php 
@@ -80,6 +81,7 @@
 												</p>
 
 											</td>
+
 											<td scope=" row">
 														<div class="d-flex align-items-center">
 															@if(!empty($cart['image']))
@@ -99,11 +101,13 @@
 															</div>
 														</div>
 											</td>
+
 											<td class=" align-middle">
 												<p class="mb-0 ps-2  cart-page-items">${{number_format(
 													$cart['price'],2)}} </p>
 
 											</td>
+
 											<td class="align-middle">
 												<div class="d-flex flex-row">
 													<button class="btn btn-link px-2"
@@ -121,9 +125,9 @@
 												</div>
 
 											</td>
+
 											<td class="align-middle">
-												<p class="mb-0 text-danger ps-2"
-													style="font-weight: 600; font-size: 20; font-family:'Poppins'">
+												<p class="mb-0 text-danger ps-2  cart-page-items">
 													<span
 														id="subtotal_{{ $pk_product_id }}">${{number_format($cart['price']
 														*$cart['quantity'],2 )}}</span>
@@ -134,65 +138,70 @@
 														id="remove">Remove</a>
 												</p>
 											</td>
+
 										</tr>
 										@endforeach
 										@endif
 									</tbody>
-								</table>
-								<div class="w-100 d-flex">
-									<div class="col-md-8 coupon-code">
-										<div class=" align-items-center d-flex">
-											<div>
-												<span class="coupon-code-label"><img class="img-fluid"
-														src="/theme/img/Vector.png" class="img-fluid">&nbsp;&nbsp;Coupon
-													code</span>
-											</div>
-											<div class="col-4 ps-3">
-												<div class="form-signupp">
-													<input type="text" name="code" id="code"
-														class="fontAwesome form-control" placeholder="Your code"
-														required>
+									<tfoot class="border">
+										<tr>
+											<td colspan="5">
+												<div class="w-100 d-flex mt-4">
+													<div class="col-md-8 coupon-code ps-0">
+														<div class=" align-items-center d-flex">
+															<div>
+																<span class="coupon-code-label"><img class="img-fluid"
+																		src="/theme/img/Vector.png"
+																		class="img-fluid">&nbsp;&nbsp;Coupon
+																	code</span>
+															</div>
+															<div class="col-4 ps-3">
+																<div class="form-signupp">
+																	<input type="text" name="code" id="code"
+																		class="fontAwesome form-control"
+																		placeholder="Your code" required>
+																</div>
+															</div>
+															<div class="col-5 p-0">
+																<span>
+																	<button class="apply-coupon-code-button w-100">
+																		Apply Coupon
+																	</button>
+																</span>
+															</div>
+														</div>
+													</div>
+													<div class="col-md-4 p-0">
+														<button class="button-cards w-75 cart-updated" type="submit"
+															id="update_cart" onclick="update_cart()">Update
+															Cart</button>
+													</div>
 												</div>
-											</div>
-											<div class="col-5 p-0">
-												<span>
-													<button class="apply-coupon-code-button w-100">
-														Apply Coupon
-													</button>
-												</span>
-											</div>
-										</div>
-									</div>
-									<div class="col-md-4 p-0">
-										<button class="button-cards w-75 cart-updated" type="submit" id="update_cart"
-											onclick="update_cart()">Update
-											Cart</button>
-									</div>
-								</div>
+											</td>
+										</tr>
+									</tfoot>
+								</table>
 							</div>
 						</div>
 					</div>
 				</div>
 			</section>
 		</div>
-
-
 		<div class="col-md-3 p-0  mt-5">
 			<div class="card mb-4 p-0 col-md-12">
 
-				<div class="card-header py-3 bg-transparent">
+				<div class="card-header py-3 bg-transparent" style="margin-top:6px;">
 					<h5 class="mb-0 cart-total">Cart Total</h5>
 				</div>
-				<div class="card-body ">
+				<div class="card-body h-100">
 					<ul class="list-group list-group-flush">
 						<li
-							class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
+							class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3 border">
 							<div>
 								<img class=" img-fluid" src="/theme/img/dollar.png"><strong>Subtotal</strong>
 							</div>
-							<span id="cart_subtotal"><strong>${{ number_format($cart_total,2)}}</strong></span>
-
-
+							<span id="cart_subtotal"><span class=" cart-page-items">${{
+									number_format($cart_total,2)}}</span></span>
 						</li>
 						<li
 							class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
@@ -200,7 +209,7 @@
 								<img class="img-fluid" src="/theme/img/pricing_tag.png">
 								<strong>Total</strong>
 							</div>
-							<span id="cart_grand_total"><strong class="text-danger">${{
+							<span id="cart_grand_total"><strong class="text-danger cart-page-items">${{
 									number_format($cart_total,2)}}</strong></span>
 						</li>
 						<li
@@ -225,22 +234,12 @@
 							</a>
 							@endif
 						</li>
-
-
-
 					</ul>
 				</div>
-
-
-
 			</div>
 		</div>
-
-
-
 	</div>
 </div>
-
 
 @include('partials.product-footer')
 
