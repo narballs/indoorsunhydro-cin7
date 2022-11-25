@@ -172,8 +172,6 @@
                     </div>
 
                     @endforeach
-
-
                     @endforeach
             </div>
 
@@ -199,12 +197,13 @@
                     $total_price = $cart['price'] * $total_quatity;
                     $cart_total  = $cart_total + $total_price ;
                 ?>
-            <li class="d-flex justify-content-between border-bottom">
+            <li class="d-flex justify-content-between border-bottom mt-1">
+                <div class="mt-2">
+                    <img src="{{ $cart['image']}}" alt="" width="70px;">
+                </div>
                 <div class="mt-4 mb-4">
                     <h6 class="my-0" style="color: #008BD3 !important;"><a href="">{{$cart['name']}}</a></h6>
-
                 </div>
-
                 <div class="text-muted rounded-circle mt-4" id="circle">{{$cart['quantity']}}</div>
             </li>
             @endforeach
@@ -296,16 +295,16 @@
             <select class="form-control bg-light" name="state" id="state">
                 @foreach($states as $state)
                 <?php 
-                                    if($user_address->postalState == $state->name){
-                                            $selected = 'selected';
+                     if($user_address->postalState == $state->name)
+                     {
+                        $selected = 'selected';
 
-                                    }
-                                    else
-                                    {
-                                         $selected = '';
-                                    }
-                                
-                                ?>
+                        }
+                        else
+                        {
+                        $selected = '';
+                    }           
+                ?>
                 <option value="{{$state->name}}" <?php echo $selected;?>>{{$state->name}}</option>
                 @endforeach
             </select>
@@ -313,12 +312,6 @@
             <div class="invalid-feedback">
                 Valid first name is required.
             </div>
-
-
-
-
-
-
 
             <script>
                 function submit(){   
