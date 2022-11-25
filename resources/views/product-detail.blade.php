@@ -62,7 +62,7 @@
                                         <div>
                                             <small class="dis-price">&nbsp;</small><span class="text-danger">OUT OF
                                                 STOCK</span>
-                                        </div>
+                                        </di+v>
                                         @endif
                                     </div>
 

@@ -1,15 +1,26 @@
 @include('partials.header')
-@include('partials.top-bar')
-@include('partials.search-bar')
 
 {{session()->forget('cart');}}
 
-<div class="container">
+<div class="container mt-5">
 	<div class="row">
 		<div class="col-md-12">
 			<div class="card">
 				<div class="card-header">
-					<h5>card header</h5>
+					<div class="row">
+						<div class="col-md-6">
+							<h5 class="fw-bold fs-1" style="font-family: 'Poppins'">Order Confirmed</h5>
+						</div>
+						<div class="col-md-6">
+							<p style="font-family: 'Poppins'"> Thank You
+								<span class="fw-bold">
+									{{$order->user->contact->firstName}}
+									{{$order->user->contact->lastName}}
+								</span>
+								Your Order has been recelved!
+							</p>
+						</div>
+					</div>
 				</div>
 				<div class="card-body">
 					<div class="row">
@@ -83,34 +94,69 @@
 						</div>
 
 						<div class="col-md-12">
-							<p class="fs-1">Items Purchased</p>
+							<h5 class="fw-bold ps-1" style="font-family: 'Poppins'">Order Confirmed</h5>
 						</div>
 						@foreach($order->apiOrderItem as $item)
-						<div class="row">
+						<div class="row ps-5">
 							<div class="col-md-2">
-								1
-								<img src="/theme/img/price.php" alt="">
+								<div class="mt-4">
+									<img src="{{ $item->product->images}}" alt="" width="70px;">
+								</div>
 							</div>
-							<div class="col-md-6">
+							<div class="col-md-6 mt-5">
 								<a class="thnak-you-page-product-name"
 									href="{{ url('product-detail/'. $item->product->id) }}">{{$item->product->name}}</a>
 							</div>
-							<div class="col-md-2">
+							<div class="col-md-2 mt-5" style="border-radius: 2px solid">
 								<p>{{$item->quantity}}</p>
 							</div>
-							<div class="col-md-2">
-								<p class="thank-you-page-product-price">${{$item->product->retail_price}}</p>
+							<div class="col-md-2 mt-5">
+								<p class="thank-you-page-product-price">${{
+									number_format($item->product->retail_price,2)}}</p>
 							</div>
 						</div>
 						@endforeach
-
 					</div>
 				</div>
+				<card-footer class="ps-5">
+					<div class="row">
+						<div class="col-md-12">
+							<table class="mb-5 thnak-you-page-top-section">
+								<tr>
+									<th>Order number</th>
+									<th>Date</th>
+									<th>Email</th>
+									<th>phone</th>
+
+								</tr>
+								<tr>
+									<td>{{$order->id}}</td>
+									<td>{{$formatedDate}}</td>
+									<td>{{$order->user->email}}</td>
+									<td>{{$order->user->contact->phone}}</td>
+
+								</tr>
+								<tr>
+									<th>Shipping</th>
+									<th>Text</th>
+									<th>Total</th>
+									<th>Payment Method</th>
+								</tr>
+								<tr>
+									<td></td>
+									<td></td>
+									@php
+									$total = $item->product->retail_price * $item->quantity
+									@endphp
+									<td>${{number_format($total, 2)}}</td>
+									<td>{{$order->paymentTerms}}</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</card-footer>
 			</div>
 		</div>
 	</div>
 </div>
-
-
-@include('partials.product-footer')
 @include('partials.footer')
