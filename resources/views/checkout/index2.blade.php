@@ -481,30 +481,4 @@
                     });
                 }
             </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            <!-- 
-            <hr class="mb-4">
-
-           <hr class="mb-4">
-          
-        </div>
-      </div> -->
-
             @include('partials.footer')
