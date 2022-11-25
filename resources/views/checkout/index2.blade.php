@@ -202,7 +202,12 @@
                     <img src="{{ $cart['image']}}" alt="" width="70px;">
                 </div>
                 <div class="mt-4 mb-4">
-                    <h6 class="my-0" style="color: #008BD3 !important;"><a href="">{{$cart['name']}}</a></h6>
+                    <h6 class="my-0" style="color: #008BD3 !important;">
+                        <a
+                            href="{{ url('product-detail/'. $cart['product_id'] . '/' . $cart['option_id'] . '/' . $cart['slug']) }}">
+                            {{$cart['name']}}
+                        </a>
+                    </h6>
                 </div>
                 <div class="text-muted rounded-circle mt-4" id="circle">{{$cart['quantity']}}</div>
             </li>
