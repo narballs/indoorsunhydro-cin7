@@ -45,7 +45,7 @@
 
                <select class="form-select" id="selected_cat" name="selected_cat"
                   onchange="handleSelectChange('category')">
-               <option>Select Category</option>
+                  <option>Select Category</option>
                   @foreach($categories as $category)
 
                   <option value="{{$category->id}}/{{$category->slug}}" {{ isset($category_id) &&
@@ -126,7 +126,8 @@
                <input type="hidden" name="quantity" value="1" id="quantity">
                <input type="hidden" name="p_id" id="p_{{$product->id}}" value="{{$product->id}}">
                <h5 class="card-title" style="font-weight: 500;
-                        font-size: 16px;"><a href="{{ url('product-detail/'.$product->id.'/'.$option->option_id.'/'.$product->slug) }}"
+                        font-size: 16px;"><a
+                     href="{{ url('product-detail/'.$product->id.'/'.$option->option_id.'/'.$product->slug) }}"
                      id=product_name_{{$product->id}}>{{$product->name}}</a></h5>
                <div class="mt-auto">
                   <p class="text-uppercase mb-0 text-center text-danger">${{$product->retail_price}}</p>
@@ -172,7 +173,6 @@
                             var cart_total = cart_total + subtotal;
                             var total_cart_quantity = total_cart_quantity + quantity;
                             $('#subtotal_' + product_id).html('$'+subtotal);
-                            console.log(item.name);
                             var product_name = document.getElementById("product_name_"+jQuery('#p_'+id).val()).innerHTML;
                         }
                         
