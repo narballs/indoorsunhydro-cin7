@@ -40,7 +40,7 @@ class CheckoutController extends Controller
     }
     public function thankyou($id)
     {
-        $order = ApiOrder::where('id', $id)->with('user.contact', 'apiOrderItem.product')->first();
+        $order = ApiOrder::where('id', $id)->with('user.contact', 'apiOrderItem.product.options')->first();
         $createdDate = $order->created_at;
         $formatedDate = $createdDate->format('F  j, Y h:i:s A');
         $orderitems = ApiOrderItem::where('order_id', $id)->with('product')->get();

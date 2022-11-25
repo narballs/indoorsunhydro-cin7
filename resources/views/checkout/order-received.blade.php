@@ -11,7 +11,7 @@
 						<div class="col-md-6">
 							<h5 class="fw-bold fs-1" style="font-family: 'Poppins'">Order Confirmed</h5>
 						</div>
-						<div class="col-md-6">
+						<div class="col-md-6 mt-1">
 							<p style="font-family: 'Poppins'"> Thank You
 								<span class="fw-bold">
 									{{$order->user->contact->firstName}}
@@ -97,6 +97,8 @@
 							<h5 class="fw-bold ps-1" style="font-family: 'Poppins'">Order Confirmed</h5>
 						</div>
 						@foreach($order->apiOrderItem as $item)
+						@foreach($item->product->options as $option)
+						{{-- {{dd($option->option_id)}} --}}
 						<div class="row ps-5">
 							<div class="col-md-2">
 								<div class="mt-4">
@@ -105,7 +107,9 @@
 							</div>
 							<div class="col-md-6 mt-5">
 								<a class="thnak-you-page-product-name"
-									href="{{ url('product-detail/'. $item->product->id) }}">{{$item->product->name}}</a>
+									href="{{ url('product-detail/'. $item->product->id.'/'.$option->option_id.'/'.$item->product->slug) }}">
+									{{$item->product->name}}
+								</a>
 							</div>
 							<div class="col-md-2 mt-5" style="border-radius: 2px solid">
 								<p>{{$item->quantity}}</p>
@@ -115,6 +119,7 @@
 									number_format($item->product->retail_price,2)}}</p>
 							</div>
 						</div>
+						@endforeach
 						@endforeach
 					</div>
 				</div>
@@ -145,10 +150,7 @@
 								<tr>
 									<td></td>
 									<td></td>
-									@php
-									$total = $item->product->retail_price * $item->quantity
-									@endphp
-									<td>${{number_format($total, 2)}}</td>
+									<td>${{number_format($item->product->retail_price * $item->quantity, 2)}}</td>
 									<td>{{$order->paymentTerms}}</td>
 								</tr>
 							</table>
