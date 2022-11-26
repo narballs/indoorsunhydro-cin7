@@ -7,9 +7,6 @@
 @stop
 
 @section('content')
-
-<?php //dd('pppp');?>
-
     <div class="table-wrapper">
         <div class="table-title">
             <span><h1>Customer</h1></span>
