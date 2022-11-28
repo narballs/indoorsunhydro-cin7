@@ -213,7 +213,7 @@
 									number_format($cart_total,2)}}</strong></span>
 						</li>
 						<li
-							class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
+							class="list-group-item d-flex justify-content-center align-items-center border-0 px-0 mb-3">
 							@if (Auth::check() == true && !empty($contact->contact_id))
 							<a href="{{ url('/checkout')}}">
 								<button class="procedd-to-checkout col w-100 tm-5">
@@ -229,7 +229,7 @@
 							@elseif (Auth::check() != true)
 							<a href="{{ url('/user/')}}">
 								<button class="procedd-to-checkout col w-100 tm-5">
-									PROCEED TO CHECKOUT
+									Login or Register
 								</button>
 							</a>
 							@endif

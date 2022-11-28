@@ -1,5 +1,5 @@
 <tr>
-    <td>{{ $count }}</td>
+    <td>{{ $contact->id }}</td>
     <td>{{$contact->firstName}}</td>
     <td>
     	@if($contact->status == '1')

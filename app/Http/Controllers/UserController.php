@@ -11,6 +11,7 @@ use App\Models\State;
 use App\Http\Requests\Users\UserSignUpRequest;
 use App\Http\Requests\Users\CompanyInfoRequest;
 use App\Http\Requests\Users\UserAddressRequest;
+use Session;
 use Auth;
 
 
@@ -38,7 +39,13 @@ class UserController extends Controller
                 return redirect()->route('admin.view');
             }
             else {
-               return redirect()->route('my_account'); 
+                // dd(session()->get('cart'));
+                if (!empty(session()->get('cart'))) {
+                    return redirect()->route('cart');
+                }
+                else {
+                    return redirect()->route('my_account');
+                } 
             }
 
         }else{

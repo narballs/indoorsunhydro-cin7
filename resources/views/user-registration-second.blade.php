@@ -232,7 +232,7 @@
 						<div id="user-info-error" class="text-danger"></div>
 						<div class="col-md-12 mb-5 mt-5 text-center">
 							<button type="submit" value="" class="btn-login sing-up-continue" onclick="signup()">
-								SIGN UP & CONTINUE</button>
+								SING UP & CONTINUE</button>
 						</div>
 					</div>
 				</div>
@@ -375,13 +375,10 @@
 
 	function Error(error) {
 		console.log(error)
-
 	    let errorMessages = [];
 	    let detailedMessages = [];
-
 	    let errorMessage = error.responseJSON;
 	    errorMessages.push(errorMessage);
-
 	    if (error.errors) {
 	        detailedMessages = [].concat.apply(
 	            [],
