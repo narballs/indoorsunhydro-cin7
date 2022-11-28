@@ -94,11 +94,12 @@
 						</div>
 
 						<div class="col-md-12">
-							<h5 class="fw-bold ps-1" style="font-family: 'Poppins'">Order Confirmed</h5>
+							<h5 class="fw-bold ps-1" style="font-family: 'Poppins'">Item Purchased</h5>
 						</div>
+
 						@foreach($order->apiOrderItem as $item)
 						@foreach($item->product->options as $option)
-						{{-- {{dd($option->option_id)}} --}}
+
 						<div class="row ps-5">
 							<div class="col-md-2">
 								<div class="mt-4">
@@ -119,8 +120,10 @@
 									number_format($item->product->retail_price,2)}}</p>
 							</div>
 						</div>
+
 						@endforeach
 						@endforeach
+
 					</div>
 				</div>
 				<card-footer class="ps-5">
