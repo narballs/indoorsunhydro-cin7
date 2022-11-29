@@ -13,7 +13,7 @@ class CreateBuyListTable extends Migration
      */
     public function up()
     {
-        Schema::create('buy_list', function (Blueprint $table) {
+        Schema::create('buy_lists', function (Blueprint $table) {
             $table->id();
             $table->string('title');
             $table->string('status');
@@ -29,6 +29,6 @@ class CreateBuyListTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('buy_list');
+        Schema::dropIfExists('buy_lists');
     }
 }
