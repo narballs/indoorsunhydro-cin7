@@ -26,12 +26,9 @@
 					<h2 style="font-size:30px" class="text-center pt-5">CONTACT US</h2>
 				</div>
 				<div class="form-signup-secondary mt-5">
-						<!-- <div class="spinner-border text-success" role="status" id="contact_us_spinner" style="display: block;">
-					<span class="sr-only">Loading...</span>
-				</div> -->
+
 					<div class="px-3">
-						<form id="contact-us" class="w-100" name="contact-us"
-						>
+						<form id="contact-us" class="w-100" name="contact-us">
 							<div class="row contact-form px-5">
 								<div class="col-md-6 ">
 									<div class="form-login">
@@ -43,7 +40,8 @@
 											<div id="name-error" class="text-danger contact-us-error"></div>
 										</div>
 										<div class="input-placeholder mt-3 ">
-											<input class="contact-us-field" type="text" name="email" required="" id="email">
+											<input class="contact-us-field" type="text" name="email" required=""
+												id="email">
 											<div class="placeholder pl-3 mt-4 fontAwesome">
 												 Email
 											</div>
@@ -55,7 +53,7 @@
 												 Subject
 											</div>
 											<div id="subject-error" class="text-danger contact-us-error"></div>
-											
+
 										</div>
 									</div>
 								</div>
@@ -63,9 +61,10 @@
 									<div class="input-placeholder mt-3">
 										<textarea type="text" name="message" required="" id="message"
 											class="message fontAwesome pl-4" placeholder=" Message"></textarea>
-											<div id="message-error" class="text-danger contact-us-error"></div>
-									
-										<button type="button" name="save" class="btn-login mt-3" id="save" onclick="contactUs()">SEND</button>
+										<div id="message-error" class="text-danger contact-us-error"></div>
+
+										<button type="button" name="save" class="btn-login mt-3" id="save"
+											onclick="contactUs()">SEND</button>
 									</div>
 								</div>
 							</div>
