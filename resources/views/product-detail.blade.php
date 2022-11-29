@@ -62,57 +62,58 @@
                                         <div>
                                             <small class="dis-price">&nbsp;</small><span class="text-danger">OUT OF
                                                 STOCK</span>
-                                        </di+v>
-                                        @endif
-                                    </div>
-
-                                </div>
-                                <form id="cart">
-                                    @csrf
-                                    <div class="cart row mt-4 align-items-center">
-                                        <div class="col-md-3">
-                                            <div class="quantity" style="width:144px">
-                                                <input type="number" name="quantity" id="quantity" min="1"
-                                                    max="{{$productOption->stockAvailable}}" step="1" value="1">
-                                                <input type="hidden" name="p_id" id="p_id"
-                                                    value="{{$productOption->products->id}}">
-                                                <input type="hidden" name="p_id" id="option_id"
-                                                    value="{{$productOption->option_id}}">
-                                                <div class="quantity-nav">
-                                                    <div class="quantity-div quantity-up"></div>
-                                                    <div class="quantity-div quantity-down"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-9 d-flex justify-content-end" style="">
-                                            @if($productOption->stockAvailable > 0)
-                                            <button class=" button-cards product-detail-button-cards text-uppercase"
-                                                style="" type="button" id="ajaxSubmit"><a class="text-white">Add to
-                                                    cart</a></button>
-                                            @else
-                                            <button
-                                                class="button-cards product-detail-button-cards opacity-50 text-uppercase"
-                                                type="submit"><a class="text-white">Add to cart</a></button>
+                                            </di+v>
                                             @endif
                                         </div>
+
                                     </div>
-                                    <span class="text-uppercase text-muted brand"></span>
-
-                                </form>
-
-                                <div>
-                                    <div class="price">
-                                        <div class="row mt-5">
-                                            <div class="col-md-8">
-                                                <span class="category-title-heading">Category</span> :
-                                                @if($pname)
-                                                <span class="category-title">{{$pname}}</span>
+                                    <form id="cart">
+                                        @csrf
+                                        <div class="cart row mt-4 align-items-center">
+                                            <div class="col-md-3">
+                                                <div class="quantity" style="width:144px">
+                                                    <input type="number" name="quantity" id="quantity" min="1"
+                                                        max="{{$productOption->stockAvailable}}" step="1" value="1">
+                                                    <input type="hidden" name="p_id" id="p_id"
+                                                        value="{{$productOption->products->id}}">
+                                                    <input type="hidden" name="p_id" id="option_id"
+                                                        value="{{$productOption->option_id}}">
+                                                    <div class="quantity-nav">
+                                                        <div class="quantity-div quantity-up"></div>
+                                                        <div class="quantity-div quantity-down"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9 d-flex justify-content-end" style="">
+                                                @if($productOption->stockAvailable > 0)
+                                                <button class=" button-cards product-detail-button-cards text-uppercase"
+                                                    style="" type="button" id="ajaxSubmit"><a class="text-white">Add to
+                                                        cart</a></button>
+                                                @else
+                                                <button
+                                                    class="button-cards product-detail-button-cards opacity-50 text-uppercase"
+                                                    type="submit"><a class="text-white">Add to cart</a></button>
                                                 @endif
                                             </div>
+                                        </div>
+                                        <span class="text-uppercase text-muted brand"></span>
+                                    </form>
 
-                                            <div class="col-md-4 d-flex justify-content-end pr-0">
-                                                <span class="category-title-heading">SKU</span> : <span
-                                                    class="category-title">{{$productOption->code}}</span>
+                                    <div>
+                                        <div class="price">
+                                            <div class="row mt-5">
+                                                <div class="col-md-3 pe-0">
+                                                    <span class="category-title-heading pe-3">Category :</span>
+                                                </div>
+                                                <div class="col-md-4 ps-0 pe-3 text-center">
+                                                    @if($pname)
+                                                    <span class="category-title">{{$pname}}</span>
+                                                    @endif
+                                                </div>
+                                                <div class="col-md-4 d-flex justify-content-end pr-0">
+                                                    <span class="category-title-heading">SKU</span> : <span
+                                                        class="category-title">{{$productOption->code}}</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
