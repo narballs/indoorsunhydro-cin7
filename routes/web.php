@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\ChangePasswordController;
 use App\Http\Controllers\Admin\CustomerSearchController;
 use App\Http\Controllers\Admin\AdminProductController;
+use App\Http\Controllers\Admin\AdminBuyListController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -98,6 +99,9 @@ Route::group(['middleware' => ['admin']], function () {
    Route::post('admin/update-pricing-column', [ContactController::class, 'update_pricing_column'])->name('admin.update.pricing.column');
    Route::get('admin/customersearch', [CustomerSearchController::class, 'customerSearch'])->name('admin.customer.search');
    Route::resource('admin/products', AdminProductController::class);
+   Route::resource('admin/buy-list', AdminBuyListController::class);
+
+    Route::post('admin/add-to-list', [AdminBuyListController::class, 'addToList']);
 });
 Route::get('product/search', [ProductController::class, 'productSearch'])->name('product_search');
 

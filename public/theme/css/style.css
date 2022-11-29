@@ -24,6 +24,9 @@
     /* identical to box height */
     color: #FFFFFF;
 }
+.w-5 {
+    width: 23px !important;
+} 
 
 .cart-price {
     font-family: 'Poppins';
