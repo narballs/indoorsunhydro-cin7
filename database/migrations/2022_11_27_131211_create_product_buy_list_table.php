@@ -13,7 +13,7 @@ class CreateProductBuyListTable extends Migration
      */
     public function up()
     {
-        Schema::create('product_buy_list', function (Blueprint $table) {
+        Schema::create('product_buy_lists', function (Blueprint $table) {
             $table->id();
             $table->integer('list_id');
             $table->integer('product_id');
@@ -29,6 +29,6 @@ class CreateProductBuyListTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('product_buy_list');
+        Schema::dropIfExists('product_buy_lists');
     }
 }
