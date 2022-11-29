@@ -17,7 +17,7 @@ class Filter extends Component
         return view(
             'livewire.admin.filter', [
             'products' =>  Product::where(function($sub_query){
-                        $sub_query->where('name', 'like', '%'.$this->searchTerm.'%')
+                        $sub_query->where('name', 'like', '%'.$this->searchTerm.'%');
                         })->paginate(5)
         ]);
     }
