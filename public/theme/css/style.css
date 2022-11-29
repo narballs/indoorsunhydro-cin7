@@ -46,6 +46,7 @@
     line-height: 1rem;
     margin-left: 10px !important;
 }
+
 #success {
     background-color: #7BC533 !important;
     font-size: 21px !important;
@@ -766,6 +767,29 @@ label {
     font-weight: 300;
     font-size: 14px;
     line-height: 16px;
+    padding-left: 1px !important;
+}
+
+.table-heading {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 16px;
+
+    color: #000000;
+}
+
+.table-items {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 19px;
+    /* identical to box height */
+
+
+    color: #000000;
 }
 
 #proceed-to-checkout {
@@ -2635,12 +2659,13 @@ input[type=number] {
     height: 615px;
 }
 
-#spinner-global{
+#spinner-global {
     position: fixed;
     left: 50%;
     top: 50%;
     z-index: 1000;
 }
-.hide_default{
+
+.hide_default {
     display: none;
 }
