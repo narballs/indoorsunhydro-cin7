@@ -263,6 +263,11 @@ return [
             'url'  => 'admin/products',
             'icon' => 'fas fa-fw fa-user',
         ],
+         [
+            'text' => 'Buy Lists',
+            'url'  => 'admin/buy-list',
+            'icon' => 'fas fa-fw fa-user',
+        ],
         [
             'text' => 'Shipping Methods',
             'url'  => 'admin/shipping-methods',
