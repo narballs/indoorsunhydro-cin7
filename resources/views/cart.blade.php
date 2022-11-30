@@ -25,10 +25,10 @@
 				<div class="h-100 py-5">
 					<div class="row d-flex justify-content-center align-items-center">
 						<div class="col-md-12">
-							<div class="" style=" font-family:'Poppins">
+							<div style=" font-family:'Poppins">
 								<table class="table table-responsive border" id="cart_table">
 									<thead>
-										<tr>
+										<tr class="boder-0">
 											<th scope="col" class="th-lg">
 												<span>
 													<img class="img-fluid" src="/theme/img/barcode.png" style="    width: 29px;
@@ -68,21 +68,19 @@
 										@if ($cart_items)
 										@foreach ($cart_items as $pk_product_id => $cart)
 										<?php 
-			            							$total_quatity =  $cart['quantity'];
-													$total_price = $cart['price'] * $total_quatity;
-													$cart_total  = $cart_total + $total_price ;
-			            				?>
-
+											$total_quatity =  $cart['quantity'];
+											$total_price = $cart['price'] * $total_quatity;
+											$cart_total  = $cart_total + $total_price ;
+										?>
 										<tr id="{{'row_'.$pk_product_id}}" class="quantities">
 											<td class="align-middle">
-												<p class="mb-0" style="font-weight: 500;"> <a
-														class="text-dark cart-page-items"
-														href="{{ url('product-detail/'.$cart['product_id'].'/'.$cart['option_id'].'/'.$cart['slug']) }}" ">{{$cart['code']}}</a>
+												<p class="mb-0" style="font-weight: 500;">
+													<a class="text-dark cart-page-items"
+														href="{{ url('product-detail/'.$cart['product_id'].'/'.$cart['option_id'].'/'.$cart['slug']) }}" ">{{$cart['code']}}
+													</a>
 												</p>
-
-											</td>
-
-											<td scope=" row">
+										</td>
+										<td scope=" row">
 														<div class="d-flex align-items-center">
 															@if(!empty($cart['image']))
 															<img src="{{$cart['image']}}" class="img-fluid rounded-3"
@@ -90,7 +88,7 @@
 															@else
 															<img src="/theme/img/image_not_available.png"
 																class="img-fluid rounded-3" style="width: 78px;
-														height: 83px;" alt="Book">
+											height: 83px;" alt="Book">
 															@endif
 															<div class="flex-column ms-4">
 																<p class="mb-2">
@@ -101,7 +99,6 @@
 															</div>
 														</div>
 											</td>
-
 											<td class=" align-middle">
 												<p class="mb-0 ps-2  cart-page-items">${{number_format(
 													$cart['price'],2)}} </p>
@@ -123,9 +120,7 @@
 														<i class="fas fa-plus"></i>
 													</button>
 												</div>
-
 											</td>
-
 											<td class="align-middle">
 												<p class="mb-0 text-danger ps-2  cart-page-items">
 													<span
@@ -133,17 +128,21 @@
 														*$cart['quantity'],2 )}}</span>
 												</p>
 												<p class="text-center remove-item-cart">
-													<a style="color:#b5b5b5;  font-family:'Poppins"
-														href="{{ url('remove/'.$pk_product_id) }}"
-														id="remove">Remove</a>
+													<a style="font-family: 'Poppins';
+													font-style: normal;
+													font-weight: 400;
+													font-size: 12px;
+													line-height: 18px;
+													/* identical to box height */
+													text-decoration-line: underline;
+													color: #9A9A9A;" href="{{ url('remove/'.$pk_product_id) }}" id="remove">Remove</a>
 												</p>
 											</td>
-
 										</tr>
 										@endforeach
 										@endif
 									</tbody>
-									<tfoot class="border">
+									<tfoot class="border-0" style="border-color: #ffff !important;">
 										<tr>
 											<td colspan="5">
 												<div class="w-100 d-flex mt-4">
@@ -196,14 +195,6 @@
 				<div class="card-body h-100">
 					<ul class="list-group list-group-flush">
 						<li
-							class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3 border">
-							<div>
-								<img class=" img-fluid" src="/theme/img/dollar.png"><strong>Subtotal</strong>
-							</div>
-							<span id="cart_subtotal"><span class=" cart-page-items">${{
-									number_format($cart_total,2)}}</span></span>
-						</li>
-						<li
 							class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
 							<div>
 								<img class="img-fluid" src="/theme/img/pricing_tag.png">
@@ -212,8 +203,7 @@
 							<span id="cart_grand_total"><strong class="text-danger cart-page-items">${{
 									number_format($cart_total,2)}}</strong></span>
 						</li>
-						<li
-							class="list-group-item d-flex justify-content-center align-items-center border-0 px-0 mb-3">
+						<li class="list-group-item d-flex justify-content-center align-items-center border-0 px-0 mb-3">
 							@if (Auth::check() == true && !empty($contact->contact_id))
 							<a href="{{ url('/checkout')}}">
 								<button class="procedd-to-checkout col w-100 tm-5">
