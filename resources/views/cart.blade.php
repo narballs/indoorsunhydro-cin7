@@ -17,8 +17,6 @@
 	@if (Session::has('message'))
 	<p class="alert {{ Session::get('alert-class', 'alert-danger') }}">{{ Session::get('message') }}</p>
 	@endif
-
-
 	<div class="row">
 		<div style="width: 75%">
 			<section class="h-100 h-custom">
@@ -26,160 +24,165 @@
 					<div class="row d-flex justify-content-center align-items-center">
 						<div class="col-md-12">
 							<div style=" font-family:'Poppins">
-								<table class="table table-responsive border" id="cart_table">
-									<thead>
-										<tr class="boder-0">
-											<th scope="col" class="th-lg">
-												<span>
-													<img class="img-fluid" src="/theme/img/barcode.png" style="    width: 29px;
-												">
-												</span>
-												SKU
-											</th>
-											<th scope="col" class="th-lg">
-												<span>
-													<img class="img-fluid" src="/theme/img/box.png">
-												</span>
-												Product
-											</th>
-											<th scope="col" class="th-lg" width="15%">
-												<span>
-													<img class=" cart-icons-cart " src="/theme/img/Price_Target.png">
-												</span>
-												Price
-											</th>
-											<th scope="col" class="th-lg">
-												<span>
-													<img src="/theme/img/Arrows_Down_Up.png" alt="">
-												</span>
-												Quantity
-											</th>
-											<th scope="col" class="th-lg">
-												<img class=" cart-icons-cart " src="/theme/img/pricing_tag.png">
-												Total
-											</th>
-										</tr>
-									</thead>
-									<tbody>
-										<?php 
-            								$cart_total = 0;
-            								$cart_price = 0;
-            							?>
-										@if ($cart_items)
-										@foreach ($cart_items as $pk_product_id => $cart)
-										<?php 
-											$total_quatity =  $cart['quantity'];
-											$total_price = $cart['price'] * $total_quatity;
-											$cart_total  = $cart_total + $total_price ;
-										?>
-										<tr id="{{'row_'.$pk_product_id}}" class="quantities">
-											<td class="align-middle">
-												<p class="mb-0" style="font-weight: 500;">
-													<a class="text-dark cart-page-items"
-														href="{{ url('product-detail/'.$cart['product_id'].'/'.$cart['option_id'].'/'.$cart['slug']) }}" ">{{$cart['code']}}
-													</a>
-												</p>
-										</td>
-										<td scope=" row">
-														<div class="d-flex align-items-center">
-															@if(!empty($cart['image']))
-															<img src="{{$cart['image']}}" class="img-fluid rounded-3"
-																style="width: 120px;" alt="Book">
-															@else
-															<img src="/theme/img/image_not_available.png"
-																class="img-fluid rounded-3" style="width: 78px;
-											height: 83px;" alt="Book">
-															@endif
-															<div class="flex-column ms-4">
-																<p class="mb-2">
-																	<a class="text-dark pe-3 cart-page-items"
-																		href="{{ url('product-detail/'.$cart['product_id'].'/'.$cart['option_id'].'/'.$cart['slug']) }}">{{$cart['name']}}
-																	</a>
-																</p>
-															</div>
-														</div>
+								<div class="table-responsive">
+									<table class="table" id="cart_table">
+										<thead>
+											<tr class="boder-0">
+												<th scope="col" class="th-lg">
+													<span>
+														<img class="img-fluid" src="/theme/img/barcode.png" style="    width: 29px;
+													">
+													</span>
+													SKU
+												</th>
+												<th scope="col" class="th-lg">
+													<span>
+														<img class="img-fluid" src="/theme/img/box.png">
+													</span>
+													Product
+												</th>
+												<th scope="col" class="th-lg" width="15%">
+													<span>
+														<img class=" cart-icons-cart "
+															src="/theme/img/Price_Target.png">
+													</span>
+													Price
+												</th>
+												<th scope="col" class="th-lg">
+													<span>
+														<img src="/theme/img/Arrows_Down_Up.png" alt="">
+													</span>
+													Quantity
+												</th>
+												<th scope="col" class="th-lg">
+													<img class=" cart-icons-cart " src="/theme/img/pricing_tag.png">
+													Total
+												</th>
+											</tr>
+										</thead>
+										<tbody style="padding: 40px">
+											<?php 
+												$cart_total = 0;
+												$cart_price = 0;
+											?>
+											@if ($cart_items)
+											@foreach ($cart_items as $pk_product_id => $cart)
+											<?php 
+												$total_quatity =  $cart['quantity'];
+												$total_price = $cart['price'] * $total_quatity;
+												$cart_total  = $cart_total + $total_price ;
+											?>
+											<tr id="{{'row_'.$pk_product_id}}" class="quantities">
+												<td class="align-middle">
+													<p class="mb-0" style="font-weight: 500;">
+														<a class="text-dark cart-page-items"
+															href="{{ url('product-detail/'.$cart['product_id'].'/'.$cart['option_id'].'/'.$cart['slug']) }}" ">{{$cart['code']}}
+														</a>
+													</p>
 											</td>
-											<td class=" align-middle">
-												<p class="mb-0 ps-2  cart-page-items">${{number_format(
-													$cart['price'],2)}} </p>
-
-											</td>
-
-											<td class="align-middle">
-												<div class="d-flex flex-row">
-													<button class="btn btn-link px-2"
-														onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
-														<i class="fas fa-minus"></i>
-													</button>
-													<input id="{{'row_quantity_'.$pk_product_id}}" min="0"
-														name="quantity" value="{{$cart['quantity']}}" type="number"
-														class="form-control form-control-sm quantity"
-														style="width: 50px;" />
-													<button class="btn btn-link px-2"
-														onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
-														<i class="fas fa-plus"></i>
-													</button>
-												</div>
-											</td>
-											<td class="align-middle">
-												<p class="mb-0 text-danger ps-2  cart-page-items">
-													<span
-														id="subtotal_{{ $pk_product_id }}">${{number_format($cart['price']
-														*$cart['quantity'],2 )}}</span>
-												</p>
-												<p class="text-center remove-item-cart">
-													<a style="font-family: 'Poppins';
-													font-style: normal;
-													font-weight: 400;
-													font-size: 12px;
-													line-height: 18px;
-													/* identical to box height */
-													text-decoration-line: underline;
-													color: #9A9A9A;" href="{{ url('remove/'.$pk_product_id) }}" id="remove">Remove</a>
-												</p>
-											</td>
-										</tr>
-										@endforeach
-										@endif
-									</tbody>
-									<tfoot class="border-0" style="border-color: #ffff !important;">
-										<tr>
-											<td colspan="5">
-												<div class="w-100 d-flex mt-4">
-													<div class="col-md-8 coupon-code ps-0">
-														<div class=" align-items-center d-flex">
-															<div>
-																<span class="coupon-code-label"><img class="img-fluid"
-																		src="/theme/img/Vector.png"
-																		class="img-fluid">&nbsp;&nbsp;Coupon
-																	code</span>
-															</div>
-															<div class="col-4 ps-3">
-																<div class="form-signupp">
-																	<input type="text" name="code" id="code"
-																		class="fontAwesome form-control"
-																		placeholder="Your code" required>
+											<td scope=" row">
+															<div class="d-flex align-items-center">
+																@if(!empty($cart['image']))
+																<img src="{{$cart['image']}}"
+																	class="img-fluid rounded-3" style="width: 120px;"
+																	alt="Book">
+																@else
+																<img src="/theme/img/image_not_available.png"
+																	class="img-fluid rounded-3" style="width: 78px;
+												height: 83px;" alt="Book">
+																@endif
+																<div class="flex-column ms-4">
+																	<p class="mb-2">
+																		<a class="text-dark pe-3 cart-page-items"
+																			href="{{ url('product-detail/'.$cart['product_id'].'/'.$cart['option_id'].'/'.$cart['slug']) }}">{{$cart['name']}}
+																		</a>
+																	</p>
 																</div>
 															</div>
-															<div class="col-5 p-0">
-																<span>
-																	<button class="apply-coupon-code-button w-100">
-																		Apply Coupon
-																	</button>
-																</span>
+												</td>
+												<td class=" align-middle">
+													<p class="mb-0 ps-2  cart-page-items">${{number_format(
+														$cart['price'],2)}} </p>
+
+												</td>
+
+												<td class="align-middle">
+													<div class="d-flex flex-row">
+														<button class="btn btn-link px-2"
+															onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
+															<i class="fas fa-minus"></i>
+														</button>
+														<input id="{{'row_quantity_'.$pk_product_id}}" min="0"
+															name="quantity" value="{{$cart['quantity']}}" type="number"
+															class="form-control form-control-sm quantity"
+															style="width: 50px;" />
+														<button class="btn btn-link px-2"
+															onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
+															<i class="fas fa-plus"></i>
+														</button>
+													</div>
+												</td>
+												<td class="align-middle">
+													<p class="mb-0 text-danger ps-2  cart-page-items">
+														<span
+															id="subtotal_{{ $pk_product_id }}">${{number_format($cart['price']
+															*$cart['quantity'],2 )}}</span>
+													</p>
+													<p class="text-center remove-item-cart">
+														<a style="font-family: 'Poppins';
+														font-style: normal;
+														font-weight: 400;
+														font-size: 12px;
+														line-height: 18px;
+														/* identical to box height */
+														text-decoration-line: underline;
+														color: #9A9A9A;" href="{{ url('remove/'.$pk_product_id) }}" id="remove">Remove</a>
+													</p>
+												</td>
+											</tr>
+											@endforeach
+											@endif
+										</tbody>
+										<tfoot class="border-0" style="border-color: #ffff !important;">
+											<tr>
+												<td colspan="5">
+													<div class="w-100 d-flex mt-4">
+														<div class="col-md-8 coupon-code ps-0">
+															<div class=" align-items-center d-flex">
+																<div>
+																	<span class="coupon-code-label"><img
+																			class="img-fluid"
+																			src="/theme/img/Vector.png"
+																			class="img-fluid">&nbsp;&nbsp;Coupon
+																		code</span>
+																</div>
+																<div class="col-4 ps-3">
+																	<div class="form-signupp">
+																		<input type="text" name="code" id="code"
+																			class="fontAwesome form-control"
+																			placeholder="Your code" required>
+																	</div>
+																</div>
+																<div class="col-5 p-0">
+																	<span>
+																		<button class="apply-coupon-code-button w-100">
+																			Apply Coupon
+																		</button>
+																	</span>
+																</div>
 															</div>
 														</div>
+														<div class="col-md-4 p-0">
+															<button class="button-cards w-75 cart-updated" type="submit"
+																id="update_cart" onclick="update_cart()">Update
+																Cart</button>
+														</div>
 													</div>
-													<div class="col-md-4 p-0">
-														<button class="button-cards w-75 cart-updated" type="submit"
-															id="update_cart" onclick="update_cart()">Update
-															Cart</button>
-													</div>
-												</div>
-											</td>
-										</tr>
-									</tfoot>
-								</table>
+												</td>
+											</tr>
+										</tfoot>
+									</table>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -188,7 +191,6 @@
 		</div>
 		<div class="col-md-3 p-0  mt-5">
 			<div class="card mb-4 p-0 col-md-12">
-
 				<div class="card-header py-3 bg-transparent" style="margin-top:6px;">
 					<h5 class="mb-0 cart-total">Cart Total</h5>
 				</div>
@@ -232,7 +234,6 @@
 </div>
 
 @include('partials.product-footer')
-
 @include('partials.footer')
 <script>
 	function update_cart() {
@@ -281,3 +282,14 @@
 
 }
 </script>
+<style>
+	.table-responsive {
+		border: 1px solid #eee;
+		padding: 13px;
+		padding-top: 0px;
+	}
+
+	.table thead>tr>th {
+		border-top: 1px solid #fff;
+	}
+</style>
