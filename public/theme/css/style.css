@@ -826,6 +826,19 @@ label {
 
 }
 
+.order-page-prduct-quantity {
+    border-radius: 50%;
+    border: #008AD0 1px solid;
+    width: 22px;
+    height: 26px;
+    padding-left: 5px;
+    padding-bottom: 24px;
+    padding-right: 17px;
+    font-weight: 'Roboto';
+    font-size: 14px;
+
+}
+
 .order-page-product-image {
     width: 61px;
     height: 61px;
