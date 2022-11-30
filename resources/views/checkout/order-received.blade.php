@@ -167,7 +167,8 @@
 									{{$item->product->name}}
 								</a>
 							</div>
-							<div class="col-md-2 mt-5">
+							<div class="col-md-2 mt-5 ">
+								{{-- <p class="order-page-prduct-quantity">{{$item->quantity}}</p> --}}
 								<p>{{$item->quantity}}</p>
 							</div>
 							<div class="col-md-2 mt-5">
@@ -175,10 +176,8 @@
 									number_format($item->product->retail_price,2)}}</p>
 							</div>
 						</div>
-
 						@endforeach
 						@endforeach
-
 					</div>
 				</div>
 				<card-footer class="ps-5 mt-5">
