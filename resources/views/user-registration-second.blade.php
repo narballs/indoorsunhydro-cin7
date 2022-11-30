@@ -10,7 +10,6 @@
 <div class="container-fluid pl-0 pr-0">
 	<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 pl-0 pr-0">
 		<div class="row">
-
 			<div class="col-md-12 bg-light text-center d-none">
 				<h2 style="color:#25529F; font-weight:700" class="text-center pt-5 ">Have an account</h2>
 				<div class="col-md-4">
@@ -20,7 +19,6 @@
 						in our privacy policy.</p>
 				</div>
 			</div>
-
 			<div class="col-md-12 col-xs-6 mt-5 d-none" id="icons" style="padding-right: 47px;">
 				<div class="icon-container d-flex">
 					<figure>
@@ -29,7 +27,6 @@
 						<img class="img-fluid" src="/theme/img/line2.png" style="margin-left: 11px">
 						<figcaption id="sigup-bold" class="mt-3">Signup</figcaption>
 					</figure>
-
 					<figure>
 						<img class="img-fluid" src="/theme/img/round-border.png" id="company-round">
 						<img class="img-fluid" src="/theme/img/company.png" style="margin-left: -39px" id="building">
@@ -49,9 +46,7 @@
 					</figure>
 				</div>
 			</div>
-
 		</div>
-
 		<div class="row ml-0 pr-0 w-100 " style="background-image: url('/theme/img/img_12.png');">
 			<div class="login-reg-panel col-xs-6">
 				<div class="register-info-box text-center">
@@ -67,7 +62,6 @@
 					</label>
 					<input type="radio" name="active-log-panel" id="log-login-show">
 				</div>
-
 				<div class="white-panel">
 					<div class="login-show">
 						<h2 class="text-center login-title">LOG IN</h2>
@@ -120,7 +114,6 @@
 									&#xf0e0; Email
 								</div>
 							</div>
-
 							<button type="button" name="save" id="save" onclick="signUp2()" class="btn-login">Sign
 								up</button>
 						</form>
@@ -130,11 +123,8 @@
 							</div>
 						</div>
 						<div id="signup_error" class="text-danger"></div>
-
 					</div>
-
 				</div>
-
 				<div class="login-info-box text-white">
 					<h2 class=" dont-have-an-account">Have an account?</h2>
 					<p class=" dont-have-an-account-pra" id="account">Your
@@ -157,7 +147,6 @@
 								Company
 								Detail</h2>
 						</div>
-
 						<p class="d-flex justify-content-center align-items-center text-dark" class="signup-intro mt-2">
 							Please
 							tell us some information about
@@ -236,7 +225,6 @@
 						</div>
 					</div>
 				</div>
-
 				<div class="row business-row bg-light d-none" id="business-row" style="margin-top: -121px">
 					<div class="col-md-12 text-center">
 						<h2 style="color:#25529F; font-size:30px" class="text-center pt-5">Your Business Location</h2>
@@ -257,7 +245,6 @@
 											id="street_address" name="street_address"
 											class="form-control mt-2 company-info fontAwesome" required>
 										<div class="text-danger" id="street_address_errors"></div>
-
 									</div>
 									<div class="col-md-12 mt-3">
 										<input type="text" placeholder="&#xf015;  Apartment, Suit, unit etc"
@@ -270,7 +257,6 @@
 											class="form-control mt-2 company-info fontAwesome" required>
 										<div class="text-danger" id="town_city_errors"></div>
 									</div>
-
 									<div class="col-md-6 mt-3">
 										<input type="text" placeholder="&#xf276;   State" id="company_website"
 											name="state" class="form-control mt-1 fontAwesome" required>
@@ -281,7 +267,6 @@
 											class="form-control mt-1 fontAwesome" required>
 										<div class="text-danger" id="zip_errors"></div>
 									</div>
-
 								</div>
 							</div>
 							<div id="address-info-error" class="text-danger"></div>
@@ -289,12 +274,9 @@
 								<input type="button" value="SAVE AND CONTINUE" style="width:15rem; height: 44px;"
 									class="btn-login mb-5" onclick="thankYou()">
 							</div>
-
 						</div>
 					</div>
 				</div>
-
-
 				<div class="d-none thankyou row bg-light" id="thanks">
 					<div class="col-md-12 text-center">
 						<h2 style="color:#25529F; font-size:30px" class="text-center pt-5">Finish</h2>
@@ -314,7 +296,6 @@
 								class="btn-login mb-5"></a>
 					</div>
 				</div>
-
 			</div>
 		</div>
 	</div>
