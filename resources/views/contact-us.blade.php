@@ -26,7 +26,6 @@
 					<h2 style="font-size:30px" class="text-center pt-5">CONTACT US</h2>
 				</div>
 				<div class="form-signup-secondary mt-5">
-
 					<div class="px-3">
 						<form id="contact-us" class="w-100" name="contact-us">
 							<div class="row contact-form px-5">
@@ -71,8 +70,6 @@
 						</form>
 					</div>
 				</div>
-				<div class="mt-5">
-				</div>
 			</div>
 		</div>
 	</div>
@@ -89,7 +86,6 @@
 		$('#save').prop('disabled', true);
 		$('.contact-us-error').html('');
 		
-	
 		jQuery.ajax({
 			method: 'post',
            	url: "{{ url('/contact-us-store/') }}",
@@ -127,7 +123,6 @@
 				}
    			}
        });
-		
 	}
 </script>
 

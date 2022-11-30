@@ -24,9 +24,10 @@
     /* identical to box height */
     color: #FFFFFF;
 }
+
 .w-5 {
     width: 23px !important;
-} 
+}
 
 .cart-price {
     font-family: 'Poppins';
@@ -761,9 +762,74 @@ label {
     max-width: 430px;
 }
 
+.order-page-order-confiremd {
+    font-family: 'Roboto' !important;
+    font-style: normal !important;
+    font-weight: 700 !important;
+    font-size: 40px !important;
+    line-height: 47px !important;
+    color: #000000 !important;
+}
+
+.order-page-user-name {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 18px;
+    color: #000000;
+}
+
+.shipping-address-heading {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 23px;
+    color: #484848;
+}
+
+.billing-address-heading {
+    font-family: 'Roboto' !important;
+    font-style: normal !important;
+    font-weight: 600 !important;
+    font-size: 20px !important;
+    line-height: 23px !important;
+    color: #484848 !important;
+}
+
+.item-purchased {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 25px;
+    line-height: 29px;
+    color: #484848;
+    margin-top: 80px;
+
+}
+
 .billing-address .name {
+    font-family: 'Roboto';
+    font-style: normal;
     font-weight: 600;
     font-size: 16px;
+    line-height: 19px;
+    color: #000000;
+}
+
+.order-page-prdoct-img {
+    width: 68px;
+    height: 69px;
+    background: #7CC633;
+    border-radius: 6px;
+
+}
+
+.order-page-product-image {
+    width: 61px;
+    height: 61px;
+
 }
 
 .billing-address .address-line {
@@ -774,12 +840,11 @@ label {
 }
 
 .table-heading {
-    font-family: 'Roboto';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 13px;
-    line-height: 16px;
-
+    font-family: 'Roboto' !important;
+    font-style: normal !important;
+    font-weight: normal !important;
+    font-size: 14px !important;
+    line-height: 16px !important;
     color: #000000;
 }
 
@@ -789,10 +854,31 @@ label {
     font-weight: 600;
     font-size: 16px;
     line-height: 19px;
-    /* identical to box height */
-
-
     color: #000000;
+
+}
+
+.view-invoice {
+    font-family: 'Roboto' !important;
+    font-style: normal !important;
+    font-weight: 500 !important;
+    font-size: 20px !important;
+    line-height: 23px !important;
+    text-transform: uppercase !important;
+    color: #FFFFFF !important;
+    width: 170px;
+    height: 43px;
+    background: #1F50A3;
+    border-radius: 6px;
+    border: 1px solid;
+}
+
+.table-items-sub-item {
+    vertical-align: top !important;
+}
+
+.table-heading-subheading {
+    vertical-align: bottom !important;
 }
 
 #proceed-to-checkout {
@@ -996,7 +1082,6 @@ label {
     font-weight: 500;
     font-size: 20px;
     line-height: 23px;
-
     color: #202020;
 }
 
@@ -1123,14 +1208,13 @@ label {
 }
 
 .thank-you-page-product-price {
-
     font-family: 'Roboto';
     font-style: normal;
-    font-weight: 300;
+    font-weight: 400;
     font-size: 20px;
     line-height: 23px;
+    color: #484848;
 
-    color: #000000;
 }
 
 .swal2-title {

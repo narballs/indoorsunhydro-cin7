@@ -58,7 +58,7 @@
 			</div>
 		</div>
 </footer> --}}
-<footer class="text-white text-lg-start bg-dark h-900">
+<footer class="text-white text-lg-start bg-dark h-900 mt-5">
 	<div class="container-fluid">
 		<div class="row ">
 			<div class=" col-xl-2 col-lg-2 col-md-0 col-sm-0 col-xs-0 text-dark ">
