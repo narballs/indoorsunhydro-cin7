@@ -212,7 +212,7 @@
 								</tr>
 							</table>
 							<div class="col-md-12 justify-content-center align-items-center d-flex">
-								<button class="view-invoice" type="button">View invoice</button>
+								<button class="view-invoice mt-5" type="button">View invoice</button>
 							</div>
 						</div>
 					</div>
