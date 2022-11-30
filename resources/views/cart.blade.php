@@ -134,8 +134,6 @@
 														font-weight: 400;
 														font-size: 12px;
 														line-height: 18px;
-														/* identical to box height */
-														text-decoration-line: underline;
 														color: #9A9A9A;" href="{{ url('remove/'.$pk_product_id) }}" id="remove">Remove</a>
 													</p>
 												</td>

@@ -1846,7 +1846,6 @@ input[type=number] {
     font-weight: 600;
     font-size: 16px;
     line-height: 24px;
-    display: flex;
     align-items: center;
     letter-spacing: 0.05em;
     text-transform: uppercase;
@@ -1857,22 +1856,6 @@ input[type=number] {
     text-decoration: none;
 }
 
-.procedd-to-checkout:hover {
-    font-family: 'Poppins';
-    font-style: normal;
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 24px;
-    display: flex;
-    align-items: center;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: #FFFFFF;
-    background-color: #7CC633;
-    border: none;
-    height: 44px;
-    text-decoration: none;
-}
 
 .cart-page-items {
     font-family: 'Poppins';
