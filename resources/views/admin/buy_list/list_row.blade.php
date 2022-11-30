@@ -11,7 +11,7 @@
 		$<span id="retail_price_{{ $product->product_id }}"> {{ number_format($product->retail_price, 2) }} </span>
 	</td>
 	<td>
-		<input type="number" id="quantity_{{ $product->product_id }}" value="1">
+		<input type="number" id="quantity_{{ $product->product_id }}" value="1" onclick="handleQuantity({{$product->product_id}})">
 	</td>
 	<td>
 		$<span id="subtotal_{{ $product->product_id }}"> {{ number_format($product->retail_price * 1, 2) }} </span>

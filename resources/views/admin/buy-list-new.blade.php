@@ -161,7 +161,19 @@
 			$('#product_row_'+ product_id).remove();
 			$('#grand_total').html(updated_total);
 		}
-
+		function handleQuantity(product_id) {
+			var quantity = $('#quantity_'+product_id).val();
+			var subtotal = $('#subtotal_'+ product_id).html();
+			var new_sub_total = quantity * subtotal;
+			$('#subtotal_'+ product_id).html(new_sub_total);
+			$('#grand_total').html(new_sub_total);
+			console.log('grand_total' + grand_total);
+			console.log('new_sub_total' + new_sub_total)
+			// var new_grand_total = grand_total + new_sub_total;
+			// console.log(new_grand_total);
+			// alert(grand_total);
+			// alert(subtotal);
+		}
     
 
         function createList() {
