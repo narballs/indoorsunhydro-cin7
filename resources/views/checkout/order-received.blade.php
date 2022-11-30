@@ -9,10 +9,10 @@
 			<div class="card  border-0">
 				<div class="card-header bg-white border-0 mt-3">
 					<div class="row">
-						<div class="col-md-5">
-							<p class="fw-bold fs-1 order-page-order-confiremd">Order Confirmed</p>
+						<div class="col-md-4">
+							<p class="fw-bold fs-1 order-page-order-confiremd">Order Confirmed.</p>
 						</div>
-						<div class="col-md-6 mt-1">
+						<div class="col-md-6 mt-3 ps-5 pe-2">
 							<p class="order-page-user-name"> <span><img src="/theme/img/star.png" alt=""></span> Thank
 								You
 								<span class="fw-bold">
@@ -158,8 +158,7 @@
 						<div class="row ps-5 mt-3">
 							<div class="col-md-2">
 								<div class="mt-4 order-page-prdoct-img ps-1 pt-1 pb-1">
-									<img class="order-page-product-image img-fluid" src="{{ $item->product->images}}"
-										alt="">
+									<img class="order-page-product-image" src="{{ $item->product->images}}" alt="">
 								</div>
 							</div>
 							<div class=" col-md-6 mt-5">
@@ -168,7 +167,7 @@
 									{{$item->product->name}}
 								</a>
 							</div>
-							<div class="col-md-2 mt-5" style="border-radius: 2px solid">
+							<div class="col-md-2 mt-5">
 								<p>{{$item->quantity}}</p>
 							</div>
 							<div class="col-md-2 mt-5">

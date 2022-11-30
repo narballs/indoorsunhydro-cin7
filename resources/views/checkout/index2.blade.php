@@ -131,21 +131,8 @@
     </div>
     <div class="row mt-5">
         <div class="col-md-5 order-md-2 mb-4">
-
             <div class="cart-headings">Cart Total</div>
-
             <div class="border-bottom"></div>
-            <div class="row mt-4 max-width">
-                <div class="col-md-10">
-                    <img src="theme/img/dollar.png">
-                    <span class="cart-subtitles">Subtotal</span>
-                </div>
-                <div class="col-md-2">
-                    <span class="totals">${{number_format($cart_total,2)}}</span>
-                </div>
-            </div>
-            <div class="border-bottom mt-4"></div>
-
             <div class="row mt-4 max-width">
                 <div class="col-md-10">
                     <img src="theme/img/pricing_tag.png">
@@ -154,8 +141,6 @@
                 <div class="col-md-2 text-danger totals">${{number_format($cart_total,2)}}</div>
             </div>
             <div class="border-bottom mt-4"></div>
-
-
             <div>
                 <div class="mt-4 payment-option">Delivery Options</div>
                 @foreach($payment_methods as $payment_method)
@@ -170,17 +155,12 @@
                             <label for="local_delivery payment-option-label">{{$payment_option->option_name}}</label>
                         </div>
                     </div>
-
                     @endforeach
                     @endforeach
             </div>
-
-
         </div>
-
         <div class="col-md-7 order-md-1">
             <div class="cart-headings border-bottom">Items in Cart</div>
-
             <div class="row  mt-4">
                 <div class="col-md-10"><img src="theme/img/box.png"><span class="ms-1 cart-subtitles">Products</span>
                 </div>
@@ -196,7 +176,7 @@
                     $total_quatity =  $cart['quantity'];
                     $total_price = $cart['price'] * $total_quatity;
                     $cart_total  = $cart_total + $total_price ;
-                ?>
+             ?>
             <li class="d-flex justify-content-between border-bottom mt-1">
                 <div class="mt-2">
                     <img src="{{ $cart['image']}}" alt="" width="70px;">
