@@ -541,10 +541,6 @@ class ProductController extends Controller
     {
 
         $items = $request->post('items_quantity');
-
-        //echo '<pre>'; var_export($items);
-
-
         $cart_items = session()->get('cart');
 
         if (!empty($items)) {

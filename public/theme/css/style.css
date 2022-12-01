@@ -570,9 +570,12 @@ a {
 }
 
 .cart-total {
-    font-family: 'Poppins' !important;
-    font-size: 17px !important;
-    font-weight: bold !important;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 30px;
+    color: #000000;
 }
 
 .cart-subtotal {
@@ -894,11 +897,11 @@ label {
     vertical-align: bottom !important;
 }
 
-#proceed-to-checkout {
+/* #proceed-to-checkout {
     margin-top: 118px !important;
     margin: auto !important;
     max-width: 600px !important;
-}
+} */
 
 .product-image {
     cursor: pointer;
@@ -1739,19 +1742,23 @@ input[type=number] {
 }
 
 .apply-coupon-code-button {
+    height: 44px;
+    left: 714px;
+    top: 779px;
     background: #E74B3B;
-    color: #FFFFFF !important;
     border: none;
-    font: Poppins;
+    font-family: 'Poppins';
     font-weight: 600;
-    font-size: 15px;
+    font-size: 12px;
     height: 44px;
     line-height: 27px;
+    line-height: 18px;
     text-transform: uppercase;
     width: 147px;
     height: 44px;
     letter-spacing: 0.05em;
-
+    justify-content: center;
+    color: #ffff;
 }
 
 
@@ -1763,7 +1770,6 @@ input[type=number] {
 }
 
 .cart-updated {
-    float: right;
     font-family: 'Poppins';
     font-style: normal;
     font-weight: 600;
@@ -1774,7 +1780,14 @@ input[type=number] {
     letter-spacing: 0.05em;
     text-transform: uppercase;
     color: #FFFFFF;
+    height: 44px;
+    left: 983px;
+    top: 779px;
+    background: #7CC633;
+    float: right;
     justify-content: center;
+    border: none;
+    width: 138px;
 }
 
 .coupon-code-label {
@@ -1841,6 +1854,9 @@ input[type=number] {
 }
 
 .procedd-to-checkout {
+    width: 268px;
+    height: 50px;
+    background: #7CC633;
     font-family: 'Poppins';
     font-style: normal;
     font-weight: 600;
@@ -1850,10 +1866,7 @@ input[type=number] {
     letter-spacing: 0.05em;
     text-transform: uppercase;
     color: #FFFFFF;
-    background-color: #7CC633;
     border: none;
-    height: 44px;
-    text-decoration: none;
 }
 
 
@@ -1864,6 +1877,17 @@ input[type=number] {
     font-size: 16px;
     line-height: 24px;
     color: #131313;
+}
+
+.cart-page-cart-title {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 48px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #FFFFFF;
+    margin-top: 12px;
 }
 
 .thumbnail-img {
