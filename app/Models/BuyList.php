@@ -16,6 +16,6 @@ class BuyList extends Model
 
     public function list_products()
     {
-        return $this->hasMany('App\Models\ProducyBuyList', 'id', 'list_id');
+        return $this->hasMany(ProductBuyList::class, 'list_id', 'id');
     }
 }

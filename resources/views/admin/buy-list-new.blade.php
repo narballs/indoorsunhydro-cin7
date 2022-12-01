@@ -54,6 +54,7 @@
 				<div id="list_title">
 					<h4></h4>
 				</div>
+				<input type="text" id="list_id" value="">
 				<table id="product_list" class="table">
 					<tr>
 						<td style="width:373px !important">Product Title</td>
@@ -66,6 +67,10 @@
 				</table>
 				<div class="row">
 					<div class="col-md-10 border-top">Grand Total</div>
+					<div class="col-md-2 border-top">amount : <span id="grand_total">0</span></div>
+				</div>
+				<div class="row">
+					<div class="col-md-10 border-top"><button type="button" class="ms-2 btn btn-primary" onclick="generatList()">Create List</button></div>
 					<div class="col-md-2 border-top">amount : <span id="grand_total">0</span></div>
 				</div>
 			</div>
@@ -148,31 +153,81 @@
 			});
 		});
 
-		function addToList(product_id, option_id) {
-	    	
-	    }
+		
 	});
+		function generatList() {
+			var listItems = [];
+			var list_id = $('#list_id').val();
+			$('.admin-buy-list').each(function() {
+				var product_id = this.id;
+				product_id = product_id.replace('product_row_', '');
+				var retail_price = $('#retail_price_' + product_id).html();
+				var option_id = $('#option_id_' + product_id).val();
+				var quantity = $('#quantity_' + product_id).val();
+				listItems.push({
+					product_id: product_id,
+					option_id : option_id,
+					quantity :  quantity,
+					retail_price: retail_price
+				});
+				
+			});
+			jQuery.ajax({
+				url: "{{ url('admin/generate-list') }}",
+				method: 'post',
+				data: {
+				"_token": "{{ csrf_token() }}",
+					listItems: listItems,
+					listId : list_id
+				},
+				success: function(response) {
+					
+				}
+			});
+		}
 
 		function deleteProduct(product_id) {
-			var subtotal_to_remove = $('#subtotal_'+ product_id).html();
-			var grand_total = $('#grand_total').html();
-			var updated_total = grand_total - subtotal_to_remove;
+			var row = $('#product_row_' + product_id).length;
+			if (row < 1) {
+				$('#grand_total').html(0.00);
+			}
+			var subtotal_to_remove = parseFloat($('#subtotal_'+ product_id).html());
+			var grand_total = parseFloat($('#grand_total').html());
+			var updated_total = parseFloat(grand_total) - parseFloat(subtotal_to_remove);
 			$('#subtotal_'+ product_id).val();
 			$('#product_row_'+ product_id).remove();
 			$('#grand_total').html(updated_total);
 		}
 		function handleQuantity(product_id) {
-			var quantity = $('#quantity_'+product_id).val();
-			var subtotal = $('#subtotal_'+ product_id).html();
-			var new_sub_total = quantity * subtotal;
-			$('#subtotal_'+ product_id).html(new_sub_total);
-			$('#grand_total').html(new_sub_total);
-			console.log('grand_total' + grand_total);
-			console.log('new_sub_total' + new_sub_total)
-			// var new_grand_total = grand_total + new_sub_total;
-			// console.log(new_grand_total);
-			// alert(grand_total);
-			// alert(subtotal);
+			var difference = 0;
+				var subtotal_before_update = parseFloat($('#subtotal_' + product_id).html());
+				console.log('difference => ' + difference);
+				console.log('sub total before update  => ' + subtotal_before_update);
+
+				var retail_price = parseFloat($('#retail_price_' + product_id).html());
+				var quantity = parseFloat($('#quantity_' + product_id).val());
+				var subtotal = parseFloat($('#subtotal_' + product_id).html());
+				
+				
+				subtotal = retail_price * quantity;
+
+				difference = subtotal_before_update - subtotal;
+
+				console.log('difference => ' + difference);
+
+				var grand_total = $('#grand_total').html();
+				grand_total = parseFloat(grand_total);
+
+				console.log('Grand Total => ' + grand_total);
+
+
+				grand_total = grand_total - difference;
+				$('#grand_total').html(grand_total);
+
+				console.log('Grand Total => ' + grand_total);
+
+				$('#quantity_' + product_id).val(quantity);
+				$('#subtotal_' + product_id).html(subtotal);
 		}
     
 
@@ -189,9 +244,9 @@
                      description : description,
                      status : status 
                   },
-                  success: function(result){
-                    console.log(result);
+                  success: function(response){
                    	$( "#list_title" ).append("<h4>"+title+"</h4>");
+                   	$("#list_id").val(response.list_id);
             }});
     }
 </script>
