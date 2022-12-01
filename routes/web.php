@@ -100,8 +100,8 @@ Route::group(['middleware' => ['admin']], function () {
    Route::get('admin/customersearch', [CustomerSearchController::class, 'customerSearch'])->name('admin.customer.search');
    Route::resource('admin/products', AdminProductController::class);
    Route::resource('admin/buy-list', AdminBuyListController::class);
-
     Route::post('admin/add-to-list', [AdminBuyListController::class, 'addToList']);
+    Route::post('admin/generate-list', [AdminBuyListController::class, 'genrateList']);
 });
 Route::get('product/search', [ProductController::class, 'productSearch'])->name('product_search');
 

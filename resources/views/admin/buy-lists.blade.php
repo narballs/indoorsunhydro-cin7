@@ -55,7 +55,7 @@
                         <td>{{$buylist->status}}</td>
                         <td>{{$buylist->description}}</td>
                         <td>
-                            <a href="" class="view" title="" data-toggle="tooltip"
+                            <a href="buy-list/{{$buylist->id}}" class="view" title="" data-toggle="tooltip"
                                 data-original-title="View"><i class="fas fa-eye"></i></a>
                             <a href="#" class="edit" title="" data-toggle="tooltip" data-original-title="Edit"><i
                                     class="fas fa-pen"></i></a>
