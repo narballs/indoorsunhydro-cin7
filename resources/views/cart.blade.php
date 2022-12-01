@@ -1,10 +1,11 @@
 @include('partials.header')
 @include('partials.top-bar')
 @include('partials.search-bar')
-<div class="mb-5 cart-title">
+<div class=" cart-title mt-4">
 	<p style="line-height: 95px;"
 		class=" fs-2 product-btn my-auto border-0 text-white text-center align-middle cart-title">
-		CART
+		<span class="cart-page-cart-title">CART</span>
+
 	</p>
 </div>
 @if (session('success'))
@@ -13,174 +14,185 @@
 </div>
 @endif
 
-<div class="container">
+<div class="container-fluid" style="
+	width: 1280px;
+	margin: auto !important;
+	">
 	@if (Session::has('message'))
 	<p class="alert {{ Session::get('alert-class', 'alert-danger') }}">{{ Session::get('message') }}</p>
 	@endif
 	<div class="row">
-		<div style="width: 75%">
-			<section class="h-100 h-custom">
+		<div class="col-md-9">
+			<section class=" h-100">
 				<div class="h-100 py-5">
-					<div class="row d-flex justify-content-center align-items-center">
+					<div class="row">
 						<div class="col-md-12">
-							<div style=" font-family:'Poppins">
-								<div class="table-responsive">
-									<table class="table" id="cart_table">
-										<thead>
-											<tr class="boder-0">
-												<th scope="col" class="th-lg">
-													<span>
-														<img class="img-fluid" src="/theme/img/barcode.png" style="    width: 29px;
+							<div class="table-responsive">
+								<table class="table mt-4" id="cart_table">
+									<thead class="table-head-items">
+										<tr>
+											<th scope="col" class="th-lg" class="table-head-items">
+												<span>
+													<img class="img-fluid" src="/theme/img/barcode.png" style="width: 29px;
 													">
-													</span>
-													SKU
-												</th>
-												<th scope="col" class="th-lg">
-													<span>
-														<img class="img-fluid" src="/theme/img/box.png">
-													</span>
-													Product
-												</th>
-												<th scope="col" class="th-lg" width="15%">
-													<span>
-														<img class=" cart-icons-cart "
-															src="/theme/img/Price_Target.png">
-													</span>
-													Price
-												</th>
-												<th scope="col" class="th-lg">
-													<span>
-														<img src="/theme/img/Arrows_Down_Up.png" alt="">
-													</span>
-													Quantity
-												</th>
-												<th scope="col" class="th-lg">
+												</span>
+												<span class=" cart-total">SKU</span>
+
+											</th>
+											<th scope="col" class="th-lg" class="table-head-items">
+												<span>
+													<img class="img-fluid" src="/theme/img/box.png">
+												</span>
+												<span class=" cart-total">Product</span>
+
+											</th>
+											<th scope="col" class="th-lg" width="147px" class="table-head-items">
+												<span>
+													<img src="/theme/img/Price_Target.png" class="img-fluid">
+												</span>
+												<span class="cart-total">Price</span>
+
+											</th>
+											<th scope="col" class="th-lg" width="170px;" class="table-head-items">
+												<span>
+													<img src="/theme/img/Arrows_Down_Up.png" alt="">
+												</span>
+												<span class="cart-total">Quantity</span>
+
+											</th>
+											<th scope="col" class="th-lg" class="table-head-items">
+												<span>
 													<img class=" cart-icons-cart " src="/theme/img/pricing_tag.png">
-													Total
-												</th>
-											</tr>
-										</thead>
-										<tbody style="padding: 40px">
-											<?php 
+												</span>
+
+												<span class=" cart-total">Total</span>
+
+											</th>
+										</tr>
+									</thead>
+									<tbody style="padding: 40px">
+										<?php 
 												$cart_total = 0;
 												$cart_price = 0;
 											?>
-											@if ($cart_items)
-											@foreach ($cart_items as $pk_product_id => $cart)
-											<?php 
+										@if ($cart_items)
+										@foreach ($cart_items as $pk_product_id => $cart)
+										<?php 
 												$total_quatity =  $cart['quantity'];
 												$total_price = $cart['price'] * $total_quatity;
 												$cart_total  = $cart_total + $total_price ;
 											?>
-											<tr id="{{'row_'.$pk_product_id}}" class="quantities">
-												<td class="align-middle">
-													<p class="mb-0" style="font-weight: 500;">
-														<a class="text-dark cart-page-items"
-															href="{{ url('product-detail/'.$cart['product_id'].'/'.$cart['option_id'].'/'.$cart['slug']) }}" ">{{$cart['code']}}
+										<tr id="{{'row_'.$pk_product_id}}" class="quantities">
+											<td class="align-middle">
+												<span class="mb-0" style="font-weight: 500;">
+													<a class="cart-page-items"
+														href="{{ url('product-detail/'.$cart['product_id'].'/'.$cart['option_id'].'/'.$cart['slug']) }}" ">{{$cart['code']}}
 														</a>
-													</p>
+													</span>
 											</td>
 											<td scope=" row">
-															<div class="d-flex align-items-center">
-																@if(!empty($cart['image']))
-																<img src="{{$cart['image']}}"
-																	class="img-fluid rounded-3" style="width: 120px;"
-																	alt="Book">
-																@else
-																<img src="/theme/img/image_not_available.png"
-																	class="img-fluid rounded-3" style="width: 78px;
-												height: 83px;" alt="Book">
-																@endif
-																<div class="flex-column ms-4">
-																	<p class="mb-2">
-																		<a class="text-dark pe-3 cart-page-items"
-																			href="{{ url('product-detail/'.$cart['product_id'].'/'.$cart['option_id'].'/'.$cart['slug']) }}">{{$cart['name']}}
-																		</a>
-																	</p>
-																</div>
+														<div class="d-flex align-items-center">
+															@if(!empty($cart['image']))
+															<img src="{{$cart['image']}}" class="img-fluid rounded-3"
+																style="width: 120px;" alt="Book">
+															@else
+															<img src="/theme/img/image_not_available.png"
+																class="img-fluid rounded-3" style="width: 78px;
+															height: 83px;" alt="Book">
+															@endif
+															<div class="flex-column ms-4">
+																<span class="mb-2">
+																	<a class=" pe-3 cart-page-items"
+																		href="{{ url('product-detail/'.$cart['product_id'].'/'.$cart['option_id'].'/'.$cart['slug']) }}">{{$cart['name']}}
+																	</a>
+																</span>
 															</div>
-												</td>
-												<td class=" align-middle">
-													<p class="mb-0 ps-2  cart-page-items">${{number_format(
-														$cart['price'],2)}} </p>
-
-												</td>
-
-												<td class="align-middle">
-													<div class="d-flex flex-row">
-														<button class="btn btn-link px-2"
-															onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
-															<i class="fas fa-minus"></i>
-														</button>
-														<input id="{{'row_quantity_'.$pk_product_id}}" min="0"
-															name="quantity" value="{{$cart['quantity']}}" type="number"
-															class="form-control form-control-sm quantity"
-															style="width: 50px;" />
-														<button class="btn btn-link px-2"
-															onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
-															<i class="fas fa-plus"></i>
-														</button>
+														</div>
+											</td>
+											<td class=" align-middle">
+												<p class="mb-0 ps-2  cart-page-items">${{number_format(
+													$cart['price'],2)}} </p>
+											</td>
+											<td class="align-middle">
+												<div class="col-md-3">
+													<div class="quantity">
+														<input type="number" name="quantity"
+															id={{'row_quantity_'.$pk_product_id}} min="1" max="20"
+															step="1" value="{{$cart['quantity']}}">
+														<input type="hidden" name="p_id" id="p_id"
+															value="{{$cart['product_id']}}">
+														<input type="hidden" name="p_id" id="option_id"
+															value="{{$cart['option_id']}}">
+														<div class="quantity-nav">
+															<div class="quantity-div quantity-up"
+																onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
+																</div>
+															<div class="quantity-div quantity-down"
+																onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
+																</div>
+														</div>
 													</div>
-												</td>
-												<td class="align-middle">
-													<p class="mb-0 text-danger ps-2  cart-page-items">
-														<span
-															id="subtotal_{{ $pk_product_id }}">${{number_format($cart['price']
-															*$cart['quantity'],2 )}}</span>
-													</p>
-													<p class="text-center remove-item-cart">
-														<a style="font-family: 'Poppins';
+												</div>
+											</td>
+											<td class="align-middle">
+												<spsn class="mb-0 text-danger ps-2  cart-page-items">
+													<span
+														id="subtotal_{{ $pk_product_id }}">${{number_format($cart['price']
+														*$cart['quantity'],2 )}}</span>
+												</spsn>
+												<p class="text-center remove-item-cart">
+													<a style="font-family: 'Poppins';
 														font-style: normal;
 														font-weight: 400;
+														margin-right: 4px;
 														font-size: 12px;
 														line-height: 18px;
+														text-decoration-line: underline;
 														color: #9A9A9A;" href="{{ url('remove/'.$pk_product_id) }}" id="remove">Remove</a>
-													</p>
-												</td>
-											</tr>
-											@endforeach
-											@endif
-										</tbody>
-										<tfoot class="border-0" style="border-color: #ffff !important;">
-											<tr>
-												<td colspan="5">
-													<div class="w-100 d-flex mt-4">
-														<div class="col-md-8 coupon-code ps-0">
-															<div class=" align-items-center d-flex">
-																<div>
-																	<span class="coupon-code-label"><img
-																			class="img-fluid"
-																			src="/theme/img/Vector.png"
-																			class="img-fluid">&nbsp;&nbsp;Coupon
-																		code</span>
-																</div>
-																<div class="col-4 ps-3">
-																	<div class="form-signupp">
-																		<input type="text" name="code" id="code"
-																			class="fontAwesome form-control"
-																			placeholder="Your code" required>
-																	</div>
-																</div>
-																<div class="col-5 p-0">
-																	<span>
-																		<button class="apply-coupon-code-button w-100">
-																			Apply Coupon
-																		</button>
-																	</span>
+												</p>
+											</td>
+										</tr>
+										@endforeach
+										@endif
+									</tbody>
+									<tfoot class="border-0" style="border-color: #ffff !important;">
+										<tr>
+											<td colspan="5">
+												<div class="w-100 d-flex mt-4">
+													<div class="col-md-8 coupon-code ps-0">
+														<div class=" align-items-center d-flex">
+															<div>
+																<span class="coupon-code-label"><img class="img-fluid"
+																		src="/theme/img/Vector.png"
+																		class="img-fluid">&nbsp;&nbsp;Coupon
+																	code</span>
+															</div>
+															<div class="col-4 ps-3">
+																<div class="form-signupp">
+																	<input type="text" name="code" id="code"
+																		class="fontAwesome form-control"
+																		placeholder="Your code" required>
 																</div>
 															</div>
-														</div>
-														<div class="col-md-4 p-0">
-															<button class="button-cards w-75 cart-updated" type="submit"
-																id="update_cart" onclick="update_cart()">Update
-																Cart</button>
+															<div class="col-5 p-0">
+																<span>
+																	<button class="apply-coupon-code-button">
+																		Apply Coupon
+																	</button>
+																</span>
+															</div>
 														</div>
 													</div>
-												</td>
-											</tr>
-										</tfoot>
-									</table>
-								</div>
+													<div class="col-md-4 p-0">
+														<button class=" cart-updated" type="submit" id="update_cart"
+															onclick="update_cart()">Update
+															Cart</button>
+													</div>
+												</div>
+											</td>
+										</tr>
+									</tfoot>
+								</table>
 							</div>
 						</div>
 					</div>
@@ -188,44 +200,61 @@
 			</section>
 		</div>
 		<div class="col-md-3 p-0  mt-5">
-			<div class="card mb-4 p-0 col-md-12">
-				<div class="card-header py-3 bg-transparent" style="margin-top:6px;">
-					<h5 class="mb-0 cart-total">Cart Total</h5>
-				</div>
-				<div class="card-body h-100">
-					<ul class="list-group list-group-flush">
-						<li
-							class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
-							<div>
-								<img class="img-fluid" src="/theme/img/pricing_tag.png">
+			<div class="table-responsive">
+				<table class="table mt-4">
+					<thead>
+						<tr>
+							<th colspan="2" scope="col" class="th-lg">
+								<span class=" cart-total p-1">
+									Cart Totals
+								</span>
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>
+								<img class=" img-fluid" src="/theme/img/pricing_tag.png">
 								<strong>Total</strong>
-							</div>
-							<span id="cart_grand_total"><strong class="text-danger cart-page-items">${{
-									number_format($cart_total,2)}}</strong></span>
-						</li>
-						<li class="list-group-item d-flex justify-content-center align-items-center border-0 px-0 mb-3">
-							@if (Auth::check() == true && !empty($contact->contact_id))
-							<a href="{{ url('/checkout')}}">
-								<button class="procedd-to-checkout col w-100 tm-5">
-									PROCEED TO CHECKOUT
-								</button>
-							</a>
-							@elseif(Auth::check() == true && empty($contact->contact_id))
-							<a href="{{ url('/checkout/')}}">
-								<button class="procedd-to-checkout col w-100 tm-5">
-									PROCEED TO CHECKOUT
-								</button>
-							</a>
-							@elseif (Auth::check() != true)
-							<a href="{{ url('/user/')}}">
-								<button class="procedd-to-checkout col w-100 tm-5">
-									Login or Register
-								</button>
-							</a>
-							@endif
-						</li>
-					</ul>
-				</div>
+							</td>
+							<td>
+								<span id="cart_grand_total">
+									<strong class="text-danger cart-page-items">
+										${{number_format($cart_total,2)}}
+									</strong>
+								</span>
+							</td>
+						</tr>
+					</tbody>
+					<tfoot class="border-0" style="border-color: #ffff !important;">
+						<tr>
+							<td colspan="2">
+								<li
+									class="list-group-item d-flex justify-content-center align-items-center border-0 px-0 mb-3">
+									@if (Auth::check() == true && !empty($contact->contact_id))
+									<a href="{{ url('/checkout')}}">
+										<button class="procedd-to-checkout mt-3">
+											PROCEED TO CHECKOUT
+										</button>
+									</a>
+									@elseif(Auth::check() == true && empty($contact->contact_id))
+									<a href="{{ url('/checkout/')}}">
+										<button class="procedd-to-checkout mt-3">
+											PROCEED TO CHECKOUT
+										</button>
+									</a>
+									@elseif (Auth::check() != true)
+									<a href="{{ url('/user/')}}">
+										<button class="procedd-to-checkout mt-3">
+											Login or Register
+										</button>
+									</a>
+									@endif
+								</li>
+							</td>
+						</tr>
+					</tfoot>
+				</table>
 			</div>
 		</div>
 	</div>
@@ -277,17 +306,162 @@
             jQuery('.alert').html(response.success);
         }
     });
-
 }
+             
+jQuery('<div class="quantity-nav"><div class="quantity-div quantity-up">&#xf106;</div><div class="quantity-div quantity-down">&#xf107</div></div>').insertAfter('.quantity input');
+		jQuery('.quantity').each(function () {
+		var spinner = jQuery(this),
+			input = spinner.find('input[type="number"]'),
+			btnUp = spinner.find('.quantity-up'),
+			btnDown = spinner.find('.quantity-down'),
+			min = input.attr('min'),
+			max = input.attr('max');
+
+		btnUp.click(function () {
+			var oldValue = parseFloat(input.val());
+			if (oldValue >= max) {
+			var newVal = oldValue;
+			} else {
+			var newVal = oldValue + 1;
+			}
+			spinner.find("input").val(newVal);
+			spinner.find("input").trigger("change");
+		});
+
+		btnDown.click(function () {
+			var oldValue = parseFloat(input.val());
+			if (oldValue <= min) {
+			var newVal = oldValue;
+			} else {
+			var newVal = oldValue - 1;
+			}
+			spinner.find("input").val(newVal);
+			spinner.find("input").trigger("change");
+		});
+
+		});
+  
 </script>
 <style>
 	.table-responsive {
-		border: 1px solid #eee;
+		border: 1px solid #DFDFDF;
 		padding: 13px;
 		padding-top: 0px;
 	}
 
 	.table thead>tr>th {
 		border-top: 1px solid #fff;
+	}
+
+	.table tbody>tr>td {
+		border-top: 1px solid #fff;
+	}
+
+	.table thead th {
+		vertical-align: bottom;
+	}
+
+	.table-head-items {
+		font-family: 'Poppins';
+		font-style: normal;
+		font-weight: 600;
+		font-size: 16px;
+		line-height: 24px;
+		color: #000000;
+	}
+
+
+	input[type=number]::-webkit-inner-spin-button,
+	input[type=number]::-webkit-outer-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
+
+	input[type=number] {
+		-moz-appearance: textfield;
+	}
+
+	.quantity input {
+		width: 96px;
+		height: 49px;
+		font-size: 16px;
+		line-height: 24px;
+		float: left;
+		display: block;
+		padding: 0;
+		margin: 0;
+		padding-left: 34px;
+		border: none;
+		color: #7CC633;
+		box-shadow: 0 0 0 1px rgb(0 0 0 / 8%);
+		border-radius: 1px;
+	}
+
+	.quantity input:focus {
+		outline: 0;
+	}
+
+	.quantity-nav {
+		float: left;
+		position: relative;
+		height: 74px;
+	}
+
+	.quantity-div {
+		position: relative;
+		cursor: pointer;
+		border: none;
+		border-left: 1px solid rgba(0, 0, 0, 0.08);
+		width: 18px;
+		text-align: center;
+		color: #333;
+		font-size: 13px;
+		font-family: "FontAwesome" !important;
+		line-height: 2.5 !important;
+		padding: 0;
+		background: #FAFAFA;
+		-webkit-transform: translateX(-100%);
+		transform: translateX(-100%);
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		-o-user-select: none;
+		user-select: none;
+	}
+
+	.quantity-div:active {
+		background: #EAEAEA;
+	}
+
+	.quantity-div.quantity-up {
+		position: absolute;
+		width: 25;
+		height: 25px;
+		top: 0;
+		border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+		font-family: "FontAwesome";
+		border-radius: 0 4px 0 0;
+		line-height: 1.6
+	}
+
+	.quantity-div.quantity-down {
+		position: absolute;
+		width: 25;
+		height: 25px;
+		bottom: 0;
+		font-family: "FontAwesome";
+		border-radius: 0 0 4px 0;
+		margin-bottom: 25px;
+	}
+
+	.top-bar-height {
+		height: 78px;
+	}
+
+	.cart-counter-details {
+		font-family: 'Poppins';
+		font-style: normal;
+		font-weight: 600;
+		font-size: 14px;
 	}
 </style>
