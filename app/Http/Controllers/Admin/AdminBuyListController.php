@@ -69,8 +69,6 @@ class AdminBuyListController extends Controller
             $product_buy_list->product_id = $list_item['product_id'];
             $product_buy_list->option_id = $list_item['option_id'];
             $product_buy_list->quantity = $list_item['quantity'];
-            $product_buy_list->sub_total = $list_item['sub_total'];
-            $product_buy_list->grand_total = $list_item['grand_total'];
             $product_buy_list->save();
         }
     }
