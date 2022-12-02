@@ -75,6 +75,9 @@
 					<div class="col-md-10 border-top">Grand Total</div>
 					<div class="col-md-2 border-top">amount : <span id="grand_total">0</span></div>
 				</div>
+				<div class="row">
+					<div class="col-md-10 border-top"><button type="button" class="ms-2 btn btn-primary" onclick="generatList()">Create List</button>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -195,7 +198,6 @@
 					listId : list_id
 				},
 				success: function(response) {
-					
 				}
 			});
 		}
