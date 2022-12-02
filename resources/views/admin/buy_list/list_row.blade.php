@@ -5,7 +5,7 @@
 	<td>
 		@foreach($product->options as $option)
 			<img src="{{$option->image}}" style="width:100px !important">
-			<input type="text" id="option_id_{{$product->product_id}}" value="{{ $option->option_id}}">
+			<input type="hidden" id="option_id_{{$product->product_id}}" value="{{ $option->option_id}}">
 		@endforeach
 	</td>
 	<td>

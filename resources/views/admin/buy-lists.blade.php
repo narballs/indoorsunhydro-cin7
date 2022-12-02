@@ -55,12 +55,17 @@
                         <td>{{$buylist->status}}</td>
                         <td>{{$buylist->description}}</td>
                         <td>
-                            <a href="buy-list/{{$buylist->id}}" class="view" title="" data-toggle="tooltip"
-                                data-original-title="View"><i class="fas fa-eye"></i></a>
-                            <a href="#" class="edit" title="" data-toggle="tooltip" data-original-title="Edit"><i
-                                    class="fas fa-pen"></i></a>
-                            <a href="#" class="delete" title="" data-toggle="tooltip" data-original-title="Delete"><i
-                                    class="fas fa-trash-alt"></i></a>
+                            <form method="post" action="{{route('buy-list.destroy' , $buylist->id)}}">
+                                @csrf
+                                 @method('DELETE')
+                                <a href="buy-list/{{$buylist->id}}" class="view" title="" data-toggle="tooltip"
+                                    data-original-title="View"><i class="fas fa-eye"></i></a>
+                                <a href="#" class="edit" title="" data-toggle="tooltip" data-original-title="Edit"><i
+                                        class="fas fa-pen"></i></a>
+                                <button type="submit" class="delete"  style="background-color: transparent; border: none;" title="" data-toggle="tooltip" data-original-title="Delete">
+                                    <i class="fas fa-trash-alt" style="color: #007bff;"></i>
+                                </button>
+                            </form>
                         </td>
                     </tr>
                 @endforeach
@@ -71,4 +76,5 @@
             </div>
         </div>
     </div>
+</div>
     @stop
