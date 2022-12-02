@@ -1,13 +1,15 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
-
+use \App\Http\Requests\BuyLists\BuyListRequest;
 use \App\Http\Controllers\Controller;
 use App\Http\Middleware\IsAdmin;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\BuyList;
 use App\Models\ProductBuyList;
+use Redirect;
+
 
 
 
@@ -30,14 +32,14 @@ class AdminBuyListController extends Controller
         return view('admin/buy-list-new', compact('products'));
     }
 
-    public function store(Request $request) {
+    public function store(BuyListRequest $request) {
         $list = BuyList::create([
             'title' => $request->title,
             'status' => $request->status, 
             'description' => $request->description
         ]);
         return response()->json([
-            'success' => 'List Created Successfully',
+            'success' => 'List Created Successfully. Please add prodcuts to list.',
             'list_id' => $list->id
         ]);
 
@@ -47,6 +49,11 @@ class AdminBuyListController extends Controller
         $list = BuyList::where('id', $id)->with('list_products.product.options')->first();
        return view('admin/buy_list/list-detail', compact(
             'list'));
+    }
+
+    public function destroy($id) {
+       BuyList::where('id', $id)->delete();
+       return Redirect::back()->withErrors(['msg' => 'The Message']);
     }
 
     public function addToList(Request $request) {
@@ -63,12 +70,15 @@ class AdminBuyListController extends Controller
         $list_id = $request->listId;
         $list_items = $request->listItems;
         $quantity = $request->quantity;
+
         foreach ($list_items as $list_item ) {
             $product_buy_list = new ProductBuyList();
             $product_buy_list->list_id = $list_id;
             $product_buy_list->product_id = $list_item['product_id'];
             $product_buy_list->option_id = $list_item['option_id'];
             $product_buy_list->quantity = $list_item['quantity'];
+            $product_buy_list->sub_total = $list_item['subtotal'];
+            $product_buy_list->grand_total = $list_item['grand_total'];
             $product_buy_list->save();
         }
     }
