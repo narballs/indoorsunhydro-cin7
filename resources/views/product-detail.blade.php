@@ -155,6 +155,7 @@
                             var total_cart_quantity = 0;
 
                         for (var key in cart_items) {
+                            console.log(item);
                                 var item = cart_items[key];
                                 var code =parseFloat(item.code)
                                 var product_id = item.prd_id;
@@ -205,8 +206,8 @@
                   } else {
                     var newVal = oldValue + 1;
                   }
-                  spinner.find("input").val(newVal);
-                  spinner.find("input").trigger("change");
+                  spinner.find("input[id=quantity]").val(newVal);
+                  spinner.find("input[id=quantity").trigger("change");
                 });
 
                 btnDown.click(function () {

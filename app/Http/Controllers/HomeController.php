@@ -19,10 +19,10 @@ class HomeController extends Controller
      */
     public function index()
     {
-    //   session()->forget('cart');
-       
-    //     session()->flush();
-        
+        // session()->forget('cart');
+
+        //     session()->flush();
+
         //dd($user_id);
         $categories = Category::orderBy('name', 'ASC')
             ->with('products')->where('is_active', 1)
@@ -32,25 +32,25 @@ class HomeController extends Controller
         // ->orderBy('brand', 'desc')
         // ->take(9)
         // ->get();
-        
+
         // dd($product_brands->getProductsByBrand());
 
         // foreach($product_brands as $brand) {
         //     echo $brand->brand;
         // }
-        
-        //echo '<pre>';var_export($product_brands);exit;
-            // foreach($categories as $category) {
-            //     foreach($category->products as $p) {
-            //         echo $p['images'];
-            //     }
-            // }
-            // exit;
-            //echo '<pre>';var_export($categories);exit;
 
-            
-        
-        
+        //echo '<pre>';var_export($product_brands);exit;
+        // foreach($categories as $category) {
+        //     foreach($category->products as $p) {
+        //         echo $p['images'];
+        //     }
+        // }
+        // exit;
+        //echo '<pre>';var_export($categories);exit;
+
+
+
+
         return view('index', compact('categories'));
     }
 }
