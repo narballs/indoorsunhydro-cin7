@@ -16,22 +16,28 @@
 		<div class="col-md-5 card">
 			<div class="alert alert-success d-none" role="alert" id="success_msg"></div>
 			<div class="row mt-5">
-		  		<div class="form-group col-md-6">
-		    		<label for="list_name">Title</label>
-		    		<input type="text" class="form-control" id="title" aria-describedby="titleHelp" name="title" placeholder="Buy List Title">
-		    		<div class="text-danger" id="title_errors"></div>
-		  		</div>
-		  		
+				@if($list)
+			  		<div class="form-group col-md-6">
+			    		<label for="list_name">Title</label>
+			    		<input type="text" class="form-control" value={{$list->title}} id="title" aria-describedby="titleHelp" name="title" placeholder="Buy List Title">
+			    		<div class="text-danger" id="title_errors"></div>
+			  		</div>
+		  		@else
+			  		<div class="form-group col-md-6">
+			    		<label for="list_name">Title</label>
+			    		<input type="text" class="form-control"  id="title" aria-describedby="titleHelp" name="title" placeholder="Buy List Title">
+			    		<div class="text-danger" id="title_errors"></div>
+			  		</div>
+		  		@endif
 		  		 <div class="form-group col-md-6 mb-0">
 		    		<label for="type" name="type">Status</label>
+
 		    		<select class="form-control" name="type" id="status">
-		    			<option value="">Select Status</option>
-		    			<option value="public">Public</option>
-		    			<option value="private">Private</option>
-		    			<option value="private">Shareable</option>
+		    			 <option value="" {{$list->status == private ? 'selected' : '' }}>{{$list->status}}</option>
+		    			  <option value="" {{$list->status == public ? 'selected' : '' }}>{{$list->status}}</option>
+		    			   <option value="" {{$list->status == status ? 'selected' : '' }}>{{$list->status}}</option>
 		    		</select>
 		    		<div id="status_errors" class="text-danger"></div>
-		    		
 		  		</div>
 		  		<div class="col-md-12 card mt-5">
 					<div class="card-body"><h4>Description</h4></div>
@@ -189,6 +195,7 @@
 					
 				});
 			});
+			console.log(listItems);
 			jQuery.ajax({
 				url: "{{ url('admin/generate-list') }}",
 				method: 'post',
@@ -198,6 +205,7 @@
 					listId : list_id
 				},
 				success: function(response) {
+					window.location.href = "{{ route('buy-list.index')}}";
 				}
 			});
 		}
@@ -216,34 +224,33 @@
 		}
 		function handleQuantity(product_id) {
 			var difference = 0;
-				var subtotal_before_update = parseFloat($('#subtotal_' + product_id).html());
-				console.log('difference => ' + difference);
-				console.log('sub total before update  => ' + subtotal_before_update);
+			var subtotal_before_update = parseFloat($('#subtotal_' + product_id).html());
+			console.log('difference => ' + difference);
+			console.log('sub total before update  => ' + subtotal_before_update);
 
-				var retail_price = parseFloat($('#retail_price_' + product_id).html());
-				var quantity = parseFloat($('#quantity_' + product_id).val());
-				var subtotal = parseFloat($('#subtotal_' + product_id).html());
-				
-				
-				subtotal = retail_price * quantity;
+			var retail_price = parseFloat($('#retail_price_' + product_id).html());
+			var quantity = parseFloat($('#quantity_' + product_id).val());
+			var subtotal = parseFloat($('#subtotal_' + product_id).html());
+			
+			
+			subtotal = retail_price * quantity;
+			difference = subtotal_before_update - subtotal;
 
-				difference = subtotal_before_update - subtotal;
+			console.log('difference => ' + difference);
 
-				console.log('difference => ' + difference);
+			var grand_total = $('#grand_total').html();
+			grand_total = parseFloat(grand_total);
 
-				var grand_total = $('#grand_total').html();
-				grand_total = parseFloat(grand_total);
-
-				console.log('Grand Total => ' + grand_total);
+			console.log('Grand Total => ' + grand_total);
 
 
-				grand_total = grand_total - difference;
-				$('#grand_total').html(grand_total);
+			grand_total = grand_total - difference;
+			$('#grand_total').html(grand_total);
 
-				console.log('Grand Total => ' + grand_total);
+			console.log('Grand Total => ' + grand_total);
 
-				$('#quantity_' + product_id).val(quantity);
-				$('#subtotal_' + product_id).html(subtotal);
+			$('#quantity_' + product_id).val(quantity);
+			$('#subtotal_' + product_id).html(subtotal);
 		}
     
 
