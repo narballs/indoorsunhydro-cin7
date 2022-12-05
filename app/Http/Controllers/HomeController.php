@@ -19,7 +19,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-      // session()->forget('cart');
+    //   session()->forget('cart');
        
     //     session()->flush();
         
