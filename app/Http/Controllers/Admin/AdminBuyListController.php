@@ -28,8 +28,16 @@ class AdminBuyListController extends Controller
     }
 
     public function create(Request $request) {
-        $products = Product::paginate(10);
-        return view('admin/buy-list-new', compact('products'));
+        if ($request->id) {
+            $list = BuyList::where('id', $request->id)->with('list_products.product.options')->first();
+            $products = Product::paginate(10);
+            return view('admin/buy-list-new', compact('products', 'list'));
+        }
+        else {
+            $products = Product::paginate(10);
+            $list = '';
+            return view('admin/buy-list-new', compact('products', 'list'));
+        }
     }
 
     public function store(BuyListRequest $request) {
@@ -47,7 +55,13 @@ class AdminBuyListController extends Controller
 
     public function show($id) {
         $list = BuyList::where('id', $id)->with('list_products.product.options')->first();
-       return view('admin/buy_list/list-detail', compact(
+        return view('admin/buy_list/list-detail', compact(
+            'list'));
+    }
+
+    public function edit($id) {
+        $list = BuyList::where('id', $id)->with('list_products.product.options')->first();
+        return view('admin/buy_list/buy-list-edit', compact(
             'list'));
     }
 
@@ -69,6 +83,7 @@ class AdminBuyListController extends Controller
     public function genrateList(Request $request) {
         $list_id = $request->listId;
         $list_items = $request->listItems;
+        //dd($list_items);
         $quantity = $request->quantity;
 
         foreach ($list_items as $list_item ) {
