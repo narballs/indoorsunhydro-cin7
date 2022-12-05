@@ -1472,8 +1472,17 @@ input[type=number] {
 .category-title {
     font-family: 'Poppins';
     font-style: normal;
-    font-size: 20px;
+    font-size: 16px;
     line-height: 30px;
+    text-align: center
+}
+
+.category-description {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 600 !important;
+    font-size: 20px;
+    line-height: 71px;
 }
 
 .form-select {

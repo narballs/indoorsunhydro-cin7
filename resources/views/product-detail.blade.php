@@ -15,7 +15,7 @@
     <div class="container mt-5 mb-5">
         <div class="row d-flex justify-content-center">
             <div class="col-md-12">
-                <div class="card">
+                <div class="card py-3">
                     <div class="row ms-0">
                         <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 col-xs-12">
                             <div class="images">
@@ -32,7 +32,7 @@
                             </div>
                         </div>
                         <div class="col-xl-7 col-lg-7 col-md-12 col-sm-12 col-xs-12 product-detail-content">
-                            <div class="product pr-1 pt-4 product-detail-content1">
+                            <div class="product pt-4 product-detail-content1">
                                 <div class="d-flex row">
                                     <?php $retail_prices = $productOption->retailPrice;?>
                                     <div class="product-detail-heading col-xl-12 col-lg-12 col-md-12 col-xs-12"
@@ -102,27 +102,26 @@
                                 <div>
                                     <div class="price">
                                         <div class="row mt-5">
-                                            <div class="col-md-3 pe-0">
-                                                <span class="category-title-heading pe-3">Category :</span>
-                                            </div>
-                                            <div class="col-md-4 ps-0 pe-3 text-center">
+                                            <div class="col-md-9">
+                                                <span class="category-title-heading">Category :</span>
                                                 @if($pname)
-                                                <span class="category-title">{{$pname}}</span>
+                                                <span class="category-title mt-4 ps-2">{{$pname}}</span>
                                                 @endif
                                             </div>
-                                            <div class="col-md-4 d-flex justify-content-end pr-0">
-                                                <span class="category-title-heading">SKU</span> : <span
-                                                    class="category-title">{{$productOption->code}}</span>
+                                            <div class="col-md-3 ps-0 pe-0">
+                                                <span class="category-title-heading">SKU :</span>
+                                                <span class="category-title">{{$productOption->code}}
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="product-detail-content-dec">
-                                    <div class="category-title mt-3"><strong>Description</strong></div>
-                                    <p class="about product-details-description mt-3">
+                                    <div class="category-description mt-3"><span>Description</span></div>
+                                    <span class="about product-details-description mt-3">
                                         {{ strip_tags( $productOption->products->description ) }}
-                                    </p>
+                                    </span>
                                 </div>
                             </div>
                         </div>
