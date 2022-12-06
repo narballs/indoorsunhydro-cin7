@@ -76,7 +76,7 @@
                                                     max="{{$productOption->stockAvailable}}" step="1" value="1">
                                                 <input type="hidden" name="p_id" id="p_id"
                                                     value="{{$productOption->products->id}}">
-                                                <input type="hidden" name="p_id" id="option_id"
+                                                <input type="hidden" name="option_id" id="option_id"
                                                     value="{{$productOption->option_id}}">
                                                 <div class="quantity-nav">
                                                     <div class="quantity-div quantity-up"></div>
