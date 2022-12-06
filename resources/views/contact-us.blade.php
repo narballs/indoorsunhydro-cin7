@@ -19,17 +19,18 @@
 <!-- <meta name="csrf-token" content="{{ csrf_token() }}"> -->
 <div class="container-fluid pl-0 pr-0">
 	<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 pl-0 pr-0">
-		<div class="row" style="background-image: url('/theme/img/img_12.png');">
-			<div class="thankyou bg-light mt-5 mb-5 contact-row" id="thanks">
+		<div class="row" style="background-image: url('/theme/img/img_12.png'); width:100%">
+			<div class="thankyou bg-light mt-5 mb-5 contact-row h-100" id="thanks">
 				<div class="col-md-12 text-center m-auto pt-5">
-					<div id="success" class="col-md-10 d-none offset-1 text-white alert-success text-center my-2"></div>
+					<div id="success" class="col-md-10 d-none offset-1 text-white alert-success text-center my-2">
+					</div>
 					<h2 style="font-size:30px" class="text-center pt-5">CONTACT US</h2>
 				</div>
 				<div class="form-signup-secondary mt-5">
 					<div class="px-3">
-						<form id="contact-us" class="w-100" name="contact-us">
+						<form id="contact-us" class="w-100 " name="contact-us">
 							<div class="row contact-form px-5">
-								<div class="col-md-6 ">
+								<div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
 									<div class="form-login">
 										<div class="input-placeholder mt-3">
 											<input type="text" name="name" required="" id="name">
@@ -56,12 +57,12 @@
 										</div>
 									</div>
 								</div>
-								<div class="col-md-6 col-sm-12">
+								<div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
 									<div class="input-placeholder mt-3">
 										<textarea type="text" name="message" required="" id="message"
-											class="message fontAwesome pl-4" placeholder=" Message"></textarea>
+											class="message fontAwesome pl-4 form-control"
+											placeholder=" Message"></textarea>
 										<div id="message-error" class="text-danger contact-us-error"></div>
-
 										<button type="button" name="save" class="btn-login mt-3" id="save"
 											onclick="contactUs()">SEND</button>
 									</div>

@@ -1306,7 +1306,7 @@ label {
 
 .dropdown:hover .dropdown-menu {
     display: block;
-    margin-top: 0; // remove the gap so it doesn't close
+    margin-top: 0;
 }
 
 .product-detail-heading {
@@ -1566,7 +1566,7 @@ input[type=number] {
     height: 404px;
     background-color: #7BC533;
 }
-}
+
 
 .sing-up-label {
     width: 100%;
@@ -2752,10 +2752,10 @@ input[type=number] {
 }
 
 .message {
-    width: 496px;
+    /* width: 496px; */
     height: 177px;
-    left: 979px;
-    top: 599px;
+    /* left: 979px; */
+    /* top: 599px; */
 }
 
 #message {
@@ -2765,7 +2765,7 @@ input[type=number] {
 }
 
 .input-placeholder .btn-login {
-    width: 496px !important;
+    /* width: 496px !important; */
     height: 79px;
 }
 

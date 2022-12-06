@@ -1,7 +1,7 @@
 <?php 
 	$categories = NavHelper::getCategories();
 ?>
-<div class="col-xl-12 col-lg-12 col-md-12  col-sm-12 col-xs-12">
+<div class="col-xl-12 col-lg-12 col-md-12  col-sm-12 col-xs-12 p-0">
 	<nav class="navbar navbar-expand-lg navbar-light bg-transparent pb-0 justify-content-start">
 
 		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -25,7 +25,8 @@
 										href="{{url('products')}}"><b>All Products</b></a></li>
 								@foreach($categories as $category)
 								@if ($category->parent_id == 0)
-								<li><a class="link-dark dropdown-item text-decoration-none nav-link product-mega-menu"
+								<li>
+									<a class="link-dark dropdown-item text-decoration-none nav-link product-mega-menu"
 										id="category_{{$category->id}}"
 										href="{{ url('products/'.$category->id.'/'.$category->slug) }}">
 										{{$category->name}}
@@ -63,26 +64,29 @@
 														@endforeach
 													</div>
 											</ul>
-
 										</ul>
 										@endif
 								</li>
-
 								@endforeach
 							</ul>
 						</li>
 
 						<li class="nav-item me-3">
-							<a class="nav-link text-uppercase nav-item-links " href="#">About</a>
+							<a class="nav-link text-uppercase nav-item-links " href="#">
+								About
+							</a>
 						</li>
 
 						<li class="nav-item me-4">
-							<a class="nav-link text-uppercase nav-item-links" href="{{url('contact-us')}}">Contact</a>
+							<a class="nav-link text-uppercase nav-item-links" href="{{url('contact-us')}}">
+								Contact
+							</a>
 						</li>
 
 						<li class="nav-item me-3">
 							<a class="nav-link text-uppercase nav-item-links" href="{{ url('my-account') }} ">My
-								account</a>
+								account
+							</a>
 						</li>
 					</ul>
 				</div>
