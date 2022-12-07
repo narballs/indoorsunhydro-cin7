@@ -7,6 +7,9 @@ use App\Models\Order;
 use App\Models\OrderStatus;
 use App\Models\ApiOrder;
 use App\Jobs\SyncContacts;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\Subscribe;
+use App\Helpers\MailHelper;
 
 
 
@@ -128,10 +131,12 @@ class ContactController extends Controller
     public function activate_customer(Request $request) {
         $contact_id = $request->input('contact_id');
         $currentContact = Contact::where('id', $contact_id)->first()->toArray();
+        // dd($currentContact );
         unset($currentContact['id']);
         unset($currentContact['contact_id']);
         unset($currentContact['user_id']);
         $json_encode = json_encode($currentContact);
+        // dd($json_encode);
         $contact = [
             $currentContact
         ];
@@ -140,10 +145,32 @@ class ContactController extends Controller
         $is_updated = Contact::where('id', $contact_id)->pluck('contact_id')->first();
 
         if ($is_updated) {
-            return response()->json(['success' => true, 'created'=> true, 'msg' => 'Welcome, new player.']);
+            $name = $currentContact['firstName'];
+            $email = $currentContact['email'];
+            $subject = 'Account  approval';
+            $template = 'emails.customer-notification';
+            $isAdmin = true;
+
+            if ($isAdmin == true) {
+                $adminTemplate = 'emails.approval-notifications';
+                MailHelper::sendMail($adminTemplate, $name, 'wqszeeshan@gmail.com', $subject);
+            }
+
+            
+            MailHelper::sendMail($template, $name, $email, $subject);
+            return response()->json([
+                'success' => true, 
+                'created'=> true, 
+                'msg' => 'Welcome, new player.'
+            ]);
+
         }
         else {
-             return response()->json(['success' => false, 'created'=> true, 'msg' => 'failed.']);
+             return response()->json([
+                'success' => false, 
+                'created'=> true, 
+                'msg' => 'failed'
+            ]);
         }
     }
 
@@ -153,13 +180,18 @@ class ContactController extends Controller
         $first_name = $request->first_name;
         $last_name = $request->last_name;
         $contact = Contact::where('contact_id', $contact_id)->first();
+
         if ($priceColumn) {
             $contact->update(
                 [
                     'priceColumn' => $priceColumn
                 ]
             );
-        return response()->json(['success' => true, 'created'=> true, 'msg' => 'Pricing Column Updated']);
+            return response()->json([
+                'success' => true, 
+                'created'=> true, 
+                'msg' => 'Pricing Column Updated'
+            ]);
         }
         else {
             $contact->update(
@@ -168,7 +200,11 @@ class ContactController extends Controller
                     'lastName' => $last_name
                 ]
             );
-        return response()->json(['success' => true, 'created'=> true, 'msg' => 'name updated']);
+            return response()->json([
+                'success' => true, 
+                'created'=> true, 
+                'msg' => 'name updated'
+            ]);
         }
     }
 }

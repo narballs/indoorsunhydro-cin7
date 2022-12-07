@@ -4,7 +4,7 @@
         <div class="col-xl-1 col-lg-1 col-md-0 col-sm-0 col-xs-0 "></div>
         <div class="col-xl-2 col-lg-2 col-md-6 col-sm-12 col-xs-12">
             <a class="navbar-brand" href="/">
-                <img class="top-img img-fluid" src="/theme/img/indoor_sun.png" ;>
+                <img class="top-img img-fluid" src="{{ url('/theme/img/indoor_sun.png') }}" ;>
             </a>
         </div>
 

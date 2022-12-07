@@ -15,6 +15,9 @@ use App\Http\Controllers\Redirect;
 use Carbon\Carbon;
 use App\Jobs\SalesOrders;
 use App\Models\PaymentMethod;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\Subscribe;
+use App\Helpers\MailHelper;
 
 
 use Illuminate\Http\Request;
@@ -26,7 +29,7 @@ class OrderController extends Controller
             'method_name' => 'required'
         ]);
 
-        //dd($request->input('method_name'));
+   
         $paymentMethod = $request->input('method_name');
         $paymentMethodOption = $request->input('method_option');
         $paymentMethod = $paymentMethod.'-'.$paymentMethodOption;
@@ -153,11 +156,19 @@ class OrderController extends Controller
         $order->status = 'DRAFT';
         $order->stage = 'Sample string';
         $order->paymentTerms = $paymentMethod;
+
         $order->save();
+
         $order_id =  $order->id;
         $currentOrder = ApiOrder::where('id', $order->id)->first();
         $apiApproval = $currentOrder->apiApproval;
         $currentOrder->reference = 'DEV2'.'-QCOM-'.$order_id;
+
+        //dd($currentOrder);
+
+   
+
+
         $currentOrder->save();
         $currentOrder = ApiOrder::where('id', $order->id)->first();
         $reference = $currentOrder->reference;
@@ -171,7 +182,44 @@ class OrderController extends Controller
             $OrderItem->save();
         }
         //exit;
-        $order_items = ApiOrderItem::with('product')->where('order_id', $order_id)->get();
+        $order_items = ApiOrderItem::with('product.options')->where('order_id', $order_id)->get();
+        $contact = Contact::where('user_id' ,auth()->id())->first();
+        //dd($contact);
+        $addresses = [
+            'billing_address' => [
+                'firstName' => $contact->firstName,
+                'lastName' => $contact->lastName,
+                'address1' => $contact->address1, 
+                'address2' => $contact->address2,
+                'city' => $contact->city, 
+                'state' => $contact->state, 
+                'zip' => $contact->postCode                
+            ],
+             'shipping_address' => [
+                'postalAddress1' => $contact->postalAddress1, 
+                'postalAddress2' => $contact->postalAddress2,
+                'phone' => $contact->postalCity, 
+                'postalCity' => $contact->postalState, 
+                'postalState' => $contact->postalPostCode,
+                'postalPostCode' => $contact->postalPostCode
+
+            ]
+        ];
+     
+        $name = $contact->firstName;
+        $email =  $contact->email;
+        $reference  =  $currentOrder->reference;
+
+        $subject = 'Account awaiting approval';
+        $isAdmin = true;
+        $template = 'emails.order-received';
+
+        if ($isAdmin == true) {
+            $adminTemplate = 'emails.admin-order-received';
+            MailHelper::sendMail($adminTemplate, $name, 'wqszeeshan@gmail.com', $subject, $reference, $order_items, $dateCreated, $addresses);
+        }
+        MailHelper::sendMail($template, $name, $email, $subject, $reference, $order_items, $dateCreated, $addresses);
+        
         $lineItems = [];
         foreach($order_items as $order_item) {
             $lineItems[] = [
