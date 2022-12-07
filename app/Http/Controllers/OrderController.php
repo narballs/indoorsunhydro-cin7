@@ -210,15 +210,15 @@ class OrderController extends Controller
         $email =  $contact->email;
         $reference  =  $currentOrder->reference;
 
-        $subject = 'Account awaiting approval';
         $isAdmin = true;
         $template = 'emails.admin-order-received';
 
         if ($isAdmin == true) {
+            $subject = '';
             $adminTemplate = 'emails.admin-order-received';
-            MailHelper::sendMail($adminTemplate, $name, 'wqszeeshan@gmail.com', $subject, $reference, $order_items, $dateCreated, $addresses);
+            MailHelper::sendMail($adminTemplate, $name, 'wqszeeshan@gmail.com', 'New order received', $reference, $order_items, $dateCreated, $addresses);
         }
-        MailHelper::sendMail($template, $name, $email, $subject, $reference, $order_items, $dateCreated, $addresses);
+        MailHelper::sendMail($template, $name, $email, 'Your order has been received', $reference, $order_items, $dateCreated, $addresses);
         
         $lineItems = [];
         foreach($order_items as $order_item) {
