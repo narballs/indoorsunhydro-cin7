@@ -212,7 +212,7 @@ class OrderController extends Controller
 
         $subject = 'Account awaiting approval';
         $isAdmin = true;
-        $template = 'emails.order-received';
+        $template = 'emails.admin-order-received';
 
         if ($isAdmin == true) {
             $adminTemplate = 'emails.admin-order-received';
