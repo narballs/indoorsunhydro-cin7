@@ -11,6 +11,9 @@ use App\Models\State;
 use App\Http\Requests\Users\UserSignUpRequest;
 use App\Http\Requests\Users\CompanyInfoRequest;
 use App\Http\Requests\Users\UserAddressRequest;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\Subscribe;
+use App\Helpers\MailHelper;
 use Session;
 use Auth;
 
@@ -100,6 +103,18 @@ class UserController extends Controller
             $contact->type = 'Customer';
             $contact->lastName = $user->last_name;
             $contact->email = $user->email;
+            
+            // $name = $user->first_name;
+            // $email = $user->email;
+            // $subject = 'Account awaiting approval';
+            // $isAdmin = true;
+            // $template = 'emails.customer-notification';
+
+            // if ($isAdmin == true) {
+            //     $adminTemplate = 'emails.new-registration-notification';
+            //     MailHelper::sendMail($adminTemplate, $name, 'wqszeeshan@gmail.com', $subject, $reference =null, $order_items=null, $dateCreated=null, $addresses=null);
+            // }
+            //  MailHelper::sendMail($adminTemplate, $name, 'wqszeeshan@gmail.com', $subject, $reference =null, $order_items=null, $dateCreated=null, $addresses=null);
             $contact->save();
         }
         else {
@@ -113,6 +128,8 @@ class UserController extends Controller
                 ]
             );
         }
+
+
         return response()->json(['success' => true, 'created'=> true, 'msg' => 'Welcome, new player.']);
     }
 

@@ -23,7 +23,7 @@
                         @endforeach
                     @endforeach
                 </table>
-                {{ $products->links() }}
+                {{$products->links()}}
         </div>
     </div>
 </div>
