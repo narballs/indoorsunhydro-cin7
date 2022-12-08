@@ -131,33 +131,47 @@ class ContactController extends Controller
     public function activate_customer(Request $request) {
         $contact_id = $request->input('contact_id');
         $currentContact = Contact::where('id', $contact_id)->first()->toArray();
-        // dd($currentContact );
         unset($currentContact['id']);
         unset($currentContact['contact_id']);
         unset($currentContact['user_id']);
         $json_encode = json_encode($currentContact);
-        // dd($json_encode);
         $contact = [
             $currentContact
         ];
         SyncContacts::dispatch('create_contact', $contact);
         sleep(10);
         $is_updated = Contact::where('id', $contact_id)->pluck('contact_id')->first();
-
+        
         if ($is_updated) {
             $name = $currentContact['firstName'];
             $email = $currentContact['email'];
             $subject = 'Account  approval';
-            $template = 'emails.customer-notification';
+            $template = 'emails.approval-notifications';
             $isAdmin = true;
+            $data = [
+                'contact_name' => $name,
+                'name' =>  'Admin',
+                'email' => $email,
+                'contact_email' => $currentContact['email'],
+                'contact_id' => $is_updated,
+                'subject' => 'New Account activated',
+                'from' => 'wqszeeshan@gmail.com', 
+                'content' => 'New account activated.'
+            ];
 
             if ($isAdmin == true) {
+                $data['email'] = 'wqszeeshan@gmail.com';
                 $adminTemplate = 'emails.approval-notifications';
-                MailHelper::sendMail($adminTemplate, $name, 'wqszeeshan@gmail.com', $subject);
+                MailHelper::sendMailNotification('emails.approval-notifications', $data);
             }
+            $data['name'] = $name;
+            $data['email'] = $email;
+            $data['content'] = 'Your account has been approved';
+            $data['subject'] = 'Your account has been approved';
+            MailHelper::sendMailNotification('emails.approval-notifications', $data);
+       
 
-            
-            MailHelper::sendMail($template, $name, $email, $subject);
+            // MailHelper::sendMailNotification('emails.admin-order-received', $data);
             return response()->json([
                 'success' => true, 
                 'created'=> true, 
