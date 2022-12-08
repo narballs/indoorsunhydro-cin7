@@ -16,11 +16,10 @@
 </div> -->
 @endif
 
-<!-- <meta name="csrf-token" content="{{ csrf_token() }}"> -->
 <div class="container-fluid pl-0 pr-0">
 	<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 pl-0 pr-0">
 		<div class="row" style="background-image: url('/theme/img/img_12.png'); width:100%">
-			<div class="thankyou bg-light mt-5 mb-5 contact-row h-100" id="thanks">
+			<div class="thankyou bg-light mt-5 mb-5 contact-row " id="thanks">
 				<div class="col-md-12 text-center m-auto pt-5">
 					<div id="success" class="col-md-10 d-none offset-1 text-white alert-success text-center my-2">
 					</div>
@@ -53,7 +52,6 @@
 												 Subject
 											</div>
 											<div id="subject-error" class="text-danger contact-us-error"></div>
-
 										</div>
 									</div>
 								</div>

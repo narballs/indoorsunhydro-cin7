@@ -52,11 +52,11 @@
             <div class="col">
                <label>Result per page</label>
                <select id="per_page" class="form-select" onchange="handleSelectChange()">
-                  <option value="20" {{ $per_page }} {{ isset($per_page) && $per_page == 20 ? 'selected="selected"' : ''
+                  <option value="20" {{ $per_page }} {{ isset($per_page) && $per_page==20 ? 'selected="selected"' : ''
                      }}>20</option>
-                  <option value="40" {{ $per_page }} {{ isset($per_page) && $per_page == 40 ? 'selected="selected"' : ''
+                  <option value="40" {{ $per_page }} {{ isset($per_page) && $per_page==40 ? 'selected="selected"' : ''
                      }}>40</option>
-                  <option value="60" {{ $per_page }} {{ isset($per_page) && $per_page == 60 ? 'selected="selected"' : ''
+                  <option value="60" {{ $per_page }} {{ isset($per_page) && $per_page==60 ? 'selected="selected"' : ''
                      }}>60</option>
                </select>
             </div>
@@ -85,9 +85,9 @@
    </form>
    <div class="row" id="product_rows">
       @foreach ($products as $key => $product)
-         @foreach($product->options as $option)
-            @include('product_row')
-         @endforeach
+      @foreach($product->options as $option)
+      @include('product_row')
+      @endforeach
       @endforeach
    </div>
    <div class="row">
@@ -134,13 +134,13 @@
          }
 
          function handleSelectChange() {
-            var selected_category = jQuery('#selected_cat').val();
-            var brand = jQuery('#brand').val();
-            var per_page = jQuery('#per_page').val();
-            var stock = jQuery('#in-stock').val();
-            var search_price = jQuery('#search_price').val();
-            var category_id = jQuery('#category_id').val();
- 
+               var selected_category = jQuery('#selected_cat').val();
+               var brand = jQuery('#brand').val();
+               var per_page = jQuery('#per_page').val();
+               var stock = jQuery('#in-stock').val();
+               var search_price = jQuery('#search_price').val();
+               var category_id = jQuery('#category_id').val();
+   
             if (selected_category != '') {
                basic_url = `?selected_category=${selected_category}`;
             }
@@ -237,10 +237,5 @@
                });
             });
 </script>
-
-<!-- Remove the container if you want to extend the Footer to full width. -->
-
 @include('partials.product-footer')
-
-<!-- End of .container -->
 @include('partials.footer')

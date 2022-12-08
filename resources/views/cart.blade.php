@@ -5,7 +5,6 @@
 	<p style="line-height: 95px;"
 		class=" fs-2 product-btn my-auto border-0 text-white text-center align-middle cart-title">
 		<span class="cart-page-cart-title">CART</span>
-
 	</p>
 </div>
 @if (session('success'))
@@ -14,6 +13,7 @@
 </div>
 @endif
 
+{{-- @if((new \Jenssegers\Agent\Agent())->isDesktop()) --}}
 <div class="container-fluid" style="
 	width: 1280px;
 	margin: auto !important;
@@ -259,7 +259,25 @@
 		</div>
 	</div>
 </div>
+{{-- @endif --}}
+{{--
+@if ((new \Jenssegers\Agent\Agent())->isMobile())
+<div class="container">
+	<div class="row">
+		<div class="col-md-6 m-auto">
+			<div class="card">
+				<div class="card-header">
+					this mobile view
+				</div>
+				<div class="card-body">
 
+				</div>
+				<div class="card-footer"></div>
+			</div>
+		</div>
+	</div>
+</div>
+@endif --}}
 @include('partials.product-footer')
 @include('partials.footer')
 <script>
