@@ -109,7 +109,6 @@
 <script>
    function showdetails(id, option_id, slug) {
 				window.location.href = '/product-detail/'+ id +'/'+option_id+'/'+slug;
-
 			}
 
          function inStockOutstock() {

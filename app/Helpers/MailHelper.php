@@ -20,19 +20,27 @@ class MailHelper
     {
 
         //return $template;
-        Mail::send($template,
-            array(
-                'name' =>  $name,
-                'email' => $email,
-                'subject' => $subject,
-                'reference' => $reference,
-                'order_items' => $order_items, 
-                'dateCreated' => $dateCreated, 
-                'addresses' => $addresses
-            ), 
-            function($message) use ($name, $email, $subject){
-                $message->from('wqszeeshan@gmail.com');
-                $message->to($email)->subject($subject);
+        // Mail::send($template,
+        //     array(
+        //         'name' =>  $name,
+        //         'email' => $email,
+        //         'subject' => $subject,
+        //         'reference' => $reference,
+        //         'order_items' => $order_items, 
+        //         'dateCreated' => $dateCreated, 
+        //         'addresses' => $addresses
+        //     ), 
+        //     function($message) use ($name, $email, $subject){
+        //         $message->from('wqszeeshan@gmail.com');
+        //         $message->to($email)->subject($subject);
+        // });
+    }
+
+
+    public static function sendMailNotification($template, $data) {
+        Mail::send($template, $data, function($message) use ($data){
+            $message->from($data['from']);
+            $message->to($data['email'])->subject($data['subject']);
         });
     }
 }

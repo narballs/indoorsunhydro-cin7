@@ -213,12 +213,40 @@ class OrderController extends Controller
         $isAdmin = true;
         $template = 'emails.admin-order-received';
 
+        $data = [
+            'name' =>  $name,
+            'email' => $email,
+            'subject' => 'New order received',
+            'reference' => $reference,
+            'order_items' => $order_items, 
+            'dateCreated' => $dateCreated, 
+            'addresses' => $addresses,
+            'from' => 'wqszeeshan@gmail.com'
+        ];
+
         if ($isAdmin == true) {
             $subject = '';
             $adminTemplate = 'emails.admin-order-received';
-            MailHelper::sendMail($adminTemplate, $name, 'wqszeeshan@gmail.com', 'New order received', $reference, $order_items, $dateCreated, $addresses);
+            $data['email'] = 'wqszeeshan@gmail.com';
+
+            MailHelper::sendMailNotification('emails.admin-order-received', $data);
         }
-        MailHelper::sendMail($template, $name, $email, 'Your order has been received', $reference, $order_items, $dateCreated, $addresses);
+
+        $data['subject'] = 'Your order has been received';
+        $data['email'] = $email;
+        MailHelper::sendMailNotification('emails.admin-order-received', $data);
+        
+
+        // $new_data = [
+        //     'from' => 'wqszeeshan@gmail.com',
+        //     'email' => $email,
+        //     'subject' => 'Forgot Password',
+        //     'full_name' => 'Iqrar Ahmad',
+        //     'any_other_variable' => 'This is just another variable name',
+        // ];
+
+        // MailHelper::sendMailNotification('emails.forgot_password', $new_data);
+
         
         $lineItems = [];
         foreach($order_items as $order_item) {
