@@ -3,7 +3,7 @@
 @include('partials.search-bar')
 {{session()->forget('cart');}}
 
-<div class="container mt-5">
+<div class="container mt-5 ">
 	<div class="row">
 		<div class="col-md-12">
 			<div class="card  border-0">

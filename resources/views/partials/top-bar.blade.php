@@ -1,4 +1,4 @@
-<header class="p-2 bg-dark text-white top-bar-height w-100">
+<header class="p-2 bg-dark text-white top-bar-height w-100 header-top">
     <div class="container">
         <div class="row">
             <div class="col-md-4"></div>
@@ -46,15 +46,14 @@
                         @if(Session::get('cart'))
                         @foreach(Session::get('cart') as $cart)
                         <?php
-	            						$total_q[] = $cart['quantity'];
-	            						$total_quantity = array_sum($total_q);
-	            						$total_price[] = $cart['price'] * $cart['quantity'];
-	            						$grand_total = array_sum($total_price);
-	            					?>
+                            $total_q[] = $cart['quantity'];
+                            $total_quantity = array_sum($total_q);
+                            $total_price[] = $cart['price'] * $cart['quantity'];
+                            $grand_total = array_sum($total_price);
+                            ?>
                         @endforeach
                         @endif
                         {{$total_quantity}}
-
                     </span>
                 </div>
 
@@ -67,7 +66,7 @@
                                     {{number_format($grand_total, 2)}}</span>&nbsp;(<span id="cart_items_quantity"
                                     class="cart-counter-details">{{$total_quantity}}</span>&nbsp;<span
                                     class="cart-counter-details">items</span> )
-                                </a>
+                            </a>
                 </div>
             </div>
         </div>

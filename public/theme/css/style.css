@@ -2,6 +2,10 @@
     background-color: #E32029;
 }
 
+.mobile-view {
+    display: none;
+}
+
 .product-btn {
     background-color: #008BD3;
     color: #FFFFFF;
@@ -1904,7 +1908,7 @@ input[type=number] {
 }
 
 .footer-section-product {
-    margin-top: 160px !important;
+    margin-top: 127px !important;
 }
 
 .banner-img {
@@ -2086,7 +2090,6 @@ input[type=number] {
     }
 
 }
-
 
 
 @media only screen and (max-width: 1440px) and (min-width: 1025) {
@@ -2486,6 +2489,28 @@ input[type=number] {
 }
 
 @media only screen and (max-width: 425px) and (min-width: 375px) {
+    .header-top {
+        display: none;
+    }
+
+    .desktop-view {
+        display: none !important;
+    }
+
+    .mobile-view {
+        display: block;
+    }
+
+    .top-reach-bar {
+        display: none;
+    }
+
+    .label {
+        text-transform: uppercase;
+        font-family: 'Montserrat';
+        margin-top: 1px;
+    }
+
     .login-title {
         font-family: 'Poppins';
         font-style: normal !important;

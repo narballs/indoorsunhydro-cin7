@@ -7,7 +7,7 @@
 	</p>
 </div>
 
-<div class="container">
+<div class="container mobile-view">
 	<div class="row">
 		<div class="col-md-5 order-md-2 mb-4">
 			<h4 class="d-flex justify-content-between align-items-center mb-3">
@@ -157,8 +157,6 @@
 					<label for="username">Country</label>&nbsp;<span>United States</span>
 					<input type="hidden" name="country" value="United States">
 				</div>
-
-
 				<div class="mb-3">
 					<label for="address">Street Address</label>
 					<input type="text" class="form-control bg-light" name="address"
@@ -167,7 +165,6 @@
 						Please enter your shipping address.
 					</div>
 				</div>
-
 				<div class="mb-3">
 					<label for="address2">Address 2 <span class="text-muted">(Optional)</span></label>
 					<input type="text" class="form-control bg-light" name="address2"
@@ -196,7 +193,6 @@
 						</div>
 					</div>
 				</div>
-
 				<div class="row">
 					<div class="col-md-6 mb-3">
 						<label for="phone">Phone</label>
@@ -215,36 +211,6 @@
 						</div>
 					</div>
 				</div>
-
-				<!--    <div class="row">
-              <div class="col-md-5 mb-3">
-                <label for="country">Country</label>
-                <select class="custom-select d-block w-100" id="country" required>
-                  <option value="">Choose...</option>
-                  <option>United States</option>
-                </select>
-                <div class="invalid-feedback">
-                  Please select a valid country.
-                </div>
-              </div>
-              <div class="col-md-4 mb-3">
-                <label for="state">State</label>
-                <select class="custom-select d-block w-100" id="state" required>
-                  <option value="">Choose...</option>
-                  <option>California</option>
-                </select>
-                <div class="invalid-feedback">
-                  Please provide a valid state.
-                </div>
-              </div>
-              <div class="col-md-3 mb-3">
-                <label for="zip">Zip</label>
-                <input type="text" class="form-control" id="zip" placeholder="" required>
-                <div class="invalid-feedback">
-                  Zip code required.
-                </div>
-              </div>
-            </div> -->
 				<hr class="mb-4">
 				<div class="custom-control custom-checkbox">
 					<input type="checkbox" class="custom-control-input" id="same-address">
@@ -263,8 +229,6 @@
 							<label for="username">Country</label>&nbsp;<span>United States</span>
 							<input type="hidden" name="delivery_country" value="United States">
 						</div>
-
-
 						<div class="mb-3">
 							<label for="address">Street Address</label>
 							<input type="text" class="form-control bg-light" name="delivery_address_1"
@@ -273,7 +237,6 @@
 								Please enter your shipping address.
 							</div>
 						</div>
-
 						<div class="mb-3">
 							<label for="address2">Address 2 <span class="text-muted">(Optional)</span></label>
 							<input type="text" class="form-control bg-light" name="delivery_address_2"
@@ -284,7 +247,6 @@
 							<input type="text" class="form-control bg-light" name="delivery_town_city"
 								placeholder="Enter your town">
 						</div>
-
 						<div class="row">
 							<div class="col-md-6 mb-3">
 								<label for="state">State</label>
@@ -303,24 +265,22 @@
 								</div>
 							</div>
 						</div>
-
-						<div class="row">
-
-						</div>
-						<div>
-						</div>
 						<div class="custom-control custom-checkbox">
 							<input type="checkbox" class="custom-control-input" id="save-info">
-							<label class="custom-control-label" for="save-info">Save this information for next
-								time</label>
+							<label class="custom-control-label" for="save-info">
+								Save this information for next time
+							</label>
 						</div>
-						<div> <button type="submit" class="button-cards w-100">Proceed to checkout</button></div>
+						<div>
+							<button type="submit" class="button-cards w-100">
+								Proceed to checkout
+							</button>
+						</div>
 					</form>
 					<hr class="mb-4">
-
 					<hr class="mb-4">
-
 				</div>
 		</div>
-
-		@include('partials.footer')
+	</div>
+</div>
+@include('partials.footer')

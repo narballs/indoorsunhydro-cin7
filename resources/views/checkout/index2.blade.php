@@ -1,7 +1,7 @@
 @include('partials.header')
 @include('partials.top-bar')
 @include('partials.search-bar')
-<div class="mb-5">
+<div class="mb-5 desktop-view">
     <p style="line-height: 95px;" class="fw-bold fs-2 product-btn my-auto border-0 text-white text-center align-middle">
         Checkout
     </p>
@@ -12,35 +12,39 @@
     $cart_price = 0;
 ?>
 @if(Session::get('cart'))
+
 @foreach(Session::get('cart') as $cart)
 <?php 
             $total_quatity =  $cart['quantity'];
             $total_price = $cart['price'] * $total_quatity;
             $cart_total  = $cart_total + $total_price ;
-        ?>
+?>
 @endforeach
 @endif
-<div class="container">
+<div class="container desktop-view" id="">
     @if(session('message'))
     <div class="alert alert-danger">
         {{ session('message') }}
     </div>
     @endif
     @include('checkout.modals.address-modal')
-    <div class="row">
+    <div class="row ">
         <div class="col-md-7">
             <div class="billing-address bg-light p-3">
                 <div class="bg-light">
                     <div style="font-weight: 600; font-size: 20px;">Billing Address</div>
                     <div class="row mt-2">
-                        <div class="col-md-6 name">{{$user_address->firstName}} {{$user_address->lastName}}</div>
-                        <div class="col-md-6 name">{{$user_address->company}}</div>
+                        <div class="col-md-6 name">
+                            {{$user_address->firstName}} {{$user_address->lastName}}
+                        </div>
+                        <div class="col-md-6 name">
+                            {{$user_address->company}}
+                        </div>
                     </div>
                 </div>
                 <div class="address-line bg-light">
                     Address line 1
                 </div>
-
                 <div class="bg-light name">
                     {{$user_address->postalAddress1}}
                 </div>
@@ -74,12 +78,9 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
-
         <div class="col-md-5" id="shipping_address">
-
             <div class="billing-address bg-light p-3">
                 <div class="bg-light">
                     <div style="font-weight: 600;font-size: 20px;">Shipping Address</div>
@@ -91,7 +92,6 @@
                 <div class="address-line bg-light">
                     Address line 1
                 </div>
-
                 <div class="bg-light name">
                     {{$user_address->postalAddress1}}
                 </div>
@@ -125,7 +125,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -202,13 +201,98 @@
     </div>
     </form>
 </div>
+
+<div class="container mobile-view">
+    <div class="row">
+        <div class="col-sm-12 d-flex justify-content-center">
+            <div class="form-signup-secondary">
+                <div class="user-info">
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <label class="label mt-5 fw-bold">First Name</label><span
+                                class="text-danger fw-bold pl-1">*</span>
+                            <input type="text" placeholder="Enter your first name" id="company_website"
+                                name="first_name" class="form-control  fontAwesome">
+                            <div class="text-danger" id="first_name_errors"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="label mt-2">last Name</label><span class="text-danger fw-bold pl-1">*</span>
+                            <input type="text" placeholder="Enter your last" id="company_website" name="last_name"
+                                class="form-control fontAwesome ">
+                            <div class="text-danger" id="last_name_errors"></div>
+                        </div>
+                        <div class="col-md-12 mt-2">
+                            <label class="label">company name (optional)</label><span
+                                class="text-danger fw-bold pl-1">*</span>
+                            <input type="text" placeholder="Enter your company name" id="company_name" name="password"
+                                class="form-control mt-2 company-info fontAwesome ">
+                            <div class="text-danger" id="password_errors"></div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="label mt-2">street address</label><span
+                                class="text-danger fw-bold pl-1">*</span>
+                            <input type="text" placeholder="House number and street name" id="company_name"
+                                name="password" class="form-control mt-2 company-info fontAwesome ">
+                            <div class="text-danger" id="password_errors"></div>
+                        </div>
+                        <div class="col-md-12">
+                            <input type="text" placeholder="Aprtmant, suit, unit, etc.(optional)" id="company_name"
+                                name="password" class="form-control mt-2 company-info fontAwesome ">
+                            <div class="text-danger" id="password_errors"></div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="label mt-2">town / city</label><span class="text-danger fw-bold pl-1">*</span>
+                            <input type="text" placeholder="Enter your town" id="company_name" name="password"
+                                class="form-control mt-2 company-info fontAwesome ">
+                            <div class="text-danger" id="password_errors"></div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="label mt-2">statte</label><span class="text-danger fw-bold pl-1">*</span>
+                            <input type="text" placeholder="Enter your state" id="company_name" name="password"
+                                class="form-control mt-2 company-info fontAwesome ">
+                            <div class="text-danger" id="password_errors"></div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="label mt-2">zip</label><span class="text-danger fw-bold pl-1">*</span>
+                            <input type="text" placeholder="Enter your zip" id="company_name" name="password"
+                                class="form-control mt-2 company-info fontAwesome ">
+                            <div class="text-danger" id="password_errors"></div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="label mt-2">phone</label><span class="text-danger fw-bold pl-1">*</span>
+                            <input type="text" placeholder="Enter your phone" id="company_name" name="password"
+                                class="form-control mt-2 company-info fontAwesome ">
+                            <div class="text-danger" id="password_errors"></div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="label mt-2">email address</label><span
+                                class="text-danger fw-bold pl-1">*</span>
+                            <input type="text" placeholder="Enter your email adress" id="company_name" name="password"
+                                class="form-control mt-2 company-info fontAwesome ">
+                            <div class="text-danger" id="password_errors"></div>
+                        </div>
+                        <div class="text-danger" id="confirm_password_errors"></div>
+                        <div class="col-md-12 d-flex justify-content-center align-items-center mt-5 pt-5">
+                            <span>
+                                <img class="img-fluid" src="/theme/img/Vector.png">
+                                <span class="text-danger fw-bold" style="font-size: 12px font-family:'Poppins'"> Apply
+                                    Coupon</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<div class="row mt-5 pt-5">
+
+<div class="row mt-5 pt-5 desktop-view">
     @include('partials.product-footer')
 </div>
 <form class="needs-validation mt-4 novalidate" style="display:none" action="{{url('order')}}" method="POST">
     @csrf
-    <div class="alert alert-success mt-3 d-none" id="success_msg"></div>
+    <div class="alert alert-success  d-none" id="success_msg"></div>
     <div class="row">
         <div class="col-md-6 mb-3">
             <label for="firstName">First name</label>
@@ -218,61 +302,46 @@
 
             </div>
         </div>
-
         <div class="col-md-6 mb-3">
             <label for="lastName">Last name</label>
             <input type="text" class="form-control bg-light" name="lastName" placeholder=""
                 value="{{$user_address->lastName}}" required>
             <div id="error_last_name" class="text-danger">
-
             </div>
         </div>
     </div>
-
     <div class="mb-3">
         <label for="company">Company Name(optional)</label>
         <div class="input-group">
             <input type="text" class="form-control bg-light" name="company" placeholder="Enter you company name"
                 value="{{$user_address->company}}" required>
-
         </div>
-        <div id="error_company" class="text-danger">
-
-        </div>
+        <div id="error_company" class="text-danger"></div>
     </div>
-
     <div class="mb-3">
         <label for="username">Country</label>&nbsp;<span>United States</span>
         <input type="hidden" name="country" value="United States">
     </div>
-
-
     <div class="mb-3">
         <label for="address">Street Address</label>
         <input type="text" class="form-control bg-light" name="address" value="{{$user_address->postalAddress1}}"
             placeholder="House number and street name" required>
-
     </div>
-    <div id="error_address1" class="text-danger">
-
-    </div>
+    <div id="error_address1" class="text-danger"></div>
 
     <div class="mb-3">
         <label for="address2">Address 2 <span class="text-muted">(Optional)</span></label>
         <input type="text" class="form-control bg-light" name="address2" value="{{$user_address->postalAddress2}}"
             placeholder="Apartment, suite, unit etc (optional)">
     </div>
-    <div id="error_address2" class="text-danger">
-
-    </div>
+    <div id="error_address2" class="text-danger"></div>
     <div class="mb-3">
         <label for="town">Town/City <span class="text-muted">(Optional)</span></label>
         <input type="text" class="form-control bg-light" name="town_city" value="{{$user_address->postalCity}}"
             placeholder="Enter your town">
     </div>
-    <div id="error_city" class="text-danger">
+    <div id="error_city" class="text-danger"></div>
 
-    </div>
     <div class="row">
         <div class="col-md-6 mb-3">
             <label for="state">State</label>
@@ -293,172 +362,167 @@
                 <option value="{{$state->name}}" <?php echo $selected;?>>{{$state->name}}</option>
                 @endforeach
             </select>
-            <!--    <input type="text" class="form-control bg-light" name="state" value="{{$user_address->postalState}}" placeholder="Enter State" value="" required> -->
             <div class="invalid-feedback">
                 Valid first name is required.
             </div>
-
             <script>
                 function submit(){   
-                    if ( ! $("input[name=method_option]").is(':checked') ) {
-                        const inputOptions = new Promise((resolve) => {
-                            setTimeout(() => {
-                                resolve({
-                                    'Local Delivery': 'Local Delivery',
-                                    'Pickup Order': 'Pickup Order'
-                                })
-                            }, 1000)
-                        })
-                        console.log(inputOptions);
-                        Swal.fire({
-                            title: 'Please choose delivery option',
-                            input: 'radio',
-                            imageUrl: "theme/img/delivery.png",
-                            inputOptions: inputOptions,
-                            showCancelButton: false,
-                            confirmButtonColor: '#8282ff',
-                            confirmButtonText: 'Continue',
-                            allowOutsideClick: false,
-                            allowEscapeKey: false
-                        }).then((result) => {
-                        if (result.value !== null) {
-                            if (result.value == 'Local Delivery') {
-                                $("#local_delivery_1").attr('checked', 'checked');
-                            } 
-                            else {
-                            $("#local_delivery_2").attr('checked', 'checked'); 
-                            }
-                            $("#order_form").submit();
-                        }
-                        });
-                    }
-
+        if ( ! $("input[name=method_option]").is(':checked') ) {
+            const inputOptions = new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve({
+                        'Local Delivery': 'Local Delivery',
+                        'Pickup Order': 'Pickup Order'
+                    })
+                }, 1000)
+            })
+            console.log(inputOptions);
+            Swal.fire({
+                title: 'Please choose delivery option',
+                input: 'radio',
+                imageUrl: "theme/img/delivery.png",
+                inputOptions: inputOptions,
+                showCancelButton: false,
+                confirmButtonColor: '#8282ff',
+                confirmButtonText: 'Continue',
+                allowOutsideClick: false,
+                allowEscapeKey: false
+            }).then((result) => {
+                if (result.value !== null) {
+                    if (result.value == 'Local Delivery') {
+                        $("#local_delivery_1").attr('checked', 'checked');
+                    } 
                     else {
-                    $("#order_form").submit(); // Submit the for
+                    $("#local_delivery_2").attr('checked', 'checked'); 
                     }
+                    $("#order_form").submit();
                 }
-                function updateAddress() {
-                    // alert('here')
-                    $('#address-form-update').toggle();
-                    $('#address-form-update').removeClass('d-none');
+            });
+        }
 
-                }
-                function updateContact(user_id) {
+        else {
+        $("#order_form").submit(); 
+        }
+    }
+    function updateAddress() {
+        $('#address-form-update').toggle();
+        $('#address-form-update').removeClass('d-none');
 
-                    //$('#address-form-update').removeClass('d-none');
-                    var first_name = $('input[name=firstName]').val();
-                    var last_name = $('input[name=lastName]').val();
-                    var company_name = $('input[name=company]').val();
-                    var phone = $('input[name=phone]').val();
-                    var address = $('input[name=address]').val();
-                    var address2 = $('input[name=address2]').val();
-                    var town_city = $('input[name=town_city]').val();
-                    var state = document.getElementById("state").value;
-                    var zip = $('input[name=zip]').val();
-                    var email = $('input[name=email]').val();
+    }
+    function updateContact(user_id) {
+        var first_name = $('input[name=firstName]').val();
+        var last_name = $('input[name=lastName]').val();
+        var company_name = $('input[name=company]').val();
+        var phone = $('input[name=phone]').val();
+        var address = $('input[name=address]').val();
+        var address2 = $('input[name=address2]').val();
+        var town_city = $('input[name=town_city]').val();
+        var state = document.getElementById("state").value;
+        var zip = $('input[name=zip]').val();
+        var email = $('input[name=email]').val();
+
+        jQuery.ajax({
+                method: 'GET',
+                url: "{{ url('/user-addresses/') }}",
+
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "user_id": user_id,
+                    "first_name" : first_name,
+                    "last_name" : last_name,
+                    "company_name" : company_name,
+                    "phone" : phone,
+                    "address" : address,
+                    "address2" : address2,
+                    "town_city" : town_city,
+                    "state" : state,
+                    "zip" : zip,
+                    "email" : email
+                },
+                success: function(response) {
+
+                    if(response.success == true) {
+
+                        $('.modal-backdrop').remove()
+                        $('#success_msg').removeClass('d-none');
+                        $('#success_msg').html(response.msg);
+                        window.location.reload();
+                    }
+                },
+                error: function (response) {
+                    
+                    var error_message = response.responseJSON;
+                    console.log(error_message);
+                    var error_text = '';
+                    if (typeof error_message.errors.first_name != 'undefined') {
+                        error_text = error_message.errors.first_name;
+                        $('#error_first_name').html(error_text);
+                    }
+                    else {
+                        error_text = '';
+                        $('#error_first_name').html(error_text);
+                    }
+                    if (typeof error_message.errors.last_name != 'undefined') {
+                        var error_text = error_message.errors.last_name;
+                        $('#error_last_name').html(error_text);
+                    }
+                    else {
+                        error_text = '';
+                        $('#error_last_name').html(error_text);
+                    }
+                    if (typeof error_message.errors.company_name != 'undefined') {
+                        var error_text = error_message.errors.company_name;
+                        $('#error_company').html(error_text);
+                    }
+                    else {
+                        error_text = '';
+                        $('#error_company').html(error_text);
+                    }
+                    if (typeof error_message.errors.address != 'undefined') {
+                        var error_text = error_message.errors.address;
+                        $('#error_address1').html(error_text);
+                    }
+                    else {
+                        error_text = '';
+                        $('#error_address1').html(error_text);
+                    }
                 
+                    if (typeof error_message.errors.zip != 'undefined') {
+                        var error_text = error_message.errors.zip;
+                        $('#error_zip').html(error_text);
+                    }
+                    else {
+                        error_text = '';
+                        $('#error_zip').html(error_text);
+                    }
+                    if (typeof error_message.errors.town_city != 'undefined') {
+                        var error_text = error_message.errors.town_city;
+                        $('#error_city').html(error_text);
+                    }
+                    else {
+                        error_text = '';
+                        $('#error_city').html(error_text);
+                    }
+                    if (typeof error_message.errors.zip != 'undefined') {
+                        var error_text = error_message.zip;
+                        $('#error_zip').html(error_text);
+                    }
+                    else {
+                        error_text = '';
+                        $('#error_zip').html(error_text);
+                    }
+                    if (typeof error_message.errors.phone != 'undefined') {
+                        var error_text = error_message.errors.phone;
+                        $('#error_phone').html(error_text);
+                    }
+                    else {
+                        error_text = '';
+                        $('#error_phone').html(error_text);
+                    }
 
-                    jQuery.ajax({
-                            method: 'GET',
-                            url: "{{ url('/user-addresses/') }}",
-
-                            data: {
-                                "_token": "{{ csrf_token() }}",
-                                "user_id": user_id,
-                                "first_name" : first_name,
-                                "last_name" : last_name,
-                                "company_name" : company_name,
-                                "phone" : phone,
-                                "address" : address,
-                                "address2" : address2,
-                                "town_city" : town_city,
-                                "state" : state,
-                                "zip" : zip,
-                                "email" : email
-                            },
-                        success: function(response) {
-
-                            if(response.success == true) {
-
-                                $('.modal-backdrop').remove()
-                                $('#success_msg').removeClass('d-none');
-                                $('#success_msg').html(response.msg);
-                                window.location.reload();
-                            }
-                        },
-                        error: function (response) {
-                            
-                            var error_message = response.responseJSON;
-                            console.log(error_message);
-                            var error_text = '';
-                            if (typeof error_message.errors.first_name != 'undefined') {
-                                error_text = error_message.errors.first_name;
-                                $('#error_first_name').html(error_text);
-                            }
-                            else {
-                                error_text = '';
-                                $('#error_first_name').html(error_text);
-                            }
-                            if (typeof error_message.errors.last_name != 'undefined') {
-                                var error_text = error_message.errors.last_name;
-                                $('#error_last_name').html(error_text);
-                            }
-                            else {
-                                error_text = '';
-                                $('#error_last_name').html(error_text);
-                            }
-                            if (typeof error_message.errors.company_name != 'undefined') {
-                                var error_text = error_message.errors.company_name;
-                                $('#error_company').html(error_text);
-                            }
-                            else {
-                                error_text = '';
-                                $('#error_company').html(error_text);
-                            }
-                            if (typeof error_message.errors.address != 'undefined') {
-                                var error_text = error_message.errors.address;
-                                $('#error_address1').html(error_text);
-                            }
-                            else {
-                                error_text = '';
-                                $('#error_address1').html(error_text);
-                            }
-                        
-                            if (typeof error_message.errors.zip != 'undefined') {
-                                var error_text = error_message.errors.zip;
-                                $('#error_zip').html(error_text);
-                            }
-                            else {
-                                error_text = '';
-                                $('#error_zip').html(error_text);
-                            }
-                            if (typeof error_message.errors.town_city != 'undefined') {
-                                var error_text = error_message.errors.town_city;
-                                $('#error_city').html(error_text);
-                            }
-                            else {
-                                error_text = '';
-                                $('#error_city').html(error_text);
-                            }
-                            if (typeof error_message.errors.zip != 'undefined') {
-                                var error_text = error_message.zip;
-                                $('#error_zip').html(error_text);
-                            }
-                            else {
-                                error_text = '';
-                                $('#error_zip').html(error_text);
-                            }
-                            if (typeof error_message.errors.phone != 'undefined') {
-                                var error_text = error_message.errors.phone;
-                                $('#error_phone').html(error_text);
-                            }
-                            else {
-                                error_text = '';
-                                $('#error_phone').html(error_text);
-                            }
-
-                        }
-                    });
                 }
+        });
+    }
             </script>
+
             @include('partials.footer')
