@@ -16,6 +16,9 @@ use DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\Subscribe;
+use App\Helpers\MailHelper;
 
 class SalesOrders implements ShouldQueue
 {
@@ -87,16 +90,29 @@ class SalesOrders implements ShouldQueue
         }
         //var_dump($res);exit;
         $response = json_decode($res);
+        // dd($response);
         $order_id = $response[0]->id;
         $reference = $response[0]->code;
         echo $order_id.'-----'.$reference;
-
-        $apiOrder = ApiOrder::where('reference', $reference)->update(
+        $data = [
+            'order_id' => $order_id,
+            'name' =>  'Admin',
+            'email' => 'wqszeeshan@gmail.com',
+            'contact_email' => 'wqszeeshan@gmail.com',
+            'reference' => $reference,
+            'subject' => 'Order fullfilled',
+            'from' => 'wqszeeshan@gmail.com', 
+            'content' => 'Order fullfilled has been fullfilled. from job.'
+        ];
+        
+        $data['email'] = 'wqszeeshan@gmail.com';
+        MailHelper::sendMailNotification('emails.admin-order-fullfillment', $data);
+        $order = ApiOrder::where('reference', $reference)->update(
             [
-                'order_id' => $order_id,
-                'apiApproval' => 'approved'
+                'memberId' => $contact->contact_id
             ]
         );
+
         // $reference = 'QCOM-70';
         // $apiOrder = ApiOrder::where('reference', $reference)->first();
         // $user_id = $apiOrder['user_id'];

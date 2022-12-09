@@ -4,8 +4,8 @@
     <title>IndoorSun</title>
 </head>
 <body>
-    Welcome<h1>{{$name}}</h1>
-    <p>{{$name}}</p>
+    Welcome<h1>asdfasw</h1>
+    <p>asdsad</p>
     <p>We will get back to you soon.</p>
    
     <p>Thank you</p>

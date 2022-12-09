@@ -15,6 +15,9 @@ use App\Models\ApiOrderItem;
 use App\Models\Contact;
 use App\Jobs\SalesOrders;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\Subscribe;
+use App\Helpers\MailHelper;
 
 class OrderManagementController extends Controller
 {
@@ -395,5 +398,21 @@ class OrderManagementController extends Controller
                         ],
                      ];
                     SalesOrders::dispatch('create_order', $order);
+            //         $data = [
+            //             'order_id' => $order_id,
+            //             'name' =>  'Admin',
+            //             'email' => 'wqszeeshan@gmail.com',
+            //             'contact_email' => 'wqszeeshan@gmail.com',
+            //             'reference' => 'adsasd',
+            //             'subject' => 'Order fullfilled',
+            //             'from' => 'wqszeeshan@gmail.com', 
+            //             'content' => 'Order fullfilled has been fullfilled. from controller.'
+            //         ];
+        
+        
+            // $data['email'] = 'wqszeeshan@gmail.com';
+            // $adminTemplate = 'emails.approval-notifications';
+            // MailHelper::sendMailNotification('emails.admin-order-fullfillment', $data);
+       
     }
 }
