@@ -41,7 +41,8 @@ Route::get('send-mail', function () {
 
     $details = [
         'title' => 'Mail from waqas',
-        'body' => 'This is for testing email using smtp'
+        'body' => 'This is for testing email using smtp',
+        'name' => 'jjjj'
     ];
 
     \Mail::to('wqszeeshan@gmail.com')->send(new \App\Mail\Subscribe($details));

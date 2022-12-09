@@ -104,17 +104,26 @@ class UserController extends Controller
             $contact->lastName = $user->last_name;
             $contact->email = $user->email;
             
-            // $name = $user->first_name;
-            // $email = $user->email;
-            // $subject = 'Account awaiting approval';
-            // $isAdmin = true;
-            // $template = 'emails.customer-notification';
+            $isAdmin = true;
+            $data = [
+                'contact_name' => $user->first_name,
+                'name' =>  'Admin',
+                'contact_email' => $user->email,
+                'subject' => 'New User Registration Request',
+                'from' => 'wqszeeshan@gmail.com', 
+                'content' => 'New user registration request received, please reveiw.'
+            ];
 
-            // if ($isAdmin == true) {
-            //     $adminTemplate = 'emails.new-registration-notification';
-            //     MailHelper::sendMail($adminTemplate, $name, 'wqszeeshan@gmail.com', $subject, $reference =null, $order_items=null, $dateCreated=null, $addresses=null);
-            // }
-            //  MailHelper::sendMail($adminTemplate, $name, 'wqszeeshan@gmail.com', $subject, $reference =null, $order_items=null, $dateCreated=null, $addresses=null);
+            if ($isAdmin == true) {
+                $data['email'] = 'wqszeeshan@gmail.com';
+                $adminTemplate = 'emails.approval-notifications';
+                MailHelper::sendMailNotification('emails.new-registration-notification', $data);
+            }
+            // $data['name'] = $name;
+            // $data['email'] = $email;
+            // $data['content'] = 'Your account has been approved';
+            // $data['subject'] = 'Your account has been approved';
+            // MailHelper::sendMailNotification('emails.approval-notifications', $data);
             $contact->save();
         }
         else {
