@@ -1,314 +1,307 @@
 @include('partials.header')
 @include('partials.top-bar')
 @include('partials.search-bar')
-@include('partials.nav')
 @if ($message = Session::get('message'))
 <div class="alert alert-danger alert-block">
 	<button type="button" class="close" data-dismiss="alert">×</button>
 	<strong>{{ $message }}</strong>
 </div>
 @endif
-
-<div class="row">
-	<!-- <meta name="csrf-token" content="{{ csrf_token() }}"> -->
-	<div class="col-md-12 bg-light text-center d-none">
-		<h2 style="color:#25529F; font-weight:700" class="text-center pt-5 ">Have an account</h2>
-		<div class="col-md-4">
-			<p class="text-center pb-5" style="font-size: 16px">Your personal data will be used to support your
-				experience throughout this website, to manage access to your account, and for other purposes
-				described
-				in our privacy policy.</p>
+<div class="container-fluid pl-0 pr-0">
+	<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 pl-0 pr-0">
+		<div class="row">
+			<div class="col-md-12 bg-light text-center d-none">
+				<h2 style="color:#25529F; font-weight:700" class="text-center pt-5 ">Have an account</h2>
+				<div class="col-md-4">
+					<p class="text-center pb-5" style="font-size: 16px">Your personal data will be used to support your
+						experience throughout this website, to manage access to your account, and for other purposes
+						described
+						in our privacy policy.</p>
+				</div>
+			</div>
+			<div class="col-md-12 col-xs-6 mt-5 d-none" id="icons" style="padding-right: 47px;">
+				<div class="icon-container d-flex">
+					<figure>
+						<img class="img-fluid" src="/theme/img/round-solid.png" id="sign-up">
+						<img class="img-fluid" src="/theme/img/white-arrow.png" style="margin-left: -41px;" id="arrow">
+						<img class="img-fluid" src="/theme/img/line2.png" style="margin-left: 11px">
+						<figcaption id="sigup-bold" class="mt-3">Signup</figcaption>
+					</figure>
+					<figure>
+						<img class="img-fluid" src="/theme/img/round-border.png" id="company-round">
+						<img class="img-fluid" src="/theme/img/company.png" style="margin-left: -39px" id="building">
+						<img class="img-fluid" src="/theme/img/line2.png" style="margin-left: 11px">
+						<figcaption id="company-bold" class="mt-3">Company</figcaption>
+					</figure>
+					<figure>
+						<img class="img-fluid" src="/theme/img/round-border.png" id="timer">
+						<img class="img-fluid" src="/theme/img/location.png" style="margin-left: -37px" id="timer-main">
+						<img class="img-fluid" src="/theme/img/line2.png" style="margin-left: 11px">
+						<figcaption id="address-bold" class="mt-3">Location</figcaption>
+					</figure>
+					<figure>
+						<img src="/theme/img/round-border.png" id="finish-round">
+						<img class="img-fluid" src="/theme/img/finish.png" style="margin-left: -36px" id="tick">
+						<figcaption id=thankyou-bold class="mt-3">Finish</figcaption>
+					</figure>
+				</div>
+			</div>
 		</div>
-	</div>
-	<div class="col-md-12 col-xs-6 mt-5 d-none" id="icons">
-		<div class="icon-container d-flex">
-			<figure>
-				<img class="img-fluid" src="/theme/img/round-solid.png" id="sign-up">
-				<img class="img-fluid" src="/theme/img/white-arrow.png" style="margin-left: -41px;" id="arrow">
-				<img class="img-fluid" src="/theme/img/line2.png" style="margin-left: 11px">
-				<figcaption id="sigup-bold" class="mt-3">Signup</figcaption>
-			</figure>
+		<div class="row ml-0 pr-0 w-100 " style="background-image: url('/theme/img/img_12.png');">
+			<div class="login-reg-panel col-xs-6">
+				<div class="register-info-box text-center">
+					<h2 class=" dont-have-an-account">Don't have an account?</h2>
+					<p class=" dont-have-an-account-pra">Your personal data will be used to support your experience
+						throughout
+						this website, to
+						manage access to your account, and for other purposes described in our privacy policy.</p>
+					<label id="label-login" for="log-login-show"
+						class="sing-up-label d-flex justify-content-center align-items-center"><span
+							class="sign-up">SIGN
+							UP</span>
+					</label>
+					<input type="radio" name="active-log-panel" id="log-login-show">
+				</div>
+				<div class="white-panel">
+					<div class="login-show">
+						<h2 class="text-center login-title">LOG IN</h2>
+						<form method="POST" action="{{ route('login') }}">
+							@csrf
+							<div class=" form-login">
+								<div class="input-placeholder">
+									<input type="text" name="email" required>
+									<div class="placeholder pl-3 fontAwesome">
+										&#xf0e0; Email
+									</div>
+								</div>
+								<div class="input-placeholder">
+									<input type="password" name="password" required>
+									<div class="placeholder pl-3 fontAwesome">
+										&#xf023; Password
+									</div>
+								</div>
 
-			<figure>
-				<img class="img-fluid" src="/theme/img/round-border.png" id="company-round">
-				<img class="img-fluid" src="/theme/img/company.png" style="margin-left: -39px" id="building">
-				<img class="img-fluid" src="/theme/img/line2.png" style="margin-left: 11px">
-				<figcaption id="company-bold" class="mt-3">Company</figcaption>
-			</figure>
-			<figure>
-				<img class="img-fluid" src="/theme/img/round-border.png" id="timer">
-				<img class="img-fluid" src="/theme/img/location.png" style="margin-left: -37px" id="timer-main">
-				<img class="img-fluid" src="/theme/img/line2.png" style="margin-left: 11px">
-				<figcaption id="address-bold" class="mt-3">Location</figcaption>
-			</figure>
-			<figure>
-				<img src="/theme/img/round-border.png" id="finish-round">
-				<img class="img-fluid" src="/theme/img/finish.png" style="margin-left: -36px" id="tick">
-				<figcaption id=thankyou-bold class="mt-3">Finish</figcaption>
-			</figure>
+							</div>
+							<button type="submit" class="btn-login info login-button">LOG IN</button>
+
+						</form>
+						<div class="row">
+							<div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12 mt-4">
+								<div class="form-check checkbox-lg form-login">
+									<input class="form-check-input aling-items-center justify-conent-center d-flex"
+										type="checkbox" value="" id="checkbox-2" />&nbsp;
+									<label class="form-check-label" for="checkbox-2">Remember me</label>
+								</div>
+							</div>
+							<div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12 mt-3">
+								<a href="#" class="btn-lost-password d-flex">Lost your password?</a></p>
+							</div>
+						</div>
+						<hr>
+						<div class="row">
+							<div class=" col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
+								<p class="required-field"><span class="req">*</span> Required field</p>
+							</div>
+						</div>
+					</div>
+					<div class="register-show mt-5">
+						<form id="email-registration" class="mt-5 form-signup">
+							@csrf
+							<h2 class="d-flex justify-content-center align-items-center sing-up-label">SIGN UP</h2>
+							<div class="input-placeholder">
+								<input type="text" id="email" name="email" required>
+								<div class="placeholder pl-3 fontAwesome">
+									&#xf0e0; Email
+								</div>
+							</div>
+							<button type="button" name="save" id="save" onclick="signUp2()" class="btn-login">Sign
+								up</button>
+						</form>
+						<div class="row">
+							<div class="col-md-6 mt-5">
+								<p class="required-field"><span class="req">*</span> Required field</p>
+							</div>
+						</div>
+						<div id="signup_error" class="text-danger"></div>
+					</div>
+				</div>
+				<div class="login-info-box text-white">
+					<h2 class=" dont-have-an-account">Have an account?</h2>
+					<p class=" dont-have-an-account-pra" id="account">Your
+						personal data will be used to support
+						your experience
+						throughout
+						this website, to manage access to your account, and for other purposes described in our privacy
+						policy.
+					</p>
+					<label id="label-register" for="log-reg-show"
+						class="d-flex justify-content-center align-items-center  sing-up-label">LOG IN</label>
+					<input type="radio" name="active-log-panel" id="log-reg-show" checked="checked">
+				</div>
+
+				<div class="row company-row bg-light">
+					<div class="col-md-12 d-none company-detail" id="company-detail"
+						style="margin: auto; height: 504px;">
+						<div class="col-md-12 bg-light text-center">
+							<h2 class="text-center mt-5" style="color:#25529F; font-size:30px">
+								Company
+								Detail</h2>
+						</div>
+						<p class="d-flex justify-content-center align-items-center text-dark" class="signup-intro mt-2">
+							Please
+							tell us some information about
+							your
+							company and website</p>
+						<div class="form-signup-secondary">
+							<div class="row col-md-12 user-info mt-3">
+								<div class="col-md-12 mt-5">
+									<input type="text" placeholder="&#xf1ad;   Company Name" id="company_name"
+										name="company_name" class="form-control mt-2 company-info fontAwesome">
+									<div class="text-danger" id="company_name_errors"></div>
+								</div>
+								<div class="col-md-12 mt-3">
+									<input type="text" placeholder="&#xf0ac;  Company Website" id="company_website"
+										name="company_website" class="form-control mt-2 company-info fontAwesome"
+										required width="520px">
+									<div class="text-danger" id="company_website_errors"></div>
+								</div>
+								<div class="col-md-12 mt-3">
+									<input type="text" placeholder="&#xf095;  Phone" id="phone" name="phone"
+										class="form-control mt-2 company-info fontAwesome">
+									<div class="text-danger" id="phone_errors"></div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-12 mb-5 mt-5">
+							<input type="submit" value="SAVE AND CONTINUE" style="width:15rem" class="btn-login mb-5"
+								onclick="loadAddress()">
+						</div>
+					</div>
+
+					<div class="col-md-12 ms-2 company-loc d-none login-form-section" id="login-form-section">
+						<div class="col-md-12 bg-light text-center">
+							<h2 style="color:#25529F; font-size:30px" class="text-center pt-5">SIGN
+								UP
+							</h2>
+						</div>
+						<div class="col-md-12 signup-intro p-0 ">
+							<p class="please-tell-us d-flex justify-content-center align-items-center">Please tell us
+								about
+								yourself so we can get to know your better.
+								Your data will be used to create an
+								account so that you can make purchases through our system.</p>
+						</div>
+						<div class="form-signup-secondary">
+							<div class="user-info">
+								<div class="row mt-3">
+									<div class="col-md-6">
+										<input type="text" placeholder="&#xf007;  First Name" id="company_website"
+											name="first_name" class="form-control mt-3 fontAwesome">
+										<div class="text-danger" id="first_name_errors"></div>
+									</div>
+									<div class="col-md-6">
+										<input type="text" placeholder="&#xf007;  Last Name" id="company_website"
+											name="last_name" class="form-control fontAwesome mt-3">
+										<div class="text-danger" id="last_name_errors"></div>
+									</div>
+									<div class="col-md-12">
+										<input type="password" placeholder="&#xf023;  Password" id="company_name"
+											name="password" class="form-control mt-2 company-info fontAwesome mt-3">
+										<div class="text-danger" id="password_errors"></div>
+									</div>
+									<div class="col-md-12">
+										<input type="password" placeholder="&#xf023;  Confirm Password"
+											id="confirm_password" name="confirm_password"
+											class="form-control mt-3 company-info fontAwesome" required>
+									</div>
+									<div class="text-danger" id="confirm_password_errors"></div>
+								</div>
+							</div>
+						</div>
+						<div id="user-info-error" class="text-danger"></div>
+						<div class="col-md-12 mb-5 mt-5 text-center">
+							<button type="submit" value="" class="btn-login sing-up-continue" onclick="signup()">
+								SING UP & CONTINUE</button>
+						</div>
+					</div>
+				</div>
+				<div class="row business-row bg-light d-none" id="business-row" style="margin-top: -121px">
+					<div class="col-md-12 text-center">
+						<h2 style="color:#25529F; font-size:30px" class="text-center pt-5">Your Business Location</h2>
+					</div>
+					<div class="col-md-12 signup-intro">
+						<p class="text-center text-dark">Knowing where you are located is also helpful to approve your
+							account
+							faster.
+						</p>
+					</div>
+					<div class="col-md-12 company-address" id="address-form-section">
+						@csrf
+						<div class="ms-4">
+							<div class="form-signup-secondary">
+								<div class="row user-info mt-3">
+									<div class="col-md-12 mt-3">
+										<input type="text" placeholder="&#xf601;  Street Address, House no, Street Name"
+											id="street_address" name="street_address"
+											class="form-control mt-2 company-info fontAwesome" required>
+										<div class="text-danger" id="street_address_errors"></div>
+									</div>
+									<div class="col-md-12 mt-3">
+										<input type="text" placeholder="&#xf015;  Apartment, Suit, unit etc"
+											id="street_address" name="suit_apartment"
+											class="form-control mt-2 company-info fontAwesome" required>
+										<div class="text-danger" id="suit_apartment_errors"></div>
+									</div>
+									<div class="col-md-12 mt-3">
+										<input type="text" placeholder="&#xf5a0;  Town/City" name="town_city"
+											class="form-control mt-2 company-info fontAwesome" required>
+										<div class="text-danger" id="town_city_errors"></div>
+									</div>
+									<div class="col-md-6 mt-3">
+										<input type="text" placeholder="&#xf276;   State" id="company_website"
+											name="state" class="form-control mt-1 fontAwesome" required>
+										<div class="text-danger" id="state_errors"></div>
+									</div>
+									<div class="col-md-6 mt-3">
+										<input type="text" placeholder="&#xf041;  Zip" id="company_website" name="zip"
+											class="form-control mt-1 fontAwesome" required>
+										<div class="text-danger" id="zip_errors"></div>
+									</div>
+								</div>
+							</div>
+							<div id="address-info-error" class="text-danger"></div>
+							<div class="col-md-12 mt-5 m-2">
+								<input type="button" value="SAVE AND CONTINUE" style="width:15rem; height: 44px;"
+									class="btn-login mb-5" onclick="thankYou()">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="d-none thankyou row bg-light" id="thanks">
+					<div class="col-md-12 text-center">
+						<h2 style="color:#25529F; font-size:30px" class="text-center pt-5">Finish</h2>
+					</div>
+					<div class="col-md-12">
+						<p class="text-center col-md-12 pb-2 text-dark">Thank you for registering, please allow us
+							sometime
+							to
+							review your subbmission.</p>
+					</div>
+					<div>
+						<img class="img-fluid" src="/theme/img/thanksyou.png">
+					</div>
+					<div class="col-md-12 text-center mt-5">
+						<a href="{{ url('/')}}">
+							<input type="button" value="CONTINUE SHOPPING" style="width:15rem; height:50px"
+								class="btn-login mb-5"></a>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
-
-<div class="row mt-5 ml-0 pr-0 w-100" style="background-image: url('/theme/img/img_12.png');">
-	<div class="login-reg-panel" style="margin-top:400px;">
-		<div class="register-info-box text-center">
-			<h2 class=" dont-have-an-account">Don't have an account?</h2>
-			<p class=" dont-have-an-account-pra">Your personal data will be used to support your experience
-				throughout
-				this website, to
-				manage access to your account, and for other purposes described in our privacy policy.</p>
-			<label id="label-login" for="log-login-show" class="sing-up-label"><span class="sign-up">SIGN UP</span>
-			</label>
-			<input type="radio" name="active-log-panel" id="log-login-show">
-		</div>
-		<div class="white-panel">
-			<div class="login-show">
-				<h2 class="text-center login-title">LOG IN</h2>
-				<form method="POST" action="{{ route('login') }}">
-					@csrf
-					<div class=" form-login">
-						<div class="input-placeholder">
-							<input type="text" name="email" required>
-							<div class="placeholder fontAwesome">
-								&#xf0e0; Email
-							</div>
-						</div>
-						<div class="input-placeholder">
-							<input type="password" name="password" required>
-							<div class="placeholder fontAwesome">
-								&#xf023; Password
-							</div>
-						</div>
-
-					</div>
-					<button type="submit" class="btn-login info login-button">LOG IN</button>
-
-				</form>
-				<div class="row">
-					<div class="col-md-6 mt-4">
-						<div class="form-check checkbox-lg form-login">
-							<input class="form-check-input" type="checkbox" value="" id="checkbox-2" />&nbsp;&nbsp;
-							<label class="form-check-label" for="checkbox-2">Remember me</label>
-						</div>
-					</div>
-					<div class="col-md-6 mt-3">
-						<a href="#" class="btn-lost-password">Lost your password?</a></p>
-					</div>
-				</div>
-				<hr>
-				<div class="row">
-					<div class="col-md-6">
-						<p class="required-field"><span class="req">*</span> Required field</p>
-					</div>
-				</div>
-			</div>
-			<div class="register-show mt-5">
-				<form id="email-registration" class="mt-5 form-signup">
-					@csrf
-					<h2 class="text-center login-singup ">SIGN UP</h2>
-					<div class="input-placeholder">
-						<input type="text" id="email" name="email" required>
-						<div class="placeholder fontAwesome">
-							&#xf0e0; Email
-						</div>
-					</div>
-
-					<button type="button" name="save" id="save" onclick="signUp2()" class="btn-login">Sign
-						up</button>
-				</form>
-				<div class="row">
-					<div class="col-md-6 mt-5">
-						<p class="required-field"><span class="req">*</span> Required field</p>
-					</div>
-				</div>
-				<div id="signup_error" class="text-danger"></div>
-
-			</div>
-
-		</div>
-		<div class="login-info-box text-white">
-			<h2 class=" dont-have-an-account text-center">Have an account?</h2>
-			<p class=" dont-have-an-account-pra text-center" id="account">Your personal data will be used to support
-				your experience
-				throughout
-				this website, to manage access to your account, and for other purposes described in our privacy
-				policy.
-			</p>
-			<label id="label-register" for="log-reg-show">Login</label>
-			<input type="radio" name="active-log-panel" id="log-reg-show" checked="checked">
-		</div>
-
-		<div class="row company-row bg-light">
-			<div class="col-md-12 d-none company-detail" id="company-detail">
-				<div class="col-md-12 bg-light text-center">
-					<h2 style="color:#25529F; font-size:30px" class="text-center mt-3 dont-have-an-account">Company
-						Detail</h2>
-				</div>
-
-				<p class="text-center text-dark" class="signup-intro mt-2">Please tell us some information about
-					your
-					company and website</p>
-				<div class="form-signup-secondary">
-					<div class="row col-md-12 user-info mt-3">
-						<div class="col-md-12 mt-5">
-							<input type="text" placeholder="&#xf1ad;   Company Name" id="company_name"
-								name="company_name" class="form-control mt-2 company-info fontAwesome">
-							<div class="text-danger" id="company_name_errors"></div>
-						</div>
-						<div class="col-md-12 mt-3">
-							<input type="text" placeholder="&#xf0ac;  Company Website" id="company_website"
-								name="company_website" class="form-control mt-2 company-info fontAwesome" required
-								width="520px">
-							<div class="text-danger" id="company_website_errors"></div>
-						</div>
-						<div class="col-md-12 mt-3">
-							<input type="text" placeholder="&#xf095;  Phone" id="phone" name="phone"
-								class="form-control mt-2 company-info fontAwesome">
-							<div class="text-danger" id="phone_errors"></div>
-						</div>
-					</div>
-				</div>
-				<div class="col-md-12 mb-5 mt-5">
-					<input type="submit" value="SAVE AND CONTINUE" style="width:15rem" class="btn-login mb-5"
-						onclick="loadAddress()">
-				</div>
-			</div>
-
-
-			<div class="col-md-12 ms-2 company-loc d-none login-form-section" id="login-form-section">
-				<div class="col-md-12 bg-light text-center">
-					<h2 style="color:#25529F; font-size:30px" class="text-center pt-5 dont-have-an-account">SIGN UP
-					</h2>
-				</div>
-				<div class="col-md-12 signup-intro p-0 ">
-					<p class="please-tell-us">Please tell us about yourself so we can get to know your better.
-						Your data will be used to create an
-						account so that you can make purchases through our system.</p>
-
-
-				</div>
-				<div class="form-signup-secondary">
-					<div class="user-info">
-						<div class="row mt-3">
-							<div class="col-md-6">
-								<input type="text" placeholder="&#xf007;  First Name" id="company_website"
-									name="first_name" class="form-control mt-3 fontAwesome">
-								<div class="text-danger" id="first_name_errors"></div>
-							</div>
-							<div class="col-md-6">
-								<input type="text" placeholder="&#xf007;  Last Name" id="company_website"
-									name="last_name" class="form-control fontAwesome mt-3">
-								<div class="text-danger" id="last_name_errors"></div>
-							</div>
-							<div class="col-md-12">
-
-								<input type="password" placeholder="&#xf023;  Password" id="company_name"
-									name="password" class="form-control mt-2 company-info fontAwesome mt-3">
-								<div class="text-danger" id="password_errors"></div>
-							</div>
-
-
-							<div class="col-md-12">
-								<input type="password" placeholder="&#xf023;  Confirm Password" id="confirm_password"
-									name="confirm_password" class="form-control mt-3 company-info fontAwesome" required>
-							</div>
-							<div class="text-danger" id="confirm_password_errors"></div>
-						</div>
-					</div>
-				</div>
-
-
-				<div id="user-info-error" class="text-danger"></div>
-				<div class="col-md-12 mb-5 mt-5">
-					<button type="submit" value="" style="" class="btn-login sing-up-continue  mb-5" onclick="signup()">
-						SING UP & CONTINUE</button>
-				</div>
-			</div>
-
-		</div>
-
-
-
-		<div class="row business-row bg-light d-none" id="business-row">
-			<div class="col-md-12 text-center">
-				<h2 style="color:#25529F; font-size:30px" class="text-center pt-5">Your Business Location</h2>
-			</div>
-			<div class="col-md-12 signup-intro">
-				<p class="text-center text-dark">Knowing where you are located is also helpful to approve your
-					account
-					faster.
-				</p>
-			</div>
-			<div class="col-md-12 company-address" id="address-form-section">
-				@csrf
-				<div class="ms-4">
-					<div class="form-signup-secondary">
-						<div class="row user-info mt-3">
-							<div class="col-md-12 mt-3">
-								<input type="text" placeholder="&#xf601;  Street Address, House no, Street Name"
-									id="street_address" name="street_address"
-									class="form-control mt-2 company-info fontAwesome" required>
-								<div class="text-danger" id="street_address_errors"></div>
-
-							</div>
-							<div class="col-md-12 mt-3">
-								<input type="text" placeholder="&#xf015;  Apartment, Suit, unit etc" id="street_address"
-									name="suit_apartment" class="form-control mt-2 company-info fontAwesome" required>
-								<div class="text-danger" id="suit_apartment_errors"></div>
-							</div>
-							<div class="col-md-12 mt-3">
-								<input type="text" placeholder="&#xf5a0;  Town/City" name="town_city"
-									class="form-control mt-2 company-info fontAwesome" required>
-								<div class="text-danger" id="town_city_errors"></div>
-							</div>
-
-							<div class="col-md-6 mt-3">
-								<input type="text" placeholder="&#xf276;   State" id="company_website" name="state"
-									class="form-control mt-1 fontAwesome" required>
-								<div class="text-danger" id="state_errors"></div>
-							</div>
-							<div class="col-md-6 mt-3">
-								<input type="text" placeholder="&#xf041;  Zip" id="company_website" name="zip"
-									class="form-control mt-1 fontAwesome" required>
-								<div class="text-danger" id="zip_errors"></div>
-							</div>
-
-						</div>
-					</div>
-					<div id="address-info-error" class="text-danger"></div>
-					<div class="col-md-12 mt-5 m-2">
-						<input type="button" value="SAVE AND CONTINUE" style="width:15rem; height: 44px;"
-							class="btn-login mb-5" onclick="thankYou()">
-					</div>
-
-				</div>
-			</div>
-		</div>
-
-
-		<div class="d-none thankyou row bg-light" id="thanks">
-			<div class="col-md-12 text-center">
-				<h2 style="color:#25529F; font-size:30px" class="text-center pt-5">Finish</h2>
-			</div>
-			<div class="col-md-12">
-				<p class="text-center col-md-12 pb-2 text-dark">Thank you for registering, please allow us sometime
-					to
-					review your subbmission.</p>
-			</div>
-			<div>
-				<img class="img-fluid" src="/theme/img/thanksyou.png">
-			</div>
-			<div class="col-md-12 text-center mt-5">
-				<a href="{{ url('/')}}">
-					<input type="button" value="CONTINUE SHOPPING" style="width:15rem; height:50px"
-						class="btn-login mb-5"></a>
-			</div>
-		</div>
-
-	</div>
-</div>
-</div>
+@include('partials.footer')
+@include('partials.product-footer')
 <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
 
 <script type="text/javascript">
@@ -363,13 +356,10 @@
 
 	function Error(error) {
 		console.log(error)
-
 	    let errorMessages = [];
 	    let detailedMessages = [];
-
 	    let errorMessage = error.responseJSON;
 	    errorMessages.push(errorMessage);
-
 	    if (error.errors) {
 	        detailedMessages = [].concat.apply(
 	            [],
@@ -616,5 +606,3 @@
 	}
 
 </script>
-@include('partials.footer')
-@include('partials.product-footer')

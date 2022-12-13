@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductOption;
 use App\Models\Brand;
+use App\Models\Pricingnew;
 use Illuminate\Support\Str;
 
 class SyncAPiData extends Command
@@ -158,21 +159,16 @@ class SyncAPiData extends Command
                 $api_products = json_decode($api_products);
                 $brands = [];
                 foreach($api_products as $api_product) {
-                    //dd($api_product->productOptions->priceColumns);
-                    // foreach($api_product->productOptions->priceColumns as $productOption) {
-                    //     echo $productOption->priceColumns->sacramentoUSD;
-                    // }
-                    // exit;
-                    // echo $api_product->productOptions[0]->priceColumns->sacramentoUSD;exit;
-
                     $this->info($api_product->id);
                     $brands[] = $api_product->brand;
-                   
                     $this->info('---------------------------------------');
                     $this->info('Processing Products ' . $api_product->name);
                     $this->info('---------------------------------------');
-                    $product = Product::where('product_id', $api_product->id)->with('options')->first();
-                    //dd($product);
+                    $product = Product::where('product_id', $api_product->id)->with('options.price')->first();
+                    // foreach($product->options as $pr) {
+                    //     echo $pr->price;
+                    // }
+                    // exit;
                     if ($product) {
                         if ($api_product->categoryIdArray) {
                             $category_id = $api_product->categoryIdArray[0];    
@@ -190,13 +186,6 @@ class SyncAPiData extends Command
                         $product->code =  $api_product->productOptions[0]->code;
                         $product->retail_price =  $api_product->productOptions[0]->priceColumns->sacramentoUSD;
                         $product->stockAvailable =  $api_product->productOptions[0]->stockAvailable;
-                        // if ($product->brand) {
-                        //     $product->brand =  $api_product->brand;
-                        //     $brand = Brand::where('name', $api_product->brand)->first();
-                        //     $product->brand_id = $brand->id;
-                        // }
-                        
-                        //if($product->brand ==)
                         if ($product->brand) {
                             $brand = Brand::where('name', $product->brand)->first();
                             if (empty($brand)) {
@@ -216,11 +205,10 @@ class SyncAPiData extends Command
                             $product->brand_id = $brand->id;
                         }
                         $product->save();
-                  
                     if ($api_product->productOptions) {
                         foreach($api_product->productOptions as $api_productOption) {
-                            $product_option = ProductOption::where('option_id',$api_productOption->id)->first();
-                            //dd($api_productOption->priceColumns->sacramentoUSD);
+                            // dd($api_productOption);
+                            $product_option = ProductOption::with('price')->where('option_id',$api_productOption->id)->first();
                             if ($product_option) {
                                 $product_option->option1 = $api_productOption->option1;
                                 $product_option->option_id = $api_productOption->id;
@@ -243,9 +231,43 @@ class SyncAPiData extends Command
                                 $product_option->specialDays =  $api_productOption->specialDays;
                                 $product_option->image =  !empty($api_productOption->image) ? $api_productOption->image->link: '';
                                 $product_option->save();
+                                //dd($product_option);
+                                $priceColumn = Pricingnew::where('option_id', $product_option->option_id)->first();
+                                if (empty($priceColumn)) {
+                                    $priceColumn = new Pricingnew([
+                                        'option_id' => $api_productOption->id,
+                                        'retailUSD' => $api_productOption->priceColumns->retailUSD,
+                                        'terraInternUSD' => $api_productOption->priceColumns->terraInternUSD,
+                                        'sacramentoUSD' => $api_productOption->priceColumns->terraInternUSD,
+                                        'wholesaleUSD' => $api_productOption->priceColumns->wholesaleUSD,
+                                        'oklahomaUSD' => $api_productOption->priceColumns->oklahomaUSD,
+                                        'tier1USD' => $api_productOption->priceColumns->tier1USD,
+                                        'calaverasUSD' => $api_productOption->priceColumns->calaverasUSD,
+                                        'tier2USD' => $api_productOption->priceColumns->tier2USD,
+                                        'tier3USD' => $api_productOption->priceColumns->tier3USD,
+                                        'commercialOKUSD' => $api_productOption->priceColumns->commercialOKUSD,
+                                        'costUSD' => $api_productOption->priceColumns->costUSD,
+                                        'specialPrice' => $api_productOption->priceColumns->specialPrice
+                                    ]);
+                                    $priceColumn->save();
+                                }
+                                else {
+                                    $priceColumn->retailUSD = $api_productOption->priceColumns->retailUSD;
+                                    $priceColumn->wholesaleUSD = $api_productOption->priceColumns->wholesaleUSD;
+                                    $priceColumn->terraInternUSD = $api_productOption->priceColumns->terraInternUSD;
+                                    $priceColumn->sacramentoUSD = $api_productOption->priceColumns->sacramentoUSD;
+                                    $priceColumn->calaverasUSD = $api_productOption->priceColumns->calaverasUSD;
+                                    $priceColumn->tier1USD = $api_productOption->priceColumns->tier1USD;
+                                    $priceColumn->tier2USD = $api_productOption->priceColumns->tier2USD;
+                                    $priceColumn->tier3USD = $api_productOption->priceColumns->tier3USD;
+                                    $priceColumn->commercialOKUSD = $api_productOption->priceColumns->commercialOKUSD;
+                                    $priceColumn->costUSD = $api_productOption->priceColumns->costUSD;
+                                    $priceColumn->specialPrice = $api_productOption->priceColumns->specialPrice;
+                                    $priceColumn->save();
+
+                                }
                             }
                             else {
-                                //dd($api_product->productOptions->priceColumns->sacramentoUSD);exit;
                                 $product_option = new ProductOption([
                                     'option1' => $api_productOption->option1,
                                     'option_id' => $api_productOption->id,
@@ -269,13 +291,26 @@ class SyncAPiData extends Command
                                     'image' =>  !empty($api_productOption->image) ? $api_productOption->image->link: ''
                                 ]);
                                 $product_option->save();
+                                $priceColumn = new Pricingnew([
+                                    'option_id' => $api_productOption->id,
+                                    'retailUSD' => $api_productOption->priceColumns->retailUSD,
+                                    'wholesaleUSD' => $api_productOption->priceColumns->wholesaleUSD,
+                                    'terraInternUSD' => $api_productOption->priceColumns->terraInternUSD,
+                                    'sacramentoUSD' => $api_productOption->priceColumns->sacramentoUSD,
+                                    'oklahomaUSD' => $api_productOption->priceColumns->oklahomaUSD,
+                                    'tier1USD' => $api_productOption->priceColumns->tier1USD,
+                                    'calaverasUSD' => $api_productOption->priceColumns->calaverasUSD,
+                                    'tier2USD' => $api_productOption->priceColumns->tier2USD,
+                                    'tier3USD' => $api_productOption->priceColumns->tier3USD,
+                                    'commercialOKUSD' => $api_productOption->priceColumns->commercialOKUSD,
+                                    'costUSD' => $api_productOption->priceColumns->costUSD,
+                                    'specialPrice' => $api_productOption->priceColumns->specialPrice
+                                ]);
+                                $priceColumn->save();
                             }
-               
                         }
                     }
                 } 
-           
-
                 else {
                     if ($api_product->categoryIdArray) {
                         $category_id = $api_product->categoryIdArray[0];    
@@ -309,8 +344,6 @@ class SyncAPiData extends Command
                     if ($api_product->productOptions) {
                         foreach($api_product->productOptions as $api_productOption) {
                             $productOption = new ProductOption([
-                                        // 'createdDate' =>  $api_productOption->createdDate,
-                                        // 'modifiedDate' =>  $api_productOption->modifiedDate,
                                         'option_id' =>  $api_productOption->id,
                                         'product_id' =>  $api_productOption->productId,
                                         'status' =>  $api_productOption->status,
@@ -340,9 +373,6 @@ class SyncAPiData extends Command
                 
             }
         }
-    //     //print_r($brands);exit;
-
-
         $this->info('------------------------------');
         $this->info('All products processed');
         $this->info('-------------------------------');

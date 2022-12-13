@@ -1,6 +1,3 @@
-
-
-
 <script src="https://unpkg.com/@popperjs/core@2"></script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <script src="/theme/bootstrap5/js/bootstrap.js"></script>
@@ -8,7 +5,7 @@
 
 <script src="https://kit.fontawesome.com/ec19ec29f3.js" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/feather-icons"></script>
-<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script> -->
+
 <script type="text/javascript">
 	var popover = new bootstrap.Popover(document.querySelector('.cart-price'), {
 	container: 'body',
@@ -46,4 +43,5 @@
 	}
 	});
 </script>
+
 </html>

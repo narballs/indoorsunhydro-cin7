@@ -37,4 +37,8 @@ class ProductOption extends Model
     {
         return $this->belongsTo('App\Models\Product', 'product_id', 'product_id');
     }
+    public function price()
+    {
+        return $this->hasMany('App\Models\Pricingnew', 'option_id', 'option_id');
+    }
 }

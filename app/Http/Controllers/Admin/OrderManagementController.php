@@ -256,11 +256,10 @@ class OrderManagementController extends Controller
         // var_dump($order_id);exit;
         $currentOrder = ApiOrder::where('id', $order_id)->first();
         $memberId = $currentOrder->memberId;
-        $order_items = ApiOrderItem::with('product')->where('order_id', $order_id)->get();
+        $order_items = ApiOrderItem::with('product.options')->where('order_id', $order_id)->get();
         $dateCreated = Carbon::now();
         $lineItems = [];
         foreach($order_items as $order_item) {
-            //dd($order_item->product->product_id);
             $lineItems[] = [
                 "id" => $order_item->product->product_id,
                 "createdDate" => '2022-07-31T23:43:38Z',
@@ -272,9 +271,9 @@ class OrderManagementController extends Controller
                 "sort" => 16,
                 "code" => $order_item->product->code,
                 "name" => $order_item->product->name,
-                "option1" => "sample string 19",
-                "option2" => "sample string 20",
-                "option3" => "sample string 21",
+                "option1" => $order_item->product->option1,
+                "option2" => $order_item->product->option2,
+                "option3" => $order_item->product->option,
                 "qty" => $order_item->quantity,
                 "styleCode" => "sample string 1",
                 "barcode" => "sample string 2",

@@ -19,7 +19,6 @@ class ContactController extends Controller
 
     public function customer(Request $request) {
         $perPage = $request->get('perPage');
-        //echo $perPage;exit;
         $search = $request->get('search');
         $contact_query = Contact::where('type', 'Customer');
         if (!empty($contact_query)) {

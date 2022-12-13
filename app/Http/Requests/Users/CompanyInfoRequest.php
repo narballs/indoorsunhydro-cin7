@@ -35,9 +35,8 @@ class CompanyInfoRequest extends FormRequest
                 ],
                 'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10'
             ];
-       }
-        else {
-             return [
+        } else {
+            return [
                 'street_address' => [
                     'required',
                     'regex:/^[a-zA-Z0-9\s-]+$/'
@@ -46,7 +45,7 @@ class CompanyInfoRequest extends FormRequest
                     'required',
                     'regex:/^[a-zA-Z0-9\s-]+$/'
                 ],
-                'town_city'=> 'required|alpha',
+                'town_city' => 'required|alpha',
                 'state' => 'required|alpha',
                 'zip' => [
                     'required',

@@ -10,6 +10,7 @@ vendor/
 .env
 composer.lock
 
+
 # Compiled Java class files
 *.class
 

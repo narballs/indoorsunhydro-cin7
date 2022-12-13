@@ -1,8 +1,5 @@
-<?php //dd(Session::forget('cart'));?>
-<header class="p-2 bg-dark text-white top-bar-height w-100">
-
+<header class="p-2 bg-dark text-white top-bar-height w-100 header-top">
     <div class="container">
-
         <div class="row">
             <div class="col-md-4"></div>
             <div class="col-md-2">
@@ -10,6 +7,7 @@
 
                 </div>
             </div>
+
             <div class="col-md-4 d-flex align-items-center justify-content-end">
                 <a href="{{'/user/'}}" class="text-white d-flex align-items-end mt-2">
                     <div>
@@ -32,9 +30,10 @@
                     @endif
                 </a>
             </div>
+
             <div class="col-md-2 d-flex justify-content-center align-items-center mt-2">
-                <div>
-                    <img class="img-fluid" src="/theme/img/Bascket.png" width="35px" height="35px">
+                <div style="font-family: 'Poppins';">
+                    <img class="basket-icon" src="/theme/img/Bascket.png">
                     <span
                         class="cart-basket d-flex align-items-center justify-content-center float-sm-end cart-counter rounded-circle"
                         id="top_cart_quantity">
@@ -47,20 +46,17 @@
                         @if(Session::get('cart'))
                         @foreach(Session::get('cart') as $cart)
                         <?php
-	            						$total_q[] = $cart['quantity'];
-	            						$total_quantity = array_sum($total_q);
-	            						$total_price[] = $cart['price'] * $cart['quantity'];
-	            						$grand_total = array_sum($total_price);
-	            					?>
+                            $total_q[] = $cart['quantity'];
+                            $total_quantity = array_sum($total_q);
+                            $total_price[] = $cart['price'] * $cart['quantity'];
+                            $grand_total = array_sum($total_price);
+                            ?>
                         @endforeach
                         @endif
                         {{$total_quantity}}
-
-
-
-
                     </span>
                 </div>
+
                 <div>
                     <a class="p-0 cart-price btn btn-secondary" data-bs-container="body" data-bs-toggle="popover"
                         data-bs-placement="right"
@@ -69,7 +65,8 @@
                                     id="topbar_cart_total" class="ms-2 cart-counter-details">
                                     {{number_format($grand_total, 2)}}</span>&nbsp;(<span id="cart_items_quantity"
                                     class="cart-counter-details">{{$total_quantity}}</span>&nbsp;<span
-                                    class="cart-counter-details">items</span> )</a>
+                                    class="cart-counter-details">items</span> )
+                            </a>
                 </div>
             </div>
         </div>

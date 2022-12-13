@@ -32,7 +32,6 @@ return [
 
     'use_ico_only' => false,
     'use_full_favicon' => false,
-
     /*
     |--------------------------------------------------------------------------
     | Logo
@@ -44,14 +43,12 @@ return [
     | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Basic-Configuration
     |
     */
-
     'logo' => '<b>Admin</b>LTE',
-    'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
+    'logo_img' => '/vendor/almasaeed2010/adminlte/dist/img/AdminLTELogo.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
     'logo_img_alt' => 'AdminLTE',
-
     /*
     |--------------------------------------------------------------------------
     | User Menu
@@ -63,7 +60,6 @@ return [
     | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Basic-Configuration
     |
     */
-
     'usermenu_enabled' => true,
     'usermenu_header' => false,
     'usermenu_header_class' => 'bg-primary',
@@ -82,14 +78,12 @@ return [
     | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Layout-and-Styling-Configuration
     |
     */
-
     'layout_topnav' => null,
     'layout_boxed' => null,
     'layout_fixed_sidebar' => null,
     'layout_fixed_navbar' => null,
     'layout_fixed_footer' => null,
     'layout_dark_mode' => null,
-
     /*
     |--------------------------------------------------------------------------
     | Authentication Views Classes
@@ -262,6 +256,16 @@ return [
         [
             'text' => 'Orders',
             'url'  => 'admin/orders',
+            'icon' => 'fas fa-fw fa-user',
+        ],
+        [
+            'text' => 'Products',
+            'url'  => 'admin/products',
+            'icon' => 'fas fa-fw fa-user',
+        ],
+         [
+            'text' => 'Buy Lists',
+            'url'  => 'admin/buy-list',
             'icon' => 'fas fa-fw fa-user',
         ],
         [

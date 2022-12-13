@@ -1,33 +1,56 @@
 <div class="col-sm-12 col-md-6 col-lg-3 d-flex align-self-stretch mt-3 mb-3">
-	<?php //dd($brand);?>
-		<div class="card shadow-sm mb-4 w-100 h-100">
-			@if($option->image != '')
-				<img src="{{$option->image}}" class="col-md-10 img-fluid offset-1 mt-2" onclick="showdetails({{$product->id}},{{$option->option_id}})" style="max-height:210px;min-height:180px;width:201px" />
-			@else
-				<img src="{{ asset('theme/img/image_not_available.png') }}" class="w-100 img-fluid h-75 w-75" onclick="showdetails({{$product->id}})"/>
-			@endif
-			<div class="card-body d-flex flex-column text-center mt-2">
-				<h5 class="card-title" style="font-weight: 500;font-size: 16px;" id="product_name_{{$product->id}}"><a href="{{ url('product-detail/'.$product->id.'/'.$option->option_id.'/'.$product->slug) }}">{{$product->name}}</a></h5>
-				
-					<input type="hidden" name="quantity" value="1" id="quantity">
-					<input type="hidden" name="p_id" id="p_{{$product->id}}" value="{{$product->id}}">
-				    @csrf
-					<div class="mt-auto">
-						<?php $retail_prices = $option->retailPrice;
+    <div class="card shadow-sm mb-4 w-100 h-100">
+        @if($option->image != '')
+        <a href="{{ url('product-detail/'.$product->id.'/'.$option->option_id.'/'.$product->slug) }}">
+            <span class="d-flex justify-content-center align-content-center me-5">
+                <img src="{{$option->image}}" class="col-md-10  offset-1 mt-2"
+                    style="width: 120px; max-height: 300px; " />
+            </span>
+        </a>
+        @else
+        <span class="d-flex justify-content-center align-items-center">
+            <img src=" {{ asset('theme/img/image_not_available.png') }}" class="w-100  h-75 w-75"
+                onclick="showdetails({{$product->id}}, {{$option->option_id}}, {{$product->slug}}')" />
+        </span>
+        @endif
+        <div class="card-body d-flex flex-column text-center mt-2">
+            <h5 class="card-title" style="font-weight: 500;font-size: 16px;" id="product_name_{{$product->id}}"><a
+                    class="product-row-product-title"
+                    href="{{ url('product-detail/'.$product->id.'/'.$option->option_id.'/'.$product->slug) }}">{{$product->name}}</a>
+            </h5>
+
+            <input type="hidden" name="quantity" value="1" id="quantity">
+            <input type="hidden" name="p_id" id="p_{{$product->id}}" value="{{$product->id}}">
+            @csrf
+            <div class="mt-auto">
+                <?php $retail_prices = $option->retailPrice;
 						?>
-							<p class="text-uppercase mb-0 text-center text-danger">${{ number_format($retail_prices,2)}}</p>
-							@if($option->stockAvailable > 0)
-							    <button class="ajaxSubmit button-cards col w-100" type="submit"style="max-height: 46px;" id="ajaxSubmit_{{$product->id}}" onclick="updateCart('{{$product->id}}', '{{$option->option_id}}')">Add to cart</button>
-							@else 
-							    <button class="ajaxSubmit text-white bg-danger bg-gradient button-cards col w-100 autocomplete=off" tabindex="-1" type="submit"style="max-height: 46px;" id="ajaxSubmit_{{$product->id}}" disabled onclick="return updateCart('{{$product->id}}')">Out of Stock</button>
-						@endif
-					</div>
-				
-			</div>
-		</div>
+                <h4 class="text-uppercase mb-0 text-center text-danger">${{ number_format($retail_prices,2)}}</h4>
+                @if($product->categories)
+                <p class="category-cart-page mt-4">
+                    Category:&nbsp;&nbsp;{{$product->categories->name}}
+                </p>
+                @else
+                <p class="category-cart-page mt-4">
+                    Category:&nbsp;&nbsp;Unassigned
+                </p>
+                @endif
+                @if($option->stockAvailable > 0)
+                <button class="ajaxSubmit button-cards col w-100" type="submit" style="max-height: 46px;"
+                    id="ajaxSubmit_{{$product->id}}"
+                    onclick="updateCart('{{$product->id}}', '{{$option->option_id}}')">Add to cart</button>
+                @else
+                <button class="ajaxSubmit text-white bg-danger bg-gradient button-cards col w-100 autocomplete=off"
+                    tabindex="-1" type="submit" style="max-height: 46px;" id="ajaxSubmit_{{$product->id}}" disabled
+                    onclick="return updateCart('{{$product->id}}')">Out of Stock</button>
+                @endif
+            </div>
+
+        </div>
+    </div>
 </div>
 <script>
-function updateCart(id, option_id) {
+    function updateCart(id, option_id) {
 			jQuery.ajax({
                url: "{{ url('/add-to-cart/') }}",
                method: 'post',
@@ -74,5 +97,4 @@ function updateCart(id, option_id) {
 
 			    return false;
 			}
-		</script>
-
+</script>

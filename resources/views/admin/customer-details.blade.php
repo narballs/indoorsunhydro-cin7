@@ -3,62 +3,54 @@
 @section('title', 'Dashboard')
 
 @section('content_header')
-    <h1>Dashboard</h1>
+<h1>Dashboard</h1>
 @stop
 
 @section('content')
 <?php //dd($customer);?>
 <div class="container-fluid">
 	<div class="container">
-  		<!-- Title -->
-  		<div class="d-flex justify-content-between align-items-center py-3">
-    		<h2 class="h5 mb-0"><a href="#" class="text-muted"></a> Customer Details</h2>
-  	</div>
-  	<!-- Main content -->
-  	<div class="row">
-    	<div class="col-lg-8">
-      		<!-- Details -->
-      		<div class="card mb-4">
-        		<div class="card-body">
-        			<div class="row mb-5">
-        				<input type="hidden" name="customer_id" id="customer_id" value="{{$customer->id}}">
-        				<input type="hidden" name="contact_id" id="contact_id" value="{{$customer->contact_id}}">
-        			<div class="row">
-	        				<div class="text-muted col-md-4"><h5>{{$customer->firstName}} {{$customer->lastName}}  
-	        					@if ($customer->status == 1)
-	        					<span class="fa fa-edit" onclick="updatePriceColumn(0)"></span>
-	        					@endif
-	        				</h5>
-	        					<div id="first-last-name" class="d-none">
-	        						<div><input type="text" name="first_name" value="{{$customer->firstName}}"></div>
-	        						<div class="mt-3"><input type="text" name="last_name" value="{{$customer->lastName}}"></div>
-	        						<div class="mt-3"><button type="button" value="update" onclick="updatePriceColumn(3)">Update</button></div>
-	        					</div>
-	        				</div>
-	        				@if ($customer->status == 1)
-		        			<!-- 	<div class="col-md-6"><b>Pricing:</b> {{$customer->priceColumn}} <a href="#" onclick="updatePriceColumn(1)">Edit</a> -->
-		        					<div class="col-md-6"><b>Pricing:</b> {{$customer->priceColumn}} </a>
-			        				<div class="spinner-border d-none" role="status" style="left: 50% !important;margin-left: -25em !important;" id="spinner2">
-		  								<span class="sr-only">Activating...</span>
+		<!-- Title -->
+		<div class="d-flex justify-content-between align-items-center py-3">
+			<h2 class="h5 mb-0"><a href="#" class="text-muted"></a> Customer Details</h2>
+		</div>
+		<!-- Main content -->
+		<div class="row">
+			<div class="col-lg-8">
+				<!-- Details -->
+				<div class="card mb-4">
+					<div class="card-body">
+						<div class="row mb-5">
+							<input type="hidden" name="customer_id" id="customer_id" value="{{$customer->id}}">
+							<input type="hidden" name="contact_id" id="contact_id" value="{{$customer->contact_id}}">
+							<div class="row">
+								<div class="text-muted col-md-4">
+									<h5>{{$customer->firstName}} {{$customer->lastName}}
+										@if ($customer->status == 1)
+										<span class="fa fa-edit" onclick="updatePriceColumn(0)"></span>
+										@endif
+									</h5>
+									<div id="first-last-name" class="d-none">
+										<div><input type="text" name="first_name" value="{{$customer->firstName}}">
+										</div>
+										<div class="mt-3"><input type="text" name="last_name"
+												value="{{$customer->lastName}}"></div>
+										<div class="mt-3"><button type="button" value="update"
+												onclick="updatePriceColumn(3)">Update</button></div>
 									</div>
-			        		<!-- 		<select class="d-none" name="priceCol" id="priceCol" onchange="updatePriceColumn(2)">
-				    					<option value="RetailUSD">Retail</option>
-				    					<option value="Wholesale">Wholesale</option>
-				    					<option value="TerraIntern">TerraIntern</option>
-				    					<option value="Sacramanto">Sacramanto</option>
-				    					<option value="Oklahoma">Oklahoma</option>
-				    					<option value="Calaveras">Calaveras</option>
-				    					<option value="Tier1">Tier1</option>
-				    					<option value="Tier2">Tier2</option>
-				    					<option value="Tier2">Tier3</option>
-				    					<option value="CommercialOK">CommercialOK</option>
-				    					<option value="Cost">Cost</option>
-				    				</select> -->
-			        			</div>
-			        		@endif
+								</div>
+								@if ($customer->status == 1)
 
-	        			
-	        				<?php 
+								<div class="col-md-6"><b>Pricing:</b> {{$customer->priceColumn}} </a>
+									<div class="spinner-border d-none" role="status"
+										style="left: 50% !important;margin-left: -25em !important;" id="spinner2">
+										<span class="sr-only">Activating...</span>
+									</div>
+								</div>
+								@endif
+
+
+								<?php 
 		              			if ($customer->status == 1) {
 		              				$status = 'Active';
 		              			}
@@ -66,142 +58,143 @@
 		              				$status = 'Inactive';
 		              			}
 		              		?>
-	        				@if($customer->status != 1)
-	        					<div class="col-md-6">
-	        					</div>
-	        					<div class="col-md-2"><button class="btn btn-primary" type="button" onclick="updateContact()">Activate</button>
-	        					</div>
-	        				@else 
-	        					<div>
-	        						<span class="badge bg-success">{{$status}}</span>
-	        					</div>
-	        				@endif
-	        			<div class="spinner-border d-none" role="status" style="left: 50% !important;
+								@if($customer->status != 1)
+								<div class="col-md-6">
+								</div>
+								<div class="col-md-2"><button class="btn btn-primary" type="button"
+										onclick="updateContact()">Activate</button>
+								</div>
+								@else
+								<div>
+									<span class="badge bg-success">{{$status}}</span>
+								</div>
+								@endif
+								<div class="spinner-border d-none" role="status" style="left: 50% !important;
     margin-left: -25em !important;" id="spinner">
-  							<span class="sr-only">Activating...</span>
+									<span class="sr-only">Activating...</span>
+								</div>
+								<div class="col-md-12">
+									<b>Company:</b> {{$customer->company}}
+								</div>
+								<div class="col-md-12 mt-2">
+									<b>Website:</b> {{$customer->website}}
+								</div>
+								<div class="col-md-12 mt-2">
+									{{$customer->email}}
+								</div>
+								<div class="col-md-12 mt-2">
+									{{$customer->phone}}
+								</div>
+								<div class="col-md-12 mt-5">
+									<div class="row">
+										<div class="col-md-6">
+											<h3>Billing Address</h3>
+											<div class="col-md-10 bg-light">
+												<div>
+													{{$customer->postalAddress1}}
+												</div>
+												<div>
+													{{$customer->postalAddress2}}
+												</div>
+												<div>
+													{{$customer->postalPostCode}}, {{$customer->postalState}}
+												</div>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<h3>Delivery Address</h3>
+											<div class="col-md-10 bg-light">
+												<div>
+													{{$customer->postalAddress1}}
+												</div>
+												<div>
+													{{$customer->postalAddress2}}
+												</div>
+												<div>
+													{{$customer->postalPostCode}}, {{$customer->postalState}}
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
-	        				<div class="col-md-12">
-	        					<b>Company:</b> {{$customer->company}}
-	        				</div>
-	        				<div class="col-md-12 mt-2">
-	        					<b>Website:</b> {{$customer->website}}
-	        				</div>
-	        				<div class="col-md-12 mt-2">
-	        					{{$customer->email}}
-	        				</div>
-	        				<div class="col-md-12 mt-2">
-	        					{{$customer->phone}}
-	        				</div>
-	        			<div class="col-md-12 mt-5">
-		        			<div class="row">
-		        				<div class="col-md-6">
-		        					<h3>Billing Address</h3>
-		        					<div class="col-md-10 bg-light">
-		        						<div>
-		        							{{$customer->postalAddress1}}
-		        						</div>
-			        					<div>
-			        						{{$customer->postalAddress2}}
-			        					</div>
-			        					<div>
-			        						{{$customer->postalPostCode}}, {{$customer->postalState}}
-			        					</div>
-			        				</div>
-		        				</div>
-			        			<div class="col-md-6">
-			        				<h3>Delivery Address</h3>
-			        				<div class="col-md-10 bg-light">
-				        				<div>
-				        					{{$customer->postalAddress1}}
-				        				</div>
-					        			<div>
-					        				{{$customer->postalAddress2}}
-					        			</div>
-					        			<div>
-					        				{{$customer->postalPostCode}}, {{$customer->postalState}}
-					        			</div>
-				        			</div>
-			        			</div>
-		        			</div>
-	        			</div>
-	        		</div>
-	        	</div>
-			
-        		</div>
-      		</div>
-      <!-- Payment -->
-      	<div class="card mb-4">
-        	<div class="card-body">
-	          	<div class="row">
-	            	<div class="col-lg-12">
-	              		<h2 class="h5 mb-0"><a href="#" class="text-muted"></a>Order History</h2>
-	              		<table class="table">
-	              			<tr>
-	              				<th>Order #</th>
-	              				<th>Date Created</th>
-	              				<th>Status</th>
-	              				<th>Total</th>
-	              				<th>Ref#</th>
-	              			</tr>
-	              			@foreach($customer_orders as $customer_order)
-	              				<tr>
-	              					@if($customer_order->order_id)
-	              						<td>
-	              							{{$customer_order->order_id}}
-	              					
-	              						</td>
-	              					@else 
-	              						<td class="badge bg-danger">Pending Approval</td>
-	              					@endif
-	              					<?php  $createdDate = $customer_order->created_at;
+
+					</div>
+				</div>
+				<!-- Payment -->
+				<div class="card mb-4">
+					<div class="card-body">
+						<div class="row">
+							<div class="col-lg-12">
+								<h2 class="h5 mb-0"><a href="#" class="text-muted"></a>Order History</h2>
+								<table class="table">
+									<tr>
+										<th>Order #</th>
+										<th>Date Created</th>
+										<th>Status</th>
+										<th>Total</th>
+										<th>Ref#</th>
+									</tr>
+									@foreach($customer_orders as $customer_order)
+									<tr>
+										@if($customer_order->order_id)
+										<td>
+											{{$customer_order->order_id}}
+
+										</td>
+										@else
+										<td class="badge bg-danger">Pending Approval</td>
+										@endif
+										<?php  $createdDate = $customer_order->created_at;
         							$formatedDate = $createdDate->format('F j, Y');
         							?>
-	              					<td>
-	    
-	              						{{$formatedDate}}
-	              					</td>
-	              					<td>
-	              						{{$customer_order->status}}
-	              					</td>
-	              					<td>
-	              						{{$customer_order->total}}
-	              					</td>
-	              					<td>
-	              						<a href="{{ url('admin/order-detail/'.$customer_order->id) }}">{{$customer_order->reference}}
-	              					</td>
-	              				</tr>
-	              			@endforeach
-	              		</table>
-	              		
-	            	</div>
-	            	
-	          	</div>
-        	</div>
-      	</div>
-    </div>
-    <div class="col-lg-4">
-      	<!-- Customer Notes -->
-      	<div class="card mb-4">
-        	<div class="card-body">
-          		<h3 class="h6"><strong>Customer Notes</strong></h3>
-          	
-          		<div>{{$customer->notes}}</div>
-        	</div>
-        	
-      	</div>
-    </div>
+										<td>
+
+											{{$formatedDate}}
+										</td>
+										<td>
+											{{$customer_order->status}}
+										</td>
+										<td>
+											{{$customer_order->total}}
+										</td>
+										<td>
+											<a href="{{ url('admin/order-detail/'.$customer_order->id) }}">{{$customer_order->reference}}
+										</td>
+									</tr>
+									@endforeach
+								</table>
+
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-4">
+				<!-- Customer Notes -->
+				<div class="card mb-4">
+					<div class="card-body">
+						<h3 class="h6"><strong>Customer Notes</strong></h3>
+
+						<div>{{$customer->notes}}</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
-</div>
-</div>
-  @stop
+@stop
 
 @section('css')
-    <link rel="stylesheet" href="/css/admin_custom.css">
+<link rel="stylesheet" href="/css/admin_custom.css">
 @stop
 
 @section('js')
-    <script>
-    	function addComment() {
+<script>
+	function addComment() {
     		var comment = $( "#comment" ).val();
     		var order_id = $( "#order_id" ).val();
     		jQuery.ajax({
@@ -316,5 +309,5 @@
     	}
     	}
     }
-    </script>
+</script>
 @stop
