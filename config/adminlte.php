@@ -258,6 +258,7 @@ return [
             'url'  => 'admin/orders',
             'icon' => 'fas fa-fw fa-user',
         ],
+      
         [
             'text' => 'Products',
             'url'  => 'admin/products',
@@ -276,6 +277,16 @@ return [
         [
             'text' => 'Supplier',
             'url'  => 'admin/contacts',
+            'icon' => 'fas fa-fw fa-user',
+        ],
+        [
+            'text' => 'Users',
+            'url'  => 'admin/users',
+            'icon' => 'fas fa-fw fa-user',
+        ],
+        [
+            'text' => 'Users Role',
+            'url'  => 'admin/roles',
             'icon' => 'fas fa-fw fa-user',
         ],
         [

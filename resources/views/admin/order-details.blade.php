@@ -14,7 +14,6 @@
   		<div class="d-flex justify-content-between align-items-center py-3">
     		<h2 class="h5 mb-0"><a href="#" class="text-muted"></a> Order #{{$order->id}}</h2>
   	</div>
-
   	<!-- Main content -->
   	<div class="row">
     	<div class="col-lg-8">
@@ -90,7 +89,7 @@
 					</form>
 					<form>
 						@csrf
-						@if($order->apiApproval == 'pending')
+						@if($order->isApproved == 'pending')
 							<div class="col-md-12" style="margin-left:396px">
 								<input class="btn btn-primary" type="button" value="Fullfill Order" onclick="fullFillOrder()">
 							</div>

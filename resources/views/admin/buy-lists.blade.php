@@ -62,7 +62,7 @@
                                     data-original-title="View"><i class="fas fa-eye"></i></a>
                                 <a href="{{ route('buy-list.create', ['id' => $buylist->id]) }}" class="edit" title="" data-toggle="tooltip" data-original-title="Edit"><i
                                         class="fas fa-pen"></i></a>
-                                <input type="text" name="list_id" value="{{$buylist->id}}">
+                                <input type="hidden" name="list_id" value="{{$buylist->id}}">
                                 <button type="submit" class="delete"  style="background-color: transparent; border: none;" title="" data-toggle="tooltip" data-original-title="Delete">
                                     <i class="fas fa-trash-alt" style="color: #007bff;"></i>
                                 </button>

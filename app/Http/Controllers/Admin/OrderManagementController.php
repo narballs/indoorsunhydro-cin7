@@ -21,10 +21,11 @@ use App\Helpers\MailHelper;
 
 class OrderManagementController extends Controller
 {
-    // public function __construct()
-    // {
-    //     $this->middleware('admin');
-    // }
+    function __construct()
+    {
+        $this->middleware(['role:Admin']);
+
+    }
     
     public function index() {
         //$orders = Order::all();
