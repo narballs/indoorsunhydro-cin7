@@ -15,6 +15,13 @@ use App\Helpers\MailHelper;
 
 class ContactController extends Controller
 {
+
+    function __construct()
+    {
+        $this->middleware(['role:Admin']);
+
+    }
+    
     public function supplier() {
         $contacts = Contact::where('type', 'Supplier')->get();
         return view('admin/contacts', compact('contacts'));

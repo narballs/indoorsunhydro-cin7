@@ -94,25 +94,29 @@ class SalesOrders implements ShouldQueue
         $order_id = $response[0]->id;
         $reference = $response[0]->code;
         echo $order_id.'-----'.$reference;
-        $data = [
-            'order_id' => $order_id,
-            'name' =>  'Admin',
-            'email' => 'wqszeeshan@gmail.com',
-            'contact_email' => 'wqszeeshan@gmail.com',
-            'reference' => $reference,
-            'subject' => 'Order fullfilled',
-            'from' => 'wqszeeshan@gmail.com', 
-            'content' => 'Order fullfilled has been fullfilled. from job.'
-        ];
-        
-        $data['email'] = 'wqszeeshan@gmail.com';
-        MailHelper::sendMailNotification('emails.admin-order-fullfillment', $data);
+        if (!empty($order_id) && !empty($reference)) {
+            $data = [
+                'order_id' => $order_id,
+                'name' =>  'Admin',
+                'email' => 'wqszeeshan@gmail.com',
+                'contact_email' => 'wqszeeshan@gmail.com',
+                'reference' => $reference,
+                'subject' => 'Order fullfilled',
+                'from' => 'wqszeeshan@gmail.com', 
+                'content' => 'Order fullfilled has been fullfilled. from job.'
+            ];
+            
+            $data['email'] = 'wqszeeshan@gmail.com';
+            MailHelper::sendMailNotification('emails.admin-order-fullfillment', $data);
+        }
+        $contact = Contact::where('user_id', $user_id)->first();
         $order = ApiOrder::where('reference', $reference)->update(
             [
-                'memberId' => $contact->contact_id
+                'memberId' => $contact->contact_id,
+                'order_id' => $order_id
             ]
         );
-
+        exit;
         // $reference = 'QCOM-70';
         // $apiOrder = ApiOrder::where('reference', $reference)->first();
         // $user_id = $apiOrder['user_id'];
