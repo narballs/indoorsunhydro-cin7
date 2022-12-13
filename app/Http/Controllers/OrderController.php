@@ -143,7 +143,7 @@ class OrderController extends Controller
         $order->modifiedDate = $createdDate;
         $order->createdBy =  79914;
         $order->processedBy  =  79914;
-        $order->isApproved    =  true;
+        $order->isApproved    =  false;
         $order->memberId    =  $contact_id;
         $order->branchId   =  3;
         $order->branchEmail  =  'wqszeeshan@gmail.com';

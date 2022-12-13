@@ -10,6 +10,12 @@ use App\Models\ShippingState;
 use App\Jobs\SalesOrders;
 class ShippingMethodController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware(['role:Admin']);
+
+    }
+    
     public function index() {
         $shippingmethods = ShippingMethod::all();
         

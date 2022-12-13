@@ -14,7 +14,7 @@ class AddCodeToProductsTable extends Migration
     public function up()
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->string('code')->after('name');
+            //$table->string('code')->after('name');
         });
     }
 

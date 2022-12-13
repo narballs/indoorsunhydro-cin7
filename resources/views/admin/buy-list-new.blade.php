@@ -12,6 +12,7 @@
 		max-height: 20px !important;
 	}
 </style>
+<?php //dd($list);?>
 	<div class="row">
 		<div class="col-md-5 card">
 			<div class="alert alert-success d-none" role="alert" id="success_msg"></div>
@@ -29,25 +30,45 @@
 			    		<div class="text-danger" id="title_errors"></div>
 			  		</div>
 		  		@endif
-		  		 <div class="form-group col-md-6 mb-0">
-		    		<label for="type" name="type">Status</label>
+		  		@if(!empty($list->status))
+			  		<div class="form-group col-md-6 mb-0">
+			    		<label for="type" name="type">Status</label>
+			    		<select class="form-control" name="type" id="status">
+			    			 <option value="" >{{$list->status}}</option>
+			    		</select>
+			    		<div id="status_errors" class="text-danger"></div>
+			  		</div>
+		  		@else
+			  		 <div class="form-group col-md-6 mb-0">
+			    		<label for="type" name="type">Status</label>
 
-		    		<select class="form-control" name="type" id="status">
-		    			 <option value="" {{$list->status == private ? 'selected' : '' }}>{{$list->status}}</option>
-		    			  <option value="" {{$list->status == public ? 'selected' : '' }}>{{$list->status}}</option>
-		    			   <option value="" {{$list->status == status ? 'selected' : '' }}>{{$list->status}}</option>
-		    		</select>
-		    		<div id="status_errors" class="text-danger"></div>
-		  		</div>
-		  		<div class="col-md-12 card mt-5">
-					<div class="card-body"><h4>Description</h4></div>
+			    		<select class="form-control" name="type" id="status">
+			    			 <option value="Public" >Public</option>
+			    			  <option value="Private">Private</option>
+			    			   <option value="Shareable">Shareable</option>
+			    		</select>
+			    		<div id="status_errors" class="text-danger"></div>
+			  		</div>
+		  		@endif
+		  		@if(!empty($list->description))
+			  		<div class="col-md-12 card mt-5">
+						<div class="card-body"><h4>Description</h4></div>
 						<div class="form-group col-md-12">
-		    				<label for="mobile"></label>
-		    				<textarea class="form-control" rows="10" name="notes" id="description"></textarea>
-		    			<div id="description_errors" class="text-danger"></div>
-		  				</div>
-
-				</div>
+			    			<label for="mobile"></label>
+			    			<textarea class="form-control" rows="10" name="notes" id="description"></textarea>
+			    			<div id="description_errors" class="text-danger"></div>
+			  			</div>
+					</div>
+				@else
+					<div class="col-md-12 card mt-5">
+						<div class="card-body"><h4>Description</h4></div>
+							<div class="form-group col-md-12">
+			    				<label for="mobile"></label>
+			    				<textarea class="form-control" rows="10" name="notes" id="description"></textarea>
+			    			<div id="description_errors" class="text-danger"></div>
+			  				</div>
+					</div>
+				@endif
 				<div class="text-center ms-5" style="margin-bottom: 12px;margin-left: 150px !important;width: 331px;
     width: 358px !important;">
 					<button type="button" class="ms-2 btn btn-primary w-100" onclick="createList()">
@@ -60,33 +81,66 @@
 			@livewire('filter')
 		</div>
 	</div>
-	<div class="row w-100 pl-2 pr-0">
-		<div class="card col-md-12">
-			<div class="card-body w-100 d-none" id="list">
-				<div id="list_title">
-					<h4></h4>
-				</div>
-				<input type="hidden" id="list_id" value="">
-				<table id="product_list" class="table">
-					<tr>
-						<td style="width:373px !important">Product Title</td>
-						<td>Image</td>
-						<td>Price</td>
-						<td>Quantity</td>
-						<td>Subtotal</td>
-						<td>Remove</td>
-					</tr>
-				</table>
-				<div class="row">
-					<div class="col-md-10 border-top">Grand Total</div>
-					<div class="col-md-2 border-top">amount : <span id="grand_total">0</span></div>
-				</div>
-				<div class="row">
-					<div class="col-md-10 border-top"><button type="button" class="ms-2 btn btn-primary" onclick="generatList()">Create List</button>
+<?php //dd($list->list_products);?>
+	@if(!empty($list->list_products))
+		<div class="row w-100 pl-2 pr-0">
+			<div class="card col-md-12">
+				<div class="card-body w-100 d-none" id="list">
+					<div id="list_title">
+						<h4></h4>
+					</div>
+					<input type="hidden" id="list_id" value="">
+						<table id="product_list" class="table">
+							<tr>
+								<td style="width:373px !important">Product Title</td>
+								<td>Image</td>
+								<td>Price</td>
+								<td>Quantity</td>
+								<td>Subtotal</td>
+								<td>Remove</td>
+							</tr>
+						</table>
+						<div class="row">
+							<div class="col-md-10 border-top">Grand Total</div>
+							<div class="col-md-2 border-top">amount : <span id="grand_total">0</span></div>
+						</div>
+						<div class="row">
+							<div class="col-md-10 border-top"><button type="button" class="ms-2 btn btn-primary" onclick="generatList()">Create List</button>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
+	@else 
+			<div class="row w-100 pl-2 pr-0">
+			<div class="card col-md-12">
+				<div class="card-body w-100 d-none" id="list">
+					<div id="list_title">
+						<h4></h4>
+					</div>
+					<input type="hidden" id="list_id" value="">
+						<table id="product_list" class="table">
+							<tr>
+								<td style="width:373px !important">Product Title</td>
+								<td>Image</td>
+								<td>Price</td>
+								<td>Quantity</td>
+								<td>Subtotal</td>
+								<td>Remove</td>
+							</tr>
+						</table>
+						<div class="row">
+							<div class="col-md-10 border-top">Grand Total</div>
+							<div class="col-md-2 border-top">amount : <span id="grand_total">0</span></div>
+						</div>
+						<div class="row">
+							<div class="col-md-10 border-top"><button type="button" class="ms-2 btn btn-primary" onclick="generatList()">Create List</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	@endif
 
 
 @livewireScripts

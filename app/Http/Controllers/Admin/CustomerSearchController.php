@@ -14,6 +14,11 @@ use DB;
 
 class CustomerSearchController extends Controller
 {
+	 function __construct()
+    {
+        $this->middleware(['role:Admin']);
+
+    }
 
 	public function customerSearch(Request $request) {
 		$rows = 6;

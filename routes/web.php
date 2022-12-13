@@ -7,6 +7,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ContactUsController;
+use App\Http\Controllers\PermissionsController;
+use App\Http\Controllers\RolesController;
 use App\Http\Controllers\Admin\TestController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\OrderManagementController;
@@ -15,6 +17,7 @@ use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\ChangePasswordController;
 use App\Http\Controllers\Admin\CustomerSearchController;
 use App\Http\Controllers\Admin\AdminProductController;
+use App\Http\Controllers\Users\RoleController;
 use App\Http\Controllers\Admin\AdminBuyListController;
 /*
 |--------------------------------------------------------------------------
@@ -78,7 +81,9 @@ Route::post('/contact-us-store/', [ContactUsController::class, 'store'])->name('
 //Route::post('/',[UserController::class, 'logout'])->name('logout');
 
 
-Route::group(['middleware' => ['admin']], function () {
+Route::group(['middleware' => ['auth']], function () {
+     Route::resource('admin/roles', RoleController::class);
+    Route::resource('admin/users', UserController::class);
     Route::get('admin/dashboard', [DashboardController::class, 'index'])->name('admin.view');
     Route::get('admin/orders', [OrderManagementController::class, 'index'])->name('admin.orders');
     Route::get('admin/order/create', [OrderManagementController::class, 'create'])->name('admin.order.create');
@@ -106,3 +111,13 @@ Route::group(['middleware' => ['admin']], function () {
     Route::post('admin/generate-list', [AdminBuyListController::class, 'genrateList']);
 });
 Route::get('product/search', [ProductController::class, 'productSearch'])->name('product_search');
+
+
+
+
+  
+Route::get('/home', [HomeController::class, 'index'])->name('home');
+  
+Route::group(['middleware' => ['auth']], function() {
+   
+});

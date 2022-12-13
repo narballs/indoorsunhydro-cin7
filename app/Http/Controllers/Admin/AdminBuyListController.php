@@ -15,9 +15,10 @@ use Redirect;
 
 class AdminBuyListController extends Controller
 {
-    public function __construct()
+    function __construct()
     {
-        $this->middleware('admin');
+        $this->middleware(['role:Admin']);
+
     }
     
     public function index(Request $request) {
@@ -30,6 +31,7 @@ class AdminBuyListController extends Controller
     public function create(Request $request) {
         if ($request->id) {
             $list = BuyList::where('id', $request->id)->with('list_products.product.options')->first();
+           
             $products = Product::paginate(10);
             return view('admin/buy-list-new', compact('products', 'list'));
         }
