@@ -248,7 +248,12 @@ class UserController extends Controller
             $contact->lastName = $user->last_name;
             $contact->email = $user->email;
             
-            $isAdmin = true;
+            $admin_users =  DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
+            $admin_users = $admin_users->toArray();
+
+            $users_with_role_admin = User::select("email")
+                    ->whereIn('id',$admin_users)
+                    ->get();
             $data = [
                 'contact_name' => $user->first_name,
                 'name' =>  'Admin',
@@ -258,16 +263,14 @@ class UserController extends Controller
                 'content' => 'New user registration request received, please reveiw.'
             ];
 
-            if ($isAdmin == true) {
-                $data['email'] = 'wqszeeshan@gmail.com';
-                $adminTemplate = 'emails.approval-notifications';
-                MailHelper::sendMailNotification('emails.new-registration-notification', $data);
+            
+            if (!empty($users_with_role_admin)) { 
+                foreach($users_with_role_admin as $role_admin) {
+                    $data['email'] = $role_admin->email;
+                    $adminTemplate = 'emails.approval-notifications';
+                    MailHelper::sendMailNotification('emails.new-registration-notification', $data);
+                }
             }
-            // $data['name'] = $name;
-            // $data['email'] = $email;
-            // $data['content'] = 'Your account has been approved';
-            // $data['subject'] = 'Your account has been approved';
-            // MailHelper::sendMailNotification('emails.approval-notifications', $data);
             $contact->save();
         }
         else {

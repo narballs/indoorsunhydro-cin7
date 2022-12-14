@@ -10,6 +10,8 @@ use App\Jobs\SyncContacts;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\Subscribe;
 use App\Helpers\MailHelper;
+use App\Models\User;
+use DB;
 
 
 
@@ -148,13 +150,18 @@ class ContactController extends Controller
         SyncContacts::dispatch('create_contact', $contact);
         sleep(10);
         $is_updated = Contact::where('id', $contact_id)->pluck('contact_id')->first();
+        $admin_users =  DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
+        $admin_users = $admin_users->toArray();
+        $users_with_role_admin = User::select("email")
+                    ->whereIn('id',$admin_users)
+                    ->get();
         
         if ($is_updated) {
             $name = $currentContact['firstName'];
             $email = $currentContact['email'];
             $subject = 'Account  approval';
             $template = 'emails.approval-notifications';
-            $isAdmin = true;
+          
             $data = [
                 'contact_name' => $name,
                 'name' =>  'Admin',
@@ -166,10 +173,12 @@ class ContactController extends Controller
                 'content' => 'New account activated.'
             ];
 
-            if ($isAdmin == true) {
-                $data['email'] = 'wqszeeshan@gmail.com';
-                $adminTemplate = 'emails.approval-notifications';
-                MailHelper::sendMailNotification('emails.approval-notifications', $data);
+            if (!empty($users_with_role_admin)) { 
+                foreach($users_with_role_admin as $role_admin) {
+                    $data['email'] = $role_admin->email;
+                    $adminTemplate = 'emails.approval-notifications';
+                    MailHelper::sendMailNotification('emails.approval-notifications', $data);
+                }
             }
             $data['name'] = $name;
             $data['email'] = $email;
