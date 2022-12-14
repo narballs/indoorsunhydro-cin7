@@ -89,7 +89,7 @@
 					</form>
 					<form>
 						@csrf
-						@if($order->isApproved == 'pending')
+						@if($order->isApproved == 0)
 							<div class="col-md-12" style="margin-left:396px">
 								<input class="btn btn-primary" type="button" value="Fullfill Order" onclick="fullFillOrder()">
 							</div>

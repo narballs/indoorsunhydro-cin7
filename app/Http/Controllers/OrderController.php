@@ -18,6 +18,8 @@ use App\Models\PaymentMethod;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\Subscribe;
 use App\Helpers\MailHelper;
+use Spatie\Permission\Models\Role;
+use DB;
 
 
 use Illuminate\Http\Request;
@@ -210,9 +212,14 @@ class OrderController extends Controller
         $email =  $contact->email;
         $reference  =  $currentOrder->reference;
 
-        $isAdmin = true;
         $template = 'emails.admin-order-received';
+        $admin_users =  DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
+        $admin_users = $admin_users->toArray();
 
+        $users_with_role_admin = User::select("email")
+                    ->whereIn('id',$admin_users)
+                    ->get();
+       
         $data = [
             'name' =>  $name,
             'email' => $email,
@@ -224,12 +231,14 @@ class OrderController extends Controller
             'from' => 'wqszeeshan@gmail.com'
         ];
 
-        if ($isAdmin == true) {
-            $subject = '';
-            $adminTemplate = 'emails.admin-order-received';
-            $data['email'] = 'wqszeeshan@gmail.com';
+        if (!empty($users_with_role_admin)) {
+            foreach($users_with_role_admin as $role_admin) {
+                $subject = '';
+                $adminTemplate = 'emails.admin-order-received';
+                $data['email'] = $role_admin->email;
 
-            MailHelper::sendMailNotification('emails.admin-order-received', $data);
+                MailHelper::sendMailNotification('emails.admin-order-received', $data);
+            }
         }
 
         $data['subject'] = 'Your order has been received';

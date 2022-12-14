@@ -88,12 +88,15 @@ class SalesOrders implements ShouldQueue
                 break;
 
         }
-        //var_dump($res);exit;
         $response = json_decode($res);
-        // dd($response);
         $order_id = $response[0]->id;
         $reference = $response[0]->code;
         echo $order_id.'-----'.$reference;
+        $admin_users =  DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
+        $admin_users = $admin_users->toArray();
+        $users_with_role_admin = User::select("email")
+                    ->whereIn('id',$admin_users)
+                    ->get();
         if (!empty($order_id) && !empty($reference)) {
             $data = [
                 'order_id' => $order_id,
@@ -103,19 +106,20 @@ class SalesOrders implements ShouldQueue
                 'reference' => $reference,
                 'subject' => 'Order fullfilled',
                 'from' => 'wqszeeshan@gmail.com', 
-                'content' => 'Order fullfilled has been fullfilled. from job.'
+                'content' => 'Order fullfilled has been fullfilled.'
             ];
-            
-            $data['email'] = 'wqszeeshan@gmail.com';
-            MailHelper::sendMailNotification('emails.admin-order-fullfillment', $data);
+             foreach($users_with_role_admin as $role_admin) {
+                    $data['email'] = $role_admin->email;
+                    $adminTemplate = 'emails.approval-notifications';
+                    MailHelper::sendMailNotification('emails.admin-order-fullfillment', $data);
+                }
         }
-        $contact = Contact::where('user_id', $user_id)->first();
-        $order = ApiOrder::where('reference', $reference)->update(
-            [
-                'memberId' => $contact->contact_id,
-                'order_id' => $order_id
-            ]
-        );
+
+        $api_order = ApiOrder::where('reference', $reference)->first();
+        $api_order->order_id = $order_id;
+        $api_order->isApproved = true;
+        $api_order->save();
+
         exit;
         // $reference = 'QCOM-70';
         // $apiOrder = ApiOrder::where('reference', $reference)->first();
