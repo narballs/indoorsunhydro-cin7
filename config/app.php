@@ -174,13 +174,8 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-<<<<<<< HEAD
-        Jenssegers\Agent\AgentServiceProvider::class,
-
-=======
+        //Jenssegers\Agent\AgentServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
-        
->>>>>>> 258f8eea8ac0bdf787978060fae0c45482b6999c
 
     ],
 
