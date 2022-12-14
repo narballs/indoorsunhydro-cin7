@@ -31,7 +31,6 @@ class AdminBuyListController extends Controller
     public function create(Request $request) {
         if ($request->id) {
             $list = BuyList::where('id', $request->id)->with('list_products.product.options')->first();
-           
             $products = Product::paginate(10);
             return view('admin/buy-list-new', compact('products', 'list'));
         }
