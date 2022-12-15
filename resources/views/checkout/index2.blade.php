@@ -202,84 +202,179 @@
     </form>
 </div>
 
-<div class="container mobile-view">
-    <div class="row">
-        <div class="col-sm-12 d-flex justify-content-center">
-            <div class="form-signup-secondary">
-                <div class="user-info">
-                    <div class="row mt-3">
-                        <div class="col-md-6">
-                            <label class="label mt-5 fw-bold">First Name</label><span
-                                class="text-danger fw-bold pl-1">*</span>
-                            <input type="text" placeholder="Enter your first name" id="company_website"
-                                name="first_name" class="form-control  fontAwesome">
-                            <div class="text-danger" id="first_name_errors"></div>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="label mt-2">last Name</label><span class="text-danger fw-bold pl-1">*</span>
-                            <input type="text" placeholder="Enter your last" id="company_website" name="last_name"
-                                class="form-control fontAwesome ">
-                            <div class="text-danger" id="last_name_errors"></div>
-                        </div>
-                        <div class="col-md-12 mt-2">
-                            <label class="label">company name (optional)</label><span
-                                class="text-danger fw-bold pl-1">*</span>
-                            <input type="text" placeholder="Enter your company name" id="company_name" name="password"
-                                class="form-control mt-2 company-info fontAwesome ">
-                            <div class="text-danger" id="password_errors"></div>
-                        </div>
-                        <div class="col-md-12">
-                            <label class="label mt-2">street address</label><span
-                                class="text-danger fw-bold pl-1">*</span>
-                            <input type="text" placeholder="House number and street name" id="company_name"
-                                name="password" class="form-control mt-2 company-info fontAwesome ">
-                            <div class="text-danger" id="password_errors"></div>
-                        </div>
-                        <div class="col-md-12">
-                            <input type="text" placeholder="Aprtmant, suit, unit, etc.(optional)" id="company_name"
-                                name="password" class="form-control mt-2 company-info fontAwesome ">
-                            <div class="text-danger" id="password_errors"></div>
-                        </div>
+<!--Mobile View -->
+<!-- MultiStep Form  -->
+<div class="container-fluid mobile-view">
+    <div class="row justify-content-center mt-0">
+        <div class="col-11 col-sm-9 col-md-7 col-lg-6 text-center p-0">
+            <div class="card border-0 px-0">
+                <div class="row">
+                    <div class="col-md-12 mx-0">
+                        <form id="msform">
+                            <!-- progressbar -->
+                            {{-- <ul id="progressbar">
+                                <li class="active" id="account"><strong>Your Card</strong></li>
+                                <li id="personal"><strong>Personal</strong></li>
+                                <li id="payment"><strong>Payment</strong></li>
+                                <li id="confirm"><strong>Finish</strong></li>
+                            </ul> --}}
+                            <!-- fieldsets -->
+                            <fieldset>
+                                <div class="form-card">
+                                    <div class="card border-0">
+                                        <div class="card-body p-0 m-0">
+                                            <div class="form-signup-secondary">
+                                                <div class="user-info">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <label class="label mt-5 fw-bold">First Name</label><span
+                                                                class="text-danger fw-bold pl-1">*</span>
+                                                            <input type="text" placeholder="Enter your first name"
+                                                                id="company_website" name="first_name"
+                                                                class="form-control  fontAwesome">
+                                                            <div class="text-danger" id="first_name_errors"></div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="label mt-2">last Name</label><span
+                                                                class="text-danger fw-bold pl-1">*</span>
+                                                            <input type="text" placeholder="Enter your last"
+                                                                id="company_website" name="last_name"
+                                                                class="form-control fontAwesome ">
+                                                            <div class="text-danger" id="last_name_errors"></div>
+                                                        </div>
+                                                        <div class="col-md-12 mt-2">
+                                                            <label class="label">company name (optional)</label><span
+                                                                class="text-danger fw-bold pl-1">*</span>
+                                                            <input type="text" placeholder="Enter your company name"
+                                                                id="company_name" name="password"
+                                                                class="form-control mt-2 company-info fontAwesome ">
+                                                            <div class="text-danger" id="password_errors"></div>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <label class="label mt-2">street address</label><span
+                                                                class="text-danger fw-bold pl-1">*</span>
+                                                            <input type="text"
+                                                                placeholder="House number and street name"
+                                                                id="company_name" name="password"
+                                                                class="form-control mt-2 company-info fontAwesome ">
+                                                            <div class="text-danger" id="password_errors"></div>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <input type="text"
+                                                                placeholder="Aprtmant, suit, unit, etc.(optional)"
+                                                                id="company_name" name="password"
+                                                                class="form-control mt-2 company-info fontAwesome ">
+                                                            <div class="text-danger" id="password_errors"></div>
+                                                        </div>
 
-                        <div class="col-md-12">
-                            <label class="label mt-2">town / city</label><span class="text-danger fw-bold pl-1">*</span>
-                            <input type="text" placeholder="Enter your town" id="company_name" name="password"
-                                class="form-control mt-2 company-info fontAwesome ">
-                            <div class="text-danger" id="password_errors"></div>
-                        </div>
-                        <div class="col-md-12">
-                            <label class="label mt-2">statte</label><span class="text-danger fw-bold pl-1">*</span>
-                            <input type="text" placeholder="Enter your state" id="company_name" name="password"
-                                class="form-control mt-2 company-info fontAwesome ">
-                            <div class="text-danger" id="password_errors"></div>
-                        </div>
-                        <div class="col-md-12">
-                            <label class="label mt-2">zip</label><span class="text-danger fw-bold pl-1">*</span>
-                            <input type="text" placeholder="Enter your zip" id="company_name" name="password"
-                                class="form-control mt-2 company-info fontAwesome ">
-                            <div class="text-danger" id="password_errors"></div>
-                        </div>
-                        <div class="col-md-12">
-                            <label class="label mt-2">phone</label><span class="text-danger fw-bold pl-1">*</span>
-                            <input type="text" placeholder="Enter your phone" id="company_name" name="password"
-                                class="form-control mt-2 company-info fontAwesome ">
-                            <div class="text-danger" id="password_errors"></div>
-                        </div>
-                        <div class="col-md-12">
-                            <label class="label mt-2">email address</label><span
-                                class="text-danger fw-bold pl-1">*</span>
-                            <input type="text" placeholder="Enter your email adress" id="company_name" name="password"
-                                class="form-control mt-2 company-info fontAwesome ">
-                            <div class="text-danger" id="password_errors"></div>
-                        </div>
-                        <div class="text-danger" id="confirm_password_errors"></div>
-                        <div class="col-md-12 d-flex justify-content-center align-items-center mt-5 pt-5">
-                            <span>
-                                <img class="img-fluid" src="/theme/img/Vector.png">
-                                <span class="text-danger fw-bold" style="font-size: 12px font-family:'Poppins'"> Apply
-                                    Coupon</span>
-                            </span>
-                        </div>
+                                                        <div class="col-md-12">
+                                                            <label class="label mt-2">town / city</label><span
+                                                                class="text-danger fw-bold pl-1">*</span>
+                                                            <input type="text" placeholder="Enter your town"
+                                                                id="company_name" name="password"
+                                                                class="form-control mt-2 company-info fontAwesome ">
+                                                            <div class="text-danger" id="password_errors"></div>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <label class="label mt-2">statte</label><span
+                                                                class="text-danger fw-bold pl-1">*</span>
+                                                            <input type="text" placeholder="Enter your state"
+                                                                id="company_name" name="password"
+                                                                class="form-control mt-2 company-info fontAwesome ">
+                                                            <div class="text-danger" id="password_errors"></div>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <label class="label mt-2">zip</label><span
+                                                                class="text-danger fw-bold pl-1">*</span>
+                                                            <input type="text" placeholder="Enter your zip"
+                                                                id="company_name" name="password"
+                                                                class="form-control mt-2 company-info fontAwesome ">
+                                                            <div class="text-danger" id="password_errors"></div>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <label class="label mt-2">phone</label><span
+                                                                class="text-danger fw-bold pl-1">*</span>
+                                                            <input type="text" placeholder="Enter your phone"
+                                                                id="company_name" name="password"
+                                                                class="form-control mt-2 company-info fontAwesome ">
+                                                            <div class="text-danger" id="password_errors"></div>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <label class="label mt-2">email address</label><span
+                                                                class="text-danger fw-bold pl-1">*</span>
+                                                            <input type="text" placeholder="Enter your email adress"
+                                                                id="company_name" name="password"
+                                                                class="form-control mt-2 company-info fontAwesome ">
+                                                            <div class="text-danger" id="password_errors"></div>
+                                                        </div>
+                                                        <div class="text-danger" id="confirm_password_errors"></div>
+                                                        <div class="d-flex justify-content-center align-items-center">
+                                                            <div>
+                                                                <img class="img-fluid coupon-code-modal-btn"
+                                                                    src="/theme/img/modal-icon1.png" alt="">
+                                                            </div>
+                                                            <button type="button"
+                                                                class="btn btn-primary fw-blod coupon-code-modal-btn ps-0"
+                                                                data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                                                applay coupon
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="button" name="next" class="next action-button" value="Next Step" />
+                            </fieldset>
+                            <fieldset>
+                                <div class="form-card">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>product</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>
+
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <input type="button" name="previous" class="previous action-button-previous"
+                                    value="Previous" />
+                                <input type="button" name="next" class="next action-button" value="Next Step" />
+                            </fieldset>
+                            <fieldset>
+                                <div class="form-card">
+
+                                </div>
+                                <input type="button" name="previous" class="previous action-button-previous"
+                                    value="Previous" />
+                                <input type="button" name="make_payment" class="next action-button" value="Confirm" />
+                            </fieldset>
+                            <fieldset>
+                                <div class="form-card">
+                                    <h2 class="fs-title text-center">Success !</h2>
+                                    <br><br>
+                                    <div class="row justify-content-center">
+                                        <div class="col-3">
+                                            <img src="https://img.icons8.com/color/96/000000/ok--v2.png"
+                                                class="fit-image">
+                                        </div>
+                                    </div>
+                                    <br><br>
+                                    <div class="row justify-content-center">
+                                        <div class="col-7 text-center">
+                                            <h5>You Have Successfully Signed Up</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -287,6 +382,36 @@
     </div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content py-4" style="width:70% ;margin: auto;">
+            <div class="modal-header border-0 pb-0 pt-0">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body border-0 p-0">
+                <div class="d-flex justify-content-center align-items-center">
+                    <img class="img-fluid" src="/theme/img/modal-icon.png" alt="">
+                </div>
+                <div class="d-flex justify-content-center align-items-center mt-4">
+                    <p class="coupon-code-input-label m-0">coupon code</p>
+                </div>
+                <div class="form-signupp d-flex justify-content-center align-items-center mt-2">
+                    <div class="w-75 d-flex justify-content-center align-items-center">
+                        <input type="text" name="code" id="code" class="fontAwesome form-control"
+                            placeholder="Your code" required
+                            style="height: 46px; border-radius: inherit; text-align: center;">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-0 p-0 mt-2 d-flex justify-content-center align-items-center">
+                <button type="button" class="btn btn-primary w-75 applay-coupon-code-modal-btn">applay
+                    coupon</button>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="row mt-5 pt-5 desktop-view">
     @include('partials.product-footer')
 </div>
@@ -365,6 +490,7 @@
             <div class="invalid-feedback">
                 Valid first name is required.
             </div>
+
             <script>
                 function submit(){   
         if ( ! $("input[name=method_option]").is(':checked') ) {
@@ -524,5 +650,73 @@
         });
     }
             </script>
-
             @include('partials.footer')
+            <script>
+                $(document).ready(function(){
+                        var current_fs, next_fs, previous_fs; //fieldsets
+                        var opacity;
+                        
+                        $(".next").click(function(){
+                            
+                            current_fs = $(this).parent();
+                            next_fs = $(this).parent().next();
+                            
+                            //Add Class Active
+                            $("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
+                            
+                            //show the next fieldset
+                            next_fs.show(); 
+                            //hide the current fieldset with style
+                            current_fs.animate({opacity: 0}, {
+                                step: function(now) {
+                                    // for making fielset appear animation
+                                    opacity = 1 - now;
+                        
+                                    current_fs.css({
+                                        'display': 'none',
+                                        'position': 'relative'
+                                    });
+                                    next_fs.css({'opacity': opacity});
+                                }, 
+                                duration: 600
+                            });
+                        });
+                        
+                        $(".previous").click(function(){
+                            
+                            current_fs = $(this).parent();
+                            previous_fs = $(this).parent().prev();
+                            
+                            //Remove class active
+                            $("#progressbar li").eq($("fieldset").index(current_fs)).removeClass("active");
+                            
+                            //show the previous fieldset
+                            previous_fs.show();
+                        
+                            //hide the current fieldset with style
+                            current_fs.animate({opacity: 0}, {
+                                step: function(now) {
+                                    // for making fielset appear animation
+                                    opacity = 1 - now;
+                        
+                                    current_fs.css({
+                                        'display': 'none',
+                                        'position': 'relative'
+                                    });
+                                    previous_fs.css({'opacity': opacity});
+                                }, 
+                                duration: 600
+                            });
+                        });
+                        
+                        $('.radio-group .radio').click(function(){
+                            $(this).parent().find('.radio').removeClass('selected');
+                            $(this).addClass('selected');
+                        });
+                        
+                        $(".submit").click(function(){
+                            return false;
+                        })
+                            
+                        });
+            </script>
