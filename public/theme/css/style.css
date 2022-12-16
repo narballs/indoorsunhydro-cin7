@@ -2597,9 +2597,44 @@ input[type=number] {
         box-shadow: 0 0 0 0.1rem #e84d3d !important;
     }
 
-
-
     /* cart-page view end */
+
+    /* checkout-page mobile view start */
+    .product-title {
+        font-size: 15px !important;
+        font-weight: 600 !important;
+        font-family: 'Poppins' !important;
+        padding-left: 5px !important;
+    }
+
+    .product-name {
+        font-size: 14px !important;
+        font-weight: 500 !important;
+        font-family: 'Poppins' !important;
+    }
+
+    .product-quantity {
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        font-family: 'Poppins' !important;
+    }
+
+    .cart-total-checkout-page {
+        font-size: 15px !important;
+        font-weight: 700;
+        font-family: 'Poppins';
+        text-transform: uppercase;
+    }
+
+    .sub-total-checkout-page {
+        margin-left: 89px;
+        font-size: 18px;
+        font-family: 'Poppins';
+        font-weight: 600;
+        color: #e84d3d !important;
+    }
+
+    /* checkout-page mobile view end */
     .mobile-view {
         display: block;
     }
@@ -2915,7 +2950,6 @@ input[type=number] {
     display: none;
 }
 
-
 /* step form css start*/
 
 * {
@@ -2971,13 +3005,14 @@ html {
     border-bottom: 1px solid #ccc;
     border-radius: 0px;
     margin-bottom: 25px;
-    margin-top: 2px;
+    /* margin-top: 2px; */
     width: 100%;
     box-sizing: border-box;
-    font-family: montserrat;
+    font-family: 'Poppins';
     color: #2C3E50;
-    font-size: 16px;
+    font-size: 14;
     letter-spacing: 1px;
+    background: lightgray;
 }
 
 #msform input:focus,
@@ -2994,9 +3029,9 @@ html {
 /*Blue Buttons*/
 #msform .action-button {
     width: 100px;
-    background: #7CC633 !important;
+    background: #fff !important;
     font-weight: bold;
-    color: white;
+    color: #7CC633;
     border: 0 none;
     border-radius: 0px;
     cursor: pointer;
@@ -3012,9 +3047,9 @@ html {
 /*Previous Buttons*/
 #msform .action-button-previous {
     width: 100px;
-    background: #616161;
+    background: #ffff;
     font-weight: bold;
-    color: white;
+    color: gray;
     border: 0 none;
     border-radius: 0px;
     cursor: pointer;

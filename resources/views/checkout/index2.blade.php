@@ -161,7 +161,9 @@
         <div class="col-md-7 order-md-1">
             <div class="cart-headings border-bottom">Items in Cart</div>
             <div class="row  mt-4">
-                <div class="col-md-10"><img src="theme/img/box.png"><span class="ms-1 cart-subtitles">Products</span>
+                <div class="col-md-10">
+                    <img src="theme/img/box.png">
+                    <span class="ms-1 cart-subtitles">Products</span>
                 </div>
                 <div class="col-md-2"><span class="ms-3 cart-subtitles">Quantity</span></div>
             </div>
@@ -230,72 +232,72 @@
                                                             <label class="label mt-5 fw-bold">First Name</label><span
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text" placeholder="Enter your first name"
-                                                                id="company_website" name="first_name"
+                                                                id="company_website" name="firstName"
+                                                                value="{{$user_address->firstName}}"
                                                                 class="form-control  fontAwesome">
-                                                            <div class="text-danger" id="first_name_errors"></div>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label class="label mt-2">last Name</label><span
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text" placeholder="Enter your last"
-                                                                id="company_website" name="last_name"
+                                                                id="company_website" name="lastName"
+                                                                value="{{$user_address->lastName}}"
                                                                 class="form-control fontAwesome ">
-                                                            <div class="text-danger" id="last_name_errors"></div>
                                                         </div>
                                                         <div class="col-md-12 mt-2">
                                                             <label class="label">company name (optional)</label><span
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text" placeholder="Enter your company name"
-                                                                id="company_name" name="password"
+                                                                value="{{$user_address->company}}" id="company"
+                                                                name="company"
                                                                 class="form-control mt-2 company-info fontAwesome ">
-                                                            <div class="text-danger" id="password_errors"></div>
                                                         </div>
                                                         <div class="col-md-12">
                                                             <label class="label mt-2">street address</label><span
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text"
                                                                 placeholder="House number and street name"
-                                                                id="company_name" name="password"
+                                                                id="postalAddress1" name="postalAddress1"
+                                                                value="{{$user_address->postalAddress1}}"
                                                                 class="form-control mt-2 company-info fontAwesome ">
-                                                            <div class="text-danger" id="password_errors"></div>
                                                         </div>
                                                         <div class="col-md-12">
                                                             <input type="text"
                                                                 placeholder="Aprtmant, suit, unit, etc.(optional)"
-                                                                id="company_name" name="password"
+                                                                id="postalAddress2" name="postalAddress2"
+                                                                value="{{$user_address->postalAddress2}}"
                                                                 class="form-control mt-2 company-info fontAwesome ">
-                                                            <div class="text-danger" id="password_errors"></div>
                                                         </div>
 
                                                         <div class="col-md-12">
                                                             <label class="label mt-2">town / city</label><span
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text" placeholder="Enter your town"
-                                                                id="company_name" name="password"
+                                                                id="postalCity" name="postalCity"
+                                                                value="{{$user_address->postalCity}}"
                                                                 class="form-control mt-2 company-info fontAwesome ">
-                                                            <div class="text-danger" id="password_errors"></div>
                                                         </div>
                                                         <div class="col-md-12">
-                                                            <label class="label mt-2">statte</label><span
+                                                            <label class="label mt-2">state</label><span
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text" placeholder="Enter your state"
-                                                                id="company_name" name="password"
+                                                                id="postalState" name="postalState"
+                                                                value="{{$user_address->postalState}}"
                                                                 class="form-control mt-2 company-info fontAwesome ">
-                                                            <div class="text-danger" id="password_errors"></div>
                                                         </div>
                                                         <div class="col-md-12">
                                                             <label class="label mt-2">zip</label><span
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text" placeholder="Enter your zip"
-                                                                id="company_name" name="password"
+                                                                id="postalPostCode" name="postalPostCode"
+                                                                value="{{$user_address->postalPostCode}}"
                                                                 class="form-control mt-2 company-info fontAwesome ">
-                                                            <div class="text-danger" id="password_errors"></div>
                                                         </div>
                                                         <div class="col-md-12">
                                                             <label class="label mt-2">phone</label><span
                                                                 class="text-danger fw-bold pl-1">*</span>
-                                                            <input type="text" placeholder="Enter your phone"
-                                                                id="company_name" name="password"
+                                                            <input type="text" placeholder="Enter your phone" id="phone"
+                                                                name="phone" value="{{$user_address->phone}}"
                                                                 class="form-control mt-2 company-info fontAwesome ">
                                                             <div class="text-danger" id="password_errors"></div>
                                                         </div>
@@ -332,25 +334,119 @@
                                     <table>
                                         <thead>
                                             <tr>
-                                                <th>product</th>
+                                                <th class="ps-3">
+                                                    <span>
+                                                        <img class="img-fluid" src="/theme/img/product-iccon.png">
+                                                    </span>
+                                                    <span class="product-title">Product</span>
+                                                </th>
+                                                <th class="text-white">
+                                                    Quantity
+                                                </th>
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            <?php
+                                                $cart_total = 0;
+                                                $cart_price = 0;
+                                                ?>
+                                            @if(Session::get('cart'))
+                                            @foreach(Session::get('cart') as $cart)
+                                            <?php 
+                                                $total_quatity =  $cart['quantity'];
+                                                $total_price = $cart['price'] * $total_quatity;
+                                                $cart_total  = $cart_total + $total_price ;
+                                            ?>
                                             <tr>
-                                                <td>
-
+                                                <td class="ps-4">
+                                                    <div class="mt-3">
+                                                        <a class="product-name" href="
+                                                        {{ url('product-detail/'. $cart['product_id'] . '/' . $cart['option_id'] . '/' . $cart['slug']) }}
+                                                        ">
+                                                            {{$cart['name']}}
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                                <td class="d-flex justify-content-end align-items-end">
+                                                    <div class="text-muted rounded-circle mt-3  product-quantity"
+                                                        id="circle">
+                                                        {{$cart['quantity']}}</div>
                                                 </td>
                                             </tr>
+                                            @endforeach
+                                            @endif
                                         </tbody>
                                     </table>
+                                    <div>
+                                        <table class="table mt-5">
+                                            <thead>
+                                                <tr>
+                                                    <th style="border-top:none !important" scope="col">Cart Total</th>
+                                                    <th style="border-top:none !important" scope="col"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <div class="d-flex">
+                                                            <span class="">
+                                                                <img src="theme/img/pricing_tag.png" width=" 22px">
+                                                            </span>
+                                                            <span>
+                                                                <p class="cart-total-checkout-page ps-3">Total</p>
+                                                            </span>
+                                                            <div
+                                                                class="d-flex justify-content-end aling-items-end ps-5">
+                                                                <p class="sub-total-checkout-page">
+                                                                    ${{number_format($cart_total,2)}} </p>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <div>
+                                            <img class="img-fluid coupon-code-modal-btn"
+                                                src="/theme/img/modal-icon1.png" alt="">
+                                        </div>
+                                        <button type="button" class="btn btn-primary fw-blod coupon-code-modal-btn ps-0"
+                                            data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                            applay coupon
+                                        </button>
+                                    </div>
                                 </div>
                                 <input type="button" name="previous" class="previous action-button-previous"
                                     value="Previous" />
                                 <input type="button" name="next" class="next action-button" value="Next Step" />
                             </fieldset>
                             <fieldset>
-                                <div class="form-card">
-
+                                <div class="form-card form-signup-secondary">
+                                    <div class="d-flex justify-content-center aling-items-center">
+                                        <img class="img-fluid" src="/theme/img/payment-img.png" alt="">
+                                    </div>
+                                    <div class="col-md-12 user-info">
+                                        <label class="label mt-5">Card Number</label><span
+                                            class="text-danger fw-bold pl-1">*</span>
+                                        <input type="text" placeholder="4242 4242 4242 4242" id="company_name"
+                                            name="cart_number" class="form-control company-info fontAwesome ">
+                                    </div>
+                                    <div class="d-flex">
+                                        <div class="user-info w-25">
+                                            <label class="label">Expiry date</label><span
+                                                class="text-danger fw-bold pl-1">*</span>
+                                            <input type="text" placeholder="4242 4242 4242 4242" id="company_name"
+                                                name="cart_number" class="form-control company-info fontAwesome ">
+                                        </div>
+                                        <div class="user-info w-25">
+                                            <label class="label">Cvc</label><span
+                                                class="text-danger fw-bold pl-1">*</span>
+                                            <input type="text" placeholder="4242 4242 4242 4242" id="company_name"
+                                                name="cart_number" class="form-control company-info fontAwesome ">
+                                        </div>
+                                    </div>
                                 </div>
                                 <input type="button" name="previous" class="previous action-button-previous"
                                     value="Previous" />
@@ -369,7 +465,7 @@
                                     <br><br>
                                     <div class="row justify-content-center">
                                         <div class="col-7 text-center">
-                                            <h5>You Have Successfully Signed Up</h5>
+                                            <h5>You Have Successfully !</h5>
                                         </div>
                                     </div>
                                 </div>
