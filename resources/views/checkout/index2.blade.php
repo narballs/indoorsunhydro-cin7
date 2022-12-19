@@ -198,7 +198,7 @@
     </div>
 
     <div class="col-md-6" style="margin-top: 118px !important;margin:auto; !important; max-width:600px !important;">
-        <button type="submit" class="button-cards w-100" id="proceed_to_checkout" onclick="validate()">Proceed to
+        <button type="button" class="button-cards w-100" id="proceed_to_checkout" onclick="validate()">Proceed to
             checkout</button>
     </div>
     </form>
@@ -590,7 +590,6 @@
             <script>
 
                 function validate(){   
-                    alert('lll');
         if ( ! $("input[name=method_option]").is(':checked') ) {
             const inputOptions = new Promise((resolve) => {
                 setTimeout(() => {
@@ -612,6 +611,7 @@
                 allowOutsideClick: false,
                 allowEscapeKey: false
             }).then((result) => {
+                console.log(result)
                 if (result.value !== null) {
                     if (result.value == 'Local Delivery') {
                         $("#local_delivery_1").attr('checked', 'checked');
@@ -624,9 +624,9 @@
             });
         }
 
-        else {
-        $("#order_form").submit(); 
-        }
+        // else {
+        // $("#order_form").submit(); 
+        // }
     }
     function updateAddress() {
         $('#address-form-update').toggle();
