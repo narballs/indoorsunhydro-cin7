@@ -7,6 +7,13 @@
 @stop
 
 @section('content')
+@if (\Session::has('success'))
+    <div class="alert alert-success">
+        <ul>
+            <li>{!! \Session::get('success') !!}</li>
+        </ul>
+    </div>
+@endif
     <div class="table-wrapper">
         <div class="table-title">
             <span><h1>Customer</h1></span>
@@ -73,6 +80,7 @@
                 </div>
             </div>
         </div>
+}
 @stop
 
 @section('css')

@@ -210,7 +210,6 @@ class ContactController extends Controller
         $first_name = $request->first_name;
         $last_name = $request->last_name;
         $contact = Contact::where('contact_id', $contact_id)->first();
-
         if ($priceColumn) {
             $contact->update(
                 [
@@ -236,5 +235,37 @@ class ContactController extends Controller
                 'msg' => 'name updated'
             ]);
         }
+    
+
+    }
+
+    public function customer_delete($id){
+        $customer =  Contact::find($id);
+        $customer->delete();
+        return redirect()->back()->with('success', 'Customer Deleted Successfully');
+    }
+
+    public function customer_edit($id){
+        $contact = Contact::where('id', $id)->first();
+        return view('admin/customer-edit',compact('contact'));
+    }
+
+    public function customer_update(Request $request) {
+        $id = $request->id;
+        Contact::where('id', $id)->update(
+            [
+                'firstName'=> $request->first_name,
+                'lastName' => $request->last_name, 
+                'company' => $request->company, 
+                'website' => $request->website, 
+                'postalAddress1' => $request->address_1,
+                'postalAddress2' => $request->address_2,
+                'phone' => $request->phone,
+                'postalCity' => $request->city, 
+                'postalState' => $request->state,
+                'postalPostCode' => $request->zip
+            ]
+        );
+        return redirect()->back();
     }
 }
