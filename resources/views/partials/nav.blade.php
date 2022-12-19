@@ -70,7 +70,6 @@
 								@endforeach
 							</ul>
 						</li>
-
 						<li class="nav-item me-3">
 							<a class="nav-link text-uppercase nav-item-links " href="#">
 								About
@@ -101,7 +100,7 @@
 	<div class="row">
 		<nav class="navbar navbar-expand-lg navbar-light bg-light">
 			<div class="container-fluid">
-				<a class="navbar-brand" href="#"><img class="top-img" src="/theme/img/indoor_sun.png" ;></a>
+				<a class="navbar-brand" href="/"><img class="top-img" src="/theme/img/indoor_sun.png" ;></a>
 				<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
 					data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
 					aria-expanded="false" aria-label="Toggle navigation">
@@ -109,6 +108,46 @@
 				</button>
 				<div class="collapse navbar-collapse" id="navbarSupportedContent">
 					<ul class="navbar-nav d-flex">
+						<li>
+							<div class="bg-dark mt-2" style="font-family: 'Poppins'; font-size:14px;">
+								<img class="basket-icon" src="/theme/img/Bascket.png">
+								<span
+									class="cart-basket d-flex align-items-center justify-content-center float-sm-end cart-counter rounded-circle"
+									id="top_cart_quantity">
+									<?php
+											  $total_quantity	 = 0;
+											  $grand_total = 0;
+				
+										  ?>
+									@if(Session::get('cart'))
+									@foreach(Session::get('cart') as $cart)
+									<?php
+											$total_q[] = $cart['quantity'];
+											$total_quantity = array_sum($total_q);
+											$total_price[] = $cart['price'] * $cart['quantity'];
+											$grand_total = array_sum($total_price);
+											?>
+									@endforeach
+									@endif
+									{{$total_quantity}}
+								</span>
+								<a class="p-0 cart-price btn btn-secondary" data-bs-container="body"
+									data-bs-toggle="popover" data-bs-placement="right"
+									data-bs-content="add <strong class='text-success'>$2500.00</strong> more to your cart and get <span class='text-danger'>5% off </span>"><span
+										id="top_cart_total">
+										<a href="{{'/cart/'}}" class="text-white">
+											<span id="topbar_cart_total" class="ms-2 cart-counter-details">
+												{{number_format($grand_total, 2)}}
+											</span>&nbsp;
+											(<span id="cart_items_quantity"
+												class="cart-counter-details">{{$total_quantity}}</span>&nbsp;<span
+												class="cart-counter-details">items
+											</span>)
+										</a>
+									</span>
+								</a>
+							</div>
+						</li>
 						<li class="nav-item dropdown">
 							<a class="nav-link dropdown-toggle product-mega-menu" href="#"
 								id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown"
@@ -184,6 +223,28 @@
 								account
 							</a>
 						</li>
+						@if(Auth::user())
+						<li class="nav-item">
+							<a class="nav-link text-uppercase nav-item-links p-0" href="{{'/user/'}}">
+								{{-- <img src="/theme/img/User.png" width="35px" height="35px"> --}}
+								<a class="nav-link text-uppercase nav-item-links" href="{{ route('logout') }}"
+									onclick="event.preventDefault(); document.getElementById('frm-logout').submit();">
+									<span class="menu-title">Logout</span>
+								</a>
+								<form style="display:none;" id="frm-logout" action="{{ route('logout') }}"
+									method="POST">
+									{{ csrf_field() }}
+									<input class="btn btn-link text-white" type="submit" value="logout">
+								</form>
+							</a>
+						</li>
+						@else
+						<li class="nav-item">
+							<div class="register-counter-details">
+								Login Or Register
+							</div>
+						</li>
+						@endif
 					</ul>
 					<form class="d-flex mt-3" method="get" action="{{route('product_search')}}">
 						<input type="hidden" id="is_search" name="is_search" value="1">
