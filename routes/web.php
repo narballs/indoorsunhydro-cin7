@@ -100,6 +100,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('admin/customer/create', [ContactController::class, 'customer_create'])->name('admin.customer.create');
     Route::post('admin/customer/store', [ContactController::class, 'customer_store'])->name('admin.customer.store');
     Route::get('admin/customer-detail/{id}', [ContactController::class, 'show_customer'])->name('admin.customer.detail');
+    Route::get('admin/customer-delete/{id}', [ContactController::class, 'customer_delete'])->name('admin.customer.delete');
+    Route::get('admin/customer-edit/{id}', [ContactController::class, 'customer_edit'])->name('admin.customer.edit');
+    Route::post('admin/customer-update/', [ContactController::class, 'customer_update'])->name('admin.customer.update');
     Route::get('admin/api-order-details/{id}', [OrderManagementController::class, 'show_api_order'])->name('admin.api.order.details');
     Route::post('admin/order-full-fill', [OrderManagementController::class, 'order_full_fill'])->name('admin.order.full.fill');
     Route::post('admin/customer-activate', [ContactController::class, 'activate_customer'])->name('admin.customer.activate');
