@@ -29,6 +29,7 @@
 
 <div class="container-fluid mobile-view ">
     <div class="w-100">
+        {{-- @include('partials.top-bar') --}}
         @include('partials.nav')
     </div>
 </div>

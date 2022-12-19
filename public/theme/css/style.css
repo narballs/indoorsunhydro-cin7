@@ -2489,6 +2489,32 @@ input[type=number] {
 }
 
 @media only screen and (max-width: 425px) and (min-width: 375px) {
+    .basket-icon {
+        width: 35px;
+        height: 27px;
+        left: 0px;
+        /* margin-top: 12px;*/
+    }
+
+    .procedd-to-checkout {
+        width: 320px !important;
+        height: 40px !important;
+        background-color: #7cc633 !important;
+    }
+
+    .payment-option {
+        font-size: 16px !important;
+        font-family: 'poppins' !important;
+        font-weight: 600 !important;
+    }
+
+    .register-counter-details {
+        font-family: 'Poppins';
+        font-style: normal;
+        font-weight: 600;
+        font-size: 16px;
+    }
+
     .header-top {
         display: none;
     }
@@ -2570,9 +2596,21 @@ input[type=number] {
         font-size: 12px !important;
         font-weight: 600 !important;
         display: flex !important;
-        margin-top: 17px !important;
+        /* margin-top: 17px !important; */
         text-transform: uppercase !important;
         font-family: 'Poppins' !important;
+    }
+
+    .button-cards {
+        background-color: #7BC533 !important;
+        color: #FFFFFF !important;
+        border: none !important;
+        width: 389px !important;
+        font: Poppins !important;
+        font-weight: 600 !important;
+        font-size: 16px !important;
+        height: 44px !important;
+        line-height: 27px !important;
     }
 
     .applay-coupon-code-modal-btn {
@@ -2644,9 +2682,11 @@ input[type=number] {
     }
 
     .label {
-        text-transform: uppercase;
-        font-family: 'Montserrat';
-        margin-top: 1px;
+        line-height: 19px !important;
+        text-transform: uppercase !important;
+        color: #131313 !important;
+        font-weight: 600 !important;
+        font-family: "Montserrat" !important;
     }
 
     .login-title {
@@ -2797,7 +2837,7 @@ input[type=number] {
     }
 
     .form-login input {
-        background-color: lightgray !important;
+        background-color: #EBEBEB !important;
         border: none !important;
     }
 
@@ -3000,19 +3040,15 @@ html {
 
 #msform input,
 #msform textarea {
-    padding: 0px 8px 4px 8px;
-    border: none;
-    border-bottom: 1px solid #ccc;
-    border-radius: 0px;
-    margin-bottom: 25px;
-    /* margin-top: 2px; */
-    width: 100%;
-    box-sizing: border-box;
-    font-family: 'Poppins';
-    color: #2C3E50;
-    font-size: 14;
-    letter-spacing: 1px;
-    background: lightgray;
+    margin-bottom: 12px;
+    /* height: 42px; */
+    background-color: #f6f6f6 !important;
+    border: 1px solid #dedede !important;
+    /* font-family: 'Montserrat'; */
+    font-size: 14px;
+    font-family: 'Poppins' !important;
+    font-size: 14px !important;
+    letter-spacing: 1px !important;
 }
 
 #msform input:focus,
@@ -3032,7 +3068,7 @@ html {
     background: #fff !important;
     font-weight: bold;
     color: #7CC633;
-    border: 0 none;
+    border: 0 none !important;
     border-radius: 0px;
     cursor: pointer;
     padding: 10px 5px;
@@ -3047,14 +3083,14 @@ html {
 /*Previous Buttons*/
 #msform .action-button-previous {
     width: 100px;
-    background: #ffff;
-    font-weight: bold;
-    color: gray;
-    border: 0 none;
-    border-radius: 0px;
-    cursor: pointer;
-    padding: 10px 5px;
-    margin: 10px 5px;
+    font-weight: bold !important;
+    color: gray !important;
+    border: 0 none !important;
+    border-radius: 0px !important;
+    cursor: pointer !important;
+    padding: 10px 5px !important;
+    margin: 10px 5px !important;
+    background: #fff !important;
 }
 
 #msform .action-button-previous:hover,
