@@ -1245,12 +1245,13 @@ label {
 
 
 .body.swal2-toast-shown .swal2-container.swal2-top {
-    width: 500px !important;
+    width: 100% !important;
     margin-top: 10px;
+
 }
 
 .swal2-container {
-    width: 482px !important;
+    width: 100% !important;
 }
 
 .swal2-radio {

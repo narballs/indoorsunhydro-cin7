@@ -143,7 +143,7 @@
             <div>
                 <div class="mt-4 payment-option">Delivery Options</div>
                 @foreach($payment_methods as $payment_method)
-                <form class="p-2" action="{{url('order')}}" method="POST" id="order_form" name="order_form">
+                <form class="p-2" id="order_form" name="order_form" method="POST" action="{{url('order')}}">
                     @csrf
                     @foreach($payment_method->options as $payment_option)
                     <div class="row">
@@ -198,7 +198,7 @@
     </div>
 
     <div class="col-md-6" style="margin-top: 118px !important;margin:auto; !important; max-width:600px !important;">
-        <button type="submit" class="button-cards w-100" id="proceed_to_checkout" onclick="submit()">Proceed to
+        <button type="submit" class="button-cards w-100" id="proceed_to_checkout" onclick="validate()">Proceed to
             checkout</button>
     </div>
     </form>
@@ -588,7 +588,9 @@
             </div>
 
             <script>
-                function submit(){   
+
+                function validate(){   
+                    alert('lll');
         if ( ! $("input[name=method_option]").is(':checked') ) {
             const inputOptions = new Promise((resolve) => {
                 setTimeout(() => {
