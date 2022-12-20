@@ -33,4 +33,9 @@
         @include('partials.nav')
     </div>
 </div>
+<div class="container-fluid ipad-view ">
+    <div class="w-100">
+        @include('partials.nav')
+    </div>
+</div>
 </div>

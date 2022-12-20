@@ -259,6 +259,7 @@
 		</div>
 	</div>
 </div>
+
 <!--Mobile View -->
 <!-- MultiStep Form  -->
 <div class="container-fluid mobile-view">
@@ -284,27 +285,27 @@
 										</div>
 										<div class="card-body p-0 m-0">
 											<div class="col-md-12 p-0">
-												<table>
+												<table class="table">
 													<thead>
 													</thead>
-													<tbody>
+													<tbody style="border-top: none !important">
 														@if ($cart_items)
 														@foreach ( $cart_items as $pk_product_id => $cart )
 														<tr>
-															<td>
+															<td class="pe-0">
 																@if(!empty($cart['image']))
 																<img src="{{$cart['image']}}"
-																	class="img-fluid rounded-3 mt-5" alt="Book"
-																	style="width:141px;">
+																	class="img-fluid rounded-3 mt-2" alt="Book"
+																	style="width:186px;">
 																@else
 																<img src="/theme/img/image_not_available.png"
-																	class="img-fluid rounded-3 mt-5" alt="Book"
-																	style="width:141px;">
+																	class="img-fluid rounded-3 mt-2" alt="Book"
+																	style="width:186px;">
 																@endif
 															</td>
-															<td>
-																<div class="mt-5">
-																	<a class=" pe-3 cart-page-items"
+															<td class="p-0">
+																<div class="mt-4">
+																	<a class=" ps-0 pe-3 cart-page-items"
 																		href="{{ url('product-detail/'.$cart['product_id'].'/'.$cart['option_id'].'/'.$cart['slug']) }}">{{$cart['name']}}
 																	</a>
 																	<div class="d-flex mt-2">
@@ -443,6 +444,221 @@
 							<fieldset>
 								<div class="form-card">
 
+								</div>
+								<input type="button" name="previous" class="previous action-button-previous"
+									value="Previous" />
+								<input type="button" name="make_payment" class="next action-button" value="Confirm" />
+							</fieldset>
+							<fieldset>
+								<div class="form-card">
+									<h2 class="fs-title text-center">Success !</h2>
+									<br><br>
+									<div class="row justify-content-center">
+										<div class="col-3">
+											<img src="https://img.icons8.com/color/96/000000/ok--v2.png"
+												class="fit-image">
+										</div>
+									</div>
+									<br><br>
+									<div class="row justify-content-center">
+										<div class="col-7 text-center">
+											<h5>You Have Successfully Signed Up</h5>
+										</div>
+									</div>
+								</div>
+							</fieldset>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!--ipad View -->
+<!-- MultiStep Form  -->
+<div class="container-fluid ipad-view">
+	<div class="row justify-content-center mt-0">
+		<div class="col-12 text-center">
+			<div class="card border-0 px-0">
+				<div class="row">
+					{{-- <div class="col-md-12 mx-0"> --}}
+						<div id="msform">
+							<!-- progressbar -->
+							{{-- <ul id="progressbar">
+								<li class="active" id="account"><strong>Your Card</strong></li>
+								<li id="personal"><strong>Personal</strong></li>
+								<li id="payment"><strong>Payment</strong></li>
+								<li id="confirm"><strong>Finish</strong></li>
+							</ul> --}}
+							<!-- fieldsets -->
+							<fieldset>
+								<div class="form-card">
+									<div class="card border-0">
+										<div class="card-header bg-light">
+											<p class="your-cart-title ps-1"> Your Cart</p>
+										</div>
+										<div class="card-body ">
+											<div class="col-md-12">
+												<table class="table">
+													<thead>
+													</thead>
+													<tbody style="border-top: none !important">
+														@if ($cart_items)
+														@foreach ( $cart_items as $pk_product_id => $cart )
+														<tr>
+															<td>
+																@if(!empty($cart['image']))
+																<img src="{{$cart['image']}}"
+																	class="img-fluid rounded-3" alt="Book"
+																	style="width:142px;">
+																@else
+																<img src="/theme/img/image_not_available.png"
+																	class="img-fluid rounded-3" alt="Book"
+																	style="width:142px;">
+																@endif
+															</td>
+															<td class="ps-0">
+																<div class="mt-5">
+																	<a class=" pe-3 cart-page-items"
+																		href="{{ url('product-detail/'.$cart['product_id'].'/'.$cart['option_id'].'/'.$cart['slug']) }}">{{$cart['name']}}
+																	</a>
+																	<div class="d-flex mt-2">
+																		<div class="quantity-bg">
+																			<p class="ps-1">
+																				{{$cart['quantity']}}</p>
+																		</div>
+																		<div class="cart-page-price ps-3">
+																			${{number_format($cart['price'],2)}}
+																		</div>
+																	</div>
+																</div>
+															</td>
+															<td>
+																<div class="d-flex justify-content-end aling-items-end">
+																	<a href="{{ url('remove/'.$pk_product_id) }}"
+																		id="remove">
+																		<img class="img-fluid pe-2"
+																			src="/theme/img/modal-icon2.png" alt="">
+																	</a>
+																</div>
+																<div class="d-flex mt-3">
+																	<input type="hidden" name="p_id" id="p_id"
+																		value="{{$cart['product_id']}}">
+																	<input type="hidden" name="p_id" id="option_id"
+																		value="{{$cart['option_id']}}">
+																	<span class="pe-1">
+																		<button class="border-0 p-0"
+																			onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
+																			<i class="fa-solid fa-minus"></i>
+																		</button>
+																	</span>
+																	<span class="ps-1">
+																		<button class="border-0 p-0"
+																			onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
+																			<i class="fa-solid fa-plus"></i>
+																		</button>
+																	</span>
+																</div>
+															</td>
+														</tr>
+														@endforeach
+														@endif
+													</tbody>
+												</table>
+												<div class="total-cart-button">
+													<button
+														class="total-cart-button border-0 d-flex justify-content-center align-content-center w-100">
+														<span class="m-auto">
+															your cart: ${{number_format($cart_total,2)}}
+														</span>
+													</button>
+												</div>
+												<div class="d-flex justify-content-center align-items-center mt-5">
+													<div>
+														<img class="img-fluid coupon-code-modal-btn"
+															src="/theme/img/modal-icon1.png" alt="">
+													</div>
+													<button type="button"
+														class="btn btn-primary coupon-code-modal-btn ps-0"
+														data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+														applay coupon
+													</button>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<input type="button" name="next" class="next action-button" value="Next Step" />
+
+							</fieldset>
+							<fieldset>
+								<div class="form-card">
+									<div>
+										<table class="table mt-5">
+											<thead>
+												<tr>
+													<th style="border-top:none !important" scope="col">Cart Totals</th>
+													<th style="border-top:none !important" scope="col"></th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>
+														<div class="d-flex">
+															<span class="">
+																<img src="theme/img/pricing_tag.png" width=" 22px">
+															</span>
+															<span>
+																<p class="cart-total-checkout-page ps-3">Total</p>
+															</span>
+															<div
+																class="d-flex justify-content-end aling-items-end ps-5">
+																<p class="sub-total-checkout-page">
+																	${{number_format($cart_total,2)}} </p>
+															</div>
+														</div>
+													</td>
+													<td></td>
+												</tr>
+											</tbody>
+											<tfoot class="border-0">
+												<tr>
+													<td style="border-bottom: none">
+														@if (Auth::check() == true && !empty($contact->contact_id))
+														<a href="{{ url('/checkout')}}">
+															<button class="procedd-to-checkout mt-2 ps-3">
+																PROCEED TO CHECKOUT
+															</button>
+														</a>
+														@elseif(Auth::check() == true &&
+														empty($contact->contact_id))
+														<a href="{{ url('/checkout/')}}">
+															<button class="procedd-to-checkout mt-2 ps-3">
+																PROCEED TO CHECKOUT
+															</button>
+														</a>
+														@elseif (Auth::check() != true)
+														<a href="{{ url('/user/')}}">
+															<button class="procedd-to-checkout mt-2 ps-">
+																Login or Register
+															</button>
+														</a>
+														@endif
+
+													</td>
+												</tr>
+											</tfoot>
+										</table>
+									</div>
+								</div>
+								<input type="button" name="previous" class="previous action-button-previous"
+									value="Previous" />
+								{{-- <input type="button" name="next" class="next action-button" value="Next Step" />
+								--}}
+							</fieldset>
+							<fieldset>
+								<div class="form-card">
+									gdfgdfgfdgfdgfdgdfgfgfgdfgdfgdfg
 								</div>
 								<input type="button" name="previous" class="previous action-button-previous"
 									value="Previous" />
