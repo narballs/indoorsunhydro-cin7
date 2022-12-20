@@ -143,7 +143,7 @@
             <div>
                 <div class="mt-4 payment-option">Delivery Options</div>
                 @foreach($payment_methods as $payment_method)
-                <form class="p-2" id="order_form" name="order_form" method="POST" action="{{url('order')}}">
+                <form class="p-2" action="{{url('order')}}" method="POST" id="order_form" name="order_form">
                     @csrf
                     @foreach($payment_method->options as $payment_option)
                     <div class="row">
@@ -428,10 +428,9 @@
                                                             @endforeach
                                                             @endforeach
                                                             <div>
-                                                                <button type="submit" class="button-cards w-100"
-                                                                    id="proceed_to_checkout" onclick="submit()">
-                                                                    Proceed to checkout
-                                                                </button>
+                                                                <button type="button" class="button-cards w-100"
+                                                                    id="proceed_to_checkout" onclick="validate()">
+                                                                    Proceed to checkout</button>
                                                             </div>
                                                         </form>
                                                     </td>
@@ -492,7 +491,8 @@
                                 </div>
                                 <input type="button" name="previous" class="previous action-button-previous"
                                     value="Previous" />
-                                <input type="button" name="make_payment" class="next action-button" value="Confirm" />
+                                {{-- <input type="button" name="make_payment" class="next action-button"
+                                    value="Confirm" /> --}}
                             </fieldset>
                             <fieldset>
                                 <div class="form-card">
@@ -629,7 +629,7 @@
                     Valid first name is required.
                 </div>
                 <script>
-                    function submit(){   
+                    function validate(){   
     if ( ! $("input[name=method_option]").is(':checked') ) {
         const inputOptions = new Promise((resolve) => {
             setTimeout(() => {
@@ -657,169 +657,6 @@
                 } 
                 else {
                 $("#local_delivery_2").attr('checked', 'checked'); 
-                <option value="{{$state->name}}" <?php echo $selected;?>>{{$state->name}}</option>
-                @endforeach
-            </select>
-            <div class="invalid-feedback">
-                Valid first name is required.
-            </div>
-
-            <script>
-
-                function validate(){   
-        if ( ! $("input[name=method_option]").is(':checked') ) {
-            const inputOptions = new Promise((resolve) => {
-                setTimeout(() => {
-                    resolve({
-                        'Local Delivery': 'Local Delivery',
-                        'Pickup Order': 'Pickup Order'
-                    })
-                }, 1000)
-            })
-            console.log(inputOptions);
-            Swal.fire({
-                title: 'Please choose delivery option',
-                input: 'radio',
-                imageUrl: "theme/img/delivery.png",
-                inputOptions: inputOptions,
-                showCancelButton: false,
-                confirmButtonColor: '#8282ff',
-                confirmButtonText: 'Continue',
-                allowOutsideClick: false,
-                allowEscapeKey: false
-            }).then((result) => {
-                console.log(result)
-                if (result.value !== null) {
-                    if (result.value == 'Local Delivery') {
-                        $("#local_delivery_1").attr('checked', 'checked');
-                    } 
-                    else {
-                    $("#local_delivery_2").attr('checked', 'checked'); 
-                    }
-                    $("#order_form").submit();
-                }
-            });
-        }
-
-        // else {
-        // $("#order_form").submit(); 
-        // }
-    }
-    function updateAddress() {
-        $('#address-form-update').toggle();
-        $('#address-form-update').removeClass('d-none');
-
-    }
-    function updateContact(user_id) {
-        var first_name = $('input[name=firstName]').val();
-        var last_name = $('input[name=lastName]').val();
-        var company_name = $('input[name=company]').val();
-        var phone = $('input[name=phone]').val();
-        var address = $('input[name=address]').val();
-        var address2 = $('input[name=address2]').val();
-        var town_city = $('input[name=town_city]').val();
-        var state = document.getElementById("state").value;
-        var zip = $('input[name=zip]').val();
-        var email = $('input[name=email]').val();
-
-        jQuery.ajax({
-                method: 'GET',
-                url: "{{ url('/user-addresses/') }}",
-
-                data: {
-                    "_token": "{{ csrf_token() }}",
-                    "user_id": user_id,
-                    "first_name" : first_name,
-                    "last_name" : last_name,
-                    "company_name" : company_name,
-                    "phone" : phone,
-                    "address" : address,
-                    "address2" : address2,
-                    "town_city" : town_city,
-                    "state" : state,
-                    "zip" : zip,
-                    "email" : email
-                },
-                success: function(response) {
-
-                    if(response.success == true) {
-
-                        $('.modal-backdrop').remove()
-                        $('#success_msg').removeClass('d-none');
-                        $('#success_msg').html(response.msg);
-                        window.location.reload();
-                    }
-                },
-                error: function (response) {
-                    
-                    var error_message = response.responseJSON;
-                    console.log(error_message);
-                    var error_text = '';
-                    if (typeof error_message.errors.first_name != 'undefined') {
-                        error_text = error_message.errors.first_name;
-                        $('#error_first_name').html(error_text);
-                    }
-                    else {
-                        error_text = '';
-                        $('#error_first_name').html(error_text);
-                    }
-                    if (typeof error_message.errors.last_name != 'undefined') {
-                        var error_text = error_message.errors.last_name;
-                        $('#error_last_name').html(error_text);
-                    }
-                    else {
-                        error_text = '';
-                        $('#error_last_name').html(error_text);
-                    }
-                    if (typeof error_message.errors.company_name != 'undefined') {
-                        var error_text = error_message.errors.company_name;
-                        $('#error_company').html(error_text);
-                    }
-                    else {
-                        error_text = '';
-                        $('#error_company').html(error_text);
-                    }
-                    if (typeof error_message.errors.address != 'undefined') {
-                        var error_text = error_message.errors.address;
-                        $('#error_address1').html(error_text);
-                    }
-                    else {
-                        error_text = '';
-                        $('#error_address1').html(error_text);
-                    }
-                
-                    if (typeof error_message.errors.zip != 'undefined') {
-                        var error_text = error_message.errors.zip;
-                        $('#error_zip').html(error_text);
-                    }
-                    else {
-                        error_text = '';
-                        $('#error_zip').html(error_text);
-                    }
-                    if (typeof error_message.errors.town_city != 'undefined') {
-                        var error_text = error_message.errors.town_city;
-                        $('#error_city').html(error_text);
-                    }
-                    else {
-                        error_text = '';
-                        $('#error_city').html(error_text);
-                    }
-                    if (typeof error_message.errors.zip != 'undefined') {
-                        var error_text = error_message.zip;
-                        $('#error_zip').html(error_text);
-                    }
-                    else {
-                        error_text = '';
-                        $('#error_zip').html(error_text);
-                    }
-                    if (typeof error_message.errors.phone != 'undefined') {
-                        var error_text = error_message.errors.phone;
-                        $('#error_phone').html(error_text);
-                    }
-                    else {
-                        error_text = '';
-                        $('#error_phone').html(error_text);
-                    }
                 }
                 $("#order_form").submit();
             }
