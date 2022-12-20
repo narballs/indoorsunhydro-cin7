@@ -57,7 +57,7 @@
 						<div class="form-group col-md-12">
 			    			<label for="mobile"></label>
 			    			<textarea class="form-control" onfocus="this.select()" type="text" rows="10" name="notes" id="description">
-			    				jkhkjghkjh
+			    				{{$list->description}}
 			    			</textarea>
 			    			<div id="description_errors" class="text-danger"></div>
 			  			</div>
