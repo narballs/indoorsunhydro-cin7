@@ -4,7 +4,7 @@
 	</td>
 	<td>
 		@foreach($product->options as $option)
-			<img src="{{$option->image}}" class="img-circle img-size-32 mr-2>
+			<img src="{{$option->image}}" class="img-circle img-size-32 mr-2">
 			<input type="hidden" id="option_id_{{$product->product_id}}" value="{{ $option->option_id}}">
 		@endforeach
 	</td>

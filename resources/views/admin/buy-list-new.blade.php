@@ -51,11 +51,14 @@
 			  		</div>
 		  		@endif
 		  		@if(!empty($list->description))
+		  		<?php //dd($list);?>
 			  		<div class="col-md-12 card mt-5">
 						<div class="card-body"><h4>Description</h4></div>
 						<div class="form-group col-md-12">
 			    			<label for="mobile"></label>
-			    			<textarea class="form-control" rows="10" name="notes" id="description"></textarea>
+			    			<textarea class="form-control" onfocus="this.select()" type="text" rows="10" name="notes" id="description">
+			    				jkhkjghkjh
+			    			</textarea>
 			    			<div id="description_errors" class="text-danger"></div>
 			  			</div>
 					</div>
@@ -96,7 +99,8 @@
 					<div id="list_title">
 						<h4></h4>
 					</div>
-					<input type="hidden" id="list_id" value="">
+					<input type="hidden" id="list_id" value="{{$list->id}}">
+					<input type="hidden" id="is_update" value="1">
 						<table id="product_list" class="table">
 							<tr>
 								<td style="width:373px !important">Product Title</td>
@@ -106,7 +110,9 @@
 								<td>Subtotal</td>
 								<td>Remove</td>
 							</tr>
+							<?php //dd($list);?>
 						@foreach($list->list_products as $list_product)
+						<?php //dd($list_product);?>
                         @foreach($list_product->product->options as $option)
                             <!-- <tr id="product_row_{{$list_product->product_id }}"> -->
                             <tr id="product_row_{{ $list_product->product_id }}" class="product-row-{{ $list_product->product_id }} admin-buy-list">
@@ -114,15 +120,16 @@
                                     {{$list_product->product->name}}
                                 </td>
                                 <td>
+                                	<input type="hidden" id="option_id_{{$list_product->product_id}}" value="{{ $option->option_id}}">
                                 	<img src="{{$option->image}}" alt="Product 1" class="img-circle img-size-32 mr-2">
                                 </td>
                                 <td>	
-                                	$<span id="retail_price_{{ $list_product->product_id }}"> {{ number_format($list_product->retail_price, 2) }} </span></td>
+                                	$<span id="retail_price_{{ $list_product->product_id }}"> {{$list_product->product->retail_price}} </span></td>
                                 <td>
-									<input type="number" min="1" id="quantity_{{ $list_product->product_id }}" value="1" onclick="handleQuantity({{$list_product->product_id}})">
+									<input type="number" min="1"   id="quantity_{{ $list_product->product_id }}" value="{{$list_product->quantity}}" onclick="handleQuantity({{$list_product->product_id}})">
 								</td>
                                 <td>
-									$<span id="subtotal_{{$list_product->product_id}}"> {{ number_format($list_product->retail_price * 1, 2) }} </span>
+									$<span id="subtotal_{{$list_product->product_id}}"> {{ number_format($list_product->product->retail_price * $list_product->quantity, 2) }} </span>
 								</td>
                                 <td>
                                        <a class="cursor-pointer delete" title="" data-toggle="tooltip" data-original-title="Delete">
@@ -136,10 +143,10 @@
 						</table>
 						<div class="row">
 							<div class="col-md-10 border-top">Grand Total</div>
-							<div class="col-md-2 border-top">amount : <span id="grand_total">0</span></div>
+							<div class="col-md-2 border-top">amount : <span id="grand_total">{{$list_product->grand_total}}</span></div>
 						</div>
 						<div class="row">
-							<div class="col-md-10 border-top"><button type="button" class="ms-2 btn btn-primary" onclick="generatList()">Create List</button>
+							<div class="col-md-10 border-top"><button type="button" class="ms-2 btn btn-primary" onclick="generatList()">Update List</button>
 						</div>
 					</div>
 				</div>
@@ -168,7 +175,7 @@
 							<div class="col-md-2 border-top">amount : <span id="grand_total">0</span></div>
 						</div>
 						<div class="row">
-							<div class="col-md-10 border-top"><button type="button" class="ms-2 btn btn-primary" onclick="generatList()">Create sdsdList</button>
+							<div class="col-md-10 border-top"><button type="button" class="ms-2 btn btn-primary" onclick="generatList()">Create List</button>
 						</div>
 					</div>
 				</div>
@@ -186,9 +193,10 @@
 @section('js')
 <script>
 	$( document ).ready(function() {
+
 		var list_id = $("#list_id").val();
 		if (list_id == '') {
-			//$(".btn-add-to-cart").prop('disabled', true);
+			$(".btn-add-to-cart").prop('disabled', true);
 		}
 		else {
 			$(".btn-add-to-cart").prop('disabled', false);
@@ -261,6 +269,8 @@
 		
 	});
 		function generatList() {
+			var is_update = $('#is_update').val();
+			alert(is_update);
 			var listItems = [];
 			var list_id = $('#list_id').val();
 			var grand_total = $('#grand_total').html();
@@ -278,8 +288,7 @@
 					option_id : option_id,
 					quantity :  quantity,
 					subtotal: subtotal,
-					grand_total: grand_total
-					
+					grand_total: grand_total,
 				});
 			});
 			console.log(listItems);
@@ -289,10 +298,11 @@
 				data: {
 				"_token": "{{ csrf_token() }}",
 					listItems: listItems,
-					listId : list_id
+					listId : list_id,
+					is_update: is_update
 				},
 				success: function(response) {
-					window.location.href = "{{ route('buy-list.index')}}";
+					 window.location.href = "{{ route('buy-list.index')}}";
 				}
 			});
 		}
