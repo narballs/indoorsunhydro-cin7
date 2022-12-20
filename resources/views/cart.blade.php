@@ -267,7 +267,7 @@
 			<div class="card border-0 px-0">
 				<div class="row">
 					<div class="col-md-12 mx-0">
-						<form id="msform">
+						<div id="msform">
 							<!-- progressbar -->
 							{{-- <ul id="progressbar">
 								<li class="active" id="account"><strong>Your Card</strong></li>
@@ -373,16 +373,72 @@
 										</div>
 									</div>
 								</div>
-								{{-- <input type="button" name="next" class="next action-button" value="Next Step" />
-								--}}
+								<input type="button" name="next" class="next action-button" value="Next Step" />
+
 							</fieldset>
 							<fieldset>
 								<div class="form-card">
-									..
+									<div>
+										<table class="table mt-5">
+											<thead>
+												<tr>
+													<th style="border-top:none !important" scope="col">Cart Totals</th>
+													<th style="border-top:none !important" scope="col"></th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>
+														<div class="d-flex">
+															<span class="">
+																<img src="theme/img/pricing_tag.png" width=" 22px">
+															</span>
+															<span>
+																<p class="cart-total-checkout-page ps-3">Total</p>
+															</span>
+															<div
+																class="d-flex justify-content-end aling-items-end ps-5">
+																<p class="sub-total-checkout-page">
+																	${{number_format($cart_total,2)}} </p>
+															</div>
+														</div>
+													</td>
+													<td></td>
+												</tr>
+											</tbody>
+											<tfoot class="border-0">
+												<tr>
+													<td style="border-bottom: none">
+														@if (Auth::check() == true && !empty($contact->contact_id))
+														<a href="{{ url('/checkout')}}">
+															<button class="procedd-to-checkout mt-2 ps-3">
+																PROCEED TO CHECKOUT
+															</button>
+														</a>
+														@elseif(Auth::check() == true &&
+														empty($contact->contact_id))
+														<a href="{{ url('/checkout/')}}">
+															<button class="procedd-to-checkout mt-2 ps-3">
+																PROCEED TO CHECKOUT
+															</button>
+														</a>
+														@elseif (Auth::check() != true)
+														<a href="{{ url('/user/')}}">
+															<button class="procedd-to-checkout mt-2 ps-">
+																Login or Register
+															</button>
+														</a>
+														@endif
+
+													</td>
+												</tr>
+											</tfoot>
+										</table>
+									</div>
 								</div>
-								<input type="button" name="previous" class="previous action-button-previous"
+								{{-- <input type="button" name="previous" class="previous action-button-previous"
 									value="Previous" />
-								<input type="button" name="next" class="next action-button" value="Next Step" />
+								<input type="button" name="next" class="next action-button" value="Next Step" /> --}}
 							</fieldset>
 							<fieldset>
 								<div class="form-card">
@@ -410,7 +466,7 @@
 									</div>
 								</div>
 							</fieldset>
-						</form>
+						</div>
 					</div>
 				</div>
 			</div>

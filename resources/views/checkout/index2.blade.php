@@ -143,7 +143,7 @@
             <div>
                 <div class="mt-4 payment-option">Delivery Options</div>
                 @foreach($payment_methods as $payment_method)
-                <form class="p-2" id="order_form" name="order_form" method="POST" action="{{url('order')}}">
+                <form class="p-2" action="{{url('order')}}" method="POST" id="order_form" name="order_form">
                     @csrf
                     @foreach($payment_method->options as $payment_option)
                     <div class="row">
@@ -212,7 +212,7 @@
             <div class="card border-0 px-0">
                 <div class="row">
                     <div class="col-md-12 mx-0">
-                        <form id="msform">
+                        <div id="msform">
                             <!-- progressbar -->
                             {{-- <ul id="progressbar">
                                 <li class="active" id="account"><strong>Your Card</strong></li>
@@ -234,82 +234,80 @@
                                                             <input type="text" placeholder="Enter your first name"
                                                                 id="company_website" name="firstName"
                                                                 value="{{$user_address->firstName}}"
-                                                                class="form-control  fontAwesome">
+                                                                class="form-control mt-0fontAwesome">
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <label class="label mt-2">last Name</label><span
+                                                            <label class="label ">last Name</label><span
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text" placeholder="Enter your last"
                                                                 id="company_website" name="lastName"
                                                                 value="{{$user_address->lastName}}"
                                                                 class="form-control fontAwesome ">
                                                         </div>
-                                                        <div class="col-md-12 mt-2">
+                                                        <div class="col-md-12 ">
                                                             <label class="label">company name (optional)</label><span
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text" placeholder="Enter your company name"
                                                                 value="{{$user_address->company}}" id="company"
                                                                 name="company"
-                                                                class="form-control mt-2 company-info fontAwesome ">
+                                                                class="form-control  company-info fontAwesome ">
                                                         </div>
                                                         <div class="col-md-12">
-                                                            <label class="label mt-2">street address</label><span
+                                                            <label class="label ">street address</label><span
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text"
                                                                 placeholder="House number and street name"
                                                                 id="postalAddress1" name="postalAddress1"
                                                                 value="{{$user_address->postalAddress1}}"
-                                                                class="form-control mt-2 company-info fontAwesome ">
+                                                                class="form-control  company-info fontAwesome ">
                                                         </div>
                                                         <div class="col-md-12">
                                                             <input type="text"
                                                                 placeholder="Aprtmant, suit, unit, etc.(optional)"
                                                                 id="postalAddress2" name="postalAddress2"
                                                                 value="{{$user_address->postalAddress2}}"
-                                                                class="form-control mt-2 company-info fontAwesome ">
+                                                                class="form-control  company-info fontAwesome ">
                                                         </div>
 
                                                         <div class="col-md-12">
-                                                            <label class="label mt-2">town / city</label><span
+                                                            <label class="label ">town / city</label><span
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text" placeholder="Enter your town"
                                                                 id="postalCity" name="postalCity"
                                                                 value="{{$user_address->postalCity}}"
-                                                                class="form-control mt-2 company-info fontAwesome ">
+                                                                class="form-control  company-info fontAwesome ">
                                                         </div>
                                                         <div class="col-md-12">
-                                                            <label class="label mt-2">state</label><span
+                                                            <label class="label ">state</label><span
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text" placeholder="Enter your state"
                                                                 id="postalState" name="postalState"
                                                                 value="{{$user_address->postalState}}"
-                                                                class="form-control mt-2 company-info fontAwesome ">
+                                                                class="form-control  company-info fontAwesome ">
                                                         </div>
                                                         <div class="col-md-12">
-                                                            <label class="label mt-2">zip</label><span
+                                                            <label class="label ">zip</label><span
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text" placeholder="Enter your zip"
                                                                 id="postalPostCode" name="postalPostCode"
                                                                 value="{{$user_address->postalPostCode}}"
-                                                                class="form-control mt-2 company-info fontAwesome ">
+                                                                class="form-control  company-info fontAwesome ">
                                                         </div>
                                                         <div class="col-md-12">
-                                                            <label class="label mt-2">phone</label><span
+                                                            <label class="label ">phone</label><span
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text" placeholder="Enter your phone" id="phone"
                                                                 name="phone" value="{{$user_address->phone}}"
-                                                                class="form-control mt-2 company-info fontAwesome ">
+                                                                class="form-control  company-info fontAwesome ">
                                                             <div class="text-danger" id="password_errors"></div>
                                                         </div>
                                                         <div class="col-md-12">
-                                                            <label class="label mt-2">email address</label><span
+                                                            <label class="label ">email address</label><span
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text" placeholder="Enter your email adress"
-                                                                id="company_name" name="password"
-                                                                class="form-control mt-2 company-info fontAwesome ">
-                                                            <div class="text-danger" id="password_errors"></div>
+                                                                id="emailAddress" name="password"
+                                                                class="form-control  company-info fontAwesome ">
                                                         </div>
-                                                        <div class="text-danger" id="confirm_password_errors"></div>
                                                         <div class="d-flex justify-content-center align-items-center">
                                                             <div>
                                                                 <img class="img-fluid coupon-code-modal-btn"
@@ -405,6 +403,39 @@
                                                     <td></td>
                                                 </tr>
                                             </tbody>
+                                            <tfoot class="border-0">
+                                                <tr>
+                                                    <td style="border-bottom:none !important;">
+                                                        <div class="payment-option">Delivery Options</div>
+                                                        @foreach($payment_methods as $payment_method)
+                                                        <form class="p-2" action="{{url('order')}}" method="POST"
+                                                            id="order_form" name="order_form">
+                                                            @csrf
+                                                            @foreach($payment_method->options as $payment_option)
+                                                            <div class="row">
+                                                                <div class="ps-1">
+                                                                    <input type="hidden"
+                                                                        value="{{$payment_method->name}}"
+                                                                        name="method_name">
+                                                                    <input type="radio"
+                                                                        id="local_delivery_{{$payment_option->id}}"
+                                                                        name="method_option"
+                                                                        value="{{$payment_option->option_name}}">
+                                                                    <label
+                                                                        for="local_delivery payment-option-label">{{$payment_option->option_name}}</label>
+                                                                </div>
+                                                            </div>
+                                                            @endforeach
+                                                            @endforeach
+                                                            <div>
+                                                                <button type="button" class="button-cards w-100"
+                                                                    id="proceed_to_checkout" onclick="validate()">
+                                                                    Proceed to checkout</button>
+                                                            </div>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                            </tfoot>
                                         </table>
                                     </div>
                                     <div class="d-flex justify-content-center align-items-center">
@@ -430,27 +461,38 @@
                                     <div class="col-md-12 user-info">
                                         <label class="label mt-5">Card Number</label><span
                                             class="text-danger fw-bold pl-1">*</span>
-                                        <input type="text" placeholder="4242 4242 4242 4242" id="company_name"
-                                            name="cart_number" class="form-control company-info fontAwesome ">
+                                        <input type="text" placeholder="4242 4242 4242 4242" id="cardNumber"
+                                            name="cardNumber" class="form-control company-info fontAwesome "
+                                            style="margin-bottom: 10px;">
                                     </div>
                                     <div class="d-flex">
-                                        <div class="user-info w-25">
+                                        <div class="user-info w-50 m-0 ps-3" style="max-width: 164px  !important;">
                                             <label class="label">Expiry date</label><span
                                                 class="text-danger fw-bold pl-1">*</span>
-                                            <input type="text" placeholder="4242 4242 4242 4242" id="company_name"
-                                                name="cart_number" class="form-control company-info fontAwesome ">
+                                            <input type="text" placeholder="MM/YY" id="expiryDate" name="expiryDate"
+                                                class="form-control company-info fontAwesome" style="
+                                                width: 154px;
+                                                height: 42px;
+                                                background-color: #f6f6f6;
+                                                border: 1px solid #dedede;
+                                                font-size: 14px;
+                                                ">
                                         </div>
-                                        <div class="user-info w-25">
+                                        <div class="user-info w-50 m-0 ps-3" style=" max-width: 163px  !important;">
                                             <label class="label">Cvc</label><span
                                                 class="text-danger fw-bold pl-1">*</span>
-                                            <input type="text" placeholder="4242 4242 4242 4242" id="company_name"
-                                                name="cart_number" class="form-control company-info fontAwesome ">
+                                            <input type="text" placeholder="MM/YY" id="cvc" name="cvc"
+                                                class="form-control company-info fontAwesome" step="width: 154px;
+                                                height: 42px;
+                                                background-color: #f6f6f6;
+                                                border: 1px solid #dedede;">
                                         </div>
                                     </div>
                                 </div>
                                 <input type="button" name="previous" class="previous action-button-previous"
                                     value="Previous" />
-                                <input type="button" name="make_payment" class="next action-button" value="Confirm" />
+                                {{-- <input type="button" name="make_payment" class="next action-button"
+                                    value="Confirm" /> --}}
                             </fieldset>
                             <fieldset>
                                 <div class="form-card">
@@ -470,106 +512,106 @@
                                     </div>
                                 </div>
                             </fieldset>
-                        </form>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Modal -->
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-    aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content py-4" style="width:70% ;margin: auto;">
-            <div class="modal-header border-0 pb-0 pt-0">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body border-0 p-0">
-                <div class="d-flex justify-content-center align-items-center">
-                    <img class="img-fluid" src="/theme/img/modal-icon.png" alt="">
+    <!-- Modal -->
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content py-4" style="width:70% ;margin: auto;">
+                <div class="modal-header border-0 pb-0 pt-0">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="d-flex justify-content-center align-items-center mt-4">
-                    <p class="coupon-code-input-label m-0">coupon code</p>
-                </div>
-                <div class="form-signupp d-flex justify-content-center align-items-center mt-2">
-                    <div class="w-75 d-flex justify-content-center align-items-center">
-                        <input type="text" name="code" id="code" class="fontAwesome form-control"
-                            placeholder="Your code" required
-                            style="height: 46px; border-radius: inherit; text-align: center;">
+                <div class="modal-body border-0 p-0">
+                    <div class="d-flex justify-content-center align-items-center">
+                        <img class="img-fluid" src="/theme/img/modal-icon.png" alt="">
+                    </div>
+                    <div class="d-flex justify-content-center align-items-center mt-4">
+                        <p class="coupon-code-input-label m-0">coupon code</p>
+                    </div>
+                    <div class="form-signupp d-flex justify-content-center align-items-center mt-2">
+                        <div class="w-75 d-flex justify-content-center align-items-center">
+                            <input type="text" name="code" id="code" class="fontAwesome form-control"
+                                placeholder="Your code" required
+                                style="height: 46px; border-radius: inherit; text-align: center;">
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer border-0 p-0 mt-2 d-flex justify-content-center align-items-center">
-                <button type="button" class="btn btn-primary w-75 applay-coupon-code-modal-btn">applay
-                    coupon</button>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="row mt-5 pt-5 desktop-view">
-    @include('partials.product-footer')
-</div>
-<form class="needs-validation mt-4 novalidate" style="display:none" action="{{url('order')}}" method="POST">
-    @csrf
-    <div class="alert alert-success  d-none" id="success_msg"></div>
-    <div class="row">
-        <div class="col-md-6 mb-3">
-            <label for="firstName">First name</label>
-            <input type="text" class="form-control bg-light" name="firstName" placeholder="First name"
-                value="{{$user_address->firstName}}" required>
-            <div id="error_first_name" class="text-danger">
-
-            </div>
-        </div>
-        <div class="col-md-6 mb-3">
-            <label for="lastName">Last name</label>
-            <input type="text" class="form-control bg-light" name="lastName" placeholder=""
-                value="{{$user_address->lastName}}" required>
-            <div id="error_last_name" class="text-danger">
+                <div class="modal-footer border-0 p-0 mt-2 d-flex justify-content-center align-items-center">
+                    <button type="button" class="btn btn-primary w-75 applay-coupon-code-modal-btn">applay
+                        coupon</button>
+                </div>
             </div>
         </div>
     </div>
-    <div class="mb-3">
-        <label for="company">Company Name(optional)</label>
-        <div class="input-group">
-            <input type="text" class="form-control bg-light" name="company" placeholder="Enter you company name"
-                value="{{$user_address->company}}" required>
+    <div class="row mt-5 pt-5 desktop-view">
+        @include('partials.product-footer')
+    </div>
+    <form class="needs-validation mt-4 novalidate" style="display:none" action="{{url('order')}}" method="POST">
+        @csrf
+        <div class="alert alert-success  d-none" id="success_msg"></div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="firstName">First name</label>
+                <input type="text" class="form-control bg-light" name="firstName" placeholder="First name"
+                    value="{{$user_address->firstName}}" required>
+                <div id="error_first_name" class="text-danger">
+
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="lastName">Last name</label>
+                <input type="text" class="form-control bg-light" name="lastName" placeholder=""
+                    value="{{$user_address->lastName}}" required>
+                <div id="error_last_name" class="text-danger">
+                </div>
+            </div>
         </div>
-        <div id="error_company" class="text-danger"></div>
-    </div>
-    <div class="mb-3">
-        <label for="username">Country</label>&nbsp;<span>United States</span>
-        <input type="hidden" name="country" value="United States">
-    </div>
-    <div class="mb-3">
-        <label for="address">Street Address</label>
-        <input type="text" class="form-control bg-light" name="address" value="{{$user_address->postalAddress1}}"
-            placeholder="House number and street name" required>
-    </div>
-    <div id="error_address1" class="text-danger"></div>
+        <div class="mb-3">
+            <label for="company">Company Name(optional)</label>
+            <div class="input-group">
+                <input type="text" class="form-control bg-light" name="company" placeholder="Enter you company name"
+                    value="{{$user_address->company}}" required>
+            </div>
+            <div id="error_company" class="text-danger"></div>
+        </div>
+        <div class="mb-3">
+            <label for="username">Country</label>&nbsp;<span>United States</span>
+            <input type="hidden" name="country" value="United States">
+        </div>
+        <div class="mb-3">
+            <label for="address">Street Address</label>
+            <input type="text" class="form-control bg-light" name="address" value="{{$user_address->postalAddress1}}"
+                placeholder="House number and street name" required>
+        </div>
+        <div id="error_address1" class="text-danger"></div>
 
-    <div class="mb-3">
-        <label for="address2">Address 2 <span class="text-muted">(Optional)</span></label>
-        <input type="text" class="form-control bg-light" name="address2" value="{{$user_address->postalAddress2}}"
-            placeholder="Apartment, suite, unit etc (optional)">
-    </div>
-    <div id="error_address2" class="text-danger"></div>
-    <div class="mb-3">
-        <label for="town">Town/City <span class="text-muted">(Optional)</span></label>
-        <input type="text" class="form-control bg-light" name="town_city" value="{{$user_address->postalCity}}"
-            placeholder="Enter your town">
-    </div>
-    <div id="error_city" class="text-danger"></div>
+        <div class="mb-3">
+            <label for="address2">Address 2 <span class="text-muted">(Optional)</span></label>
+            <input type="text" class="form-control bg-light" name="address2" value="{{$user_address->postalAddress2}}"
+                placeholder="Apartment, suite, unit etc (optional)">
+        </div>
+        <div id="error_address2" class="text-danger"></div>
+        <div class="mb-3">
+            <label for="town">Town/City <span class="text-muted">(Optional)</span></label>
+            <input type="text" class="form-control bg-light" name="town_city" value="{{$user_address->postalCity}}"
+                placeholder="Enter your town">
+        </div>
+        <div id="error_city" class="text-danger"></div>
 
-    <div class="row">
-        <div class="col-md-6 mb-3">
-            <label for="state">State</label>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="state">State</label>
 
-            <select class="form-control bg-light" name="state" id="state">
-                @foreach($states as $state)
-                <?php 
+                <select class="form-control bg-light" name="state" id="state">
+                    @foreach($states as $state)
+                    <?php 
                      if($user_address->postalState == $state->name)
                      {
                         $selected = 'selected';
@@ -580,241 +622,238 @@
                         $selected = '';
                     }           
                 ?>
-                <option value="{{$state->name}}" <?php echo $selected;?>>{{$state->name}}</option>
-                @endforeach
-            </select>
-            <div class="invalid-feedback">
-                Valid first name is required.
-            </div>
-
-            <script>
-
-                function validate(){   
-        if ( ! $("input[name=method_option]").is(':checked') ) {
-            const inputOptions = new Promise((resolve) => {
-                setTimeout(() => {
-                    resolve({
-                        'Local Delivery': 'Local Delivery',
-                        'Pickup Order': 'Pickup Order'
-                    })
-                }, 1000)
-            })
-            console.log(inputOptions);
-            Swal.fire({
-                title: 'Please choose delivery option',
-                input: 'radio',
-                imageUrl: "theme/img/delivery.png",
-                inputOptions: inputOptions,
-                showCancelButton: false,
-                confirmButtonColor: '#8282ff',
-                confirmButtonText: 'Continue',
-                allowOutsideClick: false,
-                allowEscapeKey: false
-            }).then((result) => {
-                console.log(result)
-                if (result.value !== null) {
-                    if (result.value == 'Local Delivery') {
-                        $("#local_delivery_1").attr('checked', 'checked');
-                    } 
-                    else {
-                    $("#local_delivery_2").attr('checked', 'checked'); 
-                    }
-                    $("#order_form").submit();
+                    <option value="{{$state->name}}" <?php echo $selected;?>>{{$state->name}}</option>
+                    @endforeach
+                </select>
+                <div class="invalid-feedback">
+                    Valid first name is required.
+                </div>
+                <script>
+                    function validate(){   
+    if ( ! $("input[name=method_option]").is(':checked') ) {
+        const inputOptions = new Promise((resolve) => {
+            setTimeout(() => {
+                resolve({
+                    'Local Delivery': 'Local Delivery',
+                    'Pickup Order': 'Pickup Order'
+                })
+            }, 1000)
+        })
+        console.log(inputOptions);
+        Swal.fire({
+            title: 'Please choose delivery option',
+            input: 'radio',
+            imageUrl: "theme/img/delivery.png",
+            inputOptions: inputOptions,
+            showCancelButton: false,
+            confirmButtonColor: '#8282ff',
+            confirmButtonText: 'Continue',
+            allowOutsideClick: false,
+            allowEscapeKey: false
+        }).then((result) => {
+            if (result.value !== null) {
+                if (result.value == 'Local Delivery') {
+                    $("#local_delivery_1").attr('checked', 'checked');
+                } 
+                else {
+                $("#local_delivery_2").attr('checked', 'checked'); 
                 }
-            });
-        }
-
-        // else {
-        // $("#order_form").submit(); 
-        // }
-    }
-    function updateAddress() {
-        $('#address-form-update').toggle();
-        $('#address-form-update').removeClass('d-none');
-
-    }
-    function updateContact(user_id) {
-        var first_name = $('input[name=firstName]').val();
-        var last_name = $('input[name=lastName]').val();
-        var company_name = $('input[name=company]').val();
-        var phone = $('input[name=phone]').val();
-        var address = $('input[name=address]').val();
-        var address2 = $('input[name=address2]').val();
-        var town_city = $('input[name=town_city]').val();
-        var state = document.getElementById("state").value;
-        var zip = $('input[name=zip]').val();
-        var email = $('input[name=email]').val();
-
-        jQuery.ajax({
-                method: 'GET',
-                url: "{{ url('/user-addresses/') }}",
-
-                data: {
-                    "_token": "{{ csrf_token() }}",
-                    "user_id": user_id,
-                    "first_name" : first_name,
-                    "last_name" : last_name,
-                    "company_name" : company_name,
-                    "phone" : phone,
-                    "address" : address,
-                    "address2" : address2,
-                    "town_city" : town_city,
-                    "state" : state,
-                    "zip" : zip,
-                    "email" : email
-                },
-                success: function(response) {
-
-                    if(response.success == true) {
-
-                        $('.modal-backdrop').remove()
-                        $('#success_msg').removeClass('d-none');
-                        $('#success_msg').html(response.msg);
-                        window.location.reload();
-                    }
-                },
-                error: function (response) {
-                    
-                    var error_message = response.responseJSON;
-                    console.log(error_message);
-                    var error_text = '';
-                    if (typeof error_message.errors.first_name != 'undefined') {
-                        error_text = error_message.errors.first_name;
-                        $('#error_first_name').html(error_text);
-                    }
-                    else {
-                        error_text = '';
-                        $('#error_first_name').html(error_text);
-                    }
-                    if (typeof error_message.errors.last_name != 'undefined') {
-                        var error_text = error_message.errors.last_name;
-                        $('#error_last_name').html(error_text);
-                    }
-                    else {
-                        error_text = '';
-                        $('#error_last_name').html(error_text);
-                    }
-                    if (typeof error_message.errors.company_name != 'undefined') {
-                        var error_text = error_message.errors.company_name;
-                        $('#error_company').html(error_text);
-                    }
-                    else {
-                        error_text = '';
-                        $('#error_company').html(error_text);
-                    }
-                    if (typeof error_message.errors.address != 'undefined') {
-                        var error_text = error_message.errors.address;
-                        $('#error_address1').html(error_text);
-                    }
-                    else {
-                        error_text = '';
-                        $('#error_address1').html(error_text);
-                    }
-                
-                    if (typeof error_message.errors.zip != 'undefined') {
-                        var error_text = error_message.errors.zip;
-                        $('#error_zip').html(error_text);
-                    }
-                    else {
-                        error_text = '';
-                        $('#error_zip').html(error_text);
-                    }
-                    if (typeof error_message.errors.town_city != 'undefined') {
-                        var error_text = error_message.errors.town_city;
-                        $('#error_city').html(error_text);
-                    }
-                    else {
-                        error_text = '';
-                        $('#error_city').html(error_text);
-                    }
-                    if (typeof error_message.errors.zip != 'undefined') {
-                        var error_text = error_message.zip;
-                        $('#error_zip').html(error_text);
-                    }
-                    else {
-                        error_text = '';
-                        $('#error_zip').html(error_text);
-                    }
-                    if (typeof error_message.errors.phone != 'undefined') {
-                        var error_text = error_message.errors.phone;
-                        $('#error_phone').html(error_text);
-                    }
-                    else {
-                        error_text = '';
-                        $('#error_phone').html(error_text);
-                    }
-
-                }
+                $("#order_form").submit();
+            }
         });
     }
-            </script>
-            @include('partials.footer')
-            <script>
-                $(document).ready(function(){
-                        var current_fs, next_fs, previous_fs; //fieldsets
-                        var opacity;
-                        
-                        $(".next").click(function(){
-                            
-                            current_fs = $(this).parent();
-                            next_fs = $(this).parent().next();
-                            
-                            //Add Class Active
-                            $("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
-                            
-                            //show the next fieldset
-                            next_fs.show(); 
-                            //hide the current fieldset with style
-                            current_fs.animate({opacity: 0}, {
-                                step: function(now) {
-                                    // for making fielset appear animation
-                                    opacity = 1 - now;
-                        
-                                    current_fs.css({
-                                        'display': 'none',
-                                        'position': 'relative'
-                                    });
-                                    next_fs.css({'opacity': opacity});
-                                }, 
-                                duration: 600
-                            });
-                        });
-                        
-                        $(".previous").click(function(){
-                            
-                            current_fs = $(this).parent();
-                            previous_fs = $(this).parent().prev();
-                            
-                            //Remove class active
-                            $("#progressbar li").eq($("fieldset").index(current_fs)).removeClass("active");
-                            
-                            //show the previous fieldset
-                            previous_fs.show();
-                        
-                            //hide the current fieldset with style
-                            current_fs.animate({opacity: 0}, {
-                                step: function(now) {
-                                    // for making fielset appear animation
-                                    opacity = 1 - now;
-                        
-                                    current_fs.css({
-                                        'display': 'none',
-                                        'position': 'relative'
-                                    });
-                                    previous_fs.css({'opacity': opacity});
-                                }, 
-                                duration: 600
-                            });
-                        });
-                        
-                        $('.radio-group .radio').click(function(){
-                            $(this).parent().find('.radio').removeClass('selected');
-                            $(this).addClass('selected');
-                        });
-                        
-                        $(".submit").click(function(){
-                            return false;
-                        })
-                            
-                        });
-            </script>
+
+    else {
+    $("#order_form").submit(); 
+    }
+}
+function updateAddress() {
+    $('#address-form-update').toggle();
+    $('#address-form-update').removeClass('d-none');
+
+}
+function updateContact(user_id) {
+    var first_name = $('input[name=firstName]').val();
+    var last_name = $('input[name=lastName]').val();
+    var company_name = $('input[name=company]').val();
+    var phone = $('input[name=phone]').val();
+    var address = $('input[name=address]').val();
+    var address2 = $('input[name=address2]').val();
+    var town_city = $('input[name=town_city]').val();
+    var state = document.getElementById("state").value;
+    var zip = $('input[name=zip]').val();
+    var email = $('input[name=email]').val();
+
+    jQuery.ajax({
+            method: 'GET',
+            url: "{{ url('/user-addresses/') }}",
+
+            data: {
+                "_token": "{{ csrf_token() }}",
+                "user_id": user_id,
+                "first_name" : first_name,
+                "last_name" : last_name,
+                "company_name" : company_name,
+                "phone" : phone,
+                "address" : address,
+                "address2" : address2,
+                "town_city" : town_city,
+                "state" : state,
+                "zip" : zip,
+                "email" : email
+            },
+            success: function(response) {
+
+                if(response.success == true) {
+
+                    $('.modal-backdrop').remove()
+                    $('#success_msg').removeClass('d-none');
+                    $('#success_msg').html(response.msg);
+                    window.location.reload();
+                }
+            },
+            error: function (response) {
+                
+                var error_message = response.responseJSON;
+                console.log(error_message);
+                var error_text = '';
+                if (typeof error_message.errors.first_name != 'undefined') {
+                    error_text = error_message.errors.first_name;
+                    $('#error_first_name').html(error_text);
+                }
+                else {
+                    error_text = '';
+                    $('#error_first_name').html(error_text);
+                }
+                if (typeof error_message.errors.last_name != 'undefined') {
+                    var error_text = error_message.errors.last_name;
+                    $('#error_last_name').html(error_text);
+                }
+                else {
+                    error_text = '';
+                    $('#error_last_name').html(error_text);
+                }
+                if (typeof error_message.errors.company_name != 'undefined') {
+                    var error_text = error_message.errors.company_name;
+                    $('#error_company').html(error_text);
+                }
+                else {
+                    error_text = '';
+                    $('#error_company').html(error_text);
+                }
+                if (typeof error_message.errors.address != 'undefined') {
+                    var error_text = error_message.errors.address;
+                    $('#error_address1').html(error_text);
+                }
+                else {
+                    error_text = '';
+                    $('#error_address1').html(error_text);
+                }
+            
+                if (typeof error_message.errors.zip != 'undefined') {
+                    var error_text = error_message.errors.zip;
+                    $('#error_zip').html(error_text);
+                }
+                else {
+                    error_text = '';
+                    $('#error_zip').html(error_text);
+                }
+                if (typeof error_message.errors.town_city != 'undefined') {
+                    var error_text = error_message.errors.town_city;
+                    $('#error_city').html(error_text);
+                }
+                else {
+                    error_text = '';
+                    $('#error_city').html(error_text);
+                }
+                if (typeof error_message.errors.zip != 'undefined') {
+                    var error_text = error_message.zip;
+                    $('#error_zip').html(error_text);
+                }
+                else {
+                    error_text = '';
+                    $('#error_zip').html(error_text);
+                }
+                if (typeof error_message.errors.phone != 'undefined') {
+                    var error_text = error_message.errors.phone;
+                    $('#error_phone').html(error_text);
+                }
+                else {
+                    error_text = '';
+                    $('#error_phone').html(error_text);
+                }
+
+            }
+    });
+}
+                </script>
+                @include('partials.footer')
+                <script>
+                    $(document).ready(function(){
+var current_fs, next_fs, previous_fs; //fieldsets
+var opacity;
+
+$(".next").click(function(){
+    
+    current_fs = $(this).parent();
+    next_fs = $(this).parent().next();
+    
+    //Add Class Active
+    $("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
+    
+    //show the next fieldset
+    next_fs.show(); 
+    //hide the current fieldset with style
+    current_fs.animate({opacity: 0}, {
+        step: function(now) {
+            // for making fielset appear animation
+            opacity = 1 - now;
+
+            current_fs.css({
+                'display': 'none',
+                'position': 'relative'
+            });
+            next_fs.css({'opacity': opacity});
+        }, 
+        duration: 600
+    });
+});
+
+$(".previous").click(function(){
+    
+    current_fs = $(this).parent();
+    previous_fs = $(this).parent().prev();
+    
+    //Remove class active
+    $("#progressbar li").eq($("fieldset").index(current_fs)).removeClass("active");
+    
+    //show the previous fieldset
+    previous_fs.show();
+
+    //hide the current fieldset with style
+    current_fs.animate({opacity: 0}, {
+        step: function(now) {
+            // for making fielset appear animation
+            opacity = 1 - now;
+
+            current_fs.css({
+                'display': 'none',
+                'position': 'relative'
+            });
+            previous_fs.css({'opacity': opacity});
+        }, 
+        duration: 600
+    });
+});
+
+$('.radio-group .radio').click(function(){
+    $(this).parent().find('.radio').removeClass('selected');
+    $(this).addClass('selected');
+});
+
+$(".submit").click(function(){
+    return false;
+})
+    
+});
+                </script>
