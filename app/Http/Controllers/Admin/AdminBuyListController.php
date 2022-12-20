@@ -84,18 +84,39 @@ class AdminBuyListController extends Controller
     public function genrateList(Request $request) {
         $list_id = $request->listId;
         $list_items = $request->listItems;
-        //dd($list_items);
-        $quantity = $request->quantity;
 
-        foreach ($list_items as $list_item ) {
-            $product_buy_list = new ProductBuyList();
-            $product_buy_list->list_id = $list_id;
-            $product_buy_list->product_id = $list_item['product_id'];
-            $product_buy_list->option_id = $list_item['option_id'];
-            $product_buy_list->quantity = $list_item['quantity'];
-            $product_buy_list->sub_total = $list_item['subtotal'];
-            $product_buy_list->grand_total = $list_item['grand_total'];
-            $product_buy_list->save();
+        $is_update = $request->is_update;
+        $quantity = $request->quantity;
+        if ($is_update) {
+            $product_buy_list = ProductBuyList::where('list_id', $list_id)->delete();
+          
+            // foreach($product_buy_list as $list_item) {
+            //     $product_buy_list->each->delete();
+            // }
+                foreach ($list_items as $list_item ) {
+                    $product_buy_list = new ProductBuyList();
+                    $product_buy_list->list_id = $list_id;
+                    $product_buy_list->product_id = $list_item['product_id'];
+                    $product_buy_list->option_id = $list_item['option_id'];
+                    $product_buy_list->quantity = $list_item['quantity'];
+                    $product_buy_list->sub_total = $list_item['subtotal'];
+                    $product_buy_list->grand_total = $list_item['grand_total'];
+                    $product_buy_list->save();
+                }
+
+            
+        }
+        else {
+            foreach ($list_items as $list_item ) {
+                $product_buy_list = new ProductBuyList();
+                $product_buy_list->list_id = $list_id;
+                $product_buy_list->product_id = $list_item['product_id'];
+                $product_buy_list->option_id = $list_item['option_id'];
+                $product_buy_list->quantity = $list_item['quantity'];
+                $product_buy_list->sub_total = $list_item['subtotal'];
+                $product_buy_list->grand_total = $list_item['grand_total'];
+                $product_buy_list->save();
+            }
         }
     }
 }
