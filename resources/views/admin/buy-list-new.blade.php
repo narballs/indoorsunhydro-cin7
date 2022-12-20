@@ -270,7 +270,6 @@
 	});
 		function generatList() {
 			var is_update = $('#is_update').val();
-			alert(is_update);
 			var listItems = [];
 			var list_id = $('#list_id').val();
 			var grand_total = $('#grand_total').html();
