@@ -18,7 +18,9 @@
                 <a href="#" class="btn btn-tool btn-sm">
                     <i class="fas fa-bars"></i>
                 </a>
+                 <a href="{{url('/create-cart')}}/{{$list->id}}"><button type="button" class="btn btn-info">Share</button></a>
             </div>
+
         </div>
         <?php //dd($list->list_products->product);?>
         <div class="card-body table-responsive p-0">
@@ -32,6 +34,7 @@
                     </tr>
                 </thead>
                 <tbody>
+                     <?php //dd($list->list_products);?>
                     @foreach($list->list_products as $list_product)
                         @foreach($list_product->product->options as $option)
                             <tr>
@@ -48,11 +51,12 @@
                                         {{$list_product->quantity}}
                                 </td>
                                 <td>
-                                   {{$list_product->sub_total}}
+                                   ${{$list_product->sub_total}}
                                 </td>
                             </tr>
                         @endforeach
                     @endforeach
+                    <tr colspan="3"> <th>Grand Total</th><td>${{$list_product->grand_total}}</td></tr>
                 </tbody>
             </table>
         </div>

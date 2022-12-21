@@ -29,7 +29,7 @@ class PermissionTableSeeder extends Seeder
            'edit-profile'
         ];
 
-     
+        
         foreach ($permissions as $permission) {
             Permission::create(['name' => $permission]);
         }

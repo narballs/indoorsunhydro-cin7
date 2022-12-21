@@ -313,9 +313,11 @@
 			}
 			var subtotal_to_remove = parseFloat($('#subtotal_'+ product_id).html());
 			var grand_total = parseFloat($('#grand_total').html());
-			var updated_total = parseFloat(grand_total) - parseFloat(subtotal_to_remove);
+			var updated_total = 0;
+			updated_total = parseFloat(grand_total) - parseFloat(subtotal_to_remove);
 			$('#subtotal_'+ product_id).val();
 			$('#product_row_'+ product_id).remove();
+			alert(updated_total);
 			$('#grand_total').html(updated_total);
 		}
 		function handleQuantity(product_id) {
