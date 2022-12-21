@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ContactUsController;
+use App\Http\Controllers\CreateCartController;
 use App\Http\Controllers\PermissionsController;
 use App\Http\Controllers\RolesController;
 use App\Http\Controllers\Admin\TestController;
@@ -19,6 +20,7 @@ use App\Http\Controllers\Admin\CustomerSearchController;
 use App\Http\Controllers\Admin\AdminProductController;
 use App\Http\Controllers\Users\RoleController;
 use App\Http\Controllers\Admin\AdminBuyListController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -67,7 +69,7 @@ Route::post('/register/basic/create', [UserController::class, 'process_signup'])
 Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 
 Route::get('/product-brand/{name}', [ProductController::class, 'showProductByBrands']);
-Route::post('add-to-cart', [ProductController::class, 'addToCart'])->name('add.to.cart');
+Route::post('add-to-cart/', [ProductController::class, 'addToCart'])->name('add.to.cart');
 Route::get('/remove/{id}', [ProductController::class, 'removeProductByCategory']);
 Route::get('cart', [ProductController::class, 'cart'])->name('cart');
 Route::post('update-cart', [ProductController::class, 'updateCart'])->name('update.cart');
@@ -78,6 +80,7 @@ Route::post('order-status-update', [OrderController::class, 'updateStatus'])->na
 Route::post('change-password', [ChangePasswordController::class, 'store'])->name('change.password');
 Route::get('/contact-us/', [ContactUsController::class, 'index']);
 Route::post('/contact-us-store/', [ContactUsController::class, 'store'])->name('contact.us.store');
+Route::get('/create-cart/{id}', [CreateCartController::class, 'create_cart'])->name('create.cart');
 //Route::post('/',[UserController::class, 'logout'])->name('logout');
 
 

@@ -56,6 +56,7 @@ class AdminBuyListController extends Controller
 
     public function show($id) {
         $list = BuyList::where('id', $id)->with('list_products.product.options')->first();
+        //dd($list);
         return view('admin/buy_list/list-detail', compact(
             'list'));
     }
@@ -89,10 +90,6 @@ class AdminBuyListController extends Controller
         $quantity = $request->quantity;
         if ($is_update) {
             $product_buy_list = ProductBuyList::where('list_id', $list_id)->delete();
-          
-            // foreach($product_buy_list as $list_item) {
-            //     $product_buy_list->each->delete();
-            // }
                 foreach ($list_items as $list_item ) {
                     $product_buy_list = new ProductBuyList();
                     $product_buy_list->list_id = $list_id;
@@ -103,8 +100,6 @@ class AdminBuyListController extends Controller
                     $product_buy_list->grand_total = $list_item['grand_total'];
                     $product_buy_list->save();
                 }
-
-            
         }
         else {
             foreach ($list_items as $list_item ) {
