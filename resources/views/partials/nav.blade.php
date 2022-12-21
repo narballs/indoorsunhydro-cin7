@@ -97,6 +97,45 @@
 {{-- mobile view start --}}
 <div class="container mobile-view">
 	<div class="row">
+		<div class="bg-dark mt-2" style="font-family: 'Poppins'; font-size:14px;     padding-left: 95px;
+			height: 62px;
+			padding-top: 11px;">
+			<img class="basket-icon" src="/theme/img/Bascket.png">
+			<span
+				class="cart-basket d-flex align-items-center justify-content-center float-sm-end cart-counter rounded-circle"
+				id="top_cart_quantity">
+				<?php
+					$total_quantity	 = 0;
+					$grand_total = 0;
+				?>
+				@if(Session::get('cart'))
+				@foreach(Session::get('cart') as $cart)
+				<?php
+						$total_q[] = $cart['quantity'];
+						$total_quantity = array_sum($total_q);
+						$total_price[] = $cart['price'] * $cart['quantity'];
+						$grand_total = array_sum($total_price);
+					?>
+				@endforeach
+				@endif
+				{{$total_quantity}}
+			</span>
+			<a class="p-0 cart-price btn btn-secondary" data-bs-container="body" data-bs-toggle="popover"
+				data-bs-placement="right"
+				data-bs-content="add <strong class='text-success'>$2500.00</strong> more to your cart and get <span class='text-danger'>5% off </span>"><span
+					id="top_cart_total">
+					<a href="{{'/cart/'}}" class="text-white">
+						<span id="topbar_cart_total" class="ms-2 cart-counter-details">
+							{{number_format($grand_total, 2)}}
+						</span>&nbsp;
+						(<span id="cart_items_quantity"
+							class="cart-counter-details">{{$total_quantity}}</span>&nbsp;<span
+							class="cart-counter-details">items
+						</span>)
+					</a>
+				</span>
+			</a>
+		</div>
 		<nav class="navbar navbar-expand-lg navbar-light bg-light">
 			<div class="container-fluid">
 				<a class="navbar-brand" href="/"><img class="top-img" src="/theme/img/indoor_sun.png" ;></a>
@@ -107,46 +146,6 @@
 				</button>
 				<div class="collapse navbar-collapse" id="navbarSupportedContent">
 					<ul class="navbar-nav d-flex">
-						<li>
-							<div class="bg-dark mt-2" style="font-family: 'Poppins'; font-size:14px;">
-								<img class="basket-icon" src="/theme/img/Bascket.png">
-								<span
-									class="cart-basket d-flex align-items-center justify-content-center float-sm-end cart-counter rounded-circle"
-									id="top_cart_quantity">
-									<?php
-											  $total_quantity	 = 0;
-											  $grand_total = 0;
-				
-										  ?>
-									@if(Session::get('cart'))
-									@foreach(Session::get('cart') as $cart)
-									<?php
-											$total_q[] = $cart['quantity'];
-											$total_quantity = array_sum($total_q);
-											$total_price[] = $cart['price'] * $cart['quantity'];
-											$grand_total = array_sum($total_price);
-											?>
-									@endforeach
-									@endif
-									{{$total_quantity}}
-								</span>
-								<a class="p-0 cart-price btn btn-secondary" data-bs-container="body"
-									data-bs-toggle="popover" data-bs-placement="right"
-									data-bs-content="add <strong class='text-success'>$2500.00</strong> more to your cart and get <span class='text-danger'>5% off </span>"><span
-										id="top_cart_total">
-										<a href="{{'/cart/'}}" class="text-white">
-											<span id="topbar_cart_total" class="ms-2 cart-counter-details">
-												{{number_format($grand_total, 2)}}
-											</span>&nbsp;
-											(<span id="cart_items_quantity"
-												class="cart-counter-details">{{$total_quantity}}</span>&nbsp;<span
-												class="cart-counter-details">items
-											</span>)
-										</a>
-									</span>
-								</a>
-							</div>
-						</li>
 						<li class="nav-item dropdown">
 							<a class="nav-link dropdown-toggle product-mega-menu" href="#"
 								id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown"
@@ -204,19 +203,16 @@
 								@endforeach
 							</ul>
 						</li>
-
 						<li class="nav-item me-3">
 							<a class="nav-link text-uppercase nav-item-links " href="#">
 								About
 							</a>
 						</li>
-
 						<li class="nav-item me-4">
 							<a class="nav-link text-uppercase nav-item-links" href="{{url('contact-us')}}">
 								Contact
 							</a>
 						</li>
-
 						<li class="nav-item me-3">
 							<a class="nav-link text-uppercase nav-item-links" href="{{ url('my-account') }} ">My
 								account
@@ -245,29 +241,69 @@
 						</li>
 						@endif
 					</ul>
-					<form class="d-flex mt-3" method="get" action="{{route('product_search')}}">
-						<input type="hidden" id="is_search" name="is_search" value="1">
-						<div class="input-group top-search-group">
-							<input type="text" class="form-control" placeholder="What are you searching for"
-								aria-label="Search" aria-describedby="basic-addon2" id="search" name="value"
-								value="{{ isset($searched_value) ? $searched_value : '' }}">
-							<span class="input-group-text" id="search-addon">
-								<button class="btn-info" type="submit" id="search"
-									style="background: transparent;border:none">
-									<i class="text-white" data-feather="search"></i>
-								</button>
-							</span>
-						</div>
-					</form>
 				</div>
 			</div>
 		</nav>
+		<div class="col-md-12 p-0">
+			<form class="d-flex mt-3" method="get" action="{{route('product_search')}}">
+				<input type="hidden" id="is_search" name="is_search" value="1">
+				<div class="input-group top-search-group w-100">
+					<input type="text" class="form-control" placeholder="What are you searching for" aria-label="Search"
+						aria-describedby="basic-addon2" id="search" name="value"
+						value="{{ isset($searched_value) ? $searched_value : '' }}">
+					<span class="input-group-text" id="search-addon">
+						<button class="btn-info" type="submit" id="search" style="background: transparent;border:none">
+							<i class="text-white" data-feather="search"></i>
+						</button>
+					</span>
+				</div>
+			</form>
+		</div>
 	</div>
 </div>
 {{-- mobile view end --}}
 {{-- ipad view start --}}
 <div class="container ipad-view">
 	<div class="row">
+		<div class="bg-dark mt-2" style="font-family: 'Poppins'; font-size:14px;     padding-left: 95px;
+			height: 62px;
+			padding-top: 11px;">
+			<img class="basket-icon" src="/theme/img/Bascket.png">
+			<span
+				class="cart-basket d-flex align-items-center justify-content-center float-sm-end cart-counter rounded-circle"
+				id="top_cart_quantity">
+				<?php
+					$total_quantity	 = 0;
+					$grand_total = 0;
+				?>
+				@if(Session::get('cart'))
+				@foreach(Session::get('cart') as $cart)
+				<?php
+						$total_q[] = $cart['quantity'];
+						$total_quantity = array_sum($total_q);
+						$total_price[] = $cart['price'] * $cart['quantity'];
+						$grand_total = array_sum($total_price);
+					?>
+				@endforeach
+				@endif
+				{{$total_quantity}}
+			</span>
+			<a class="p-0 cart-price btn btn-secondary" data-bs-container="body" data-bs-toggle="popover"
+				data-bs-placement="right"
+				data-bs-content="add <strong class='text-success'>$2500.00</strong> more to your cart and get <span class='text-danger'>5% off </span>"><span
+					id="top_cart_total">
+					<a href="{{'/cart/'}}" class="text-white">
+						<span id="topbar_cart_total" class="ms-2 cart-counter-details">
+							{{number_format($grand_total, 2)}}
+						</span>&nbsp;
+						(<span id="cart_items_quantity"
+							class="cart-counter-details">{{$total_quantity}}</span>&nbsp;<span
+							class="cart-counter-details">items
+						</span>)
+					</a>
+				</span>
+			</a>
+		</div>
 		<nav class="navbar navbar-expand-lg navbar-light bg-light">
 			<div class="container-fluid">
 				<a class="navbar-brand" href="/"><img class="top-img" src="/theme/img/indoor_sun.png" ;></a>
@@ -278,46 +314,6 @@
 				</button>
 				<div class="collapse navbar-collapse" id="navbarSupportedContent">
 					<ul class="navbar-nav d-flex">
-						<li>
-							<div class="bg-dark mt-2" style="font-family: 'Poppins'; font-size:14px;">
-								<img class="basket-icon" src="/theme/img/Bascket.png">
-								<span
-									class="cart-basket d-flex align-items-center justify-content-center float-sm-end cart-counter rounded-circle"
-									id="top_cart_quantity">
-									<?php
-											  $total_quantity	 = 0;
-											  $grand_total = 0;
-				
-										  ?>
-									@if(Session::get('cart'))
-									@foreach(Session::get('cart') as $cart)
-									<?php
-											$total_q[] = $cart['quantity'];
-											$total_quantity = array_sum($total_q);
-											$total_price[] = $cart['price'] * $cart['quantity'];
-											$grand_total = array_sum($total_price);
-											?>
-									@endforeach
-									@endif
-									{{$total_quantity}}
-								</span>
-								<a class="p-0 cart-price btn btn-secondary" data-bs-container="body"
-									data-bs-toggle="popover" data-bs-placement="right"
-									data-bs-content="add <strong class='text-success'>$2500.00</strong> more to your cart and get <span class='text-danger'>5% off </span>"><span
-										id="top_cart_total">
-										<a href="{{'/cart/'}}" class="text-white">
-											<span id="topbar_cart_total" class="ms-2 cart-counter-details">
-												{{number_format($grand_total, 2)}}
-											</span>&nbsp;
-											(<span id="cart_items_quantity"
-												class="cart-counter-details">{{$total_quantity}}</span>&nbsp;<span
-												class="cart-counter-details">items
-											</span>)
-										</a>
-									</span>
-								</a>
-							</div>
-						</li>
 						<li class="nav-item dropdown">
 							<a class="nav-link dropdown-toggle product-mega-menu" href="#"
 								id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown"
@@ -375,19 +371,16 @@
 								@endforeach
 							</ul>
 						</li>
-
 						<li class="nav-item me-3">
 							<a class="nav-link text-uppercase nav-item-links " href="#">
 								About
 							</a>
 						</li>
-
 						<li class="nav-item me-4">
 							<a class="nav-link text-uppercase nav-item-links" href="{{url('contact-us')}}">
 								Contact
 							</a>
 						</li>
-
 						<li class="nav-item me-3">
 							<a class="nav-link text-uppercase nav-item-links" href="{{ url('my-account') }} ">My
 								account
@@ -416,23 +409,24 @@
 						</li>
 						@endif
 					</ul>
-					<form class="d-flex mt-3" method="get" action="{{route('product_search')}}">
-						<input type="hidden" id="is_search" name="is_search" value="1">
-						<div class="input-group top-search-group">
-							<input type="text" class="form-control" placeholder="What are you searching for"
-								aria-label="Search" aria-describedby="basic-addon2" id="search" name="value"
-								value="{{ isset($searched_value) ? $searched_value : '' }}">
-							<span class="input-group-text" id="search-addon">
-								<button class="btn-info" type="submit" id="search"
-									style="background: transparent;border:none">
-									<i class="text-white" data-feather="search"></i>
-								</button>
-							</span>
-						</div>
-					</form>
 				</div>
 			</div>
 		</nav>
+		<div class="col-md-12 p-0">
+			<form class="d-flex mt-3" method="get" action="{{route('product_search')}}">
+				<input type="hidden" id="is_search" name="is_search" value="1">
+				<div class="input-group top-search-group w-100">
+					<input type="text" class="form-control" placeholder="What are you searching for" aria-label="Search"
+						aria-describedby="basic-addon2" id="search" name="value"
+						value="{{ isset($searched_value) ? $searched_value : '' }}">
+					<span class="input-group-text" id="search-addon">
+						<button class="btn-info" type="submit" id="search" style="background: transparent;border:none">
+							<i class="text-white" data-feather="search"></i>
+						</button>
+					</span>
+				</div>
+			</form>
+		</div>
 	</div>
 </div>
 {{-- ipad view end --}}

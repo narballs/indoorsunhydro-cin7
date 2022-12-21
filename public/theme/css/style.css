@@ -2234,8 +2234,15 @@ input[type=number] {
         transition: .3s ease-in-out;
         z-index: 0;
         box-shadow: 0 0 15px 9px #00000096;
-        width: 450px !important;
-        height: 475px;
+        width: 350px !important;
+        height: 475px !important;
+        /* right: calc(48% - 30px) !important; */
+    }
+
+    .register-info-box {
+        width: 48% !important;
+        padding: 0 50px !important;
+        top: 10% !important;
     }
 
     .sing-up-label {
@@ -2343,6 +2350,13 @@ input[type=number] {
 
     .ipad-view {
         display: block !important;
+    }
+
+    .register-counter-details {
+        font-family: 'Poppins' !important;
+        font-style: normal !important;
+        font-weight: 600 !important;
+        font-size: 18px !important;
     }
 
     /* 
@@ -2674,10 +2688,24 @@ input[type=number] {
         /* margin-top: 12px;*/
     }
 
+    .logout-bnt {
+        font-size: 14px !important;
+        font-family: 'Poppins' !important;
+        text-transform: uppercase !important;
+        font-weight: 600 !important;
+    }
+
     .procedd-to-checkout {
-        width: 690px !important;
+        width: 302px !important;
         height: 40px !important;
         background-color: #7cc633 !important;
+    }
+
+    .register-counter-details {
+        font-family: 'Poppins' !important;
+        font-style: normal !important;
+        font-weight: 600 !important;
+        font-size: 18px !important;
     }
 
     .payment-option {
