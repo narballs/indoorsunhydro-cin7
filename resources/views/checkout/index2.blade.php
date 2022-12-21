@@ -179,9 +179,15 @@
                     $cart_total  = $cart_total + $total_price ;
              ?>
             <li class="d-flex justify-content-between border-bottom mt-1">
-                <div class="mt-2">
-                    <img src="{{ $cart['image']}}" alt="" width="70px;">
-                </div>
+                @if ($cart['image'])
+                    <div class="mt-2">
+                        <img src="{{ $cart['image']}}" alt="" width="70px;">
+                    </div>
+                @else
+                    <div class="mt-2">
+                        <img src="/theme/img/image_not_available.png" alt="" width="80px">
+                    </div>
+                @endif
                 <div class="mt-4 mb-4">
                     <h6 class="my-0" style="color: #008BD3 !important;">
                         <a
