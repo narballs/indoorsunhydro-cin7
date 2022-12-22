@@ -20,6 +20,7 @@ use App\Http\Controllers\Admin\CustomerSearchController;
 use App\Http\Controllers\Admin\AdminProductController;
 use App\Http\Controllers\Users\RoleController;
 use App\Http\Controllers\Admin\AdminBuyListController;
+use App\Http\Controllers\Admin\AdminShareListController;
 
 /*
 |--------------------------------------------------------------------------
@@ -115,6 +116,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('admin/buy-list', AdminBuyListController::class);
     Route::post('admin/add-to-list', [AdminBuyListController::class, 'addToList']);
     Route::post('admin/generate-list', [AdminBuyListController::class, 'genrateList']);
+    Route::post('admin/share-list', [AdminShareListController::class, 'shareList']);
 });
 Route::get('product/search', [ProductController::class, 'productSearch'])->name('product_search');
 
