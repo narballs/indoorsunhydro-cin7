@@ -842,7 +842,7 @@ label {
     border: #008AD0 1px solid;
     width: 22px;
     height: 26px;
-    padding-left: 5px;
+    padding-left: 8px;
     padding-bottom: 24px;
     padding-right: 17px;
     font-weight: 'Roboto';
@@ -853,6 +853,7 @@ label {
 .order-page-product-image {
     width: 61px;
     height: 61px;
+    background-color: #FFFF !important;
 
 }
 
