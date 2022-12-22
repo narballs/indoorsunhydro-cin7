@@ -83,7 +83,6 @@
                 </tbody>
             </table>
         </div>
-        {{exit()}}
     </div>
 </div>
 </body>
