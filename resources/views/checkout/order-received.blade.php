@@ -2,7 +2,6 @@
 @include('partials.top-bar')
 @include('partials.search-bar')
 {{session()->forget('cart');}}
-
 <div class="container mt-5 ">
 	<div class="row">
 		<div class="col-md-12">
@@ -157,9 +156,15 @@
 
 						<div class="row ps-5 mt-3">
 							<div class="col-md-2">
+								@if($option->image)
+									<div class="mt-4 order-page-prdoct-img ps-1 pt-1 pb-1">
+										<img class="order-page-product-image" src="{{ $option->image}}" alt="">
+									</div>
+								@else
 								<div class="mt-4 order-page-prdoct-img ps-1 pt-1 pb-1">
-									<img class="order-page-product-image" src="{{ $item->product->images}}" alt="">
+									<img class="order-page-product-image" src="/theme/img/image_not_available.png" alt="">
 								</div>
+								@endif
 							</div>
 							<div class=" col-md-6 mt-5">
 								<a class="thnak-you-page-product-name"
