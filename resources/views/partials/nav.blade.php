@@ -148,19 +148,22 @@
 					<div class="collapse navbar-collapse" id="navbarSupportedContent">
 						<ul class="navbar-nav d-flex">
 							<li class="nav-item dropdown">
-								<a class="nav-link dropdown-toggle product-mega-menu" href="#"
+								<a class="nav-link dropdown-toggle product-mega-menu ps-4" href="#"
 									id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown"
-									aria-expanded="false">
+									aria-expanded="false" style="width: 346px">
 									Products
 								</a>
 								<ul class="dropdown-menu l dropdown-menu-dark mt-0 pr-4 pl-4"
 									aria-labelledby="navbarDarkDropdownMenuLink" style="width: 346px;">
-									<li><a class="link-dark dropdown-item text-decoration-none nav-link product-mega-menu"
-											href="{{url('products')}}"><b>All Products</b></a></li>
+									<li>
+										<a class="link-dark dropdown-item text-decoration-none nav-link product-mega-menu"
+											href="{{url('products')}}"><b>All Products</b>
+										</a>
+									</li>
 									@foreach($categories as $category)
 									@if ($category->parent_id == 0)
 									<li>
-										<a class="link-dark dropdown-item text-decoration-none nav-link product-mega-menu"
+										<a class="link-dark dropdown-item text-decoration-none nav-link product-mega-menu "
 											id="category_{{$category->id}}"
 											href="{{ url('products/'.$category->id.'/'.$category->slug) }}">
 											{{$category->name}}
@@ -205,25 +208,26 @@
 								</ul>
 							</li>
 							<li class="nav-item me-3">
-								<a class="nav-link text-uppercase nav-item-links " href="#">
+								<a class="nav-link text-uppercase nav-item-links ps-4" href="#">
 									About
 								</a>
 							</li>
 							<li class="nav-item me-4">
-								<a class="nav-link text-uppercase nav-item-links" href="{{url('contact-us')}}">
+								<a class="nav-link text-uppercase nav-item-links ps-4" href="{{url('contact-us')}}">
 									Contact
 								</a>
 							</li>
 							<li class="nav-item me-3">
-								<a class="nav-link text-uppercase nav-item-links" href="{{ url('my-account') }} ">My
+								<a class="nav-link text-uppercase nav-item-links ps-4"
+									href="{{ url('my-account') }} ">My
 									account
 								</a>
 							</li>
 							@if(Auth::user())
 							<li class="nav-item">
-								<a class="nav-link text-uppercase nav-item-links p-0" href="{{'/user/'}}">
+								<a class="nav-link text-uppercase nav-item-links p-0 ps-4" href="{{'/user/'}}">
 									{{-- <img src="/theme/img/User.png" width="35px" height="35px"> --}}
-									<a class="nav-link text-uppercase nav-item-links" href="{{ route('logout') }}"
+									<a class="nav-link text-uppercase nav-item-links ps-4" href="{{ route('logout') }}"
 										onclick="event.preventDefault(); document.getElementById('frm-logout').submit();">
 										<span class="menu-title">Logout</span>
 									</a>

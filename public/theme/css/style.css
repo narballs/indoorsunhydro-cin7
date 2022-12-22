@@ -3,7 +3,7 @@
 }
 
 .mobile-view {
-    display: none;
+    display: none !important;
 }
 
 .ipad-view {
@@ -842,7 +842,7 @@ label {
     border: #008AD0 1px solid;
     width: 22px;
     height: 26px;
-    padding-left: 8px;
+    padding-left: 5px;
     padding-bottom: 24px;
     padding-right: 17px;
     font-weight: 'Roboto';
@@ -853,7 +853,6 @@ label {
 .order-page-product-image {
     width: 61px;
     height: 61px;
-    background-color: #FFFF !important;
 
 }
 
@@ -2366,6 +2365,58 @@ input[type=number] {
         margin-left: 10px !important;
     }
 
+    .login-reg-panel {
+        position: relative !important;
+        top: 50% !important;
+        transform: translateY(-40%) !important;
+        text-align: center !important;
+        width: 100% !important;
+        margin: auto !important;
+        height: 309px !important;
+        background-color: #7BC533;
+        margin-top: 269px !important;
+        color: #fff !important;
+    }
+
+    .register-info-box {
+        width: 46% !important;
+        padding: 0 50px !important;
+        top: 2% !important;
+        right: 0 !important;
+        position: absolute !important;
+        text-align: left !important;
+    }
+
+    .footer-section-product {
+        margin-top: 10px !important;
+    }
+
+    .sm-4-footer {
+        font-family: 'Poppins' !important;
+        font-style: normal !important;
+        font-weight: 300 !important;
+        font-size: 16px !important;
+        line-height: 12px !important;
+        color: #FFFFFF !important;
+    }
+
+    .contact-us-footer {
+        font-family: 'Poppins' !important;
+        font-style: normal !important;
+        font-weight: 500 !important;
+        font-size: 20px !important;
+        line-height: 23px !important;
+        letter-spacing: 0.05em !important;
+        text-transform: uppercase !important;
+        color: #FFFFFF;
+    }
+
+    .ms-4-footer {
+        font-size: 16px !important;
+        margin-top: 6px !important;
+        margin-bottom: 9px !important;
+    }
+
     /* 
     .login-title {
         font-family: 'Poppins';
@@ -2712,11 +2763,141 @@ input[type=number] {
 }
 
 @media only screen and (max-width: 425px) and (min-width: 360px) {
+    .mobile-view {
+        display: block !important;
+    }
+
     .basket-icon {
         width: 35px;
         height: 27px;
         left: 0px;
         /* margin-top: 12px;*/
+    }
+
+    /* product details page start */
+    .product-detail-heading {
+        font-family: 'Poppins' !important;
+        font-style: normal !important;
+        font-weight: 600 !important;
+        font-size: 12px !important;
+        color: #000000 !important;
+    }
+
+    .product-detail-price {
+        font-family: 'Poppins' !important;
+        font-style: normal !important;
+        font-weight: 600 !important;
+        font-size: 15px !important;
+        line-height: 10px !important;
+        color: #DC4E41 !important;
+    }
+
+    .instock-label {
+        font-style: normal !important;
+        font-weight: 500 !important;
+        font-size: 15px !important;
+        font-family: 'Poppins' !important;
+    }
+
+    .quantity input {
+        width: 61px !important;
+        height: 49px !important;
+        line-height: 1.65 !important;
+        float: left !important;
+        display: block !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        padding-left: 18px !important;
+        border: none !important;
+        color: #7CC633 !important;
+        box-shadow: 0 0 0 1px rgb(0 0 0 / 8%) !important;
+        font-size: 21px !important;
+        border-radius: 4px !important;
+    }
+
+    .quantity-div.quantity-up {
+        position: absolute !important;
+        height: 36% !important;
+        top: 0 !important;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+        font-family: "FontAwesome" !important;
+        /* border-radius: 0 4px 0 0; */
+        line-height: 26px !important;
+        width: 23px !important;
+    }
+
+    .quantity-div {
+        border-left: none !important;
+    }
+
+    .quantity-div.quantity-down {
+        position: absolute;
+        bottom: 0;
+        height: 65%;
+        font-family: "FontAwesome";
+        width: 23px !important;
+        line-height: 26px !important;
+    }
+
+    .category-title-heading {
+        font-family: 'Poppins' !important;
+        font-style: normal !important;
+        font-weight: 700 !important;
+        font-size: 13px !important;
+        line-height: 30px !important;
+    }
+
+    .category-title {
+        font-family: 'Poppins' !important;
+        font-style: normal !important;
+        font-size: 10px !important;
+        line-height: 30px !important;
+        text-align: center !important;
+    }
+
+    .category-description {
+        font-family: 'Poppins' !important;
+        font-style: normal !important;
+        font-weight: 600 !important;
+        font-size: 14px !important;
+        line-height: 36px !important;
+    }
+
+    .category-pra {
+        font-size: 12px !important;
+        font-family: 'Poppins' !important;
+    }
+
+    /* product details page end */
+
+    .footer-section-product {
+        margin-top: 10px !important;
+    }
+
+    .sm-4-footer {
+        font-family: 'Poppins' !important;
+        font-style: normal !important;
+        font-weight: 300 !important;
+        font-size: 16px !important;
+        line-height: 12px !important;
+        color: #FFFFFF !important;
+    }
+
+    .contact-us-footer {
+        font-family: 'Poppins' !important;
+        font-style: normal !important;
+        font-weight: 500 !important;
+        font-size: 20px !important;
+        line-height: 23px !important;
+        letter-spacing: 0.05em !important;
+        text-transform: uppercase !important;
+        color: #FFFFFF;
+    }
+
+    .ms-4-footer {
+        font-size: 16px !important;
+        margin-top: 6px !important;
+        margin-bottom: 9px !important;
     }
 
     .logout-bnt {
@@ -2843,7 +3024,7 @@ input[type=number] {
         background-color: #7BC533 !important;
         color: #FFFFFF !important;
         border: none !important;
-        width: 389px !important;
+        width: 188px !important;
         font: Poppins !important;
         font-weight: 600 !important;
         font-size: 16px !important;
