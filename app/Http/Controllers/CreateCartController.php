@@ -41,17 +41,18 @@ class CreateCartController extends Controller
             ];
         session()->put('cart', $cart);
         }
-         $data = [
-            'name' =>  'waqas',
-            'subject' => 'Share Test',
-            'link' => 'http://indoorsunhydro.local/create-cart/'.$id,
-            'from' => 'wqszeeshan@gmail.com'
-        ];
-        $subject = '';
-                //$adminTemplate = 'emails.admin-share';
-                $data['email'] = 'wqszeeshan@gmail.com';
+        return redirect()->route('cart');
+        //  $data = [
+        //     'name' =>  'waqas',
+        //     'subject' => 'Share Test',
+        //     'link' => 'http://indoorsunhydro.local/create-cart/'.$id,
+        //     'from' => 'wqszeeshan@gmail.com'
+        // ];
+        // $subject = '';
+        //         //$adminTemplate = 'emails.admin-share';
+        //         $data['email'] = 'wqszeeshan@gmail.com';
 
-                MailHelper::sendMailNotification('emails.admin-share', $data);
+        //         MailHelper::sendMailNotification('emails.admin-share', $data);
         // dd($cart);
       //session()->put('cart', $cart);
         // return redirect()->route('add.to.cart')->with('var', $list);
