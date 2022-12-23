@@ -33,7 +33,12 @@ class AdminShareListController extends Controller
             'from' => 'wqszeeshan@gmail.com',
             'list' => $list
         ];
-            $subject = '';
-            MailHelper::sendMailNotification('emails.admin-share', $data);
+        $subject = '';
+        MailHelper::sendMailNotification('emails.admin-share', $data);
+
+       return response()->json([
+                'success' => true, 
+                'msg' => 'List Shared Successully !'
+            ]);
     }
 }

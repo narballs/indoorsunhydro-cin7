@@ -19,7 +19,6 @@
                 <a href="#" class="btn btn-tool btn-sm">
                     <i class="fas fa-bars"></i>
                 </a>
-                 <a href="{{url('/create-cart')}}/{{$list->id}}"><button type="button" class="btn btn-info">Share</button></a>
                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#staticBackdrop">Share</button>
             </div>
 
@@ -61,7 +60,7 @@
                             </tr>
                         @endforeach
                     @endforeach
-                    <tr colspan="3"> <th>Grand Total</th><td>${{$list_product->grand_total}}</td></tr>
+                    <tr colspan="4"> <th colspan="3">Grand Total</th><td class="text-center"><h4>${{$list_product->grand_total}}</h4></td></tr>
                 </tbody>
             </table>
         </div>
@@ -86,13 +85,18 @@
                     <input type="text" class="form-control" name="email" id="email">
                 </div>
                 <input type="hidden" id="list_id" name="list_id" value="{{$list->id}}">
+                 <div class="text-light bg-success text-center " id="share-success">
+            
+                </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" onclick="sendEmail();">Submit</button>
+                    <button type="button" class="btn btn-primary" onclick="sendEmail();">Share</button>
                 </div>
+               
             </form>
         </div>
+ 
     </div>
 </div>
 
@@ -109,8 +113,13 @@
                      email: email,
                      list_id: list_id
                   },
-                  success: function(result){
-                     console.log(result);
+                  success: function(success){
+                     if (success.success == true) {
+                        console.log('ppp');
+                        var msg = success.msg;
+                        $('#share-success').html(msg);
+                     }
+                     console.log(success);
                       //jQuery('.alert').html(result.success);
                         // window.location.reload();
                   }});
