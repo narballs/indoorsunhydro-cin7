@@ -1,7 +1,5 @@
-<footer class="text-white text-lg-start bg-dark ">
-
+<footer class="text-white text-lg-start bg-dark">
     <div class="container-fluid">
-
         <div class="row">
             <div class="col-md-1 text-dark">
                 .
@@ -45,8 +43,6 @@
                 <img class="img-fluid" src="/theme/img/curus.png">&nbsp; &nbsp;
                 <img class="img-fluid" src="/theme/img/visa.png">&nbsp; &nbsp;
             </div>
-
         </div>
     </div>
-
 </footer>
