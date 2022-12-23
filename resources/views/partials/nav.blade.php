@@ -95,9 +95,9 @@
 	</nav>
 </div>
 {{-- mobile view start --}}
-<div class="container mobile-view p-0">
+<div class="container-fluid mobile-view p-0">
 	<div class="row">
-		<div class="bg-dark mt-2" style="font-family: 'Poppins'; font-size:14px;     padding-left: 95px;
+		<div class="bg-dark" style="font-family: 'Poppins'; font-size:14px;     padding-left: 95px;
 			height: 62px;
 			padding-top: 11px;">
 			<img class="basket-icon" src="/theme/img/Bascket.png">
@@ -240,7 +240,7 @@
 							</li>
 							@else
 							<li class="nav-item">
-								<div class="register-counter-details">
+								<div class="register-counter-details ps-4">
 									Login Or Register
 								</div>
 							</li>
@@ -269,9 +269,9 @@
 </div>
 {{-- mobile view end --}}
 {{-- ipad view start --}}
-<div class="container ipad-view">
+<div class="container-fluid ipad-view p-0 m-0">
 	<div class="row">
-		<div class="bg-dark mt-2" style="font-family: 'Poppins'; font-size:14px;     padding-left: 95px;
+		<div class="bg-dark" style="font-family: 'Poppins'; font-size:14px;     padding-left: 252px;
 			height: 62px;
 			padding-top: 11px;">
 			<img class="basket-icon" src="/theme/img/Bascket.png">
@@ -322,7 +322,7 @@
 					<div class="collapse navbar-collapse" id="navbarSupportedContent">
 						<ul class="navbar-nav d-flex">
 							<li class="nav-item dropdown">
-								<a class="nav-link dropdown-toggle product-mega-menu" href="#"
+								<a class="nav-link dropdown-toggle product-mega-menu ps-4" href="#"
 									id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown"
 									aria-expanded="false">
 									Products
@@ -379,17 +379,18 @@
 								</ul>
 							</li>
 							<li class="nav-item me-3">
-								<a class="nav-link text-uppercase nav-item-links " href="#">
+								<a class="nav-link text-uppercase nav-item-links ps-4" href="#">
 									About
 								</a>
 							</li>
 							<li class="nav-item me-4">
-								<a class="nav-link text-uppercase nav-item-links" href="{{url('contact-us')}}">
+								<a class="nav-link text-uppercase nav-item-links ps-4" href="{{url('contact-us')}}">
 									Contact
 								</a>
 							</li>
 							<li class="nav-item me-3">
-								<a class="nav-link text-uppercase nav-item-links" href="{{ url('my-account') }} ">My
+								<a class="nav-link text-uppercase nav-item-links ps-4"
+									href="{{ url('my-account') }} ">My
 									account
 								</a>
 							</li>
@@ -399,7 +400,7 @@
 									{{-- <img src="/theme/img/User.png" width="35px" height="35px"> --}}
 									<a class="nav-link text-uppercase nav-item-links" href="{{ route('logout') }}"
 										onclick="event.preventDefault(); document.getElementById('frm-logout').submit();">
-										<span class="menu-title">Logout</span>
+										<span class="menu-title ps-4">Logout</span>
 									</a>
 									<form style="display:none;" id="frm-logout" action="{{ route('logout') }}"
 										method="POST">
@@ -410,7 +411,7 @@
 							</li>
 							@else
 							<li class="nav-item">
-								<div class="register-counter-details">
+								<div class="register-counter-details ps-4">
 									Login Or Register
 								</div>
 							</li>

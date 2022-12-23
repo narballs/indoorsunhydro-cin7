@@ -359,7 +359,7 @@
 														</span>
 													</button>
 												</div>
-												<div class="d-flex justify-content-center align-items-center">
+												<div class="d-flex justify-content-center align-items-center mt-5">
 													<div>
 														<img class="img-fluid coupon-code-modal-btn"
 															src="/theme/img/modal-icon1.png" alt="">
@@ -374,8 +374,7 @@
 										</div>
 									</div>
 								</div>
-								<input type="button" name="next" class="next action-button" value="Next Step" />
-
+								<input type="button" name="next" class="next action-button mb-5" value="Next Step" />
 							</fieldset>
 							<fieldset>
 								<div class="form-card">
