@@ -45,7 +45,7 @@
 											</th>
 											<th scope="col" class="th-lg" width="147px" class="table-head-items">
 												<span>
-													<img src="/theme/img/Price_Target.png" class="img-fluid">
+													<img src="/theme/img/price_target.png" class="img-fluid">
 												</span>
 												<span class="cart-total">Price</span>
 
