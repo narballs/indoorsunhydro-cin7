@@ -129,7 +129,7 @@
     </div>
 </div>
 {{-- mobile view start --}}
-{{-- <div class="row bg-light mobile-view">
+<div class="row bg-light mobile-view">
     <div class="container">
         <div class="row">
             <div class="w-25">
@@ -234,7 +234,7 @@
             </div>
         </div>
     </div>
-</div> --}}
+</div>
 {{-- mobile view end --}}
 
 

@@ -2379,12 +2379,49 @@ input[type=number] {
     }
 
     .register-info-box {
-        width: 46% !important;
+        width: 51% !important;
         padding: 0 50px !important;
-        top: 2% !important;
+        top: 12% !important;
         right: 0 !important;
         position: absolute !important;
-        text-align: left !important;
+    }
+
+    .dont-have-an-account {
+        font-family: 'Poppins' !important;
+        font-weight: 700 !important;
+        font-size: 19px !important;
+        color: #FFFFFF !important;
+        line-height: 24px !important;
+    }
+
+    #label-register {
+        font-family: 'Poppins' !important;
+        border: 1px solid #9E9E9E !important;
+        padding: 16px 47px !important;
+        display: block !important;
+        color: #7BC533 !important;
+        background-color: white !important;
+        cursor: pointer !important;
+        font-weight: 600 !important;
+        font-size: 17px !important;
+    }
+
+    .login-reg-panel #label-login,
+    .login-reg-panel #label-register {
+        font-family: 'Poppins' !important;
+        border: 1px solid #9E9E9E !important;
+        padding: 9px 0px !important;
+        display: block !important;
+        text-align: center !important;
+        color: #7BC533 !important;
+        background-color: white !important;
+        cursor: pointer !important;
+        font-weight: 600 !important;
+        font-size: 17px !important;
+        width: 169px !important;
+        height: 49px !important;
+        /* margin-left: 63px !important; */
+        margin: auto !important;
     }
 
     .footer-section-product {
@@ -2622,7 +2659,6 @@ input[type=number] {
     #msform input,
     #msform textarea {
         margin-bottom: 12px !important;
-        height: 52px !important;
         background-color: #f6f6f6 !important;
         border: 1px solid #dedede !important;
         font-family: 'Montserrat';
@@ -2630,7 +2666,6 @@ input[type=number] {
         font-family: 'Poppins' !important;
         font-size: 14px !important;
         letter-spacing: 1px !important;
-        width: 83px !important;
     }
 
     .quantity-bg {

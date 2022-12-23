@@ -652,9 +652,9 @@
                             </fieldset>
                             <fieldset>
                                 <div class="form-card">
-                                    <table>
+                                    <table class=" border-white" style="width:658px">
                                         <thead>
-                                            <tr>
+                                            <tr class="border-white">
                                                 <th class="ps-3">
                                                     <span>
                                                         <img class="img-fluid" src="/theme/img/product-iccon.png">
@@ -678,8 +678,8 @@
                                                 $total_price = $cart['price'] * $total_quatity;
                                                 $cart_total  = $cart_total + $total_price ;
                                             ?>
-                                            <tr>
-                                                <td class="ps-4">
+                                            <tr class="border-white">
+                                                <td class="ps-4 border-white">
                                                     <div class="mt-3">
                                                         <a class="product-name" href="
                                                         {{ url('product-detail/'. $cart['product_id'] . '/' . $cart['option_id'] . '/' . $cart['slug']) }}
@@ -688,6 +688,7 @@
                                                         </a>
                                                     </div>
                                                 </td>
+
                                                 <td class="d-flex justify-content-end align-items-end">
                                                     <div class="text-muted rounded-circle mt-3  product-quantity"
                                                         id="circle">
@@ -729,14 +730,14 @@
                                             <tfoot class="border-0">
                                                 <tr>
                                                     <td style="border-bottom:none !important;">
-                                                        <div class="payment-option">Delivery Options</div>
+                                                        <div class="payment-option ps-3">Delivery Options</div>
                                                         @foreach($payment_methods as $payment_method)
                                                         <form class="p-2" action="{{url('order')}}" method="POST"
                                                             id="order_form" name="order_form">
                                                             @csrf
                                                             @foreach($payment_method->options as $payment_option)
                                                             <div class="row">
-                                                                <div class="ps-1">
+                                                                <div class="ps-4">
                                                                     <input type="hidden"
                                                                         value="{{$payment_method->name}}"
                                                                         name="method_name">
