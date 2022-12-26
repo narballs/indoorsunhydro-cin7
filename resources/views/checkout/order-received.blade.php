@@ -157,12 +157,14 @@
 						<div class="row ps-5 mt-3">
 							<div class="col-md-2">
 								@if($option->image)
-									<div class="mt-4 order-page-prdoct-img ps-1 pt-1 pb-1">
-										<img class="order-page-product-image" src="{{ $option->image}}" alt="">
-									</div>
+								<div class="mt-4 order-page-prdoct-img ps-1 pt-1 pb-1">
+									<img class="order-page-product-image" src="{{ $option->image}}" alt=""
+										style="    background: #fff !important;">
+								</div>
 								@else
 								<div class="mt-4 order-page-prdoct-img ps-1 pt-1 pb-1">
-									<img class="order-page-product-image" src="/theme/img/image_not_available.png" alt="">
+									<img class="order-page-product-image" src="/theme/img/image_not_available.png"
+										alt="" style="    background: #fff !important;">
 								</div>
 								@endif
 							</div>
