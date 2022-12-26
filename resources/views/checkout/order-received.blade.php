@@ -150,10 +150,8 @@
 							<h5 class="fw-bold ps-1 item-purchased">Item Purchased
 							</h5>
 						</div>
-
 						@foreach($order->apiOrderItem as $item)
 						@foreach($item->product->options as $option)
-
 						<div class="row ps-5 mt-3">
 							<div class="col-md-2">
 								@if($option->image)
@@ -176,7 +174,6 @@
 							</div>
 							<div class="col-md-2 mt-5 ">
 								<p class="order-page-prduct-quantity">{{$item->quantity}}</p>
-								{{-- <p>{{$item->quantity}}</p> --}}
 							</div>
 							<div class="col-md-2 mt-5">
 								<p class="thank-you-page-product-price">${{
