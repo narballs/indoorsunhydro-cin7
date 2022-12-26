@@ -966,11 +966,11 @@
                 })
             }, 1000)
         })
-        console.log(inputOptions);
         Swal.fire({
+            imageUrl: "theme/img/delivery-icon.png",
+            // text: 'Delivery Option',
             title: 'Please choose delivery option',
             input: 'radio',
-            imageUrl: "theme/img/delivery.png",
             inputOptions: inputOptions,
             showCancelButton: false,
             confirmButtonColor: '#8282ff',

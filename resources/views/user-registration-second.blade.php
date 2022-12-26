@@ -86,7 +86,7 @@
 
 						</form>
 						<div class="row">
-							<div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12 mt-4">
+							<div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12 mt-4 remember-me">
 								<div class="form-check checkbox-lg form-login">
 									<input class="form-check-input aling-items-center justify-conent-center d-flex"
 										type="checkbox" value="" id="checkbox-2" />&nbsp;
