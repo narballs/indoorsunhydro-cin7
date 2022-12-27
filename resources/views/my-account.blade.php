@@ -830,7 +830,7 @@
 				$('.nav-pills .active').removeClass('active');
 				$('.nav-pills #recent_orders').addClass('active');
 				//$(this).addClass("active");
-		
+				$('#whishlist').addClass('d-none');
 				$('#customer-address').addClass('d-none');
 				$('#order-detail-container').addClass('d-none');
 				$('#edit_address').addClass('d-none');
@@ -875,6 +875,7 @@
 
 			function accountDetails() {
 				$('#orders').addClass('d-none');
+				$('#whishlist').addClass('d-none');
 				$('#detail-heading').addClass('d-none');
 				$('#order_details').addClass('d-none');
 				$('#address_row').addClass('d-none');
@@ -892,6 +893,7 @@
 				})
 			}
 			function edit_address() {
+				$('#whishlist').addClass('d-none');
 				$('#address_row').addClass('d-none');
 				$('.nav-pills .active').removeClass('active');
 				$('.nav-pills #current_address').addClass('active');
