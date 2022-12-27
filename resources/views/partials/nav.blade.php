@@ -239,7 +239,7 @@
 								</a>
 							</li>
 							@else
-							<li class="nav-item">
+							<li class="text-uppercase nav-item-links">
 								<div class="register-counter-details ps-4">
 									Login Or Register
 								</div>
