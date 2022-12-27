@@ -91,6 +91,30 @@
 
 									</a>
 								</li>
+								<li class="nav-item w-100 mb-3" id="wish_lists">
+									<a href="#" class="nav-link px-0 align-middle  px-0 ms-3">
+										<i class="fs-4 bi-table"></i>
+										<div class="row">
+											<div class="col-md-2">
+												<span>
+													<img src="theme/img/order_visited.png" id="order_active"
+														style="display: none;">
+													<img src="theme/img/order_unvisited.png" id="order_inactive">
+												</span>
+											</div>
+											<div class="col-md-10">
+												<span
+													class="ms-1 d-none d-sm-inline  fs-5 ms-3 mt-1 ml-0 pl-0 nav-items-link"
+													onclick="wishLists()">
+													Whishlists
+												</span>
+											</div>
+
+
+										</div>
+
+									</a>
+								</li>
 								<li class="nav-item w-100 mb-3" id="current_address">
 									<a href="#" class="nav-link px-0 align-middle  px-0 ms-3">
 										<i class="fs-4 bi-bootstrap"></i>
@@ -195,12 +219,14 @@
 									<span class="dashboard-heading">Hello <span
 											class="text-capitalize user_names_dashboard"><strong>{{$user->first_name}}</strong></span>
 								</div>
-								<div class="col-md-1">
-									<form id="frm-logout" action="{{ route('logout') }}" method="POST">
-										{{ csrf_field() }}
-									</form>
+									<div class="col-md-1">
+										<form id="frm-logout" action="{{ route('logout') }}" method="POST">
+											{{ csrf_field() }}
+										</form>
+									</div>
+									</span>
 								</div>
-							</div>
+							
 							<div class="col-md-12  mt-4 dashboard-content pl-1 ms-3">
 								From your account dashboard you can view your <span
 									class="dashboard-link-text text-decoration-underline" onclick="showOrders()">Recent
@@ -233,10 +259,63 @@
 								</tbody>
 							</table>
 						</div>
-						<div class="order-detail" id="order_details">
+						<div class="d-none  mt-3 mb-3 pr-0 pl-0" id="whishlist">
+							<div class="col-md-12 border-bottom border-4 pb-4 p-0 bg-white">
+								<img src="theme/img/orders_main.png" style="margin: -6px 1px 1px 1px;">
+								<span class="pt-1 my-account-content-heading  ">Wishlists</span>
+							</div>
+							<div class="col-md-8 m-auto rounded-end pt-3 pb-3" style="" id="wishlist_content">
+					<!-- 			<div class="container p-0">
+								    <header class="text-center">
+								        <h1>My Favourites</h1>
+								    </header>
+									<div class="row">
+										  <div class="col-md-8 col-sm-12 co-xs-12 gal-item">
+											   <div class="row h-50">
+													  <div class="col-md-12 col-sm-12 co-xs-12 gal-item">
+																<div class="box buy-list-box">
+															 <img src="http://fakeimg.pl/758x370/" class="img-ht img-fluid rounded">
+																</div>
+														</div>
+												</div>
+										  
+										    <div class="row h-50 mt-3">
+													 <div class="col-md-6 col-sm-6 co-xs-12 gal-item pt-0">
+													  <div class="box buy-list-box">
+														<img src="http://fakeimg.pl/748x177/" class="img-ht img-fluid rounded">
+													</div>
+													</div>
+
+													<div class="col-md-6 col-sm-6 co-xs-12 gal-item pt-0">
+													 <div class="box buy-list-box">
+														<img src="http://fakeimg.pl/371x370/" class="img-ht img-fluid rounded">
+													</div>
+													</div>
+									            </div>
+									      </div>
+
+								           <div class="col-md-4 col-sm-6 co-xs-12 gal-item">
+											   <div class="col-md-12 col-sm-6 co-xs-12 gal-item h-25 pl-0 pr-0">
+												<div class="box buy-list-box">
+													<img src="http://fakeimg.pl/748x177/" class="img-ht img-fluid rounded">
+												</div>
+												</div>
+
+												  <div class="col-md-12 col-sm-6 co-xs-12 gal-item h-76 p-0">
+												   <div class="box buy-list-box">
+													<img src="http://fakeimg.pl/748x177/" class="img-ht img-fluid rounded">
+												</div>
+												</div>
+								            </div>
+									</div>
+								<br/>
+							</div> -->
+						</div>
+						</div>
+						<div class="" id="order_details">
 							<div class="col-md-12 mt-4 d-none order-detail-container pl-4 pr-4"
 								id="order-detail-container">
-								<div class="row mt-3 d-none detail-heading" id="detail-heading">
+								<div class="row mt-3  detail-heading" id="detail-heading">
 									<div class="row mb-4 mt-3 pr-0">
 										<div class="col-md-4">
 											<img src="theme/img/order_details.png" style="margin: -1px 2px 1px 1px;">
@@ -244,7 +323,7 @@
 											</span>
 										</div>
 										<div class="col-md-8 rounded-end" id="order_content">
-											<div class="mt-1" id="order_id"></div>
+											<div class="mt-1" id="order_id">dfdfdfdf</div>
 										</div>
 									</div>
 								</div>
@@ -458,9 +537,7 @@
 										value="Save" onclick="change_password()">SAVE CHANGES</button>
 								</div>
 							</div>
-						</div>
-					</div>
-				</div>
+				
 				<div class="row ms-2 mb-5 d-none" id="address_row">
 					<div class="col-md-3">
 					</div>
@@ -528,6 +605,83 @@
 	  				}
   				}
 
+			}
+			function wishLists() {
+				$('#whishlist').removeClass('d-none');
+				$('#intro').addClass('d-none');
+				$('#edit_address').addClass('d-none');
+				$('#address_row').addClass('d-none');
+				
+				$('.order-detail-container').addClass('d-none');
+				$('#customer-address').addClass('d-none')
+				$('#orders').addClass('d-none');
+				var listitems = '';
+					jQuery.ajax({
+					url: "{{ url('/get-wish-lists/')}}",
+					method: 'GET',
+					data: {
+						
+					
+					},
+				        success : function (images) {
+
+				        	$('#wishlist_content').html(images);
+				        	return;
+
+				        	console.log(images[1]);
+							//response.images.slice(-5).forEach(
+							// 	function(item, index){
+							// 		console.log(item.product.options[0].image)
+					
+							// });
+								listitems += '<div class="container p-0">';
+								    listitems +=  '<header class="text-center">'+
+								        	'<h1>My Favourites</h1>'+
+								    		'</header>'+
+						
+									'<div class="row">'+
+										  '<div class="col-md-8 col-sm-12 co-xs-12 gal-item">'+
+											   	'<div class="row h-50">'+
+													  '<div class="col-md-12 col-sm-12 co-xs-12 gal-item">'+
+																'<div class="box buy-list-box">'+
+															 '<img src="' + images[0] + '" class="img-ht img-fluid rounded">'+
+																'</div>'+
+														'</div>'+
+												'</div>'+
+										  
+										    '<div class="row h-50 mt-3">'+
+													 '<div class="col-md-6 col-sm-6 co-xs-12 gal-item pt-0">'+
+													  '<div class="box buy-list-box">'+
+														'<img src="http://fakeimg.pl/748x177/" class="img-ht img-fluid rounded">'+
+													'</div>'+
+													'</div>'+
+
+													'<div class="col-md-6 col-sm-6 co-xs-12 gal-item pt-0">'+
+													 '<div class="box buy-list-box">'+
+														'<img src="http://fakeimg.pl/371x370/" class="img-ht img-fluid rounded">'+
+													'</div>'+
+													'</div>'+
+									            '</div>'+
+									      '</div>'+
+
+								           '<div class="col-md-4 col-sm-6 co-xs-12 gal-item">'+
+											   '<div class="col-md-12 col-sm-6 co-xs-12 gal-item h-25 pl-0 pr-0">'+
+												'<div class="box buy-list-box">'+
+													'<img src="http://fakeimg.pl/748x177/" class="img-ht img-fluid rounded">'+
+												'</div>'+
+												'</div>'+
+
+												  '<div class="col-md-12 col-sm-6 co-xs-12 gal-item h-76 p-0">'+
+												   '<div class="box buy-list-box">'+
+													'<img src="http://fakeimg.pl/748x177/" class="img-ht img-fluid rounded">'+
+												'</div>'+
+												'</div>'+
+								            '</div>'+
+									'</div>'+
+								'<br/>'+
+							'</div>';
+							$('#wishlist_content').html(listitems);
+				}});
 			}
 
 			
@@ -766,9 +920,9 @@
 
         		jQuery.ajax({
                 	method: 'GET',
+                	data: {
                 	url: "{{ url('/user-addresses/') }}",
 
-                	data: {
 	                	"_token": "{{ csrf_token() }}",
 	                    "user_id": user_id,
 	                    "first_name" : first_name,

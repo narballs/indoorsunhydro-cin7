@@ -1,7 +1,7 @@
 <script src="https://unpkg.com/@popperjs/core@2"></script>
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-<script src="/theme/bootstrap5/js/bootstrap.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="{{asset('//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js')}}"></script>
+<script src="{{asset('/theme/bootstrap5/js/bootstrap.js')}}"></script>
+<script src="{{asset('//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js')}}"></script>
 
 <script src="https://kit.fontawesome.com/ec19ec29f3.js" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/feather-icons"></script>

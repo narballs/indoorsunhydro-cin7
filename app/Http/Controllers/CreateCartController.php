@@ -29,7 +29,7 @@ class CreateCartController extends Controller
         //dd($list->list_products);
         //$count = 0;
         foreach($list->list_products as $key=>$list_product) {
-            $cart[$key+1] = [
+            $cart[$list_product->id] = [
                 "product_id" => $list_product->product_id,
                 "name" => $list_product->product->name,
                 "quantity" => $list_product->quantity,

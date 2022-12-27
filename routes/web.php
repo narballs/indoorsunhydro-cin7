@@ -82,6 +82,8 @@ Route::post('change-password', [ChangePasswordController::class, 'store'])->name
 Route::get('/contact-us/', [ContactUsController::class, 'index']);
 Route::post('/contact-us-store/', [ContactUsController::class, 'store'])->name('contact.us.store');
 Route::get('/create-cart/{id}', [CreateCartController::class, 'create_cart'])->name('create.cart');
+Route::post('/add-to-wish-list/', [ProductController::class, 'addToWishList']);
+Route::get('/get-wish-lists/', [ProductController::class, 'getWishLists']);
 //Route::post('/',[UserController::class, 'logout'])->name('logout');
 
 

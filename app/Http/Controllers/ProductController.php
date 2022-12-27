@@ -9,6 +9,9 @@ use App\Models\ProductOption;
 use Session;
 use App\Models\Contact;
 use App\Models\Brand;
+use App\Models\BuyList;
+use App\Models\ProductBuyList;
+use Auth;
 
 class ProductController extends Controller
 {
@@ -519,6 +522,7 @@ class ProductController extends Controller
     public function cart(Request $request)
     {
         $cart_items = $request->session()->get('cart');
+        //dd($cart_items);
         $user_id = auth()->id();
         $contact = [];
         if (!empty($user_id)) {
@@ -756,5 +760,57 @@ class ProductController extends Controller
             'per_page',
             'searched_value'
         ));
+    }
+
+
+    public function addToWishList(Request $request) {
+        $user_id = Auth::id();
+
+        //check if user have list already
+
+        $user_lists = BuyList::where('user_id', $user_id)->exists();
+        if ($user_lists == false) {
+                $wishlist = new BuyList();
+                $wishlist->title = 'Favourite';
+                $wishlist->status = 'Public';
+                $wishlist->description = 'Favourite';
+                $wishlist->user_id = $user_id;
+                $wishlist->save();
+                $list_id = $wishlist->id;
+            }
+        else {
+            $list = BuyList::where('title', 'Favourite')->where('user_id', $user_id)->first();
+            $list_id = $list->id;
+        }
+            
+            $product_buy_list = new ProductBuyList();
+            $product_buy_list->list_id = $list_id;
+            $product_buy_list->product_id = $request->product_id;
+            $product_buy_list->option_id = $request->option_id;
+            $product_buy_list->quantity = $request->quantity;
+            $product_buy_list->save();
+             return response()->json([
+                'success' => true, 
+                'msg' => 'List Shared Successully !'
+            ]);
+        
+    }
+
+    public function getWishlists() {
+        $user_id = Auth::id();
+        $list = BuyList::where('user_id', $user_id)->with('list_products.product.options')->first();
+        $images = [];
+        foreach ($list->list_products as $list){
+            foreach ($list->product->options as $image) {
+                array_push($images, $image->image);
+            }
+        }
+
+
+        return view('wishlists.index', compact(
+            'images'
+        ));
+
+        return $images;
     }
 }
