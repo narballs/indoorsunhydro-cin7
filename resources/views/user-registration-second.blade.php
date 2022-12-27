@@ -83,14 +83,14 @@
 
 							</div>
 							<button type="submit" class="btn-login info login-button">LOG IN</button>
-
 						</form>
 						<div class="row">
 							<div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12 mt-4 remember-me">
 								<div class="form-check checkbox-lg form-login">
 									<input class="form-check-input aling-items-center justify-conent-center d-flex"
 										type="checkbox" value="" id="checkbox-2" />&nbsp;
-									<label class="form-check-label" for="checkbox-2">Remember me</label>
+									<label class="formemail-registration-check-label" for="checkbox-2">Remember
+										me</label>
 								</div>
 							</div>
 							<div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12 mt-3">

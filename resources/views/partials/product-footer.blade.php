@@ -64,7 +64,7 @@
 		</div>
 </footer>
 
-<footer class="text-white text-lg-start bg-dark h-900 mt-5 mobile-view">
+<footer class="text-white text-lg-start bg-dark h-90 mt-5 mobile-view">
 	<div class="container">
 		<div class="row">
 			<div class="col-md-12">
@@ -89,7 +89,7 @@
 					</span>
 					<p class="ms-4 ms-4-footer">&nbsp;
 						<span class="text-success sm-4-footer">
-							MONDAY-SUNDAY 7 Dayes
+							MONDAY-SUNDAY
 						</span> 9AM-5pm
 					</p>
 				</div>
@@ -147,7 +147,7 @@
 					</span>
 					<p class="ms-4 ms-4-footer">&nbsp;
 						<span class="text-success sm-4-footer">
-							MONDAY-SUNDAY 7 Dayes
+							MONDAY-SUNDAY
 						</span> 9AM-5pm
 					</p>
 				</div>
