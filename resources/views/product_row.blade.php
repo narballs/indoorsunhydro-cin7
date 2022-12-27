@@ -36,7 +36,10 @@
                 </p>
                 @endif
                 @if($option->stockAvailable > 0)
-                <button class="ajaxSubmit button-cards col w-100" type="submit" style="max-height: 46px;"
+                <button class="ajaxSubmit col w-100 whishlist-button" type="submit" style="max-height: 46px;"
+                    id="ajaxSubmit_{{$product->id}}"
+                    onclick="addToList('{{$product->product_id}}', '{{$option->option_id}}')">Add to wishlist</button>
+                <button class="ajaxSubmit button-cards col w-100 mt-2" type="submit" style="max-height: 46px;"
                     id="ajaxSubmit_{{$product->id}}"
                     onclick="updateCart('{{$product->id}}', '{{$option->option_id}}')">Add to cart</button>
                 @else
@@ -97,4 +100,35 @@
 
 			    return false;
 			}
+    function addToList(id, option_id) {
+        var product_id = id;
+        var option_id = option_id;
+
+        jQuery.ajax({
+               url: "{{ url('/add-to-wish-list/') }}",
+               method: 'post',
+               data: {
+                 "_token": "{{ csrf_token() }}",
+                  product_id: product_id,
+                  option_id: option_id,
+                  quantity: 1
+               },
+               success: function(success){
+                console.log(success)
+                    if(success.success == true){
+                        Swal.fire({
+                            toast: true,
+                            icon: 'success',
+                            title: 'Added to Favourite',
+                            timer: 3000,
+                            showConfirmButton: false,
+                            position: 'top',
+                            timerProgressBar: true
+                        });
+                    }
+               
+               }
+           });
+
+    }
 </script>

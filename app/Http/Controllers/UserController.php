@@ -290,10 +290,7 @@ class UserController extends Controller
     }
 
     public function my_account(Request $request) {
-        // $user = User::latest()->first();
-        // $user_id = $user->id;
-        // Auth::loginUsingId($user_id);
-      
+        
         $user_id = auth()->id();
         if (!$user_id) {
             return redirect('/user/');

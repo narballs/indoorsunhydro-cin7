@@ -11,7 +11,8 @@ class BuyList extends Model
     protected $fillable = [
         'title',
         'status',
-        'description'
+        'description', 
+        'user_id'
     ];
 
     public function list_products()
