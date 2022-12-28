@@ -239,10 +239,10 @@
 								</a>
 							</li>
 							@else
-							<li class="text-uppercase nav-item-links">
-								<div class="register-counter-details ps-4">
-									Login Or Register
-								</div>
+							<li class="nav-item me-3">
+								<a class="nav-link text-uppercase nav-item-links ps-4" href="{{ url('my-account') }} ">
+									login or register
+								</a>
 							</li>
 							@endif
 						</ul>
@@ -268,6 +268,7 @@
 	</div>
 </div>
 {{-- mobile view end --}}
+
 {{-- ipad view start --}}
 <div class="container-fluid ipad-view p-0 m-0">
 	<div class="row">
@@ -412,7 +413,7 @@
 							@else
 							<li class="nav-item">
 								<div class="register-counter-details ps-4">
-									Login Or Register
+									login or register
 								</div>
 							</li>
 							@endif
@@ -438,5 +439,4 @@
 		</div>
 	</div>
 </div>
-
 {{-- ipad view end --}}
