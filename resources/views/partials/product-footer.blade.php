@@ -65,7 +65,7 @@
 </footer>
 
 <footer class="text-white text-lg-start bg-dark h-90 mt-5 mobile-view">
-	<div class="container">
+	<div class="container mt-5">
 		<div class="row">
 			<div class="col-md-12">
 				<div class="main-page-footer-section footer-section-product">
