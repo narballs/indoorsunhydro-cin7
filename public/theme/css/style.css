@@ -1,5 +1,5 @@
 .deal-btn {
-    background-color: #E32029;
+    #icons background-color: #E32029;
 }
 
 .mobile-view {
@@ -173,6 +173,11 @@
 h1 {
     border: 1px solid red;
 }
+
+#icons {
+    padding-right: 47px !important;
+}
+
 
 /*.box img{
     height: none !important;
@@ -3002,13 +3007,28 @@ input[type=number] {
     .top-bar-total-items {
         font-family: 'Poppins' !important;
         font-size: 14px !important;
-        padding-left: 94px !important;
-        height: 62px !important;
+        padding-left: 123px !important;
+        height: 64px !important;
         padding-top: 11px !important;
     }
 
     .login-show a {
         padding: 0px !important;
+    }
+
+    #icons {
+        width: 92% !important;
+        margin-right: -6px !important;
+        padding-left: 21px !important;
+        margin-top: 13px !important;
+        padding-right: 0px !important;
+
+
+    }
+
+    .compay-row {
+        margin-top: -115px !important;
+        height: 0px !important;
     }
 
     /* product details page start */
