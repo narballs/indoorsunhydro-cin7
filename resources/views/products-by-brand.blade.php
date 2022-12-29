@@ -184,7 +184,6 @@
                            && $price_creteria=='brand-a-to-z' ? 'selected="selected"' : '' }}>Product A to Z</option>
                         <option class="form-group" value="brand-z-to-a" {{ $price_creteria }} {{ isset($price_creteria)
                            && $price_creteria=='brand-z-to-a' ? 'selected="selected"' : '' }}>Product Z to A</option>
-
                      </select>
                   </div>
                   <div class="col-md-12">

@@ -19,7 +19,7 @@
 						in our privacy policy.</p>
 				</div>
 			</div>
-			<div class="col-md-12 col-xs-6 mt-5 d-none" id="icons" style="padding-right: 47px;">
+			<div class="col-md-12 col-xs-6 mt-5 d-none" id="icons">
 				<div class="icon-container d-flex">
 					<figure>
 						<img class="img-fluid" src="/theme/img/round-solid.png" id="sign-up">
@@ -225,6 +225,7 @@
 						</div>
 					</div>
 				</div>
+
 				<div class="row business-row bg-light d-none" id="business-row" style="margin-top: -121px">
 					<div class="col-md-12 text-center">
 						<h2 style="color:#25529F; font-size:30px" class="text-center pt-5">Your Business Location</h2>

@@ -97,9 +97,7 @@
 {{-- mobile view start --}}
 <div class="container-fluid mobile-view p-0">
 	<div class="row">
-		<div class="bg-dark" style="font-family: 'Poppins'; font-size:14px;     padding-left: 95px;
-			height: 62px;
-			padding-top: 11px;">
+		<div class="bg-dark top-bar-total-items">
 			<img class="basket-icon" src="/theme/img/Bascket.png">
 			<span
 				class="cart-basket d-flex align-items-center justify-content-center float-sm-end cart-counter rounded-circle"
@@ -120,24 +118,27 @@
 				@endif
 				{{$total_quantity}}
 			</span>
-			<a class="p-0 cart-price btn btn-secondary" data-bs-container="body" data-bs-toggle="popover"
-				data-bs-placement="right"
-				data-bs-content="add <strong class='text-success'>$2500.00</strong> more to your cart and get <span class='text-danger'>5% off </span>"><span
-					id="top_cart_total">
-					<a href="{{'/cart/'}}" class="text-white">
-						<span id="topbar_cart_total" class="ms-2 cart-counter-details">
-							{{number_format($grand_total, 2)}}
-						</span>&nbsp;
-						(<span id="cart_items_quantity"
-							class="cart-counter-details">{{$total_quantity}}</span>&nbsp;<span
-							class="cart-counter-details">items
-						</span>)
-					</a>
-				</span>
-			</a>
+			{{-- <div class="top-tatal-items d-flex justify-content-center align-items-center"> --}}
+				<a class="p-0 cart-price btn btn-secondary" data-bs-container="body" data-bs-toggle="popover"
+					data-bs-placement="right"
+					data-bs-content="add <strong class='text-success'>$2500.00</strong> more to your cart and get <span class='text-danger'>5% off </span>"><span
+						id="top_cart_total">
+						<a href="{{'/cart/'}}" class="text-white mt-2">
+							<span id="topbar_cart_total" class="ms-2 cart-counter-details">
+								{{number_format($grand_total, 2)}}
+							</span>&nbsp;
+							(<span id="cart_items_quantity"
+								class="cart-counter-details">{{$total_quantity}}</span>&nbsp;<span
+								class="cart-counter-details">items
+							</span>)
+						</a>
+					</span>
+				</a>
+				{{--
+			</div> --}}
 		</div>
-		<div>
-			<nav class="navbar navbar-expand-lg navbar-light bg-light">
+		<div class="p-0">
+			<nav class="navbar navbar-expand-lg navbar-light bg-light p-0">
 				<div class="container-fluid">
 					<a class="navbar-brand" href="/"><img class="top-img" src="/theme/img/indoor_sun.png" ;></a>
 					<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -239,10 +240,10 @@
 								</a>
 							</li>
 							@else
-							<li class="text-uppercase nav-item-links">
-								<div class="register-counter-details ps-4">
-									Login Or Register
-								</div>
+							<li class="nav-item me-3">
+								<a class="nav-link text-uppercase nav-item-links ps-4" href="{{ url('my-account') }} ">
+									login or register
+								</a>
 							</li>
 							@endif
 						</ul>
@@ -250,7 +251,7 @@
 				</div>
 			</nav>
 		</div>
-		<div class="col-md-12 mb-4">
+		<div class="col-md-12 mb-4 p-1">
 			<form class="d-flex mt-3" method="get" action="{{route('product_search')}}">
 				<input type="hidden" id="is_search" name="is_search" value="1">
 				<div class="input-group top-search-group w-100">
@@ -268,6 +269,7 @@
 	</div>
 </div>
 {{-- mobile view end --}}
+
 {{-- ipad view start --}}
 <div class="container-fluid ipad-view p-0 m-0">
 	<div class="row">
@@ -412,7 +414,7 @@
 							@else
 							<li class="nav-item">
 								<div class="register-counter-details ps-4">
-									Login Or Register
+									login or register
 								</div>
 							</li>
 							@endif
@@ -438,5 +440,4 @@
 		</div>
 	</div>
 </div>
-
 {{-- ipad view end --}}
