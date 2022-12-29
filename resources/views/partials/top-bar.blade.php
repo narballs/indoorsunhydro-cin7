@@ -7,7 +7,6 @@
 
                 </div>
             </div>
-
             <div class="col-md-4 d-flex align-items-center justify-content-end">
                 <a href="{{'/user/'}}" class="text-white d-flex align-items-end mt-2">
                     <div>
