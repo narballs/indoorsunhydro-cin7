@@ -15,7 +15,7 @@
                     </div>
                     @if(Auth::user())
                     <div>
-                        <a class="text-white" href="{{ route('logout') }}"
+                        <a class="text-white top-bar-logout" href="{{ route('logout') }}"
                             onclick="event.preventDefault(); document.getElementById('frm-logout').submit();">
                             <span class="menu-title">Logout</span>
                         </a>
