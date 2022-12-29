@@ -1325,14 +1325,21 @@ label {
 }
 
 
-.body.swal2-toast-shown .swal2-container.swal2-top {
+/* .body.swal2-toast-shown .swal2-container.swal2-top {
     width: 500px !important;
     margin-top: 10px;
+} */
+body.swal2-toast-shown .swal2-container {
+    box-sizing: border-box !important;
+    width: 576px !important;
+    max-width: 100% !important;
+    background-color: rgba(0, 0, 0, 0) !important;
+    pointer-events: none !important;
 }
 
-/*.swal2-container {
-    width: 482px !important;
-}*/
+/* .swal2-container {
+    width: 631px !important;
+} */
 
 .swal2-radio {
     /* display: grid !important; */
@@ -1377,9 +1384,10 @@ label {
 
 
 .swal2-image {
-    width: 511px !important;
-    margin-top: 2.8em !important;
-    margin-bottom: 0 !important;
+    /* max-width: 91%; */
+    margin: 2em auto 1em;
+    width: 100% !important;
+    min-width: 50%;
 }
 
 .dropdown-menu-dark li {
@@ -1572,6 +1580,13 @@ input[type=number] {
 }
 
 .cart-counter-details {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.top-bar-logout {
     font-family: 'Poppins';
     font-style: normal;
     font-weight: 600;
@@ -2977,6 +2992,19 @@ input[type=number] {
         height: 27px;
         left: 0px;
         /* margin-top: 12px;*/
+    }
+
+    .top-tatal-items {
+        margin-top: -33px !important;
+        padding-right: 22px !important;
+    }
+
+    .top-bar-total-items {
+        font-family: 'Poppins' !important;
+        font-size: 14px !important;
+        padding-left: 94px !important;
+        height: 62px !important;
+        padding-top: 11px !important;
     }
 
     .login-show a {
