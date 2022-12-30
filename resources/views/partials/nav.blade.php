@@ -138,9 +138,11 @@
 			</div> --}}
 		</div>
 		<div class="p-0">
-			<nav class="navbar navbar-expand-lg navbar-light bg-light p-0">
+			<nav class="navbar navbar-expand-lg navbar-light p-0">
 				<div class="container-fluid">
-					<a class="navbar-brand" href="/"><img class="top-img" src="/theme/img/indoor_sun.png" ;></a>
+					<a class="navbar-brand" href="/">
+						<img class="top-img" src="/theme/img/indoor_sun.png">
+					</a>
 					<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
 						data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
 						aria-expanded="false" aria-label="Toggle navigation">

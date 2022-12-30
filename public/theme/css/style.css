@@ -341,7 +341,7 @@ a {
     display: block;
     margin: 20px 0;
     padding: 15px;
-    border: 1px solid #b5b5b5;
+    border: 1px solid #b5b5b5 !important;
     outline: none;
 }
 
@@ -365,13 +365,12 @@ a {
 
 .register-show input[type="text"],
 .register-show input[type="password"] {
-    width: 100% !important;
-    display: block !important;
-    margin: 20px 0 !important;
-    padding: 15px !important;
+    width: 100%;
+    display: block;
+    margin: 20px 0;
+    padding: 15px;
     border: 1px solid #b5b5b5 !important;
-    outline: none !important;
-    height: 1px !important;
+    outline: none;
 }
 
 .login-info-box {
@@ -2083,22 +2082,22 @@ input[type=number] {
     }
 
     .login-info-box {
-        width: 46%;
-        padding: 0 50px;
-        top: 20%;
-        left: 0;
-        position: absolute;
-        text-align: right;
-        text-align: center;
+        width: 46% !important;
+        padding: 0 50px !important;
+        top: 20% !important;
+        left: 0 !important;
+        position: absolute !important;
+        text-align: right !important;
+        text-align: center !important;
     }
 
     .register-info-box {
-        width: 46%;
-        padding: 0 50px;
-        top: 20%;
-        right: 0;
-        position: absolute;
-        text-align: right;
+        width: 46% !important;
+        padding: 0 50px !important;
+        top: 20% !important;
+        right: 0 !important;
+        position: absolute !important;
+        text-align: right !important;
 
     }
 
@@ -2168,22 +2167,23 @@ input[type=number] {
     }
 
     .login-info-box {
-        width: 46%;
-        padding: 0 50px;
-        top: 20%;
-        left: 0;
-        position: absolute;
-        text-align: right;
+        width: 46% !important;
+        padding: 0 50px !important;
+        top: 20% !important;
+        left: 0 !important;
+        position: absolute !important;
+        text-align: right !important;
+        text-align: center !important;
         text-align: center;
     }
 
     .register-info-box {
-        width: 46%;
-        padding: 0 50px;
-        top: 20%;
-        right: 0;
-        position: absolute;
-        text-align: right;
+        width: 46% !important;
+        padding: 0 50px !important;
+        top: 20% !important;
+        right: 0 !important;
+        position: absolute !important;
+        text-align: right !important;
 
     }
 
@@ -2519,7 +2519,7 @@ input[type=number] {
         font-weight: 700 !important;
         font-size: 19px !important;
         color: #FFFFFF !important;
-        line-height: 24px !important;
+        line-height: 17px !important;
     }
 
     #label-register {
@@ -2548,8 +2548,8 @@ input[type=number] {
         font-size: 17px !important;
         width: 169px !important;
         height: 49px !important;
-        /* margin-left: 63px !important; */
-        margin: auto !important;
+        margin-left: 23px !important;
+
     }
 
     .footer-section-product {
@@ -2580,6 +2580,61 @@ input[type=number] {
         font-size: 16px !important;
         margin-top: 6px !important;
         margin-bottom: 9px !important;
+    }
+
+    .login-show,
+    .register-show {
+        z-index: 1 !important;
+        transition: 0.3s ease-in-out !important;
+        color: #242424 !important;
+        text-align: left !important;
+        padding: 27px !important;
+    }
+
+    .login-show a {
+        padding: 0px !important;
+    }
+
+    hr {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 0;
+        border-top: 1px solid #b5b5b5 !important;
+    }
+
+    hr {
+        margin: 0px !important;
+        color: #b5b5b5 !important;
+        background-color: currentColor;
+        border: 0;
+        opacity: 0.25;
+    }
+
+    label {
+        display: inline-block;
+        margin-bottom: 0px !important;
+    }
+
+    .white-panel {
+        background-color: rgba(255, 255, 255, 1);
+        position: absolute;
+        top: 3%;
+        right: calc(50% - 30px);
+        transition: .3s ease-in-out;
+        z-index: 0;
+        box-shadow: 0 0 15px 9px #00000096;
+        width: 48% !important;
+        height: 477px !important;
+        margin-top: -96px !important;
+    }
+
+    .login-info-box {
+        width: 44% !important;
+        padding: 0 32px !important;
+        top: 20% !important;
+        /* left: 0 !important; */
+        /* position: absolute !important; */
+        /* text-align: left !important; */
     }
 
     /* 
@@ -3382,8 +3437,7 @@ input[type=number] {
 
     .top-img {
         width: 100%;
-        padding-top: 11px;
-        margin-left: 0px !important;
+        margin-left: 43px !important;
     }
 
     .banner-img {
