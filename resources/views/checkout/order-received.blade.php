@@ -2,7 +2,7 @@
 @include('partials.top-bar')
 @include('partials.search-bar')
 {{session()->forget('cart');}}
-<div class="container mt-5 ">
+{{-- <div class="container mt-5 ">
 	<div class="row">
 		<div class="col-md-12">
 			<div class="card  border-0">
@@ -221,6 +221,203 @@
 						</div>
 					</div>
 				</card-footer>
+			</div>
+		</div>
+	</div>
+</div> --}}
+<div class="container-fluid" style="width: 1551px !important;">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="card border-0"
+				style=" background: #F5F5F5; border-radius: 10px; height: 1877px !important; background-image: url('/theme/img/thank-background.png');background-repeat: no-repeat;width: 1551px !important; ">
+				<div class=" row">
+					<div class="col-md-12 thank-you-page-card-row">
+						<div class="card m-auto border-0" style="width: 85%; height: 1552px;">
+							<div class="card-boday">
+								<div class="col-md-12 card-body-content">
+									<p class="thank-page-date">{{$order->user->contact->created_at
+										->format('F '.'d, Y, '.'g:i A')}}
+									</p>
+									<hr class="border">
+								</div>
+								<div class="row ps-5">
+									<div class="col-md-7 mt-4">
+										<div class="row">
+											<div class="col-md-7">
+												<p class="ps-5 thanks-heading">Thanks</p>
+												<p class="for-you-order">for your order</p>
+											</div>
+											<div class="col-md-5">
+												<div class="pt-5">
+													<img src="/theme/img/thnak-page-user-icon.png" class="img-fluid"
+														alt="">
+													<span
+														class="thank-you-page-user-name pt-4 ps-2">{{$order->user->contact->firstName}}
+														{{$order->user->contact->lastName}}</span>
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-12 mt-5">
+												<p class="description-thank-you-page ps-5">Lorem ipsum dolor sit amet,
+													consectetur adipiscing elit. Praesent
+													blandit suscipit felis,<br> at fermentum arcu. Vestibulum molestie
+													laoreet eros, id semper magna luctus at.<br> Maecenas at mi sed ex
+													ullamcorper viverra vel aliquam ante. Duis ut pulvinar ipsum.<br>
+													Morbi
+													lectus magna, dictum ut</p>
+											</div>
+											@foreach($order->apiOrderItem as $item)
+											@foreach($item->product->options as $option)
+											<div class="row ms-5 mt-2" style="    background: #FFFFFF;
+											border: 1px solid #D3D3D3;
+											border-radius: 5px;
+											width: 682px;
+											min-height: 114px;">
+												@if($option->image)
+												<div class="col-md-2 pe-2 ps-0">
+													<img class="img-fluid my-2" src="{{ $option->image}}" alt=""
+														style="max-height: 95px;">
+												</div>
+												@else
+												<div class="col-md-2 p-0">
+													<img class="img-fluid my-2" src="/theme/img/image_not_available.png"
+														alt="" style="max-height: 95px;">
+												</div>
+												@endif
+												<div class=" col-md-7 my-3 ps-1 pe-1">
+													<p class="thank-you-sku ps-0">Sku:{{$item->product->code}}</p>
+													<p class="thank-page-title">{{$item->product->name}}</p>
+												</div>
+												<div class="col-md-3">
+													<p class="thnak-you-page-price">
+														${{number_format($item->product->retail_price,2)}}
+													</p>
+												</div>
+											</div>
+											@endforeach
+											@endforeach
+										</div>
+									</div>
+									<div class="col-md-5 thnak-you-page-box-billing-address mt-5">
+										<p class="thank-you-page-billing-address">Billing Address</p>
+										<p class="thank-you-page-delivery-address">Delivery Address</p>
+										<span class="thank-you-page-user-detais">
+											{{$order->user->contact->firstName}}
+											{{$order->user->contact->lastName}}
+										</span><br>
+										<span class="thank-you-page-user-detaiss">{{$order->user->contact->email}}
+										</span><br>
+										<span class="thank-you-page-user-detaiss">
+											{{$order->user->contact->postalAddress1}}
+										</span><br>
+										<span class="thank-you-page-user-detaiss">
+											{{$order->user->contact->postalAddress2}}
+										</span><br>
+										<span class="thank-you-page-user-detaiss">
+											{{$order->user->contact->postalPostCode}}
+										</span>
+										<p class="thank-you-page-delivery-address mt-4">Billing Address</p>
+										<span class="thank-you-page-user-detais">
+											{{$order->user->contact->firstName}}
+											{{$order->user->contact->lastName}}
+										</span><br>
+										<span class="thank-you-page-user-detaiss">{{$order->user->contact->email}}
+										</span><br>
+										<span class="thank-you-page-user-detaiss">
+											{{$order->user->contact->postalAddress1}}
+										</span><br>
+										<span class="thank-you-page-user-detaiss">
+											{{$order->user->contact->postalAddress2}}
+										</span><br>
+										<span class="thank-you-page-user-detaiss">
+											{{$order->user->contact->postalPostCode}}
+										</span>
+										<div class="row mt-5 ms-0 py-3" style="background: #FBFBFB;
+										border: 3px solid #2653A0;
+										box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05);
+										border-radius: 10px;
+										max-width:100% !important">
+											<div class="col-md-12">
+												<p class="thank-you-page-order-summary">Order Summary</p>
+												<div class="row">
+													<div class="col-md-6">
+														<p class="thank-you-page-item-count">Item count</p>
+														<span class="thank-you-page-item-counter">{{$count}}</span>
+													</div>
+													<div class="col-md-6 ps-5">
+														<p class="thank-you-page-item-count">Delivery Method</p>
+														<span
+															class="thank-you-page-item-counter">{{$order->paymentTerms}}</span>
+													</div>
+													<div class="col-md-6 mt-5">
+														<p class="thank-you-page-item-count">Total</p>
+														<span class="thank-you-page-item-counter">
+															${{number_format($item->product->retail_price *
+															$item->quantity, 2)}}
+														</span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="row mt-5 ms-5">
+									<div class="col-md-12">
+										<hr class="second-border">
+										<p class="best-product mt-5"> Best Product
+											<span> <img src="/theme/img/thnak-you-best-pruduct-img.png"
+													class="img-fluid ps-3" alt=""></span>
+										</p>
+										<div class="row ps-4">
+											@foreach ($best_products as $product)
+											<div
+												class="col-md-3 d-flex justify-content-between aling-imtes-center ps-0 pe-3">
+												<div>
+													<div style="background: #FFFFFF;
+													border: 1px solid #D3D3D3;
+													border-radius: 5px;
+													height: 177px;
+													">
+														@if ($product->images)
+														<img src="{{$product->images}}" alt="" class="img-fluid" style="max-width: 62%;
+															margin-left: 41px;
+															padding-top: 28px;
+															max-height: 167px;
+															">
+														@else
+														<img src="/theme/img/image_not_available.png" class="img-fluid"
+															alt="">
+														@endif
+													</div>
+													<p class="thank-you-page-product-sku pt-1">Sku:{{$product->code}}
+													</p>
+													<p class="thank-you-page-product-name">{{$product->name}}</p>
+												</div>
+											</div>
+											@endforeach
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6 m-auto py-3" style="background: #2653A0;
+								box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05);
+								border-radius: 10px;
+								margin-top:96px  !important">
+									<p class="thank-you-page-card-footer">Indoorsunhydro isn’t your grandma’s gardening
+										store.<br> But you can bring her along
+										if you want. <br> Walk-ins welcome anytime — except Sunday. Even gardeners need
+										a day
+										of rest.</p>
+									<p class="thank-you-page-footer-icons">
+										<img src="/theme/img/thank-you-page-icon-3.png" alt="">
+										<span><img src="/theme/img/thank-you-page-icon-2.png" alt=""></span>
+										<span><img src="/theme/img/thank-you-page-icon-1 (1).png" alt=""></span>
+									</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
