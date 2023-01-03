@@ -3996,3 +3996,259 @@ select.list-dt:focus {
 }
 
 /* step form css end*/
+
+/* thank you page start */
+/* thank-you-page {
+    position: absolute;
+    left: 11.67%;
+    right: 11.51%;
+    top: 8.77%;
+    bottom: 27.88%;
+
+    background: #FFFFFF;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+} */
+.thank-you-page-card-row {
+    margin-top: 140px !important;
+}
+
+.thank-page-date {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 119.5%;
+    color: #575757;
+}
+
+.card-body-content {
+    margin-top: 100px;
+    margin-left: 88px;
+}
+
+.border {
+    margin-top: 40px !important;
+    margin-bottom: 1rem;
+    border: 0;
+    border-top: 1px solid #000000 !important;
+    width: 817px !important;
+    border: 1px solid #000000 !important;
+}
+
+.thanks-heading {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 108px;
+    line-height: 127px;
+    /* identical to box height */
+
+
+    color: #000000;
+}
+
+.thank-you-page-user-name {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 30px;
+    line-height: 120%;
+    color: #2653A0;
+}
+
+.for-you-order {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 25px;
+    line-height: 120%;
+    letter-spacing: 0.545em;
+    color: #575757;
+    margin-top: -38px;
+    padding-left: 46px;
+}
+
+.description-thank-you-page {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 129.19%;
+    letter-spacing: 0.025em;
+    color: #000000;
+}
+
+.background-colo-css {
+    margin-top: -115px;
+    padding-right: 52px;
+    padding-top: 24px !important;
+    background: #FBFBFB !important;
+    border-radius: 6px !important;
+    padding-left: 293px;
+}
+
+.thanks-page-items {
+    width: 565px;
+    height: 114px;
+    left: 297px;
+    top: 949px;
+    background: #FFFFFF;
+    border: 1px solid #D3D3D3;
+    border-radius: 5px;
+}
+
+.thank-you-sku {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 21px;
+    color: #000000;
+}
+
+.thank-page-title {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+    color: #4E4E4E;
+    /* padding-left: 90px; */
+    margin-top: -16px;
+}
+
+.thank-you-page-billing-address {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 30px;
+    line-height: 36px;
+    color: #000000;
+}
+
+.thnak-you-page-box-billing-address {
+    background: #FBFBFB;
+    box-shadow: 0px 0px 10px rgb(0 0 0 / 5%);
+    border-radius: 10px;
+    height: 344px;
+    max-width: 462px !important;
+}
+
+.thnak-you-page-price {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 21px;
+    color: #000000;
+    margin-top: 35px;
+    padding-left: 52px;
+}
+
+.thank-you-page-delivery-address {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 22px;
+    color: #5C5C5C;
+}
+
+.thank-you-page-user-detais {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 19px;
+    color: #5C5C5C;
+}
+
+.thank-you-page-user-detaiss {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 19px;
+    color: #5C5C5C;
+}
+
+.thank-you-page-order-summary {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 30px;
+    line-height: 36px;
+    color: #000000;
+}
+
+.thank-you-page-item-count {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 19px;
+    color: #000000;
+    margin-bottom: 0px;
+}
+
+.thank-you-page-item-counter {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+    color: #5C5C5C;
+}
+
+.best-product {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 30px;
+    line-height: 36px;
+
+}
+
+.thank-you-page-product-sku {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 21px;
+    color: #000000;
+    margin-top: 18px;
+}
+
+.thank-you-page-product-name {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 25px;
+    color: #4E4E4E;
+}
+
+.thank-you-page-card-footer {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 22px;
+    text-align: center;
+    color: #FFFFFF !important;
+}
+
+.thank-you-page-footer-icons {
+    padding-left: 251px
+}
+
+.second-border {
+    border: 1px solid #CECECE !important;
+    width: 1161px;
+    margin-left: 22px !important;
+    margin-top: 44px !important;
+}
+
+
+/* thank you page end */

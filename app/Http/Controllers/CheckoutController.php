@@ -44,6 +44,8 @@ class CheckoutController extends Controller
         $createdDate = $order->created_at;
         $formatedDate = $createdDate->format('F  j, Y h:i:s A');
         $orderitems = ApiOrderItem::where('order_id', $id)->with('product')->get();
-        return view('checkout/order-received', compact('order', 'orderitems', 'formatedDate'));
+        $count = $orderitems->count();
+        $best_products = Product::where('status', '!=', 'Inactive')->orderBy('views', 'DESC')->limit(4)->get();
+        return view('checkout/order-received', compact('order', 'orderitems', 'formatedDate', 'count', 'best_products'));
     }
 }
