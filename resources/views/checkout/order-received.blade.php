@@ -229,7 +229,7 @@
 	<div class="row">
 		<div class="col-md-12">
 			<div class="card border-0"
-				style=" background: #F5F5F5; border-radius: 10px; height: 1877px !important; background-image: url('/theme/img/thank-background.png');background-repeat: no-repeat;width: 1551px !important; ">
+				style=" background: #F5F5F5; border-radius: 10px; height: 1877px !important; background-image: url('/theme/img/thank-background.png');background-repeat: no-repeat;width: 1551px !important; background-size: 1551px">
 				<div class=" row">
 					<div class="col-md-12 thank-you-page-card-row">
 						<div class="card m-auto border-0" style="width: 85%; height: 1552px;">
