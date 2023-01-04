@@ -228,11 +228,10 @@
 <div class="container-fluid" style="width: 1551px !important;">
 	<div class="row">
 		<div class="col-md-12">
-			<div class="card border-0"
-				style=" background: #F5F5F5; border-radius: 10px; height: 2022px  !important; background-image: url('/theme/img/thank-background.png');background-repeat: no-repeat;width: 1551px !important; background-size: 1551px">
-				<div class=" row">
+			<div class="card border-0 thank-you-page-background-img">
+				<div class="row">
 					<div class="col-md-12 thank-you-page-card-row">
-						<div class="card m-auto border-0" style="width: 85%; height: 1603px;">
+						<div class="card m-auto border-0 thank-you-page-first-card">
 							<div class="card-boday">
 								<div class="col-md-12 card-body-content">
 									<p class="thank-page-date">{{$order->user->contact->created_at
@@ -270,21 +269,16 @@
 											<div class="mt-5">
 												@foreach($order->apiOrderItem as $item)
 												@foreach($item->product->options as $option)
-												<div class="row ms-5 mt-2" style="    background: #FFFFFF;
-											border: 1px solid #D3D3D3;
-											border-radius: 5px;
-											width: 682px;
-											min-height: 114px;">
+												<div class="row ms-5 mt-2 thank-you-page-all-prudct-section">
 													@if($option->image)
 													<div class="col-md-2 pe-2 ps-0">
-														<img class="img-fluid my-2" src="{{ $option->image}}" alt=""
-															style="max-height: 95px;">
+														<img class="img-fluid my-2 thank-you-page-product-options-image"
+															src="{{ $option->image}}" alt="">
 													</div>
 													@else
 													<div class="col-md-2 p-0">
-														<img class="img-fluid my-2"
-															src="/theme/img/image_not_available.png" alt=""
-															style="max-height: 95px;">
+														<img class="img-fluid my-2 thank-you-page-product-options-image"
+															src="/theme/img/image_not_available.png" alt="">
 													</div>
 													@endif
 													<div class=" col-md-7 my-3 ps-1 pe-1">
@@ -336,11 +330,7 @@
 										<span class="thank-you-page-user-detaiss">
 											{{$order->user->contact->postalPostCode}}
 										</span>
-										<div class="row mt-5 ms-0 py-3" style="background: #FBFBFB;
-										border: 3px solid #2653A0;
-										box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05);
-										border-radius: 10px;
-										max-width:100% !important">
+										<div class="row mt-5 ms-0 py-3 thank-you-page-second-row">
 											<div class="col-md-12">
 												<p class="thank-you-page-order-summary">Order Summary</p>
 												<div class="row">
@@ -402,24 +392,21 @@
 										</div>
 									</div>
 								</div>
-								<div class="col-md-7 m-auto py-4" style="    background: #2653A0;
-								box-shadow: 0px 0px 10px rgb(0 0 0 / 5%);
-								border-radius: 10px;
-								margin-top: 72px !important;
-								padding-bottom: 1px !important;">
-									<p class="thank-you-page-card-footer">Indoorsunhydro isn’t your grandma’s gardening
-										store.<br> But you can bring her along
-										if you want. <br> Walk-ins welcome anytime — except Sunday. Even gardeners need
-										a day
-										of rest.</p>
-									<p class="thank-you-page-footer-icons mt-5">
-										<img src="/theme/img/thank-you-page-icon-3.png" alt="">
-										<span><img src="/theme/img/thank-you-page-icon-2.png" alt=""></span>
-										<span><img src="/theme/img/thank-you-page-icon-1 (1).png" alt=""></span>
-									</p>
-								</div>
 							</div>
 						</div>
+					</div>
+					<div class="col-md-7 m-auto py-4 thank-you-page-card-footer-best-product-section mt-5"
+						style="margin-top: -97px !important">
+						<p class="thank-you-page-card-footer">Indoorsunhydro isn’t your grandma’s gardening
+							store.<br> But you can bring her along
+							if you want. <br> Walk-ins welcome anytime — except Sunday. Even gardeners need
+							a day
+							of rest.</p>
+						<p class="thank-you-page-footer-icons mt-5">
+							<img src="/theme/img/thank-you-page-icon-3.png" alt="">
+							<span><img src="/theme/img/thank-you-page-icon-2.png" alt=""></span>
+							<span><img src="/theme/img/thank-you-page-icon-1 (1).png" alt=""></span>
+						</p>
 					</div>
 				</div>
 			</div>
