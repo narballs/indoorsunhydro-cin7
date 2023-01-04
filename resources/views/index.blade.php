@@ -8,7 +8,7 @@
         <div class="bg-light pb-5">
             <div class="container-sm bg-light">
                 <div class="row">
-                    <div class="col-sm-8 pe-0 ps-0">
+                    <div class="col-md-8 pe-0 ps-0">
                         <div class="card mt-5">
                             <div class="card-body text-center">
                                 <h4 class="text-center p-2 mt-3">We stock all superior brands!</h4>
@@ -74,7 +74,6 @@
                                                         height="64px" class="img-responsive img-fluid">
                                                 </a>
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
@@ -116,53 +115,53 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-4">
+                    <div class="col-md-4 home-page-product-section">
                         <div class="mt-5">
                             <a class="link-dark text-decoration-none text-white" href="{{ url('products')}}">
-                                <img class="img-fluid" src="theme/img/all_products.png">
+                                <img class="img-fluid home-page-product-img" src="theme/img/all_products.png">
                             </a>
                         </div>
                     </div>
-                    <div class="col-md-12">
+                    <div class="col-md-12 home-page-product-section">
                         <div class="row mt-3">
                             <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                                 <a class="link-dark text-decoration-none text-white"
                                     href="{{ url('product-brand/Trolmaster')}}">
-                                    <img class="img-fluid" src="theme/img/troll_master.png">
+                                    <img class="img-fluid home-page-product-img" src="theme/img/troll_master.png">
                                 </a>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                                 <a class="link-dark text-decoration-none text-white"
                                     href="{{ url('products/253/ac-dehumidification-humidification')}}">
-                                    <img class="img-fluid" src="theme/img/quest.png">
+                                    <img class="img-fluid home-page-product-img" src="theme/img/quest.png">
                                 </a>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                                 <a class="link-dark text-decoration-none text-white"
                                     href="{{ url('product-brand/Advanced Nutrients')}}">
-                                    <img class="img-fluid" src="theme/img/nutrients_box.png">
+                                    <img class="img-fluid home-page-product-img" src="theme/img/nutrients_box.png">
                                 </a>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-12">
+                    <div class="col-md-12 home-page-product-section">
                         <div class="row mt-3 gx-5">
                             <div class="col-md-4">
                                 <a class="link-dark text-decoration-none text-white"
                                     href="{{ url('products/7/lighting')}}">
-                                    <img class="img-fluid" src="theme/img/lightening.png">
+                                    <img class="img-fluid home-page-product-img" src="theme/img/lightening.png">
                                 </a>
                             </div>
                             <div class="col-md-4">
                                 <a class="link-dark text-decoration-none text-white"
                                     href="{{ url('product-brand/Mills Nutrients')}}">
-                                    <img class="img-fluid" src="theme/img/can.png">
+                                    <img class="img-fluid home-page-product-img" src="theme/img/can.png">
                                 </a>
                             </div>
                             <div class="col-md-4">
                                 <a class="link-dark text-decoration-none text-white"
                                     href="{{ url('products/7/lighting')}}">
-                                    <img class="img-fluid" src="theme/img/lux_lightening.png">
+                                    <img class="img-fluid home-page-product-img" src="theme/img/lux_lightening.png">
                                 </a>
                             </div>
                         </div>
