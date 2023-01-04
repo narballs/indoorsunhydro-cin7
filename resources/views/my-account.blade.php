@@ -97,9 +97,9 @@
 										<div class="row">
 											<div class="col-md-2">
 												<span>
-													<img src="theme/img/order_visited.png" id="order_active"
-														style="display: none;">
-													<img src="theme/img/order_unvisited.png" id="order_inactive">
+													<img src="theme/img/heart.png" id="order_active"
+														style="display: none;" width="28px" height="23px">
+													<img src="theme/img/heartfilled.png" id="order_inactive" class="mt-1" width="28px" height="23px">
 												</span>
 											</div>
 											<div class="col-md-10">
@@ -259,12 +259,16 @@
 								</tbody>
 							</table>
 						</div>
-						<div class="d-none  mt-3 mb-3 pr-0 pl-0" id="whishlist">
-							<div class="col-md-12 border-bottom border-4 pb-4 p-0 bg-white">
-								<img src="theme/img/orders_main.png" style="margin: -6px 1px 1px 1px;">
-								<span class="pt-1 my-account-content-heading  ">Wishlists</span>
+						<div class="d-none row mt-3 mb-3 pr-0 pl-0" id="whishlist">
+							<div class="col-md-8 border-bottom border-4 d-flex pb-4 p-0 bg-white">
+								<img src="theme/img/heart.png" style="margin: 5px 3px 0px 9px;"width="28px" height="28px">
+								<span class="pt-1 my-account-content-heading">My lists</span>
 							</div>
-							<div class="col-md-8 m-auto rounded-end pt-3 pb-3" style="" id="wishlist_content">
+							<div class="col-md-4 border-bottom">
+								<button class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#exampleModal">Create List</button>
+							</div>
+						
+								<div class="col-md-8 bg-light m-auto rounded-end pt-3 pb-3" style="" id="wishlist_content">
 					<!-- 			<div class="container p-0">
 								    <header class="text-center">
 								        <h1>My Favourites</h1>
@@ -308,9 +312,27 @@
 												</div>
 								            </div>
 									</div>
-								<br/>
-							</div> -->
+									<br/>
+								</div> -->
+							</div>
 						</div>
+						<!-- Modal -->
+						<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+						  	<div class="modal-dialog">
+						    	<div class="modal-content">
+						      		<div class="modal-header">
+						       			<h5 class="modal-title text-center" id="exampleModalLabel">Create List</h5>
+						        		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						      		</div>
+						      		<div class="modal-body">
+						        		<input type="text" name="list" id="list" class="form-control" placeholder="List Name" aria-label="List Name" aria-describedby="addon-wrapping">
+						      		</div>
+						      <div class="modal-footer">
+						        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+						        <button type="button" class="btn btn-primary" onclick="createList()">Save changes</button>
+						      </div>
+						    </div>
+						  </div>
 						</div>
 						<div class="" id="order_details">
 							<div class="col-md-12 mt-4 d-none order-detail-container pl-4 pr-4"
@@ -578,6 +600,27 @@
 			function replaceEye2(val) {
 				$('#eye_icon_'+val).attr("src", "theme/img/eye.png");
 			}
+
+			function createList() {
+				var list_name = $('#list').val();
+				jQuery.ajax({
+					url: "{{ url('/create-list/')}}",
+					method: 'POST',
+					data: {
+					"_token": "{{ csrf_token() }}",
+					list_title : list_name
+
+					},
+				success: function (response) {
+					console.log(response.status);
+					$('#exampleModal').modal('hide');
+
+				}
+				});
+			};
+
+
+			
 
 			function showHidePassword(val) {
 				if (val === "current_password") {
@@ -893,13 +936,14 @@
 				})
 			}
 			function edit_address() {
+				$('#edit_address').removeClass('d-none');
 				$('#whishlist').addClass('d-none');
 				$('#address_row').addClass('d-none');
 				$('.nav-pills .active').removeClass('active');
 				$('.nav-pills #current_address').addClass('active');
 				// $('#customer-address').addClass('d-none');
 				$('#customer-address').addClass('d-none');
-				$('#edit_address').removeClass('d-none');
+				
 				$('#orders').addClass('d-none');
 				$('#intro').addClass('d-none');
 				$('#order-detail-container').addClass('d-none');
@@ -907,7 +951,6 @@
 
 
 			function updateContact(user_id) {
-
 		        var first_name = $('input[name=firstName]').val();
 		        var last_name = $('input[name=lastName]').val();
 		        var company_name = $('input[name=company]').val();

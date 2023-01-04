@@ -297,6 +297,7 @@ class UserController extends Controller
         }
         $user = User::where('id', $user_id)->first();
         $user_address = Contact::where('user_id', $user_id)->first();
+        //dd($user_address);
         $states = State::all();
         if ($request->ajax()) {
             $user_orders = ApiOrder::where('user_id', $user_id)->with('apiOrderItem')->get();

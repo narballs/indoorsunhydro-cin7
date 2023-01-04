@@ -54,7 +54,7 @@
 }
 
 .popover {
-    transform: translate(1095px, 3px) !important;
+    /*transform: translate(314px, 457px) !important;*/
 }
 
 .popover-body {
@@ -154,10 +154,10 @@
 
 }
 
-#wishlist_content {}
 
-#whishlist {
-    background-color: #bfc2c5;
+
+.whishlist_content {
+    background-color: #f8f9fa;
 }
 
 .wrapper2 img:first-child,
