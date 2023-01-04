@@ -3025,6 +3025,14 @@ input[type=number] {
         /* margin-top: 12px;*/
     }
 
+    .home-page-product-section {
+        padding: 0px !important;
+
+    }
+
+    .home-page-product-img {
+        width: 100% !important;
+    }
 
     .top-tatal-items {
         margin-top: -33px !important;
@@ -3437,7 +3445,7 @@ input[type=number] {
 
     .top-img {
         width: 100%;
-        margin-left: 43px !important;
+        margin-left: 31px !important;
     }
 
     .banner-img {
@@ -4240,7 +4248,7 @@ select.list-dt:focus {
 }
 
 .thank-you-page-footer-icons {
-    padding-left: 251px
+    padding-left: 298px
 }
 
 .second-border {

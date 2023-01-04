@@ -229,10 +229,10 @@
 	<div class="row">
 		<div class="col-md-12">
 			<div class="card border-0"
-				style=" background: #F5F5F5; border-radius: 10px; height: 1877px !important; background-image: url('/theme/img/thank-background.png');background-repeat: no-repeat;width: 1551px !important; background-size: 1551px">
+				style=" background: #F5F5F5; border-radius: 10px; height: 2022px  !important; background-image: url('/theme/img/thank-background.png');background-repeat: no-repeat;width: 1551px !important; background-size: 1551px">
 				<div class=" row">
 					<div class="col-md-12 thank-you-page-card-row">
-						<div class="card m-auto border-0" style="width: 85%; height: 1552px;">
+						<div class="card m-auto border-0" style="width: 85%; height: 1603px;">
 							<div class="card-boday">
 								<div class="col-md-12 card-body-content">
 									<p class="thank-page-date">{{$order->user->contact->created_at
@@ -267,36 +267,39 @@
 													Morbi
 													lectus magna, dictum ut</p>
 											</div>
-											@foreach($order->apiOrderItem as $item)
-											@foreach($item->product->options as $option)
-											<div class="row ms-5 mt-2" style="    background: #FFFFFF;
+											<div class="mt-5">
+												@foreach($order->apiOrderItem as $item)
+												@foreach($item->product->options as $option)
+												<div class="row ms-5 mt-2" style="    background: #FFFFFF;
 											border: 1px solid #D3D3D3;
 											border-radius: 5px;
 											width: 682px;
 											min-height: 114px;">
-												@if($option->image)
-												<div class="col-md-2 pe-2 ps-0">
-													<img class="img-fluid my-2" src="{{ $option->image}}" alt=""
-														style="max-height: 95px;">
+													@if($option->image)
+													<div class="col-md-2 pe-2 ps-0">
+														<img class="img-fluid my-2" src="{{ $option->image}}" alt=""
+															style="max-height: 95px;">
+													</div>
+													@else
+													<div class="col-md-2 p-0">
+														<img class="img-fluid my-2"
+															src="/theme/img/image_not_available.png" alt=""
+															style="max-height: 95px;">
+													</div>
+													@endif
+													<div class=" col-md-7 my-3 ps-1 pe-1">
+														<p class="thank-you-sku ps-0">Sku:{{$item->product->code}}</p>
+														<p class="thank-page-title">{{$item->product->name}}</p>
+													</div>
+													<div class="col-md-3">
+														<p class="thnak-you-page-price">
+															${{number_format($item->product->retail_price,2)}}
+														</p>
+													</div>
 												</div>
-												@else
-												<div class="col-md-2 p-0">
-													<img class="img-fluid my-2" src="/theme/img/image_not_available.png"
-														alt="" style="max-height: 95px;">
-												</div>
-												@endif
-												<div class=" col-md-7 my-3 ps-1 pe-1">
-													<p class="thank-you-sku ps-0">Sku:{{$item->product->code}}</p>
-													<p class="thank-page-title">{{$item->product->name}}</p>
-												</div>
-												<div class="col-md-3">
-													<p class="thnak-you-page-price">
-														${{number_format($item->product->retail_price,2)}}
-													</p>
-												</div>
+												@endforeach
+												@endforeach
 											</div>
-											@endforeach
-											@endforeach
 										</div>
 									</div>
 									<div class="col-md-5 thnak-you-page-box-billing-address mt-5">
@@ -399,16 +402,17 @@
 										</div>
 									</div>
 								</div>
-								<div class="col-md-6 m-auto py-3" style="background: #2653A0;
-								box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05);
+								<div class="col-md-7 m-auto py-4" style="    background: #2653A0;
+								box-shadow: 0px 0px 10px rgb(0 0 0 / 5%);
 								border-radius: 10px;
-								margin-top:96px  !important">
+								margin-top: 72px !important;
+								padding-bottom: 1px !important;">
 									<p class="thank-you-page-card-footer">Indoorsunhydro isn’t your grandma’s gardening
 										store.<br> But you can bring her along
 										if you want. <br> Walk-ins welcome anytime — except Sunday. Even gardeners need
 										a day
 										of rest.</p>
-									<p class="thank-you-page-footer-icons">
+									<p class="thank-you-page-footer-icons mt-5">
 										<img src="/theme/img/thank-you-page-icon-3.png" alt="">
 										<span><img src="/theme/img/thank-you-page-icon-2.png" alt=""></span>
 										<span><img src="/theme/img/thank-you-page-icon-1 (1).png" alt=""></span>
