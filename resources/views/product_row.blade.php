@@ -1,10 +1,27 @@
+<!-- <button type="button" class="btn btn-lg btn-danger" 
+        data-toggle="popover" title="Popover title" onclick="pop()"
+        data-content="And here's some amazing content. It's very engaging. Right?">
+     Click to toggle popover
+</button> -->
+
 <div class="col-sm-12 col-md-6 col-lg-3 d-flex align-self-stretch mt-3 mb-3">
     <div class="card shadow-sm mb-4 w-100 h-100">
         @if($option->image != '')
+
+    <a style="width:20px !important;" href="#" data-toggle="popover-click" class="subscribe">
+            <i class="fa-solid fa-heart" onclick="addToList('{{$product->product_id}}', '{{$option->option_id}}')" id="{{$option->option_id}}"
+
+        data-toggle="popover" onclick="addToList('{{$product->product_id}}', '{{$option->option_id}}')"></i>
+
+    </a>
+    
         <a href="{{ url('product-detail/'.$product->id.'/'.$option->option_id.'/'.$product->slug) }}">
-            <span class="d-flex justify-content-center align-content-center me-5">
-                <img src="{{$option->image}}" class="col-md-10  offset-1 mt-2"
+            <span class="d-flex justify-content-center align-content-center">
+
+             
+                <img src="{{$option->image}}" class="col-md-10 .image-body offset-1 mt-2"
                     style="width: 120px; max-height: 300px; " />
+
             </span>
         </a>
         @else
@@ -36,9 +53,9 @@
                 </p>
                 @endif
                 @if($option->stockAvailable > 0)
-                <button class="ajaxSubmit col w-100 whishlist-button" type="submit" style="max-height: 46px;"
+                <!-- <button class="ajaxSubmit col w-100 whishlist-button" type="submit" style="max-height: 46px;"
                     id="ajaxSubmit_{{$product->id}}"
-                    onclick="addToList('{{$product->product_id}}', '{{$option->option_id}}')">Add to wishlist</button>
+                    onclick="addToList('{{$product->product_id}}', '{{$option->option_id}}')">Add to wishlist</button> -->
                 <button class="ajaxSubmit button-cards col w-100 mt-2" type="submit" style="max-height: 46px;"
                     id="ajaxSubmit_{{$product->id}}"
                     onclick="updateCart('{{$product->id}}', '{{$option->option_id}}')">Add to cart</button>
@@ -51,7 +68,24 @@
 
         </div>
     </div>
+<!--     <div id="popover-form" class="d-none">
+        <form id="myform" class="form-inline" role="form">
+            @foreach($lists as $list)
+            <div class="form-group">
+                <ul>
+                    <li>
+                        {{$list->title}}<input  type="radio" value="{{$list->id}}" name="list_id"/>
+                    </li>
+                </ul>
+
+            </div>
+            @endforeach
+               <button type="submit" class="btn btn-warning" onclick="addToList('{{$product->product_id}}', '{{$option->option_id}}')">Subscribe</button>
+        
+        </form>
+    </div> -->
 </div>
+
 <script>
     function updateCart(id, option_id) {
 			jQuery.ajax({
@@ -101,8 +135,31 @@
 			    return false;
 			}
     function addToList(id, option_id) {
+
+//           jQuery.ajax({
+//                url: "{{ url('/get-lists-names/') }}",
+//                method: 'get',
+//                data: {
+                
+//                },
+//                success: function(response){
+//                 console.log(response)
+//                 var inputOptions = response.lists.forEach(function(item, index) {
+//     '<input type="radio" value="list.id">'+item.title;
+// });
+               
+//                }
+//            });
+        var list_id = $("input[name='list_id']:checked").val();
         var product_id = id;
         var option_id = option_id;
+        console.log(list_id);
+        console.log(product_id);
+        console.log(option_id);
+
+ 
+
+  
 
         jQuery.ajax({
                url: "{{ url('/add-to-wish-list/') }}",
@@ -111,24 +168,18 @@
                  "_token": "{{ csrf_token() }}",
                   product_id: product_id,
                   option_id: option_id,
-                  quantity: 1
+                  quantity: 1,
+                  list_id : list_id
                },
                success: function(success){
-                console.log(success)
+                console.log(success);
                     if(success.success == true){
-                        Swal.fire({
-                            toast: true,
-                            icon: 'success',
-                            title: 'Added to Favourite',
-                            timer: 3000,
-                            showConfirmButton: false,
-                            position: 'top',
-                            timerProgressBar: true
-                        });
+          
                     }
                
                }
            });
 
     }
+
 </script>

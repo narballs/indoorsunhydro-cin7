@@ -84,6 +84,8 @@ Route::post('/contact-us-store/', [ContactUsController::class, 'store'])->name('
 Route::get('/create-cart/{id}', [CreateCartController::class, 'create_cart'])->name('create.cart');
 Route::post('/add-to-wish-list/', [ProductController::class, 'addToWishList']);
 Route::get('/get-wish-lists/', [ProductController::class, 'getWishLists']);
+Route::get('/get-lists-names/', [ProductController::class, 'getListNames']);
+Route::post('/create-list/', [ProductController::class, 'createList']);
 //Route::post('/',[UserController::class, 'logout'])->name('logout');
 
 

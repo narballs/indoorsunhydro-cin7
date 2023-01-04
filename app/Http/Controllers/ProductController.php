@@ -17,6 +17,7 @@ class ProductController extends Controller
 {
     public function showProductByCategory(Request $request, $category_id)
     {
+
         $selected_category_id = $request->get('selected_category_id');
         if (!empty($selected_category_id)) {
         }
@@ -90,6 +91,10 @@ class ProductController extends Controller
         }
 
         $brands = Brand::whereIn('id', $brand_ids)->pluck('name', 'id')->toArray();
+         $user_id = Auth::id();
+        $lists = BuyList::where('user_id', $user_id)->get();
+
+
 
         return view('categories', compact(
             'products',
@@ -101,7 +106,8 @@ class ProductController extends Controller
             'price_creteria',
             'categories',
             'stock',
-            'selected_category_id'
+            'selected_category_id',
+            'lists'
 
         ));
     }
@@ -447,6 +453,9 @@ class ProductController extends Controller
                 $parent_category_slug  = '';
             }
         }
+        $user_id = Auth::id();
+        $lists = BuyList::where('user_id', $user_id)->get();
+
         //dd($name);
         //$products_query = Product::with('options', 'brand');
         //$products = $products_query->with('options', 'brand')->paginate($per_page);
@@ -468,7 +477,8 @@ class ProductController extends Controller
                 'parent_category_slug',
                 'brand_id',
                 'per_page',
-                'name'
+                'name',
+                'lists'
             )
         );
     }
@@ -764,6 +774,7 @@ class ProductController extends Controller
 
 
     public function addToWishList(Request $request) {
+        // dd($request->list_id);
         $user_id = Auth::id();
 
         //check if user have list already
@@ -771,18 +782,18 @@ class ProductController extends Controller
         $user_lists = BuyList::where('user_id', $user_id)->exists();
         if ($user_lists == false) {
                 $wishlist = new BuyList();
-                $wishlist->title = 'Favourite';
+                $wishlist->title = 'My Favourites';
                 $wishlist->status = 'Public';
-                $wishlist->description = 'Favourite';
+                $wishlist->description = 'My Favourites';
                 $wishlist->user_id = $user_id;
                 $wishlist->save();
                 $list_id = $wishlist->id;
             }
         else {
-            $list = BuyList::where('title', 'Favourite')->where('user_id', $user_id)->first();
+            $list = BuyList::where('title', 'My Favourites')->where('user_id', $user_id)->first();
             $list_id = $list->id;
         }
-            
+       
             $product_buy_list = new ProductBuyList();
             $product_buy_list->list_id = $list_id;
             $product_buy_list->product_id = $request->product_id;
@@ -791,26 +802,64 @@ class ProductController extends Controller
             $product_buy_list->save();
              return response()->json([
                 'success' => true, 
-                'msg' => 'List Shared Successully !'
+                'msg' => 'List created Successully !'
             ]);
         
     }
 
     public function getWishlists() {
         $user_id = Auth::id();
-        $list = BuyList::where('user_id', $user_id)->with('list_products.product.options')->first();
+        $lists = BuyList::where('user_id', $user_id)->with('list_products.product.options')->get();
+
+        //$list_title = $list->title;
         $images = [];
-        foreach ($list->list_products as $list){
-            foreach ($list->product->options as $image) {
-                array_push($images, $image->image);
+        // dd($lists);
+        foreach ($lists as $list) {
+            foreach($list->list_products as $single_product) {
+                    foreach($single_product->product as $image) {
+                        // dd($image->image);
+                        array_push($images,$image);
+
+                    }
+
             }
         }
 
-
+        // foreach ($lists->list_products as $list){
+        //     foreach ($list->product->options as $image) {
+        //         array_push($images, $image->image);
+        //     }
+        // }
+        // dd($images);
         return view('wishlists.index', compact(
-            'images'
+            'lists', 'images'
         ));
-
         return $images;
+    }
+
+    public function getListNames() {
+        $user_id = Auth::id();
+        $lists = BuyList::where('user_id', $user_id)->get();
+        return response()->json([
+            'msg' => 'success',
+            'lists' => $lists
+        ]);
+    }
+
+
+    public function createList(Request $request) {
+        $user_id = Auth::id();
+        $request->list_title;
+        $buyList = new BuyList();
+        $buyList->title = $request->list_title;
+        $buyList->status = 'Public';
+        $buyList->description = $request->list_title;
+        $buyList->user_id = $user_id;
+        $buyList->save();
+        return response()->json([
+            'status' => 'success',
+            'msg' => 'List created Successully'
+        ]);
+
     }
 }
