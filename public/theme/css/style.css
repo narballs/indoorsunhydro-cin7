@@ -4004,6 +4004,51 @@ select.list-dt:focus {
 }
 
 /* step form css end*/
+.thank-you-page-background-img {
+    background: #F5F5F5 !important;
+    border-radius: 10px !important;
+    /* height: 2155px !important; */
+    background-image: url('/theme/img/thank-background.png') !important;
+    background-repeat: no-repeat !important;
+    width: 1551px !important;
+    background-size: 1551px !important;
+    padding-bottom: 146px !important;
+}
+
+.thank-you-page-first-card {
+    width: 85% !important;
+    padding-bottom: 194px !important;
+    /* height: 1735px !important;
+    min-height: 1735px !important; */
+}
+
+.thank-you-page-all-prudct-section {
+    background: #FFFFFF !important;
+    border: 1px solid #D3D3D3 !important;
+    border-radius: 5px !important;
+    width: 682px !important;
+    min-height: 114px !important;
+}
+
+.thank-you-page-product-options-image {
+    max-height: 95px !important;
+}
+
+.thank-you-page-second-row {
+    background: #FBFBFB !important;
+    border: 3px solid #2653A0 !important;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05) !important;
+    border-radius: 10px !important;
+    max-width: 100% !important
+}
+
+.thank-you-page-card-footer-best-product-section {
+    background: #2653A0 !important;
+    box-shadow: 0px 0px 10px rgb(0 0 0 / 5%) !important;
+    border-radius: 10px !important;
+    margin-top: 72px !important;
+    padding-bottom: 1px !important;
+}
 
 /* thank you page start */
 /* thank-you-page {
@@ -4018,7 +4063,7 @@ select.list-dt:focus {
     border-radius: 10px;
 } */
 .thank-you-page-card-row {
-    margin-top: 140px !important;
+    margin-top: 209px !important;
 }
 
 .thank-page-date {
@@ -4050,9 +4095,6 @@ select.list-dt:focus {
     font-weight: 600;
     font-size: 108px;
     line-height: 127px;
-    /* identical to box height */
-
-
     color: #000000;
 }
 
@@ -4248,7 +4290,7 @@ select.list-dt:focus {
 }
 
 .thank-you-page-footer-icons {
-    padding-left: 298px
+    padding-left: 367px;
 }
 
 .second-border {
