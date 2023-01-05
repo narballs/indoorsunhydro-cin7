@@ -34,21 +34,25 @@
 									@endif
 									<?php $count = count($category->children);?>
 									@if(isset($category->children) && $count > 0)
-									<ul
-										class="dropdown-menu-dark pl-0 pr-0 border mt-0 dropdown-submenu rounded-2 text-center">
+									<ul class="dropdown-menu-dark pl-0 pr-0 border mt-0 dropdown-submenu rounded-2 text-center w-100 ms-2"
+										style="background-color: none !important;">
 										@if($count > 10)
-										<ul class="dd-horizontal border p-0 pr-4" style="width:800px">
+										<ul class="dd-horizontal border p-0 pr-4"
+											style="width:800px !important; background-color:white !important; margin-top: -20px !important;">
 											@else
-											<ul class="dd-horizontal pl-0 pr-0" style="width:100%">
+											<ul class="dd-horizontal pl-0 pr-0"
+												style="width:100% !important; background-color:white !imporatnt">
 												@endif
 												<div class="row pl-4 pt-0 pr-4">
 
 													@foreach($category->children as $key=>$cat)
 													@if($cat->is_active == 1)
 													@if($count > 10 )
-													<div class="col-md-3 pl-0 pr-0" style="width:600px">
+													<div class="col-md-3 pl-0 pr-0"
+														style="width:600px !important; background-color:white !important">
 														@else
-														<div class="col-md-12 pl-0 pr-0" style="width:100%">
+														<div class="col-md-12 pl-0 pr-0"
+															style="width:100% !imporant; background-color:white !important">
 															@endif
 															@if ($count > 0)
 															<li class="dropdown-item" id="category_{{$cat->id}}"
