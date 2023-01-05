@@ -250,6 +250,8 @@ class ProductController extends Controller
         //$products = $products_query->with('options', 'brand')->paginate($per_page);
         //dd($products);
         //$brands = Brand::pluck('name', 'id')->toArray();
+        $user_id = Auth::id();
+        $lists = BuyList::where('user_id', $user_id)->get();
 
         $category_id = $selected_category_id;
 
@@ -264,7 +266,8 @@ class ProductController extends Controller
                 'category_id',
                 'parent_category_slug',
                 'brand_id',
-                'per_page'
+                'per_page', 
+                'lists'
             )
         );
     }
@@ -579,7 +582,6 @@ class ProductController extends Controller
 
     public function productSearch(Request $request)
     {
-
         if ($request->ajax()) {
 
             $brand = $request->input('brand');
@@ -739,21 +741,10 @@ class ProductController extends Controller
         $searched_value = $request->value;
 
         $category_id = $selected_category_id;
+        $user_id = Auth::id();
+        $lists = BuyList::where('user_id', $user_id)->get();
 
-        // return view(
-        //     'all_products',
-        //     compact(
-        //         'products',
-        //         'brands',
-        //         'price_creteria',
-        //         'categories',
-        //         'stock',
-        //         'category_id',
-        //         'parent_category_slug',
-        //         'brand_id',
-        //         'per_page'
-        //     )
-        // );
+
 
 
 
@@ -768,7 +759,9 @@ class ProductController extends Controller
             'parent_category_slug',
             'brand_id',
             'per_page',
-            'searched_value'
+            'searched_value',
+            'lists'
+
         ));
     }
 
