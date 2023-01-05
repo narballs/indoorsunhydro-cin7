@@ -38,7 +38,7 @@
 										style="background-color: none !important;">
 										@if($count > 10)
 										<ul class="dd-horizontal border p-0 pr-4"
-											style="width:800px !important; background-color:white !important; margin-top: -20px !important;">
+											style="width:800px !important; background-color:white !important; margin:0px !important;">
 											@else
 											<ul class="dd-horizontal pl-0 pr-0"
 												style="width:100% !important; background-color:white !imporatnt">
