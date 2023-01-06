@@ -89,6 +89,7 @@ class SyncContacts implements ShouldQueue
 
         }
         $response = json_decode($res);
+        dd($response);
         $contact_id = $response[0]->id;
         $code = $response[0]->code;
         echo $contact_id.'-----'.$code;
