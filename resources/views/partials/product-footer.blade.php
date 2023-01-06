@@ -9,10 +9,8 @@
 				<span>
 					<img src="/theme/img/map-pin.png" class="img-fluid">
 				</span>
-				<span class="ms-2 pra-footer">Los
-					Angeles
-					Warehouse
-					(HQ)
+				<span class="ms-2 pra-footer">5671 Warehouse Way
+					Sacramento CA 95826
 				</span>
 				<p class="ms-4 ms-4-footer">&nbsp;
 					13310 S. Figueroa St. Los Angeles, CA 90061
@@ -73,10 +71,8 @@
 					<span>
 						<img src="/theme/img/map-pin.png" class="img-fluid ps-3">
 					</span>
-					<span class="ms-2 pra-footer">Los
-						Angeles
-						Warehouse
-						(HQ)
+					<span class="ms-2 pra-footer">5671 Warehouse Way
+						Sacramento CA 95826
 					</span>
 					<p class="ms-4 ms-4-footer">&nbsp;
 						13310 S. Figueroa St. Los Angeles, CA 90061
@@ -131,10 +127,8 @@
 					<span>
 						<img src="/theme/img/map-pin.png" class="img-fluid ps-3">
 					</span>
-					<span class="ms-2 pra-footer">Los
-						Angeles
-						Warehouse
-						(HQ)
+					<span class="ms-2 pra-footer">5671 Warehouse Way
+						Sacramento CA 95826
 					</span>
 					<p class="ms-4 ms-4-footer">&nbsp;
 						13310 S. Figueroa St. Los Angeles, CA 90061
