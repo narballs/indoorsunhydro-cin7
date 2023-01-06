@@ -2,7 +2,7 @@
 @include('partials.top-bar')
 @include('partials.search-bar')
 {{session()->forget('cart');}}
-{{-- <div class="container mt-5 ">
+<div class="container mt-5 ">
 	<div class="row">
 		<div class="col-md-12">
 			<div class="card  border-0">
@@ -224,8 +224,8 @@
 			</div>
 		</div>
 	</div>
-</div> --}}
-<div class="container-fluid" style="width: 1551px !important;">
+</div>
+{{-- <div class="container-fluid" style="width: 1551px !important;">
 	<div class="row">
 		<div class="col-md-12">
 			<div class="card border-0 thank-you-page-background-img">
@@ -412,6 +412,6 @@
 			</div>
 		</div>
 	</div>
-</div>
+</div> --}}
 @include('partials.product-footer')
 @include('partials.footer')

@@ -71,8 +71,6 @@
                         }
                         $count++;
                         ?>
-
-
                             <tr style="padding:0px;text-align:center;border: 1px solid red; <?php echo $bgcolor;?>; font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Arial,'Roboto';font-size: 15px;">
                                 <td class="has-bordered">
                                     <img src="{{$option->image}}" alt="Product 1" class="img-circle img-size-32 mr-2" width="100px" style="max-height:150px">
