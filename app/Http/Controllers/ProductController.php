@@ -598,7 +598,6 @@ class ProductController extends Controller
     public function productSearch(Request $request)
     {
         if ($request->ajax()) {
-
             $brand = $request->input('brand');
             $price = $request->input('price');
             $instock = $request->input('instock');
@@ -762,6 +761,8 @@ class ProductController extends Controller
         $category_id = $selected_category_id;
         $user_id = Auth::id();
         $lists = BuyList::where('user_id', $user_id)->get();
+        $contact = Contact::where('user_id', $user_id)->first();
+        $pricing = $contact->priceColumn;
 
 
 
@@ -779,7 +780,8 @@ class ProductController extends Controller
             'brand_id',
             'per_page',
             'searched_value',
-            'lists'
+            'lists',
+            'pricing'
 
         ));
     }
