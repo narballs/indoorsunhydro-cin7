@@ -35,13 +35,27 @@
 										</div>
 										<div class="mt-3"><input type="text" name="last_name"
 												value="{{$customer->lastName}}"></div>
-										<div class="mt-3"><button type="button" value="update"
-												onclick="updatePriceColumn(3)">Update</button></div>
+										<div class="mt-3">
+											<button type="button" value="update"
+												onclick="updatePriceColumn(3)">Update</button>
+										</div>
 									</div>
 								</div>
 								@if ($customer->status == 1)
 
-								<div class="col-md-6"><b>Pricing:</b> {{$customer->priceColumn}} </a>
+								<div class="col-md-6"><b>Pricing:</b>
+							        <select onchange="updatePriceColumn(4)" class="pricingColumn">
+							            <option value="RetailUSD">
+							                RetailUSD
+							            </option>
+							            <option value="WholesaleUSD">
+							                WholesaleUSD
+							            </option>
+							             <option value="test">
+							                test
+							            </option>
+							        </select>
+    
 									<div class="spinner-border d-none" role="status"
 										style="left: 50% !important;margin-left: -25em !important;" id="spinner2">
 										<span class="sr-only">Activating...</span>
@@ -253,6 +267,7 @@
     	}
 
     	function updatePriceColumn(showSpinner) {
+    		//alert(showSpinner);
     		if (showSpinner == 2 ) {
     			$('#spinner').removeClass('d-none');
     			
@@ -271,20 +286,26 @@
 
     			if (showSpinner == 3  ) {
     				var contact_id = $( "#contact_id" ).val();
+
     				$('#spinner').removeClass('d-none');
     				var first_name = $("input[name=first_name]" ).val();
     				var last_name = $("input[name=last_name]" ).val();
     				var contact_id = $( "#contact_id" ).val();
 				}
-			if (showSpinner != 0) {
-    	
+			if (showSpinner == 4) {
+				var contact_id = $( "#contact_id" ).val();
+				console.log(contact_id);
+				// console.log(contact_id);
+				var pricingCol = $('.pricingColumn').val();
+				// console.log(pricingCol);
+
     		jQuery.ajax({
         		url: "{{ url('admin/update-pricing-column') }}",
         		method: 'post',
         		data: {
             		"_token": "{{ csrf_token() }}",
             		"contact_id": contact_id,
-            		"pricingCol": priceCol,
+            		"pricingCol": pricingCol,
             		"first_name": first_name,
             		"last_name" : last_name
         		},

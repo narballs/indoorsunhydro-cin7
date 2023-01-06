@@ -87,11 +87,15 @@ class ProductController extends Controller
             if (!empty($selected_category_id)) {
                 $sub_category_ids = Category::where('parent_id', $selected_category_id)->pluck('id')->toArray();
             }
-            $products = $products_query->with('options', 'brand')->paginate($per_page);
+            $products = $products_query->with('options.price', 'brand')->paginate($per_page);
+            // dd($products);
         }
 
         $brands = Brand::whereIn('id', $brand_ids)->pluck('name', 'id')->toArray();
-         $user_id = Auth::id();
+        $user_id = Auth::id();
+        $contact = Contact::where('user_id', $user_id)->first();
+        $pricing = $contact->priceColumn;
+     
         $lists = BuyList::where('user_id', $user_id)->get();
 
 
@@ -107,7 +111,8 @@ class ProductController extends Controller
             'categories',
             'stock',
             'selected_category_id',
-            'lists'
+            'lists',
+            'pricing'
 
         ));
     }
@@ -491,9 +496,17 @@ class ProductController extends Controller
         $id = $request->p_id;
         $option_id = $request->option_id;
 
-        //$product = Product::findOrFail($id);
         $productOption = ProductOption::where('option_id', $option_id)->with('products')->first();
         $cart = session()->get('cart', []);
+        $user_id = Auth::id();
+        $contact = Contact::where('user_id', $user_id)->first();
+        $pricing = $contact->priceColumn;
+        if ($pricing == 'WholesaleUSD') {
+           $price = $productOption->wholesalePrice;
+        }
+        else {
+            $price = $productOption->retailPrice;
+        }
 
         if (isset($cart[$id])) {
             $cart[$id]['quantity'] += $request->quantity;
@@ -502,7 +515,7 @@ class ProductController extends Controller
                 "product_id" => $productOption->products->product_id,
                 "name" => $productOption->products->name,
                 "quantity" => $request->quantity,
-                "price" => $productOption->retailPrice,
+                "price" => $price,
                 "code" => $productOption->code,
                 "image" => $productOption->image,
                 'option_id' => $productOption->option_id,
@@ -730,12 +743,16 @@ class ProductController extends Controller
         }
 
         $is_search = $request->get('is_search');
+        $searchvalue = $request->value;
+        $searchvalue = preg_split('/\s+/', $searchvalue, -1, PREG_SPLIT_NO_EMPTY);
         if (!empty($is_search)) {
-            $products = Product::with(['options' => function ($q) {
-                $q->where('status', '!=', 'Disabled');
-            }])->where('status', '!=', 'Inactive')
-                ->where('name', 'LIKE', '%' . $request->value . '%')
-                ->orWhere('code', 'LIKE', '%' . $request->value . '%')->paginate($per_page);
+            foreach ($searchvalue as $value) {
+                $products = Product::with(['options' => function ($q) {
+                    $q->where('status', '!=', 'Disabled');
+                }])->where('status', '!=', 'Inactive')
+                    ->where('name', 'LIKE', '%' . $value . '%')
+                    ->orWhere('code', 'LIKE', '%' . $value . '%')->paginate($per_page);
+            };
         }
 
         $searched_value = $request->value;
