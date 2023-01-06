@@ -7,7 +7,7 @@
 @stop
 
 @section('content')
-<?php //dd($customer);?>
+<?php //dd($customer->priceColumn);?>
 <div class="container-fluid">
 	<div class="container">
 		<!-- Title -->
@@ -42,18 +42,17 @@
 									</div>
 								</div>
 								@if ($customer->status == 1)
-
 								<div class="col-md-6"><b>Pricing:</b>
 							        <select onchange="updatePriceColumn(4)" class="pricingColumn">
-							        	  <option value="test">
-							                test
-							            </option>
-							            <option value="RetailUSD">
-							                RetailUSD
-							            </option>
-							            <option value="WholesaleUSD">
-							                WholesaleUSD
-							            </option>
+							      	<?php 
+							      	$pricing = $customer->priceColumn;
+							      	// echo $pricing;exit;
+							      
+							      	?>
+							           <option class="form-group" value="RetailUSD" {{ $pricing }} {{ isset($pricing) &&
+                     $pricing=='RetailUSD' ? 'selected="selected"' : '' }}>RetailUSD</option>
+							           <option class="form-group" value="WholesaleUSD" {{ $pricing }} {{ isset($pricing) &&
+                     $pricing=='WholesaleUSD' ? 'selected="selected"' : '' }}>WholesaleUSD</option>
 							           
 							        </select>
     
@@ -63,7 +62,6 @@
 									</div>
 								</div>
 								@endif
-
 
 								<?php 
 		              			if ($customer->status == 1) {
