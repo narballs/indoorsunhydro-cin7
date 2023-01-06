@@ -257,6 +257,8 @@ class ProductController extends Controller
         //$brands = Brand::pluck('name', 'id')->toArray();
         $user_id = Auth::id();
         $lists = BuyList::where('user_id', $user_id)->get();
+        $contact = Contact::where('user_id', $user_id)->first();
+        $pricing = $contact->priceColumn;
 
         $category_id = $selected_category_id;
 
@@ -272,7 +274,8 @@ class ProductController extends Controller
                 'parent_category_slug',
                 'brand_id',
                 'per_page', 
-                'lists'
+                'lists',
+                'pricing'
             )
         );
     }
@@ -301,7 +304,10 @@ class ProductController extends Controller
         } else {
             $pname = '';
         }
-        return view('product-detail', compact('productOption', 'pname'));
+        $user_id = Auth::id();
+        $contact = Contact::where('user_id', $user_id)->first();
+        $pricing = $contact->priceColumn;
+        return view('product-detail', compact('productOption', 'pname','pricing'));
     }
     public function showProductByCategory_slug($slug)
     {
@@ -462,14 +468,9 @@ class ProductController extends Controller
             }
         }
         $user_id = Auth::id();
+        $contact = Contact::where('user_id', $user_id)->first();
+        $pricing = $contact->priceColumn;
         $lists = BuyList::where('user_id', $user_id)->get();
-
-        //dd($name);
-        //$products_query = Product::with('options', 'brand');
-        //$products = $products_query->with('options', 'brand')->paginate($per_page);
-        //dd($products);
-        //$brands = Brand::pluck('name', 'id')->toArray();
-
         $category_id = $selected_category_id;
 
         return view(
@@ -486,7 +487,8 @@ class ProductController extends Controller
                 'brand_id',
                 'per_page',
                 'name',
-                'lists'
+                'lists',
+                'pricing'
             )
         );
     }

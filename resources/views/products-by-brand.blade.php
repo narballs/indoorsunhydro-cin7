@@ -1,6 +1,7 @@
 @include('partials.header')
 @include('partials.top-bar')
 @include('partials.search-bar')
+
 <div class="mb-5">
    <p style="line-height: 95px;" class="fw-bold fs-2 product-btn my-auto border-0 text-white text-center align-middle">
       PRODUCTS
@@ -130,7 +131,16 @@
                      href="{{ url('product-detail/'.$product->id.'/'.$option->option_id.'/'.$product->slug) }}"
                      id=product_name_{{$product->id}}>{{$product->name}}</a></h5>
                <div class="mt-auto">
-                  <p class="text-uppercase mb-0 text-center text-danger">${{$product->retail_price}}</p>
+                  <p class="text-uppercase mb-0 text-center text-danger">
+               <?php 
+                  if($pricing == 'WholesaleUSD') {
+                    $retail_prices = $option->wholesalePrice;
+                  }
+                  else {
+                    $retail_prices = $option->retailPrice;
+                  }
+                  ?>
+                     ${{number_format($retail_prices,2)}}</p>
                   <button class="button-cards col w-100" style="max-height: 46px;"
                      onclick="updateCart({{$product->id}},{{$option->option_id}})">Add to cart</button>
                </div>
