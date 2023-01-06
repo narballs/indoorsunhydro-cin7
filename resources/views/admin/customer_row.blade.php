@@ -8,6 +8,7 @@
     		<span class="badge bg-danger">Inactive</span>
     	@endif
     </td>
+  
     <td>{{$contact->priceColumn}}</td>
     <td>{{$contact->company}}</td>
     <td><a href="{{ url('admin/customer-detail/'.$contact->id) }}">{{$contact->email}}</a></td>

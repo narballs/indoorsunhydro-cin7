@@ -14,7 +14,7 @@
         data-toggle="popover" onclick="addToList('{{$product->product_id}}', '{{$option->option_id}}')"></i>
 
     </a>
-    
+
         <a href="{{ url('product-detail/'.$product->id.'/'.$option->option_id.'/'.$product->slug) }}">
             <span class="d-flex justify-content-center align-content-center">
 
@@ -40,8 +40,14 @@
             <input type="hidden" name="p_id" id="p_{{$product->id}}" value="{{$product->id}}">
             @csrf
             <div class="mt-auto">
-                <?php $retail_prices = $option->retailPrice;
-						?>
+                <?php 
+                if($pricing == 'WholesaleUSD') {
+                    $retail_prices = $option->wholesalePrice;
+                }
+                else {
+                    $retail_prices = $option->retailPrice;
+                }
+                ?>
                 <h4 class="text-uppercase mb-0 text-center text-danger">${{ number_format($retail_prices,2)}}</h4>
                 @if($product->categories)
                 <p class="category-cart-page mt-4">
@@ -68,7 +74,7 @@
 
         </div>
     </div>
-<!--     <div id="popover-form" class="d-none">
+    <div id="popover-form" class="d-none">
         <form id="myform" class="form-inline" role="form">
             @foreach($lists as $list)
             <div class="form-group">
@@ -80,10 +86,10 @@
 
             </div>
             @endforeach
-               <button type="submit" class="btn btn-warning" onclick="addToList('{{$product->product_id}}', '{{$option->option_id}}')">Subscribe</button>
+               <button type="submit" class="btn btn-warning" onclick="addToList('{{$product->product_id}}', '{{$option->option_id}}')">Add</button>
         
         </form>
-    </div> -->
+    </div>
 </div>
 
 <script>

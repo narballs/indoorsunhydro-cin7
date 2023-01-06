@@ -131,7 +131,9 @@ class ContactController extends Controller
     }
 
     public function show_customer($id){
+
         $customer = Contact::where('id', $id)->first();
+       
         $customer_orders =  ApiOrder::where('user_id', $customer->user_id)->with(['createdby','processedby'])->get();
         $statuses = OrderStatus::all();
         return view('admin/customer-details',compact('customer', 'statuses', 'customer_orders'));
@@ -205,15 +207,22 @@ class ContactController extends Controller
     }
 
     public function update_pricing_column(Request $request) {
+        //dd($request->all());
         $contact_id = $request->contact_id;
         $priceColumn = $request->pricingCol;
+        //dd()
         $first_name = $request->first_name;
         $last_name = $request->last_name;
-        $contact = Contact::where('contact_id', $contact_id)->first();
-        if ($priceColumn) {
+        $pricingCol = $request->pricingCol;
+        // dd($pricingCol);
+
+        $contact = Contact::where('contact_id', $request->contact_id)->first();
+        //dd($contact);
+        if ($pricingCol) {
+            //dd($pricingCol);
             $contact->update(
                 [
-                    'priceColumn' => $priceColumn
+                    'priceColumn' => $pricingCol,
                 ]
             );
             return response()->json([
