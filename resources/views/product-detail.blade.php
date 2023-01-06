@@ -32,7 +32,17 @@
                         <div class="col-xl-7 col-lg-7 col-md-12 col-sm-12 col-xs-12 product-detail-content">
                             <div class="product pt-4 product-detail-content1">
                                 <div class="d-flex row">
-                                    <?php $retail_prices = $productOption->retailPrice;?>
+                                    
+                        <?php 
+                            if($pricing == 'WholesaleUSD') {
+                                $retail_prices = $productOption->wholesalePrice;
+                            }
+                            else {
+                                $retail_prices = $productOption->retailPrice;
+                            }
+                        ?>
+
+                               
                                     <div class="product-detail-heading col-xl-12 col-lg-12 col-md-12 col-xs-12"
                                         id="product_name">
                                         <h3 class="product-detail-heading">{{$productOption->products->name}}</h3>

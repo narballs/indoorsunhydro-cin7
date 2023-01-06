@@ -45,15 +45,16 @@
 
 								<div class="col-md-6"><b>Pricing:</b>
 							        <select onchange="updatePriceColumn(4)" class="pricingColumn">
+							        	  <option value="test">
+							                test
+							            </option>
 							            <option value="RetailUSD">
 							                RetailUSD
 							            </option>
 							            <option value="WholesaleUSD">
 							                WholesaleUSD
 							            </option>
-							             <option value="test">
-							                test
-							            </option>
+							           
 							        </select>
     
 									<div class="spinner-border d-none" role="status"
@@ -294,7 +295,7 @@
 				}
 			if (showSpinner == 4) {
 				var contact_id = $( "#contact_id" ).val();
-				console.log(contact_id);
+			
 				// console.log(contact_id);
 				var pricingCol = $('.pricingColumn').val();
 				// console.log(pricingCol);
