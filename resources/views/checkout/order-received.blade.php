@@ -152,6 +152,15 @@
 						</div>
 						@foreach($order->apiOrderItem as $item)
 						@foreach($item->product->options as $option)
+						 <?php 
+			                if($pricing == 'WholesaleUSD') {
+			                    $retail_prices = $option->wholesalePrice;
+			                }
+			                else {
+			                    $retail_prices = $option->retailPrice;
+			                }
+	                	?>
+						<?php //dd($option);?>
 						<div class="row ps-5 mt-3">
 							<div class="col-md-2">
 								@if($option->image)
@@ -177,7 +186,7 @@
 							</div>
 							<div class="col-md-2 mt-5">
 								<p class="thank-you-page-product-price">${{
-									number_format($item->product->retail_price,2)}}</p>
+									number_format($retail_prices,2)}}</p>
 							</div>
 						</div>
 						@endforeach
@@ -209,8 +218,8 @@
 								<tr class="table-items">
 									<td class="table-items-sub-item">$</td>
 									<td class="table-items-sub-item">$</td>
-									<td class="table-items-sub-item">${{number_format($item->product->retail_price *
-										$item->quantity, 2)}}</td>
+									<?php //dd($order);?>
+									<td class="table-items-sub-item">${{number_format($order->total, 2)}}</td>
 									<td class="table-items-sub-item">{{$order->paymentTerms}}</td>
 
 								</tr>
