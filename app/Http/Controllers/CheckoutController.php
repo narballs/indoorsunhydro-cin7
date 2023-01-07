@@ -46,6 +46,9 @@ class CheckoutController extends Controller
         $orderitems = ApiOrderItem::where('order_id', $id)->with('product')->get();
         $count = $orderitems->count();
         $best_products = Product::where('status', '!=', 'Inactive')->orderBy('views', 'DESC')->limit(4)->get();
-        return view('checkout/order-received', compact('order', 'orderitems', 'formatedDate', 'count', 'best_products'));
+        $user_id = Auth::id();
+        $contact = Contact::where('user_id', $user_id)->first();
+        $pricing = $contact->priceColumn;
+        return view('checkout/order-received', compact('order', 'orderitems', 'formatedDate', 'count', 'best_products', 'pricing'));
     }
 }
