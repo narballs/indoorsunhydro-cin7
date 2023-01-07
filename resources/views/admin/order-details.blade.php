@@ -115,7 +115,6 @@
 	                   					</div>
 	                    				<div class="flex-lg-grow-1 ms-3">
 	                      					<h6 class="small mb-0"><a href="#" class="text-reset">{{$item->Product->name}}</a></h6>
-	                      					<span class="small">Color: Black</span>
 	                    				</div>
                   					</div>
                 				</td>
