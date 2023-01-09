@@ -133,14 +133,53 @@
                <div class="mt-auto">
                   <p class="text-uppercase mb-0 text-center text-danger">
                <?php 
-                  if($pricing == 'WholesaleUSD') {
-                    $retail_prices = $option->wholesalePrice;
+               foreach($option->price as $price)
+                  {
+                    switch ($pricing) {
+                        case "Retail":
+                            $retail_price = $price->retailUSD;
+                            break;
+                        case "Wholesale":
+                            $retail_price = $price->wholesaleUSD;
+                            break;
+                        case "TerraIntern":
+                            $retail_price = $price->terraInternUSD;
+                            break;
+                        case "Sacramento":
+                            $retail_price = $price->sacramentoUSD;
+                            break;
+                        case "Oklahoma":
+                            $retail_price = $price->oklahomaUSD;
+                            break;
+                        case "Calaveras":
+                            $retail_price = $price->calaverasUSD;
+                        break;
+                        case "Tier1":
+                            $retail_price = $price->tier1USD;
+                        break;
+                        case "Tier2":
+                            $retail_price = $price->tier2USD;
+                        break;
+                        case "Tier3":
+                            $retail_price = $price->tier3USD;
+                        break;
+                        case "ComercialOk":
+                            $retail_price = $price->commercialOKUSD;
+                        break;
+                        case "Cost":
+                            $retail_price = $price->costUSD;
+                        break;
+                        }
                   }
-                  else {
-                    $retail_prices = $option->retailPrice;
-                  }
+            
+                  // if($pricing == 'WholesaleUSD') {
+                  //   $retail_prices = $option->wholesalePrice;
+                  // }
+                  // else {
+                  //   $retail_prices = $option->retailPrice;
+                  // }
                   ?>
-                     ${{number_format($retail_prices,2)}}</p>
+                     ${{number_format($retail_price,2)}}</p>
                   <button class="button-cards col w-100" style="max-height: 46px;"
                      onclick="updateCart({{$product->id}},{{$option->option_id}})">Add to cart</button>
                </div>
