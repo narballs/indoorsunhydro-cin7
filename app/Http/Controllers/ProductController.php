@@ -265,9 +265,18 @@ class ProductController extends Controller
         //$brands = Brand::pluck('name', 'id')->toArray();
         $user_id = Auth::id();
         $lists = BuyList::where('user_id', $user_id)->get();
-        $contact = Contact::where('user_id', $user_id)->first();
-        $pricing = $contact->priceColumn;
-
+        //$contact = Contact::where('user_id', $user_id)->first();
+        $contact = '';
+        if ($user_id != null) {
+            $contact = Contact::where('user_id', $user_id)->first();
+        }
+       
+        if ($contact) {
+            $pricing = $contact->priceColumn;
+        }
+        else {
+            $pricing = 'Retail';
+        }
         $category_id = $selected_category_id;
 
         return view(
@@ -312,8 +321,18 @@ class ProductController extends Controller
             $pname = '';
         }
         $user_id = Auth::id();
-        $contact = Contact::where('user_id', $user_id)->first();
-        $pricing = $contact->priceColumn;
+        $contact = '';
+        if ($user_id != null) {
+            $contact = Contact::where('user_id', $user_id)->first();
+        }
+       
+        if ($contact) {
+            $pricing = $contact->priceColumn;
+        }
+        else {
+            $pricing = 'Retail';
+        }
+   
         return view('product-detail', compact('productOption', 'pname','pricing'));
     }
     public function showProductByCategory_slug($slug)
@@ -473,8 +492,17 @@ class ProductController extends Controller
             }
         }
         $user_id = Auth::id();
-        $contact = Contact::where('user_id', $user_id)->first();
-        $pricing = $contact->priceColumn;
+        //$contact = Contact::where('user_id', $user_id)->first();
+        $contact = '';
+        if ($user_id != null) {
+            $contact = Contact::where('user_id', $user_id)->first();
+        }
+        if ($contact) {
+            $pricing = $contact->priceColumn;
+        }
+        else {
+            $pricing = 'Retail';
+        }
         $lists = BuyList::where('user_id', $user_id)->get();
         $category_id = $selected_category_id;
 
@@ -807,13 +835,18 @@ class ProductController extends Controller
         $category_id = $selected_category_id;
         $user_id = Auth::id();
         $lists = BuyList::where('user_id', $user_id)->get();
-        $contact = Contact::where('user_id', $user_id)->first();
-        $pricing = $contact->priceColumn;
-
-
-
-
-
+        //$contact = Contact::where('user_id', $user_id)->first();
+        $contact = '';
+        if ($user_id != null) {
+            $contact = Contact::where('user_id', $user_id)->first();
+        }
+       
+        if ($contact) {
+            $pricing = $contact->priceColumn;
+        }
+        else {
+            $pricing = 'Retail';
+        }
 
         return view('search_product.search_product', compact(
             'products',
