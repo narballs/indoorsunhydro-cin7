@@ -92,8 +92,17 @@ class ProductController extends Controller
 
         $brands = Brand::whereIn('id', $brand_ids)->pluck('name', 'id')->toArray();
         $user_id = Auth::id();
-        $contact = Contact::where('user_id', $user_id)->first();
-        $pricing = $contact->priceColumn;
+        $contact = '';
+        if ($user_id != null) {
+            $contact = Contact::where('user_id', $user_id)->first();
+        }
+       
+        if ($contact) {
+            $pricing = $contact->priceColumn;
+        }
+        else {
+            $pricing = 'Retail';
+        }
      
         $lists = BuyList::where('user_id', $user_id)->get();
 
