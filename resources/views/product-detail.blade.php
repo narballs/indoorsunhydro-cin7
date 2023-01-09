@@ -34,14 +34,53 @@
                                 <div class="d-flex row">
                                     
                         <?php 
-                            if($pricing == 'WholesaleUSD') {
+                foreach($productOption->price as $price)
+                    {
+                    switch ($pricing) {
+                        case "Retail":
+                            $retail_price = $price->retailUSD;
+                            break;
+                        case "Wholesale":
+                            $retail_price = $price->wholesaleUSD;
+                            break;
+                        case "TerraIntern":
+                            $retail_price = $price->terraInternUSD;
+                            break;
+                        case "Sacramento":
+                            $retail_price = $price->sacramentoUSD;
+                            break;
+                        case "Oklahoma":
+                            $retail_price = $price->oklahomaUSD;
+                            break;
+                        case "Calaveras":
+                            $retail_price = $price->calaverasUSD;
+                        break;
+                        case "Tier1":
+                            $retail_price = $price->tier1USD;
+                        break;
+                        case "Tier2":
+                            $retail_price = $price->tier2USD;
+                        break;
+                        case "Tier3":
+                            $retail_price = $price->tier3USD;
+                        break;
+                        case "ComercialOk":
+                            $retail_price = $price->commercialOKUSD;
+                        break;
+                        case "Cost":
+                            $retail_price = $price->costUSD;
+                        break;
+                        }
+                }
+                ?>
+               <!--              if($pricing == 'WholesaleUSD') {
                                 $retail_prices = $productOption->wholesalePrice;
                             }
                             else {
                                 $retail_prices = $productOption->retailPrice;
                             }
                         ?>
-
+ -->
                                
                                     <div class="product-detail-heading col-xl-12 col-lg-12 col-md-12 col-xs-12"
                                         id="product_name">
@@ -50,7 +89,7 @@
 
                                     <div class="col-md-12 d-flex">
                                         <span class="text-danger product-detail-price" id="product_price">
-                                            ${{number_format($retail_prices,2)}}</span>
+                                            ${{number_format($retail_price,2)}}</span>
                                     </div>
                                 </div>
                                 <div class="mt-4 mb-3"> <span class="text-uppercase text-muted brand"></span>

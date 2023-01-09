@@ -1,13 +1,9 @@
 @extends('adminlte::page')
-
 @section('title', 'Dashboard')
-
 @section('content_header')
 <h1>Dashboard</h1>
 @stop
-
 @section('content')
-<?php //dd($customer->priceColumn);?>
 <div class="container-fluid">
 	<div class="container">
 		<!-- Title -->
@@ -46,13 +42,31 @@
 							        <select onchange="updatePriceColumn(4)" class="pricingColumn">
 							      	<?php 
 							      	$pricing = $customer->priceColumn;
-							      	// echo $pricing;exit;
 							      
 							      	?>
-							           <option class="form-group" value="RetailUSD" {{ $pricing }} {{ isset($pricing) &&
-                     $pricing=='RetailUSD' ? 'selected="selected"' : '' }}>RetailUSD</option>
-							           <option class="form-group" value="WholesaleUSD" {{ $pricing }} {{ isset($pricing) &&
-                     $pricing=='WholesaleUSD' ? 'selected="selected"' : '' }}>WholesaleUSD</option>
+							      	<option class="form-group" value="Retail" {{ $pricing }} {{ isset($pricing) &&
+                     $pricing=='Retail' ? 'selected="selected"' : '' }}>Retail</option>
+							        <option class="form-group" value="Wholesale" {{ $pricing }} {{ isset($pricing) &&
+                     $pricing=='Wholesale' ? 'selected="selected"' : '' }}>Wholesale</option>
+                       				<option class="form-group" value="TerraIntern" {{ $pricing }} {{ isset($pricing) &&
+                     $pricing=='TerraIntern' ? 'selected="selected"' : '' }}>TerraIntern</option>
+                     				<option class="form-group" value="Sacramento" {{ $pricing }} {{ isset($pricing) &&
+                     $pricing=='Sacramento' ? 'selected="selected"' : '' }}>Sacramento</option>
+                        			<option class="form-group" value="Oklahoma" {{ $pricing }} {{ isset($pricing) &&
+                     $pricing=='Oklahoma' ? 'selected="selected"' : '' }}>Oklahoma</option>
+                     				<option class="form-group" value="Calaveras" {{ $pricing }} {{ isset($pricing) &&
+                     $pricing=='Calaveras' ? 'selected="selected"' : '' }}>Calaveras</option>
+                     		<option class="form-group" value="Tier1" {{ $pricing }} {{ isset($pricing) &&
+                     $pricing=='Tier1' ? 'selected="selected"' : '' }}>Tier1</option>
+                      		<option class="form-group" value="Tier2" {{ $pricing }} {{ isset($pricing) &&
+                     $pricing=='Tier2' ? 'selected="selected"' : '' }}>Tier2</option>
+                     		<option class="form-group" value="Tier3" {{ $pricing }} {{ isset($pricing) &&
+                     $pricing=='Tier3' ? 'selected="selected"' : '' }}>Tier3</option>
+                     		<option class="form-group" value="ComercialOk" {{ $pricing }} {{ isset($pricing) &&
+                     $pricing=='ComercialOk' ? 'selected="selected"' : '' }}>ComercialOk</option>
+                     		<option class="form-group" value="Cost" {{ $pricing }} {{ isset($pricing) &&
+                     $pricing=='Cost' ? 'selected="selected"' : '' }}>Cost</option>
+							      
 							           
 							        </select>
     

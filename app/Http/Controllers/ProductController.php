@@ -47,7 +47,7 @@ class ProductController extends Controller
         if (!empty($category_ids)) {
             $products_query = Product::where('status', '!=', 'Inactive')
                 ->whereIn('category_id', $category_ids)
-                ->with('options', 'brand');
+                ->with('options.price', 'brand');
 
             if (!empty($brand_id)) {
                 $products_query->where('brand_id', $brand_id);
@@ -88,7 +88,6 @@ class ProductController extends Controller
                 $sub_category_ids = Category::where('parent_id', $selected_category_id)->pluck('id')->toArray();
             }
             $products = $products_query->with('options.price', 'brand')->paginate($per_page);
-            // dd($products);
         }
 
         $brands = Brand::whereIn('id', $brand_ids)->pluck('name', 'id')->toArray();
@@ -289,10 +288,9 @@ class ProductController extends Controller
             $product->views = $views + 1;
             $product->save();
         }
-        $productOption = ProductOption::where('option_id', $option_id)->with('products.categories')->first();
+        $productOption = ProductOption::where('option_id', $option_id)->with('products.categories','price')->first();
         if ($productOption->products->categories != '') {
             $category = Category::where('category_id', $productOption->products->categories->category_id)->first();
-            //dd($category);
             $parent_category = Category::where('category_id', $category->parent_id)->first();
             $pname = '';
             if ($parent_category) {
@@ -311,7 +309,6 @@ class ProductController extends Controller
     }
     public function showProductByCategory_slug($slug)
     {
-
         $category = Category::where('slug', $slug)->first();
         $category_ids = Category::where('parent_id', $category->id)->pluck('id')->toArray();
         $products = [];
@@ -331,7 +328,7 @@ class ProductController extends Controller
 
         $search_queries = $request->all();
 
-        $products_query  = Product::with('options', 'brand')->where('brand', $name);
+        $products_query  = Product::with('options.price', 'brand')->where('brand', $name);
 
         $selected_category_id = $request->get('selected_category');
 
@@ -386,7 +383,7 @@ class ProductController extends Controller
         if (empty($search_queries)) {
             $products = $products_query->paginate($per_page);
         } else {
-            $products = $products_query->with('options', 'brand')->paginate($per_page);
+            $products = $products_query->with('options.price', 'brand')->paginate($per_page);
         }
         $brands = [];
         if (!empty($brand_ids)) {
@@ -400,7 +397,6 @@ class ProductController extends Controller
         $products_in_brand = Product::where('brand_id', $brand_id)->pluck('category_id', 'category_id')->toArray();
         $parent_ids = Category::whereIn('category_id', $products_in_brand)->pluck('parent_id', 'parent_id');
         $parent_names = Category::whereIn('category_id', $parent_ids)->pluck('name', 'id');
-        // dd($parent_names);
         $category_ids = Category::where('parent_id', $category_id)->pluck('id')->toArray();
         array_push($category_ids, $category_id);
         $all_product_ids = Product::whereIn('category_id', $category_ids)->pluck('id')->toArray();
@@ -498,17 +494,58 @@ class ProductController extends Controller
         $id = $request->p_id;
         $option_id = $request->option_id;
 
-        $productOption = ProductOption::where('option_id', $option_id)->with('products')->first();
+        $productOption = ProductOption::where('option_id', $option_id)->with('products.options.price')->first();
+
+
         $cart = session()->get('cart', []);
         $user_id = Auth::id();
         $contact = Contact::where('user_id', $user_id)->first();
         $pricing = $contact->priceColumn;
-        if ($pricing == 'WholesaleUSD') {
-           $price = $productOption->wholesalePrice;
+
+        foreach($productOption->products->options as $option) {
+            foreach($option->price as $price) {
+                if ($pricing == 'Retail') {
+                   $price = $price['retailUSD'];
+                }
+                else if ($pricing == 'Wholesale') {
+                    $price = $price['wholesaleUSD'];
+                }
+                else if ($pricing == 'TerraIntern') {
+                    $price = $price['terraInternUSD'];
+                }
+                else if ($pricing == 'Sacramento') {
+                    $price = $price['sacramentoUSD'];
+                }
+                else if ($pricing == 'Oklahoma') {
+                    $price = $price['oklahomaUSD'];
+                }
+                else if ($pricing == 'Calaveras') {
+                    $price = $price['calaverasUSD'];
+                }
+                else if ($pricing == 'Tier1') {
+                    $price = $price['tier1USD'];
+                }
+                else if ($pricing == 'Tier2') {
+                    $price = $price['tier2USD'];
+                }
+                else if ($pricing == 'Tier3') {
+                    $price = $price['tier3USD'];
+                }
+                else if ($pricing == 'ComercialOk') {
+                    $price = $price['commercialOKUSD'];
+                }
+                else if ($pricing == 'Cost') {
+                    $price = $price['costUSD'];
+                }
+            }
         }
-        else {
-            $price = $productOption->retailPrice;
-        }
+        
+        // if ($pricing == 'Wholesale') {
+        //    $price = $productOption->wholesalePrice;
+        // }
+        // else {
+        //     $price = $productOption->retailPrice;
+        // }
 
         if (isset($cart[$id])) {
             $cart[$id]['quantity'] += $request->quantity;

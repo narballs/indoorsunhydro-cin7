@@ -3,7 +3,7 @@
         data-content="And here's some amazing content. It's very engaging. Right?">
      Click to toggle popover
 </button> -->
-
+<?php //dd($option->price);?>
 <div class="col-sm-12 col-md-6 col-lg-3 d-flex align-self-stretch mt-3 mb-3">
     <div class="card shadow-sm mb-4 w-100 h-100">
         @if($option->image != '')
@@ -41,14 +41,48 @@
             @csrf
             <div class="mt-auto">
                 <?php 
-                if($pricing == 'WholesaleUSD') {
-                    $retail_prices = $option->wholesalePrice;
-                }
-                else {
-                    $retail_prices = $option->retailPrice;
+                //dd($option->price);
+
+                foreach($option->price as $price)
+                {
+                    switch ($pricing) {
+                        case "Retail":
+                            $retail_price = $price->retailUSD;
+                            break;
+                        case "Wholesale":
+                            $retail_price = $price->wholesaleUSD;
+                            break;
+                        case "TerraIntern":
+                            $retail_price = $price->terraInternUSD;
+                            break;
+                        case "Sacramento":
+                            $retail_price = $price->sacramentoUSD;
+                            break;
+                        case "Oklahoma":
+                            $retail_price = $price->oklahomaUSD;
+                            break;
+                        case "Calaveras":
+                            $retail_price = $price->calaverasUSD;
+                        break;
+                        case "Tier1":
+                            $retail_price = $price->tier1USD;
+                        break;
+                        case "Tier2":
+                            $retail_price = $price->tier2USD;
+                        break;
+                        case "Tier3":
+                            $retail_price = $price->tier3USD;
+                        break;
+                        case "ComercialOk":
+                            $retail_price = $price->commercialOKUSD;
+                        break;
+                        case "Cost":
+                            $retail_price = $price->costUSD;
+                        break;
+                        }
                 }
                 ?>
-                <h4 class="text-uppercase mb-0 text-center text-danger">${{ number_format($retail_prices,2)}}</h4>
+                <h4 class="text-uppercase mb-0 text-center text-danger">${{ number_format($retail_price,2)}}</h4>
                 @if($product->categories)
                 <p class="category-cart-page mt-4">
                     Category:&nbsp;&nbsp;{{$product->categories->name}}
