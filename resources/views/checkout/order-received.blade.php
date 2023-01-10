@@ -152,7 +152,7 @@
 						</div>
 						@foreach($order->apiOrderItem as $item)
 						@foreach($item->product->options as $option)
-						 <?php 
+						<?php 
 			                if($pricing == 'WholesaleUSD') {
 			                    $retail_prices = $option->wholesalePrice;
 			                }
@@ -181,8 +181,9 @@
 									{{$item->product->name}}
 								</a>
 							</div>
-							<div class="col-md-2 mt-5 ">
-								<p class="order-page-prduct-quantity">{{$item->quantity}}</p>
+							<div class="col-md-2 mt-5">
+								<p class="d-flex justify-content-between align-items-center order-page-prduct-quantity">
+									{{$item->quantity}}</p>
 							</div>
 							<div class="col-md-2 mt-5">
 								<p class="thank-you-page-product-price">${{

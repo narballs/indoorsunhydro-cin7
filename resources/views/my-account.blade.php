@@ -1,6 +1,14 @@
 @include('partials.header')
 @include('partials.top-bar')
 @include('partials.search-bar')
+<style>
+	.nav .active {
+		background: #F5F5F5;
+		/* border-left: none !important; */
+		/* color: green !important; */
+		color: #008AD0 !important;
+	}
+</style>
 <div class="bg-light">
 	<div class="mb-5">
 		<p style="line-height: 95px;"
@@ -44,7 +52,7 @@
 							</a>
 							<ul class="nav nav-pills flex-column w-100 mb-sm-auto mb-0 align-items-center align-items-sm-start"
 								id="menu">
-								<li class="nav-item w-100 text-dark active mb-3">
+								<li class="nav-item w-100 text-dark active mb-3" id="dashboard">
 									<a href="#" class="nav-link align-middle px-0 ms-3">
 										<i class="fs-4 bi-house"></i>
 										<div class="row">
@@ -56,8 +64,7 @@
 												</span>
 											</div>
 											<div class="col-md-10">
-												<span
-													class=" ms-1 d-none d-sm-inline fs-5 ms-3 mt-1 ml-0 pl-0 nav-items-link"
+												<span class=" ms-1 d-none d-sm-inline fs-5 ms-3 mt-1 ml-0 pl-0"
 													onclick="dashboard()" id="dashboard">
 													Dashboard
 												</span>
@@ -85,10 +92,7 @@
 													Orders
 												</span>
 											</div>
-
-
 										</div>
-
 									</a>
 								</li>
 								<li class="nav-item w-100 mb-3" id="wish_lists">
@@ -97,9 +101,10 @@
 										<div class="row">
 											<div class="col-md-2">
 												<span>
-													<img src="theme/img/heart.png" id="order_active"
-														style="display: none;" width="28px" height="23px">
-													<img src="theme/img/heartfilled.png" id="order_inactive" class="mt-1" width="28px" height="23px">
+													<img src="theme/img/heart-icon.png" id="order_active"
+														style="display: none;" width="30px" height="30px">
+													<img src="theme/img/heartfilled.png" id="order_inactive"
+														class="mt-1" width="28px" height="23px">
 												</span>
 											</div>
 											<div class="col-md-10">
@@ -219,14 +224,14 @@
 									<span class="dashboard-heading">Hello <span
 											class="text-capitalize user_names_dashboard"><strong>{{$user->first_name}}</strong></span>
 								</div>
-									<div class="col-md-1">
-										<form id="frm-logout" action="{{ route('logout') }}" method="POST">
-											{{ csrf_field() }}
-										</form>
-									</div>
-									</span>
+								<div class="col-md-1">
+									<form id="frm-logout" action="{{ route('logout') }}" method="POST">
+										{{ csrf_field() }}
+									</form>
 								</div>
-							
+								</span>
+							</div>
+
 							<div class="col-md-12  mt-4 dashboard-content pl-1 ms-3">
 								From your account dashboard you can view your <span
 									class="dashboard-link-text text-decoration-underline" onclick="showOrders()">Recent
@@ -261,15 +266,17 @@
 						</div>
 						<div class="d-none row mt-3 mb-3 pr-0 pl-0" id="whishlist">
 							<div class="col-md-8 border-bottom border-4 d-flex pb-4 p-0 bg-white">
-								<img src="theme/img/heart.png" style="margin: 5px 3px 0px 9px;"width="28px" height="28px">
-								<span class="pt-1 my-account-content-heading">My lists</span>
+								<img src="/theme/img/heartfilled.png" style="margin: 5px 3px 0px 9px;" width="28px"
+									height="28px">
+								<span class="pt-1 my-account-content-heading">Whishlists</span>
 							</div>
 							<div class="col-md-4 border-bottom">
-								<button class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#exampleModal">Create List</button>
+								<button class="btn btn-outline-success" data-bs-toggle="modal"
+									data-bs-target="#exampleModal">Create List</button>
 							</div>
-						
-								<div class="col-md-8 bg-light m-auto rounded-end pt-3 pb-3" style="" id="wishlist_content">
-					<!-- 			<div class="container p-0">
+
+							<div class="col-md-8 bg-light m-auto rounded-end pt-3 pb-3" style="" id="wishlist_content">
+								<!-- 			<div class="container p-0">
 								    <header class="text-center">
 								        <h1>My Favourites</h1>
 								    </header>
@@ -317,22 +324,28 @@
 							</div>
 						</div>
 						<!-- Modal -->
-						<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-						  	<div class="modal-dialog">
-						    	<div class="modal-content">
-						      		<div class="modal-header">
-						       			<h5 class="modal-title text-center" id="exampleModalLabel">Create List</h5>
-						        		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-						      		</div>
-						      		<div class="modal-body">
-						        		<input type="text" name="list" id="list" class="form-control" placeholder="List Name" aria-label="List Name" aria-describedby="addon-wrapping">
-						      		</div>
-						      <div class="modal-footer">
-						        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-						        <button type="button" class="btn btn-primary" onclick="createList()">Save changes</button>
-						      </div>
-						    </div>
-						  </div>
+						<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+							aria-hidden="true">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title text-center" id="exampleModalLabel">Create List</h5>
+										<button type="button" class="btn-close" data-bs-dismiss="modal"
+											aria-label="Close"></button>
+									</div>
+									<div class="modal-body">
+										<input type="text" name="list" id="list" class="form-control"
+											placeholder="List Name" aria-label="List Name"
+											aria-describedby="addon-wrapping">
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary"
+											data-bs-dismiss="modal">Close</button>
+										<button type="button" class="btn btn-primary" onclick="createList()">Save
+											changes</button>
+									</div>
+								</div>
+							</div>
 						</div>
 						<div class="" id="order_details">
 							<div class="col-md-12 mt-4 d-none order-detail-container pl-4 pr-4"
@@ -559,42 +572,42 @@
 										value="Save" onclick="change_password()">SAVE CHANGES</button>
 								</div>
 							</div>
-				
-				<div class="row ms-2 mb-5 d-none" id="address_row">
-					<div class="col-md-3">
-					</div>
-					<div class="col-md-9 pl-1">
-						<div class="row mt-3 " style="margin:auto;">
-							<div class="col bg-white mr-3" style="border-radius: 10px !important;">
-								<div class="mt-4 mb-4"><img src="theme/img/user_address.png"><span
-										class="billing-address-heading-subtitle pt-2 ms-2 align-middle address-weight">Order
-										Details</span>
+
+							<div class="row ms-2 mb-5 d-none" id="address_row">
+								<div class="col-md-3">
 								</div>
-								<div class="border-bottom"></div>
-								<div id="address_table" class="mt-3 mb-4"></div>
-							</div>
-							<div class="col pl-1 bg-white"
-								style="border-radius: 10px; border: 1px solid #008AD0!important;">
-								<div class="mt-4 mb-4 ms-3"><img src="theme/img/shipping_address2.png"><span
-										class="billing-address-heading-subtitle pt-2 ms-2 align-middle address-weight">Order
-										Details</span>
-								</div>
-								<div class="border-bottom ms-3"></div>
-								<div class="ms-3">
-									<div id="shipping_table" class="mt-3 mb-4"></div>
+								<div class="col-md-9 pl-1">
+									<div class="row mt-3 " style="margin:auto;">
+										<div class="col bg-white mr-3" style="border-radius: 10px !important;">
+											<div class="mt-4 mb-4"><img src="theme/img/user_address.png"><span
+													class="billing-address-heading-subtitle pt-2 ms-2 align-middle address-weight">Order
+													Details</span>
+											</div>
+											<div class="border-bottom"></div>
+											<div id="address_table" class="mt-3 mb-4"></div>
+										</div>
+										<div class="col pl-1 bg-white"
+											style="border-radius: 10px; border: 1px solid #008AD0!important;">
+											<div class="mt-4 mb-4 ms-3"><img src="theme/img/shipping_address2.png"><span
+													class="billing-address-heading-subtitle pt-2 ms-2 align-middle address-weight">Order
+													Details</span>
+											</div>
+											<div class="border-bottom ms-3"></div>
+											<div class="ms-3">
+												<div id="shipping_table" class="mt-3 mb-4"></div>
+											</div>
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-	</div>
-</div>
 
 
-<script>
-	function replaceEye(val) {
+			<script>
+				function replaceEye(val) {
         		$('#eye_icon_'+val).attr("src", "theme/img/white_eye.png").css('width' , '20px');
 			}
 			function replaceEye2(val) {
@@ -651,7 +664,9 @@
 			}
 			function wishLists() {
 				$('#whishlist').removeClass('d-none');
-				$('#intro').addClass('d-none');
+				$('#intro,#edit_address,#address_row').addClass('d-none');
+				$('.nav-pills .active').removeClass('active');
+				$('.nav-pills #wish_lists').addClass('active');
 				$('#edit_address').addClass('d-none');
 				$('#address_row').addClass('d-none');
 				
@@ -793,6 +808,8 @@
 				$('#intro').removeClass('d-none');
 				$('#edit_address').addClass('d-none');
 				$('#address_row').addClass('d-none');
+				$('.nav-pills .active').removeClass('active');
+				$('.nav-pills #dashboard').addClass('active');
 				
 				// $('#order_id').hide();
 				$('.order-detail-container').addClass('d-none');
@@ -1066,10 +1083,10 @@
            			}
       			});
     		}
-</script>
-<!-- Remove the container if you want to extend the Footer to full width. -->
+			</script>
+			<!-- Remove the container if you want to extend the Footer to full width. -->
 
-@include('partials.product-footer')
+			@include('partials.product-footer')
 
-<!-- End of .container -->
-@include('partials.footer')
+			<!-- End of .container -->
+			@include('partials.footer')

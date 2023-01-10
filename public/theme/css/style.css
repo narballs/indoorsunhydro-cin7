@@ -942,13 +942,12 @@ label {
 .order-page-prduct-quantity {
     border-radius: 50%;
     border: #008AD0 1px solid;
-    width: 22px;
-    height: 26px;
-    padding-left: 5px;
-    padding-bottom: 24px;
-    padding-right: 17px;
+    width: 36px;
+    height: 37px;
+    padding-left: 7px;
     font-weight: 'Roboto';
     font-size: 14px;
+    padding: 11px;
 
 }
 
@@ -4299,6 +4298,121 @@ select.list-dt:focus {
     margin-left: 22px !important;
     margin-top: 44px !important;
 }
+
+/* updated thank you page start */
+.billing-address-thank-you-page-heading {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 25px;
+    line-height: 29px;
+    color: #000000;
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+    border-bottom: 2px dashed #CDCDCD;
+    padding-bottom: 43px;
+}
+
+.user-first-name-thank-you-page {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 19px;
+    color: #000000;
+    margin-top: 46px;
+}
+
+.user-address-thank-you-page-title {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+    color: #000000;
+}
+
+.user-address-thank-you-page-item {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 19px;
+    color: #000000;
+}
+
+.item-purchased-thank-you-page {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 35px;
+    color: #000000;
+    margin-top: 103px;
+}
+
+
+.thank-you-page-table,
+thead,
+tbody,
+tfoot,
+tr,
+td,
+th {
+    border-color: inherit;
+    border-style: solid;
+    border-width: 0;
+    border-color: #8C8C8C;
+}
+
+.thank-you-page-table-data-heading {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+    color: #303030;
+    border-top: none !important;
+    padding-bottom: 32px !important;
+}
+
+.product-img-thank-you-page {
+    background: #FFFFFF;
+    border: 1px solid #DFDFDF;
+    border-radius: 5px;
+    padding: 11;
+    width: 50%;
+}
+
+.category-name-thank-you-page {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 16px;
+    color: #0096DE;
+}
+
+.product-title-thank-you-page {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 16px;
+    color: #000000;
+}
+
+.product-title-thank-you-page-title {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 16px;
+    color: #000000;
+}
+
+/* updated thank you page end */
 
 
 /* thank you page end */
