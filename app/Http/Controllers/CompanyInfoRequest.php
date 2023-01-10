@@ -35,18 +35,17 @@ class CompanyInfoRequest extends FormRequest
                 ],
                 'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10'
             ];
-       }
-        else {
-             return [
+        } else {
+            return [
                 'street_address' => [
                     'required',
                     'regex:/^[a-zA-Z0-9\s-]+$/'
                 ],
-                'suit_apartment' => [
-                    'required',
-                    'regex:/^[a-zA-Z0-9\s-]+$/'
-                ],
-                'town_city'=> 'required|alpha',
+                // 'suit_apartment' => [
+                //     'required',
+                //     'regex:/^[a-zA-Z0-9\s-]+$/'
+                // ],
+                'town_city' => 'required|alpha',
                 'state' => 'required|alpha',
                 'zip' => [
                     'required',
