@@ -25,36 +25,36 @@ use Illuminate\Support\Arr;
 
 class UserController extends Controller
 {
-      function __construct()
+    function __construct()
 
-        {
-            $this->middleware('permission:user-list|user-create|user-edit|user-delete', ['only' => ['index','show']]);
-            $this->middleware('permission:user-create', ['only' => ['create','store']]);
-            $this->middleware('permission:user-edit', ['only' => ['edit','update']]);
-            $this->middleware('permission:user-delete', ['only' => ['destroy']]);
-            //$this->middleware('permission:user-show', ['only' => ['show']]);
+    {
+        $this->middleware('permission:user-list|user-create|user-edit|user-delete', ['only' => ['index', 'show']]);
+        $this->middleware('permission:user-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:user-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:user-delete', ['only' => ['destroy']]);
+        //$this->middleware('permission:user-show', ['only' => ['show']]);
 
-            //$this->middleware(['role:Admin','permission:user-list']);
+        //$this->middleware(['role:Admin','permission:user-list']);
 
         // $this->middleware(['role:Admin','permission:user-list|user-list']);
         // $this->middleware(['role:users','permission:user-list|user-list']);
-         //$this->middleware('permission:user-list|user-create|user-edit|user-delete', ['only' => ['index','show']]);
-         //$this->middleware('permission:user-list', ['only' => ['index']]);
-         // $this->middleware('permission:users-edit', ['only' => ['edit','update']]);
-         // $this->middleware('permission:users-delete', ['only' => ['destroy']]);
+        //$this->middleware('permission:user-list|user-create|user-edit|user-delete', ['only' => ['index','show']]);
+        //$this->middleware('permission:user-list', ['only' => ['index']]);
+        // $this->middleware('permission:users-edit', ['only' => ['edit','update']]);
+        // $this->middleware('permission:users-delete', ['only' => ['destroy']]);
     }
-   /**
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
     {
-        $data = User::orderBy('id','DESC')->paginate(5);
-        return view('admin.users.index',compact('data'))
+        $data = User::orderBy('id', 'DESC')->paginate(5);
+        return view('admin.users.index', compact('data'))
             ->with('i', ($request->input('page', 1) - 1) * 5);
     }
-    
+
     /**
      * Show the form for creating a new resource.
      *
@@ -62,10 +62,10 @@ class UserController extends Controller
      */
     public function create()
     {
-        $roles = Role::pluck('name','name')->all();
-        return view('admin.users.create',compact('roles'));
+        $roles = Role::pluck('name', 'name')->all();
+        return view('admin.users.create', compact('roles'));
     }
-    
+
     /**
      * Store a newly created resource in storage.
      *
@@ -80,17 +80,17 @@ class UserController extends Controller
             'password' => 'required|same:confirm-password',
             'roles' => 'required'
         ]);
-    
+
         $input = $request->all();
         $input['password'] = Hash::make($input['password']);
-    
+
         $user = User::create($input);
         $user->assignRole($request->input('roles'));
-    
+
         return redirect()->route('users.index')
-                        ->with('success','User created successfully');
+            ->with('success', 'User created successfully');
     }
-    
+
     /**
      * Display the specified resource.
      *
@@ -100,9 +100,9 @@ class UserController extends Controller
     public function show($id)
     {
         $user = User::find($id);
-        return view('admin.users.show',compact('user'));
+        return view('admin.users.show', compact('user'));
     }
-    
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -111,14 +111,14 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        $this->middleware('permission:user-edit', ['only' => ['edit','update']]);
+        $this->middleware('permission:user-edit', ['only' => ['edit', 'update']]);
         $user = User::find($id);
-        $roles = Role::pluck('name','name')->all();
-        $userRole = $user->roles->pluck('name','name')->all();
-    
-        return view('admin.users.edit',compact('user','roles','userRole'));
+        $roles = Role::pluck('name', 'name')->all();
+        $userRole = $user->roles->pluck('name', 'name')->all();
+
+        return view('admin.users.edit', compact('user', 'roles', 'userRole'));
     }
-    
+
     /**
      * Update the specified resource in storage.
      *
@@ -130,28 +130,28 @@ class UserController extends Controller
     {
         $this->validate($request, [
             'name' => 'required',
-            'email' => 'required|email|unique:users,email,'.$id,
+            'email' => 'required|email|unique:users,email,' . $id,
             'password' => 'same:confirm-password',
             'roles' => 'required'
         ]);
-    
+
         $input = $request->all();
-        if(!empty($input['password'])){ 
+        if (!empty($input['password'])) {
             $input['password'] = Hash::make($input['password']);
-        }else{
-            $input = Arr::except($input,array('password'));    
+        } else {
+            $input = Arr::except($input, array('password'));
         }
-    
+
         $user = User::find($id);
         $user->update($input);
-        DB::table('model_has_roles')->where('model_id',$id)->delete();
-    
+        DB::table('model_has_roles')->where('model_id', $id)->delete();
+
         $user->assignRole($request->input('roles'));
-    
+
         return redirect()->route('users.index')
-                        ->with('success','User updated successfully');
+            ->with('success', 'User updated successfully');
     }
-    
+
     /**
      * Remove the specified resource from storage.
      *
@@ -162,66 +162,62 @@ class UserController extends Controller
     {
         User::find($id)->delete();
         return redirect()->route('users.index')
-                        ->with('success','User deleted successfully');
+            ->with('success', 'User deleted successfully');
     }
-    public function userRegistration() {
+    public function userRegistration()
+    {
         $states = State::all();
         //dd($states);
         return view('user-registration-second', compact('states'));
     }
 
-    public function process_login(Request $request) {
-           $request->validate([
+    public function process_login(Request $request)
+    {
+        $request->validate([
             'email' => 'required',
             'password' => 'required'
         ]);
 
         $credentials = $request->except(['_token']);
-        $user = User::where('email',$request->email)->first();
+        $user = User::where('email', $request->email)->first();
         // dd(auth()->attempt($credentials));
 
         if (auth()->attempt($credentials)) {
             if ($user->hasRole(['Admin'])) {
                 session()->flash('message', 'Successfully Logged in');
                 return redirect()->route('admin.view');
-            }
-            else {
+            } else {
                 // dd(session()->get('cart'));
                 if (!empty(session()->get('cart'))) {
                     return redirect()->route('cart');
-                }
-                else {
+                } else {
                     return redirect()->route('my_account');
-                } 
+                }
             }
-
-        }else{
+        } else {
             session()->flash('message', 'Invalid credentials');
             return redirect()->back();
         }
     }
 
     public function process_signup(UserSignUpRequest $request)
-    {   
+    {
         if ($request->get('email')) {
             $user = User::create([
                 'email' => strtolower($request->get('email'))
             ]);
-            return response()->json(['success' => true, 'created'=> true, 'msg' => 'Welcome, new player.']);
-        }
-        else {
+            return response()->json(['success' => true, 'created' => true, 'msg' => 'Welcome, new player.']);
+        } else {
             $user = User::latest()->first();
             $user_id = $user->id;
-            $user_Update = User::where("id", $user_id)->update
-                        ([
-                            "first_name" => $request->get('first_name'),
-                            "last_name" => $request->get('last_name'),
-                            "password" => bcrypt($request->get('password'))
-                        ]);
+            $user_Update = User::where("id", $user_id)->update([
+                    "first_name" => $request->get('first_name'),
+                    "last_name" => $request->get('last_name'),
+                    "password" => bcrypt($request->get('password'))
+                ]);
         }
-        
-        return response()->json(['success' => true, 'created'=> true, 'msg' => 'Welcome, new player.']);
-  
+
+        return response()->json(['success' => true, 'created' => true, 'msg' => 'Welcome, new player.']);
     }
 
     public function logout()
@@ -231,7 +227,8 @@ class UserController extends Controller
         return redirect()->route('user');
     }
 
-    public function save_contact(CompanyInfoRequest $request) {
+    public function save_contact(CompanyInfoRequest $request)
+    {
         $user = User::latest()->first();
         $user_id = $user->id;
         Auth::loginUsingId($user_id);
@@ -247,37 +244,36 @@ class UserController extends Controller
             $contact->type = 'Customer';
             $contact->lastName = $user->last_name;
             $contact->email = $user->email;
-            
+
             $admin_users =  DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
             $admin_users = $admin_users->toArray();
 
             $users_with_role_admin = User::select("email")
-                    ->whereIn('id',$admin_users)
-                    ->get();
+                ->whereIn('id', $admin_users)
+                ->get();
             $data = [
                 'contact_name' => $user->first_name,
                 'name' =>  'Admin',
                 'contact_email' => $user->email,
                 'subject' => 'New User Registration Request',
-                'from' => 'wqszeeshan@gmail.com', 
+                'from' => 'wqszeeshan@gmail.com',
                 'content' => 'New user registration request received, please reveiw.'
             ];
 
-            
-            if (!empty($users_with_role_admin)) { 
-                foreach($users_with_role_admin as $role_admin) {
+
+            if (!empty($users_with_role_admin)) {
+                foreach ($users_with_role_admin as $role_admin) {
                     $data['email'] = $role_admin->email;
                     $adminTemplate = 'emails.approval-notifications';
                     MailHelper::sendMailNotification('emails.new-registration-notification', $data);
                 }
             }
             $contact->save();
-        }
-        else {
+        } else {
             $contact = Contact::where('user_id', $user_id)->first()->update(
                 [
                     'postalAddress1' => $request->input('street_address'),
-                    'postalAddress2' => $request->input('suit_apartment'),
+                    // 'postalAddress2' => $request->input('suit_apartment'),
                     'postalCity' => $request->input('town_city'),
                     'postalState' => $request->input('state'),
                     'postalPostCode' => $request->input('zip')
@@ -286,11 +282,12 @@ class UserController extends Controller
         }
 
 
-        return response()->json(['success' => true, 'created'=> true, 'msg' => 'Welcome, new player.']);
+        return response()->json(['success' => true, 'created' => true, 'msg' => 'Welcome, new player.']);
     }
 
-    public function my_account(Request $request) {
-        
+    public function my_account(Request $request)
+    {
+
         $user_id = auth()->id();
         if (!$user_id) {
             return redirect('/user/');
@@ -305,16 +302,17 @@ class UserController extends Controller
                 $createdDate = $user_order->created_at;
                 $user_order->createdDate = $createdDate->format('F \  j, Y');
             }
-            
+
             return $user_orders;
         }
         return view('my-account', compact('user', 'user_address', 'states'));
     }
 
-    public function user_order_detail($id) {
+    public function user_order_detail($id)
+    {
         $user_id = auth()->id();
         // $user_info = User::where('user_')
-        $user_order = ApiOrder::where('id', $id )->first();
+        $user_order = ApiOrder::where('id', $id)->first();
         $createdDate = $user_order->created_at;
         $user_order->createdDate = $createdDate->format('F \  j, Y');
         $user_address = Contact::where('user_id', $user_id)->first();
@@ -327,14 +325,15 @@ class UserController extends Controller
         return $data;
     }
 
-    public function user_addresses(Request $request) {
-           $request->validate([
+    public function user_addresses(Request $request)
+    {
+        $request->validate([
             'first_name' => 'required|regex:/^[a-zA-Z ]*$/',
             'last_name' => 'required|regex:/^[a-zA-Z ]*$/',
             'company_name' => 'required|regex:/^[a-zA-Z0-9\s]+$/',
             'address' => 'required|regex:/^[a-zA-Z0-9\s]+$/',
             'address2' => 'required|regex:/^[a-zA-Z0-9\s]+$/',
-            'town_city'=> 'required|alpha',
+            'town_city' => 'required|alpha',
             'state' => 'required|alpha',
             'zip' => 'required|regex:/^\d{5}(?:[- ]?\d{4})?$/s',
             'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10'
@@ -349,7 +348,7 @@ class UserController extends Controller
                     'lastName' => request('last_name'),
                     'postalAddress1' => request('address'),
                     'postalAddress2' => request('address2'),
-                    'company' => request('company_name'), 
+                    'company' => request('company_name'),
                     'postalState' => request('state'),
                     'phone' => request('phone'),
                     'postalCity' => request('town_city'),
@@ -357,8 +356,8 @@ class UserController extends Controller
                     'email' => request('email')
                 ]
             );
-        } 
-        return response()->json(['success' => true, 'created'=> true, 'msg' => 'Address updated Successfully']);
+        }
+        return response()->json(['success' => true, 'created' => true, 'msg' => 'Address updated Successfully']);
         // echo $user_id;exit;
         // //dd
         // //$user_data = Contact::where('user_id', $user_id)->first();

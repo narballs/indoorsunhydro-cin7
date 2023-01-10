@@ -41,10 +41,10 @@ class CompanyInfoRequest extends FormRequest
                     'required',
                     'regex:/^[a-zA-Z0-9\s-]+$/'
                 ],
-                'suit_apartment' => [
-                    'required',
-                    'regex:/^[a-zA-Z0-9\s-]+$/'
-                ],
+                // 'suit_apartment' => [
+                //     'required',
+                //     'regex:/^[a-zA-Z0-9\s-]+$/'
+                // ],
                 'town_city' => 'required|alpha',
                 'state' => 'required|alpha',
                 'zip' => [
