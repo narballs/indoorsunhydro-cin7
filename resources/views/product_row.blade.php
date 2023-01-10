@@ -8,17 +8,17 @@
     <div class="card shadow-sm mb-4 w-100 h-100">
         @if($option->image != '')
 
-    <a style="width:20px !important;" href="#" data-toggle="popover-click" class="subscribe">
-            <i class="fa-solid fa-heart" onclick="addToList('{{$product->product_id}}', '{{$option->option_id}}')" id="{{$option->option_id}}"
+        <a style="width:20px !important;" href="#" data-toggle="popover-click" class="subscribe">
+            <i class="fa-solid fa-heart" onclick="addToList('{{$product->product_id}}', '{{$option->option_id}}')"
+                id="{{$option->option_id}}" data-toggle="popover"
+                onclick="addToList('{{$product->product_id}}', '{{$option->option_id}}')"></i>
 
-        data-toggle="popover" onclick="addToList('{{$product->product_id}}', '{{$option->option_id}}')"></i>
-
-    </a>
+        </a>
 
         <a href="{{ url('product-detail/'.$product->id.'/'.$option->option_id.'/'.$product->slug) }}">
             <span class="d-flex justify-content-center align-content-center">
 
-             
+
                 <img src="{{$option->image}}" class="col-md-10 .image-body offset-1 mt-2"
                     style="width: 120px; max-height: 300px; " />
 
@@ -112,16 +112,22 @@
         <form id="myform" class="form-inline" role="form">
             @foreach($lists as $list)
             <div class="form-group">
-                <ul>
-                    <li>
-                        {{$list->title}}<input  type="radio" value="{{$list->id}}" name="list_id"/>
+                <ul style="font-family: 'Poppins';
+                font-style: normal;
+                font-weight: 600;
+                font-size: 14px;
+                padding:1px;
+                ">
+                    <li style="">
+                        {{$list->title}} &nbsp;<input type="radio" value="{{$list->id}}" name="list_id" />
                     </li>
                 </ul>
 
             </div>
             @endforeach
-               <button type="submit" class="btn btn-warning" onclick="addToList('{{$product->product_id}}', '{{$option->option_id}}')">Add</button>
-        
+            <button type="submit" class="btn btn-warning"
+                onclick="addToList('{{$product->product_id}}', '{{$option->option_id}}')">Add</button>
+
         </form>
     </div>
 </div>

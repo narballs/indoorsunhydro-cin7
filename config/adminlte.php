@@ -258,13 +258,13 @@ return [
             'url'  => 'admin/orders',
             'icon' => 'fas fa-fw fa-user',
         ],
-      
+
         [
             'text' => 'Products',
             'url'  => 'admin/products',
             'icon' => 'fas fa-fw fa-user',
         ],
-         [
+        [
             'text' => 'Buy Lists',
             'url'  => 'admin/buy-list',
             'icon' => 'fas fa-fw fa-user',
@@ -336,42 +336,42 @@ return [
             'text'    => 'Contacts',
             'icon'    => 'fas fa-fw fa-share',
             'submenu' => [
-                [
-                    'text' => 'Suppliers',
-                    'url'  => 'admin/contacts',
-                ],
+                // [
+                //     'text' => 'Suppliers',
+                //     'url'  => 'admin/contacts',
+                // ],
                 [
                     'text' => 'Customers',
                     'url'  => 'admin/customers',
                 ],
-                [
-                    'text'    => 'level_one',
-                    'url'     => '#',
-                    'submenu' => [
-                        [
-                            'text' => 'level_two',
-                            'url'  => '#',
-                        ],
-                        [
-                            'text'    => 'level_two',
-                            'url'     => '#',
-                            'submenu' => [
-                                [
-                                    'text' => 'level_three',
-                                    'url'  => '#',
-                                ],
-                                [
-                                    'text' => 'level_three',
-                                    'url'  => '#',
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-                [
-                    'text' => 'level_one',
-                    'url'  => '#',
-                ],
+                // [
+                //     'text'    => 'level_one',
+                //     'url'     => '#',
+                //     'submenu' => [
+                //         [
+                //             'text' => 'level_two',
+                //             'url'  => '#',
+                //         ],
+                //         [
+                //             'text'    => 'level_two',
+                //             'url'     => '#',
+                //             'submenu' => [
+                //                 [
+                //                     'text' => 'level_three',
+                //                     'url'  => '#',
+                //                 ],
+                //                 [
+                //                     'text' => 'level_three',
+                //                     'url'  => '#',
+                //                 ],
+                //             ],
+                //         ],
+                //     ],
+                // ],
+                // [
+                //     'text' => 'level_one',
+                //     'url'  => '#',
+                // ],
             ],
         ],
         ['header' => 'labels'],

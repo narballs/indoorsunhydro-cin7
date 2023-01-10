@@ -20,9 +20,9 @@
 								Your Order has been received!
 							</p>
 						</div>
-						<div class="col-md-1 pb-2">
+						{{-- <div class="col-md-1 pb-2">
 							<img src="/theme/img/crose.png" alt="">
-						</div>
+						</div> --}}
 					</div>
 				</div>
 				<div class="card-body">
