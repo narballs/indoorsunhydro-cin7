@@ -322,7 +322,7 @@ class OrderManagementController extends Controller
                         "createdBy" => 79914,
                         "processedBy" => 79914,
                         "isApproved" => true,
-                        "reference" => 'DEV2'.'-QCOM-'.$order_id,
+                        "reference" => 'DEV3'.'-QCOM-'.$order_id,
                         "memberId" => $memberId,
                         // "firstName" => $request->input('firstName'),
                         // "lastName" => $request->input('lastName'),

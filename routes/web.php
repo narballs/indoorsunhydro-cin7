@@ -51,7 +51,7 @@ Route::get('send-mail', function () {
         'name' => 'jjjj'
     ];
 
-    \Mail::to('wqszeeshan@gmail.com')->send(new \App\Mail\Subscribe($details));
+    \Mail::to('naris@letswebnow.com')->send(new \App\Mail\Subscribe($details));
 
     dd("Email is Sent.");
 });

@@ -918,7 +918,7 @@
 							var temp = value.createdDate;
             				res +=
             					'<tr class="table-row-content border-bottom">'+
-                					'<td class="table-order-number pl-0">#'+value.id+'</td>'+
+                					'<td class="table-order-number pl-0">#'+value.order_id+'</td>'+
                 					'<td>'+temp+'</td>'+
                 					'<td>'+value.status+'</td>'+
                 					'<td><strong>'+'$'+value.total.toFixed(2)+'</strong>'+' For ('+total_items+' '+' items)'+'</td>'+

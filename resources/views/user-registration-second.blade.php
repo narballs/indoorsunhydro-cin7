@@ -226,7 +226,7 @@
 					</div>
 				</div>
 
-				<div class="row business-row bg-light d-none" id="business-row" style="margin-top: -121px">
+				<div class="row business-row bg-light d-none" id="business-row" style="margin-top: -100px">
 					<div class="col-md-12 text-center">
 						<h2 style="color:#25529F; font-size:30px" class="text-center pt-5">Your Business Location</h2>
 					</div>

@@ -42,5 +42,6 @@ class MailHelper
             $message->from($data['from']);
             $message->to($data['email'])->subject($data['subject']);
         });
+       
     }
 }

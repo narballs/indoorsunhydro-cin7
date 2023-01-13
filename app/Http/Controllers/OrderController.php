@@ -164,7 +164,7 @@ class OrderController extends Controller
             $order_id =  $order->id;
             $currentOrder = ApiOrder::where('id', $order->id)->first();
             $apiApproval = $currentOrder->apiApproval;
-            $currentOrder->reference = 'DEV2' . '-QCOM-' . $order_id;
+            $currentOrder->reference = 'DEV3' . '-QCOM-' . $order_id;
 
             //dd($currentOrder);
 
@@ -228,7 +228,7 @@ class OrderController extends Controller
                 'order_items' => $order_items,
                 'dateCreated' => $dateCreated,
                 'addresses' => $addresses,
-                'from' => 'wqszeeshan@gmail.com'
+                'from' => 'stageindoorsun@stage.indoorsunhydro.com'
             ];
 
             if (!empty($users_with_role_admin)) {

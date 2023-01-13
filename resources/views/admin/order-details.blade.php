@@ -292,6 +292,7 @@
             		"order_id": order_id
         		},
          		success: function(response){
+         		console.log(response);
         			setInterval('location.reload()', 7000);
     			}
     		});
