@@ -4331,6 +4331,7 @@ select.list-dt:focus {
     font-size: 16px;
     line-height: 19px;
     color: #000000;
+    margin-bottom: 0px;
 }
 
 .user-address-thank-you-page-item {
@@ -4352,19 +4353,6 @@ select.list-dt:focus {
     margin-top: 103px;
 }
 
-
-.thank-you-page-table,
-thead,
-tbody,
-tfoot,
-tr,
-td,
-th {
-    border-color: inherit;
-    border-style: solid;
-    border-width: 0;
-    border-color: #8C8C8C;
-}
 
 .thank-you-page-table-data-heading {
     font-family: 'Roboto';
@@ -4392,6 +4380,7 @@ th {
     font-size: 14px;
     line-height: 16px;
     color: #0096DE;
+    /* margin-left: -46px !important; */
 }
 
 .product-title-thank-you-page {
@@ -4401,6 +4390,8 @@ th {
     font-size: 14px;
     line-height: 16px;
     color: #000000;
+    padding-top: 8px;
+    margin-bottom: 10px;
 }
 
 .product-title-thank-you-page-title {
@@ -4414,6 +4405,76 @@ th {
 .pagination-container > div > span {
 width: 200px !important;
 display: inline-block  !important;
+}
+
+.product-delete-icon-thank-you-page-icon {
+    /* margin-left: -46px; */
+}
+
+.thank-you-page-product-items-cart {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+    color: #303030;
+}
+
+.thank-you-page-product-items-price {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 23px;
+    color: #000000;
+}
+
+.thank-you-page-product-items-delivery-options {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 21px;
+    color: #000000;
+    padding-top: 46px;
+    margin-left: 6px;
+}
+
+.thank-you-page-product-items-payment-method-cart {
+    font-family: 'Roboto' !important;
+    font-style: normal !important;
+    font-weight: 400 !important;
+    font-size: 14px !important;
+    line-height: 16px !important;
+    color: #303030 !important;
+}
+
+.thank-you-page-product-imtes-total-cart {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 21px;
+    /* identical to box height */
+    color: #000000;
+}
+
+.thank-you-page-product-items-subtotal-cart {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+    color: #303030;
+}
+
+.thank-you-page-product-item-cart {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 19px;
+    color: #000000;
 }
 
 /* updated thank you page end */

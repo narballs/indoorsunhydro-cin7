@@ -444,7 +444,7 @@
 
 								<table cellpadding="10" cellspacing="10" class="w-100">
 									<tr class="border-bottom">
-										<th>Ordesdsddr#</th>
+										<th>Order#</th>
 										<th>Date</th>
 										<th>Status</th>
 										<th>Total</th>
@@ -1007,7 +1007,7 @@
 							var temp = value.createdDate;
             				res +=
             					'<tr class="table-row-content border-bottom">'+
-                					'<td class="table-order-number pl-0">#'+value.order_id+'</td>'+
+                					'<td class="table-order-number pl-0">#'+value.id+'</td>'+
                 					'<td>'+temp+'</td>'+
                 					'<td>'+value.status+'</td>'+
                 					'<td><strong>'+'$'+value.total.toFixed(2)+'</strong>'+' For ('+total_items+' '+' items)'+'</td>'+

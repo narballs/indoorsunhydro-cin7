@@ -104,8 +104,8 @@
 							</div>
 						</div>
 					</div>
-					<div class="register-show mt-5">
-						<form id="email-registration" class="mt-5 form-signup">
+					<div class="register-show" style="margin-top: 56px;">
+						<form id="email-registration" class="form-signup">
 							@csrf
 							<h2 class="d-flex justify-content-center align-items-center sing-up-label">SIGN UP</h2>
 							<div class="input-placeholder">
@@ -247,12 +247,12 @@
 											class="form-control mt-2 company-info fontAwesome" required>
 										<div class="text-danger" id="street_address_errors"></div>
 									</div>
-									{{-- <div class="col-md-12 mt-3">
+									<div class="col-md-12 mt-3">
 										<input type="text" placeholder="&#xf015;  Apartment, Suit, unit etc"
 											id="street_address" name="suit_apartment"
 											class="form-control mt-2 company-info fontAwesome" required>
 										<div class="text-danger" id="suit_apartment_errors"></div>
-									</div> --}}
+									</div>
 									<div class="col-md-12 mt-3">
 										<input type="text" placeholder="&#xf5a0;  Town/City" name="town_city"
 											class="form-control mt-2 company-info fontAwesome" required>
@@ -524,7 +524,7 @@
 		$('#thankyou-bold').css( 'font-weight', '700' );
 
 		var street_address = $('input[name=street_address]').val();
-		// var suit_apartment = $('input[name=suit_apartment]').val();
+		var suit_apartment = $('input[name=suit_apartment]').val();
 		var town_city_address = $('input[name=town_city').val();
 		var state = $('input[name=state').val();
 		var zip = $('input[name=zip').val();
@@ -535,7 +535,7 @@
 			data: {
 	        	"_token": "{{ csrf_token() }}",
 	        	"street_address" : street_address,
-	        	// "suit_apartment": suit_apartment,
+	        	"suit_apartment": suit_apartment,
 	        	"town_city": town_city_address,
 	        	"state": state,
 	        	"zip" : zip
@@ -559,7 +559,7 @@
    					var error_message = response.responseJSON;
    					console.log(error_message);
    					var error_text = '';
-   					//error_text += error_message.message;
+   					error_text += error_message.message;
    					if (typeof error_message.errors.street_address != 'undefined') {
    						error_text =  error_message.errors.street_address;
    						$('#street_address_errors').html(error_text);
@@ -568,14 +568,14 @@
    						error_text = '';
    						$('#street_address_errors').html(error_text);
    					}
-   					// if (typeof error_message.errors.suit_apartment != 'undefined') {
-   					// 	var error_text2 = error_message.errors.suit_apartment;
-   					// 	$('#suit_apartment_errors').html(error_text2);
-   					// }
-   					// else {
-   					// 	error_text2 = '';
-   					// 	$('#suit_apartment_errors').html(error_text2);
-   					// }
+   					if (typeof error_message.errors.suit_apartment != 'undefined') {
+   						var error_text2 = error_message.errors.suit_apartment;
+   						$('#suit_apartment_errors').html(error_text2);
+   					}
+   					else {
+   						error_text2 = '';
+   						$('#suit_apartment_errors').html(error_text2);
+   					}
    				
    					if (typeof error_message.errors.town_city != 'undefined') {
    						var error_text3 = error_message.errors.town_city;

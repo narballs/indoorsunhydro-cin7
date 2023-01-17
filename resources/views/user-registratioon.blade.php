@@ -110,8 +110,8 @@
 							</div>
 						</div>
 					</div>
-					<div class="register-show mt-5">
-						<form id="email-registration" class="mt-5 form-signup">
+					<div class="register-show">
+						<form id="email-registration" class=" form-signup">
 							@csrf
 							<h2 class="d-flex justify-content-center align-items-center sing-up-label">SIGN UP</h2>
 							<div class="input-placeholder">
