@@ -1,3 +1,4 @@
+{{--
 <!DOCTYPE html>
 <html>
 
@@ -179,6 +180,520 @@
             </tr>
         </table>
     </div>
+</body>
+
+</html> --}}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <link rel="stylesheet" href="/theme/bootstrap5/css/bootstrap.css">
+    <link rel="stylesheet" href="/theme/css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.33/sweetalert2.css">
+    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <link href="{{asset('//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css')}}" rel="stylesheet"
+        id="bootstrap-css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<style>
+    .thank-you-page-product-options-image {
+        max-height: 95px !important;
+    }
+
+    .background-colo-css {
+        margin-top: -115px;
+        padding-right: 52px;
+        padding-top: 24px !important;
+        background: #FBFBFB !important;
+        border-radius: 6px !important;
+        padding-left: 293px;
+    }
+
+    .thanks-page-items {
+        width: 565px;
+        height: 114px;
+        left: 297px;
+        top: 949px;
+        background: #FFFFFF;
+        border: 1px solid #D3D3D3;
+        border-radius: 5px;
+    }
+
+    .thank-you-page-user-detais {
+        font-family: 'Poppins';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 15px;
+        line-height: 19px;
+        color: #5C5C5C;
+    }
+
+    @import url('https://fonts.googleapis.com/css?family=Mukta');
+</style>
+
+
+<body>
+    <div class="container-fluid" style="width: 100% !important; marging:auto !important" width="100%;">
+        <div class="row">
+            <div style="width: 100%">
+                <div class="card border-0 thank-you-page-background-img" style="background-color: #F5F5F5 !important;
+                border-radius: 10px !important;
+                background-image: url('/theme/img/thank-background.png') !important;
+                background-repeat: no-repeat !important;
+                width: 100% !important;
+                background-size: 100% !important;
+                padding-bottom: 146px !important;
+                padding-top: 184px !important;">
+                    <div class="row">
+                        <div class="col-md-12 thank-you-page-card-row">
+                            <div class="card m-auto border-0 thank-you-page-first-card" style="width: 85% !important;
+                            padding-bottom: 194px !important;
+                            margin: auto; !important
+                            padding-bottom: 100px;">
+                                <div class="card-boday" style="    background-color: #ffff;
+                                margin: auto;
+                                width: 85%;
+                                border-radius: 10px;">
+                                    <div class=" col-md-12 card-body-content">
+                                        <p class="thank-page-date" style="font-family: 'Poppins' !important;
+                                        font-style: normal !important;
+                                        font-weight: 400 !important;
+                                        font-size: 20px !important;
+                                        line-height: 119.5% !important;
+                                        color: #575757 !important;
+                                        padding-left: 60px !important;
+                                        padding-top: 85px !important;
+                                        ">
+                                            {{$addresses['currentOrder']['created_at']->format('F '.'d, Y, '.'g:i A')}}
+                                        </p>
+                                        <hr class="border" style="
+                                            margin-left: 63px;
+                                            margin-top: 40px!important;
+                                            margin-bottom: 1rem;
+                                            border: 0;
+                                            border-top: 1px solid #000000!important;
+                                            width: 1142px!important;
+                                            border: 1px solid #000000!important;">
+                                    </div>
+                                    <div class="row ps-5" style="display:flex">
+                                        <div class="col-md-7 mt-4" style="width: 57%;padding-left: 63px;">
+                                            <div class="row" style="display: flex">
+                                                <div class="col-md-7" style="width: 54%;">
+                                                    <p class="ps-5 thanks-heading" style="font-family: 'Roboto';
+                                                    font-style: normal;
+                                                    font-weight: 600;
+                                                    font-size: 108px;
+                                                    line-height: 127px;
+                                                    color: #000000;
+                                                    margin: 0px;">Thanks</p>
+                                                    <p class="for-you-order" style="font-family: 'Montserrat';
+                                                    font-style: normal;
+                                                    font-weight: 500;
+                                                    font-size: 25px;
+                                                    line-height: 120%;
+                                                    letter-spacing: 0.545em;
+                                                    color: #575757;
+                                                    padding-left: 8px;
+                                                    margin-top: -15px !important;">for your order</p>
+                                                </div>
+                                                <div class="col-md-5" style="width: width: 36%">
+                                                    <div class="pt-5"
+                                                        style="padding-top: 35px !important;
+                                                    padding-left: 14px !important; background: #FBFBFB;border-radius: 6px;">
+                                                        <img src="/theme/img/thnak-page-user-icon.png" class="img-fluid"
+                                                            alt="">
+                                                        <span class="thank-you-page-user-name pt-4 ps-2" style=" font-family: 'Montserrat' !important;
+                                                        font-style: normal;
+                                                        font-weight: 500;
+                                                        font-size: 30px;
+                                                        line-height: 120%;
+                                                        color: #2653A0;">
+                                                            {{$addresses['billing_address']['firstName']}}
+                                                            {{$addresses['billing_address']['lastName']}}
+
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12 mt-5" style="width: 100%">
+                                                    <p class="description-thank-you-page ps-5" style="font-family: 'Roboto';
+                                                    font-style: normal;
+                                                    font-weight: 400;
+                                                    font-size: 16px;
+                                                    line-height: 129.19%;
+                                                    letter-spacing: 0.025em;
+                                                    color: #000000;">Hey
+                                                        {{$addresses['billing_address']['firstName']}},<br>
+                                                        Thank you for your purchase! This email is to confirm your order
+                                                        with IndoorSunHydro, <br>
+                                                        This order will be delivered to you within 2 to 3 working days
+                                                        Registered Courier.
+                                                        We will send you another email with your shipment tracking
+                                                        details as soon as we ship your
+                                                        order.</p>
+                                                </div>
+                                                <div class="mt-5" style="margin-top: 50px !important;">
+                                                    @foreach ($order_items as $item )
+                                                    <div
+                                                        style="display: flex;  background: #FFFFFF !important; border: 1px solid #D3D3D3 !important;  border-radius: 5px !important; width: 682px !important;min-height: 114px !important; margin-top: 10px;">
+                                                        @if (!empty($item->product->options[0]->image))
+                                                        <div style="width:20%">
+                                                            <img class="img-fluid my-2 thank-you-page-product-options-image"
+                                                                src="{{$item->product->options[0]->image}}" alt=""
+                                                                style="
+                                                                    border: 1px solid #ddd; !important
+                                                                    border-radius: 4px !important;  
+                                                                    padding: 5px !important;
+                                                                    max-width: 110px !important;
+                                                                    padding-left: 12px !important;
+                                                                  " width="  120px !important;">
+                                                        </div>
+                                                        @else
+                                                        <div style="width:20%">
+                                                            <img class="img-fluid my-2 thank-you-page-product-options-image"
+                                                                src="/theme/img/image_not_available.png" alt=""
+                                                                style="max-height: 95px !important;"
+                                                                width="120px !important;">
+                                                        </div>
+                                                        @endif
+                                                        <div style="width:50%">
+                                                            <p class="thank-you-sku ps-0" style="font-family: 'Roboto';
+                                                            font-style: normal;
+                                                            font-weight: 600;
+                                                            font-size: 18px;
+                                                            line-height: 21px;
+                                                            color: #000000;">Sku:
+                                                                {{$item->product->code}}
+                                                            </p>
+                                                            <p class="thank-page-title" style=" font-family: 'Roboto';
+                                                            font-style: normal;
+                                                            font-weight: 400;
+                                                            font-size: 16px;
+                                                            line-height: 19px;
+                                                            color: #4E4E4E;
+                                                            /* padding-left: 90px; */
+                                                            margin-top: -16px;">
+                                                                {{$item->product->name}}
+
+                                                            </p>
+                                                        </div>
+                                                        <div style="width:30%">
+                                                            <p class="thnak-you-page-price" style="font-family: 'Roboto';
+                                                            font-style: normal;
+                                                            font-weight: 400;
+                                                            font-size: 18px;
+                                                            line-height: 21px;
+                                                            color: #000000;
+                                                            margin-top: 35px;
+                                                            padding-left: 52px;">
+                                                                ${{number_format($item->product->retail_price,2)}}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-5 thnak-you-page-box-billing-address mt-5"
+                                            style="width: 31%; background: #FBFBFB; border-radius: 10px;">
+                                            <p class="thank-you-page-billing-address " style=" font-family: 'Roboto';
+                                            font-style: normal;
+                                            font-weight: 600;
+                                            font-size: 30px;
+                                            line-height: 36px;
+                                            color: #000000;">Billing Address</p>
+                                            <p class="thank-you-page-delivery-address" style="font-family: 'Poppins';
+                                            font-style: normal;
+                                            font-weight: 700;
+                                            font-size: 18px;
+                                            line-height: 22px;
+                                            color: #5C5C5C;">Delivery Address</p>
+                                            <span class="thank-you-page-user-detais" style="font-family: 'Poppins';
+                                            font-style: normal;
+                                            font-weight: 400;
+                                            font-size: 15px;
+                                            line-height: 19px;
+                                            color: #5C5C5C;">
+                                                {{$addresses['billing_address']['firstName']}}
+                                                {{$addresses['billing_address']['lastName']}}
+                                            </span><br>
+                                            <span class="thank-you-page-user-detaiss" style=" font-family: 'Poppins';
+                                            font-style: normal;
+                                            font-weight: 400;
+                                            font-size: 15px;
+                                            line-height: 19px;
+                                            color: #5C5C5C;
+                                            ">
+                                                {{$user_email->email}}
+                                            </span><br>
+                                            <span class="thank-you-page-user-detaiss" style=" font-family: 'Poppins';
+                                            font-style: normal;
+                                            font-weight: 400;
+                                            font-size: 15px;
+                                            line-height: 19px;
+                                            color: #5C5C5C;">
+                                                {{$addresses['shipping_address']['postalAddress1']}}
+
+                                            </span><br>
+                                            <span class="thank-you-page-user-detaiss" style=" font-family: 'Poppins';
+                                            font-style: normal;
+                                            font-weight: 400;
+                                            font-size: 15px;
+                                            line-height: 19px;
+                                            color: #5C5C5C;">
+                                                {{$addresses['shipping_address']['postalAddress1']}}
+                                            </span><br>
+                                            <span class="thank-you-page-user-detaiss" style=" font-family: 'Poppins';
+                                            font-style: normal;
+                                            font-weight: 400;
+                                            font-size: 15px;
+                                            line-height: 19px;
+                                            color: #5C5C5C;">
+                                                {{$addresses['shipping_address']['postalPostCode']}}
+
+                                            </span>
+                                            <p class="thank-you-page-delivery-address mt-4" style="font-family: 'Poppins';
+                                            font-style: normal;
+                                            font-weight: 700;
+                                            font-size: 18px;
+                                            line-height: 22px;
+                                            color: #5C5C5C;">Billing Address</p>
+                                            <span class="thank-you-page-user-detais" style=" font-family: 'Poppins';
+                                            font-style: normal;
+                                            font-weight: 400;
+                                            font-size: 15px;
+                                            line-height: 19px;
+                                            color: #5C5C5C;">
+                                                {{$addresses['billing_address']['firstName']}}
+                                                {{$addresses['billing_address']['lastName']}}
+
+                                            </span><br>
+                                            <span class="thank-you-page-user-detaiss" style=" font-family: 'Poppins';
+                                            font-style: normal;
+                                            font-weight: 400;
+                                            font-size: 15px;
+                                            line-height: 19px;
+                                            color: #5C5C5C;">
+                                                {{$user_email->email}}
+                                            </span><br>
+                                            <span class="thank-you-page-user-detaiss" style=" font-family: 'Poppins';
+                                            font-style: normal;
+                                            font-weight: 400;
+                                            font-size: 15px;
+                                            line-height: 19px;
+                                            color: #5C5C5C;">
+                                                {{$addresses['billing_address']['address1']}}
+                                            </span><br>
+                                            <span class="thank-you-page-user-detaiss" style=" font-family: 'Poppins';
+                                            font-style: normal;
+                                            font-weight: 400;
+                                            font-size: 15px;
+                                            line-height: 19px;
+                                            color: #5C5C5C;">
+                                                {{$addresses['billing_address']['address1']}}
+                                            </span><br>
+                                            <span class="thank-you-page-user-detaiss" style="  font-family: 'Poppins';
+                                            font-style: normal;
+                                            font-weight: 400;
+                                            font-size: 15px;
+                                            line-height: 19px;
+                                            color: #5C5C5C">
+                                                {{$addresses['billing_address']['zip']}}
+                                            </span>
+                                            <div class=" row mt-5 ms-0 py-3 thank-you-page-second-row" style="background: #FBFBFB !important;
+                                            border: 3px solid #2653A0 !important;
+                                            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05) !important;
+                                            border-radius: 10px !important;
+                                            max-width: 100% !important">
+                                                <div class="col-md-12" style="width: 96%;
+                                                padding-left: 22px;
+                                                padding-bottom: 14px;">
+                                                    <p class="thank-you-page-order-summary" style=" font-family: 'Poppins';
+                                                    font-style: normal;
+                                                    font-weight: 600;
+                                                    font-size: 30px;
+                                                    line-height: 36px;
+                                                    color: #000000;">Order Summary</p>
+                                                    <div class="row" style="display: flex">
+                                                        <div class="col-md-6" style="width: 50%">
+                                                            <p class="thank-you-page-item-count" style="   font-family: 'Poppins';
+                                                            font-style: normal;
+                                                            font-weight: 700;
+                                                            font-size: 16px;
+                                                            line-height: 19px;
+                                                            color: #000000;
+                                                            margin-bottom: 0px;">Item count</p>
+                                                            <span class="thank-you-page-item-counter" style="font-family: 'Poppins';
+                                                            font-style: normal;
+                                                            font-weight: 400;
+                                                            font-size: 16px;
+                                                            line-height: 19px;
+                                                            color: #5C5C5C;">
+                                                                {{$count}}
+                                                            </span>
+                                                        </div>
+                                                        <div class="col-md-6 ps-5" style="width: 50%">
+                                                            <p class="thank-you-page-item-count" style="   font-family: 'Poppins';
+                                                            font-style: normal;
+                                                            font-weight: 700;
+                                                            font-size: 16px;
+                                                            line-height: 19px;
+                                                            color: #000000;
+                                                            margin-bottom: 0px;">Delivery Method</p>
+                                                            <span class="thank-you-page-item-counter" style="font-family: 'Poppins';
+                                                            font-style: normal;
+                                                            font-weight: 400;
+                                                            font-size: 16px;
+                                                            line-height: 19px;
+                                                            color: #5C5C5C;">
+                                                                {{$addresses['currentOrder']['paymentTerms']}}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 mt-5" style="width: 100%">
+                                                        <p class="thank-you-page-item-count" style="  font-family: 'Poppins';
+                                                            font-style: normal;
+                                                            font-weight: 700;
+                                                            font-size: 16px;
+                                                            line-height: 19px;
+                                                            color: #000000;
+                                                            margin-bottom: 0px;">Total</p>
+                                                        <span class="thank-you-page-item-counter" style="font-family: 'Poppins';
+                                                            font-style: normal;
+                                                            font-weight: 400;
+                                                            font-size: 16px;
+                                                            line-height: 19px;
+                                                            color: #5C5C5C;">
+                                                            ${{number_format($item->product->retail_price *
+                                                            $item->quantity, 2)}}
+
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-5 ms-5">
+                                        <div class="col-md-12" style="
+                                        width: 96%;
+                                        margin-top: 119px;">
+                                            <hr class=" second-border">
+                                            <p class="best-product mt-5" style="font-family: 'Poppins';
+                                            font-style: normal;
+                                            font-weight: 600;
+                                            font-size: 30px;
+                                            line-height: 36px;
+                                            padding-left: 47px;
+                                            margin-top: 68px;"> Best Product
+                                                <span> <img src="/theme/img/thnak-you-best-pruduct-img.png"
+                                                        class="img-fluid ps-3" alt=""></span>
+                                            </p>
+                                            <div class="row ps-4" style="display: flex;">
+                                                @foreach ($best_product as $product)
+                                                <div class="col-md-3 d-flex justify-content-between aling-imtes-center ps-0 pe-3"
+                                                    style="    width: 25%;
+                                                    padding-left: 46px;">
+                                                    <div>
+                                                        <div style=" background: #ffffff;
+                                                        border: 1px solid #d3d3d3;
+                                                        border-radius: 5px;
+                                                        height: 223px;
+                                                        /* width: 250px; */
+                                                        width: 100%;
+													">
+                                                            @if ($product->images)
+                                                            <img src="{{$product->images}}" alt="" class="img-fluid"
+                                                                style="margin-left: 41px;
+                                                                padding-top: 28px;
+                                                                max-height: 172px;
+															">
+                                                            @else
+                                                            <img src="/theme/img/image_not_available.png"
+                                                                class="img-fluid" alt="" style="max-width: 62%;
+                                                                margin-left: 41px;
+                                                                padding-top: 28px;
+                                                                max-height: 118px;">
+                                                            @endif
+                                                        </div>
+                                                        <p class="thank-you-page-product-sku pt-1" style="    font-family: 'Roboto';
+                                                        font-style: normal;
+                                                        font-weight: 600;
+                                                        font-size: 18px;
+                                                        line-height: 21px;
+                                                        color: #000000;
+                                                        margin-bottom: 8px;
+                                                        margin-top: 18px;">
+                                                            Sku:
+                                                            {{$product->code}}
+                                                        </p>
+                                                        <p class="thank-you-page-product-name" style="  font-family: 'Roboto';
+                                                    font-style: normal;
+                                                    font-weight: 400;
+                                                    font-size: 18px;
+                                                    line-height: 25px;
+                                                    color: #4E4E4E;
+                                                    margin-top: 6px;">
+                                                            {{$product->name}}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="margin-top: -97px !important;  background-color: #2653A0 !important;
+                            box-shadow: 0px 0px 10px rgb(0 0 0 / 5%) !important;
+                            border-radius: 10px !important;
+                            margin-top: 72px !important;
+                            padding-bottom: 1px !important;" width="40%;" margin="auto;">
+                            <p class="thank-you-page-card-footer" style=" font-family: 'Roboto';
+                        font-style: normal;
+                        font-weight: 400;
+                        font-size: 16px;
+                        line-height: 22px;
+                        text-align: center;
+                        color: #FFFFFF !important;
+                        background-color: #2653A0 !important;
+                        margin-top: -74px;">
+                                Indoorsunhydro isn’t your grandma’s gardening
+                                store.<br> But you can bring her along
+                                if you want. <br> Walk-ins welcome anytime — except Sunday. Even gardeners need
+                                a day
+                                of rest.</p>
+                            <p class="thank-you-page-footer-icons mt-5" style="border: 1px solid #CECECE !important;
+                        width: 1161px;
+                        margin-left: 22px !important;
+                        margin-top: 44px !important;
+                        \ padding-left: 367px;">
+                                <img src="/theme/img/thank-you-page-icon-3.png" alt="">
+                                <span><img src="/theme/img/thank-you-page-icon-2.png" alt=""></span>
+                                <span><img src="/theme/img/thank-you-page-icon-1 (1).png" alt=""></span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- {{exit;}} --}}
 </body>
 
 </html>

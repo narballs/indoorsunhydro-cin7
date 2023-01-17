@@ -23,6 +23,7 @@ use DB;
 
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB as FacadesDB;
 
 class OrderController extends Controller
 {
@@ -184,9 +185,11 @@ class OrderController extends Controller
                 $OrderItem->save();
             }
             //exit;
-            $order_items = ApiOrderItem::with('product.options')->where('order_id', $order_id)->get();
+            $order_items = ApiOrderItem::with('order', 'product.options')->where('order_id', $order_id)->get();
             $contact = Contact::where('user_id', auth()->id())->first();
-            //dd($contact);
+            $user_email = Auth::user();
+            $count = $order_items->count();
+            $best_products = Product::where('status', '!=', 'Inactive')->orderBy('views', 'DESC')->limit(4)->get();
             $addresses = [
                 'billing_address' => [
                     'firstName' => $contact->firstName,
@@ -204,16 +207,22 @@ class OrderController extends Controller
                     'postalCity' => $contact->postalState,
                     'postalState' => $contact->postalPostCode,
                     'postalPostCode' => $contact->postalPostCode
-
-                ]
+                ],
+                'best_product' => $best_products,
+                'user_email' =>   $user_email,
+                'currentOrder' => $currentOrder,
+                'count' => $count,
             ];
+
+
 
             $name = $contact->firstName;
             $email =  $contact->email;
             $reference  =  $currentOrder->reference;
             $template = 'emails.admin-order-received';
-            $admin_users =  DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
+            $admin_users = DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
             $admin_users = $admin_users->toArray();
+
 
             $users_with_role_admin = User::select("email")
                 ->whereIn('id', $admin_users)
@@ -228,6 +237,10 @@ class OrderController extends Controller
                 'order_items' => $order_items,
                 'dateCreated' => $dateCreated,
                 'addresses' => $addresses,
+                'best_product' => $best_products,
+                'user_email' => $user_email,
+                '$currentOrder' => $currentOrder,
+                'count' => $count,
                 'from' => 'stageindoorsun@stage.indoorsunhydro.com'
             ];
 

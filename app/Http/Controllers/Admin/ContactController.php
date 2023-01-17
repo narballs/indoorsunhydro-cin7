@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Http\Controllers\Admin;
+
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Contact;
@@ -21,41 +23,43 @@ class ContactController extends Controller
     function __construct()
     {
         $this->middleware(['role:Admin']);
-
     }
-    
-    public function supplier() {
+
+    public function supplier()
+    {
         $contacts = Contact::where('type', 'Supplier')->get();
         return view('admin/contacts', compact('contacts'));
     }
 
-    public function customer(Request $request) {
+    public function customer(Request $request)
+    {
         $perPage = $request->get('perPage');
         $search = $request->get('search');
         $contact_query = Contact::where('type', 'Customer');
         if (!empty($contact_query)) {
             $contact_query->where('firstName', 'LIKE', '%' . $search . '%')
-            ->orWhere('lastName', 'like', '%' . $search . '%')
-            ->orWhere('email', 'like', '%' . $search . '%')
-            ->orWhere('company', 'like', '%' . $search . '%')
-            ->orWhere('phone', 'like', '%' . $search . '%')
-            ->orWhere('mobile', 'like', '%' . $search . '%')
-            ;
+                ->orWhere('lastName', 'like', '%' . $search . '%')
+                ->orWhere('email', 'like', '%' . $search . '%')
+                ->orWhere('company', 'like', '%' . $search . '%')
+                ->orWhere('phone', 'like', '%' . $search . '%')
+                ->orWhere('mobile', 'like', '%' . $search . '%');
         }
-     
+
         $contacts = $contact_query->paginate($perPage);
         return view('admin/customers', compact(
-            'contacts', 
+            'contacts',
             'search',
             'perPage'
         ));
     }
 
-    public function customer_create() {
+    public function customer_create()
+    {
         return view('admin/customer-create');
     }
 
-    public function customer_store(Request $request) {
+    public function customer_store(Request $request)
+    {
         $company = $request->input('company');
         $mobile = $request->input('mobile');
         $first_name = $request->input('first_name');
@@ -110,19 +114,19 @@ class ContactController extends Controller
         $response = $client->post($url, [
             'headers' => ['Content-type' => 'application/json'],
             'auth' => [
-                'IndoorSunHydro2US', 
+                'IndoorSunHydro2US',
                 '764c3409324f4c14b5eadf8dcdd7dd2f'
             ],
             'json' => [
                 $api_contact
-            ], 
+            ],
         ]);
         $contact->save();
 
         $customer_id = $contact->id;
 
         $api_response = $response->getBody();
-       
+
         $decoded_response = json_decode($api_response);
         $customer = Contact::find($customer_id);
         $customer->contact_id = $decoded_response[0]->id;
@@ -130,16 +134,19 @@ class ContactController extends Controller
         return redirect('admin/customers');
     }
 
-    public function show_customer($id){
+    public function show_customer($id)
+    {
 
         $customer = Contact::where('id', $id)->first();
-       
-        $customer_orders =  ApiOrder::where('user_id', $customer->user_id)->with(['createdby','processedby'])->get();
+
+        $customer_orders =  ApiOrder::where('user_id', $customer->user_id)->with(['createdby', 'processedby'])->limit('5')->get();
         $statuses = OrderStatus::all();
-        return view('admin/customer-details',compact('customer', 'statuses', 'customer_orders'));
+        // dd($customer_orders);
+        return view('admin/customer-details', compact('customer', 'statuses', 'customer_orders'));
     }
 
-    public function activate_customer(Request $request) {
+    public function activate_customer(Request $request)
+    {
         $contact_id = $request->input('contact_id');
         $currentContact = Contact::where('id', $contact_id)->first()->toArray();
         unset($currentContact['id']);
@@ -155,15 +162,15 @@ class ContactController extends Controller
         $admin_users =  DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
         $admin_users = $admin_users->toArray();
         $users_with_role_admin = User::select("email")
-                    ->whereIn('id',$admin_users)
-                    ->get();
-        
+            ->whereIn('id', $admin_users)
+            ->get();
+
         if ($is_updated) {
             $name = $currentContact['firstName'];
             $email = $currentContact['email'];
             $subject = 'Account  approval';
             $template = 'emails.approval-notifications';
-          
+
             $data = [
                 'contact_name' => $name,
                 'name' =>  'Admin',
@@ -171,12 +178,12 @@ class ContactController extends Controller
                 'contact_email' => $currentContact['email'],
                 'contact_id' => $is_updated,
                 'subject' => 'New Account activated',
-                'from' => 'wqszeeshan@gmail.com', 
+                'from' => 'wqszeeshan@gmail.com',
                 'content' => 'New account activated.'
             ];
 
-            if (!empty($users_with_role_admin)) { 
-                foreach($users_with_role_admin as $role_admin) {
+            if (!empty($users_with_role_admin)) {
+                foreach ($users_with_role_admin as $role_admin) {
                     $data['email'] = $role_admin->email;
                     $adminTemplate = 'emails.approval-notifications';
                     MailHelper::sendMailNotification('emails.approval-notifications', $data);
@@ -187,26 +194,25 @@ class ContactController extends Controller
             $data['content'] = 'Your account has been approved';
             $data['subject'] = 'Your account has been approved';
             MailHelper::sendMailNotification('emails.approval-notifications', $data);
-       
+
 
             // MailHelper::sendMailNotification('emails.admin-order-received', $data);
             return response()->json([
-                'success' => true, 
-                'created'=> true, 
+                'success' => true,
+                'created' => true,
                 'msg' => 'Welcome, new player.'
             ]);
-
-        }
-        else {
-             return response()->json([
-                'success' => false, 
-                'created'=> true, 
+        } else {
+            return response()->json([
+                'success' => false,
+                'created' => true,
                 'msg' => 'failed'
             ]);
         }
     }
 
-    public function update_pricing_column(Request $request) {
+    public function update_pricing_column(Request $request)
+    {
         //dd($request->all());
         $contact_id = $request->contact_id;
         $priceColumn = $request->pricingCol;
@@ -226,12 +232,11 @@ class ContactController extends Controller
                 ]
             );
             return response()->json([
-                'success' => true, 
-                'created'=> true, 
+                'success' => true,
+                'created' => true,
                 'msg' => 'Pricing Column Updated'
             ]);
-        }
-        else {
+        } else {
             $contact->update(
                 [
                     'firstName' => $first_name,
@@ -239,38 +244,39 @@ class ContactController extends Controller
                 ]
             );
             return response()->json([
-                'success' => true, 
-                'created'=> true, 
+                'success' => true,
+                'created' => true,
                 'msg' => 'name updated'
             ]);
         }
-    
-
     }
 
-    public function customer_delete($id){
+    public function customer_delete($id)
+    {
         $customer =  Contact::find($id);
         $customer->delete();
         return redirect()->back()->with('success', 'Customer Deleted Successfully');
     }
 
-    public function customer_edit($id){
+    public function customer_edit($id)
+    {
         $contact = Contact::where('id', $id)->first();
-        return view('admin/customer-edit',compact('contact'));
+        return view('admin/customer-edit', compact('contact'));
     }
 
-    public function customer_update(Request $request) {
+    public function customer_update(Request $request)
+    {
         $id = $request->id;
         Contact::where('id', $id)->update(
             [
-                'firstName'=> $request->first_name,
-                'lastName' => $request->last_name, 
-                'company' => $request->company, 
-                'website' => $request->website, 
+                'firstName' => $request->first_name,
+                'lastName' => $request->last_name,
+                'company' => $request->company,
+                'website' => $request->website,
                 'postalAddress1' => $request->address_1,
                 'postalAddress2' => $request->address_2,
                 'phone' => $request->phone,
-                'postalCity' => $request->city, 
+                'postalCity' => $request->city,
                 'postalState' => $request->state,
                 'postalPostCode' => $request->zip
             ]

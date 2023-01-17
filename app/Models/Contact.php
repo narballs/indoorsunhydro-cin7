@@ -47,7 +47,4 @@ class Contact extends Model
     {
         return $this->hasMany('App\Models\ApiOrder', 'contact_id', 'memberId');
     }
-
-
-
 }

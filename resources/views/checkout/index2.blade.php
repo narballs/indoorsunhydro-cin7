@@ -1,6 +1,20 @@
 @include('partials.header')
 @include('partials.top-bar')
 @include('partials.search-bar')
+<style>
+    .thank-you-page-table,
+    thead,
+    tbody,
+    tfoot,
+    tr,
+    td,
+    th {
+        border-color: inherit;
+        border-style: solid;
+        border-width: 0;
+        border-color: #8C8C8C;
+    }
+</style>
 <div class="mb-5 desktop-view">
     <p style="line-height: 95px;" class="fw-bold fs-2 product-btn my-auto border-0 text-white text-center align-middle">
         Checkout
@@ -21,7 +35,7 @@
 ?>
 @endforeach
 @endif
-<div class="container desktop-view" id="">
+{{-- <div class="container desktop-view" id="">
     @if(session('message'))
     <div class="alert alert-danger">
         {{ session('message') }}
@@ -208,6 +222,217 @@
             checkout</button>
     </div>
     </form>
+</div> --}}
+
+<div class="container-fluid w-75 desktop-view">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card p-5 border-0" style="background: #FAFAFA;
+            border-radius: 6px;">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p class="billing-address-thank-you-page-heading">Billing Address</p>
+                            </div>
+                            <div class="col-md-6">
+                                <a data-bs-toggle="modal" href="#address_modal_id" role="button" class="float-end">
+                                    <img src="/theme/img/thank_you_page_edit_icon.png" alt="">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p class="user-first-name-thank-you-page"> {{$user_address->firstName}}
+                                    {{$user_address->lastName}}
+                                </p>
+                            </div>
+                            <div class="col-md-6">
+                                <p class="user-address-thank-you-page-title">Address line 1</p>
+                                <p class="user-address-thank-you-page-item">{{$user_address->postalAddress1}}</p>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <p class="user-address-thank-you-page-title">City</p>
+                                        <p class="user-address-thank-you-page-item">{{$user_address->postalCity}}
+                                        </p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p class="user-address-thank-you-page-title">State</p>
+                                        <p class="user-address-thank-you-page-item">{{$user_address->postalState}}
+                                        </p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p class="user-address-thank-you-page-title">Zip</p>
+                                        <p class="user-address-thank-you-page-item">{{$user_address->postalPostCode}}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <p class="user-address-thank-you-page-title">Address line 2</p>
+                                <p class="user-address-thank-you-page-item">{{$user_address->postalAddress2}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="billing-address-thank-you-page-heading">Billing Address</p>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p class="user-first-name-thank-you-page"> {{$user_address->firstName}}
+                                    {{$user_address->lastName}}
+                                </p>
+                            </div>
+                            <div class="col-md-6">
+                                <p class="user-address-thank-you-page-title">Address line 1</p>
+                                <p class="user-address-thank-you-page-item">{{$user_address->postalAddress1}}</p>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <p class="user-address-thank-you-page-title">City</p>
+                                        <p class="user-address-thank-you-page-item">{{$user_address->postalCity}}
+                                        </p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p class="user-address-thank-you-page-title">State</p>
+                                        <p class="user-address-thank-you-page-item">{{$user_address->postalState}}
+                                        </p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p class="user-address-thank-you-page-title">Zip</p>
+                                        <p class="user-address-thank-you-page-item">{{$user_address->postalPostCode}}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <p class="user-address-thank-you-page-title">Address line 2</p>
+                                <p class="user-address-thank-you-page-item">{{$user_address->postalAddress2}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row ps-5">
+        <div class="col-md-12">
+            <p class="item-purchased-thank-you-page">Item Purchased </p>
+        </div>
+        <div class="col-md-9 pe-5">
+            <table class="table">
+                <tr>
+                    <th class="thank-you-page-table-data-heading">Name</th>
+                    <th class="thank-you-page-table-data-heading">Quantity</th>
+                    <th class="thank-you-page-table-data-heading">Shipping</th>
+                    <th class="thank-you-page-table-data-heading">Price</th>
+                </tr>
+                <tbody class="border-0">
+                    <?php
+                        $cart_total = 0;
+                        $cart_price = 0;
+                    ?>
+                    @if(Session::get('cart'))
+                    @foreach(Session::get('cart') as $cart)
+                    <?php 
+                        $total_quatity =  $cart['quantity'];
+                        $total_price = $cart['price'] * $total_quatity;
+                        $cart_total  = $cart_total + $total_price ;
+                    ?>
+                    <tr>
+                        <td>
+                            <div class="row">
+                                <div class="col-md-2 py-2">
+                                    @if ($cart['image'])
+                                    <img class="img-fluid img-thumbnail" src="{{ $cart['image']}}" alt="" width="90px"
+                                        style="max-height: 90px">
+                                    @else
+                                    <img src="/theme/img/image_not_available.png" alt="" width="80px">
+                                    @endif
+                                </div>
+                                <div class="col-md-8 py-2 ps-0">
+                                    <a class="category-name-thank-you-page pb-3"
+                                        href="{{ url('product-detail/'. $cart['product_id'] . '/' . $cart['option_id'] . '/' . $cart['slug']) }}">
+                                        {{$cart['name']}}
+                                    </a>
+                                    <br>
+                                    <p class="product-title-thank-you-page ">Title:<span
+                                            class="product-title-thank-you-page-title">
+                                            {{$cart['name']}}</span>
+                                    </p>
+                                    <p class="product-delete-icon-thank-you-page-icon">
+                                        <img class="img-fluid" src="/theme/img/thank-you-page-delete.icon.png" alt="">
+                                    </p>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <p class="pt-4 thank-you-page-product-items-cart">{{$cart['quantity']}}</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td></td>
+                        <td>
+                            <p class="pt-4 thank-you-page-product-items-price ">${{number_format($cart['price'],2)}}</p>
+                        </td>
+                    </tr>
+                    @endforeach
+                    @endif
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-3" style="background: #FAFAFA; border-radius: 5px;">
+            <p class="thank-you-page-product-items-delivery-options">Delivery Options</p>
+            <div class="row">
+                <div class="col-md-12 mt-2">
+                    @foreach($payment_methods as $payment_method)
+                    <form action="{{url('order')}}" method="POST" id="order_form" name="order_form">
+                        @csrf
+                        <div class="row">
+                            @foreach($payment_method->options as $payment_option)
+                            <div class="col-md-6 ps-4">
+                                <input type="hidden" value="{{$payment_method->name}}" name="method_name">
+                                <input type="radio" id="local_delivery_{{$payment_option->id}}" name="method_option"
+                                    value="{{$payment_option->option_name}}" style="background: #008BD3;">
+                                <label for="local_delivery payment-option-label"
+                                    class="thank-you-page-product-items-payment-method-cart">{{$payment_option->option_name}}</label>
+                            </div>
+                            @endforeach
+                        </div>
+                        @endforeach
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 mt-3 py-3" style="background: #F7F7F7; border-radius: 5px;">
+                    <p class="thank-you-page-product-imtes-total-cart">Total</p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p class="thank-you-page-product-items-subtotal-cart">Subtotal:</p>
+                            <p class="thank-you-page-product-items-subtotal-cart">Shipping:</p>
+                            <p class="thank-you-page-product-items-subtotal-cart">Discount:</p>
+                            <p class="thank-you-page-product-items-subtotal-cart mt-4">Total:</p>
+                        </div>
+                        <div class="col-md-6 ">
+                            <p class=" thank-you-page-product-item-cart">ldskfldsk</p>
+                            <p class=" thank-you-page-product-item-cart">ldskfldsk</p>
+                            <p class=" thank-you-page-product-item-cart">ldskfldsk</p>
+                            <p class=" thank-you-page-product-item-cart mt-4">${{number_format($cart_total,2)}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 m-auto"
+            style="margin-top: 118px !important;margin:auto; !important; max-width:600px !important;">
+            <button type="button" class="button-cards w-100" id="proceed_to_checkout" onclick="validate()" style="background: #008BD3 ;
+            border-radius: 5px;">Proceed
+                to
+                checkout</button>
+        </div>
+        </form>
+    </div>
 </div>
 
 <!--Mobile View -->
@@ -880,6 +1105,151 @@
 <div class="row mt-5 pt-5 desktop-view">
     @include('partials.product-footer')
 </div>
+
+<div class="modal fade" id="address_modal_id" data-dismiss="modal" data-backdrop="false" aria-hidden="true"
+    aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalToggleLabel">Update Address</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="update-address-section" id="address-form-update">
+
+                    <form class="needs-validation mt-4 novalidate" action="{{url('order')}}" method="POST">
+                        @csrf
+                        <div class="alert alert-success mt-3 d-none" id="success_msg"></div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="firstName">First name</label>
+                                <input type="text" class="form-control bg-light" name="firstName"
+                                    placeholder="First name" value="{{$user_address->firstName}}" required>
+                                <div id="error_first_name" class="text-danger">
+
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="lastName">Last name</label>
+                                <input type="text" class="form-control bg-light" name="lastName" placeholder=""
+                                    value="{{$user_address->lastName}}" required>
+                                <div id="error_last_name" class="text-danger">
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="company">Company Name(optional)</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control bg-light" name="company"
+                                    placeholder="Enter you company name" value="{{$user_address->company}}" required>
+
+                            </div>
+                            <div id="error_company" class="text-danger">
+
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="username">Country</label>&nbsp;<span>United States</span>
+                            <input type="hidden" name="country" value="United States">
+                        </div>
+
+
+                        <div class="mb-3">
+                            <label for="address">Street Address</label>
+                            <input type="text" class="form-control bg-light" name="address"
+                                value="{{$user_address->postalAddress1}}" placeholder="House number and street name"
+                                required>
+
+                        </div>
+                        <div id="error_address1" class="text-danger">
+
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="address2">Address 2 <span class="text-muted">(Optional)</span></label>
+                            <input type="text" class="form-control bg-light" name="address2"
+                                value="{{$user_address->postalAddress2}}"
+                                placeholder="Apartment, suite, unit etc (optional)">
+                        </div>
+                        <div id="error_address2" class="text-danger">
+
+                        </div>
+                        <div class="mb-3">
+                            <label for="town">Town/City <span class="text-muted">(Optional)</span></label>
+                            <input type="text" class="form-control bg-light" name="town_city"
+                                value="{{$user_address->postalCity}}" placeholder="Enter your town">
+                        </div>
+                        <div id="error_city" class="text-danger">
+
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="state">State</label>
+
+                                <select class="form-control bg-light" name="state" id="state">
+                                    @foreach($states as $state)
+                                    <?php 
+                                      if($user_address->postalState == $state->name){
+                                              $selected = 'selected';
+  
+                                      }
+                                      else
+                                      {
+                                           $selected = '';
+                                      }
+                                  
+                                  ?>
+                                    <option value="{{$state->name}}" <?php echo $selected;?>>{{$state->name}}</option>
+                                    @endforeach
+                                </select>
+                                <!--    <input type="text" class="form-control bg-light" name="state" value="{{$user_address->postalState}}" placeholder="Enter State" value="" required> -->
+                                <div class="invalid-feedback">
+                                    Valid first name is required.
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="zip">Zip</label>
+                                <input type="text" class="form-control bg-light" name="zip" placeholder="Enter zip code"
+                                    value="{{$user_address->postalPostCode}}" required>
+                                <div id="error_zip" class="text-danger">
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="phone">Phone</label>
+                                <input type="text" class="form-control bg-light" name="phone"
+                                    placeholder="Enter your phone" value="{{$user_address->phone}}" required>
+                                <div id="error_phone" class="text-danger"></div>
+
+
+
+                            </div>
+
+                            <!-- <div>
+                      <button calss="btn btn-primary" onclick="updateContact('{{auth()->user()->id}}')">Update</button>
+                  </div> -->
+                        </div>
+                    </form>
+                </div>
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn button-cards primary"
+                    onclick="updateContact('{{auth()->user()->id}}')">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <form class="needs-validation mt-4 novalidate" style="display:none" action="{{url('order')}}" method="POST">
     @csrf
     <div class="alert alert-success  d-none" id="success_msg"></div>
@@ -994,6 +1364,7 @@
     $("#order_form").submit(); 
     }
 }
+
 function updateAddress() {
     $('#address-form-update').toggle();
     $('#address-form-update').removeClass('d-none');
