@@ -252,7 +252,7 @@
             <div style="width: 100%">
                 <div class="card border-0 thank-you-page-background-img" style="background-color: #F5F5F5 !important;
                 border-radius: 10px !important;
-                background-image: url('/theme/img/thank-background.png') !important;
+                background-image: url('https://stage.indoorsunhydro.com/theme/img/thank-background.png') !important;
                 background-repeat: no-repeat !important;
                 width: 100% !important;
                 background-size: 100% !important;
