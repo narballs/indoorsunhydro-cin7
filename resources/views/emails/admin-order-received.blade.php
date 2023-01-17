@@ -264,7 +264,7 @@
                             padding-bottom: 194px !important;
                             margin: auto; !important
                             padding-bottom: 100px;">
-                                <div class="card-boday" style="    background-color: #ffff;
+                                <div class="card-boday" style="background-color: #ffff;
                                 margin: auto;
                                 width: 85%;
                                 border-radius: 10px;">
@@ -314,8 +314,8 @@
                                                     <div class="pt-5"
                                                         style="padding-top: 35px !important;
                                                     padding-left: 14px !important; background: #FBFBFB;border-radius: 6px;">
-                                                        <img src="/theme/img/thnak-page-user-icon.png" class="img-fluid"
-                                                            alt="">
+                                                        <img src="https://stage.indoorsunhydro.com/theme/img/thnak-page-user-icon.png"
+                                                            class="img-fluid" alt="">
                                                         <span class="thank-you-page-user-name pt-4 ps-2" style=" font-family: 'Montserrat' !important;
                                                         font-style: normal;
                                                         font-weight: 500;
@@ -683,9 +683,12 @@
                         margin-left: 22px !important;
                         margin-top: 44px !important;
                         \ padding-left: 367px;">
-                                <img src="/theme/img/thank-you-page-icon-3.png" alt="">
-                                <span><img src="/theme/img/thank-you-page-icon-2.png" alt=""></span>
-                                <span><img src="/theme/img/thank-you-page-icon-1 (1).png" alt=""></span>
+                                <img src="https://stage.indoorsunhydro.com/theme/img/thank-you-page-icon-3.png" alt="">
+                                <span><img src="https://stage.indoorsunhydro.com/theme/img/thank-you-page-icon-2.png"
+                                        alt=""></span>
+                                <span><img
+                                        src="https://stage.indoorsunhydro.com/theme/img/thank-you-page-icon-1 (1).png"
+                                        alt=""></span>
                             </p>
                         </div>
                     </div>
