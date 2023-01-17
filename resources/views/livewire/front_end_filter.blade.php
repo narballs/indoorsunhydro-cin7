@@ -18,8 +18,7 @@
                                 <td>{{$product->name}}</td>
                                 <td>{{$product->code}}</td>
                                 <td>
-                          
-                                    <button id="btn_{{ $product->product_id }}" data-retail-price="{{ $product->retail_price }}" class="btn btn-primary btn-add-to-cart">Add to List</button>
+                                    <button id="btn_{{ $product->product_id }}" data-retail-price="{{ $product->retail_price }}" class="btn btn-primary btn-add-to-cart">Add to quote</button>
                                    
                                 </td>
                             </tr>
@@ -32,7 +31,3 @@
         </div>
     </div>
 </div>
-
-
-
-

@@ -9,7 +9,7 @@ use App\Models\User;
 use Auth;
 
 
-class Filter extends Component
+class Filter2 extends Component
 {
     public $searchTerm;
     use WithPagination;
@@ -18,10 +18,10 @@ class Filter extends Component
         $role = Auth::user()->hasRole('Admin');
 
         return view(
-            'livewire.filter', [
+            'livewire.front_end_filter', [
             'products' =>  Product::with('options')->where(function($sub_query){
-                        $sub_query->where('name', 'like', '%'.$this->searchTerm.'%');
-                        })->paginate(5),
+                $sub_query->where('name', 'like', '%' . $this->searchTerm . '%');
+            })->paginate(5),
             'role' => $role
         ]);
     }

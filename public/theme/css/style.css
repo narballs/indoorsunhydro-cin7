@@ -4084,7 +4084,7 @@ select.list-dt:focus {
     margin-bottom: 1rem;
     border: 0;
     border-top: 1px solid #000000 !important;
-    width: 1142px !important;
+    /*width: 1142px !important;*/
     border: 1px solid #000000 !important;
 }
 
@@ -4410,6 +4410,10 @@ th {
     font-size: 14px;
     line-height: 16px;
     color: #000000;
+}
+.pagination-container > div > span {
+width: 200px !important;
+display: inline-block  !important;
 }
 
 /* updated thank you page end */

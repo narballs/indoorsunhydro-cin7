@@ -902,7 +902,7 @@ class ProductController extends Controller
 
     public function getWishlists() {
         $user_id = Auth::id();
-        $lists = BuyList::where('user_id', $user_id)->with('list_products.product.options')->get();
+        $lists = BuyList::where('user_id', $user_id)->where('type', 'wishlist')->with('list_products.product.options')->get();
 
         //$list_title = $list->title;
         $images = [];
@@ -914,7 +914,6 @@ class ProductController extends Controller
                         array_push($images,$image);
 
                     }
-
             }
         }
 
@@ -948,6 +947,7 @@ class ProductController extends Controller
         $buyList->status = 'Public';
         $buyList->description = $request->list_title;
         $buyList->user_id = $user_id;
+        $buyList->type = $request->type;
         $buyList->save();
         return response()->json([
             'status' => 'success',
