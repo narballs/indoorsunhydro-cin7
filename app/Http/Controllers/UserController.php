@@ -256,7 +256,7 @@ class UserController extends Controller
                 'name' =>  'Admin',
                 'contact_email' => $user->email,
                 'subject' => 'New User Registration Request',
-                'from' => 'wqszeeshan@gmail.com',
+                'from' => 'stageindoorsun@stage.indoorsunhydro.com',
                 'content' => 'New user registration request received, please reveiw.'
             ];
 

@@ -8,6 +8,11 @@
 		/* color: green !important; */
 		color: #008AD0 !important;
 	}
+	
+	nav svg{
+		max-height: 20px !important;
+	}
+
 </style>
 <div class="bg-light">
 	<div class="mb-5">
@@ -114,8 +119,29 @@
 													Whishlists
 												</span>
 											</div>
+										</div>
 
-
+									</a>
+								</li>
+								<li class="nav-item w-100 mb-3" id="qoutes">
+									<a href="#" class="nav-link px-0 align-middle  px-0 ms-3">
+										<i class="fs-4 bi-table"></i>
+										<div class="row">
+											<div class="col-md-2">
+												<span>
+													<img src="theme/img/heart-icon.png" id="order_active"
+														style="display: none;" width="30px" height="30px">
+													<img src="theme/img/quotation-icon.png" id="order_inactive"
+														class="mt-1" width="28px" height="23px">
+												</span>
+											</div>
+											<div class="col-md-10">
+												<span
+													class="ms-1 d-none d-sm-inline  fs-5 ms-3 mt-1 ml-0 pl-0 nav-items-link"
+													onclick="qoute()">
+													Qoutes
+												</span>
+											</div>
 										</div>
 
 									</a>
@@ -139,8 +165,6 @@
 													Addresses
 												</span>
 											</div>
-
-
 										</div>
 									</a>
 								</li>
@@ -276,6 +300,7 @@
 							</div>
 
 							<div class="col-md-8 bg-light m-auto rounded-end pt-3 pb-3" style="" id="wishlist_content">
+
 								<!-- 			<div class="container p-0">
 								    <header class="text-center">
 								        <h1>My Favourites</h1>
@@ -323,6 +348,20 @@
 								</div> -->
 							</div>
 						</div>
+						<div class="d-none row mt-3 mb-3 pr-0 pl-0" id="all_qoutes">
+							<div class="col-md-8 border-bottom border-4 d-flex pb-4 p-0 bg-white">
+								<img src="/theme/img/heartfilled.png" style="margin: 5px 3px 0px 9px;" width="28px"
+										height="28px">
+								<span class="pt-1 my-account-content-heading">Qoutes</span>
+							</div>
+							<div class="col-md-4 border-bottom">
+								<button class="btn btn-outline-success" data-bs-toggle="modal"
+										data-bs-target="#exampleModal2">Create a Qoute</button>
+							</div>
+							<div class="d-none" id="filter">
+								@livewire('filter2')
+							</div>
+						</div>
 						<!-- Modal -->
 						<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
 							aria-hidden="true">
@@ -337,11 +376,36 @@
 										<input type="text" name="list" id="list" class="form-control"
 											placeholder="List Name" aria-label="List Name"
 											aria-describedby="addon-wrapping">
+											<input type="hidden" name="wishlist" id="wishlist" value="wishlist">
 									</div>
 									<div class="modal-footer">
 										<button type="button" class="btn btn-secondary"
 											data-bs-dismiss="modal">Close</button>
-										<button type="button" class="btn btn-primary" onclick="createList()">Save
+										<button type="button" class="btn btn-primary" onclick="createList(1)">Save
+											changes</button>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel"
+							aria-hidden="true">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title text-center" id="exampleModalLabel">Create Qoute</h5>
+										<button type="button" class="btn-close" data-bs-dismiss="modal"
+											aria-label="Close"></button>
+									</div>
+									<div class="modal-body">
+										<input type="text" name="qoute_id" id="qoute_id" class="form-control"
+											placeholder="List Name" aria-label="Qoute Name"
+											aria-describedby="addon-wrapping">
+											<input type="hidden" name="qoute" id="qoute" value="qoute">
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary"
+											data-bs-dismiss="modal">Close</button>
+										<button type="button" class="btn btn-primary" onclick="createList(2)">Save
 											changes</button>
 									</div>
 								</div>
@@ -604,25 +668,51 @@
 					</div>
 				</div>
 			</div>
+			@livewireScripts
+			@section('css')
+    <link rel="stylesheet" href="../css/admin_custom.css">
+@stop
 
 
 			<script>
-				function replaceEye(val) {
+			function qoute() {
+				$('#filter').removeClass('d-none');
+				$('#all_qoutes').removeClass('d-none');
+				$('#intro,#edit_address,#address_row').addClass('d-none');
+				$('#whishlist').addClass('d-none');
+				$('.nav-pills .active').removeClass('active');
+				$('.nav-pills #qoutes').addClass('active');
+				$('#edit_address').addClass('d-none');
+				$('#address_row').addClass('d-none');
+				$('#whish_lists').addClass('d-none');
+				$('.order-detail-container').addClass('d-none');
+				$('#customer-address').addClass('d-none')
+				$('#orders').addClass('d-none');
+			}
+			function replaceEye(val) {
         		$('#eye_icon_'+val).attr("src", "theme/img/white_eye.png").css('width' , '20px');
 			}
 			function replaceEye2(val) {
 				$('#eye_icon_'+val).attr("src", "theme/img/eye.png");
 			}
 
-			function createList() {
-				var list_name = $('#list').val();
+			function createList(type) {
+				if (type == 1) {
+					var type = 'whishlist';
+					var list_name = $('#list').val();
+				}
+				else {
+					var type = 'qoute';
+					var list_name = $('#qoute_id').val();
+				}
+				alert(type);
 				jQuery.ajax({
 					url: "{{ url('/create-list/')}}",
 					method: 'POST',
 					data: {
-					"_token": "{{ csrf_token() }}",
-					list_title : list_name
-
+						"_token": "{{ csrf_token() }}",
+						list_title : list_name,
+						type : type
 					},
 				success: function (response) {
 					console.log(response.status);
@@ -665,6 +755,7 @@
 			function wishLists() {
 				$('#whishlist').removeClass('d-none');
 				$('#intro,#edit_address,#address_row').addClass('d-none');
+				$('#all_qoutes').addClass('d-none');
 				$('.nav-pills .active').removeClass('active');
 				$('.nav-pills #wish_lists').addClass('active');
 				$('#edit_address').addClass('d-none');
@@ -678,8 +769,6 @@
 					url: "{{ url('/get-wish-lists/')}}",
 					method: 'GET',
 					data: {
-						
-					
 					},
 				        success : function (images) {
 
@@ -884,7 +973,7 @@
 						}});
 
 			}
-			function showOrders	() {
+			function showOrders() {
 				$('#address_row').addClass('d-none');
 
 				$('.nav-pills .active').removeClass('active');

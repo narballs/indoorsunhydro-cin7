@@ -178,7 +178,7 @@ class ContactController extends Controller
                 'contact_email' => $currentContact['email'],
                 'contact_id' => $is_updated,
                 'subject' => 'New Account activated',
-                'from' => 'wqszeeshan@gmail.com',
+                'from' => 'stageindoorsun@stage.indoorsunhydro.com',
                 'content' => 'New account activated.'
             ];
 

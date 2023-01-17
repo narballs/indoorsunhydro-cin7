@@ -4084,7 +4084,7 @@ select.list-dt:focus {
     margin-bottom: 1rem;
     border: 0;
     border-top: 1px solid #000000 !important;
-    width: 1142px !important;
+    /*width: 1142px !important;*/
     border: 1px solid #000000 !important;
 }
 
@@ -4401,6 +4401,10 @@ select.list-dt:focus {
     font-size: 14px;
     line-height: 16px;
     color: #000000;
+}
+.pagination-container > div > span {
+width: 200px !important;
+display: inline-block  !important;
 }
 
 .product-delete-icon-thank-you-page-icon {

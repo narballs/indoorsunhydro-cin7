@@ -26,11 +26,11 @@ class AdminShareListController extends Controller
         $list = BuyList::where('id', $request->list_id)->with('list_products.product.options')->first();
         $base_url = url('/');
         $data = [
-            'name' =>  'Waqas Zeeshan',
+            'name' =>  'Stageindoor',
             'email' => $request->email,
             'subject' => 'Buy List shared',
             'link' => $base_url.'/create-cart/'.$request->list_id,
-            'from' => 'wqszeeshan@gmail.com',
+            'from' => 'stageindoorsun@stage.indoorsunhydro.com',
             'list' => $list
         ];
         $subject = '';
