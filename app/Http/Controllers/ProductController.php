@@ -96,14 +96,13 @@ class ProductController extends Controller
         if ($user_id != null) {
             $contact = Contact::where('user_id', $user_id)->first();
         }
-       
+
         if ($contact) {
             $pricing = $contact->priceColumn;
-        }
-        else {
+        } else {
             $pricing = 'Retail';
         }
-     
+
         $lists = BuyList::where('user_id', $user_id)->get();
 
 
@@ -270,11 +269,10 @@ class ProductController extends Controller
         if ($user_id != null) {
             $contact = Contact::where('user_id', $user_id)->first();
         }
-       
+
         if ($contact) {
             $pricing = $contact->priceColumn;
-        }
-        else {
+        } else {
             $pricing = 'Retail';
         }
         $category_id = $selected_category_id;
@@ -290,7 +288,7 @@ class ProductController extends Controller
                 'category_id',
                 'parent_category_slug',
                 'brand_id',
-                'per_page', 
+                'per_page',
                 'lists',
                 'pricing'
             )
@@ -306,7 +304,7 @@ class ProductController extends Controller
             $product->views = $views + 1;
             $product->save();
         }
-        $productOption = ProductOption::where('option_id', $option_id)->with('products.categories','price')->first();
+        $productOption = ProductOption::where('option_id', $option_id)->with('products.categories', 'price')->first();
         if ($productOption->products->categories != '') {
             $category = Category::where('category_id', $productOption->products->categories->category_id)->first();
             $parent_category = Category::where('category_id', $category->parent_id)->first();
@@ -325,15 +323,14 @@ class ProductController extends Controller
         if ($user_id != null) {
             $contact = Contact::where('user_id', $user_id)->first();
         }
-       
+
         if ($contact) {
             $pricing = $contact->priceColumn;
-        }
-        else {
+        } else {
             $pricing = 'Retail';
         }
-   
-        return view('product-detail', compact('productOption', 'pname','pricing'));
+
+        return view('product-detail', compact('productOption', 'pname', 'pricing'));
     }
     public function showProductByCategory_slug($slug)
     {
@@ -499,8 +496,7 @@ class ProductController extends Controller
         }
         if ($contact) {
             $pricing = $contact->priceColumn;
-        }
-        else {
+        } else {
             $pricing = 'Retail';
         }
         $lists = BuyList::where('user_id', $user_id)->get();
@@ -528,6 +524,7 @@ class ProductController extends Controller
 
     public function addToCart(Request $request)
     {
+        // dd($request->all());
         $id = $request->p_id;
         $option_id = $request->option_id;
 
@@ -539,44 +536,36 @@ class ProductController extends Controller
         $contact = Contact::where('user_id', $user_id)->first();
         $pricing = $contact->priceColumn;
 
-        foreach($productOption->products->options as $option) {
-            foreach($option->price as $price) {
+        foreach ($productOption->products->options as $option) {
+            foreach ($option->price as $price) {
                 if ($pricing == 'Retail') {
-                   $price = $price['retailUSD'];
-                }
-                else if ($pricing == 'Wholesale') {
+                    $price = $price['retailUSD'];
+                } else if ($pricing == 'Wholesale') {
                     $price = $price['wholesaleUSD'];
-                }
-                else if ($pricing == 'TerraIntern') {
+                } else if ($pricing == 'TerraIntern') {
                     $price = $price['terraInternUSD'];
-                }
-                else if ($pricing == 'Sacramento') {
+                } else if ($pricing == 'Sacramento') {
                     $price = $price['sacramentoUSD'];
-                }
-                else if ($pricing == 'Oklahoma') {
+                } else if ($pricing == 'Oklahoma') {
                     $price = $price['oklahomaUSD'];
-                }
-                else if ($pricing == 'Calaveras') {
+                } else if ($pricing == 'Calaveras') {
                     $price = $price['calaverasUSD'];
-                }
-                else if ($pricing == 'Tier1') {
+                } else if ($pricing == 'Tier1') {
                     $price = $price['tier1USD'];
-                }
-                else if ($pricing == 'Tier2') {
+                } else if ($pricing == 'Tier2') {
                     $price = $price['tier2USD'];
-                }
-                else if ($pricing == 'Tier3') {
+                } else if ($pricing == 'Tier3') {
                     $price = $price['tier3USD'];
-                }
-                else if ($pricing == 'ComercialOk') {
+                } else if ($pricing == 'ComercialOk') {
                     $price = $price['commercialOKUSD'];
-                }
-                else if ($pricing == 'Cost') {
+                } else if ($pricing == 'Cost') {
                     $price = $price['costUSD'];
+                } else if ($price['']) {
+                    $price['Retail'];
                 }
             }
         }
-        
+
         // if ($pricing == 'Wholesale') {
         //    $price = $productOption->wholesalePrice;
         // }
@@ -840,11 +829,10 @@ class ProductController extends Controller
         if ($user_id != null) {
             $contact = Contact::where('user_id', $user_id)->first();
         }
-       
+
         if ($contact) {
             $pricing = $contact->priceColumn;
-        }
-        else {
+        } else {
             $pricing = 'Retail';
         }
 
@@ -866,7 +854,8 @@ class ProductController extends Controller
     }
 
 
-    public function addToWishList(Request $request) {
+    public function addToWishList(Request $request)
+    {
         // dd($request->list_id);
         $user_id = Auth::id();
 
@@ -874,33 +863,32 @@ class ProductController extends Controller
 
         $user_lists = BuyList::where('user_id', $user_id)->exists();
         if ($user_lists == false) {
-                $wishlist = new BuyList();
-                $wishlist->title = 'My Favourites';
-                $wishlist->status = 'Public';
-                $wishlist->description = 'My Favourites';
-                $wishlist->user_id = $user_id;
-                $wishlist->save();
-                $list_id = $wishlist->id;
-            }
-        else {
+            $wishlist = new BuyList();
+            $wishlist->title = 'My Favourites';
+            $wishlist->status = 'Public';
+            $wishlist->description = 'My Favourites';
+            $wishlist->user_id = $user_id;
+            $wishlist->save();
+            $list_id = $wishlist->id;
+        } else {
             $list = BuyList::where('title', 'My Favourites')->where('user_id', $user_id)->first();
             $list_id = $list->id;
         }
-       
-            $product_buy_list = new ProductBuyList();
-            $product_buy_list->list_id = $list_id;
-            $product_buy_list->product_id = $request->product_id;
-            $product_buy_list->option_id = $request->option_id;
-            $product_buy_list->quantity = $request->quantity;
-            $product_buy_list->save();
-             return response()->json([
-                'success' => true, 
-                'msg' => 'List created Successully !'
-            ]);
-        
+
+        $product_buy_list = new ProductBuyList();
+        $product_buy_list->list_id = $list_id;
+        $product_buy_list->product_id = $request->product_id;
+        $product_buy_list->option_id = $request->option_id;
+        $product_buy_list->quantity = $request->quantity;
+        $product_buy_list->save();
+        return response()->json([
+            'success' => true,
+            'msg' => 'List created Successully !'
+        ]);
     }
 
-    public function getWishlists() {
+    public function getWishlists()
+    {
         $user_id = Auth::id();
         $lists = BuyList::where('user_id', $user_id)->where('type', 'wishlist')->with('list_products.product.options')->get();
 
@@ -908,12 +896,11 @@ class ProductController extends Controller
         $images = [];
         // dd($lists);
         foreach ($lists as $list) {
-            foreach($list->list_products as $single_product) {
-                    foreach($single_product->product as $image) {
-                        // dd($image->image);
-                        array_push($images,$image);
-
-                    }
+            foreach ($list->list_products as $single_product) {
+                foreach ($single_product->product as $image) {
+                    // dd($image->image);
+                    array_push($images, $image);
+                }
             }
         }
 
@@ -924,12 +911,14 @@ class ProductController extends Controller
         // }
         // dd($images);
         return view('wishlists.index', compact(
-            'lists', 'images'
+            'lists',
+            'images'
         ));
         return $images;
     }
 
-    public function getListNames() {
+    public function getListNames()
+    {
         $user_id = Auth::id();
         $lists = BuyList::where('user_id', $user_id)->get();
         return response()->json([
@@ -939,7 +928,8 @@ class ProductController extends Controller
     }
 
 
-    public function createList(Request $request) {
+    public function createList(Request $request)
+    {
         $user_id = Auth::id();
         $request->list_title;
         $buyList = new BuyList();
@@ -953,6 +943,5 @@ class ProductController extends Controller
             'status' => 'success',
             'msg' => 'List created Successully'
         ]);
-
     }
 }
