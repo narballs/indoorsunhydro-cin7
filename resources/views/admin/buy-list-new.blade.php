@@ -91,7 +91,6 @@
 			@livewire('filter')
 		</div>
 	</div>
-<?php //dd($list->list_products);?>
 	@if(!empty($list->list_products))
 		<div class="row w-100 pl-2 pr-0">
 			<div class="card col-md-12">
@@ -112,7 +111,7 @@
 							</tr>
 							<?php //dd($list);?>
 						@foreach($list->list_products as $list_product)
-						<?php //dd($list_product);?>
+					
                         @foreach($list_product->product->options as $option)
                             <!-- <tr id="product_row_{{$list_product->product_id }}"> -->
                             <tr id="product_row_{{ $list_product->product_id }}" class="product-row-{{ $list_product->product_id }} admin-buy-list">
@@ -147,8 +146,8 @@
 						</div>
 						<div class="row">
 							<div class="col-md-10 border-top"><button type="button" class="ms-2 btn btn-primary" onclick="generatList()">Update List</button>
+							</div>
 						</div>
-					</div>
 				</div>
 			</div>
 		</div>
@@ -193,7 +192,6 @@
 @section('js')
 <script>
 	$( document ).ready(function() {
-
 		var list_id = $("#list_id").val();
 		if (list_id == '') {
 			$(".btn-add-to-cart").prop('disabled', true);
@@ -317,7 +315,6 @@
 			updated_total = parseFloat(grand_total) - parseFloat(subtotal_to_remove);
 			$('#subtotal_'+ product_id).val();
 			$('#product_row_'+ product_id).remove();
-			alert(updated_total);
 			$('#grand_total').html(updated_total);
 		}
 		function handleQuantity(product_id) {

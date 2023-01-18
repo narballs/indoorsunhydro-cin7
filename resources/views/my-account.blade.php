@@ -1,6 +1,7 @@
 @include('partials.header')
 @include('partials.top-bar')
 @include('partials.search-bar')
+  <link rel="stylesheet" href="http://indoorsunhydro.local/vendor/adminlte/dist/css/adminlte.min.css">
 <style>
 	.nav .active {
 		background: #F5F5F5;
@@ -12,6 +13,14 @@
 	nav svg{
 		max-height: 20px !important;
 	}
+	#spinner-global {
+		display: none !important;
+	}
+input[type=number]::-webkit-outer-spin-button {
+
+opacity: 20;
+
+}
 
 </style>
 <div class="bg-light">
@@ -301,51 +310,6 @@
 
 							<div class="col-md-8 bg-light m-auto rounded-end pt-3 pb-3" style="" id="wishlist_content">
 
-								<!-- 			<div class="container p-0">
-								    <header class="text-center">
-								        <h1>My Favourites</h1>
-								    </header>
-									<div class="row">
-										  <div class="col-md-8 col-sm-12 co-xs-12 gal-item">
-											   <div class="row h-50">
-													  <div class="col-md-12 col-sm-12 co-xs-12 gal-item">
-																<div class="box buy-list-box">
-															 <img src="http://fakeimg.pl/758x370/" class="img-ht img-fluid rounded">
-																</div>
-														</div>
-												</div>
-										  
-										    <div class="row h-50 mt-3">
-													 <div class="col-md-6 col-sm-6 co-xs-12 gal-item pt-0">
-													  <div class="box buy-list-box">
-														<img src="http://fakeimg.pl/748x177/" class="img-ht img-fluid rounded">
-													</div>
-													</div>
-
-													<div class="col-md-6 col-sm-6 co-xs-12 gal-item pt-0">
-													 <div class="box buy-list-box">
-														<img src="http://fakeimg.pl/371x370/" class="img-ht img-fluid rounded">
-													</div>
-													</div>
-									            </div>
-									      </div>
-
-								           <div class="col-md-4 col-sm-6 co-xs-12 gal-item">
-											   <div class="col-md-12 col-sm-6 co-xs-12 gal-item h-25 pl-0 pr-0">
-												<div class="box buy-list-box">
-													<img src="http://fakeimg.pl/748x177/" class="img-ht img-fluid rounded">
-												</div>
-												</div>
-
-												  <div class="col-md-12 col-sm-6 co-xs-12 gal-item h-76 p-0">
-												   <div class="box buy-list-box">
-													<img src="http://fakeimg.pl/748x177/" class="img-ht img-fluid rounded">
-												</div>
-												</div>
-								            </div>
-									</div>
-									<br/>
-								</div> -->
 							</div>
 						</div>
 						<div class="d-none row mt-3 mb-3 pr-0 pl-0" id="all_qoutes">
@@ -357,10 +321,41 @@
 							<div class="col-md-4 border-bottom">
 								<button class="btn btn-outline-success" data-bs-toggle="modal"
 										data-bs-target="#exampleModal2">Create a Qoute</button>
+										<button class="btn btn-outline-success" data-bs-toggle="modal"
+										data-bs-target="#exampleModal2">My Qoutes</button>
 							</div>
+						
 							<div class="d-none" id="filter">
 								@livewire('filter2')
 							</div>
+								<div class="row w-100 pl-2 pr-0">
+			<div class="card col-md-12">
+				<div class="card-body w-100 d-none" id="list">
+					<div id="list_title">
+						<h4></h4>
+					</div>
+					<input type="hidden" id="list_id" value="">
+						<table id="product_list" class="table" width="50%">
+							<tr>
+								<td style="width:373px !important">Product Title</td>
+								<td style="width:373px !important">Image</td>
+								<td>Price</td>
+								<td>Quantity</td>
+								<td>Subtotal</td>
+								<td>Remove</td>
+							</tr>
+						</table>
+						<div class="row">
+							<div class="col-md-10 border-top">Grand Total</div>
+							<div class="col-md-2 border-top">amount : <span id="grand_total">0</span></div>
+						</div>
+						<div class="row">
+							<div class="col-md-10 border-top"><button type="button" class="ms-2 btn btn-primary" onclick="generatList()">Create List</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 						</div>
 						<!-- Modal -->
 						<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
@@ -373,7 +368,7 @@
 											aria-label="Close"></button>
 									</div>
 									<div class="modal-body">
-										<input type="text" name="list" id="list" class="form-control"
+										<input type="text" name="list" id="whish_list_id" class="form-control"
 											placeholder="List Name" aria-label="List Name"
 											aria-describedby="addon-wrapping">
 											<input type="hidden" name="wishlist" id="wishlist" value="wishlist">
@@ -675,6 +670,7 @@
 
 
 			<script>
+
 			function qoute() {
 				$('#filter').removeClass('d-none');
 				$('#all_qoutes').removeClass('d-none');
@@ -696,31 +692,30 @@
 				$('#eye_icon_'+val).attr("src", "theme/img/eye.png");
 			}
 
-			function createList(type) {
-				if (type == 1) {
-					var type = 'whishlist';
-					var list_name = $('#list').val();
-				}
-				else {
-					var type = 'qoute';
-					var list_name = $('#qoute_id').val();
-				}
-				alert(type);
-				jQuery.ajax({
-					url: "{{ url('/create-list/')}}",
-					method: 'POST',
-					data: {
-						"_token": "{{ csrf_token() }}",
-						list_title : list_name,
-						type : type
-					},
-				success: function (response) {
-					console.log(response.status);
-					$('#exampleModal').modal('hide');
+			// function createList(type) {
+			// 	if (type == 1) {
+			// 		var type = 'whishlist';
+			// 		var list_name = $('#list').val();
+			// 	}
+			// 	else {
+			// 		var type = 'qoute';
+			// 		var list_name = $('#qoute_id').val();
+			// 	}
+			// 	jQuery.ajax({
+			// 		url: "{{ url('/create-list/')}}",
+			// 		method: 'POST',
+			// 		data: {
+			// 			"_token": "{{ csrf_token() }}",
+			// 			list_title : list_name,
+			// 			type : type
+			// 		},
+			// 	success: function (response) {
+			// 		console.log(response.status);
+			// 		$('#exampleModal').modal('hide');
 
-				}
-				});
-			};
+			// 	}
+			// 	});
+			// };
 
 
 			
@@ -974,6 +969,7 @@
 
 			}
 			function showOrders() {
+				$('#filter').addClass('d-none');
 				$('#address_row').addClass('d-none');
 
 				$('.nav-pills .active').removeClass('active');
@@ -1023,6 +1019,7 @@
 			} 
 
 			function accountDetails() {
+				$('#filter').addClass('d-none');
 				$('#orders').addClass('d-none');
 				$('#whishlist').addClass('d-none');
 				$('#detail-heading').addClass('d-none');
@@ -1042,6 +1039,7 @@
 				})
 			}
 			function edit_address() {
+				$('#filter').addClass('d-none');
 				$('#edit_address').removeClass('d-none');
 				$('#whishlist').addClass('d-none');
 				$('#address_row').addClass('d-none');
@@ -1172,7 +1170,155 @@
            			}
       			});
     		}
-			</script>
+
+    		function createList(type) {
+	    		if (type == 1) {
+					var type = 'wishlist';
+					var list_name = $('#whish_list_id').val();
+				}
+				else {
+					var type = 'qoute';
+					var list_name = $('#qoute_id').val();
+				}
+		    	var title = $('#qoute_id').val();
+		    	var description = 'Qoute';
+		    	var status = 'Public';
+        	jQuery.ajax({
+                  	url: "{{ route('buy-list.store') }}",
+                  	method: 'post',
+                  	data: {
+                    	"_token": "{{ csrf_token() }}",
+                     	title : list_name,
+                     	description : description,
+                     	status : status,
+                     	type : type 
+                  	},
+                  	success: function(response){
+                  		console.log(response);
+                   		$( "#list_title" ).append("<h4>"+title+"</h4>");
+                   		$("#list_id").val(response.list_id);
+                   		$("#title_errors").html('');
+                   		$("#status_errors").html('');
+                   		$("#description_errors").html('');
+                   		console.log(response);
+                   		$("#success_msg").html(response.success);
+                   		$("#success_msg").removeClass('d-none');
+                   		$(".btn-add-to-cart").prop('disabled', false);
+                   		$("#list").removeClass('d-none');
+
+            		}, 
+            		error : function(response) {
+            			console.log(response.responseJSON.errors);
+            			if (response.responseJSON.errors.title) {
+
+            				$("#title_errors").html(response.responseJSON.errors.title);
+            			}
+            			else {
+            				$("#title_errors").html('');
+            			}
+
+            			if (response.responseJSON.errors.status) {
+            				$("#status_errors").html(response.responseJSON.errors.status);
+            			}
+            			else {
+            				$("#status_errors").html('');
+            			}
+
+            			if (response.responseJSON.errors.description) {
+            				$("#description_errors").html(response.responseJSON.errors.description);
+            			}
+            			else {
+            				$("#description_errors").html('');
+            			}
+            		}
+        		});
+   			}
+
+   			function generatList() {
+			var is_update = $('#is_update').val();
+			var listItems = [];
+			var list_id = $('#list_id').val();
+			var grand_total = $('#grand_total').html();
+			console.log(grand_total);
+			$('.admin-buy-list').each(function() {
+				var product_id = this.id;
+				product_id = product_id.replace('product_row_', '');
+				var retail_price = $('#retail_price_' + product_id).html();
+				var option_id = $('#option_id_' + product_id).val();
+				var quantity = $('#quantity_' + product_id).val();
+				var subtotal = $('#subtotal_' + product_id).html();
+				console.log(subtotal);
+				listItems.push({
+					product_id: product_id,
+					option_id : option_id,
+					quantity :  quantity,
+					subtotal: subtotal,
+					grand_total: grand_total,
+				});
+			});
+			console.log(listItems);
+			jQuery.ajax({
+				url: "{{ url('admin/generate-list') }}",
+				method: 'post',
+				data: {
+				"_token": "{{ csrf_token() }}",
+					listItems: listItems,
+					listId : list_id,
+					is_update: is_update,
+					type : 'Qoute'
+				},
+				success: function(response) {
+					 window.location.href = "{{ route('buy-list.index')}}";
+				}
+			});
+		}
+
+
+    	function deleteProduct(product_id) {
+			var row = $('#product_row_' + product_id).length;
+			if (row < 1) {
+				$('#grand_total').html(0.00);
+			}
+			var subtotal_to_remove = parseFloat($('#subtotal_'+ product_id).html());
+			var grand_total = parseFloat($('#grand_total').html());
+			var updated_total = 0;
+			updated_total = parseFloat(grand_total) - parseFloat(subtotal_to_remove);
+			$('#subtotal_'+ product_id).val();
+			$('#product_row_'+ product_id).remove();
+			$('#grand_total').html(updated_total);
+		}
+
+		function handleQuantity(product_id) {
+			var difference = 0;
+			var subtotal_before_update = parseFloat($('#subtotal_' + product_id).html());
+			console.log('difference => ' + difference);
+			console.log('sub total before update  => ' + subtotal_before_update);
+
+			var retail_price = parseFloat($('#retail_price_' + product_id).html());
+			var quantity = parseFloat($('#quantity_' + product_id).val());
+			var subtotal = parseFloat($('#subtotal_' + product_id).html());
+			
+			
+			subtotal = retail_price * quantity;
+			difference = subtotal_before_update - subtotal;
+
+			console.log('difference => ' + difference);
+
+			var grand_total = $('#grand_total').html();
+			grand_total = parseFloat(grand_total);
+
+			console.log('Grand Total => ' + grand_total);
+
+
+			grand_total = grand_total - difference;
+			$('#grand_total').html(grand_total);
+
+			console.log('Grand Total => ' + grand_total);
+
+			$('#quantity_' + product_id).val(quantity);
+			$('#subtotal_' + product_id).html(subtotal);
+		}
+	</script>
 			<!-- Remove the container if you want to extend the Footer to full width. -->
 
 			@include('partials.product-footer')
