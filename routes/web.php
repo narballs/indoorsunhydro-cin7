@@ -123,6 +123,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('admin/share-list', [AdminShareListController::class, 'shareList']);
 });
 Route::get('product/search', [ProductController::class, 'productSearch'])->name('product_search');
+//Route::resource('buy-list', AdminBuyListController::class)->name('buy-lisy-front');
 
 
 

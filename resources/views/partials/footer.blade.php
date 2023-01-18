@@ -67,4 +67,80 @@ $('[data-toggle="popover-click"]').popover({
 	});
 
 </script>
-</html>
+<script>
+	$( document ).ready(function() {
+		var list_id = $("#list_id").val();
+		if (list_id == '') {
+			$(".btn-add-to-cart").prop('disabled', true);
+		}
+		else {
+			$(".btn-add-to-cart").prop('disabled', false);
+		}
+		$('body').on('click', '.btn-add-to-cart', function() {
+			var id = $(this).attr('id');
+			var product_id = id.replace('btn_', '');
+			var row = $('#product_row_' + product_id).length;
+
+			if (row > 0) {
+				var difference = 0;
+				var subtotal_before_update = parseFloat($('#subtotal_' + product_id).html());
+				console.log('difference => ' + difference);
+				console.log('sub total before update  => ' + subtotal_before_update);
+
+				var retail_price = parseFloat($('#retail_price_' + product_id).html());
+				var quantity = parseFloat($('#quantity_' + product_id).val());
+				var subtotal = parseFloat($('#subtotal_' + product_id).html());
+				
+				quantity++;
+				subtotal = retail_price * quantity;
+
+				difference = subtotal_before_update - subtotal;
+
+				console.log('difference => ' + difference);
+
+				var grand_total = $('#grand_total').html();
+				grand_total = parseFloat(grand_total);
+
+				console.log('Grand Total => ' + grand_total);
+
+
+				grand_total = grand_total - difference;
+				$('#grand_total').html(grand_total);
+
+				console.log('Grand Total => ' + grand_total);
+
+				$('#quantity_' + product_id).val(quantity);
+				$('#subtotal_' + product_id).html(subtotal);
+				return false;
+			}
+
+
+			jQuery.ajax({
+				url: "{{ url('admin/add-to-list') }}",
+				method: 'post',
+				data: {
+				"_token": "{{ csrf_token() }}",
+					product_id: product_id,
+					//option_id: option_id
+				},
+				success: function(response) {
+					$('#product_list').append(response);
+					console.log(response);
+					var grand_total = $('#grand_total').html();
+					grand_total = parseFloat(grand_total);
+
+					var retail_price = $('#btn_' + product_id).attr('data-retail-price');
+					console.log(retail_price);
+
+					var subtotal = retail_price * 1;
+
+					grand_total = grand_total + subtotal;
+
+					$('#grand_total').html(grand_total);
+				}
+			});
+		});
+
+		
+	});
+	</script>

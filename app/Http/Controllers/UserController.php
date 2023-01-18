@@ -8,6 +8,7 @@ use App\Models\Contact;
 use App\Models\ApiOrder;
 use App\Models\ApiOrderItem;
 use App\Models\State;
+use App\Models\BuyList;
 use App\Http\Requests\Users\UserSignUpRequest;
 use App\Http\Requests\Users\CompanyInfoRequest;
 use App\Http\Requests\Users\UserAddressRequest;
@@ -294,6 +295,7 @@ class UserController extends Controller
         }
         $user = User::where('id', $user_id)->first();
         $user_address = Contact::where('user_id', $user_id)->first();
+        $list = BuyList::where('id', 20)->with('list_products.product.options')->first();
         //dd($user_address);
         $states = State::all();
         if ($request->ajax()) {
@@ -305,6 +307,7 @@ class UserController extends Controller
 
             return $user_orders;
         }
+
         return view('my-account', compact('user', 'user_address', 'states'));
     }
 

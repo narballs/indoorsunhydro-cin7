@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\BuyList;
 use App\Models\ProductBuyList;
 use Redirect;
+use Auth;
 
 
 
@@ -42,10 +43,13 @@ class AdminBuyListController extends Controller
     }
 
     public function store(BuyListRequest $request) {
+        $user_id = Auth::id();
         $list = BuyList::create([
             'title' => $request->title,
             'status' => $request->status, 
-            'description' => $request->description
+            'description' => $request->description, 
+            'type' => $request->type,
+            'user_id' =>  $user_id
         ]);
         return response()->json([
             'success' => 'List Created Successfully. Please add prodcuts to list.',
