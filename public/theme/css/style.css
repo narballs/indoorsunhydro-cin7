@@ -4476,6 +4476,9 @@ display: inline-block  !important;
     line-height: 19px;
     color: #000000;
 }
+.img-size-32 {
+    width: 32px !important;
+}
 
 /* updated thank you page end */
 
