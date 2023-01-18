@@ -535,7 +535,6 @@ class ProductController extends Controller
         $user_id = Auth::id();
         $contact = Contact::where('user_id', $user_id)->first();
         $pricing = $contact->priceColumn;
-
         foreach ($productOption->products->options as $option) {
             foreach ($option->price as $price) {
                 if ($pricing == 'Retail') {

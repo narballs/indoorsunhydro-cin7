@@ -86,7 +86,6 @@
 				</table>
 
 			</div>
-
 			<form class="card p-2">
 				<span class="fw-bold">Card Number</span>
 				<div class="input-group">

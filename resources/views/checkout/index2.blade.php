@@ -321,8 +321,8 @@
             <table class="table">
                 <tr>
                     <th class="thank-you-page-table-data-heading">Name</th>
-                    <th class="thank-you-page-table-data-heading">Quantity</th>
-                    <th class="thank-you-page-table-data-heading">Shipping</th>
+                    <th class="thank-you-page-table-data-heading" style="padding-left: 0px; !important">Quantity</th>
+                    {{-- <th class="thank-you-page-table-data-heading">Shipping</th> --}}
                     <th class="thank-you-page-table-data-heading">Price</th>
                 </tr>
                 <tbody class="border-0">
@@ -371,7 +371,6 @@
                                 </div>
                             </div>
                         </td>
-                        <td></td>
                         <td>
                             <p class="pt-4 thank-you-page-product-items-price ">${{number_format($cart['price'],2)}}</p>
                         </td>
@@ -381,7 +380,9 @@
                 </tbody>
             </table>
         </div>
-        <div class="col-md-3" style="background: #FAFAFA; border-radius: 5px;">
+        <div class="col-md-3" style="background: #FAFAFA;
+        border-radius: 5px;
+        height: 426px;">
             <p class="thank-you-page-product-items-delivery-options">Delivery Options</p>
             <div class="row">
                 <div class="col-md-12 mt-2">
@@ -408,14 +409,14 @@
                     <div class="row">
                         <div class="col-md-6">
                             <p class="thank-you-page-product-items-subtotal-cart">Subtotal:</p>
-                            <p class="thank-you-page-product-items-subtotal-cart">Shipping:</p>
+                            {{-- <p class="thank-you-page-product-items-subtotal-cart">Shipping:</p> --}}
                             <p class="thank-you-page-product-items-subtotal-cart">Discount:</p>
                             <p class="thank-you-page-product-items-subtotal-cart mt-4">Total:</p>
                         </div>
                         <div class="col-md-6 ">
-                            <p class=" thank-you-page-product-item-cart">ldskfldsk</p>
-                            <p class=" thank-you-page-product-item-cart">ldskfldsk</p>
-                            <p class=" thank-you-page-product-item-cart">ldskfldsk</p>
+                            <p class=" thank-you-page-product-item-cart">$</p>
+                            {{-- <p class=" thank-you-page-product-item-cart">shipping</p> --}}
+                            <p class=" thank-you-page-product-item-cart">$</p>
                             <p class=" thank-you-page-product-item-cart mt-4">${{number_format($cart_total,2)}}</p>
                         </div>
                     </div>
