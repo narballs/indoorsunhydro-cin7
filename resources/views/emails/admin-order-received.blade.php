@@ -258,12 +258,13 @@
                 background-size: 100% !important;
                 padding-bottom: 146px !important;
                 padding-top: 184px !important;">
-                    <div class="row">
+                    <div class="row" style="padding-bottom: 77px !important;">
                         <div class="col-md-12 thank-you-page-card-row">
-                            <div class="card m-auto border-0 thank-you-page-first-card" style="width: 85% !important;
+                            <div class="card m-auto border-0 thank-you-page-first-card" style="
+                            width: 85% !important;
                             padding-bottom: 194px !important;
-                            margin: auto; !important
-                            padding-bottom: 100px;">
+                            margin: auto; !important;
+">
                                 <div class="card-boday" style="background-color: #ffff;
                                 margin: auto;
                                 width: 85%;
@@ -300,23 +301,27 @@
                                                     line-height: 127px;
                                                     color: #000000;
                                                     margin: 0px;">Thanks</p>
-                                                    <p class="for-you-order" style="font-family: 'Montserrat';
+                                                    <p style="font-family: 'Montserrat';
                                                     font-style: normal;
                                                     font-weight: 500;
                                                     font-size: 25px;
                                                     line-height: 120%;
                                                     letter-spacing: 0.545em;
                                                     color: #575757;
-                                                    padding-left: 8px;
-                                                    margin-top: -15px !important;">for your order</p>
+                                                    padding-left: 24px;
+                                                    margin-top: -18px !important;
+                                                    ">for your order</p>
                                                 </div>
-                                                <div class="col-md-5" style="width: width: 36%">
-                                                    <div class="pt-5"
-                                                        style="padding-top: 35px !important;
-                                                    padding-left: 14px !important; background: #FBFBFB;border-radius: 6px;">
+                                                <div class="col-md-5" style="width: width: 36%;">
+                                                    <div class="pt-5" style="padding-top: 35px!important;
+                                                        padding-left: 14px!important;
+                                                        background: #fbfbfb;
+                                                        border-radius: 6px;
+                                                        display: flex;">
                                                         <img src="https://stage.indoorsunhydro.com/theme/img/thnak-page-user-icon.png"
                                                             class="img-fluid" alt="">
-                                                        <span class="thank-you-page-user-name pt-4 ps-2" style=" font-family: 'Montserrat' !important;
+                                                        &nbsp; &nbsp;
+                                                        <span class="thank-you-page-user-name pt-4 ps-2" style="font-family: 'Roboto' !important;
                                                         font-style: normal;
                                                         font-weight: 500;
                                                         font-size: 30px;
@@ -340,15 +345,26 @@
                                                     color: #000000;">Hey
                                                         {{$addresses['billing_address']['firstName']}},<br>
                                                         Thank you for your purchase! This email is to confirm your order
-                                                        with IndoorSunHydro, <br>
+                                                        with IndoorSunHydro,<br>
                                                         This order will be delivered to you within 2 to 3 working days
                                                         Registered Courier.
-                                                        We will send you another email with your shipment tracking
+                                                        We <br>will send you another email with your shipment tracking
                                                         details as soon as we ship your
                                                         order.</p>
                                                 </div>
                                                 <div class="mt-5" style="margin-top: 50px !important;">
+                                                    <?php
+                                                        $cart_total = 0;
+                                                        $cart_price = 0;
+                                                        // dd($order_items);
+                                                    ?>
                                                     @foreach ($order_items as $item )
+                                                    <?php 
+                                                        // dd($item);
+                                                        $total_quatity =  $item->quantity;
+                                                        $total_price = $item->price * $total_quatity;
+                                                        $cart_total  = $cart_total + $total_price ;
+                                                     ?>
                                                     <div
                                                         style="display: flex;  background: #FFFFFF !important; border: 1px solid #D3D3D3 !important;  border-radius: 5px !important; width: 682px !important;min-height: 114px !important; margin-top: 10px;">
                                                         @if (!empty($item->product->options[0]->image))
@@ -380,7 +396,7 @@
                                                             color: #000000;">Sku:
                                                                 {{$item->product->code}}
                                                             </p>
-                                                            <p class="thank-page-title" style=" font-family: 'Roboto';
+                                                            <p class="thank-page-title" style="font-family: 'Roboto';
                                                             font-style: normal;
                                                             font-weight: 400;
                                                             font-size: 16px;
@@ -409,8 +425,10 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-5 thnak-you-page-box-billing-address mt-5"
-                                            style="width: 31%; background: #FBFBFB; border-radius: 10px;">
+                                        <div class="col-md-5 thnak-you-page-box-billing-address mt-5" style="    width: 31%;
+                                            background: #fbfbfb;
+                                            border-radius: 10px;
+                                            padding-left: 23px;">
                                             <p class="thank-you-page-billing-address " style=" font-family: 'Roboto';
                                             font-style: normal;
                                             font-weight: 600;
@@ -579,9 +597,7 @@
                                                             font-size: 16px;
                                                             line-height: 19px;
                                                             color: #5C5C5C;">
-                                                            ${{number_format($item->product->retail_price *
-                                                            $item->quantity, 2)}}
-
+                                                            ${{number_format($cart_total,2)}}
                                                         </span>
                                                     </div>
                                                 </div>
@@ -591,7 +607,8 @@
                                     <div class="row mt-5 ms-5">
                                         <div class="col-md-12" style="
                                         width: 96%;
-                                        margin-top: 119px;">
+                                        margin-top: 119px;
+                                       padding-bottom: 109px!important;">
                                             <hr class=" second-border">
                                             <p class="best-product mt-5" style="font-family: 'Poppins';
                                             font-style: normal;
@@ -600,7 +617,8 @@
                                             line-height: 36px;
                                             padding-left: 47px;
                                             margin-top: 68px;"> Best Product
-                                                <span> <img src="/theme/img/thnak-you-best-pruduct-img.png"
+                                                <span> <img
+                                                        src="https://stage.indoorsunhydro.com/theme/img/thnak-you-best-pruduct-img.png"
                                                         class="img-fluid ps-3" alt=""></span>
                                             </p>
                                             <div class="row ps-4" style="display: flex;">
@@ -659,11 +677,14 @@
                                 </div>
                             </div>
                         </div>
-                        <div style="margin-top: -97px !important;  background-color: #2653A0 !important;
-                            box-shadow: 0px 0px 10px rgb(0 0 0 / 5%) !important;
-                            border-radius: 10px !important;
-                            margin-top: 72px !important;
-                            padding-bottom: 1px !important;" width="40%;" margin="auto;">
+                        <div style="background-color: #2653a0!important;
+                        margin-top: -101px !important;
+                        padding-bottom: 1px!important;
+                        margin: auto !important;
+                        width: 47%!important;
+                        border-radius: 10px !important;
+                        padding: 30px !important;
+                        ">
                             <p class="thank-you-page-card-footer" style=" font-family: 'Roboto';
                         font-style: normal;
                         font-weight: 400;
@@ -671,25 +692,27 @@
                         line-height: 22px;
                         text-align: center;
                         color: #FFFFFF !important;
-                        background-color: #2653A0 !important;
-                        margin-top: -74px;">
+                        ">
                                 Indoorsunhydro isn’t your grandma’s gardening
                                 store.<br> But you can bring her along
                                 if you want. <br> Walk-ins welcome anytime — except Sunday. Even gardeners need
                                 a day
                                 of rest.</p>
-                            <p class="thank-you-page-footer-icons mt-5" style="border: 1px solid #CECECE !important;
-                        width: 1161px;
-                        margin-left: 22px !important;
-                        margin-top: 44px !important;
-                        \ padding-left: 367px;">
-                                <img src="https://stage.indoorsunhydro.com/theme/img/thank-you-page-icon-3.png" alt="">
-                                <span><img src="https://stage.indoorsunhydro.com/theme/img/thank-you-page-icon-2.png"
-                                        alt=""></span>
-                                <span><img
-                                        src="https://stage.indoorsunhydro.com/theme/img/thank-you-page-icon-1 (1).png"
-                                        alt=""></span>
-                            </p>
+                            <center>
+                                <p style="display: flex !important;
+                                justify-content: center !important;
+                            padding: 3px; !important">
+                                    <img src="https://stage.indoorsunhydro.com/theme/img/thank-you-page-icon-3.png"
+                                        alt="">
+                                    <span>
+                                        <img src="https://stage.indoorsunhydro.com/theme/img/thank-you-page-icon-2.png"
+                                            alt=""></span>
+                                    <span>
+                                        <img src="https://stage.indoorsunhydro.com/theme/img/thank-you-page-icon-1.png"
+                                            alt=""></span>
+                                </p>
+                            </center>
+
                         </div>
                     </div>
                 </div>

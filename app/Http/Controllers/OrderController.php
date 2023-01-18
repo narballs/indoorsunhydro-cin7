@@ -186,6 +186,7 @@ class OrderController extends Controller
             }
             //exit;
             $order_items = ApiOrderItem::with('order', 'product.options')->where('order_id', $order_id)->get();
+            // dd($order_items);
             $contact = Contact::where('user_id', auth()->id())->first();
             $user_email = Auth::user();
             $count = $order_items->count();
@@ -223,7 +224,6 @@ class OrderController extends Controller
             $admin_users = DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
             $admin_users = $admin_users->toArray();
 
-
             $users_with_role_admin = User::select("email")
                 ->whereIn('id', $admin_users)
                 ->get();
@@ -243,6 +243,8 @@ class OrderController extends Controller
                 'count' => $count,
                 'from' => 'stageindoorsun@stage.indoorsunhydro.com'
             ];
+
+
 
             if (!empty($users_with_role_admin)) {
                 foreach ($users_with_role_admin as $role_admin) {

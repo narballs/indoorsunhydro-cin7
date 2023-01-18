@@ -219,7 +219,6 @@
 								<tr class="table-items">
 									<td class="table-items-sub-item">$</td>
 									<td class="table-items-sub-item">$</td>
-									<?php //dd($order);?>
 									<td class="table-items-sub-item">${{number_format($order->total, 2)}}</td>
 									<td class="table-items-sub-item">{{$order->paymentTerms}}</td>
 
