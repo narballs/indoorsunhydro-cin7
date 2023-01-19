@@ -318,12 +318,12 @@ opacity: 20;
 							</table>
 						</div>
 						<div class="d-none row mt-3 mb-3 pr-0 pl-0" id="whishlist">
-							<div class="col-md-6 border-bottom border-4 d-flex pb-4 p-0 bg-white">
+							<div class="col-md-8 border-bottom border-4 d-flex pb-4 p-0 bg-white">
 								<img src="/theme/img/heartfilled.png" style="margin: 5px 3px 0px 9px;" width="28px"
 									height="28px">
 								<span class="pt-1 my-account-content-heading">Whishlists</span>
 							</div>
-							<div class="col-md-6 border-bottom">
+							<div class="col-md-4 border-bottom">
 								<button class="btn btn-outline-success" data-bs-toggle="modal"
 									data-bs-target="#exampleModal">Create List</button>
 							</div>
@@ -333,12 +333,12 @@ opacity: 20;
 							</div>
 						</div>
 						<div class="d-none row mt-3 mb-3 pr-0 pl-0" id="all_qoutes">
-							<div class="col-md-8 border-bottom border-4 d-flex pb-4 p-0 bg-white">
+							<div class="col-md-6 border-bottom border-4 d-flex pb-4 p-0 bg-white">
 								<img src="/theme/img/heartfilled.png" style="margin: 5px 3px 0px 9px;" width="28px"
 										height="28px">
 								<span class="pt-1 my-account-content-heading">Qoutes</span>
 							</div>
-							<div class="col-md-4 border-bottom">
+							<div class="col-md-6 border-bottom">
 								<button class="btn btn-outline-success" data-bs-toggle="modal"data-bs-target="#exampleModal2">Create a Quotes</button>
 								<button class="btn btn-outline-success" onclick="myQoutes()">My Quotes</button>
 							</div>
