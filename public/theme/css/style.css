@@ -4402,14 +4402,12 @@ select.list-dt:focus {
     line-height: 16px;
     color: #000000;
 }
-.pagination-container > div > span {
-width: 200px !important;
-display: inline-block  !important;
+
+.pagination-container>div>span {
+    width: 200px !important;
+    display: inline-block !important;
 }
 
-.product-delete-icon-thank-you-page-icon {
-    /* margin-left: -46px; */
-}
 
 .thank-you-page-product-items-cart {
     font-family: 'Roboto';
@@ -4476,11 +4474,395 @@ display: inline-block  !important;
     line-height: 19px;
     color: #000000;
 }
+
 .img-size-32 {
     width: 32px !important;
 }
 
 /* updated thank you page end */
 
-
 /* thank you page end */
+
+/* order confirmation page start */
+.order-confirmation-page-top-heading {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 40px;
+    line-height: 47px;
+    color: #000000;
+
+}
+
+.order-confirmation-page-title {
+    font-family: 'Ubuntu';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 25px;
+    line-height: 29px;
+    color: #000000;
+    padding-bottom: 14px;
+}
+
+.order-confirmation-page-user-name {
+    font-family: 'Ubuntu';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 25px;
+    line-height: 29px;
+    color: #000000;
+}
+
+.order-confirmation-page-invoice-row {
+    background: #F5F5F5;
+    border: 1px dashed #000000;
+    border-radius: 6px;
+}
+
+.order-confirmation-page-order-number-title {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 10px;
+    line-height: 12px;
+    color: #000000;
+    margin: 0px;
+}
+
+.order-confirmation-page-order-number-item {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 30px;
+    line-height: 35px;
+    color: #000000;
+}
+
+.order-confirmation-page-date-title {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+    color: #000000;
+    margin: 0px;
+}
+
+.order-confirmation-page-date-item {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 19px;
+    color: #000000;
+}
+
+.order-confirmation-page-mobile {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 19px;
+    color: #000000;
+    margin: 0px;
+}
+
+.order-confirmation-page-email {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 19px;
+    color: #000000;
+    margin: 0px;
+}
+
+.order-confirmation-page-payment-method-title {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+    color: #000000;
+    margin: 0px;
+}
+
+.order-confirmation-page-payment-method-item {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 19px;
+    color: #000000;
+}
+
+.order-confirmation-page-shipping-title {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+    color: #000000;
+    margin: 0px;
+}
+
+.order-confirmation-page-shipping-item {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 19px;
+    color: #000000;
+}
+
+.order-confirmation-page-tax-title {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+    color: #000000;
+    margin: 0px;
+}
+
+.order-confirmation-page-tax-item {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 19px;
+    color: #000000;
+}
+
+.order-confirmation-page-total-title {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 10px;
+    line-height: 12px;
+    color: #000000;
+    margin: 0px;
+}
+
+.order-confirmation-page-total-item {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 30px;
+    line-height: 35px;
+    color: #000000;
+}
+
+.order-confirmation-page-second-row {
+    background: #FAFAFA;
+    border-radius: 6px;
+}
+
+.order-confirmation-page-billing-address {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 25px;
+    line-height: 29px;
+    color: #000000;
+    border-bottom: 2px dashed #CDCDCD;
+    padding-bottom: 58px;
+
+}
+
+.order-confirmation-page-shipping-address {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 25px;
+    line-height: 29px;
+    color: #000000;
+    border-bottom: 2px dashed #CDCDCD;
+    padding-bottom: 58px;
+}
+
+.order-confirmation-page-first-name-last-name-user-name {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 19px;
+    color: #000000;
+}
+
+.order-confirmation-page-address-line-one-title {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+    color: #303030;
+    margin: 0px;
+}
+
+.order-confirmation-page-address-line-tow-title {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+    color: #303030;
+    margin: 0px;
+}
+
+.order-confirmation-page-address-line-one-item {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 19px;
+    color: #000000;
+}
+
+.order-confirmation-page-address-line-tow-item {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 19px;
+    color: #000000;
+}
+
+.order-confirmation-page-city-name-title {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+    color: #303030;
+    margin: 0px;
+}
+
+.order-confirmation-page-city-name-item {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 19px;
+    color: #000000;
+}
+
+.order-confirmation-page-state-name-title {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+    color: #303030;
+    margin: 0px;
+}
+
+.order-confirmation-page-state-name-item {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 19px;
+    color: #000000;
+}
+
+.order-confirmation-page-zip-name-title {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+    color: #303030;
+    margin: 0px;
+}
+
+.order-confirmation-page-zip-name-item {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 19px;
+    color: #000000;
+}
+
+.order-confirmation-page-item-purchased-title {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 35px;
+    color: #000000;
+}
+
+.order-confirmation-page-table-data-heading {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+    color: #303030;
+    border-top: none !important;
+    padding-bottom: 32px !important;
+}
+
+.order-confirmation-page-product-category-name {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 16px;
+    color: #0096DE;
+}
+
+.order-confirmation-page-product-title {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 16px;
+    color: #000000;
+    padding-top: 8px;
+    margin-bottom: 10px;
+}
+
+.order-confirmation-page-product-item {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 16px;
+    color: #000000;
+}
+
+.order-confirmation-page-product-quantity {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+    color: #303030;
+}
+
+.order-confirmation-page-product-price {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 23px;
+    color: #000000;
+}
+
+.order-confirmation-page-view-invoice-button {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 19px;
+    line-height: 22px;
+    letter-spacing: 0.01em;
+    color: #FFFFFF;
+    background: #008BD3;
+    border-radius: 5px;
+    margin-top: 98px;
+}
+
+/* order confirmation page end */
