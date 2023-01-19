@@ -689,6 +689,7 @@ opacity: 20;
 
 			<script>
 			function qoute() {
+				$('#my_quotes').addClass('d-none');
 				$('#filter').removeClass('d-none');
 				$('#all_qoutes').removeClass('d-none');
 				$('#intro,#edit_address,#address_row').addClass('d-none');
