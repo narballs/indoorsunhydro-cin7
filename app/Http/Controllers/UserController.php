@@ -311,6 +311,17 @@ class UserController extends Controller
         return view('my-account', compact('user', 'user_address', 'states'));
     }
 
+    public function my_qoutes() {
+        $user_id = auth()->id();
+        $qoutes = BuyList::where('user_id', $user_id)->where('type', 'qoute')->get();
+        return response()->json([
+            'data' => $qoutes,
+            'msg' => 'success'
+
+        ]);
+
+    }
+
     public function user_order_detail($id)
     {
         $user_id = auth()->id();
