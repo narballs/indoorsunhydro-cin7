@@ -1,8 +1,333 @@
 @include('partials.header')
 @include('partials.top-bar')
 @include('partials.search-bar')
+<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Ubuntu:regular,bold&subset=Latin">
+<style>
+	.order-confirmation-page-table-data-heading,
+	thead,
+	tbody,
+	tfoot,
+	tr,
+	td,
+	th {
+		border-color: inherit;
+		border-style: solid;
+		border-width: 0;
+		border-color: #8C8C8C;
+	}
+</style>
 {{session()->forget('cart');}}
-<div class="container mt-5 ">
+
+<div class="container-fluid" style="width:89%;">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="card mt-5 border-0">
+				<div class="card-body ps-5 mt-5 ">
+					<div class="row ps-5">
+						<div class="col-md-12">
+							<p class="order-confirmation-page-top-heading">Order Confirmation</p>
+						</div>
+						<div class="col-md-12 mt-4">
+							<p class="order-confirmation-page-title">
+								{{$order->user->contact->firstName}}
+								{{$order->user->contact->lastName}}.
+								<span class="order-confirmation-page-user-name">Your order has been received.</span>
+							</p>
+						</div>
+					</div>
+					<div class="row ms-5 p-4 me-5 order-confirmation-page-invoice-row"
+						style=" padding-top: 50px !important;">
+						<div class="col-md-1 ms-4">
+							<p class="order-confirmation-page-order-number-title">Order Number</p>
+							<p class="order-confirmation-page-order-number-item">
+								{{$order->apiOrderItem[0]['order_id']}}
+							</p>
+						</div>
+						<div class="col-md-2 ps-4 ms-3">
+							<p class="order-confirmation-page-date-title">Date</p>
+							<p class="order-confirmation-page-date-item">
+								{{$order->apiOrderItem[0]['created_at']->format('F '.'d, Y, '.'g:i A')}}
+							</p>
+						</div>
+						<div class="col-md-2 ps-5 ms-3" style="
+						background: #FAFAFA;
+						border-radius: 6px;">
+							<p class="order-confirmation-page-mobile">
+								{{$order->user->contact->phone}}
+							</p>
+							<p class="order-confirmation-page-email">
+								{{$order->user->email}}
+							</p>
+						</div>
+						<div class="col-md-2 ps-5 ms-3">
+							<p class="order-confirmation-page-payment-method-title">Payment Method</p>
+							<p class="order-confirmation-page-payment-method-item">{{$order->paymentTerms}}</p>
+						</div>
+						<div class="col-md-1 ps-4">
+							<p class="order-confirmation-page-shipping-title">Shipping</p>
+							<p class="order-confirmation-page-shippping-item">$</p>
+						</div>
+						<div class="col-md-1 ps-5 ms-4">
+							<p class="order-confirmation-page-tax-title">Tax</p>
+							<p class="order-confirmation-page-tax-item">
+								$
+							</p>
+						</div>
+						<div class="col-md-2 ps-5">
+							<p class="order-confirmation-page-total-title">Total</p>
+							<p class="order-confirmation-page-total-item">
+								${{number_format($order->total, 2)}}
+							</p>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<div class="row  ms-5 p-4 me-5 order-confirmation-page-second-row"
+								style="padding-top: 5rem!important;">
+								<div class="col-md-6">
+									<p class="order-confirmation-page-billing-address">
+										Billing Address
+									</p>
+									<div class="row">
+										<div class="col-md-12">
+											<p class="order-confirmation-page-first-name-last-name-user-name pt-3">
+												{{$order->user->contact->firstName}}
+												{{$order->user->contact->lastName}}
+											</p>
+											<div class="row">
+												<div class="col-md-6">
+													<p class="order-confirmation-page-address-line-one-title">
+														Address line 1
+													</p>
+													@if (!$order->user->contact->address1)
+													<p class="order-confirmation-page-address-line-one-item">
+														Addressline1 empty
+													</p>
+													@else
+													<p class="order-confirmation-page-address-line-one-item">
+														{{$order->user->contact->address1}}
+													</p>
+													@endif
+													<div class="row mt-4">
+														<div class="col-md-4">
+															<p class="order-confirmation-page-city-name-title">City</p>
+															@if (!$order->user->contact->city)
+															<p class="order-confirmation-page-city-name-item">
+																City empty
+															</p>
+															@else
+															<p class="order-confirmation-page-city-name-item">
+																{{$order->user->contact->city}}
+															</p>
+															@endif
+														</div>
+														<div class="col-md-4">
+															<p class="order-confirmation-page-state-name-title">State
+															</p>
+															@if (!$order->user->contact->state)
+															<p class="order-confirmation-page-state-name-item">
+																State empty
+															</p>
+															@else
+															<p class="order-confirmation-page-state-name-item">
+																{{$order->user->contact->state}}
+															</p>
+															@endif
+														</div>
+														<div class="col-md-4">
+															<p class="order-confirmation-page-zip-name-title">Zip</p>
+
+															@if (!$order->user->contact->postCode)
+															<p class="order-confirmation-page-zip-name-item">
+																zip empty
+															</p>
+															@else
+															<p class="order-confirmation-page-zip-name-item">
+
+																{{$order->user->contact->postCode}}
+															</p>
+															@endif
+														</div>
+													</div>
+												</div>
+												<div class="col-md-6">
+													<p class="order-confirmation-page-address-line-tow-title">
+														Address line 1
+													</p>
+													@if ($order->user->contact->address2)
+													<p class="order-confirmation-page-address-line-tow-item">
+														{{$order->user->contact->address2}}
+													</p>
+													@endif
+													<p class="order-confirmation-page-address-line-tow-item">
+														Addressline empty
+													</p>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<p class="order-confirmation-page-shipping-address">
+										Shipping Address
+									</p>
+									<div class="row">
+										<div class="col-md-12">
+											<p class="order-confirmation-page-first-name-last-name-user-name pt-3">
+												{{$order->user->contact->firstName}}
+												{{$order->user->contact->lastName}}
+											</p>
+											<div class="row">
+												<div class="col-md-6">
+													<p class="order-confirmation-page-address-line-one-title">
+														Address line 1
+													</p>
+													@if (!$order->user->contact->postalAddress1)
+													<p class="order-confirmation-page-address-line-one-item">
+														Address Line 1 Empty
+													</p>
+													@else
+													<p class="order-confirmation-page-address-line-one-item">
+														{{$order->user->contact->postalAddress1}}
+													</p>
+													@endif
+
+													<div class="row mt-4">
+														<div class="col-md-4">
+															<p class="order-confirmation-page-city-name-title">City</p>
+															@if (!$order->user->contact->postalCity)
+															<p class="order-confirmation-page-city-name-item">
+																City empty
+															</p>
+															@else
+															<p class="order-confirmation-page-city-name-item">
+																{{$order->user->contact->postalCity}}
+															</p>
+															@endif
+														</div>
+														<div class="col-md-4">
+															<p class="order-confirmation-page-state-name-title">State
+															</p>
+															@if (!$order->user->contact->postalState)
+															<p class="order-confirmation-page-state-name-item">
+																State empty
+															</p>
+															@else
+															<p class="order-confirmation-page-state-name-item">
+																{{$order->user->contact->postalState}}
+															</p>
+															@endif
+														</div>
+														<div class="col-md-4">
+															<p class="order-confirmation-page-zip-name-title">Zip</p>
+															@if (!$order->user->contact->postalPostCode)
+															<p class="order-confirmation-page-zip-name-item">
+																zip empty
+															</p>
+															@else
+															<p class="order-confirmation-page-zip-name-item">
+																{{$order->user->contact->postalPostCode}}
+															</p>
+															@endif
+														</div>
+													</div>
+												</div>
+												<div class="col-md-6">
+													<p class="order-confirmation-page-address-line-tow-title">
+														Address line 2
+													</p>
+													@if (!$order->user->contact->postalAddress2)
+													<p class="order-confirmation-page-address-line-tow-item">
+														Address Line 2 Empty
+													</p>
+													@else
+													<p class="order-confirmation-page-address-line-tow-item">
+														{{$order->user->contact->postalAddress2}}
+													</p>
+													@endif
+
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row ps-5 mt-5 pe-5">
+						<div class="col-md-12 mt-5">
+							<p class="order-confirmation-page-item-purchased-title">Item Purchased </p>
+						</div>
+						<div class="col-md-12 mt-5">
+							<table class="table">
+								<tr>
+									<th class="order-confirmation-page-table-data-heading">Name</th>
+									<th class="order-confirmation-page-table-data-heading"
+										style="padding-left: 0px; !important">
+										Quantity</th>
+									{{-- <th class="order-confirmation-page-table-data-heading">Shipping</th> --}}
+									<th class="order-confirmation-page-table-data-heading">Price</th>
+								</tr>
+								<tbody class="border-0">
+									@foreach($order->apiOrderItem as $item)
+									@foreach($item->product->options as $option)
+									<tr>
+										<td>
+											<div class="row">
+												<div class="col-md-2 py-2">
+													@if ($option->image)
+													<img class="img-fluid img-thumbnail" src="{{$option->image}}" alt=""
+														width="90px" style="max-height: 90px">
+													@else
+													<img src="/theme/img/image_not_available.png" alt="" width="80px">
+													@endif
+												</div>
+												<div class="col-md-5 py-2 ps-0"
+													style="    margin-left: -62px !important;">
+													<a class="order-confirmation-page-product-category-name pb-3"
+														href=" {{ url('product-detail/'. $item->product->id.'/'.$option->option_id.'/'.$item->product->slug) }}">
+														{{$item->product->name}}
+													</a>
+													<br>
+													<p class="order-confirmation-page-product-title">Title:<span
+															class="order-confirmation-page-product-item">
+															{{$item->product->name}}</span>
+													</p>
+												</div>
+											</div>
+										</td>
+										{{-- <td>Shipping</td> --}}
+										<td>
+											<div class="row">
+												<div class="col-md-12">
+													<p class="pt-4 order-confirmation-page-product-quantity">
+														{{$item->quantity}}</p>
+												</div>
+											</div>
+										</td>
+										<td>
+											<p class="pt-4 order-confirmation-page-product-price">
+												${{number_format($item->price,2)}}</p>
+										</td>
+									</tr>
+									@endforeach
+									@endforeach
+								</tbody>
+							</table>
+							<div class="row">
+								<div class="col-md-2 m-auto">
+									<a href="#" class="order-confirmation-page-view-invoice-button btn w-100">VIEW
+										INVOICE</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{{-- <div class="container mt-5 ">
 	<div class="row">
 		<div class="col-md-12">
 			<div class="card  border-0">
@@ -20,9 +345,9 @@
 								Your Order has been received!
 							</p>
 						</div>
-						{{-- <div class="col-md-1 pb-2">
+						<div class="col-md-1 pb-2">
 							<img src="/theme/img/crose.png" alt="">
-						</div> --}}
+						</div>
 					</div>
 				</div>
 				<div class="card-body">
@@ -152,15 +477,15 @@
 						</div>
 						@foreach($order->apiOrderItem as $item)
 						@foreach($item->product->options as $option)
-						<?php 
-			                if($pricing == 'WholesaleUSD') {
-			                    $retail_prices = $option->wholesalePrice;
-			                }
-			                else {
-			                    $retail_prices = $option->retailPrice;
-			                }
-	                	?>
-						<?php //dd($option);?>
+						{{
+						if($pricing == 'WholesaleUSD') {
+						$retail_prices = $option->wholesalePrice;
+						}
+						else {
+						$retail_prices = $option->retailPrice;
+						}
+						}}
+
 						<div class="row ps-5 mt-3">
 							<div class="col-md-2">
 								@if($option->image)
@@ -233,194 +558,7 @@
 			</div>
 		</div>
 	</div>
-</div>
-{{-- <div class="container-fluid" style="width: 1551px !important;">
-	<div class="row">
-		<div class="col-md-12">
-			<div class="card border-0 thank-you-page-background-img">
-				<div class="row">
-					<div class="col-md-12 thank-you-page-card-row">
-						<div class="card m-auto border-0 thank-you-page-first-card">
-							<div class="card-boday">
-								<div class="col-md-12 card-body-content">
-									<p class="thank-page-date">{{$order->user->contact->created_at
-										->format('F '.'d, Y, '.'g:i A')}}
-									</p>
-									<hr class="border">
-								</div>
-								<div class="row ps-5">
-									<div class="col-md-7 mt-4">
-										<div class="row">
-											<div class="col-md-7">
-												<p class="ps-5 thanks-heading">Thanks</p>
-												<p class="for-you-order">for your order</p>
-											</div>
-											<div class="col-md-5">
-												<div class="pt-5">
-													<img src="/theme/img/thnak-page-user-icon.png" class="img-fluid"
-														alt="">
-													<span
-														class="thank-you-page-user-name pt-4 ps-2">{{$order->user->contact->firstName}}
-														{{$order->user->contact->lastName}}</span>
-												</div>
-											</div>
-										</div>
-										<div class="row">
-											<div class="col-md-12 mt-5">
-												<p class="description-thank-you-page ps-5">Lorem ipsum dolor sit amet,
-													consectetur adipiscing elit. Praesent
-													blandit suscipit felis,<br> at fermentum arcu. Vestibulum molestie
-													laoreet eros, id semper magna luctus at.<br> Maecenas at mi sed ex
-													ullamcorper viverra vel aliquam ante. Duis ut pulvinar ipsum.<br>
-													Morbi
-													lectus magna, dictum ut</p>
-											</div>
-											<div class="mt-5">
-												@foreach($order->apiOrderItem as $item)
-												@foreach($item->product->options as $option)
-												<div class="row ms-5 mt-2 thank-you-page-all-prudct-section">
-													@if($option->image)
-													<div class="col-md-2 pe-2 ps-0">
-														<img class="img-fluid my-2 thank-you-page-product-options-image"
-															src="{{ $option->image}}" alt="">
-													</div>
-													@else
-													<div class="col-md-2 p-0">
-														<img class="img-fluid my-2 thank-you-page-product-options-image"
-															src="/theme/img/image_not_available.png" alt="">
-													</div>
-													@endif
-													<div class=" col-md-7 my-3 ps-1 pe-1">
-														<p class="thank-you-sku ps-0">Sku:{{$item->product->code}}</p>
-														<p class="thank-page-title">{{$item->product->name}}</p>
-													</div>
-													<div class="col-md-3">
-														<p class="thnak-you-page-price">
-															${{number_format($item->product->retail_price,2)}}
-														</p>
-													</div>
-												</div>
-												@endforeach
-												@endforeach
-											</div>
-										</div>
-									</div>
-									<div class="col-md-5 thnak-you-page-box-billing-address mt-5">
-										<p class="thank-you-page-billing-address">Billing Address</p>
-										<p class="thank-you-page-delivery-address">Delivery Address</p>
-										<span class="thank-you-page-user-detais">
-											{{$order->user->contact->firstName}}
-											{{$order->user->contact->lastName}}
-										</span><br>
-										<span class="thank-you-page-user-detaiss">{{$order->user->contact->email}}
-										</span><br>
-										<span class="thank-you-page-user-detaiss">
-											{{$order->user->contact->postalAddress1}}
-										</span><br>
-										<span class="thank-you-page-user-detaiss">
-											{{$order->user->contact->postalAddress2}}
-										</span><br>
-										<span class="thank-you-page-user-detaiss">
-											{{$order->user->contact->postalPostCode}}
-										</span>
-										<p class="thank-you-page-delivery-address mt-4">Billing Address</p>
-										<span class="thank-you-page-user-detais">
-											{{$order->user->contact->firstName}}
-											{{$order->user->contact->lastName}}
-										</span><br>
-										<span class="thank-you-page-user-detaiss">{{$order->user->contact->email}}
-										</span><br>
-										<span class="thank-you-page-user-detaiss">
-											{{$order->user->contact->postalAddress1}}
-										</span><br>
-										<span class="thank-you-page-user-detaiss">
-											{{$order->user->contact->postalAddress2}}
-										</span><br>
-										<span class="thank-you-page-user-detaiss">
-											{{$order->user->contact->postalPostCode}}
-										</span>
-										<div class="row mt-5 ms-0 py-3 thank-you-page-second-row">
-											<div class="col-md-12">
-												<p class="thank-you-page-order-summary">Order Summary</p>
-												<div class="row">
-													<div class="col-md-6">
-														<p class="thank-you-page-item-count">Item count</p>
-														<span class="thank-you-page-item-counter">{{$count}}</span>
-													</div>
-													<div class="col-md-6 ps-5">
-														<p class="thank-you-page-item-count">Delivery Method</p>
-														<span
-															class="thank-you-page-item-counter">{{$order->paymentTerms}}</span>
-													</div>
-													<div class="col-md-6 mt-5">
-														<p class="thank-you-page-item-count">Total</p>
-														<span class="thank-you-page-item-counter">
-															${{number_format($item->product->retail_price *
-															$item->quantity, 2)}}
-														</span>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="row mt-5 ms-5">
-									<div class="col-md-12">
-										<hr class="second-border">
-										<p class="best-product mt-5"> Best Product
-											<span> <img src="/theme/img/thnak-you-best-pruduct-img.png"
-													class="img-fluid ps-3" alt=""></span>
-										</p>
-										<div class="row ps-4">
-											@foreach ($best_products as $product)
-											<div
-												class="col-md-3 d-flex justify-content-between aling-imtes-center ps-0 pe-3">
-												<div>
-													<div style="background: #FFFFFF;
-													border: 1px solid #D3D3D3;
-													border-radius: 5px;
-													height: 177px;
-													">
-														@if ($product->images)
-														<img src="{{$product->images}}" alt="" class="img-fluid" style="max-width: 62%;
-															margin-left: 41px;
-															padding-top: 28px;
-															max-height: 167px;
-															">
-														@else
-														<img src="/theme/img/image_not_available.png" class="img-fluid"
-															alt="">
-														@endif
-													</div>
-													<p class="thank-you-page-product-sku pt-1">Sku:{{$product->code}}
-													</p>
-													<p class="thank-you-page-product-name">{{$product->name}}</p>
-												</div>
-											</div>
-											@endforeach
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-7 m-auto py-4 thank-you-page-card-footer-best-product-section mt-5"
-						style="margin-top: -97px !important">
-						<p class="thank-you-page-card-footer">Indoorsunhydro isn’t your grandma’s gardening
-							store.<br> But you can bring her along
-							if you want. <br> Walk-ins welcome anytime — except Sunday. Even gardeners need
-							a day
-							of rest.</p>
-						<p class="thank-you-page-footer-icons mt-5">
-							<img src="/theme/img/thank-you-page-icon-3.png" alt="">
-							<span><img src="/theme/img/thank-you-page-icon-2.png" alt=""></span>
-							<span><img src="/theme/img/thank-you-page-icon-1 (1).png" alt=""></span>
-						</p>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
 </div> --}}
+
 @include('partials.product-footer')
 @include('partials.footer')
