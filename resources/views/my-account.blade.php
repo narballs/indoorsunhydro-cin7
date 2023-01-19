@@ -148,7 +148,7 @@ opacity: 20;
 												<span
 													class="ms-1 d-none d-sm-inline  fs-5 ms-3 mt-1 ml-0 pl-0 nav-items-link"
 													onclick="qoute()">
-													Qoutes
+													Quotes
 												</span>
 											</div>
 										</div>
@@ -297,6 +297,26 @@ opacity: 20;
 								</tbody>
 							</table>
 						</div>
+						<div class="d-none mt-3 mb-3 pr-4 pl-4" id="my_quotes">
+							<div class="col-md-12 border-bottom border-4 pb-4 p-0">
+								<img src="theme/img/orders_main.png" style="margin: -6px 1px 1px 1px;">
+								<span class="pt-1 my-account-content-heading ">My Quotes</span>
+							</div>
+
+
+							<table cellpadding="10" cellspacing="10" class="w-100" class="mt-3">
+								<tr class="order-table-heading border-bottom">
+									<td class="pl-0">Title</td>
+									<td>Status</td>
+									<td class="text-center pr-0">Action</td>
+								</tr>
+								<!-- <tr class="border-bottom ms-3 mr-3"></tr> -->
+								<tbody id="my_quotes_table" class="">
+
+
+								</tbody>
+							</table>
+						</div>
 						<div class="d-none row mt-3 mb-3 pr-0 pl-0" id="whishlist">
 							<div class="col-md-8 border-bottom border-4 d-flex pb-4 p-0 bg-white">
 								<img src="/theme/img/heartfilled.png" style="margin: 5px 3px 0px 9px;" width="28px"
@@ -319,10 +339,8 @@ opacity: 20;
 								<span class="pt-1 my-account-content-heading">Qoutes</span>
 							</div>
 							<div class="col-md-4 border-bottom">
-								<button class="btn btn-outline-success" data-bs-toggle="modal"
-										data-bs-target="#exampleModal2">Create a Qoute</button>
-										<button class="btn btn-outline-success" data-bs-toggle="modal"
-										data-bs-target="#exampleModal2">My Qoutes</button>
+								<button class="btn btn-outline-success" data-bs-toggle="modal"data-bs-target="#exampleModal2">Create a Quotes</button>
+								<button class="btn btn-outline-success" onclick="myQoutes()">My Quotes</button>
 							</div>
 						
 							<div class="d-none" id="filter">
@@ -670,7 +688,6 @@ opacity: 20;
 
 
 			<script>
-
 			function qoute() {
 				$('#filter').removeClass('d-none');
 				$('#all_qoutes').removeClass('d-none');
@@ -748,6 +765,7 @@ opacity: 20;
 
 			}
 			function wishLists() {
+
 				$('#whishlist').removeClass('d-none');
 				$('#intro,#edit_address,#address_row').addClass('d-none');
 				$('#all_qoutes').addClass('d-none');
@@ -755,6 +773,7 @@ opacity: 20;
 				$('.nav-pills #wish_lists').addClass('active');
 				$('#edit_address').addClass('d-none');
 				$('#address_row').addClass('d-none');
+				$('#my_quotes').addClass('d-none');
 				
 				$('.order-detail-container').addClass('d-none');
 				$('#customer-address').addClass('d-none')
@@ -888,7 +907,7 @@ opacity: 20;
 		
 			}
 			function dashboard() {
-
+				$('#my_quotes').addClass('d-none');
 				$('#intro').removeClass('d-none');
 				$('#edit_address').addClass('d-none');
 				$('#address_row').addClass('d-none');
@@ -904,6 +923,7 @@ opacity: 20;
 			}
 
 			function userOrderDetail(id) {
+				$('#my_quotes').addClass('d-none');
 				$('#address_row').removeClass('d-none');
 				$('#order_details').removeClass('d-none');
 				$('#lineitems').removeClass('d-none');
@@ -969,6 +989,7 @@ opacity: 20;
 
 			}
 			function showOrders() {
+				$('#my_quotes').addClass('d-none');
 				$('#filter').addClass('d-none');
 				$('#address_row').addClass('d-none');
 
@@ -987,7 +1008,7 @@ opacity: 20;
 					 jQuery.ajax({
 						url: "{{ url('/my-account/') }}",
 						method: 'GET',	
-						success: function(data){
+						success: function(data) {
 							console.log(data);
 							var res='';
 							var total_items = 0;
@@ -1019,6 +1040,7 @@ opacity: 20;
 			} 
 
 			function accountDetails() {
+				$('#my_quotes').addClass('d-none');
 				$('#filter').addClass('d-none');
 				$('#orders').addClass('d-none');
 				$('#whishlist').addClass('d-none');
@@ -1039,6 +1061,7 @@ opacity: 20;
 				})
 			}
 			function edit_address() {
+				$('#my_quotes').addClass('d-none');
 				$('#filter').addClass('d-none');
 				$('#edit_address').removeClass('d-none');
 				$('#whishlist').addClass('d-none');
@@ -1317,6 +1340,38 @@ opacity: 20;
 
 			$('#quantity_' + product_id).val(quantity);
 			$('#subtotal_' + product_id).html(subtotal);
+		}
+
+		function myQoutes() {
+			$('#filter').addClass('d-none');
+			$('#my_quotes').removeClass('d-none');
+			$('#all_qoutes').addClass('d-none');
+			jQuery.ajax({
+				url: "{{ url('/my-qoutes/') }}",
+				method: 'GET',
+				data: {
+		
+				},
+					success: function(data) {
+							console.log(data);
+							var res='';
+							var total_items = 0;
+						$.each (data.data, function (key, value) {
+							console.log(value.title);
+							console.log(total_items);
+							var temp = value.createdDate;
+            				res +=
+            					'<tr class="table-row-content border-bottom">'+
+                					'<td>'+value.title+'</td>'+
+                					'<td>'+value.status+'</td>'+
+                					'<td class="pr-0">'+'<a onclick=userOrderDetail('+value.id+') onmouseover=replaceEye('+value.id+') onmouseout= replaceEye2('+value.id+');>'+'<button class="btn btn-outline-success view-btn p-0" type="" style="width:100%;height:32px;"><img src="theme/img/eye.png" class="mr-1 mb-1" id="eye_icon_'+value.id+'"></i>View</button>'+'</td></a>'+
+           						'</tr>';
+
+   								});
+							//console.log(res);
+						  $('#my_quotes_table').html(res);
+						},	
+					});
 		}
 	</script>
 			<!-- Remove the container if you want to extend the Footer to full width. -->

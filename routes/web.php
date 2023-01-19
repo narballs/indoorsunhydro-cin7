@@ -64,6 +64,7 @@ Route::post('/login/', [UserController::class, 'process_login'])->name('login');
 Route::post('/user-contact/', [UserController::class, 'save_contact'])->name('save_contact');
 Route::post('/update-contact/', [UserController::class, 'update_contact'])->name('update_contact');
 Route::get('/my-account/', [UserController::class, 'my_account'])->name('my_account');
+Route::get('/my-qoutes/', [UserController::class, 'my_qoutes'])->name('my_qoutes');
 Route::get('/user-addresses/', [UserController::class, 'user_addresses'])->name('user_addresses');
 Route::get('/user-order-detail/{id}', [UserController::class, 'user_order_detail'])->name('user-order-detail');
 Route::post('/register/basic/create', [UserController::class, 'process_signup'])->name('register');
