@@ -4495,7 +4495,7 @@ select.list-dt:focus {
 }
 
 .order-confirmation-page-title {
-    font-family: 'Ubuntu';
+    font-family: 'Roboto';
     font-style: normal;
     font-weight: 700;
     font-size: 25px;
@@ -4505,7 +4505,7 @@ select.list-dt:focus {
 }
 
 .order-confirmation-page-user-name {
-    font-family: 'Ubuntu';
+    font-family: 'Roboto';
     font-style: normal;
     font-weight: 400;
     font-size: 25px;
@@ -4523,8 +4523,8 @@ select.list-dt:focus {
     font-family: 'Roboto';
     font-style: normal;
     font-weight: 400;
-    font-size: 10px;
-    line-height: 12px;
+    font-size: 16px;
+    line-height: 19px;
     color: #000000;
     margin: 0px;
 }
@@ -4551,10 +4551,11 @@ select.list-dt:focus {
 .order-confirmation-page-date-item {
     font-family: 'Roboto';
     font-style: normal;
-    font-weight: 600;
+    font-weight: 400;
     font-size: 16px;
     line-height: 19px;
     color: #000000;
+    margin: 0px;
 }
 
 .order-confirmation-page-mobile {
@@ -4590,10 +4591,11 @@ select.list-dt:focus {
 .order-confirmation-page-payment-method-item {
     font-family: 'Roboto';
     font-style: normal;
-    font-weight: 600;
+    font-weight: 400;
     font-size: 16px;
     line-height: 19px;
     color: #000000;
+    margin: 0px;
 }
 
 .order-confirmation-page-shipping-title {
@@ -4638,8 +4640,8 @@ select.list-dt:focus {
     font-family: 'Roboto';
     font-style: normal;
     font-weight: 400;
-    font-size: 10px;
-    line-height: 12px;
+    font-size: 16px;
+    line-height: 19px;
     color: #000000;
     margin: 0px;
 }

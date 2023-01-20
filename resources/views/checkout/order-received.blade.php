@@ -37,21 +37,19 @@
 					</div>
 					<div class="row ms-5 p-4 me-5 order-confirmation-page-invoice-row"
 						style=" padding-top: 50px !important;">
-						<div class="col-md-1 ms-4">
+						<div class="col-md-2 ps-5">
 							<p class="order-confirmation-page-order-number-title">Order Number</p>
 							<p class="order-confirmation-page-order-number-item">
 								{{$order->apiOrderItem[0]['order_id']}}
 							</p>
 						</div>
-						<div class="col-md-2 ps-4 ms-3">
+						<div class="col-md-2 ps-4">
 							<p class="order-confirmation-page-date-title">Date</p>
 							<p class="order-confirmation-page-date-item">
 								{{$order->apiOrderItem[0]['created_at']->format('F '.'d, Y, '.'g:i A')}}
 							</p>
 						</div>
-						<div class="col-md-2 ps-5 ms-3" style="
-						background: #FAFAFA;
-						border-radius: 6px;">
+						<div class="col-md-2 ps-5">
 							<p class="order-confirmation-page-mobile">
 								{{$order->user->contact->phone}}
 							</p>
@@ -59,7 +57,7 @@
 								{{$order->user->email}}
 							</p>
 						</div>
-						<div class="col-md-2 ps-5 ms-3">
+						<div class="col-md-2 ps-5">
 							<p class="order-confirmation-page-payment-method-title">Payment Method</p>
 							<p class="order-confirmation-page-payment-method-item">{{$order->paymentTerms}}</p>
 						</div>
@@ -67,7 +65,7 @@
 							<p class="order-confirmation-page-shipping-title">Shipping</p>
 							<p class="order-confirmation-page-shippping-item">$</p>
 						</div>
-						<div class="col-md-1 ps-5 ms-4">
+						<div class="col-md-1 ps-5">
 							<p class="order-confirmation-page-tax-title">Tax</p>
 							<p class="order-confirmation-page-tax-item">
 								$
@@ -283,7 +281,7 @@
 													@endif
 												</div>
 												<div class="col-md-5 py-2 ps-0"
-													style="    margin-left: -62px !important;">
+													style="margin-left: -48px !important; margin-top:3px;">
 													<a class="order-confirmation-page-product-category-name pb-3"
 														href=" {{ url('product-detail/'. $item->product->id.'/'.$option->option_id.'/'.$item->product->slug) }}">
 														{{$item->product->name}}
