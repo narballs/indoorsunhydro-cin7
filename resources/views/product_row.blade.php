@@ -79,6 +79,9 @@
                         case "Cost":
                             $retail_price = $price->costUSD;
                         break;
+                        default:
+                        $retail_price = $price->retailUSD;
+                        break;
                         }
                 }
                 ?>

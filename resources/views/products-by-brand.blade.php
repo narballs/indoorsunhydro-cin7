@@ -132,7 +132,7 @@
                      id=product_name_{{$product->id}}>{{$product->name}}</a></h5>
                <div class="mt-auto">
                   <p class="text-uppercase mb-0 text-center text-danger">
-               <?php 
+                     <?php 
                foreach($option->price as $price)
                   {
                     switch ($pricing) {
@@ -169,6 +169,8 @@
                         case "Cost":
                             $retail_price = $price->costUSD;
                         break;
+                        default : 
+                        $retail_price = $price->retailUSD;
                         }
                   }
             
@@ -179,7 +181,8 @@
                   //   $retail_prices = $option->retailPrice;
                   // }
                   ?>
-                     ${{number_format($retail_price,2)}}</p>
+                     ${{number_format($retail_price,2)}}
+                  </p>
                   <button class="button-cards col w-100" style="max-height: 46px;"
                      onclick="updateCart({{$product->id}},{{$option->option_id}})">Add to cart</button>
                </div>
