@@ -529,8 +529,6 @@ class ProductController extends Controller
         $option_id = $request->option_id;
 
         $productOption = ProductOption::where('option_id', $option_id)->with('products.options.price')->first();
-
-
         $cart = session()->get('cart', []);
         $user_id = Auth::id();
         $contact = Contact::where('user_id', $user_id)->first();
@@ -559,8 +557,8 @@ class ProductController extends Controller
                     $price = $price['commercialOKUSD'];
                 } else if ($pricing == 'Cost') {
                     $price = $price['costUSD'];
-                } else if ($price['']) {
-                    $price['Retail'];
+                } else {
+                    $price = $price['retailUSD'];
                 }
             }
         }
