@@ -1,7 +1,7 @@
 @include('partials.header')
 @include('partials.top-bar')
 @include('partials.search-bar')
-  <link rel="stylesheet" href="http://indoorsunhydro.local/vendor/adminlte/dist/css/adminlte.min.css">
+<link rel="stylesheet" href="http://indoorsunhydro.local/vendor/adminlte/dist/css/adminlte.min.css">
 <style>
 	.nav .active {
 		background: #F5F5F5;
@@ -9,19 +9,20 @@
 		/* color: green !important; */
 		color: #008AD0 !important;
 	}
-	
-	nav svg{
+
+	nav svg {
 		max-height: 20px !important;
 	}
+
 	#spinner-global {
 		display: none !important;
 	}
-input[type=number]::-webkit-outer-spin-button {
 
-opacity: 20;
+	input[type=number]::-webkit-outer-spin-button {
 
-}
+		opacity: 20;
 
+	}
 </style>
 <div class="bg-light">
 	<div class="mb-5">
@@ -335,45 +336,49 @@ opacity: 20;
 						<div class="d-none row mt-3 mb-3 pr-0 pl-0" id="all_qoutes">
 							<div class="col-md-6 border-bottom border-4 d-flex pb-4 p-0 bg-white">
 								<img src="/theme/img/heartfilled.png" style="margin: 5px 3px 0px 9px;" width="28px"
-										height="28px">
+									height="28px">
 								<span class="pt-1 my-account-content-heading">Qoutes</span>
 							</div>
 							<div class="col-md-6 border-bottom">
-								<button class="btn btn-outline-success" data-bs-toggle="modal"data-bs-target="#exampleModal2">Create a Quotes</button>
+								<button class="btn btn-outline-success" data-bs-toggle="modal"
+									data-bs-target="#exampleModal2">Create a Quotes</button>
 								<button class="btn btn-outline-success" onclick="myQoutes()">My Quotes</button>
 							</div>
-						
+
 							<div class="d-none" id="filter">
 								@livewire('filter2')
 							</div>
-								<div class="row w-100 pl-2 pr-0">
-			<div class="card col-md-12">
-				<div class="card-body w-100 d-none" id="list">
-					<div id="list_title">
-						<h4></h4>
-					</div>
-					<input type="hidden" id="list_id" value="">
-						<table id="product_list" class="table" width="50%">
-							<tr>
-								<td style="width:373px !important">Product Title</td>
-								<td style="width:373px !important">Image</td>
-								<td>Price</td>
-								<td>Quantity</td>
-								<td>Subtotal</td>
-								<td>Remove</td>
-							</tr>
-						</table>
-						<div class="row">
-							<div class="col-md-10 border-top">Grand Total</div>
-							<div class="col-md-2 border-top">amount : <span id="grand_total">0</span></div>
-						</div>
-						<div class="row">
-							<div class="col-md-10 border-top"><button type="button" class="ms-2 btn btn-primary" onclick="generatList()">Create List</button>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
+							<div class="row w-100 pl-2 pr-0">
+								<div class="card col-md-12">
+									<div class="card-body w-100 d-none" id="list">
+										<div id="list_title">
+											<h4></h4>
+										</div>
+										<input type="hidden" id="list_id" value="">
+										<table id="product_list" class="table" width="50%">
+											<tr>
+												<td style="width:373px !important">Product Title</td>
+												<td style="width:373px !important">Image</td>
+												<td>Price</td>
+												<td>Quantity</td>
+												<td>Subtotal</td>
+												<td>Remove</td>
+											</tr>
+										</table>
+										<div class="row">
+											<div class="col-md-10 border-top">Grand Total</div>
+											<div class="col-md-2 border-top">amount : <span id="grand_total">0</span>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-10 border-top"><button type="button"
+													class="ms-2 btn btn-primary" onclick="generatList()">Create
+													List</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 						<!-- Modal -->
 						<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
@@ -389,7 +394,7 @@ opacity: 20;
 										<input type="text" name="list" id="whish_list_id" class="form-control"
 											placeholder="List Name" aria-label="List Name"
 											aria-describedby="addon-wrapping">
-											<input type="hidden" name="wishlist" id="wishlist" value="wishlist">
+										<input type="hidden" name="wishlist" id="wishlist" value="wishlist">
 									</div>
 									<div class="modal-footer">
 										<button type="button" class="btn btn-secondary"
@@ -413,7 +418,7 @@ opacity: 20;
 										<input type="text" name="qoute_id" id="qoute_id" class="form-control"
 											placeholder="List Name" aria-label="Qoute Name"
 											aria-describedby="addon-wrapping">
-											<input type="hidden" name="qoute" id="qoute" value="qoute">
+										<input type="hidden" name="qoute" id="qoute" value="qoute">
 									</div>
 									<div class="modal-footer">
 										<button type="button" class="btn btn-secondary"
@@ -683,12 +688,12 @@ opacity: 20;
 			</div>
 			@livewireScripts
 			@section('css')
-    <link rel="stylesheet" href="../css/admin_custom.css">
-@stop
+			<link rel="stylesheet" href="../css/admin_custom.css">
+			@stop
 
 
 			<script>
-			function qoute() {
+				function qoute() {
 				$('#my_quotes').addClass('d-none');
 				$('#filter').removeClass('d-none');
 				$('#all_qoutes').removeClass('d-none');
@@ -993,7 +998,7 @@ opacity: 20;
 				$('#my_quotes').addClass('d-none');
 				$('#filter').addClass('d-none');
 				$('#address_row').addClass('d-none');
-
+                $('#all_qoutes').addClass('d-none');
 				$('.nav-pills .active').removeClass('active');
 				$('.nav-pills #recent_orders').addClass('active');
 				//$(this).addClass("active");
@@ -1374,7 +1379,7 @@ opacity: 20;
 						},	
 					});
 		}
-	</script>
+			</script>
 			<!-- Remove the container if you want to extend the Footer to full width. -->
 
 			@include('partials.product-footer')
