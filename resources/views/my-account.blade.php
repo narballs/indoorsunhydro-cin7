@@ -318,6 +318,7 @@
 								</tbody>
 							</table>
 						</div>
+
 						<div class="d-none row mt-3 mb-3 pr-0 pl-0" id="whishlist">
 							<div class="col-md-8 border-bottom border-4 d-flex pb-4 p-0 bg-white">
 								<img src="/theme/img/heartfilled.png" style="margin: 5px 3px 0px 9px;" width="28px"
@@ -627,6 +628,7 @@
 											onclick="showHidePassword('current_password')" id="eye"></i>
 									</div>
 								</div>
+								<div id="#my_quotes_detail_table"></div>
 								<div class="text-danger" id="password-match-fail"></div>
 								<div class="col-md-6">
 									<label for="first_name" class="col-form-label dashboard-content">New Password (<i
@@ -968,8 +970,6 @@
 								});
 
 							lineitems += '<tr class="border-bottom" style="height:70px"><td class="table-row-content">'+ 'Subtotal'+'</td><td></td><td></td><td class="table-order-number text-dark text-end">$'+subtotal+'</td></tr>';
-							// lineitems += '<tr class="border-bottom" style="height:70px"><td class="table-row-content">'+'<img src="theme/img/truck.png">'+' Shipping: <span class="shipping-content">Via UPS cround ( Estimated transit time of 3 - 5 business days. )</span>'+'</td><td><td></td></td><td class="table-order-number text-dark text-end">'+'$0.00'+'</td></tr>';
-							// lineitems += '<tr class="border-bottom" style="height:70px"><td class="table-row-content">'+'<img src="theme/img/arrow_1.png">'+' <span>Free shipping discount </span>'+'</td><td></td><td></td><td class="table-order-number text-dark text-end">'+'$0.00'+'</td></tr>';
 							lineitems += '<tr class="border-bottom" style="height:70px"><td class="table-row-content">'+'<img src="theme/img/arrow_1.png">'+' <span>Tax </span>'+'</td><td></td><td></td><td class="table-order-number text-dark text-end">'+'$0.00'+'</td></tr>';
 						
 							lineitems += '<tr class="border-bottom" style="height:70px"><td class="table-row-content">'+'<img src="theme/img/arrow_1.png">'+' <span>Delivery Method </span>'+'</td><td><td></td></td><td class="table-order-number text-dark text-end">'+result.user_order.paymentTerms+'</td><td class="table-order-number text-dark ">'+' '+'</td></tr>';
@@ -1370,7 +1370,7 @@
             					'<tr class="table-row-content border-bottom">'+
                 					'<td>'+value.title+'</td>'+
                 					'<td>'+value.status+'</td>'+
-                					'<td class="pr-0">'+'<a onclick=userOrderDetail('+value.id+') onmouseover=replaceEye('+value.id+') onmouseout= replaceEye2('+value.id+');>'+'<button class="btn btn-outline-success view-btn p-0" type="" style="width:100%;height:32px;"><img src="theme/img/eye.png" class="mr-1 mb-1" id="eye_icon_'+value.id+'"></i>View</button>'+'</td></a>'+
+                					'<td class="pr-0">'+'<a onclick=userQouteDetail('+value.id+') onmouseover=replaceEye('+value.id+') onmouseout= replaceEye2('+value.id+');>'+'<button class="btn btn-outline-success view-btn p-0" type="" style="width:100%;height:32px;"><img src="theme/img/eye.png" class="mr-1 mb-1" id="eye_icon_'+value.id+'"></i>View</button>'+'</td></a>'+
            						'</tr>';
 
    								});
@@ -1379,7 +1379,22 @@
 						},	
 					});
 		}
-			</script>
+
+		function userQouteDetail(id) {
+			jQuery.ajax({
+				url: "{{ url('/my-qoutes-details')}}"+"/"+id,
+				method: 'GET',
+				data: {
+		
+				},
+					success: function(data) {
+				
+						  $('#my_quotes_detail_table').html(data);
+						},	
+					});
+		}
+	</script>
+
 			<!-- Remove the container if you want to extend the Footer to full width. -->
 
 			@include('partials.product-footer')
