@@ -12,7 +12,6 @@
 		max-height: 20px !important;
 	}
 </style>
-<?php //dd($list);?>
 	<div class="row">
 		<div class="col-md-5 card">
 			<div class="alert alert-success d-none" role="alert" id="success_msg"></div>

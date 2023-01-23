@@ -9,6 +9,7 @@ use App\Models\ApiOrder;
 use App\Models\ApiOrderItem;
 use App\Models\State;
 use App\Models\BuyList;
+use App\Models\Product;
 use App\Http\Requests\Users\UserSignUpRequest;
 use App\Http\Requests\Users\CompanyInfoRequest;
 use App\Http\Requests\Users\UserAddressRequest;
@@ -323,12 +324,17 @@ class UserController extends Controller
     }
 
     public function my_qoutes_details($id) {
-     
         $user_id = auth()->id();
         $list = BuyList::where('user_id', $user_id)->where('id', $id)->where('type', 'qoute')->with('list_products.product.options')->first();
-     return view('admin/buy_list/list-detail', compact(
-            'list'));
 
+     return view('user-list-detail', compact(
+            'list'))->render();
+    }
+
+    public function my_qoute_edit($id) {
+         $list = BuyList::where('id', $id)->with('list_products.product.options')->first();
+            $products = Product::paginate(10);
+           return view('user-qoute-edit', compact('products', 'list'))->render();
     }
 
     public function user_order_detail($id)

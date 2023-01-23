@@ -853,7 +853,6 @@ class ProductController extends Controller
 
     public function addToWishList(Request $request)
     {
-        // dd($request->list_id);
         $user_id = Auth::id();
 
         //check if user have list already
@@ -895,7 +894,6 @@ class ProductController extends Controller
         foreach ($lists as $list) {
             foreach ($list->list_products as $single_product) {
                 foreach ($single_product->product as $image) {
-                    // dd($image->image);
                     array_push($images, $image);
                 }
             }
@@ -917,7 +915,8 @@ class ProductController extends Controller
     public function getListNames()
     {
         $user_id = Auth::id();
-        $lists = BuyList::where('user_id', $user_id)->get();
+        $lists = BuyList::where('user_id', $user_id)->where('type', 'wishlist')->get();
+        dd($lists);
         return response()->json([
             'msg' => 'success',
             'lists' => $lists

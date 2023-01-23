@@ -276,6 +276,7 @@
 									onclick="accountDetails()">Edit your password and account details.</span>
 							</div>
 						</div>
+						<div id="my_quotes_detail_table"></div>
 						<div class="d-none mt-3 mb-3 pr-4 pl-4" id="orders">
 							<div class="col-md-12 border-bottom border-4 pb-4 p-0">
 								<img src="theme/img/orders_main.png" style="margin: -6px 1px 1px 1px;">
@@ -318,9 +319,20 @@
 								</tbody>
 							</table>
 						</div>
+						<div id="update_qoute" class="bg-success text-white text-center fade-out w-50 m-auto"></div>
+						<div class="d-none mt-3 mb-3 pr-4 pl-4" id="my_quotes_edit">
+							<div class="col-md-12 border-bottom border-4 pb-4 p-0">
+								<img src="theme/img/orders_main.png" style="margin: -6px 1px 1px 1px;">
+								<span class="pt-1 my-account-content-heading ">Edit Qoute</span>
+								
+							</div>
+							<div id="user-qoute">
+								
+							</div>
+						</div>
 
 						<div class="d-none row mt-3 mb-3 pr-0 pl-0" id="whishlist">
-							<div class="col-md-8 border-bottom border-4 d-flex pb-4 p-0 bg-white">
+						f	<div class="col-md-8 border-bottom border-4 d-flex pb-4 p-0 bg-white">
 								<img src="/theme/img/heartfilled.png" style="margin: 5px 3px 0px 9px;" width="28px"
 									height="28px">
 								<span class="pt-1 my-account-content-heading">Whishlists</span>
@@ -335,7 +347,8 @@
 							</div>
 						</div>
 						<div class="d-none row mt-3 mb-3 pr-0 pl-0" id="all_qoutes">
-							<div class="col-md-6 border-bottom border-4 d-flex pb-4 p-0 bg-white">
+							<div id="qoute-heading" class="row">
+							<div class="col-md-6 border-bottom border-4 d-flex pb-4 p-0 bg-white" >
 								<img src="/theme/img/heartfilled.png" style="margin: 5px 3px 0px 9px;" width="28px"
 									height="28px">
 								<span class="pt-1 my-account-content-heading">Qoutes</span>
@@ -345,7 +358,7 @@
 									data-bs-target="#exampleModal2">Create a Quotes</button>
 								<button class="btn btn-outline-success" onclick="myQoutes()">My Quotes</button>
 							</div>
-
+							</div>
 							<div class="d-none" id="filter">
 								@livewire('filter2')
 							</div>
@@ -628,7 +641,7 @@
 											onclick="showHidePassword('current_password')" id="eye"></i>
 									</div>
 								</div>
-								<div id="#my_quotes_detail_table"></div>
+							
 								<div class="text-danger" id="password-match-fail"></div>
 								<div class="col-md-6">
 									<label for="first_name" class="col-form-label dashboard-content">New Password (<i
@@ -696,6 +709,7 @@
 
 			<script>
 				function qoute() {
+				$('#my_quotes_detail_table').addClass('d-none');
 				$('#my_quotes').addClass('d-none');
 				$('#filter').removeClass('d-none');
 				$('#all_qoutes').removeClass('d-none');
@@ -776,6 +790,7 @@
 
 				$('#whishlist').removeClass('d-none');
 				$('#intro,#edit_address,#address_row').addClass('d-none');
+				$('#my_quotes_edit').addClass('d-none');
 				$('#all_qoutes').addClass('d-none');
 				$('.nav-pills .active').removeClass('active');
 				$('.nav-pills #wish_lists').addClass('active');
@@ -1297,7 +1312,10 @@
 					type : 'Qoute'
 				},
 				success: function(response) {
-					 window.location.href = "{{ route('buy-list.index')}}";
+					console.log(response);
+					$('.nav-pills #qoutes').addClass('active');
+					$('#update_qoute').html('Updated Successfully');
+					 //window.location.href = "{{ route('buy-list.index')}}";
 				}
 			});
 		}
@@ -1370,7 +1388,7 @@
             					'<tr class="table-row-content border-bottom">'+
                 					'<td>'+value.title+'</td>'+
                 					'<td>'+value.status+'</td>'+
-                					'<td class="pr-0">'+'<a onclick=userQouteDetail('+value.id+') onmouseover=replaceEye('+value.id+') onmouseout= replaceEye2('+value.id+');>'+'<button class="btn btn-outline-success view-btn p-0" type="" style="width:100%;height:32px;"><img src="theme/img/eye.png" class="mr-1 mb-1" id="eye_icon_'+value.id+'"></i>View</button>'+'</td></a>'+
+                					'<td class="pr-0">'+'<a onclick=userQouteDetail('+value.id+') onmouseover=replaceEye('+value.id+') onmouseout= replaceEye2('+value.id+');>'+'<button class="btn btn-outline-success view-btn p-0" type="" style="width:100%;height:32px;"><img src="theme/img/eye.png" class="mr-1 mb-1" id="eye_icon_'+value.id+'"></i>View</button>'+'</td></a>'+'<td class="pr-0">'+'<a onclick=userQouteEdit('+value.id+') onmouseover=replaceEye('+value.id+') onmouseout= replaceEye2('+value.id+');>'+'<button class="btn btn-outline-success view-btn p-0" type="" style="width:100%;height:32px;"><img src="theme/img/eye.png" class="mr-1 mb-1" id="eye_icon_'+value.id+'"></i>Edit</button>'+'</td></a>'+
            						'</tr>';
 
    								});
@@ -1381,17 +1399,37 @@
 		}
 
 		function userQouteDetail(id) {
+			$('#my_quotes_detail_table').removeClass('d-none');
 			jQuery.ajax({
 				url: "{{ url('/my-qoutes-details')}}"+"/"+id,
 				method: 'GET',
-				data: {
-		
-				},
-					success: function(data) {
-				
-						  $('#my_quotes_detail_table').html(data);
-						},	
-					});
+				success: function(html) {
+					$('#my_quotes').addClass('d-none');
+					$('filter').addClass('d-none');
+						console.log(html);
+						  $('#my_quotes_detail_table').append(html);
+						  dataType: 'html'
+				},	
+			});
+		}
+
+		function userQouteEdit(id) {
+			$('#filter').addClass('d-block');
+			jQuery.ajax({
+				url: "{{ url('/my-qoute-edit')}}"+"/"+id,
+				method: 'GET',
+				success: function(html) {
+					console.log(html);
+					$('#my_quotes').addClass('d-none');
+					$('#qoute-heading').addClass('d-none');
+						console.log(html);
+						  $('#user-qoute').append(html);
+						  $('#all_qoutes').removeClass('d-none');
+				          $('#my_quotes_edit').removeClass('d-none');
+				          $('#my_quotes').addClass('d-none');
+							  dataType: 'html'
+				},	
+			});
 		}
 	</script>
 
