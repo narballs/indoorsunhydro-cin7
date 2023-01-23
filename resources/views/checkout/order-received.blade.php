@@ -37,41 +37,49 @@
 					</div>
 					<div class="row ms-5 p-4 me-5 order-confirmation-page-invoice-row"
 						style=" padding-top: 50px !important;">
-						<div class="col-md-2 ps-5">
+						<div class="col-md-1 p-0" style="margin-left: 32px;">
 							<p class="order-confirmation-page-order-number-title">Order Number</p>
 							<p class="order-confirmation-page-order-number-item">
 								{{$order->apiOrderItem[0]['order_id']}}
 							</p>
 						</div>
-						<div class="col-md-2 ps-4">
+						<div class="col-md-2 ps-4 ms-3">
 							<p class="order-confirmation-page-date-title">Date</p>
 							<p class="order-confirmation-page-date-item">
 								{{$order->apiOrderItem[0]['created_at']->format('F '.'d, Y, '.'g:i A')}}
 							</p>
 						</div>
-						<div class="col-md-2 ps-5">
-							<p class="order-confirmation-page-mobile">
+						<div class="col-md-1 pe-2 ms-3">
+							<p class="order-confirmation-page-mobile-title">
+								Mobile
+							</p>
+							<p class="order-confirmation-page-mobile-item">
 								{{$order->user->contact->phone}}
 							</p>
-							<p class="order-confirmation-page-email">
+						</div>
+						<div class="col-md-2 ps-5">
+							<p class="order-confirmation-page-email-title">
+								Email
+							</p>
+							<p class="order-confirmation-page-email-item">
 								{{$order->user->email}}
 							</p>
 						</div>
-						<div class="col-md-2 ps-5">
+						<div class="col-md-2">
 							<p class="order-confirmation-page-payment-method-title">Payment Method</p>
 							<p class="order-confirmation-page-payment-method-item">{{$order->paymentTerms}}</p>
 						</div>
-						<div class="col-md-1 ps-4">
+						<div class="col-md-1 ps-0">
 							<p class="order-confirmation-page-shipping-title">Shipping</p>
-							<p class="order-confirmation-page-shippping-item">$</p>
+							<p class="order-confirmation-page-shipping-item">$</p>
 						</div>
-						<div class="col-md-1 ps-5">
+						<div class="col-md-1 ms-4">
 							<p class="order-confirmation-page-tax-title">Tax</p>
 							<p class="order-confirmation-page-tax-item">
 								$
 							</p>
 						</div>
-						<div class="col-md-2 ps-5">
+						<div class="col-md-1 ms-4">
 							<p class="order-confirmation-page-total-title">Total</p>
 							<p class="order-confirmation-page-total-item">
 								${{number_format($order->total, 2)}}
