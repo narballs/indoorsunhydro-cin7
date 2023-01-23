@@ -66,6 +66,7 @@ Route::post('/update-contact/', [UserController::class, 'update_contact'])->name
 Route::get('/my-account/', [UserController::class, 'my_account'])->name('my_account');
 Route::get('/my-qoutes/', [UserController::class, 'my_qoutes'])->name('my_qoutes');
 Route::get('/my-qoutes-details/{id}', [UserController::class, 'my_qoutes_details'])->name('my_qoutes_details');
+Route::get('/my-qoute-edit/{id}', [UserController::class, 'my_qoute_edit'])->name('my_qoute_edit');
 Route::get('/user-addresses/', [UserController::class, 'user_addresses'])->name('user_addresses');
 Route::get('/user-order-detail/{id}', [UserController::class, 'user_order_detail'])->name('user-order-detail');
 Route::post('/register/basic/create', [UserController::class, 'process_signup'])->name('register');
