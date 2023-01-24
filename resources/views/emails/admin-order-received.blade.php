@@ -299,11 +299,11 @@
                                                     <p class="ps-5 thanks-heading" style="    font-family: 'Poppins';
                                                     font-style: normal;
                                                     font-weight: 600;
-                                                    font-size: 31px;
+                                                    font-size: 27px;
                                                     line-height: 120%;
                                                     letter-spacing: 0.545em;
                                                     color: #575757;
-                                                    ">Thank for your order</p>
+                                                    ">Thank you for your order</p>
                                                 </div>
                                                 {{-- <div class="col-md-5 pt-5" style="width: width: 50%;">
                                                     <div class="pt-5" style="padding-top: 35px!important;
