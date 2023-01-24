@@ -124,6 +124,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('admin/add-to-list', [AdminBuyListController::class, 'addToList']);
     Route::post('admin/generate-list', [AdminBuyListController::class, 'genrateList']);
     Route::post('admin/share-list', [AdminShareListController::class, 'shareList']);
+    Route::get('admin/admin-users', [UserController::class, 'adminUsers']);
 });
 Route::get('product/search', [ProductController::class, 'productSearch'])->name('product_search');
 //Route::resource('buy-list', AdminBuyListController::class)->name('buy-lisy-front');

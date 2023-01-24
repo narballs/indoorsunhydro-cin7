@@ -54,16 +54,27 @@
 }
 
 .popover {
-    /*transform: translate(314px, 457px) !important;*/
+    *transform: translate(314px, 457px) !important;
 }
 
 .popover-body {
-    width: 170px;
+    width: 220px;
     font-size: 12px;
     text-align: center;
     padding: 0.3rem 0.5rem;
     line-height: 1rem;
     margin-left: 10px !important;
+}
+#pop .popover:has(.show)  {
+    background-color: black !important;
+}
+.bs-popover-top > .popover-arrow::after, .bs-popover-auto[data-popper-placement^=top] > .popover-arrow::after {
+    bottom: 1px;
+    border-width: 0.5rem 0.5rem 0;
+    border-top-color: #525252 !important;
+}
+.bs-popover-top {
+    background: #525252 !important;
 }
 
 #success {

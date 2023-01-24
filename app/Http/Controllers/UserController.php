@@ -22,6 +22,8 @@ use Spatie\Permission\Models\Role;
 use DB;
 use Hash;
 use Illuminate\Support\Arr;
+use Spatie\QueryBuilder\QueryBuilder;
+use Spatie\QueryBuilder\AllowedFilter;
 
 
 
@@ -53,8 +55,12 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $data = User::orderBy('id', 'DESC')->paginate(5);
-        return view('admin.users.index', compact('data'))
+        $users = User::role(['Admin'])->get();
+        $count = $users->count();
+
+        return view('admin.users.index', compact('data', 'count'))
             ->with('i', ($request->input('page', 1) - 1) * 5);
+
     }
 
     /**
@@ -387,15 +393,13 @@ class UserController extends Controller
             );
         }
         return response()->json(['success' => true, 'created' => true, 'msg' => 'Address updated Successfully']);
-        // echo $user_id;exit;
-        // //dd
-        // //$user_data = Contact::where('user_id', $user_id)->first();
-        // dd($user_data);
-        // $orderitems = ApiOrderItem::where('order_id', $id)->with('product')->get();
-        // $data = [
-        //     'user_order'  =>  $user_order,
-        //     'order_items' =>  $orderitems
-        // ];
-        // return $data;
+    }
+
+    public function adminUsers(Request $request){
+        //$data = User::orderBy('id', 'DESC')->paginate(5);
+        $data = User::role(['Admin'])->get();
+        $count = $data ->count();
+        return view('admin/users/admin-users', compact('data', 'count'))
+            ->with('i', ($request->input('page', 1) - 1) * 5);
     }
 }

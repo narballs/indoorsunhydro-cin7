@@ -46,20 +46,20 @@
 <script type="text/javascript">
 	$(document).ready(function() {
     	// popovers initialization - on hover
-$('[data-toggle="popover-hover"]').popover({
+$('[data-toggle="popover-click"]').popover({
   html: true,
-  trigger: 'hover',
-  placement: 'bottom',
+  trigger: 'click',
+  placement: 'top',
   sanitize:false,
   content: function () { return '<img src="' + $(this).data('img') + '" />'; }
 });
 
 // popovers initialization - on click
-$('[data-toggle="popover-click"]').popover({
+$('[data-toggle="popover-hover"]').popover({
 	
   html: true,
-  trigger: 'click',
-  placement: 'bottom',
+  trigger: 'hover',
+  placement: 'top',
   sanitize: false,
   content: $('#popover-form').html(),
 });

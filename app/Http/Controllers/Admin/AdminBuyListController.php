@@ -117,5 +117,6 @@ class AdminBuyListController extends Controller
                 $product_buy_list->save();
             }
         }
+        
     }
 }

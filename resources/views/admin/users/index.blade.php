@@ -24,8 +24,14 @@
 </div>
 @endif
 
+<div class="row mt-2">
+    <div class="col-md-12">
+       <span onclick="adminUsers()"> Admins({{$count}})</span>
+    </div>
 
-<table class="table table-bordered mt-5">
+</div>
+<div id="admin-users"></div>
+<table class="table table-bordered mt-5" id="user-table">
  <tr>
    <th>No</th>
    <th>Name</th>
@@ -33,6 +39,7 @@
    <th>Roles</th>
    <th width="280px">Action</th>
  </tr>
+
  @foreach ($data as $key => $user)
   <tr>
     <td>{{ ++$i }}</td>
@@ -62,9 +69,27 @@
  @endforeach
 </table>
 
-
+<div id="pageination">
 {!! $data->render() !!}
+</div>
 
-
-<p class="text-center text-primary"><small>Tutorial by ItSolutionStuff.com</small></p>
 @endsection
+
+ 
+<script>
+    function adminUsers() {
+        $('#user-table').addClass('d-none');
+        $('#pageination').addClass('d-none');
+        $.ajax({
+               url: "{{ url('admin/admin-users') }}",
+               method: 'GET',
+           
+               success: function(response){
+                console.log(response);
+                $('#admin-users').html(response);
+                }
+            });
+    }
+</script>
+
+ 
