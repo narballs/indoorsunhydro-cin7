@@ -252,12 +252,12 @@
             <div style="width: 100%">
                 <div class="card border-0 thank-you-page-background-img" style="background-color: #F5F5F5 !important;
                 border-radius: 10px !important;
-                background-image: url('https://stage.indoorsunhydro.com/theme/img/thank-background.png') !important;
-                background-repeat: no-repeat !important;
-                width: 100% !important;
-                background-size: 100% !important;
+                /* background-image: url('https://stage.indoorsunhydro.com/theme/img/thank-background.png') !important; */
+                /* background-repeat: no-repeat !important; */
+                /* width: 100% !important; */
+                /* background-size: 100% !important; */
                 padding-bottom: 146px !important;
-                padding-top: 184px !important;">
+                padding-top: 92px !important;">
                     <div class="row" style="padding-bottom: 77px !important;">
                         <div class="col-md-12 thank-you-page-card-row">
                             <div class="card m-auto border-0 thank-you-page-first-card" style="
@@ -290,29 +290,22 @@
                                             width: 1142px!important;
                                             border: 1px solid #000000!important;">
                                     </div>
-                                    <div class="row ps-5" style="display:flex">
+                                    <div class="row ps-5" style="
+                                    display: flex;
+                                    padding-bottom: 171px; ">
                                         <div class="col-md-7 mt-4" style="width: 57%;padding-left: 63px;">
                                             <div class="row" style="display: flex">
-                                                <div class="col-md-7" style="width: 54%;">
-                                                    <p class="ps-5 thanks-heading" style="font-family: 'Roboto';
+                                                <div class="col-md-7" style="width: 100%;">
+                                                    <p class="ps-5 thanks-heading" style="    font-family: 'Poppins';
                                                     font-style: normal;
                                                     font-weight: 600;
-                                                    font-size: 108px;
-                                                    line-height: 127px;
-                                                    color: #000000;
-                                                    margin: 0px;">Thanks</p>
-                                                    <p style="font-family: 'Montserrat';
-                                                    font-style: normal;
-                                                    font-weight: 500;
-                                                    font-size: 25px;
+                                                    font-size: 31px;
                                                     line-height: 120%;
                                                     letter-spacing: 0.545em;
                                                     color: #575757;
-                                                    padding-left: 24px;
-                                                    margin-top: -18px !important;
-                                                    ">for your order</p>
+                                                    ">Thank for your order</p>
                                                 </div>
-                                                <div class="col-md-5" style="width: width: 36%;">
+                                                {{-- <div class="col-md-5 pt-5" style="width: width: 50%;">
                                                     <div class="pt-5" style="padding-top: 35px!important;
                                                         padding-left: 14px!important;
                                                         background: #fbfbfb;
@@ -332,7 +325,17 @@
 
                                                         </span>
                                                     </div>
-                                                </div>
+                                                    <p style="font-family: 'Poppins';
+                                                    font-style: normal;
+                                                    font-weight: 500;
+                                                    font-size: 25px;
+                                                    line-height: 120%;
+                                                    letter-spacing: 0.545em;
+                                                    color: #575757;
+                                                    padding-left: 24px;
+                                                    margin-top: -18px !important;
+                                                    ">for your order</p>
+                                                </div> --}}
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-12 mt-5" style="width: 100%">
@@ -604,7 +607,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row mt-5 ms-5">
+                                    {{-- <div class="row mt-5 ms-5">
                                         <div class="col-md-12" style="
                                         width: 96%;
                                         margin-top: 119px;
@@ -673,17 +676,17 @@
                                                 @endforeach
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
                         </div>
-                        <div style="background-color: #2653a0!important;
-                        margin-top: -101px !important;
+                        <div style="    background-color: #2653a0!important;
                         padding-bottom: 1px!important;
-                        margin: auto !important;
+                        margin: auto!important;
                         width: 47%!important;
-                        border-radius: 10px !important;
-                        padding: 30px !important;
+                        border-radius: 10px!important;
+                        padding: 30px!important;
+                        margin-top: -111px !important;
                         ">
                             <p class="thank-you-page-card-footer" style=" font-family: 'Roboto';
                         font-style: normal;
