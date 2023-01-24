@@ -420,7 +420,8 @@
                                                             color: #000000;
                                                             margin-top: 35px;
                                                             padding-left: 52px;">
-                                                                ${{number_format($item->product->retail_price,2)}}
+                                                                ${{number_format($item->price,2)}}
+
                                                             </p>
                                                         </div>
                                                     </div>
@@ -722,7 +723,6 @@
             </div>
         </div>
     </div>
-    {{-- {{exit;}} --}}
 </body>
 
 </html>
