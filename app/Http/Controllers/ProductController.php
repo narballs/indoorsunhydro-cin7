@@ -298,7 +298,28 @@ class ProductController extends Controller
     public function showProductDetail($id, $option_id)
     {
         $product = Product::where('id', $id)->first();
-
+        $url = 'https://api.cin7.com/api/v1/Stock?where=productId=' . $product->product_id . '&productOptionId=' . $option_id;
+        $client2 = new \GuzzleHttp\Client();
+        $res = $client2->request(
+            'GET', 
+            $url, 
+                [
+                    'auth' => [
+                        'IndoorSunHydroUS', 
+                        'faada8a7a5ef4f90abaabb63e078b5c1'
+                    ]
+                     
+                ]
+            ); 
+        $inventory = $res->getBody()->getContents();
+        $location_inventories = json_decode($inventory);
+        //dd($location_inventories);
+        // $invetory = [];
+        // foreach($location_inventories as $key=>$location_inventory) {
+        //     $inventory[$key] = $location_inventory->branchName;
+        //     //$location_inventory->branchId;
+        // }
+        // dd($inventory);
         if ($product) {
             $views = $product->views;
             $product->views = $views + 1;
@@ -330,7 +351,7 @@ class ProductController extends Controller
             $pricing = 'Retail';
         }
 
-        return view('product-detail', compact('productOption', 'pname', 'pricing'));
+        return view('product-detail', compact('productOption', 'pname', 'pricing', 'location_inventories'));
     }
     public function showProductByCategory_slug($slug)
     {

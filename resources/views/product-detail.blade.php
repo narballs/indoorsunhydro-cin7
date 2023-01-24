@@ -9,6 +9,7 @@
     @endif
     @yield('content')
 </div>
+<?php //dd($location_inventories);exit;?>
 <div class="row bg-light desktop-view">
     <div class="container mt-5 mb-5">
         <div class="row d-flex justify-content-center">
@@ -18,14 +19,14 @@
                         <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 col-xs-12">
                             <div class="images">
                                 @if($productOption->image)
-                                <div class="text-center mt-5">
-                                    <img id="main-image" src="{{$productOption->image}}" class="img-fluid" />
-                                </div>
+                                    <div class="text-center mt-5">
+                                        <img id="main-image" src="{{$productOption->image}}" class="img-fluid" />
+                                    </div>
                                 @else
-                                <div class="text-center mt-5">
-                                    <img id="main-image" src="/theme/img/image_not_available.png"
-                                        class="img-fluid w-75 h-75" />
-                                </div>
+                                    <div class="text-center mt-5">
+                                        <img id="main-image" src="/theme/img/image_not_available.png"
+                                            class="img-fluid w-75 h-75" />
+                                    </div>
                                 @endif
                             </div>
                         </div>
@@ -73,14 +74,7 @@
                         }
                 }
                 ?>
-               <!--              if($pricing == 'WholesaleUSD') {
-                                $retail_prices = $productOption->wholesalePrice;
-                            }
-                            else {
-                                $retail_prices = $productOption->retailPrice;
-                            }
-                        ?>
- -->
+
                                
                                     <div class="product-detail-heading col-xl-12 col-lg-12 col-md-12 col-xs-12"
                                         id="product_name">
@@ -97,9 +91,19 @@
                                     <div class="price d-flex flex-row align-items-center">
                                         @if ($productOption->stockAvailable > 0)
                                         <span
-                                            class="rounded-pill product-detail-quantity d-flex justify-content-center align-items-center"><span
-                                                class="">{{$productOption->stockAvailable}}</span></span>
+                                            class="rounded-pill cursor product-detail-quantity d-flex justify-content-center align-items-center" data-toggle="popover-hover" data-bs-container="body" data-placement="top" data-bs-placement="top" data-bs-content="Top popover" style=" cursor: pointer;"><span
+                                                class="">
+                                            {{$productOption->stockAvailable}}</span></span>
                                         <div>
+                                            
+                                          <!--   <a style="width:20px !important;" href="#" data-toggle="popover-click" data-placement="top" class="subscribe">
+                                                <i class="fa-solid fa-heart" id="test" 
+                                                     data-toggle="popover" data-placement="top"
+                                                     ></i>
+
+                                            </a> -->
+   
+
                                             <small class="dis-price">&nbsp;</small> <span class="instock-label">IN
                                                 STOCK</span>
                                         </div>
@@ -175,6 +179,33 @@
                 </div>
             </div>
         </div>
+    </div>
+</div>
+<div id="pop" class="" style=" width: 170px;
+    font-size: 12px;
+    text-align: center;
+    padding: 0.3rem 0.5rem;
+    line-height: 1rem;
+    margin-left: 10px !important;
+    background: #000 !important;">
+<div id="popover-form" class="d-none" style="   ">
+        <form id="myform" class="form-inline p-0 w-100" role="form">
+            @foreach($location_inventories as $inventory)
+            <div class="form-group ">
+                <div style="font-family: 'Poppins';
+                font-style: normal;
+                font-weight: 400;
+                font-size: 14px;
+                padding:1px;
+                color: white;
+                ">
+                    
+                        {{$inventory->available}}  {{$inventory->branchName}}
+                </div>
+
+            </div>
+            @endforeach
+        </form>
     </div>
 </div>
 {{-- mobile view start --}}
