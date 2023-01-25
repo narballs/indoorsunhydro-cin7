@@ -48,7 +48,7 @@
     	// popovers initialization - on hover
 $('[data-toggle="popover-click"]').popover({
   html: true,
-  trigger: 'click',
+  trigger: 'clcik',
   placement: 'top',
   sanitize:false,
   content: function () { return '<img src="' + $(this).data('img') + '" />'; }

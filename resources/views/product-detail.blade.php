@@ -188,24 +188,25 @@
     line-height: 1rem;
     margin-left: 10px !important;
     background: #000 !important;">
-<div id="popover-form" class="d-none" style="   ">
-        <form id="myform" class="form-inline p-0 w-100" role="form">
-            @foreach($location_inventories as $inventory)
-            <div class="form-group ">
-                <div style="font-family: 'Poppins';
-                font-style: normal;
-                font-weight: 400;
-                font-size: 14px;
-                padding:1px;
-                color: white;
-                ">
-                    
-                        {{$inventory->available}}  {{$inventory->branchName}}
-                </div>
+        <div id="popover-form">
+            <form id="myform" class="form-inline p-0 w-100" role="form">
+                @foreach($location_inventories as $inventory)
+                <div class="form-group" style="width:500px">
+                    <div style="font-family: 'Poppins';
+                    font-style: normal;
+                    font-weight: 400;
+                    font-size: 14px;
+                    padding:1px;
+                    color: white;
+                    max-width:500px;
+                    z-index:9999;
+                    ">
+                        <span style="width: 500px !important">{{$inventory->available}}  {{$inventory->branchName}}</span>
+                    </div>
 
-            </div>
-            @endforeach
-        </form>
+                </div>
+                @endforeach
+            </form>
     </div>
 </div>
 {{-- mobile view start --}}

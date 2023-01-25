@@ -55,15 +55,17 @@
 
 .popover {
     *transform: translate(314px, 457px) !important;
+    max-width:350px !important;
 }
 
 .popover-body {
-    width: 220px;
+    max-width: 450px important;
     font-size: 12px;
     text-align: center;
     padding: 0.3rem 0.5rem;
     line-height: 1rem;
     margin-left: 10px !important;
+    z-index: 9999;
 }
 #pop .popover:has(.show)  {
     background-color: black !important;
@@ -74,8 +76,10 @@
     border-top-color: #525252 !important;
 }
 .bs-popover-top {
+    width:  330px;
     background: #525252 !important;
 }
+
 
 #success {
     background-color: #7BC533 !important;
