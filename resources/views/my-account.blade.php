@@ -979,12 +979,12 @@
 									var product_total = item.price * item.quantity;
 									//var product_total = retail_price * item.quantity;
 									subtotal = product_total + subtotal;
-									lineitems +='<tr class="border-bottom table-row-content" style="height:70px"><td style="width:491px"><a href="">'+item.product.name+'</a>'+'<td class="cart-basket d-flex align-items-center justify-content-center float-sm-end quantity-counter rounded-circle mt-4">'+item.quantity+'</td><td></td><td class="table-order-number text-dark text-end">$'+ item.price * item.quantity .toFixed(2)+'</td></tr>';
+									lineitems +='<tr class="border-bottom table-row-content" style="height:70px"><td style="width:491px"><a href="">'+item.product.name+'</a>'+'<td class="cart-basket d-flex align-items-center justify-content-center float-sm-end quantity-counter rounded-circle mt-4">'+item.quantity+'</td><td></td><td class="table-order-number text-dark text-end">$'+ item.price * item.quantity.toFixed(2)+'</td></tr>';
 									
 								console.log(item.quantity)
 								});
 
-							lineitems += '<tr class="border-bottom" style="height:70px"><td class="table-row-content">'+ 'Subtotal'+'</td><td></td><td></td><td class="table-order-number text-dark text-end">$'+subtotal+'</td></tr>';
+							lineitems += '<tr class="border-bottom" style="height:70px"><td class="table-row-content">'+ 'Subtotal'+'</td><td></td><td></td><td class="table-order-number text-dark text-end">$'+subtotal.toFixed(2)+'</td></tr>';
 							lineitems += '<tr class="border-bottom" style="height:70px"><td class="table-row-content">'+'<img src="theme/img/arrow_1.png">'+' <span>Tax </span>'+'</td><td></td><td></td><td class="table-order-number text-dark text-end">'+'$0.00'+'</td></tr>';
 						
 							lineitems += '<tr class="border-bottom" style="height:70px"><td class="table-row-content">'+'<img src="theme/img/arrow_1.png">'+' <span>Delivery Method </span>'+'</td><td><td></td></td><td class="table-order-number text-dark text-end">'+result.user_order.paymentTerms+'</td><td class="table-order-number text-dark ">'+' '+'</td></tr>';
