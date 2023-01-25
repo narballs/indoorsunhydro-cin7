@@ -301,16 +301,16 @@ class ProductController extends Controller
         $url = 'https://api.cin7.com/api/v1/Stock?where=productId=' . $product->product_id . '&productOptionId=' . $option_id;
         $client2 = new \GuzzleHttp\Client();
         $res = $client2->request(
-            'GET', 
-            $url, 
-                [
-                    'auth' => [
-                        'IndoorSunHydroUS', 
-                        'faada8a7a5ef4f90abaabb63e078b5c1'
-                    ]
-                     
+            'GET',
+            $url,
+            [
+                'auth' => [
+                    'IndoorSunHydroUS',
+                    'faada8a7a5ef4f90abaabb63e078b5c1'
                 ]
-            ); 
+
+            ]
+        );
         $inventory = $res->getBody()->getContents();
         $location_inventories = json_decode($inventory);
         //dd($location_inventories);
@@ -552,37 +552,47 @@ class ProductController extends Controller
         $productOption = ProductOption::where('option_id', $option_id)->with('products.options.price')->first();
         $cart = session()->get('cart', []);
         $user_id = Auth::id();
+
+
+
+
         $contact = Contact::where('user_id', $user_id)->first();
         $pricing = $contact->priceColumn;
         foreach ($productOption->products->options as $option) {
+
             foreach ($option->price as $price) {
-                if ($pricing == 'Retail') {
-                    $price = $price['retailUSD'];
-                } else if ($pricing == 'Wholesale') {
-                    $price = $price['wholesaleUSD'];
-                } else if ($pricing == 'TerraIntern') {
-                    $price = $price['terraInternUSD'];
-                } else if ($pricing == 'Sacramento') {
-                    $price = $price['sacramentoUSD'];
-                } else if ($pricing == 'Oklahoma') {
-                    $price = $price['oklahomaUSD'];
-                } else if ($pricing == 'Calaveras') {
-                    $price = $price['calaverasUSD'];
-                } else if ($pricing == 'Tier1') {
-                    $price = $price['tier1USD'];
-                } else if ($pricing == 'Tier2') {
-                    $price = $price['tier2USD'];
-                } else if ($pricing == 'Tier3') {
-                    $price = $price['tier3USD'];
-                } else if ($pricing == 'ComercialOk') {
-                    $price = $price['commercialOKUSD'];
-                } else if ($pricing == 'Cost') {
-                    $price = $price['costUSD'];
+                if ($user_id) {
+                    if ($pricing == 'Retail') {
+                        $price = $price['retailUSD'];
+                    } else if ($pricing == 'Wholesale') {
+                        $price = $price['wholesaleUSD'];
+                    } else if ($pricing == 'TerraIntern') {
+                        $price = $price['terraInternUSD'];
+                    } else if ($pricing == 'Sacramento') {
+                        $price = $price['sacramentoUSD'];
+                    } else if ($pricing == 'Oklahoma') {
+                        $price = $price['oklahomaUSD'];
+                    } else if ($pricing == 'Calaveras') {
+                        $price = $price['calaverasUSD'];
+                    } else if ($pricing == 'Tier1') {
+                        $price = $price['tier1USD'];
+                    } else if ($pricing == 'Tier2') {
+                        $price = $price['tier2USD'];
+                    } else if ($pricing == 'Tier3') {
+                        $price = $price['tier3USD'];
+                    } else if ($pricing == 'ComercialOk') {
+                        $price = $price['commercialOKUSD'];
+                    } else if ($pricing == 'Cost') {
+                        $price = $price['costUSD'];
+                    } else {
+                        $price = $price['retailUSD'];
+                    }
                 } else {
                     $price = $price['retailUSD'];
                 }
             }
         }
+
 
         // if ($pricing == 'Wholesale') {
         //    $price = $productOption->wholesalePrice;
