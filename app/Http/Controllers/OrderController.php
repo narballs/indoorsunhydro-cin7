@@ -166,15 +166,10 @@ class OrderController extends Controller
             $currentOrder = ApiOrder::where('id', $order->id)->first();
             $apiApproval = $currentOrder->apiApproval;
             $currentOrder->reference = 'DEV3' . '-QCOM-' . $order_id;
-
-            //dd($currentOrder);
-
-
-
-
             $currentOrder->save();
             $currentOrder = ApiOrder::where('id', $order->id)->first();
             $reference = $currentOrder->reference;
+
             foreach ($cart_items as $cart_item) {
                 $OrderItem = new ApiOrderItem;
                 $OrderItem->order_id = $order_id;
@@ -184,9 +179,8 @@ class OrderController extends Controller
                 $OrderItem->option_id = $cart_item['option_id'];
                 $OrderItem->save();
             }
-            //exit;
+
             $order_items = ApiOrderItem::with('order', 'product.options')->where('order_id', $order_id)->get();
-            // dd($order_items);
             $contact = Contact::where('user_id', auth()->id())->first();
             $user_email = Auth::user();
             $count = $order_items->count();
@@ -213,6 +207,7 @@ class OrderController extends Controller
                 'user_email' =>   $user_email,
                 'currentOrder' => $currentOrder,
                 'count' => $count,
+                'order_id' => $order_id,
             ];
 
 
