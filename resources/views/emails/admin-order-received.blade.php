@@ -245,7 +245,6 @@
     @import url('https://fonts.googleapis.com/css?family=Mukta');
 </style>
 
-
 <body>
     <div class="container-fluid" style="width: 100% !important; marging:auto !important" width="100%;">
         <div class="row">
@@ -597,7 +596,7 @@
                                                     font-size: 27px;
                                                     line-height: 13px;
                                                     color: #000000;
-                                                ">Order #{{$currentOrder->id}}
+                                                ">Order #{{$addresses['order_id']}}
                                                         Summary
                                                     </p>
                                                     <div class="row" style="display: flex">
