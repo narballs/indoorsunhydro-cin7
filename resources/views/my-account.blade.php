@@ -324,15 +324,15 @@
 							<div class="col-md-12 border-bottom border-4 pb-4 p-0">
 								<img src="theme/img/orders_main.png" style="margin: -6px 1px 1px 1px;">
 								<span class="pt-1 my-account-content-heading ">Edit Qoute</span>
-								
+
 							</div>
 							<div id="user-qoute">
-								
+
 							</div>
 						</div>
 
 						<div class="d-none row mt-3 mb-3 pr-0 pl-0" id="whishlist">
-						f	<div class="col-md-8 border-bottom border-4 d-flex pb-4 p-0 bg-white">
+							f <div class="col-md-8 border-bottom border-4 d-flex pb-4 p-0 bg-white">
 								<img src="/theme/img/heartfilled.png" style="margin: 5px 3px 0px 9px;" width="28px"
 									height="28px">
 								<span class="pt-1 my-account-content-heading">Whishlists</span>
@@ -348,16 +348,16 @@
 						</div>
 						<div class="d-none row mt-3 mb-3 pr-0 pl-0" id="all_qoutes">
 							<div id="qoute-heading" class="row">
-							<div class="col-md-6 border-bottom border-4 d-flex pb-4 p-0 bg-white" >
-								<img src="/theme/img/heartfilled.png" style="margin: 5px 3px 0px 9px;" width="28px"
-									height="28px">
-								<span class="pt-1 my-account-content-heading">Qoutes</span>
-							</div>
-							<div class="col-md-6 border-bottom">
-								<button class="btn btn-outline-success" data-bs-toggle="modal"
-									data-bs-target="#exampleModal2">Create a Quotes</button>
-								<button class="btn btn-outline-success" onclick="myQoutes()">My Quotes</button>
-							</div>
+								<div class="col-md-6 border-bottom border-4 d-flex pb-4 p-0 bg-white">
+									<img src="/theme/img/heartfilled.png" style="margin: 5px 3px 0px 9px;" width="28px"
+										height="28px">
+									<span class="pt-1 my-account-content-heading">Qoutes</span>
+								</div>
+								<div class="col-md-6 border-bottom">
+									<button class="btn btn-outline-success" data-bs-toggle="modal"
+										data-bs-target="#exampleModal2">Create a Quotes</button>
+									<button class="btn btn-outline-success" onclick="myQoutes()">My Quotes</button>
+								</div>
 							</div>
 							<div class="d-none" id="filter">
 								@livewire('filter2')
@@ -641,7 +641,7 @@
 											onclick="showHidePassword('current_password')" id="eye"></i>
 									</div>
 								</div>
-							
+
 								<div class="text-danger" id="password-match-fail"></div>
 								<div class="col-md-6">
 									<label for="first_name" class="col-form-label dashboard-content">New Password (<i
@@ -976,10 +976,10 @@
 							var retail_price = 1
 							result.order_items.forEach(
 								function(item, index){
-									var product_total = item.product.retail_price * item.quantity;
+									var product_total = item.price * item.quantity;
 									//var product_total = retail_price * item.quantity;
 									subtotal = product_total + subtotal;
-									lineitems +='<tr class="border-bottom table-row-content" style="height:70px"><td style="width:491px"><a href="">'+item.product.name+'</a>'+'<td class="cart-basket d-flex align-items-center justify-content-center float-sm-end quantity-counter rounded-circle mt-4">'+item.quantity+'</td><td></td><td class="table-order-number text-dark text-end">$'+item.product.retail_price * item.quantity+'</td></tr>';
+									lineitems +='<tr class="border-bottom table-row-content" style="height:70px"><td style="width:491px"><a href="">'+item.product.name+'</a>'+'<td class="cart-basket d-flex align-items-center justify-content-center float-sm-end quantity-counter rounded-circle mt-4">'+item.quantity+'</td><td></td><td class="table-order-number text-dark text-end">$'+ item.price * item.quantity .toFixed(2)+'</td></tr>';
 									
 								console.log(item.quantity)
 								});
@@ -1431,7 +1431,7 @@
 				},	
 			});
 		}
-	</script>
+			</script>
 
 			<!-- Remove the container if you want to extend the Footer to full width. -->
 

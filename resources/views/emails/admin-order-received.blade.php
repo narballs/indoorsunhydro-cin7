@@ -339,7 +339,7 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-12 mt-5" style="width: 100%">
-                                                    <p class="description-thank-you-page ps-5" style="font-family: 'Roboto';
+                                                    <p class="description-thank-you-page ps-5" style="font-family: 'Poppins';
                                                     font-style: normal;
                                                     font-weight: 400;
                                                     font-size: 16px;
@@ -356,20 +356,53 @@
                                                         order.</p>
                                                 </div>
                                                 <div class="mt-5" style="margin-top: 50px !important;">
+                                                    <div style="display: flex;">
+                                                        <div style="width:20%">
+                                                            <p style="font-size: 15px;
+                                                            font-weight: 600;
+                                                            font-family: 'Poppins';
+                                                            padding-left: 46px;">Image</p>
+                                                        </div>
+                                                        <div style="width:40%">
+                                                            <p style="
+                                                            font-size: 15px;
+                                                            font-weight: 600;
+                                                            font-family: 'Poppins';">Name</p>
+                                                        </div>
+                                                        <div style="width:10%">
+                                                            <p style="
+                                                            font-size: 15px;
+                                                            font-weight: 600;
+                                                            font-family: 'Poppins';">Quantity</p>
+                                                        </div>
+                                                        <div style="width:15%">
+                                                            <p style=" padding-left: 25px;
+                                                            font-size: 15px;
+                                                            font-weight: 600;
+                                                            font-family: 'Poppins';">Price</p>
+                                                        </div>
+                                                        <div style="width:15%">
+                                                            <p style="
+                                                            font-size: 15px;
+                                                            font-weight: 600;
+                                                            font-family: 'Poppins';">Total </p>
+                                                        </div>
+                                                    </div>
                                                     <?php
+                                                        $total_quantity	 = 0;
                                                         $cart_total = 0;
                                                         $cart_price = 0;
-                                                        // dd($order_items);
                                                     ?>
                                                     @foreach ($order_items as $item )
                                                     <?php 
-                                                        // dd($item);
+                                                     $total_q[] = $item->quantity;
+                                                     $total_quantity = array_sum($total_q);
                                                         $total_quatity =  $item->quantity;
                                                         $total_price = $item->price * $total_quatity;
                                                         $cart_total  = $cart_total + $total_price ;
                                                      ?>
                                                     <div
-                                                        style="display: flex;  background: #FFFFFF !important; border: 1px solid #D3D3D3 !important;  border-radius: 5px !important; width: 682px !important;min-height: 114px !important; margin-top: 10px;">
+                                                        style="display: flex;  background: #FFFFFF !important; border: 1px solid #D3D3D3 !important;  border-radius: 5px !important; width: 722px !important;min-height: 114px !important; margin-top: 10px;">
                                                         @if (!empty($item->product->options[0]->image))
                                                         <div style="width:20%">
                                                             <img class="img-fluid my-2 thank-you-page-product-options-image"
@@ -390,8 +423,8 @@
                                                                 width="120px !important;">
                                                         </div>
                                                         @endif
-                                                        <div style="width:50%">
-                                                            <p class="thank-you-sku ps-0" style="font-family: 'Roboto';
+                                                        <div style="width:40%">
+                                                            <p class="thank-you-sku ps-0" style="font-family: 'Poppins';
                                                             font-style: normal;
                                                             font-weight: 600;
                                                             font-size: 18px;
@@ -399,41 +432,55 @@
                                                             color: #000000;">Sku:
                                                                 {{$item->product->code}}
                                                             </p>
-                                                            <p class="thank-page-title" style="font-family: 'Roboto';
+                                                            <p class="thank-page-title" style="font-family: 'Poppins';
                                                             font-style: normal;
                                                             font-weight: 400;
                                                             font-size: 16px;
                                                             line-height: 19px;
                                                             color: #4E4E4E;
-                                                            /* padding-left: 90px; */
                                                             margin-top: -16px;">
                                                                 {{$item->product->name}}
-
                                                             </p>
                                                         </div>
-                                                        <div style="width:30%">
-                                                            <p class="thnak-you-page-price" style="font-family: 'Roboto';
+                                                        <div style="width:10%">
+                                                            <p style="padding-left: 22px;
+                                                            font-family: 'Poppins';
                                                             font-style: normal;
                                                             font-weight: 400;
-                                                            font-size: 18px;
-                                                            line-height: 21px;
-                                                            color: #000000;
-                                                            margin-top: 35px;
-                                                            padding-left: 52px;">
-                                                                ${{number_format($item->price,2)}}
-
+                                                            font-size: 16px;
+                                                            line-height: 19px;
+                                                            color: #4e4e4e;
+                                                            margin-top: 40px;">
+                                                                {{$item->quantity}}
                                                             </p>
+                                                        </div>
+                                                        <div style="width:15%">
+                                                            <p class="thnak-you-page-price" style="    margin-top: 35px;
+                                                            padding-left: 20px;
+                                                            font-family: 'Poppins';
+                                                            font-style: normal;
+                                                            font-weight: 400;
+                                                            font-size: 16px;
+                                                            line-height: 19px;">
+                                                                ${{number_format($item->price,2)}}
+                                                            </p>
+                                                        </div>
+                                                        <div style="width:15%"">
+                                                        <p style=" padding-top: 20px; font-family: 'Poppins' ;
+                                                            font-style: normal; font-weight: 600; font-size: 16px;
+                                                            line-height: 19px;">
+                                                            ${{number_format($item->quantity * $item->price, 2)}}</p>
                                                         </div>
                                                     </div>
                                                     @endforeach
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-5 thnak-you-page-box-billing-address mt-5" style="    width: 31%;
+                                        <div class=" col-md-5 thnak-you-page-box-billing-address mt-5" style="    width: 31%;
                                             background: #fbfbfb;
                                             border-radius: 10px;
-                                            padding-left: 23px;">
-                                            <p class="thank-you-page-billing-address " style=" font-family: 'Roboto';
+                                            padding-left: 39px;">
+                                            <p class="thank-you-page-billing-address " style=" font-family: 'Poppins';
                                             font-style: normal;
                                             font-weight: 600;
                                             font-size: 30px;
@@ -470,7 +517,6 @@
                                             line-height: 19px;
                                             color: #5C5C5C;">
                                                 {{$addresses['shipping_address']['postalAddress1']}}
-
                                             </span><br>
                                             <span class="thank-you-page-user-detaiss" style=" font-family: 'Poppins';
                                             font-style: normal;
@@ -545,12 +591,15 @@
                                                 <div class="col-md-12" style="width: 96%;
                                                 padding-left: 22px;
                                                 padding-bottom: 14px;">
-                                                    <p class="thank-you-page-order-summary" style=" font-family: 'Poppins';
+                                                    <p class="thank-you-page-order-summary" style="font-family: 'Poppins';
                                                     font-style: normal;
                                                     font-weight: 600;
-                                                    font-size: 30px;
-                                                    line-height: 36px;
-                                                    color: #000000;">Order Summary</p>
+                                                    font-size: 27px;
+                                                    line-height: 13px;
+                                                    color: #000000;
+                                                ">Order #{{$currentOrder->id}}
+                                                        Summary
+                                                    </p>
                                                     <div class="row" style="display: flex">
                                                         <div class="col-md-6" style="width: 50%">
                                                             <p class="thank-you-page-item-count" style="   font-family: 'Poppins';
@@ -566,7 +615,7 @@
                                                             font-size: 16px;
                                                             line-height: 19px;
                                                             color: #5C5C5C;">
-                                                                {{$count}}
+                                                                {{$total_quantity}}
                                                             </span>
                                                         </div>
                                                         <div class="col-md-6 ps-5" style="width: 50%">
@@ -689,7 +738,7 @@
                         padding: 30px!important;
                         margin-top: -111px !important;
                         ">
-                            <p class="thank-you-page-card-footer" style=" font-family: 'Roboto';
+                            <p class="thank-you-page-card-footer" style=" font-family: 'Poppins';
                         font-style: normal;
                         font-weight: 400;
                         font-size: 16px;
@@ -699,7 +748,8 @@
                         ">
                                 Indoorsunhydro isn’t your grandma’s gardening
                                 store.<br> But you can bring her along
-                                if you want. <br> Walk-ins welcome anytime — except Sunday. Even gardeners need
+                                if you want. <br> Walk-ins welcome anytime — except Sunday. Even
+                                gardeners need
                                 a day
                                 of rest.</p>
                             <center>
