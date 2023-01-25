@@ -181,13 +181,7 @@
         </div>
     </div>
 </div>
-<div id="pop" class="" style=" width: 170px;
-    font-size: 12px;
-    text-align: center;
-    padding: 0.3rem 0.5rem;
-    line-height: 1rem;
-    margin-left: 10px !important;
-    background: #000 !important;">
+
         <div id="popover-form">
             <form id="myform" class="form-inline p-0 w-100" role="form">
                 @foreach($location_inventories as $inventory)
