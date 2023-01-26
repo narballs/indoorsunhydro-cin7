@@ -356,17 +356,18 @@
                                                 </div>
                                                 <div class="mt-5" style="margin-top: 50px !important;">
                                                     <div style="display: flex;">
-                                                        <div style="width:20%">
+                                                        {{-- <div style="width:20%">
                                                             <p style="font-size: 15px;
                                                             font-weight: 600;
                                                             font-family: 'Poppins';
                                                             padding-left: 46px;">Image</p>
-                                                        </div>
+                                                        </div> --}}
                                                         <div style="width:40%">
                                                             <p style="
                                                             font-size: 15px;
                                                             font-weight: 600;
-                                                            font-family: 'Poppins';">Name</p>
+                                                            font-family: 'Poppins';
+                                                            padding-left: 18px;">Name</p>
                                                         </div>
                                                         <div style="width:10%">
                                                             <p style="
@@ -402,7 +403,7 @@
                                                      ?>
                                                     <div
                                                         style="display: flex;  background: #FFFFFF !important; border: 1px solid #D3D3D3 !important;  border-radius: 5px !important; width: 722px !important;min-height: 114px !important; margin-top: 10px;">
-                                                        @if (!empty($item->product->options[0]->image))
+                                                        {{-- @if (!empty($item->product->options[0]->image))
                                                         <div style="width:20%">
                                                             <img class="img-fluid my-2 thank-you-page-product-options-image"
                                                                 src="{{$item->product->options[0]->image}}" alt=""
@@ -414,21 +415,22 @@
                                                                     padding-left: 12px !important;
                                                                   " width="  120px !important;">
                                                         </div>
-                                                        @else
-                                                        <div style="width:20%">
+                                                        @else --}}
+                                                        {{-- <div style="width:20%">
                                                             <img class="img-fluid my-2 thank-you-page-product-options-image"
                                                                 src="/theme/img/image_not_available.png" alt=""
                                                                 style="max-height: 95px !important;"
                                                                 width="120px !important;">
                                                         </div>
-                                                        @endif
-                                                        <div style="width:40%">
-                                                            <p class="thank-you-sku ps-0" style="font-family: 'Poppins';
+                                                        @endif --}}
+                                                        <div style="width:60%;">
+                                                            <p class=" thank-you-sku ps-0" style="font-family: 'Poppins';
                                                             font-style: normal;
                                                             font-weight: 600;
                                                             font-size: 18px;
                                                             line-height: 21px;
-                                                            color: #000000;">Sku:
+                                                            color: #000000;
+                                                            padding-left: 18px;">Sku:
                                                                 {{$item->product->code}}
                                                             </p>
                                                             <p class="thank-page-title" style="font-family: 'Poppins';
@@ -437,7 +439,8 @@
                                                             font-size: 16px;
                                                             line-height: 19px;
                                                             color: #4E4E4E;
-                                                            margin-top: -16px;">
+                                                            margin-top: -16px;
+                                                            padding-left: 18px;">
                                                                 {{$item->product->name}}
                                                             </p>
                                                         </div>
