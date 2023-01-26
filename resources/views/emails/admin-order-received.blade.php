@@ -362,7 +362,7 @@
                                                             font-family: 'Poppins';
                                                             padding-left: 46px;">Image</p>
                                                         </div> --}}
-                                                        <div style="width:40%">
+                                                        <div style="width:60%">
                                                             <p style="
                                                             font-size: 15px;
                                                             font-weight: 600;
