@@ -12,6 +12,7 @@ use App\Models\Brand;
 use App\Models\BuyList;
 use App\Models\ProductBuyList;
 use Auth;
+use DB;
 
 class ProductController extends Controller
 {
@@ -41,13 +42,14 @@ class ProductController extends Controller
         if ($request->get('per_page')) {
             $per_page = $request->get('per_page');
         } else {
-            $per_page = 10;
+            $per_page = 12;
         }
         $price_creteria = $request->get('search_price');
         if (!empty($category_ids)) {
             $products_query = Product::where('status', '!=', 'Inactive')
                 ->whereIn('category_id', $category_ids)
                 ->with('options.price', 'brand');
+            //dd($products_query);
 
             if (!empty($brand_id)) {
                 $products_query->where('brand_id', $brand_id);
@@ -87,7 +89,18 @@ class ProductController extends Controller
             if (!empty($selected_category_id)) {
                 $sub_category_ids = Category::where('parent_id', $selected_category_id)->pluck('id')->toArray();
             }
+            //echo $per_page;
+
+            //DB::connection()->enableQueryLog();
+            
+
+
             $products = $products_query->with('options.price', 'brand')->paginate($per_page);
+
+            $queries = DB::getQueryLog();
+
+
+            //echo '<pre>'; var_export($queries); echo '</pre>';
         }
 
         $brands = Brand::whereIn('id', $brand_ids)->pluck('name', 'id')->toArray();
