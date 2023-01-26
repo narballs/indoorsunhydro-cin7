@@ -45,23 +45,25 @@
 												@endif
 												<div class="row pl-4 pt-0 pr-4">
 
-													@foreach($category->children as $key=>$cat)
-													@if($cat->is_active == 1)
-													@if($count > 10 )
-													<div class="col-md-3 pl-0 pr-0"
-														style="width:600px !important; background-color:white !important">
-														@else
+													@foreach($category->children->sortBy('name') as $key=>$cat)
+														@if($cat->is_active == 1)
+															@if($count > 10)
+																<div class="col-md-2 pl-0 pr-0"
+																	style="width:600px !important; background-color:white !important">
+																
+															@else
+															
 														<div class="col-md-12 pl-0 pr-0"
-															style="width:100% !imporant; background-color:white !important">
+																style="width:100% !imporant; background-color:white !important">
 															@endif
 															@if ($count > 0)
-															<li class="dropdown-item" id="category_{{$cat->id}}"
-																href="{{ url('products/'.$category->id) }}">
+																<li class="dropdown-item" id="category_{{$cat->id}}"
+																	href="{{ url('products/'.$category->id) }}">
 
-																<a class="link-dark text-decoration-none nav-link product-mega-menu"
-																	id="category_{{$category->id}}"
-																	href="{{ url('products/'.$cat->id.'/'.$category->slug.'-'.$cat->slug) }}">{{$cat->name}}</a>
-															</li>
+																	<a class="link-dark text-decoration-none nav-link product-mega-menu"
+																		id="category_{{$category->id}}"
+																		href="{{ url('products/'.$cat->id.'/'.$category->slug.'-'.$cat->slug) }}">{{$cat->name}}</a>
+																</li>
 															@endif
 														</div>
 														@endif

@@ -48,27 +48,18 @@
 
                   <option value="{{$category->id}}/{{$category->slug}}" {{ isset($category_id) &&
                      $category_id==$category->id ? 'selected="selected"' : '' }}>{{ $category->name }}</option>
-                  <!-- <option value="{{$category->id}}/{{$category->slug}}" {{ isset($selected_category_id) && $selected_category_id == $selected_category_id ? 'selected="selected"' : '' }}>{{ $category->name }}</option> -->
                   @endforeach
-
-                  <!-- @foreach($products as $key=>$product)
-                        <option value="{{$product->brand_id}}" >{{$product->brand}}</option>
-                  @endforeach -->
                </select>
             </div>
 
             <div class="col">
-               <label>Brand</label>
-               <select class="form-select" id="brand" name="brands[]" onchange="handleSelectChange('brand')">
-                  <option value="">Select Brand</option>
-                  @foreach($brands as $_brand_id => $brand_name)
-                  <option value="{{ $_brand_id }}" {{ isset($brand_id) && $brand_id==$_brand_id ? 'selected="selected"'
-                     : '' }}>{{ $brand_name }}</option>
+               <label>Sub Category</label>
+               <select class="form-select" id="childeren" name="childeren[]" onchange="handleSelectChange('childeren')">
+                  <option value="">Sub Category</option>
+                  @foreach($childerens as $key => $childeren)
+                  <option value="{{ $childeren->id }}" {{ isset($childeren_id) && $childeren_id==$childeren->id ? 'selected="selected"'
+                     : '' }}>{{ $childeren->name }}</option>
                   @endforeach
-
-                  <!-- @foreach($products as $key=>$product)
-                        <option value="{{$product->brand_id}}" >{{$product->brand}}</option>
-                  @endforeach -->
                </select>
             </div>
 
@@ -401,6 +392,9 @@
                var selected_cat_id = jQuery('#selected_cat').val();
                var price = jQuery('#search_price').val();
                var brand = jQuery('#brand').val();
+               var childeren = jQuery('#childeren').val();
+
+
                var per_page = jQuery('#per_page').val();
                var stock = jQuery('#in-stock').val();
                var search_price = jQuery('#search_price').val();
@@ -424,6 +418,11 @@
                   if (brand != '') {
                      basic_url = `?brand_id=${brand}`;
                   }
+
+                  if (childeren != '') {
+                     basic_url = `?childeren_id=${childeren}`;
+                  }
+
                   if (per_page != '') {
                      basic_url = basic_url+`&per_page=${per_page}`;
                   }

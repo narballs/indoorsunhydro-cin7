@@ -24,7 +24,9 @@ class ProductController extends Controller
         }
 
         $parent_category = Category::find($category_id);
+
         $parent_category_slug = $parent_category->slug;
+
         $categories = Category::where('parent_id', 0)->get();
 
 
@@ -35,6 +37,10 @@ class ProductController extends Controller
 
         $all_product_ids = Product::whereIn('category_id', $category_ids)->pluck('id')->toArray();
         $brand_ids = Product::whereIn('id', $all_product_ids)->pluck('brand_id')->toArray();
+
+        $childerens  = Category::where('parent_id', $category_id)->get();
+        
+
 
         $brand_id = $request->get('brand_id');
         $stock = $request->get('stock');
@@ -53,6 +59,11 @@ class ProductController extends Controller
 
             if (!empty($brand_id)) {
                 $products_query->where('brand_id', $brand_id);
+            }
+            $childeren_id = $request->get('childeren_id');
+
+            if (!empty($childeren_id)) {
+                $products_query->where('category_id', $childeren_id);
             }
 
             if (!empty($price_creteria)) {
@@ -89,9 +100,6 @@ class ProductController extends Controller
             if (!empty($selected_category_id)) {
                 $sub_category_ids = Category::where('parent_id', $selected_category_id)->pluck('id')->toArray();
             }
-            //echo $per_page;
-
-            //DB::connection()->enableQueryLog();
             
 
 
@@ -132,7 +140,9 @@ class ProductController extends Controller
             'stock',
             'selected_category_id',
             'lists',
-            'pricing'
+            'pricing',
+            'childerens',
+            'childeren_id'
 
         ));
     }
@@ -151,6 +161,10 @@ class ProductController extends Controller
 
         $selected_category_id = $request->get('selected_category');
 
+        $childerens   = Category::where('parent_id', $selected_category_id)->get();
+
+
+
         $category_id = $selected_category_id;
         $brand_ids = Product::where('category_id', $selected_category_id)->pluck('brand_id', 'brand_id')->toArray();
         if (empty($brand_ids) && !empty($search_queries)) {
@@ -161,9 +175,18 @@ class ProductController extends Controller
             $products_query = Product::where('category_id', $selected_category_id)->with('brand', 'options');
         }
         $brand_id = $request->get('brand_id');
+
         if (!empty($brand_id)) {
             $products_query->where('brand_id', $brand_id);
         }
+
+        $childeren_id = $request->get('childeren_id');
+        
+
+            if (!empty($childeren_id)) {
+                $products_query->where('category_id', $childeren_id);
+            }
+
         $price_creteria = $request->get('search_price');
         if (!empty($price_creteria)) {
             if ($price_creteria == 'brand-a-to-z') {
@@ -303,7 +326,9 @@ class ProductController extends Controller
                 'brand_id',
                 'per_page',
                 'lists',
-                'pricing'
+                'pricing',
+                'childerens',
+                'childeren_id'
             )
         );
     }

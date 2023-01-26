@@ -39,7 +39,7 @@
                   @endforeach
                </select>
             </div>
-            <div class="col">
+    <!--         <div class="col">
                <label>Brand</label>
                <select class="form-select" id="brand" name="brands[]" onchange="handleSelectChange()">
                   <option value="0">Select Brand</option>
@@ -48,7 +48,18 @@
                      : '' }}>{{ $brand_name }}</option>
                   @endforeach
                </select>
+            </div> -->
+             <div class="col">
+               <label>Sub Category</label>
+               <select class="form-select" id="childeren" name="childeren[]" onchange="handleSelectChange('childeren')">
+                  <option value="">Sub Category</option>
+                  @foreach($childerens as $key => $childeren)
+                  <option value="{{ $childeren->id }}" {{ isset($childeren_id) && $childeren_id==$childeren->id ? 'selected="selected"'
+                     : '' }}>{{ $childeren->name }}</option>
+                  @endforeach
+               </select>
             </div>
+
             <div class="col">
                <label>Result per page</label>
                <select id="per_page" class="form-select" onchange="handleSelectChange()">
@@ -144,6 +155,8 @@
                         @endforeach
                      </select>
                   </div>
+
+         
                   <div class="col-md-12">
                      <label>Brand</label>
                      <select class="form-select" id="brand" name="brands[]" onchange="handleSelectChange()">
@@ -357,9 +370,13 @@
                var stock = jQuery('#in-stock').val();
                var search_price = jQuery('#search_price').val();
                var category_id = jQuery('#category_id').val();
+               var childeren = jQuery('#childeren').val();
    
             if (selected_category != '') {
                basic_url = `?selected_category=${selected_category}`;
+            }
+            if (childeren != '') {
+               basic_url = basic_url+ `&childeren_id=${childeren}`;
             }
             if (brand != '') {
                basic_url = basic_url+`&brand_id=${brand}`;
