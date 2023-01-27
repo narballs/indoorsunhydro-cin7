@@ -21,6 +21,7 @@ use App\Http\Controllers\Admin\AdminProductController;
 use App\Http\Controllers\Users\RoleController;
 use App\Http\Controllers\Admin\AdminBuyListController;
 use App\Http\Controllers\Admin\AdminShareListController;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -93,7 +94,7 @@ Route::post('/create-list/', [ProductController::class, 'createList']);
 
 
 Route::group(['middleware' => ['auth']], function () {
-     Route::resource('admin/roles', RoleController::class);
+    Route::resource('admin/roles', RoleController::class);
     Route::resource('admin/users', UserController::class);
     Route::get('admin/dashboard', [DashboardController::class, 'index'])->name('admin.view');
     Route::get('admin/orders', [OrderManagementController::class, 'index'])->name('admin.orders');
@@ -125,6 +126,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('admin/generate-list', [AdminBuyListController::class, 'genrateList']);
     Route::post('admin/share-list', [AdminShareListController::class, 'shareList']);
     Route::get('admin/admin-users', [UserController::class, 'adminUsers']);
+    Route::get('admin/logout', function () {
+        Auth::logout();
+        return redirect()->route('user');
+    });
 });
 Route::get('product/search', [ProductController::class, 'productSearch'])->name('product_search');
 //Route::resource('buy-list', AdminBuyListController::class)->name('buy-lisy-front');
@@ -132,9 +137,8 @@ Route::get('product/search', [ProductController::class, 'productSearch'])->name(
 
 
 
-  
+
 Route::get('/home', [HomeController::class, 'index'])->name('home');
-  
-Route::group(['middleware' => ['auth']], function() {
-   
+
+Route::group(['middleware' => ['auth']], function () {
 });

@@ -390,6 +390,12 @@ return [
             'icon_color' => 'cyan',
             'url'        => '#',
         ],
+
+        [
+            'text'       => 'Logout',
+            'icon' => ' fas fa-power-off',
+            'url'        => 'admin/logout',
+        ],
     ],
 
     /*
