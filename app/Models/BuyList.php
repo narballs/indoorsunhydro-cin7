@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 use Illuminate\Database\Eloquent\Model;
 
 class BuyList extends Model
@@ -11,8 +12,8 @@ class BuyList extends Model
     protected $fillable = [
         'title',
         'status',
-        'description', 
-        'user_id', 
+        'description',
+        'user_id',
         'type'
     ];
 
