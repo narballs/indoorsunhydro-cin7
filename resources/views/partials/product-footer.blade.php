@@ -10,10 +10,10 @@
 					<img src="/theme/img/map-pin.png" class="img-fluid">
 				</span>
 				<span class="ms-2 pra-footer">5671 Warehouse Way
-					Sacramento CA 95826
 				</span>
-				<p class="ms-4 ms-4-footer">&nbsp;
-					13310 S. Figueroa St. Los Angeles, CA 90061
+				<p class="ms-4 mt-3 pra-footer">&nbsp;
+					{{-- 13310 S. Figueroa St. Los Angeles, CA 90061 --}}
+					Sacramento CA 95826
 				</p>
 				<span>
 					<img src="/theme/img/phone-call.png" class="img-fluid">
