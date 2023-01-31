@@ -283,7 +283,7 @@
             		"order_id": order_id
         		},
         		success: function(response){
-        			 window.location.reload();
+        			//  window.location.reload();
     			}
     		});
     	}
@@ -317,7 +317,6 @@
         		success: function(response){
 				    console.log(response);
 					window.location.reload();
-					// window.location.href = "/admin/orders";
     			}
 			})      
 		}

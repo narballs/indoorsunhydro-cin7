@@ -60,7 +60,6 @@ class UserController extends Controller
 
         return view('admin.users.index', compact('data', 'count'))
             ->with('i', ($request->input('page', 1) - 1) * 5);
-
     }
 
     /**
@@ -219,10 +218,10 @@ class UserController extends Controller
             $user = User::latest()->first();
             $user_id = $user->id;
             $user_Update = User::where("id", $user_id)->update([
-                    "first_name" => $request->get('first_name'),
-                    "last_name" => $request->get('last_name'),
-                    "password" => bcrypt($request->get('password'))
-                ]);
+                "first_name" => $request->get('first_name'),
+                "last_name" => $request->get('last_name'),
+                "password" => bcrypt($request->get('password'))
+            ]);
         }
 
         return response()->json(['success' => true, 'created' => true, 'msg' => 'Welcome, new player.']);
@@ -318,29 +317,31 @@ class UserController extends Controller
         return view('my-account', compact('user', 'user_address', 'states'));
     }
 
-    public function my_qoutes() {
+    public function my_qoutes()
+    {
         $user_id = auth()->id();
-        $qoutes = BuyList::where('user_id', $user_id)->where('type', 'qoute')->get();
+        $qoutes = BuyList::where('user_id', $user_id)->where('type', 'Quote')->get();
         return response()->json([
             'data' => $qoutes,
             'msg' => 'success'
-
         ]);
-
     }
 
-    public function my_qoutes_details($id) {
+    public function my_qoutes_details($id)
+    {
         $user_id = auth()->id();
         $list = BuyList::where('user_id', $user_id)->where('id', $id)->where('type', 'qoute')->with('list_products.product.options')->first();
 
-     return view('user-list-detail', compact(
-            'list'))->render();
+        return view('user-list-detail', compact(
+            'list'
+        ))->render();
     }
 
-    public function my_qoute_edit($id) {
-         $list = BuyList::where('id', $id)->with('list_products.product.options')->first();
-            $products = Product::paginate(10);
-           return view('user-qoute-edit', compact('products', 'list'))->render();
+    public function my_qoute_edit($id)
+    {
+        $list = BuyList::where('id', $id)->with('list_products.product.options')->first();
+        $products = Product::paginate(10);
+        return view('user-qoute-edit', compact('products', 'list'))->render();
     }
 
     public function user_order_detail($id)
@@ -395,10 +396,11 @@ class UserController extends Controller
         return response()->json(['success' => true, 'created' => true, 'msg' => 'Address updated Successfully']);
     }
 
-    public function adminUsers(Request $request){
+    public function adminUsers(Request $request)
+    {
         //$data = User::orderBy('id', 'DESC')->paginate(5);
         $data = User::role(['Admin'])->get();
-        $count = $data ->count();
+        $count = $data->count();
         return view('admin/users/admin-users', compact('data', 'count'))
             ->with('i', ($request->input('page', 1) - 1) * 5);
     }
