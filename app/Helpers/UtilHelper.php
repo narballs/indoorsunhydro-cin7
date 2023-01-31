@@ -39,13 +39,13 @@ class UtilHelper
 
         switch ($method) {
             case 'POST':
-                $res = $client->post($url, $parameters);
+                $res = $client->post($url, $authHeaders);
                 break;
             case 'PUT':
                 // code...
                 break;
             case 'GET':
-                $res = $client->get($url, $parameters);
+                $res = $client->get($url, $authHeaders);
                 break;
 
             default:
