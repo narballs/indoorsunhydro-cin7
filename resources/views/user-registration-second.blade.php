@@ -221,7 +221,7 @@
 						<div id="user-info-error" class="text-danger"></div>
 						<div class="col-md-12 mb-5 mt-5 text-center">
 							<button type="submit" value="" class="btn-login sing-up-continue" onclick="signup()">
-								SING UP & CONTINUE</button>
+								SIGN UP & CONTINUE</button>
 						</div>
 					</div>
 				</div>
