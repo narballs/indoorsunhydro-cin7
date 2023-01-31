@@ -24,13 +24,13 @@ class SalesOrders implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-     /**
+    /**
      * The number of times the job may be attempted.
      *
      * @var int
      */
     public $tries = 3;
- 
+
     /**
      * The maximum number of unhandled exceptions to allow before failing.
      *
@@ -71,32 +71,31 @@ class SalesOrders implements ShouldQueue
     {
         switch ($this->_method) {
             case 'create_order':
-                $res = UtilHelper::sendRequest('POST', $this->_apiBaseURL.'v1/SalesOrders', $this->_body, []);
+                $res = UtilHelper::sendRequest('POST', $this->_apiBaseURL . 'v1/SalesOrders', $this->_body, []);
                 break;
             case 'update_order':
-                $res = UtilHelper::sendRequest('PUT', $this->_apiBaseURL.'v1/SalesOrders', $this->_body, []);
+                $res = UtilHelper::sendRequest('PUT', $this->_apiBaseURL . 'v1/SalesOrders', $this->_body, []);
                 break;
             case 'list_order':
-                $res = UtilHelper::sendRequest('GET', $this->_apiBaseURL.'v1/SalesOrders', $this->_body, []);
+                $res = UtilHelper::sendRequest('GET', $this->_apiBaseURL . 'v1/SalesOrders', $this->_body, []);
                 break;
             case 'retrive_order':
-                $res = UtilHelper::sendRequest('GET', $this->_apiBaseURL.'v1/SalesOrders/'.$this->_pathParam, $this->_body, []);
-                break;
-            
-            default:
-               $res = UtilHelper::sendRequest('GET', $this->_apiBaseURL.'v1/SalesOrders', $this->_body, []);
+                $res = UtilHelper::sendRequest('GET', $this->_apiBaseURL . 'v1/SalesOrders/' . $this->_pathParam, $this->_body, []);
                 break;
 
+            default:
+                $res = UtilHelper::sendRequest('GET', $this->_apiBaseURL . 'v1/SalesOrders', $this->_body, []);
+                break;
         }
         $response = json_decode($res);
         $order_id = $response[0]->id;
         $reference = $response[0]->code;
-        echo $order_id.'-----'.$reference;
+        echo $order_id . '-----' . $reference;
         $admin_users =  DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
         $admin_users = $admin_users->toArray();
         $users_with_role_admin = User::select("email")
-                    ->whereIn('id',$admin_users)
-                    ->get();
+            ->whereIn('id', $admin_users)
+            ->get();
         if (!empty($order_id) && !empty($reference)) {
             $data = [
                 'order_id' => $order_id,
@@ -105,14 +104,14 @@ class SalesOrders implements ShouldQueue
                 'contact_email' => 'stageindoorsun@stage.indoorsunhydro.com',
                 'reference' => $reference,
                 'subject' => 'Order fullfilled',
-                'from' => env('MAIL_FROM_ADDRESS'),
+                'from' => 'noreply@indoorsunhydro.com',
                 'content' => 'Order fullfilled has been fullfilled.'
             ];
-             foreach($users_with_role_admin as $role_admin) {
-                    $data['email'] = $role_admin->email;
-                    $adminTemplate = 'emails.approval-notifications';
-                    MailHelper::sendMailNotification('emails.admin-order-fullfillment', $data);
-                }
+            foreach ($users_with_role_admin as $role_admin) {
+                $data['email'] = $role_admin->email;
+                $adminTemplate = 'emails.approval-notifications';
+                MailHelper::sendMailNotification('emails.admin-order-fullfillment', $data);
+            }
         }
 
         $api_order = ApiOrder::where('reference', $reference)->first();
@@ -134,8 +133,8 @@ class SalesOrders implements ShouldQueue
         // );
         //dd($contact['user_id']);exit;
         //dd($apiOrder);
-        
-      
+
+
         // $reference = $response[0]->code;
         // //dd($reference);
         // $last_row = DB::table('api_orders')->latest('id')->first();
