@@ -424,12 +424,12 @@
 							<div class="modal-dialog">
 								<div class="modal-content">
 									<div class="modal-header">
-										<h5 class="modal-title text-center" id="exampleModalLabel">Create Qoute</h5>
+										<h5 class="modal-title text-center" id="exampleModalLabel">Create Quote</h5>
 										<button type="button" class="btn-close" data-bs-dismiss="modal"
 											aria-label="Close"></button>
 									</div>
 									<div class="modal-body">
-										<input type="text" name="qoute_id" id="qoute_id" class="form-control"
+										<input type="text" name="quote_id" id="quote_id" class="form-control"
 											placeholder="List Name" aria-label="Qoute Name"
 											aria-describedby="addon-wrapping">
 										<input type="hidden" name="qoute" id="qoute" value="qoute">
@@ -738,7 +738,7 @@
 			// 	}
 			// 	else {
 			// 		var type = 'qoute';
-			// 		var list_name = $('#qoute_id').val();
+			// 		var list_name = $('#quote_id').val();
 			// 	}
 			// 	jQuery.ajax({
 			// 		url: "{{ url('/create-list/')}}",
@@ -1139,11 +1139,7 @@
                 		}
             		},
             		error: function (response) {
-  
-		                console.log(response)
-		                
 		                var error_message = response.responseJSON;
-		                console.log(error_message);
 		                var error_text = '';
 		                if (typeof error_message.errors.first_name != 'undefined') {
 		                    error_text = error_message.errors.first_name;
@@ -1221,11 +1217,11 @@
 					var list_name = $('#whish_list_id').val();
 				}
 				else {
-					var type = 'qoute';
-					var list_name = $('#qoute_id').val();
+					var type = 'quote';
+					var list_name = $('#quote_id').val();
 				}
-		    	var title = $('#qoute_id').val();
-		    	var description = 'Qoute';
+		    	var title = $('#quote_id').val();
+		    	var description = 'Quote';
 		    	var status = 'Public';
         	jQuery.ajax({
                   	url: "{{ route('buy-list.store') }}",
@@ -1238,13 +1234,11 @@
                      	type : type 
                   	},
                   	success: function(response){
-                  		console.log(response);
                    		$( "#list_title" ).append("<h4>"+title+"</h4>");
                    		$("#list_id").val(response.list_id);
                    		$("#title_errors").html('');
                    		$("#status_errors").html('');
                    		$("#description_errors").html('');
-                   		console.log(response);
                    		$("#success_msg").html(response.success);
                    		$("#success_msg").removeClass('d-none');
                    		$(".btn-add-to-cart").prop('disabled', false);
@@ -1252,15 +1246,12 @@
 
             		}, 
             		error : function(response) {
-            			console.log(response.responseJSON.errors);
             			if (response.responseJSON.errors.title) {
-
             				$("#title_errors").html(response.responseJSON.errors.title);
             			}
             			else {
             				$("#title_errors").html('');
             			}
-
             			if (response.responseJSON.errors.status) {
             				$("#status_errors").html(response.responseJSON.errors.status);
             			}
@@ -1309,7 +1300,7 @@
 					listItems: listItems,
 					listId : list_id,
 					is_update: is_update,
-					type : 'Qoute'
+					type : 'Quote'
 				},
 				success: function(response) {
 					console.log(response);

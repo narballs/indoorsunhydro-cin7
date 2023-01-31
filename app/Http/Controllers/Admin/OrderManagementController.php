@@ -454,6 +454,7 @@ class OrderManagementController extends Controller
             'isApproved' => 2,
             'updated_at' => Carbon::now(),
         ]);
+
         return response()->json([
             'buy_list_product' =>  $buy_list_product,
             'status' => 'success',
