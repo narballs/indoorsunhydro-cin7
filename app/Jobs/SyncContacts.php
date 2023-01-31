@@ -23,13 +23,13 @@ class SyncContacts implements ShouldQueue
      *
      * @return void
      */
-     /**
+    /**
      * The number of times the job may be attempted.
      *
      * @var int
      */
     public $tries = 3;
- 
+
     /**
      * The maximum number of unhandled exceptions to allow before failing.
      *
@@ -71,28 +71,26 @@ class SyncContacts implements ShouldQueue
     {
         switch ($this->_method) {
             case 'create_contact':
-                $res = UtilHelper::sendRequest('POST', $this->_apiBaseURL.'v1/Contacts', $this->_body, []);
+                $res = UtilHelper::sendRequest('POST', $this->_apiBaseURL . 'v1/Contacts', $this->_body, []);
                 break;
             case 'update_contact':
-                $res = UtilHelper::sendRequest('PUT', $this->_apiBaseURL.'v1/Contacts', $this->_body, []);
+                $res = UtilHelper::sendRequest('PUT', $this->_apiBaseURL . 'v1/Contacts', $this->_body, []);
                 break;
             case 'list_contact':
-                $res = UtilHelper::sendRequest('GET', $this->_apiBaseURL.'v1/Contacts', $this->_body, []);
+                $res = UtilHelper::sendRequest('GET', $this->_apiBaseURL . 'v1/Contacts', $this->_body, []);
                 break;
             case 'retrive_contact':
-                $res = UtilHelper::sendRequest('GET', $this->_apiBaseURL.'v1/Contacts/'.$this->_pathParam, $this->_body, []);
-                break;
-            
-            default:
-               $res = UtilHelper::sendRequest('GET', $this->_apiBaseURL.'v1/Contacts', $this->_body, []);
+                $res = UtilHelper::sendRequest('GET', $this->_apiBaseURL . 'v1/Contacts/' . $this->_pathParam, $this->_body, []);
                 break;
 
+            default:
+                $res = UtilHelper::sendRequest('GET', $this->_apiBaseURL . 'v1/Contacts', $this->_body, []);
+                break;
         }
         $response = json_decode($res);
-        dd($response);
         $contact_id = $response[0]->id;
         $code = $response[0]->code;
-        echo $contact_id.'-----'.$code;
+        echo $contact_id . '-----' . $code;
         if ($contact_id) {
             $contact = Contact::where('email', $code)->update(
                 [
@@ -100,9 +98,9 @@ class SyncContacts implements ShouldQueue
                     'status' => '1'
                 ]
             );
-        
+
             $user_id = Contact::where('email', $code)->pluck('user_id')->first();
-            $api_order = ApiOrder::where('user_id', $user_id)->update(['memberId' => $contact_id]); 
+            $api_order = ApiOrder::where('user_id', $user_id)->update(['memberId' => $contact_id]);
         }
     }
 }
