@@ -12,10 +12,11 @@ use App\Models\Pricing;
 
 class AdminProductController extends Controller
 {
-    // public function __construct()
-    // {
-    //     $this->middleware('admin');
-    // }
+    function __construct()
+    {
+        $this->middleware(['role:Admin']);
+
+    }
     
     public function index(Request $request) {
         $search = $request->get('search');

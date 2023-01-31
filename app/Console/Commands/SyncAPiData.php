@@ -45,88 +45,81 @@ class SyncAPiData extends Command
     public function handle()
     {
 
-//         $client = new \GuzzleHttp\Client();
+        $client = new \GuzzleHttp\Client();
 
 
-//         // Find total category pages
-//         $total_category_pages = 9;
+        // Find total category pages
+        $total_category_pages = 9;
 
-//         for ($i = 1; $i <= $total_category_pages; $i++) {
-//             $this->info('Processing page#' . $i);
+        for ($i = 1; $i <= $total_category_pages; $i++) {
+            $this->info('Processing page#' . $i);
 
-//             $res = $client->request(
-//                 'GET', 
-//                 'https://api.cin7.com/api/v1/ProductCategories?page=' . $i, 
-//                 [
-//                     // 'auth' => [
-//                     //     env('API_USER'), 
-//                     //     env('API_PASSWORD')
-//                     // ]
-//                      'auth' => [
-//                         'IndoorSunHydroUS', 
-//                         'faada8a7a5ef4f90abaabb63e078b5c1'
-//                     ]
+            $res = $client->request(
+                'GET', 
+                'https://api.cin7.com/api/v1/ProductCategories?page=' . $i, 
+                [
+                    // 'auth' => [
+                    //     env('API_USER'), 
+                    //     env('API_PASSWORD')
+                    // ]
+                     'auth' => [
+                        'IndoorSunHydroUS', 
+                        'faada8a7a5ef4f90abaabb63e078b5c1'
+                    ]
                  
-//                 ]
-//             );
+                ]
+            );
 
-//             $api_categories = $res->getBody()->getContents();
-//             $api_categories = json_decode($api_categories);
-//             // dd($api_categories);
+            $api_categories = $res->getBody()->getContents();
+            $api_categories = json_decode($api_categories);
 
-//             $this->info('Found ' . count($api_categories) . ' from API');
+            $this->info('Found ' . count($api_categories) . ' from API');
 
-//             foreach($api_categories as $api_category) {
+            foreach($api_categories as $api_category) {
 
-//                 $this->info($api_category->id);
-//                 //continue;
-//                 $category = Category::where('category_id', $api_category->id)->first();
-//                 if (!empty($category)) {
-//                     $this->info('---------------------------------------');
-//                     $this->info('Processing Category ' . $api_category->name);
-//                     $this->info('---------------------------------------');
-//                         //old one 
-//                         // $category_data = [
-//                         //     'id' => $api_category->id,
-//                         //     'name' => $api_category->name,
-//                         //     'category_id' => $api_category->id,
-//                         //     'parent_id' => $api_category->parentId,
-//                         //     'is_active' => $api_category->isActive,
-//                         //     'sort' => $api_category->sort,
-//                         // ];
+                $this->info($api_category->id);
+                $category = Category::where('category_id', $api_category->id)->first();
+                if (!empty($category)) {
+                    $this->info('---------------------------------------');
+                    $this->info('Processing Category ' . $api_category->name);
+                    $this->info('---------------------------------------');
+                        //old one 
+                        // $category_data = [
+                        //     'id' => $api_category->id,
+                        //     'name' => $api_category->name,
+                        //     'category_id' => $api_category->id,
+                        //     'parent_id' => $api_category->parentId,
+                        //     'is_active' => $api_category->isActive,
+                        //     'sort' => $api_category->sort,
+                        // ];
 
-//                         // $category = Category::firstOrCreate(
-//                         //     ['id' => $api_category->id],
-//                         //     $category_data
-//                         // );
+                        // $category = Category::firstOrCreate(
+                        //     ['id' => $api_category->id],
+                        //     $category_data
+                        // );
 
-//                     $category->name = $api_category->name;
-//                     $category->slug = Str::slug($api_category->name);
-//                     $category->is_active = $api_category->isActive;
-//                     $category->parent_id = $api_category->parentId;
-//                     $category->save();
-//                 }
-//                 else {
-//                     //echo 'here';exit;
-//                     $category = new Category([
-//                         'id' => $api_category->id,
-//                         'name' => $api_category->name,
-//                         'slug' => Str::slug($api_category->name),
-//                         'category_id' => $api_category->id,
-//                         'parent_id' => $api_category->parentId,
-//                         'is_active' => $api_category->isActive,
-//                         'sort' => $api_category->sort
-//                     ]);
-//                     $category->save();
-//                 }
-//             }
-//         }
-//     }
-// }
-        // $product = Product::where('product_id', 14535)->first();
-        // $product->name = 'abc' . date('Y-m-d H:i:s');
-        // $product->save();
-        // return;
+                    $category->name = $api_category->name;
+                    $category->slug = Str::slug($api_category->name);
+                    $category->is_active = $api_category->isActive;
+                    $category->parent_id = $api_category->parentId;
+                    $category->save();
+                }
+                else {
+                    //echo 'here';exit;
+                    $category = new Category([
+                        'id' => $api_category->id,
+                        'name' => $api_category->name,
+                        'slug' => Str::slug($api_category->name),
+                        'category_id' => $api_category->id,
+                        'parent_id' => $api_category->parentId,
+                        'is_active' => $api_category->isActive,
+                        'sort' => $api_category->sort
+                    ]);
+                    $category->save();
+                }
+            }
+        }
+
 
 
             $client2 = new \GuzzleHttp\Client();
@@ -143,10 +136,6 @@ class SyncAPiData extends Command
                     'GET', 
                     'https://api.cin7.com/api/v1/Products/?page=' . $i, 
                     [
-                        // 'auth' => [
-                        //     env('API_USER'), 
-                        //     env('API_PASSWORD')
-                        // ]
                         'auth' => [
                             'IndoorSunHydroUS', 
                             'faada8a7a5ef4f90abaabb63e078b5c1'
@@ -207,7 +196,6 @@ class SyncAPiData extends Command
                         $product->save();
                     if ($api_product->productOptions) {
                         foreach($api_product->productOptions as $api_productOption) {
-                            // dd($api_productOption);
                             $product_option = ProductOption::with('price')->where('option_id',$api_productOption->id)->first();
                             if ($product_option) {
                                 $product_option->option1 = $api_productOption->option1;

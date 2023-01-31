@@ -9,17 +9,24 @@ use App\Models\ProductOption;
 use Session;
 use App\Models\Contact;
 use App\Models\Brand;
+use App\Models\BuyList;
+use App\Models\ProductBuyList;
+use Auth;
+use DB;
 
 class ProductController extends Controller
 {
     public function showProductByCategory(Request $request, $category_id)
     {
+
         $selected_category_id = $request->get('selected_category_id');
         if (!empty($selected_category_id)) {
         }
 
         $parent_category = Category::find($category_id);
+
         $parent_category_slug = $parent_category->slug;
+
         $categories = Category::where('parent_id', 0)->get();
 
 
@@ -31,22 +38,32 @@ class ProductController extends Controller
         $all_product_ids = Product::whereIn('category_id', $category_ids)->pluck('id')->toArray();
         $brand_ids = Product::whereIn('id', $all_product_ids)->pluck('brand_id')->toArray();
 
+        $childerens  = Category::where('parent_id', $category_id)->get();
+        
+
+
         $brand_id = $request->get('brand_id');
         $stock = $request->get('stock');
 
         if ($request->get('per_page')) {
             $per_page = $request->get('per_page');
         } else {
-            $per_page = 10;
+            $per_page = 12;
         }
         $price_creteria = $request->get('search_price');
         if (!empty($category_ids)) {
             $products_query = Product::where('status', '!=', 'Inactive')
                 ->whereIn('category_id', $category_ids)
-                ->with('options', 'brand');
+                ->with('options.price', 'brand');
+            //dd($products_query);
 
             if (!empty($brand_id)) {
                 $products_query->where('brand_id', $brand_id);
+            }
+            $childeren_id = $request->get('childeren_id');
+
+            if (!empty($childeren_id)) {
+                $products_query->where('category_id', $childeren_id);
             }
 
             if (!empty($price_creteria)) {
@@ -83,10 +100,33 @@ class ProductController extends Controller
             if (!empty($selected_category_id)) {
                 $sub_category_ids = Category::where('parent_id', $selected_category_id)->pluck('id')->toArray();
             }
-            $products = $products_query->with('options', 'brand')->paginate($per_page);
+            
+
+
+            $products = $products_query->with('options.price', 'brand')->paginate($per_page);
+
+            $queries = DB::getQueryLog();
+
+
+            //echo '<pre>'; var_export($queries); echo '</pre>';
         }
 
         $brands = Brand::whereIn('id', $brand_ids)->pluck('name', 'id')->toArray();
+        $user_id = Auth::id();
+        $contact = '';
+        if ($user_id != null) {
+            $contact = Contact::where('user_id', $user_id)->first();
+        }
+
+        if ($contact) {
+            $pricing = $contact->priceColumn;
+        } else {
+            $pricing = 'Retail';
+        }
+
+        $lists = BuyList::where('user_id', $user_id)->get();
+
+
 
         return view('categories', compact(
             'products',
@@ -98,7 +138,11 @@ class ProductController extends Controller
             'price_creteria',
             'categories',
             'stock',
-            'selected_category_id'
+            'selected_category_id',
+            'lists',
+            'pricing',
+            'childerens',
+            'childeren_id'
 
         ));
     }
@@ -117,6 +161,10 @@ class ProductController extends Controller
 
         $selected_category_id = $request->get('selected_category');
 
+        $childerens   = Category::where('parent_id', $selected_category_id)->get();
+
+
+
         $category_id = $selected_category_id;
         $brand_ids = Product::where('category_id', $selected_category_id)->pluck('brand_id', 'brand_id')->toArray();
         if (empty($brand_ids) && !empty($search_queries)) {
@@ -127,9 +175,18 @@ class ProductController extends Controller
             $products_query = Product::where('category_id', $selected_category_id)->with('brand', 'options');
         }
         $brand_id = $request->get('brand_id');
+
         if (!empty($brand_id)) {
             $products_query->where('brand_id', $brand_id);
         }
+
+        $childeren_id = $request->get('childeren_id');
+        
+
+            if (!empty($childeren_id)) {
+                $products_query->where('category_id', $childeren_id);
+            }
+
         $price_creteria = $request->get('search_price');
         if (!empty($price_creteria)) {
             if ($price_creteria == 'brand-a-to-z') {
@@ -241,7 +298,19 @@ class ProductController extends Controller
         //$products = $products_query->with('options', 'brand')->paginate($per_page);
         //dd($products);
         //$brands = Brand::pluck('name', 'id')->toArray();
+        $user_id = Auth::id();
+        $lists = BuyList::where('user_id', $user_id)->get();
+        //$contact = Contact::where('user_id', $user_id)->first();
+        $contact = '';
+        if ($user_id != null) {
+            $contact = Contact::where('user_id', $user_id)->first();
+        }
 
+        if ($contact) {
+            $pricing = $contact->priceColumn;
+        } else {
+            $pricing = 'Retail';
+        }
         $category_id = $selected_category_id;
 
         return view(
@@ -255,7 +324,11 @@ class ProductController extends Controller
                 'category_id',
                 'parent_category_slug',
                 'brand_id',
-                'per_page'
+                'per_page',
+                'lists',
+                'pricing',
+                'childerens',
+                'childeren_id'
             )
         );
     }
@@ -263,16 +336,36 @@ class ProductController extends Controller
     public function showProductDetail($id, $option_id)
     {
         $product = Product::where('id', $id)->first();
+        $url = 'https://api.cin7.com/api/v1/Stock?where=productId=' . $product->product_id . '&productOptionId=' . $option_id;
+        $client2 = new \GuzzleHttp\Client();
+        $res = $client2->request(
+            'GET',
+            $url,
+            [
+                'auth' => [
+                    'IndoorSunHydroUS',
+                    'faada8a7a5ef4f90abaabb63e078b5c1'
+                ]
 
+            ]
+        );
+        $inventory = $res->getBody()->getContents();
+        $location_inventories = json_decode($inventory);
+        //dd($location_inventories);
+        // $invetory = [];
+        // foreach($location_inventories as $key=>$location_inventory) {
+        //     $inventory[$key] = $location_inventory->branchName;
+        //     //$location_inventory->branchId;
+        // }
+        // dd($inventory);
         if ($product) {
             $views = $product->views;
             $product->views = $views + 1;
             $product->save();
         }
-        $productOption = ProductOption::where('option_id', $option_id)->with('products.categories')->first();
+        $productOption = ProductOption::where('option_id', $option_id)->with('products.categories', 'price')->first();
         if ($productOption->products->categories != '') {
             $category = Category::where('category_id', $productOption->products->categories->category_id)->first();
-            //dd($category);
             $parent_category = Category::where('category_id', $category->parent_id)->first();
             $pname = '';
             if ($parent_category) {
@@ -284,11 +377,22 @@ class ProductController extends Controller
         } else {
             $pname = '';
         }
-        return view('product-detail', compact('productOption', 'pname'));
+        $user_id = Auth::id();
+        $contact = '';
+        if ($user_id != null) {
+            $contact = Contact::where('user_id', $user_id)->first();
+        }
+
+        if ($contact) {
+            $pricing = $contact->priceColumn;
+        } else {
+            $pricing = 'Retail';
+        }
+
+        return view('product-detail', compact('productOption', 'pname', 'pricing', 'location_inventories'));
     }
     public function showProductByCategory_slug($slug)
     {
-
         $category = Category::where('slug', $slug)->first();
         $category_ids = Category::where('parent_id', $category->id)->pluck('id')->toArray();
         $products = [];
@@ -308,7 +412,7 @@ class ProductController extends Controller
 
         $search_queries = $request->all();
 
-        $products_query  = Product::with('options', 'brand')->where('brand', $name);
+        $products_query  = Product::with('options.price', 'brand')->where('brand', $name);
 
         $selected_category_id = $request->get('selected_category');
 
@@ -363,7 +467,7 @@ class ProductController extends Controller
         if (empty($search_queries)) {
             $products = $products_query->paginate($per_page);
         } else {
-            $products = $products_query->with('options', 'brand')->paginate($per_page);
+            $products = $products_query->with('options.price', 'brand')->paginate($per_page);
         }
         $brands = [];
         if (!empty($brand_ids)) {
@@ -377,7 +481,6 @@ class ProductController extends Controller
         $products_in_brand = Product::where('brand_id', $brand_id)->pluck('category_id', 'category_id')->toArray();
         $parent_ids = Category::whereIn('category_id', $products_in_brand)->pluck('parent_id', 'parent_id');
         $parent_names = Category::whereIn('category_id', $parent_ids)->pluck('name', 'id');
-        // dd($parent_names);
         $category_ids = Category::where('parent_id', $category_id)->pluck('id')->toArray();
         array_push($category_ids, $category_id);
         $all_product_ids = Product::whereIn('category_id', $category_ids)->pluck('id')->toArray();
@@ -444,12 +547,18 @@ class ProductController extends Controller
                 $parent_category_slug  = '';
             }
         }
-        //dd($name);
-        //$products_query = Product::with('options', 'brand');
-        //$products = $products_query->with('options', 'brand')->paginate($per_page);
-        //dd($products);
-        //$brands = Brand::pluck('name', 'id')->toArray();
-
+        $user_id = Auth::id();
+        //$contact = Contact::where('user_id', $user_id)->first();
+        $contact = '';
+        if ($user_id != null) {
+            $contact = Contact::where('user_id', $user_id)->first();
+        }
+        if ($contact) {
+            $pricing = $contact->priceColumn;
+        } else {
+            $pricing = 'Retail';
+        }
+        $lists = BuyList::where('user_id', $user_id)->get();
         $category_id = $selected_category_id;
 
         return view(
@@ -465,19 +574,80 @@ class ProductController extends Controller
                 'parent_category_slug',
                 'brand_id',
                 'per_page',
-                'name'
+                'name',
+                'lists',
+                'pricing'
             )
         );
     }
 
     public function addToCart(Request $request)
     {
+        // dd($request->all());
         $id = $request->p_id;
         $option_id = $request->option_id;
 
-        //$product = Product::findOrFail($id);
-        $productOption = ProductOption::where('option_id', $option_id)->with('products')->first();
+        $productOption = ProductOption::where('option_id', $option_id)->with('products.options.price')->first();
         $cart = session()->get('cart', []);
+        $user_id = Auth::id();
+
+        $contact_id = '';
+
+        if ($user_id) {
+            $contact = Contact::where('user_id', $user_id)->first();
+            $contact_id = $contact->contact_id;
+
+        }
+        
+        if ($contact_id) {
+            $pricing = $contact->priceColumn;
+        }
+        if (!empty($user_id) && !empty($contact_id)) {
+            foreach ($productOption->products->options as $option) {
+                foreach ($option->price as $price) {
+                    if ($pricing == 'Retail') {
+                        $price = $price['retailUSD'];
+                    } else if ($pricing == 'Wholesale') {
+                        $price = $price['wholesaleUSD'];
+                    } else if ($pricing == 'TerraIntern') {
+                        $price = $price['terraInternUSD'];
+                    } else if ($pricing == 'Sacramento') {
+                        $price = $price['sacramentoUSD'];
+                    } else if ($pricing == 'Oklahoma') {
+                        $price = $price['oklahomaUSD'];
+                    } else if ($pricing == 'Calaveras') {
+                        $price = $price['calaverasUSD'];
+                    } else if ($pricing == 'Tier1') {
+                        $price = $price['tier1USD'];
+                    } else if ($pricing == 'Tier2') {
+                        $price = $price['tier2USD'];
+                    } else if ($pricing == 'Tier3') {
+                        $price = $price['tier3USD'];
+                    } else if ($pricing == 'ComercialOk') {
+                        $price = $price['commercialOKUSD'];
+                    } else if ($pricing == 'Cost') {
+                        $price = $price['costUSD'];
+                    } else {
+                        $price = $price['retailUSD'];
+                    }
+                }
+            }
+        }
+        else {
+            foreach ($productOption->products->options as $option) {
+                foreach ($option->price as $price) {
+                    $price = $price['retailUSD'];
+                }
+            }
+        } 
+
+
+        // if ($pricing == 'Wholesale') {
+        //    $price = $productOption->wholesalePrice;
+        // }
+        // else {
+        //     $price = $productOption->retailPrice;
+        // }
 
         if (isset($cart[$id])) {
             $cart[$id]['quantity'] += $request->quantity;
@@ -486,7 +656,7 @@ class ProductController extends Controller
                 "product_id" => $productOption->products->product_id,
                 "name" => $productOption->products->name,
                 "quantity" => $request->quantity,
-                "price" => $productOption->retailPrice,
+                "price" => $price,
                 "code" => $productOption->code,
                 "image" => $productOption->image,
                 'option_id' => $productOption->option_id,
@@ -519,6 +689,7 @@ class ProductController extends Controller
     public function cart(Request $request)
     {
         $cart_items = $request->session()->get('cart');
+        //dd($cart_items);
         $user_id = auth()->id();
         $contact = [];
         if (!empty($user_id)) {
@@ -565,9 +736,7 @@ class ProductController extends Controller
 
     public function productSearch(Request $request)
     {
-
         if ($request->ajax()) {
-
             $brand = $request->input('brand');
             $price = $request->input('price');
             $instock = $request->input('instock');
@@ -714,35 +883,34 @@ class ProductController extends Controller
         }
 
         $is_search = $request->get('is_search');
+        $searchvalue = $request->value;
+        $searchvalue = preg_split('/\s+/', $searchvalue, -1, PREG_SPLIT_NO_EMPTY);
         if (!empty($is_search)) {
-            $products = Product::with(['options' => function ($q) {
-                $q->where('status', '!=', 'Disabled');
-            }])->where('status', '!=', 'Inactive')
-                ->where('name', 'LIKE', '%' . $request->value . '%')
-                ->orWhere('code', 'LIKE', '%' . $request->value . '%')->paginate($per_page);
+            foreach ($searchvalue as $value) {
+                $products = Product::with(['options' => function ($q) {
+                    $q->where('status', '!=', 'Disabled');
+                }])->where('status', '!=', 'Inactive')
+                    ->where('name', 'LIKE', '%' . $value . '%')
+                    ->orWhere('code', 'LIKE', '%' . $value . '%')->paginate($per_page);
+            };
         }
 
         $searched_value = $request->value;
 
         $category_id = $selected_category_id;
+        $user_id = Auth::id();
+        $lists = BuyList::where('user_id', $user_id)->get();
+        //$contact = Contact::where('user_id', $user_id)->first();
+        $contact = '';
+        if ($user_id != null) {
+            $contact = Contact::where('user_id', $user_id)->first();
+        }
 
-        // return view(
-        //     'all_products',
-        //     compact(
-        //         'products',
-        //         'brands',
-        //         'price_creteria',
-        //         'categories',
-        //         'stock',
-        //         'category_id',
-        //         'parent_category_slug',
-        //         'brand_id',
-        //         'per_page'
-        //     )
-        // );
-
-
-
+        if ($contact) {
+            $pricing = $contact->priceColumn;
+        } else {
+            $pricing = 'Retail';
+        }
 
         return view('search_product.search_product', compact(
             'products',
@@ -754,7 +922,101 @@ class ProductController extends Controller
             'parent_category_slug',
             'brand_id',
             'per_page',
-            'searched_value'
+            'searched_value',
+            'lists',
+            'pricing'
+
         ));
+    }
+
+
+    public function addToWishList(Request $request)
+    {
+        $user_id = Auth::id();
+
+        //check if user have list already
+
+        $user_lists = BuyList::where('user_id', $user_id)->exists();
+        if ($user_lists == false) {
+            $wishlist = new BuyList();
+            $wishlist->title = 'My Favourites';
+            $wishlist->status = 'Public';
+            $wishlist->description = 'My Favourites';
+            $wishlist->user_id = $user_id;
+            $wishlist->save();
+            $list_id = $wishlist->id;
+        } else {
+            $list = BuyList::where('title', 'My Favourites')->where('user_id', $user_id)->first();
+            $list_id = $list->id;
+        }
+
+        $product_buy_list = new ProductBuyList();
+        $product_buy_list->list_id = $list_id;
+        $product_buy_list->product_id = $request->product_id;
+        $product_buy_list->option_id = $request->option_id;
+        $product_buy_list->quantity = $request->quantity;
+        $product_buy_list->save();
+        return response()->json([
+            'success' => true,
+            'msg' => 'List created Successully !'
+        ]);
+    }
+
+    public function getWishlists()
+    {
+        $user_id = Auth::id();
+        $lists = BuyList::where('user_id', $user_id)->where('type', 'wishlist')->with('list_products.product.options')->get();
+
+        //$list_title = $list->title;
+        $images = [];
+        // dd($lists);
+        foreach ($lists as $list) {
+            foreach ($list->list_products as $single_product) {
+                foreach ($single_product->product as $image) {
+                    array_push($images, $image);
+                }
+            }
+        }
+
+        // foreach ($lists->list_products as $list){
+        //     foreach ($list->product->options as $image) {
+        //         array_push($images, $image->image);
+        //     }
+        // }
+        // dd($images);
+        return view('wishlists.index', compact(
+            'lists',
+            'images'
+        ));
+        return $images;
+    }
+
+    public function getListNames()
+    {
+        $user_id = Auth::id();
+        $lists = BuyList::where('user_id', $user_id)->where('type', 'wishlist')->get();
+        dd($lists);
+        return response()->json([
+            'msg' => 'success',
+            'lists' => $lists
+        ]);
+    }
+
+
+    public function createList(Request $request)
+    {
+        $user_id = Auth::id();
+        $request->list_title;
+        $buyList = new BuyList();
+        $buyList->title = $request->list_title;
+        $buyList->status = 'Public';
+        $buyList->description = $request->list_title;
+        $buyList->user_id = $user_id;
+        $buyList->type = $request->type;
+        $buyList->save();
+        return response()->json([
+            'status' => 'success',
+            'msg' => 'List created Successully'
+        ]);
     }
 }

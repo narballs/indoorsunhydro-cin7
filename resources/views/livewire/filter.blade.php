@@ -17,16 +17,22 @@
                                 </td>
                                 <td>{{$product->name}}</td>
                                 <td>{{$product->code}}</td>
-                                <!-- <td><button id="btn_{{ $product->product_id }}" class="btn btn-primary btn-add-to-cart" onclick="addToList({{$product->product_id}}, {{$option->option_id}})">Add to List</button></td> -->
-                                <td><button id="btn_{{ $product->product_id }}" data-retail-price="{{ $product->retail_price }}" class="btn btn-primary btn-add-to-cart">Add to List</button></td>
+                                <td>
+                          
+                                    <button id="btn_{{ $product->product_id }}" data-retail-price="{{ $product->retail_price }}" class="btn btn-primary btn-add-to-cart">Add to List</button>
+                                   
+                                </td>
                             </tr>
                         @endforeach
                     @endforeach
                 </table>
-                {{ $products->links() }}
+                <div class="pagination-container">
+                    {{$products->links()}}
+                </div>
         </div>
     </div>
 </div>
+
 
 
 

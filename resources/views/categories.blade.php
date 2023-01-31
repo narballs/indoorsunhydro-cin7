@@ -6,7 +6,7 @@
       PRODUCTS
    </p>
 </div>
-<div class="container">
+<div class="container desktop-view">
    <form id="form-filter">
       <div class="col-md-12">
          <div class="row pl-5 pr-5 pb-4 pt-3" style="border: 1px solid rgba(0,0,0,.125);">
@@ -48,6 +48,236 @@
 
                   <option value="{{$category->id}}/{{$category->slug}}" {{ isset($category_id) &&
                      $category_id==$category->id ? 'selected="selected"' : '' }}>{{ $category->name }}</option>
+                  @endforeach
+               </select>
+            </div>
+
+            <div class="col">
+               <label>Sub Category</label>
+               <select class="form-select" id="childeren" name="childeren[]" onchange="handleSelectChange('childeren')">
+                  <option value="">Sub Category</option>
+                  @foreach($childerens as $key => $childeren)
+                  <option value="{{ $childeren->id }}" {{ isset($childeren_id) && $childeren_id==$childeren->id ? 'selected="selected"'
+                     : '' }}>{{ $childeren->name }}</option>
+                  @endforeach
+               </select>
+            </div>
+
+            <div class="col">
+               <label>Result per page</label>
+               <select id="per_page" class="form-select" onchange="handleSelectChange('result_per_page')">
+                  <option value="20" {{ $per_page }} {{ isset($per_page) && $per_page==20 ? 'selected="selected"' : ''
+                     }}>20</option>
+                  <option value="40" {{ $per_page }} {{ isset($per_page) && $per_page==40 ? 'selected="selected"' : ''
+                     }}>40</option>
+                  <option value="60" {{ $per_page }} {{ isset($per_page) && $per_page==60 ? 'selected="selected"' : ''
+                     }}>60</option>
+               </select>
+            </div>
+            <div class="col">
+               <label>Show Only</label>
+
+               <div id="stock">
+                  <?php if(empty($stock) || $stock == 'in-stock') {
+                     $text = 'In stock';
+                     $danger = '';
+                     $stock = 'in-stock';
+                  }
+                  else {
+                     $text = 'Out of Stock';
+                     $danger = 'bg-danger';
+                     $stock = 'out-of-stock';
+                  }   
+                  ?>
+                  <button class="{{ $stock ? $stock : 'in-stock'  }} {{$danger}}" type="button" id="in-stock"
+                     onclick="inStockOutstock('instock'), handleSelectChange()" value="{{$stock}}">{{$text}}</button>
+               </div>
+            </div>
+         </div>
+      </div>
+   </form>
+   <div class="row" id="product_rows">
+      @foreach ($products as $key => $product)
+      @foreach($product->options as $option)
+      @include('product_row')
+      @endforeach
+      @endforeach
+   </div>
+   <!--    {{$products->links('pagination::bootstrap-4')}} -->
+   {{$products->appends(Request::all())->links()}}
+</div>
+{{-- moible view start --}}
+<div class="container mobile-view">
+   <div class="pt-3" style="border: 1px solid lightgray;">
+      <p class="d-flex justify-content-center align-items-center">
+         <button class="filler-and-sort btn btn-primary w-75 filler-and-sort" type="button" data-bs-toggle="collapse"
+            data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+            Filter and Sort <span><img src="/theme/img/filler-icon.png" alt=""></span>
+         </button>
+      </p>
+   </div>
+   <div class="collapse mt-5" id="collapseExample">
+      <div class="card card-body p-0">
+         <form id="form-filter">
+            <div class="col-md-12">
+               <div class="row pt-3" style="border: 1px solid rgba(0,0,0,.125);">
+                  <input type="hidden" id="category_id" value="{{ $category_id }}">
+                  <input type="hidden" id="parent_category_slug" value="{{ $parent_category_slug }}">
+                  <div class="col-md-12">
+                     <label>Sort by</label>
+                     <select class="form-select" id="search_price" onchange="handleSelectChange('best_selling')">
+                        <option value="0">Select Option</option>
+                        <option class="form-group" value="best-selling" {{ $price_creteria }} {{ isset($price_creteria)
+                           && $price_creteria=='best-selling' ? 'selected="selected"' : '' }}>Best Selling</option>
+                        <option class="form-group" value="price-low-to-high" {{ $price_creteria }} {{
+                           isset($price_creteria) && $price_creteria=='price-low-to-high' ? 'selected="selected"' : ''
+                           }}>Price Low to High</option>
+                        <option class="form-group" value="price-high-to-low" {{ $price_creteria }} {{
+                           isset($price_creteria) && $price_creteria=='price-high-to-low' ? 'selected="selected"' : ''
+                           }}>Price High to Low</option>
+                        <option class="form-group" value="brand-a-to-z" {{ $price_creteria }} {{ isset($price_creteria)
+                           && $price_creteria=='brand-a-to-z' ? 'selected="selected"' : '' }}>Product A to Z</option>
+                        <option class="form-group" value="brand-z-to-a" {{ $price_creteria }} {{ isset($price_creteria)
+                           && $price_creteria=='brand-z-to-a' ? 'selected="selected"' : '' }}>Product Z to A</option>
+                        <option class="form-group" value="price">Best Selling</option>
+                        <option class="form-group" value="price-low-to-high" {{ $price_creteria }} {{
+                           isset($price_creteria) && $price_creteria=='price-low-to-high' ? 'selected="selected"' : ''
+                           }}>Price Low to High</option>
+                        <option class="form-group" value="price-high-to-low" {{ $price_creteria }} {{
+                           isset($price_creteria) && $price_creteria=='price-high-to-low' ? 'selected="selected"' : ''
+                           }}>Price High to Low</option>
+                        <option class="form-group" value="brand-a-to-z" {{ $price_creteria }} {{ isset($price_creteria)
+                           && $price_creteria=='brand-a-to-z' ? 'selected="selected"' : '' }}>Product A to Z</option>
+                        <option class="form-group" value="brand-z-to-a" {{ $price_creteria }} {{ isset($price_creteria)
+                           && $price_creteria=='brand-z-to-a' ? 'selected="selected"' : '' }}>Product Z to A</option>
+
+                     </select>
+                  </div>
+                  <div class="col-md-12">
+                     <?php //dd($category_id);?>
+                     <label>Categories</label>
+                     <select class="form-select" id="selected_cat" name="selected_cat"
+                        onchange="handleSelectChange('category')">
+
+                        @foreach($categories as $category)
+
+                        <option value="{{$category->id}}/{{$category->slug}}" {{ isset($category_id) &&
+                           $category_id==$category->id ? 'selected="selected"' : '' }}>{{ $category->name }}</option>
+                        <!-- <option value="{{$category->id}}/{{$category->slug}}" {{ isset($selected_category_id) && $selected_category_id == $selected_category_id ? 'selected="selected"' : '' }}>{{ $category->name }}</option> -->
+                        @endforeach
+
+                        <!-- @foreach($products as $key=>$product)
+                        <option value="{{$product->brand_id}}" >{{$product->brand}}</option>
+                  @endforeach -->
+                     </select>
+                  </div>
+
+                  <div class="col-md-12">
+                     <label>Brand</label>
+                     <select class="form-select" id="brand" name="brands[]" onchange="handleSelectChange('brand')">
+                        <option>Select Brand</option>
+                        @foreach($brands as $_brand_id => $brand_name)
+                        <option value="{{ $_brand_id }}" {{ isset($brand_id) && $brand_id==$_brand_id
+                           ? 'selected="selected"' : '' }}>{{ $brand_name }}</option>
+                        @endforeach
+
+                        <!-- @foreach($products as $key=>$product)
+                        <option value="{{$product->brand_id}}" >{{$product->brand}}</option>
+                  @endforeach -->
+                     </select>
+                  </div>
+
+                  <div class="col-md-12">
+                     <label>Result per page</label>
+                     <select id="per_page" class="form-select" onchange="handleSelectChange('result_per_page')">
+                        <option value="10" {{ $per_page }} {{ isset($per_page) && $per_page==10 ? 'selected="selected"'
+                           : '' }}>10</option>
+                        <option value="20" {{ $per_page }} {{ isset($per_page) && $per_page==20 ? 'selected="selected"'
+                           : '' }}>20</option>
+                        <option value="30" {{ $per_page }} {{ isset($per_page) && $per_page==30 ? 'selected="selected"'
+                           : '' }}>30</option>
+                     </select>
+                  </div>
+                  <div class="col-md-12">
+                     <label>Show Only</label>
+
+                     <div id="stock">
+                        <?php if(empty($stock) || $stock == 'in-stock') {
+                     $text = 'In stock';
+                     $danger = '';
+                     $stock = 'in-stock';
+                  }
+                  else {
+                     $text = 'Out of Stock';
+                     $danger = 'bg-danger';
+                     $stock = 'out-of-stock';
+                  }   
+                  ?>
+                        <button class="{{ $stock ? $stock : 'in-stock'  }} {{$danger}}" type="button" id="in-stock"
+                           onclick="inStockOutstock('instock'), handleSelectChange()"
+                           value="{{$stock}}">{{$text}}</button>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </form>
+      </div>
+   </div>
+   <div class="row" id="product_rows">
+      @foreach ($products as $key => $product)
+      @foreach($product->options as $option)
+      @include('product_row')
+      @endforeach
+      @endforeach
+   </div>
+   <!--    {{$products->links('pagination::bootstrap-4')}} -->
+   {{$products->appends(Request::all())->links()}}
+</div>
+{{-- moible view end --}}
+
+{{-- ipad view start --}}
+<div class="container ipad-view">
+   <form id="form-filter">
+      <div class="col-md-12">
+         <div class="row  pb-4 pt-3" style="border: 1px solid rgba(0,0,0,.125);">
+            <input type="hidden" id="category_id" value="{{ $category_id }}">
+            <input type="hidden" id="parent_category_slug" value="{{ $parent_category_slug }}">
+            <div class="col-md-6">
+               <label>Sort by</label>
+               <select class="form-select" id="search_price" onchange="handleSelectChange('best_selling')">
+                  <option value="0">Select Option</option>
+                  <option class="form-group" value="best-selling" {{ $price_creteria }} {{ isset($price_creteria) &&
+                     $price_creteria=='best-selling' ? 'selected="selected"' : '' }}>Best Selling</option>
+                  <option class="form-group" value="price-low-to-high" {{ $price_creteria }} {{ isset($price_creteria)
+                     && $price_creteria=='price-low-to-high' ? 'selected="selected"' : '' }}>Price Low to High</option>
+                  <option class="form-group" value="price-high-to-low" {{ $price_creteria }} {{ isset($price_creteria)
+                     && $price_creteria=='price-high-to-low' ? 'selected="selected"' : '' }}>Price High to Low</option>
+                  <option class="form-group" value="brand-a-to-z" {{ $price_creteria }} {{ isset($price_creteria) &&
+                     $price_creteria=='brand-a-to-z' ? 'selected="selected"' : '' }}>Product A to Z</option>
+                  <option class="form-group" value="brand-z-to-a" {{ $price_creteria }} {{ isset($price_creteria) &&
+                     $price_creteria=='brand-z-to-a' ? 'selected="selected"' : '' }}>Product Z to A</option>
+                  <option class="form-group" value="price">Best Selling</option>
+                  <option class="form-group" value="price-low-to-high" {{ $price_creteria }} {{ isset($price_creteria)
+                     && $price_creteria=='price-low-to-high' ? 'selected="selected"' : '' }}>Price Low to High</option>
+                  <option class="form-group" value="price-high-to-low" {{ $price_creteria }} {{ isset($price_creteria)
+                     && $price_creteria=='price-high-to-low' ? 'selected="selected"' : '' }}>Price High to Low</option>
+                  <option class="form-group" value="brand-a-to-z" {{ $price_creteria }} {{ isset($price_creteria) &&
+                     $price_creteria=='brand-a-to-z' ? 'selected="selected"' : '' }}>Product A to Z</option>
+                  <option class="form-group" value="brand-z-to-a" {{ $price_creteria }} {{ isset($price_creteria) &&
+                     $price_creteria=='brand-z-to-a' ? 'selected="selected"' : '' }}>Product Z to A</option>
+
+               </select>
+            </div>
+            <div class="col-md-6">
+               <?php //dd($category_id);?>
+               <label>Categories</label>
+               <select class="form-select" id="selected_cat" name="selected_cat"
+                  onchange="handleSelectChange('category')">
+
+                  @foreach($categories as $category)
+
+                  <option value="{{$category->id}}/{{$category->slug}}" {{ isset($category_id) &&
+                     $category_id==$category->id ? 'selected="selected"' : '' }}>{{ $category->name }}</option>
                   <!-- <option value="{{$category->id}}/{{$category->slug}}" {{ isset($selected_category_id) && $selected_category_id == $selected_category_id ? 'selected="selected"' : '' }}>{{ $category->name }}</option> -->
                   @endforeach
 
@@ -57,7 +287,7 @@
                </select>
             </div>
 
-            <div class="col">
+            <div class="col-md-6">
                <label>Brand</label>
                <select class="form-select" id="brand" name="brands[]" onchange="handleSelectChange('brand')">
                   <option>Select Brand</option>
@@ -72,7 +302,7 @@
                </select>
             </div>
 
-            <div class="col">
+            <div class="col-md-6">
                <label>Result per page</label>
                <select id="per_page" class="form-select" onchange="handleSelectChange('result_per_page')">
                   <option value="10" {{ $per_page }} {{ isset($per_page) && $per_page==10 ? 'selected="selected"' : ''
@@ -83,10 +313,10 @@
                      }}>30</option>
                </select>
             </div>
-            <div class="col">
+            <div class="col-md-12 d-flex mt-3">
                <label>Show Only</label>
 
-               <div id="stock">
+               <div id="stock" style="padding-left: 488px !important">
                   <?php if(empty($stock) || $stock == 'in-stock') {
                      $text = 'In stock';
                      $danger = '';
@@ -117,6 +347,8 @@
    <!--    {{$products->links('pagination::bootstrap-4')}} -->
    {{$products->appends(Request::all())->links()}}
 </div>
+{{-- ipad view start --}}
+
 <script>
    $('#brand').select2({
     width: '100%',
@@ -135,11 +367,10 @@
 				window.location.href = '/product-detail/'+ id +'/'+option_id+'/'+slug;
 			}
          function categoryChange() {
+            alert('kflsdflkdsflsdk');
             var categories = jQuery('#categories').val();
             window.location.href =  window.location.origin+'/products/'+category_id;
-
          } 
-
          function inStockOutstock() {
             var value = jQuery('#in-stock').val();
             if (value == 'in-stock') {
@@ -147,7 +378,6 @@
                jQuery('#in-stock').addClass('out-of-stock');
                $("#in-stock").html("Out of Stock");
                $("#in-stock").prop("value", "out-of-stock");
-
             }
             else {
                jQuery('#in-stock').removeClass('bg-danger');
@@ -155,129 +385,108 @@
                jQuery('#in-stock').addClass('in-stock');
                $("#in-stock").prop("value", "in-stock");
                $("#in-stock").html("In Stock");
-               
             }
-
-             
-           
          }
+            function handleSelectChange(searchedOption = '') {
+               var category_id = jQuery('#categories').val();
+               var selected_cat_id = jQuery('#selected_cat').val();
+               var price = jQuery('#search_price').val();
+               var brand = jQuery('#brand').val();
+               var childeren = jQuery('#childeren').val();
 
-         function handleSelectChange(searchedOption = '') {
-            var category_id = jQuery('#categories').val();
-            var selected_cat_id = jQuery('#selected_cat').val();
-            var price = jQuery('#search_price').val();
-            var brand = jQuery('#brand').val();
-            var per_page = jQuery('#per_page').val();
-            var stock = jQuery('#in-stock').val();
-            var search_price = jQuery('#search_price').val();
-            var category_id = jQuery('#category_id').val();
-            var selected_category_id = jQuery('#categories').val();
-            var parent_category_slug = jQuery('#parent_category_slug').val();
-            //var chosen = true;
 
-            if (searchedOption == 'category') {
-               var brand = '';
+               var per_page = jQuery('#per_page').val();
+               var stock = jQuery('#in-stock').val();
+               var search_price = jQuery('#search_price').val();
+               var category_id = jQuery('#category_id').val();
+               var selected_category_id = jQuery('#categories').val();
+               var parent_category_slug = jQuery('#parent_category_slug').val();
+                  if (searchedOption == 'category') {
+                     var brand = '';
+                  }
+                  if (selected_cat_id != ''){ 
+                     var slug = selected_cat_id;
+                  var basic_url = '/products/'+selected_cat_id + '/?';
+                     //window.location.href = basic_url;
+                     //var basic_url = `/products/${selected_cat_id}/${slug}`;
+                  }
+                  else {
+                  
+                     var slug = `${category_id}/${parent_category_slug}`
+                  }
+
+                  if (brand != '') {
+                     basic_url = `?brand_id=${brand}`;
+                  }
+
+                  if (childeren != '') {
+                     basic_url = `?childeren_id=${childeren}`;
+                  }
+
+                  if (per_page != '') {
+                     basic_url = basic_url+`&per_page=${per_page}`;
+                  }
+                  if (search_price != '') {
+                     basic_url = basic_url+`&search_price=${search_price}`;
+                  }
+                  if (selected_category_id != '') {
+                     basic_url = basic_url+`&selected_category_id=${selected_cat_id}`;
+                  }
+                  if (stock != '') {
+                     basic_url = basic_url+`&stock=${stock}`;
+                  }
+                  window.location.href = basic_url;
             }
+            function updateCart(id, option_id) {
+               jQuery.ajax({
+                     url: "{{ url('/add-to-cart/') }}",
+                        method: 'post',
+                        data: {
+                           "_token": "{{ csrf_token() }}",
+                           p_id: jQuery('#p_'+id).val(),
+                           option_id: option_id,
+                           quantity: 1
+                        },
+                     success: function(response) {
+                     if(response.status == 'success') {
+                              var cart_items = response.cart_items;
+                              var cart_total = 0;
+                              var total_cart_quantity = 0;
 
+                              for (var key in cart_items) {
+                                 var item = cart_items[key];
 
-            if (selected_cat_id != ''){ 
-               //alert(selected_cat_id);
-               var slug = selected_cat_id;
-              var basic_url = '/products/'+selected_cat_id + '/?';
-               //window.location.href = basic_url;
-               //var basic_url = `/products/${selected_cat_id}/${slug}`;
-             
-            }
-            else {
-            
-               var slug = `${category_id}/${parent_category_slug}`
-            }
-               
-                
-           
+                                 var product_id = item.prd_id;
+                                 var price = parseFloat(item.price);
+                                 var quantity = parseFloat(item.quantity);
 
-            // alert(selected_category_id);
-           
-            // alert(selected_category_id);
-
-            // if (categories !='') {
-
-            // }
-
-            if (brand != '') {
-               basic_url = `?brand_id=${brand}`;
-            }
-            if (per_page != '') {
-               basic_url = basic_url+`&per_page=${per_page}`;
-            }
-            if (search_price != '') {
-               basic_url = basic_url+`&search_price=${search_price}`;
-            }
-            if (selected_category_id != '') {
-               basic_url = basic_url+`&selected_category_id=${selected_cat_id}`;
-            }
-            if (stock != '') {
-               basic_url = basic_url+`&stock=${stock}`;
-            }
-
-          // alert(basic_url);
-          
-          
-            window.location.href = basic_url;
-
-         //}
-      }
-
-			function updateCart(id, option_id) {
-			 jQuery.ajax({
-                url: "{{ url('/add-to-cart/') }}",
-                   method: 'post',
-                   data: {
-                     "_token": "{{ csrf_token() }}",
-                      p_id: jQuery('#p_'+id).val(),
-                      option_id: option_id,
-                      quantity: 1
-                   },
-               success: function(response) {
-					if(response.status == 'success') {
-                        var cart_items = response.cart_items;
-                        var cart_total = 0;
-                        var total_cart_quantity = 0;
-
-                        for (var key in cart_items) {
-                            var item = cart_items[key];
-
-                            var product_id = item.prd_id;
-                            var price = parseFloat(item.price);
-                            var quantity = parseFloat(item.quantity);
-
-                            var subtotal = parseInt(price * quantity);
-                            var cart_total = cart_total + subtotal;
-                            var total_cart_quantity = total_cart_quantity + quantity;
-                            $('#subtotal_' + product_id).html('$'+subtotal);
-                            console.log(item.name);
-                            var product_name = document.getElementById("product_name_"+jQuery('#p_'+id).val()).innerHTML;
+                                 var subtotal = parseInt(price * quantity);
+                                 var cart_total = cart_total + subtotal;
+                                 var total_cart_quantity = total_cart_quantity + quantity;
+                                 $('#subtotal_' + product_id).html('$'+subtotal);
+                                 console.log(item.name);
+                                 var product_name = document.getElementById("product_name_"+jQuery('#p_'+id).val()).innerHTML;
+                              }
+                              
+                              Swal.fire({
+                                 toast: true,
+                                 icon: 'success',
+                                 title: jQuery('#quantity').val() + ' X ' + product_name + ' added to your cart',
+                                 timer: 3000,
+                                 showConfirmButton: false,
+                                 position: 'top',
+                                 timerProgressBar: true
+                              });
                         }
-                        
-                        Swal.fire({
-                            toast: true,
-                            icon: 'success',
-                            title: jQuery('#quantity').val() + ' X ' + product_name + ' added to your cart',
-                            timer: 3000,
-                            showConfirmButton: false,
-                            position: 'top',
-                            timerProgressBar: true
-                        });
-                    }
-                    $('#top_cart_quantity').html(total_cart_quantity);
-                    
-                    $('#cart_items_quantity').html(total_cart_quantity);
-                    $('#topbar_cart_total').html('$'+parseFloat(cart_total).toFixed(2));
-                    var total = document.getElementById('#top_cart_quantity');
-               }});
+                           $('#top_cart_quantity').html(total_cart_quantity);
+                           
+                           $('#cart_items_quantity').html(total_cart_quantity);
+                           $('#topbar_cart_total').html('$'+parseFloat(cart_total).toFixed(2));
+                           var total = document.getElementById('#top_cart_quantity');
+                     }});
 
-			    return false;
-			}
+                  return false;
+               }
 </script>
 <script>
    jQuery(document).ready(function(){

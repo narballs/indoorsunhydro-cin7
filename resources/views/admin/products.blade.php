@@ -3,7 +3,6 @@
 @section('content_header')
 @stop
 @section('content')
-
 <div class="table-wrapper">
     <div class="table-title">
         <span>

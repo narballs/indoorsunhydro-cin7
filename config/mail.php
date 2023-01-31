@@ -33,7 +33,7 @@ return [
     |
     */
 
-    'mailers' => [
+ 'mailers' => [
         'smtp' => [
             'transport' => 'smtp',
             'host' => env('MAIL_HOST', 'smtp.gmail.com'),
@@ -44,6 +44,7 @@ return [
             'timeout' => null,
             'auth_mode' => null,
         ],
+        
 
         'ses' => [
             'transport' => 'ses',
@@ -79,6 +80,7 @@ return [
             ],
         ],
     ],
+    
 
     /*
     |--------------------------------------------------------------------------

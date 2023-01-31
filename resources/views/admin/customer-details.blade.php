@@ -1,13 +1,9 @@
 @extends('adminlte::page')
-
 @section('title', 'Dashboard')
-
 @section('content_header')
 <h1>Dashboard</h1>
 @stop
-
 @section('content')
-<?php //dd($customer);?>
 <div class="container-fluid">
 	<div class="container">
 		<!-- Title -->
@@ -35,20 +31,54 @@
 										</div>
 										<div class="mt-3"><input type="text" name="last_name"
 												value="{{$customer->lastName}}"></div>
-										<div class="mt-3"><button type="button" value="update"
-												onclick="updatePriceColumn(3)">Update</button></div>
+										<div class="mt-3">
+											<button type="button" value="update"
+												onclick="updatePriceColumn(3)">Update</button>
+										</div>
 									</div>
 								</div>
 								@if ($customer->status == 1)
+								<div class="col-md-6"><b>Pricing:</b>
+									<select onchange="updatePriceColumn(4)" class="pricingColumn">
+										<?php 
+							      	$pricing = $customer->priceColumn;
+							      
+							      	?>
+										<option class="form-group" value="Retail" {{ $pricing }} {{ isset($pricing) &&
+											$pricing=='Retail' ? 'selected="selected"' : '' }}>Retail</option>
+										<option class="form-group" value="Wholesale" {{ $pricing }} {{ isset($pricing)
+											&& $pricing=='Wholesale' ? 'selected="selected"' : '' }}>Wholesale</option>
+										<option class="form-group" value="TerraIntern" {{ $pricing }} {{ isset($pricing)
+											&& $pricing=='TerraIntern' ? 'selected="selected"' : '' }}>TerraIntern
+										</option>
+										<option class="form-group" value="Sacramento" {{ $pricing }} {{ isset($pricing)
+											&& $pricing=='Sacramento' ? 'selected="selected"' : '' }}>Sacramento
+										</option>
+										<option class="form-group" value="Oklahoma" {{ $pricing }} {{ isset($pricing) &&
+											$pricing=='Oklahoma' ? 'selected="selected"' : '' }}>Oklahoma</option>
+										<option class="form-group" value="Calaveras" {{ $pricing }} {{ isset($pricing)
+											&& $pricing=='Calaveras' ? 'selected="selected"' : '' }}>Calaveras</option>
+										<option class="form-group" value="Tier1" {{ $pricing }} {{ isset($pricing) &&
+											$pricing=='Tier1' ? 'selected="selected"' : '' }}>Tier1</option>
+										<option class="form-group" value="Tier2" {{ $pricing }} {{ isset($pricing) &&
+											$pricing=='Tier2' ? 'selected="selected"' : '' }}>Tier2</option>
+										<option class="form-group" value="Tier3" {{ $pricing }} {{ isset($pricing) &&
+											$pricing=='Tier3' ? 'selected="selected"' : '' }}>Tier3</option>
+										<option class="form-group" value="ComercialOk" {{ $pricing }} {{ isset($pricing)
+											&& $pricing=='ComercialOk' ? 'selected="selected"' : '' }}>ComercialOk
+										</option>
+										<option class="form-group" value="Cost" {{ $pricing }} {{ isset($pricing) &&
+											$pricing=='Cost' ? 'selected="selected"' : '' }}>Cost</option>
 
-								<div class="col-md-6"><b>Pricing:</b> {{$customer->priceColumn}} </a>
+
+									</select>
+
 									<div class="spinner-border d-none" role="status"
 										style="left: 50% !important;margin-left: -25em !important;" id="spinner2">
 										<span class="sr-only">Activating...</span>
 									</div>
 								</div>
 								@endif
-
 
 								<?php 
 		              			if ($customer->status == 1) {
@@ -140,17 +170,16 @@
 									<tr>
 										@if($customer_order->order_id)
 										<td>
-											{{$customer_order->order_id}}
+											{{$customer_order->id}}
 
 										</td>
 										@else
 										<td class="badge bg-danger">Pending Approval</td>
 										@endif
 										<?php  $createdDate = $customer_order->created_at;
-        							$formatedDate = $createdDate->format('F j, Y');
-        							?>
+        							             $formatedDate = $createdDate->format('F j, Y');
+        							      ?>
 										<td>
-
 											{{$formatedDate}}
 										</td>
 										<td>
@@ -253,6 +282,7 @@
     	}
 
     	function updatePriceColumn(showSpinner) {
+    		//alert(showSpinner);
     		if (showSpinner == 2 ) {
     			$('#spinner').removeClass('d-none');
     			
@@ -271,20 +301,26 @@
 
     			if (showSpinner == 3  ) {
     				var contact_id = $( "#contact_id" ).val();
+
     				$('#spinner').removeClass('d-none');
     				var first_name = $("input[name=first_name]" ).val();
     				var last_name = $("input[name=last_name]" ).val();
     				var contact_id = $( "#contact_id" ).val();
 				}
-			if (showSpinner != 0) {
-    	
+			if (showSpinner == 4) {
+				var contact_id = $( "#contact_id" ).val();
+			
+				// console.log(contact_id);
+				var pricingCol = $('.pricingColumn').val();
+				// console.log(pricingCol);
+
     		jQuery.ajax({
         		url: "{{ url('admin/update-pricing-column') }}",
         		method: 'post',
         		data: {
             		"_token": "{{ csrf_token() }}",
             		"contact_id": contact_id,
-            		"pricingCol": priceCol,
+            		"pricingCol": pricingCol,
             		"first_name": first_name,
             		"last_name" : last_name
         		},

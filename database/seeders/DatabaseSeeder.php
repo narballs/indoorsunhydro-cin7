@@ -13,8 +13,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        App\OrderStatus::create([
-            'status' => 'New'
-        ]);
+        // App\OrderStatus::create([
+        //     'status' => 'New'
+        // ]);
+        $this->call(PermissionTableSeeder::class);
+        $this->call(CreateAdminUserSeeder::class);
+        //$this->call(RoleTableSeeder::class);
     }
 }

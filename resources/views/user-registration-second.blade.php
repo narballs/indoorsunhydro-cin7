@@ -19,7 +19,7 @@
 						in our privacy policy.</p>
 				</div>
 			</div>
-			<div class="col-md-12 col-xs-6 mt-5 d-none" id="icons" style="padding-right: 47px;">
+			<div class="col-md-12 col-xs-6 mt-5 d-none" id="icons">
 				<div class="icon-container d-flex">
 					<figure>
 						<img class="img-fluid" src="/theme/img/round-solid.png" id="sign-up">
@@ -83,14 +83,14 @@
 
 							</div>
 							<button type="submit" class="btn-login info login-button">LOG IN</button>
-
 						</form>
 						<div class="row">
-							<div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12 mt-4">
+							<div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12 mt-4 remember-me">
 								<div class="form-check checkbox-lg form-login">
 									<input class="form-check-input aling-items-center justify-conent-center d-flex"
 										type="checkbox" value="" id="checkbox-2" />&nbsp;
-									<label class="form-check-label" for="checkbox-2">Remember me</label>
+									<label class="formemail-registration-check-label" for="checkbox-2">Remember
+										me</label>
 								</div>
 							</div>
 							<div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12 mt-3">
@@ -104,8 +104,8 @@
 							</div>
 						</div>
 					</div>
-					<div class="register-show mt-5">
-						<form id="email-registration" class="mt-5 form-signup">
+					<div class="register-show" style="margin-top: 56px;">
+						<form id="email-registration" class="form-signup">
 							@csrf
 							<h2 class="d-flex justify-content-center align-items-center sing-up-label">SIGN UP</h2>
 							<div class="input-placeholder">
@@ -225,7 +225,8 @@
 						</div>
 					</div>
 				</div>
-				<div class="row business-row bg-light d-none" id="business-row" style="margin-top: -121px">
+
+				<div class="row business-row bg-light d-none" id="business-row" style="margin-top: -100px">
 					<div class="col-md-12 text-center">
 						<h2 style="color:#25529F; font-size:30px" class="text-center pt-5">Your Business Location</h2>
 					</div>
@@ -558,7 +559,7 @@
    					var error_message = response.responseJSON;
    					console.log(error_message);
    					var error_text = '';
-   					//error_text += error_message.message;
+   					error_text += error_message.message;
    					if (typeof error_message.errors.street_address != 'undefined') {
    						error_text =  error_message.errors.street_address;
    						$('#street_address_errors').html(error_text);

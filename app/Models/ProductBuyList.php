@@ -8,10 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class ProductBuyList extends Model
 {
     use HasFactory;
-    protected $fillable = ["list_id","product_id","option_id"];
+    protected $fillable = [
+        'list_id',
+        'product_id',
+        'option_id',
+        'quantity'
+    ];
 
 
-    public function buylist() 
+    public function buylist()
     {
         return $this->belongsTo('App\Models\BuyList', 'list_id', 'id');
     }

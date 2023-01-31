@@ -14,7 +14,6 @@ class NavHelper
      * @return option_value
      */
     public static function getCategories() {
-      
          $categories = Category::orderBy('name', 'ASC')
             ->with('products')->where('is_active', 1)
             ->get();

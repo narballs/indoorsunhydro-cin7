@@ -1,6 +1,29 @@
 @include('partials.header')
 @include('partials.top-bar')
 @include('partials.search-bar')
+<link rel="stylesheet" href="http://indoorsunhydro.local/vendor/adminlte/dist/css/adminlte.min.css">
+<style>
+	.nav .active {
+		background: #F5F5F5;
+		/* border-left: none !important; */
+		/* color: green !important; */
+		color: #008AD0 !important;
+	}
+
+	nav svg {
+		max-height: 20px !important;
+	}
+
+	#spinner-global {
+		display: none !important;
+	}
+
+	input[type=number]::-webkit-outer-spin-button {
+
+		opacity: 20;
+
+	}
+</style>
 <div class="bg-light">
 	<div class="mb-5">
 		<p style="line-height: 95px;"
@@ -44,7 +67,7 @@
 							</a>
 							<ul class="nav nav-pills flex-column w-100 mb-sm-auto mb-0 align-items-center align-items-sm-start"
 								id="menu">
-								<li class="nav-item w-100 text-dark active mb-3">
+								<li class="nav-item w-100 text-dark active mb-3" id="dashboard">
 									<a href="#" class="nav-link align-middle px-0 ms-3">
 										<i class="fs-4 bi-house"></i>
 										<div class="row">
@@ -56,8 +79,7 @@
 												</span>
 											</div>
 											<div class="col-md-10">
-												<span
-													class=" ms-1 d-none d-sm-inline fs-5 ms-3 mt-1 ml-0 pl-0 nav-items-link"
+												<span class=" ms-1 d-none d-sm-inline fs-5 ms-3 mt-1 ml-0 pl-0"
 													onclick="dashboard()" id="dashboard">
 													Dashboard
 												</span>
@@ -85,8 +107,51 @@
 													Orders
 												</span>
 											</div>
+										</div>
+									</a>
+								</li>
+								<li class="nav-item w-100 mb-3" id="wish_lists">
+									<a href="#" class="nav-link px-0 align-middle  px-0 ms-3">
+										<i class="fs-4 bi-table"></i>
+										<div class="row">
+											<div class="col-md-2">
+												<span>
+													<img src="theme/img/heart-icon.png" id="order_active"
+														style="display: none;" width="30px" height="30px">
+													<img src="theme/img/heartfilled.png" id="order_inactive"
+														class="mt-1" width="28px" height="23px">
+												</span>
+											</div>
+											<div class="col-md-10">
+												<span
+													class="ms-1 d-none d-sm-inline  fs-5 ms-3 mt-1 ml-0 pl-0 nav-items-link"
+													onclick="wishLists()">
+													Whishlists
+												</span>
+											</div>
+										</div>
 
-
+									</a>
+								</li>
+								<li class="nav-item w-100 mb-3" id="qoutes">
+									<a href="#" class="nav-link px-0 align-middle  px-0 ms-3">
+										<i class="fs-4 bi-table"></i>
+										<div class="row">
+											<div class="col-md-2">
+												<span>
+													<img src="theme/img/heart-icon.png" id="order_active"
+														style="display: none;" width="30px" height="30px">
+													<img src="theme/img/quotation-icon.png" id="order_inactive"
+														class="mt-1" width="28px" height="23px">
+												</span>
+											</div>
+											<div class="col-md-10">
+												<span
+													class="ms-1 d-none d-sm-inline  fs-5 ms-3 mt-1 ml-0 pl-0 nav-items-link"
+													onclick="qoute()">
+													Quotes
+												</span>
+											</div>
 										</div>
 
 									</a>
@@ -110,8 +175,6 @@
 													Addresses
 												</span>
 											</div>
-
-
 										</div>
 									</a>
 								</li>
@@ -200,7 +263,9 @@
 										{{ csrf_field() }}
 									</form>
 								</div>
+								</span>
 							</div>
+
 							<div class="col-md-12  mt-4 dashboard-content pl-1 ms-3">
 								From your account dashboard you can view your <span
 									class="dashboard-link-text text-decoration-underline" onclick="showOrders()">Recent
@@ -211,6 +276,7 @@
 									onclick="accountDetails()">Edit your password and account details.</span>
 							</div>
 						</div>
+						<div id="my_quotes_detail_table"></div>
 						<div class="d-none mt-3 mb-3 pr-4 pl-4" id="orders">
 							<div class="col-md-12 border-bottom border-4 pb-4 p-0">
 								<img src="theme/img/orders_main.png" style="margin: -6px 1px 1px 1px;">
@@ -233,10 +299,164 @@
 								</tbody>
 							</table>
 						</div>
-						<div class="order-detail" id="order_details">
+						<div class="d-none mt-3 mb-3 pr-4 pl-4" id="my_quotes">
+							<div class="col-md-12 border-bottom border-4 pb-4 p-0">
+								<img src="theme/img/orders_main.png" style="margin: -6px 1px 1px 1px;">
+								<span class="pt-1 my-account-content-heading ">My Quotes</span>
+							</div>
+
+
+							<table cellpadding="10" cellspacing="10" class="w-100" class="mt-3">
+								<tr class="order-table-heading border-bottom">
+									<td class="pl-0">Title</td>
+									<td>Status</td>
+									<td class="text-center pr-0">Action</td>
+								</tr>
+								<!-- <tr class="border-bottom ms-3 mr-3"></tr> -->
+								<tbody id="my_quotes_table" class="">
+
+
+								</tbody>
+							</table>
+						</div>
+						<div id="update_qoute" class="bg-success text-white text-center fade-out w-50 m-auto"></div>
+
+
+
+
+
+
+
+
+
+
+						<div class="d-none mt-3 mb-3 pr-4 pl-4" id="my_quotes_edit">
+							<div class="col-md-12 border-bottom border-4 pb-4 p-0">
+								<img src="theme/img/orders_main.png" style="margin: -6px 1px 1px 1px;">
+								<span class="pt-1 my-account-content-heading ">Edit Qoute</span>
+
+							</div>
+							<div id="user-qoute">
+
+							</div>
+						</div>
+
+						<div class="d-none row mt-3 mb-3 pr-0 pl-0" id="whishlist">
+							<div class="col-md-8 border-bottom border-4 d-flex pb-4 p-0 bg-white">
+								<img src="/theme/img/heartfilled.png" style="margin: 5px 3px 0px 9px;" width="28px"
+									height="28px">
+								<span class="pt-1 my-account-content-heading">Whishlists</span>
+							</div>
+							<div class="col-md-4 border-bottom" style="    padding-left: 151px;">
+								<button class="btn btn-outline-success" data-bs-toggle="modal"
+									data-bs-target="#exampleModal">Create List</button>
+							</div>
+
+							<div class="col-md-8 bg-light m-auto rounded-end pt-3 pb-3" style="" id="wishlist_content">
+
+							</div>
+						</div>
+						<div class="d-none row mt-3 mb-3 pr-0 pl-0" id="all_qoutes">
+							<div id="qoute-heading" class="row d-none">
+								<div class="col-md-6 border-bottom border-4 d-flex pb-4 p-0 bg-white">
+									<img src="/theme/img/heartfilled.png" style="margin: 5px 3px 0px 9px;" width="28px"
+										height="28px">
+									<span class="pt-1 my-account-content-heading">Qoutes</span>
+								</div>
+								<div class="col-md-6 border-bottom" style="padding-left: 135px;">
+									<button class="btn btn-outline-success" data-bs-toggle="modal"
+										data-bs-target="#exampleModal2">Create a Quotes</button>
+									<button class="btn btn-outline-success" onclick="myQoutes()">My Quotes</button>
+								</div>
+							</div>
+							<div class="d-none" id="filter">
+								@livewire('filter2')
+							</div>
+							<div class="row w-100 pl-2 pr-0">
+								<div class="card col-md-12">
+									<div class="card-body w-100 d-none" id="list">
+										<div id="list_title">
+											<h4></h4>
+										</div>
+										<input type="hidden" id="list_id" value="">
+										<table id="product_list" class="table" width="50%">
+											<tr>
+												<td style="width:373px !important">Product Title</td>
+												<td style="width:373px !important">Image</td>
+												<td>Price</td>
+												<td>Quantity</td>
+												<td>Subtotal</td>
+												<td>Remove</td>
+											</tr>
+										</table>
+										<div class="row">
+											<div class="col-md-10 border-top">Grand Total</div>
+											<div class="col-md-2 border-top">amount : <span id="grand_total">0</span>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-10 border-top"><button type="button"
+													class="ms-2 btn btn-primary" onclick="generatList()">Create
+													List</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- Modal -->
+						<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+							aria-hidden="true">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title text-center" id="exampleModalLabel">Create List</h5>
+										<button type="button" class="btn-close" data-bs-dismiss="modal"
+											aria-label="Close"></button>
+									</div>
+									<div class="modal-body">
+										<input type="text" name="list" id="whish_list_id" class="form-control"
+											placeholder="List Name" aria-label="List Name"
+											aria-describedby="addon-wrapping">
+										<input type="hidden" name="wishlist" id="wishlist" value="wishlist">
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary"
+											data-bs-dismiss="modal">Close</button>
+										<button type="button" class="btn btn-primary" onclick="createList(1)">Save
+											changes</button>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel"
+							aria-hidden="true">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title text-center" id="exampleModalLabel">Create Quote</h5>
+										<button type="button" class="btn-close" data-bs-dismiss="modal"
+											aria-label="Close"></button>
+									</div>
+									<div class="modal-body">
+										<input type="text" name="quote_id" id="quote_id" class="form-control"
+											placeholder="List Name" aria-label="Qoute Name"
+											aria-describedby="addon-wrapping">
+										<input type="hidden" name="qoute" id="qoute" value="qoute">
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary"
+											data-bs-dismiss="modal">Close</button>
+										<button type="button" class="btn btn-primary" onclick="createList(2)">Save
+											changes</button>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="" id="order_details">
 							<div class="col-md-12 mt-4 d-none order-detail-container pl-4 pr-4"
 								id="order-detail-container">
-								<div class="row mt-3 d-none detail-heading" id="detail-heading">
+								<div class="row mt-3  detail-heading" id="detail-heading">
 									<div class="row mb-4 mt-3 pr-0">
 										<div class="col-md-4">
 											<img src="theme/img/order_details.png" style="margin: -1px 2px 1px 1px;">
@@ -244,7 +464,7 @@
 											</span>
 										</div>
 										<div class="col-md-8 rounded-end" id="order_content">
-											<div class="mt-1" id="order_id"></div>
+											<div class="mt-1" id="order_id">dfdfdfdf</div>
 										</div>
 									</div>
 								</div>
@@ -266,7 +486,7 @@
 
 								<table cellpadding="10" cellspacing="10" class="w-100">
 									<tr class="border-bottom">
-										<th>Ordesdsddr#</th>
+										<th>Order#</th>
 										<th>Date</th>
 										<th>Status</th>
 										<th>Total</th>
@@ -431,6 +651,7 @@
 											onclick="showHidePassword('current_password')" id="eye"></i>
 									</div>
 								</div>
+
 								<div class="text-danger" id="password-match-fail"></div>
 								<div class="col-md-6">
 									<label for="first_name" class="col-form-label dashboard-content">New Password (<i
@@ -458,49 +679,97 @@
 										value="Save" onclick="change_password()">SAVE CHANGES</button>
 								</div>
 							</div>
+
+							<div class="row ms-2 mb-5 d-none" id="address_row">
+								<div class="col-md-3">
+								</div>
+								<div class="col-md-9 pl-1">
+									<div class="row mt-3 " style="margin:auto;">
+										<div class="col bg-white mr-3" style="border-radius: 10px !important;">
+											<div class="mt-4 mb-4"><img src="theme/img/user_address.png"><span
+													class="billing-address-heading-subtitle pt-2 ms-2 align-middle address-weight">Order
+													Details</span>
+											</div>
+											<div class="border-bottom"></div>
+											<div id="address_table" class="mt-3 mb-4"></div>
+										</div>
+										<div class="col pl-1 bg-white"
+											style="border-radius: 10px; border: 1px solid #008AD0!important;">
+											<div class="mt-4 mb-4 ms-3"><img src="theme/img/shipping_address2.png"><span
+													class="billing-address-heading-subtitle pt-2 ms-2 align-middle address-weight">Order
+													Details</span>
+											</div>
+											<div class="border-bottom ms-3"></div>
+											<div class="ms-3">
+												<div id="shipping_table" class="mt-3 mb-4"></div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
-				<div class="row ms-2 mb-5 d-none" id="address_row">
-					<div class="col-md-3">
-					</div>
-					<div class="col-md-9 pl-1">
-						<div class="row mt-3 " style="margin:auto;">
-							<div class="col bg-white mr-3" style="border-radius: 10px !important;">
-								<div class="mt-4 mb-4"><img src="theme/img/user_address.png"><span
-										class="billing-address-heading-subtitle pt-2 ms-2 align-middle address-weight">Order
-										Details</span>
-								</div>
-								<div class="border-bottom"></div>
-								<div id="address_table" class="mt-3 mb-4"></div>
-							</div>
-							<div class="col pl-1 bg-white"
-								style="border-radius: 10px; border: 1px solid #008AD0!important;">
-								<div class="mt-4 mb-4 ms-3"><img src="theme/img/shipping_address2.png"><span
-										class="billing-address-heading-subtitle pt-2 ms-2 align-middle address-weight">Order
-										Details</span>
-								</div>
-								<div class="border-bottom ms-3"></div>
-								<div class="ms-3">
-									<div id="shipping_table" class="mt-3 mb-4"></div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
+				@livewireScripts
+				@section('css')
+				<link rel="stylesheet" href="../css/admin_custom.css">
+				@stop
 
 
-<script>
-	function replaceEye(val) {
+				<script>
+					function qoute() {
+				$('#my_quotes_detail_table').addClass('d-none');
+				$('#my_quotes').addClass('d-none');
+				$('#filter').removeClass('d-none');
+				$('#all_qoutes').removeClass('d-none');
+				$('#intro,#edit_address,#address_row').addClass('d-none');
+				$('#whishlist').addClass('d-none');
+				$('.nav-pills .active').removeClass('active');
+				$('.nav-pills #qoutes').addClass('active');
+				$('#edit_address').addClass('d-none');
+				$('#address_row').addClass('d-none');
+				$('#whish_lists').addClass('d-none');
+				$('.order-detail-container').addClass('d-none');
+				$('#customer-address').addClass('d-none');
+				$('#orders').addClass('d-none');
+				$('#qoute-heading').removeClass('d-none');
+				$('#my_quotes_edit').addClass('d-none');
+				$('#update_qoute').addClass('d-none');
+			}
+			function replaceEye(val) {
         		$('#eye_icon_'+val).attr("src", "theme/img/white_eye.png").css('width' , '20px');
 			}
 			function replaceEye2(val) {
 				$('#eye_icon_'+val).attr("src", "theme/img/eye.png");
 			}
+
+			// function createList(type) {
+			// 	if (type == 1) {
+			// 		var type = 'whishlist';
+			// 		var list_name = $('#list').val();
+			// 	}
+			// 	else {
+			// 		var type = 'qoute';
+			// 		var list_name = $('#quote_id').val();
+			// 	}
+			// 	jQuery.ajax({
+			// 		url: "{{ url('/create-list/')}}",
+			// 		method: 'POST',
+			// 		data: {
+			// 			"_token": "{{ csrf_token() }}",
+			// 			list_title : list_name,
+			// 			type : type
+			// 		},
+			// 	success: function (response) {
+			// 		console.log(response.status);
+			// 		$('#exampleModal').modal('hide');
+
+			// 	}
+			// 	});
+			// };
+
+
+			
 
 			function showHidePassword(val) {
 				if (val === "current_password") {
@@ -528,6 +797,86 @@
 	  				}
   				}
 
+			}
+			function wishLists() {
+
+				$('#whishlist').removeClass('d-none');
+				$('#intro,#edit_address,#address_row').addClass('d-none');
+				$('#my_quotes_edit').addClass('d-none');
+				$('#all_qoutes').addClass('d-none');
+				$('.nav-pills .active').removeClass('active');
+				$('.nav-pills #wish_lists').addClass('active');
+				$('#edit_address').addClass('d-none');
+				$('#address_row').addClass('d-none');
+				$('#my_quotes').addClass('d-none');
+				$('.order-detail-container').addClass('d-none');
+				$('#customer-address').addClass('d-none')
+				$('#orders').addClass('d-none');
+				var listitems = '';
+					jQuery.ajax({
+					url: "{{ url('/get-wish-lists/')}}",
+					method: 'GET',
+					data: {
+					},
+				        success : function (images) {
+
+				        	$('#wishlist_content').html(images);
+				        	return;
+
+				        	console.log(images[1]);
+							//response.images.slice(-5).forEach(
+							// 	function(item, index){
+							// 		console.log(item.product.options[0].image)
+					
+							// });
+								listitems += '<div class="container p-0">';
+								    listitems +=  '<header class="text-center">'+
+								        	'<h1>My Favourites</h1>'+
+								    		'</header>'+
+						
+									'<div class="row">'+
+										  '<div class="col-md-8 col-sm-12 co-xs-12 gal-item">'+
+											   	'<div class="row h-50">'+
+													  '<div class="col-md-12 col-sm-12 co-xs-12 gal-item">'+
+																'<div class="box buy-list-box">'+
+															 '<img src="' + images[0] + '" class="img-ht img-fluid rounded">'+
+																'</div>'+
+														'</div>'+
+												'</div>'+
+										  
+										    '<div class="row h-50 mt-3">'+
+													 '<div class="col-md-6 col-sm-6 co-xs-12 gal-item pt-0">'+
+													  '<div class="box buy-list-box">'+
+														'<img src="http://fakeimg.pl/748x177/" class="img-ht img-fluid rounded">'+
+													'</div>'+
+													'</div>'+
+
+													'<div class="col-md-6 col-sm-6 co-xs-12 gal-item pt-0">'+
+													 '<div class="box buy-list-box">'+
+														'<img src="http://fakeimg.pl/371x370/" class="img-ht img-fluid rounded">'+
+													'</div>'+
+													'</div>'+
+									            '</div>'+
+									      '</div>'+
+
+								           '<div class="col-md-4 col-sm-6 co-xs-12 gal-item">'+
+											   '<div class="col-md-12 col-sm-6 co-xs-12 gal-item h-25 pl-0 pr-0">'+
+												'<div class="box buy-list-box">'+
+													'<img src="http://fakeimg.pl/748x177/" class="img-ht img-fluid rounded">'+
+												'</div>'+
+												'</div>'+
+
+												  '<div class="col-md-12 col-sm-6 co-xs-12 gal-item h-76 p-0">'+
+												   '<div class="box buy-list-box">'+
+													'<img src="http://fakeimg.pl/748x177/" class="img-ht img-fluid rounded">'+
+												'</div>'+
+												'</div>'+
+								            '</div>'+
+									'</div>'+
+								'<br/>'+
+							'</div>';
+							$('#wishlist_content').html(listitems);
+				}});
 			}
 
 			
@@ -592,10 +941,12 @@
 		
 			}
 			function dashboard() {
-
+				$('#my_quotes').addClass('d-none');
 				$('#intro').removeClass('d-none');
 				$('#edit_address').addClass('d-none');
 				$('#address_row').addClass('d-none');
+				$('.nav-pills .active').removeClass('active');
+				$('.nav-pills #dashboard').addClass('active');
 				
 				// $('#order_id').hide();
 				$('.order-detail-container').addClass('d-none');
@@ -606,6 +957,7 @@
 			}
 
 			function userOrderDetail(id) {
+				$('#my_quotes').addClass('d-none');
 				$('#address_row').removeClass('d-none');
 				$('#order_details').removeClass('d-none');
 				$('#lineitems').removeClass('d-none');
@@ -635,20 +987,18 @@
 							var retail_price = 1
 							result.order_items.forEach(
 								function(item, index){
-									var product_total = item.product.retail_price * item.quantity;
+									var product_total = item.price * item.quantity;
 									//var product_total = retail_price * item.quantity;
 									subtotal = product_total + subtotal;
-									lineitems +='<tr class="border-bottom table-row-content" style="height:70px"><td style="width:491px"><a href="">'+item.product.name+'</a>'+'<td class="cart-basket d-flex align-items-center justify-content-center float-sm-end quantity-counter rounded-circle mt-4">'+item.quantity+'</td><td></td><td class="table-order-number text-dark text-end">$'+item.product.retail_price * item.quantity+'</td></tr>';
+									lineitems +='<tr class="border-bottom table-row-content" style="height:70px"><td style="width:491px"><a href="">'+item.product.name+'</a>'+'<td class="cart-basket d-flex align-items-center justify-content-center float-sm-end quantity-counter rounded-circle mt-4">'+item.quantity+'</td><td></td><td class="table-order-number text-dark text-end">$'+ item.price * item.quantity.toFixed(2)+'</td></tr>';
 									
 								console.log(item.quantity)
 								});
 
-							lineitems += '<tr class="border-bottom" style="height:70px"><td class="table-row-content">'+ 'Subtotal'+'</td><td></td><td></td><td class="table-order-number text-dark text-end">$'+subtotal+'</td></tr>';
-							// lineitems += '<tr class="border-bottom" style="height:70px"><td class="table-row-content">'+'<img src="theme/img/truck.png">'+' Shipping: <span class="shipping-content">Via UPS cround ( Estimated transit time of 3 - 5 business days. )</span>'+'</td><td><td></td></td><td class="table-order-number text-dark text-end">'+'$0.00'+'</td></tr>';
-							// lineitems += '<tr class="border-bottom" style="height:70px"><td class="table-row-content">'+'<img src="theme/img/arrow_1.png">'+' <span>Free shipping discount </span>'+'</td><td></td><td></td><td class="table-order-number text-dark text-end">'+'$0.00'+'</td></tr>';
+							lineitems += '<tr class="border-bottom" style="height:70px"><td class="table-row-content">'+ 'Subtotal'+'</td><td></td><td></td><td class="table-order-number text-dark text-end">$'+subtotal.toFixed(2)+'</td></tr>';
 							lineitems += '<tr class="border-bottom" style="height:70px"><td class="table-row-content">'+'<img src="theme/img/arrow_1.png">'+' <span>Tax </span>'+'</td><td></td><td></td><td class="table-order-number text-dark text-end">'+'$0.00'+'</td></tr>';
 						
-							lineitems += '<tr class="border-bottom" style="height:70px"><td class="table-row-content">'+'<img src="theme/img/arrow_1.png">'+' <span>Payment Method </span>'+'</td><td><td></td></td><td class="table-order-number text-dark text-end">'+result.user_order.paymentTerms+'</td><td class="table-order-number text-dark ">'+' '+'</td></tr>';
+							lineitems += '<tr class="border-bottom" style="height:70px"><td class="table-row-content">'+'<img src="theme/img/arrow_1.png">'+' <span>Delivery Method </span>'+'</td><td><td></td></td><td class="table-order-number text-dark text-end">'+result.user_order.paymentTerms+'</td><td class="table-order-number text-dark ">'+' '+'</td></tr>';
 							lineitems += '<tr class="border-bottom" style="height:70px"><td class="table-row-content">  '+'   Total'+'</td><td></td><td></td><td class="table-order-number  text-end text-danger">$'+subtotal.toFixed(2)+'</td><td class="table-order-number text-dark">'+' '+'</td></tr>';
 							var address = '';
 							//address = result.user_address.firstName;
@@ -670,13 +1020,15 @@
 						}});
 
 			}
-			function showOrders	() {
+			function showOrders() {
+				$('#my_quotes').addClass('d-none');
+				$('#filter').addClass('d-none');
 				$('#address_row').addClass('d-none');
-
+                $('#all_qoutes').addClass('d-none');
 				$('.nav-pills .active').removeClass('active');
 				$('.nav-pills #recent_orders').addClass('active');
 				//$(this).addClass("active");
-		
+				$('#whishlist').addClass('d-none');
 				$('#customer-address').addClass('d-none');
 				$('#order-detail-container').addClass('d-none');
 				$('#edit_address').addClass('d-none');
@@ -688,7 +1040,7 @@
 					 jQuery.ajax({
 						url: "{{ url('/my-account/') }}",
 						method: 'GET',	
-						success: function(data){
+						success: function(data) {
 							console.log(data);
 							var res='';
 							var total_items = 0;
@@ -720,7 +1072,10 @@
 			} 
 
 			function accountDetails() {
+				$('#my_quotes').addClass('d-none');
+				$('#filter').addClass('d-none');
 				$('#orders').addClass('d-none');
+				$('#whishlist').addClass('d-none');
 				$('#detail-heading').addClass('d-none');
 				$('#order_details').addClass('d-none');
 				$('#address_row').addClass('d-none');
@@ -738,12 +1093,16 @@
 				})
 			}
 			function edit_address() {
+				$('#my_quotes').addClass('d-none');
+				$('#filter').addClass('d-none');
+				$('#edit_address').removeClass('d-none');
+				$('#whishlist').addClass('d-none');
 				$('#address_row').addClass('d-none');
 				$('.nav-pills .active').removeClass('active');
 				$('.nav-pills #current_address').addClass('active');
 				// $('#customer-address').addClass('d-none');
 				$('#customer-address').addClass('d-none');
-				$('#edit_address').removeClass('d-none');
+				
 				$('#orders').addClass('d-none');
 				$('#intro').addClass('d-none');
 				$('#order-detail-container').addClass('d-none');
@@ -751,7 +1110,6 @@
 
 
 			function updateContact(user_id) {
-
 		        var first_name = $('input[name=firstName]').val();
 		        var last_name = $('input[name=lastName]').val();
 		        var company_name = $('input[name=company]').val();
@@ -766,9 +1124,9 @@
 
         		jQuery.ajax({
                 	method: 'GET',
+                	data: {
                 	url: "{{ url('/user-addresses/') }}",
 
-                	data: {
 	                	"_token": "{{ csrf_token() }}",
 	                    "user_id": user_id,
 	                    "first_name" : first_name,
@@ -792,11 +1150,7 @@
                 		}
             		},
             		error: function (response) {
-  
-		                console.log(response)
-		                
 		                var error_message = response.responseJSON;
-		                console.log(error_message);
 		                var error_text = '';
 		                if (typeof error_message.errors.first_name != 'undefined') {
 		                    error_text = error_message.errors.first_name;
@@ -867,10 +1221,223 @@
            			}
       			});
     		}
-</script>
-<!-- Remove the container if you want to extend the Footer to full width. -->
 
-@include('partials.product-footer')
+    		function createList(type) {
+	    		if (type == 1) {
+					var type = 'wishlist';
+					var list_name = $('#whish_list_id').val();
+				}
+				else {
+					var type = 'quote';
+					var list_name = $('#quote_id').val();
+				}
+		    	var title = $('#quote_id').val();
+		    	var description = 'Quote';
+		    	var status = 'Public';
+        	jQuery.ajax({
+                  	url: "{{ route('buy-list.store') }}",
+                  	method: 'post',
+                  	data: {
+                    	"_token": "{{ csrf_token() }}",
+                     	title : list_name,
+                     	description : description,
+                     	status : status,
+                     	type : type 
+                  	},
+                  	success: function(response){
+                   		$( "#list_title" ).append("<h4>"+title+"</h4>");
+                   		$("#list_id").val(response.list_id);
+                   		$("#title_errors").html('');
+                   		$("#status_errors").html('');
+                   		$("#description_errors").html('');
+                   		$("#success_msg").html(response.success);
+                   		$("#success_msg").removeClass('d-none');
+                   		$(".btn-add-to-cart").prop('disabled', false);
+                   		$("#list").removeClass('d-none');
 
-<!-- End of .container -->
-@include('partials.footer')
+            		}, 
+            		error : function(response) {
+            			if (response.responseJSON.errors.title) {
+            				$("#title_errors").html(response.responseJSON.errors.title);
+            			}
+            			else {
+            				$("#title_errors").html('');
+            			}
+            			if (response.responseJSON.errors.status) {
+            				$("#status_errors").html(response.responseJSON.errors.status);
+            			}
+            			else {
+            				$("#status_errors").html('');
+            			}
+
+            			if (response.responseJSON.errors.description) {
+            				$("#description_errors").html(response.responseJSON.errors.description);
+            			}
+            			else {
+            				$("#description_errors").html('');
+            			}
+            		}
+        		});
+   			}
+
+   			function generatList() {
+			var is_update = $('#is_update').val();
+			var listItems = [];
+			var list_id = $('#list_id').val();
+			var grand_total = $('#grand_total').html();
+			console.log(grand_total);
+			$('.admin-buy-list').each(function() {
+				var product_id = this.id;
+				product_id = product_id.replace('product_row_', '');
+				var retail_price = $('#retail_price_' + product_id).html();
+				var option_id = $('#option_id_' + product_id).val();
+				var quantity = $('#quantity_' + product_id).val();
+				var subtotal = $('#subtotal_' + product_id).html();
+				console.log(subtotal);
+				listItems.push({
+					product_id: product_id,
+					option_id : option_id,
+					quantity :  quantity,
+					subtotal: subtotal,
+					grand_total: grand_total,
+				});
+			});
+			console.log(listItems);
+			jQuery.ajax({
+				url: "{{ url('admin/generate-list') }}",
+				method: 'post',
+				data: {
+				"_token": "{{ csrf_token() }}",
+					listItems: listItems,
+					listId : list_id,
+					is_update: is_update,
+					type : 'Quote'
+				},
+				success: function(response) {
+					console.log(response);
+					$('.nav-pills #qoutes').addClass('active');
+					$('#update_qoute').html('Updated Successfully');
+					 //window.location.href = "{{ route('buy-list.index')}}";
+				}
+			});
+		}
+
+
+    	function deleteProduct(product_id) {
+			var row = $('#product_row_' + product_id).length;
+			if (row < 1) {
+				$('#grand_total').html(0.00);
+			}
+			var subtotal_to_remove = parseFloat($('#subtotal_'+ product_id).html());
+			var grand_total = parseFloat($('#grand_total').html());
+			var updated_total = 0;
+			updated_total = parseFloat(grand_total) - parseFloat(subtotal_to_remove);
+			$('#subtotal_'+ product_id).val();
+			$('#product_row_'+ product_id).remove();
+			$('#grand_total').html(updated_total);
+		}
+
+		function handleQuantity(product_id) {
+			var difference = 0;
+			var subtotal_before_update = parseFloat($('#subtotal_' + product_id).html());
+			console.log('difference => ' + difference);
+			console.log('sub total before update  => ' + subtotal_before_update);
+
+			var retail_price = parseFloat($('#retail_price_' + product_id).html());
+			var quantity = parseFloat($('#quantity_' + product_id).val());
+			var subtotal = parseFloat($('#subtotal_' + product_id).html());
+			
+			
+			subtotal = retail_price * quantity;
+			difference = subtotal_before_update - subtotal;
+
+			console.log('difference => ' + difference);
+
+			var grand_total = $('#grand_total').html();
+			grand_total = parseFloat(grand_total);
+
+			console.log('Grand Total => ' + grand_total);
+
+
+			grand_total = grand_total - difference;
+			$('#grand_total').html(grand_total);
+
+			console.log('Grand Total => ' + grand_total);
+
+			$('#quantity_' + product_id).val(quantity);
+			$('#subtotal_' + product_id).html(subtotal);
+		}
+
+		function myQoutes() {
+			$('#filter').addClass('d-none');
+			$('#my_quotes').removeClass('d-none');
+			$('#all_qoutes').addClass('d-none');
+			$('#qoute-heading').removeClass('d-none');
+			jQuery.ajax({
+				url: "{{ url('/my-qoutes/') }}",
+				method: 'GET',
+				data: {
+		
+				},
+					success: function(data) {
+							console.log(data);
+							var res='';
+							var total_items = 0;
+						$.each (data.data, function (key, value) {
+							console.log(value.title);
+							console.log(total_items);
+							var temp = value.createdDate;
+            				res +=
+            					'<tr class="table-row-content border-bottom">'+
+                					'<td>'+value.title+'</td>'+
+                					'<td>'+value.status+'</td>'+
+                					'<td class="pr-0">'+'<a onclick=userQouteDetail('+value.id+') onmouseover=replaceEye('+value.id+') onmouseout= replaceEye2('+value.id+');>'+'<button class="btn btn-outline-success view-btn p-0" type="" style="width:100%;height:32px;"><img src="theme/img/eye.png" class="mr-1 mb-1" id="eye_icon_'+value.id+'"></i>View</button>'+'</td></a>'+'<td class="pr-0">'+'<a onclick=userQouteEdit('+value.id+') onmouseover=replaceEye('+value.id+') onmouseout= replaceEye2('+value.id+');>'+'<button class="btn btn-outline-success view-btn p-0" type="" style="width:100%;height:32px;"><img src="theme/img/eye.png" class="mr-1 mb-1" id="eye_icon_'+value.id+'"></i>Edit</button>'+'</td></a>'+
+           						'</tr>';
+
+   								});
+							//console.log(res);
+						  $('#my_quotes_table').html(res);
+						},	
+					});
+		}
+
+		function userQouteDetail(id) {
+			$('#my_quotes_detail_table').removeClass('d-none');
+			jQuery.ajax({
+				url: "{{ url('/my-qoutes-details')}}"+"/"+id,
+				method: 'GET',
+				success: function(html) {
+					$('#my_quotes').addClass('d-none');
+					$('filter').addClass('d-none');
+						console.log(html);
+						  $('#my_quotes_detail_table').append(html);
+						  dataType: 'html'
+				},	
+			});
+		}
+
+		function userQouteEdit(id) {
+			$('#filter').addClass('d-block');
+			jQuery.ajax({
+				url: "{{ url('/my-qoute-edit')}}"+"/"+id,
+				method: 'GET',
+				success: function(html) {
+					console.log(html);
+					$('#my_quotes').addClass('d-none');
+					$('#qoute-heading').addClass('d-none');
+						  $('#user-qoute').append(html);
+						  $('#all_qoutes').removeClass('d-none');
+				          $('#my_quotes_edit').removeClass('d-none');
+				          $('#my_quotes').addClass('d-none');
+							  dataType: 'html'
+				},	
+			});
+		}
+				</script>
+
+				<!-- Remove the container if you want to extend the Footer to full width. -->
+
+				@include('partials.product-footer')
+
+				<!-- End of .container -->
+				@include('partials.footer')

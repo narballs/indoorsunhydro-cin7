@@ -29,66 +29,158 @@
 			    		<div class="text-danger" id="title_errors"></div>
 			  		</div>
 		  		@endif
-		  		 <div class="form-group col-md-6 mb-0">
-		    		<label for="type" name="type">Status</label>
+		  		@if(!empty($list->status))
+			  		<div class="form-group col-md-6 mb-0">
+			    		<label for="type" name="type">Status</label>
+			    		<select class="form-control" name="type" id="status">
+			    			 <option value="{{$list->status}}" >{{$list->status}}</option>
+			    		</select>
+			    		<div id="status_errors" class="text-danger"></div>
+			  		</div>
+		  		@else
+			  		 <div class="form-group col-md-6 mb-0">
+			    		<label for="type" name="type">Status</label>
 
-		    		<select class="form-control" name="type" id="status">
-		    			 <option value="" {{$list->status == private ? 'selected' : '' }}>{{$list->status}}</option>
-		    			  <option value="" {{$list->status == public ? 'selected' : '' }}>{{$list->status}}</option>
-		    			   <option value="" {{$list->status == status ? 'selected' : '' }}>{{$list->status}}</option>
-		    		</select>
-		    		<div id="status_errors" class="text-danger"></div>
-		  		</div>
-		  		<div class="col-md-12 card mt-5">
-					<div class="card-body"><h4>Description</h4></div>
+			    		<select class="form-control" name="type" id="status">
+			    			 <option value="Public" >Public</option>
+			    			  <option value="Private">Private</option>
+			    			   <option value="Shareable">Shareable</option>
+			    		</select>
+			    		<div id="status_errors" class="text-danger"></div>
+			  		</div>
+		  		@endif
+		  		@if(!empty($list->description))
+		  		<?php //dd($list);?>
+			  		<div class="col-md-12 card mt-5">
+						<div class="card-body"><h4>Description</h4></div>
 						<div class="form-group col-md-12">
-		    				<label for="mobile"></label>
-		    				<textarea class="form-control" rows="10" name="notes" id="description"></textarea>
-		    			<div id="description_errors" class="text-danger"></div>
-		  				</div>
-
+			    			<label for="mobile"></label>
+			    			<textarea class="form-control" onfocus="this.select()" type="text" rows="10" name="notes" id="description">
+			    				{{$list->description}}
+			    			</textarea>
+			    			<div id="description_errors" class="text-danger"></div>
+			  			</div>
+					</div>
+				@else
+					<div class="col-md-12 card mt-5">
+						<div class="card-body"><h4>Description</h4></div>
+							<div class="form-group col-md-12">
+			    				<label for="mobile"></label>
+			    				<textarea class="form-control" rows="10" name="notes" id="description"></textarea>
+			    			<div id="description_errors" class="text-danger"></div>
+			  				</div>
+					</div>
+				@endif
+				@if(!empty($list->id))
+				<div class="text-center ms-5" style="margin-bottom: 12px;margin-left: 150px !important;width: 331px;width: 358px !important;">
+					<button type="button" class="ms-2 btn btn-primary w-100" onclick="createList()">
+						Update List
+					</button>
 				</div>
-				<div class="text-center ms-5" style="margin-bottom: 12px;margin-left: 150px !important;width: 331px;
-    width: 358px !important;">
+				@else 
+				<div class="text-center ms-5" style="margin-bottom: 12px;margin-left: 150px !important;width: 331px;width: 358px !important;">
 					<button type="button" class="ms-2 btn btn-primary w-100" onclick="createList()">
 						Create List
 					</button>
 				</div>
+				@endif
 		  	</div>
 		</div>
 		<div class="col-md-7 card">
 			@livewire('filter')
 		</div>
 	</div>
-	<div class="row w-100 pl-2 pr-0">
-		<div class="card col-md-12">
-			<div class="card-body w-100 d-none" id="list">
-				<div id="list_title">
-					<h4></h4>
-				</div>
-				<input type="hidden" id="list_id" value="">
-				<table id="product_list" class="table">
-					<tr>
-						<td style="width:373px !important">Product Title</td>
-						<td>Image</td>
-						<td>Price</td>
-						<td>Quantity</td>
-						<td>Subtotal</td>
-						<td>Remove</td>
-					</tr>
-				</table>
-				<div class="row">
-					<div class="col-md-10 border-top">Grand Total</div>
-					<div class="col-md-2 border-top">amount : <span id="grand_total">0</span></div>
-				</div>
-				<div class="row">
-					<div class="col-md-10 border-top"><button type="button" class="ms-2 btn btn-primary" onclick="generatList()">Create List</button>
+	@if(!empty($list->list_products))
+		<div class="row w-100 pl-2 pr-0">
+			<div class="card col-md-12">
+				<div class="card-body w-100" id="list">
+					<div id="list_title">
+						<h4></h4>
+					</div>
+					<input type="hidden" id="list_id" value="{{$list->id}}">
+					<input type="hidden" id="is_update" value="1">
+						<table id="product_list" class="table">
+							<tr>
+								<td style="width:373px !important">Product Title</td>
+								<td>Image</td>
+								<td>Price</td>
+								<td>Quantity</td>
+								<td>Subtotal</td>
+								<td>Remove</td>
+							</tr>
+							<?php //dd($list);?>
+						@foreach($list->list_products as $list_product)
+					
+                        @foreach($list_product->product->options as $option)
+                            <!-- <tr id="product_row_{{$list_product->product_id }}"> -->
+                            <tr id="product_row_{{ $list_product->product_id }}" class="product-row-{{ $list_product->product_id }} admin-buy-list">
+                                <td>
+                                    {{$list_product->product->name}}
+                                </td>
+                                <td>
+                                	<input type="hidden" id="option_id_{{$list_product->product_id}}" value="{{ $option->option_id}}">
+                                	<img src="{{$option->image}}" alt="Product 1" class="img-circle img-size-32 mr-2">
+                                </td>
+                                <td>	
+                                	$<span id="retail_price_{{ $list_product->product_id }}"> {{$list_product->product->retail_price}} </span></td>
+                                <td>
+									<input type="number" min="1"   id="quantity_{{ $list_product->product_id }}" value="{{$list_product->quantity}}" onclick="handleQuantity({{$list_product->product_id}})">
+								</td>
+                                <td>
+									$<span id="subtotal_{{$list_product->product_id}}"> {{ number_format($list_product->product->retail_price * $list_product->quantity, 2) }} </span>
+								</td>
+                                <td>
+                                       <a class="cursor-pointer delete" title="" data-toggle="tooltip" data-original-title="Delete">
+            <i class="fas fa-trash-alt cursor-pointer" onclick="deleteProduct({{$list_product->product_id }})"></i>
+        </a>
+                                </td>
+                            </tr>
+                        @endforeach
+                    @endforeach
+
+						</table>
+						<div class="row">
+							<div class="col-md-10 border-top">Grand Total</div>
+							<div class="col-md-2 border-top">amount : <span id="grand_total">{{$list_product->grand_total}}</span></div>
+						</div>
+						<div class="row">
+							<div class="col-md-10 border-top"><button type="button" class="ms-2 btn btn-primary" onclick="generatList()">Update List</button>
+							</div>
+						</div>
 				</div>
 			</div>
 		</div>
-	</div>
+	@else 
+		<div class="row w-100 pl-2 pr-0">
+			<div class="card col-md-12">
+				<div class="card-body w-100 d-none" id="list">
+					<div id="list_title">
+						<h4></h4>
+					</div>
+					<input type="hidden" id="list_id" value="">
+						<table id="product_list" class="table">
+							<tr>
+								<td style="width:373px !important">Product Title</td>
+								<td>Image</td>
+								<td>Price</td>
+								<td>Quantity</td>
+								<td>Subtotal</td>
+								<td>Remove</td>
+							</tr>
+						</table>
+						<div class="row">
+							<div class="col-md-10 border-top">Grand Total</div>
+							<div class="col-md-2 border-top">amount : <span id="grand_total">0</span></div>
+						</div>
+						<div class="row">
+							<div class="col-md-10 border-top"><button type="button" class="ms-2 btn btn-primary" onclick="generatList()">Create List</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 
-
+	@endif
 @livewireScripts
   @stop
 
@@ -174,6 +266,7 @@
 		
 	});
 		function generatList() {
+			var is_update = $('#is_update').val();
 			var listItems = [];
 			var list_id = $('#list_id').val();
 			var grand_total = $('#grand_total').html();
@@ -191,8 +284,7 @@
 					option_id : option_id,
 					quantity :  quantity,
 					subtotal: subtotal,
-					grand_total: grand_total
-					
+					grand_total: grand_total,
 				});
 			});
 			console.log(listItems);
@@ -202,10 +294,11 @@
 				data: {
 				"_token": "{{ csrf_token() }}",
 					listItems: listItems,
-					listId : list_id
+					listId : list_id,
+					is_update: is_update
 				},
 				success: function(response) {
-					window.location.href = "{{ route('buy-list.index')}}";
+					 window.location.href = "{{ route('buy-list.index')}}";
 				}
 			});
 		}
@@ -217,7 +310,8 @@
 			}
 			var subtotal_to_remove = parseFloat($('#subtotal_'+ product_id).html());
 			var grand_total = parseFloat($('#grand_total').html());
-			var updated_total = parseFloat(grand_total) - parseFloat(subtotal_to_remove);
+			var updated_total = 0;
+			updated_total = parseFloat(grand_total) - parseFloat(subtotal_to_remove);
 			$('#subtotal_'+ product_id).val();
 			$('#product_row_'+ product_id).remove();
 			$('#grand_total').html(updated_total);

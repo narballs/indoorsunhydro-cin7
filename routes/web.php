@@ -7,6 +7,9 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ContactUsController;
+use App\Http\Controllers\CreateCartController;
+use App\Http\Controllers\PermissionsController;
+use App\Http\Controllers\RolesController;
 use App\Http\Controllers\Admin\TestController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\OrderManagementController;
@@ -15,7 +18,11 @@ use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\ChangePasswordController;
 use App\Http\Controllers\Admin\CustomerSearchController;
 use App\Http\Controllers\Admin\AdminProductController;
+use App\Http\Controllers\Users\RoleController;
 use App\Http\Controllers\Admin\AdminBuyListController;
+use App\Http\Controllers\Admin\AdminShareListController;
+use Illuminate\Support\Facades\Auth;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -41,10 +48,11 @@ Route::get('send-mail', function () {
 
     $details = [
         'title' => 'Mail from waqas',
-        'body' => 'This is for testing email using smtp'
+        'body' => 'This is for testing email using smtp',
+        'name' => 'jjjj'
     ];
 
-    \Mail::to('wqszeeshan@gmail.com')->send(new \App\Mail\Subscribe($details));
+    \Mail::to('naris@letswebnow.com')->send(new \App\Mail\Subscribe($details));
 
     dd("Email is Sent.");
 });
@@ -57,13 +65,16 @@ Route::post('/login/', [UserController::class, 'process_login'])->name('login');
 Route::post('/user-contact/', [UserController::class, 'save_contact'])->name('save_contact');
 Route::post('/update-contact/', [UserController::class, 'update_contact'])->name('update_contact');
 Route::get('/my-account/', [UserController::class, 'my_account'])->name('my_account');
+Route::get('/my-qoutes/', [UserController::class, 'my_qoutes'])->name('my_qoutes');
+Route::get('/my-qoutes-details/{id}', [UserController::class, 'my_qoutes_details'])->name('my_qoutes_details');
+Route::get('/my-qoute-edit/{id}', [UserController::class, 'my_qoute_edit'])->name('my_qoute_edit');
 Route::get('/user-addresses/', [UserController::class, 'user_addresses'])->name('user_addresses');
 Route::get('/user-order-detail/{id}', [UserController::class, 'user_order_detail'])->name('user-order-detail');
 Route::post('/register/basic/create', [UserController::class, 'process_signup'])->name('register');
 Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 
 Route::get('/product-brand/{name}', [ProductController::class, 'showProductByBrands']);
-Route::post('add-to-cart', [ProductController::class, 'addToCart'])->name('add.to.cart');
+Route::post('add-to-cart/', [ProductController::class, 'addToCart'])->name('add.to.cart');
 Route::get('/remove/{id}', [ProductController::class, 'removeProductByCategory']);
 Route::get('cart', [ProductController::class, 'cart'])->name('cart');
 Route::post('update-cart', [ProductController::class, 'updateCart'])->name('update.cart');
@@ -74,10 +85,17 @@ Route::post('order-status-update', [OrderController::class, 'updateStatus'])->na
 Route::post('change-password', [ChangePasswordController::class, 'store'])->name('change.password');
 Route::get('/contact-us/', [ContactUsController::class, 'index']);
 Route::post('/contact-us-store/', [ContactUsController::class, 'store'])->name('contact.us.store');
+Route::get('/create-cart/{id}', [CreateCartController::class, 'create_cart'])->name('create.cart');
+Route::post('/add-to-wish-list/', [ProductController::class, 'addToWishList']);
+Route::get('/get-wish-lists/', [ProductController::class, 'getWishLists']);
+Route::get('/get-lists-names/', [ProductController::class, 'getListNames']);
+Route::post('/create-list/', [ProductController::class, 'createList']);
 //Route::post('/',[UserController::class, 'logout'])->name('logout');
 
 
-Route::group(['middleware' => ['admin']], function () {
+Route::group(['middleware' => ['auth']], function () {
+    Route::resource('admin/roles', RoleController::class);
+    Route::resource('admin/users', UserController::class);
     Route::get('admin/dashboard', [DashboardController::class, 'index'])->name('admin.view');
     Route::get('admin/orders', [OrderManagementController::class, 'index'])->name('admin.orders');
     Route::get('admin/order/create', [OrderManagementController::class, 'create'])->name('admin.order.create');
@@ -94,8 +112,12 @@ Route::group(['middleware' => ['admin']], function () {
     Route::get('admin/customer/create', [ContactController::class, 'customer_create'])->name('admin.customer.create');
     Route::post('admin/customer/store', [ContactController::class, 'customer_store'])->name('admin.customer.store');
     Route::get('admin/customer-detail/{id}', [ContactController::class, 'show_customer'])->name('admin.customer.detail');
+    Route::get('admin/customer-delete/{id}', [ContactController::class, 'customer_delete'])->name('admin.customer.delete');
+    Route::get('admin/customer-edit/{id}', [ContactController::class, 'customer_edit'])->name('admin.customer.edit');
+    Route::post('admin/customer-update/', [ContactController::class, 'customer_update'])->name('admin.customer.update');
     Route::get('admin/api-order-details/{id}', [OrderManagementController::class, 'show_api_order'])->name('admin.api.order.details');
     Route::post('admin/order-full-fill', [OrderManagementController::class, 'order_full_fill'])->name('admin.order.full.fill');
+    Route::post('admin/order-cancel', [OrderManagementController::class, 'cancelOrder']);
     Route::post('admin/customer-activate', [ContactController::class, 'activate_customer'])->name('admin.customer.activate');
     Route::post('admin/update-pricing-column', [ContactController::class, 'update_pricing_column'])->name('admin.update.pricing.column');
     Route::get('admin/customersearch', [CustomerSearchController::class, 'customerSearch'])->name('admin.customer.search');
@@ -103,5 +125,21 @@ Route::group(['middleware' => ['admin']], function () {
     Route::resource('admin/buy-list', AdminBuyListController::class);
     Route::post('admin/add-to-list', [AdminBuyListController::class, 'addToList']);
     Route::post('admin/generate-list', [AdminBuyListController::class, 'genrateList']);
+    Route::post('admin/share-list', [AdminShareListController::class, 'shareList']);
+    Route::get('admin/admin-users', [UserController::class, 'adminUsers']);
+    Route::get('admin/logout', function () {
+        Auth::logout();
+        return redirect()->route('user');
+    });
 });
 Route::get('product/search', [ProductController::class, 'productSearch'])->name('product_search');
+//Route::resource('buy-list', AdminBuyListController::class)->name('buy-lisy-front');
+
+
+
+
+
+Route::get('/home', [HomeController::class, 'index'])->name('home');
+
+Route::group(['middleware' => ['auth']], function () {
+});

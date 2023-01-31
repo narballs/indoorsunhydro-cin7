@@ -1,10 +1,27 @@
+<!-- <button type="button" class="btn btn-lg btn-danger" 
+        data-toggle="popover" title="Popover title" onclick="pop()"
+        data-content="And here's some amazing content. It's very engaging. Right?">
+     Click to toggle popover
+</button> -->
+<?php //dd($option->price);?>
 <div class="col-sm-12 col-md-6 col-lg-3 d-flex align-self-stretch mt-3 mb-3">
     <div class="card shadow-sm mb-4 w-100 h-100">
         @if($option->image != '')
+
+        <a style="width:20px !important;" href="#" data-toggle="popover-click" class="subscribe">
+            <i class="fa-solid fa-heart" onclick="addToList('{{$product->product_id}}', '{{$option->option_id}}')"
+                id="{{$option->option_id}}" data-toggle="popover"
+                onclick="addToList('{{$product->product_id}}', '{{$option->option_id}}')"></i>
+
+        </a>
+
         <a href="{{ url('product-detail/'.$product->id.'/'.$option->option_id.'/'.$product->slug) }}">
-            <span class="d-flex justify-content-center align-content-center me-5">
-                <img src="{{$option->image}}" class="col-md-10  offset-1 mt-2"
+            <span class="d-flex justify-content-center align-content-center">
+
+
+                <img src="{{$option->image}}" class="col-md-10 .image-body offset-1 mt-2"
                     style="width: 120px; max-height: 300px; " />
+
             </span>
         </a>
         @else
@@ -23,9 +40,52 @@
             <input type="hidden" name="p_id" id="p_{{$product->id}}" value="{{$product->id}}">
             @csrf
             <div class="mt-auto">
-                <?php $retail_prices = $option->retailPrice;
-						?>
-                <h4 class="text-uppercase mb-0 text-center text-danger">${{ number_format($retail_prices,2)}}</h4>
+                <?php 
+                //dd($option->price);
+
+                foreach($option->price as $price)
+                {
+                    switch ($pricing) {
+                        case "Retail":
+                            $retail_price = $price->retailUSD;
+                            break;
+                        case "Wholesale":
+                            $retail_price = $price->wholesaleUSD;
+                            break;
+                        case "TerraIntern":
+                            $retail_price = $price->terraInternUSD;
+                            break;
+                        case "Sacramento":
+                            $retail_price = $price->sacramentoUSD;
+                            break;
+                        case "Oklahoma":
+                            $retail_price = $price->oklahomaUSD;
+                            break;
+                        case "Calaveras":
+                            $retail_price = $price->calaverasUSD;
+                        break;
+                        case "Tier1":
+                            $retail_price = $price->tier1USD;
+                        break;
+                        case "Tier2":
+                            $retail_price = $price->tier2USD;
+                        break;
+                        case "Tier3":
+                            $retail_price = $price->tier3USD;
+                        break;
+                        case "ComercialOk":
+                            $retail_price = $price->commercialOKUSD;
+                        break;
+                        case "Cost":
+                            $retail_price = $price->costUSD;
+                        break;
+                        default:
+                        $retail_price = $price->retailUSD;
+                        break;
+                        }
+                }
+                ?>
+                <h4 class="text-uppercase mb-0 text-center text-danger">${{ number_format($retail_price,2)}}</h4>
                 @if($product->categories)
                 <p class="category-cart-page mt-4">
                     Category:&nbsp;&nbsp;{{$product->categories->name}}
@@ -36,7 +96,10 @@
                 </p>
                 @endif
                 @if($option->stockAvailable > 0)
-                <button class="ajaxSubmit button-cards col w-100" type="submit" style="max-height: 46px;"
+                <!-- <button class="ajaxSubmit col w-100 whishlist-button" type="submit" style="max-height: 46px;"
+                    id="ajaxSubmit_{{$product->id}}"
+                    onclick="addToList('{{$product->product_id}}', '{{$option->option_id}}')">Add to wishlist</button> -->
+                <button class="ajaxSubmit button-cards col w-100 mt-2" type="submit" style="max-height: 46px;"
                     id="ajaxSubmit_{{$product->id}}"
                     onclick="updateCart('{{$product->id}}', '{{$option->option_id}}')">Add to cart</button>
                 @else
@@ -48,7 +111,30 @@
 
         </div>
     </div>
+    <div id="popover-form" class="d-none">
+        <form id="myform" class="form-inline" role="form">
+            @foreach($lists as $list)
+            <div class="form-group">
+                <ul style="font-family: 'Poppins';
+                font-style: normal;
+                font-weight: 600;
+                font-size: 14px;
+                padding:1px;
+                ">
+                    <li style="">
+                        {{$list->title}} &nbsp;<input type="radio" value="{{$list->id}}" name="list_id" />
+                    </li>
+                </ul>
+
+            </div>
+            @endforeach
+            <button type="submit" class="btn btn-warning"
+                onclick="addToList('{{$product->product_id}}', '{{$option->option_id}}')">Add</button>
+
+        </form>
+    </div>
 </div>
+
 <script>
     function updateCart(id, option_id) {
 			jQuery.ajax({
@@ -97,4 +183,52 @@
 
 			    return false;
 			}
+    function addToList(id, option_id) {
+
+//           jQuery.ajax({
+//                url: "{{ url('/get-lists-names/') }}",
+//                method: 'get',
+//                data: {
+                
+//                },
+//                success: function(response){
+//                 console.log(response)
+//                 var inputOptions = response.lists.forEach(function(item, index) {
+//     '<input type="radio" value="list.id">'+item.title;
+// });
+               
+//                }
+//            });
+        var list_id = $("input[name='list_id']:checked").val();
+        var product_id = id;
+        var option_id = option_id;
+        console.log(list_id);
+        console.log(product_id);
+        console.log(option_id);
+
+ 
+
+  
+
+        jQuery.ajax({
+               url: "{{ url('/add-to-wish-list/') }}",
+               method: 'post',
+               data: {
+                 "_token": "{{ csrf_token() }}",
+                  product_id: product_id,
+                  option_id: option_id,
+                  quantity: 1,
+                  list_id : list_id
+               },
+               success: function(success){
+                console.log(success);
+                    if(success.success == true){
+          
+                    }
+               
+               }
+           });
+
+    }
+
 </script>

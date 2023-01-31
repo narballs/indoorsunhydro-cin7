@@ -1,16 +1,14 @@
-<footer class="text-white text-lg-start bg-dark ">
-
+<footer class="text-white text-lg-start bg-dark">
     <div class="container-fluid">
-
         <div class="row">
             <div class="col-md-1 text-dark">
                 .
             </div>
             <div class="col-md-3 main-page-footer-section ">
                 <h5 class="mb-4 contact-us-footer">CONTACT US</h5>
-                <span><img src="/theme/img/map-pin.png" class="img-fluid"></span><span class="ms-2 fw-bold">Los Angeles
-                    Warehouse
-                    (HQ)</span>
+                <span><img src="/theme/img/map-pin.png" class="img-fluid"></span><span class="ms-2 fw-bold">5671
+                    Warehouse Way
+                    Sacramento CA 95826 </span>
                 <p class="ms-4 ms-4-footer">&nbsp;
                     13310 S. Figueroa St. Los Angeles, CA 90061
                 </p>
@@ -45,8 +43,6 @@
                 <img class="img-fluid" src="/theme/img/curus.png">&nbsp; &nbsp;
                 <img class="img-fluid" src="/theme/img/visa.png">&nbsp; &nbsp;
             </div>
-
         </div>
     </div>
-
 </footer>

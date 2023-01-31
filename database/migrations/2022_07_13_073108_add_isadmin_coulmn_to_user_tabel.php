@@ -14,7 +14,7 @@ class AddIsadminCoulmnToUserTabel extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->boolean('isAdmin')->after('password')->default('0');
+            //$table->boolean('isAdmin')->after('password')->default('0');
         });
     }
 
