@@ -19,22 +19,22 @@
                         <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 col-xs-12">
                             <div class="images">
                                 @if($productOption->image)
-                                    <div class="text-center mt-5">
-                                        <img id="main-image" src="{{$productOption->image}}" class="img-fluid" />
-                                    </div>
+                                <div class="text-center mt-5">
+                                    <img id="main-image" src="{{$productOption->image}}" class="img-fluid" />
+                                </div>
                                 @else
-                                    <div class="text-center mt-5">
-                                        <img id="main-image" src="/theme/img/image_not_available.png"
-                                            class="img-fluid w-75 h-75" />
-                                    </div>
+                                <div class="text-center mt-5">
+                                    <img id="main-image" src="/theme/img/image_not_available.png"
+                                        class="img-fluid w-75 h-75" />
+                                </div>
                                 @endif
                             </div>
                         </div>
                         <div class="col-xl-7 col-lg-7 col-md-12 col-sm-12 col-xs-12 product-detail-content">
                             <div class="product pt-4 product-detail-content1">
                                 <div class="d-flex row">
-                                    
-                        <?php 
+
+                                    <?php 
                 foreach($productOption->price as $price)
                     {
                     switch ($pricing) {
@@ -70,12 +70,12 @@
                         break;
                         case "Cost":
                             $retail_price = $price->costUSD;
+                            default:
+                            $retail_price = $price->retailUSD;
                         break;
                         }
                 }
                 ?>
-
-                               
                                     <div class="product-detail-heading col-xl-12 col-lg-12 col-md-12 col-xs-12"
                                         id="product_name">
                                         <h3 class="product-detail-heading">{{$productOption->products->name}}</h3>
@@ -91,18 +91,20 @@
                                     <div class="price d-flex flex-row align-items-center">
                                         @if ($productOption->stockAvailable > 0)
                                         <span
-                                            class="rounded-pill cursor product-detail-quantity d-flex justify-content-center align-items-center" data-toggle="popover-hover" data-bs-container="body" data-placement="top" data-bs-placement="top" data-bs-content="Top popover" style=" cursor: pointer;"><span
-                                                class="">
-                                            {{$productOption->stockAvailable}}</span></span>
+                                            class="rounded-pill cursor product-detail-quantity d-flex justify-content-center align-items-center"
+                                            data-toggle="popover-hover" data-bs-container="body" data-placement="top"
+                                            data-bs-placement="top" data-bs-content="Top popover"
+                                            style=" cursor: pointer;"><span class="">
+                                                {{$productOption->stockAvailable}}</span></span>
                                         <div>
-                                            
-                                          <!--   <a style="width:20px !important;" href="#" data-toggle="popover-click" data-placement="top" class="subscribe">
+
+                                            <!--   <a style="width:20px !important;" href="#" data-toggle="popover-click" data-placement="top" class="subscribe">
                                                 <i class="fa-solid fa-heart" id="test" 
                                                      data-toggle="popover" data-placement="top"
                                                      ></i>
 
                                             </a> -->
-   
+
 
                                             <small class="dis-price">&nbsp;</small> <span class="instock-label">IN
                                                 STOCK</span>
@@ -182,11 +184,11 @@
     </div>
 </div>
 
-        <div id="popover-form">
-            <form id="myform" class="form-inline p-0 w-100" role="form">
-                @foreach($location_inventories as $inventory)
-                <div class="form-group" style="width:500px">
-                    <div style="font-family: 'Poppins';
+<div id="popover-form">
+    <form id="myform" class="form-inline p-0 w-100" role="form">
+        @foreach($location_inventories as $inventory)
+        <div class="form-group" style="width:500px">
+            <div style="font-family: 'Poppins';
                     font-style: normal;
                     font-weight: 400;
                     font-size: 14px;
@@ -195,13 +197,13 @@
                     max-width:500px;
                     z-index:9999;
                     ">
-                        <span style="width: 500px !important">{{$inventory->available}}  {{$inventory->branchName}}</span>
-                    </div>
+                <span style="width: 500px !important">{{$inventory->available}} {{$inventory->branchName}}</span>
+            </div>
 
-                </div>
-                @endforeach
-            </form>
-    </div>
+        </div>
+        @endforeach
+    </form>
+</div>
 </div>
 {{-- mobile view start --}}
 <div class="row bg-light mobile-view">
