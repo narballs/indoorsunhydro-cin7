@@ -236,7 +236,7 @@ class OrderController extends Controller
                 'user_email' => $user_email,
                 '$currentOrder' => $currentOrder,
                 'count' => $count,
-                'from' => 'stageindoorsun@stage.indoorsunhydro.com'
+                'from' => env('MAIL_FROM_ADDRESS')
             ];
 
 
