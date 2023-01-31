@@ -320,6 +320,16 @@
 							</table>
 						</div>
 						<div id="update_qoute" class="bg-success text-white text-center fade-out w-50 m-auto"></div>
+
+
+
+
+
+
+
+
+
+
 						<div class="d-none mt-3 mb-3 pr-4 pl-4" id="my_quotes_edit">
 							<div class="col-md-12 border-bottom border-4 pb-4 p-0">
 								<img src="theme/img/orders_main.png" style="margin: -6px 1px 1px 1px;">
@@ -332,12 +342,12 @@
 						</div>
 
 						<div class="d-none row mt-3 mb-3 pr-0 pl-0" id="whishlist">
-							f <div class="col-md-8 border-bottom border-4 d-flex pb-4 p-0 bg-white">
+							<div class="col-md-8 border-bottom border-4 d-flex pb-4 p-0 bg-white">
 								<img src="/theme/img/heartfilled.png" style="margin: 5px 3px 0px 9px;" width="28px"
 									height="28px">
 								<span class="pt-1 my-account-content-heading">Whishlists</span>
 							</div>
-							<div class="col-md-4 border-bottom">
+							<div class="col-md-4 border-bottom" style="    padding-left: 151px;">
 								<button class="btn btn-outline-success" data-bs-toggle="modal"
 									data-bs-target="#exampleModal">Create List</button>
 							</div>
@@ -347,13 +357,13 @@
 							</div>
 						</div>
 						<div class="d-none row mt-3 mb-3 pr-0 pl-0" id="all_qoutes">
-							<div id="qoute-heading" class="row">
+							<div id="qoute-heading" class="row d-none">
 								<div class="col-md-6 border-bottom border-4 d-flex pb-4 p-0 bg-white">
 									<img src="/theme/img/heartfilled.png" style="margin: 5px 3px 0px 9px;" width="28px"
 										height="28px">
 									<span class="pt-1 my-account-content-heading">Qoutes</span>
 								</div>
-								<div class="col-md-6 border-bottom">
+								<div class="col-md-6 border-bottom" style="padding-left: 135px;">
 									<button class="btn btn-outline-success" data-bs-toggle="modal"
 										data-bs-target="#exampleModal2">Create a Quotes</button>
 									<button class="btn btn-outline-success" onclick="myQoutes()">My Quotes</button>
@@ -700,15 +710,14 @@
 						</div>
 					</div>
 				</div>
-			</div>
-			@livewireScripts
-			@section('css')
-			<link rel="stylesheet" href="../css/admin_custom.css">
-			@stop
+				@livewireScripts
+				@section('css')
+				<link rel="stylesheet" href="../css/admin_custom.css">
+				@stop
 
 
-			<script>
-				function qoute() {
+				<script>
+					function qoute() {
 				$('#my_quotes_detail_table').addClass('d-none');
 				$('#my_quotes').addClass('d-none');
 				$('#filter').removeClass('d-none');
@@ -721,8 +730,11 @@
 				$('#address_row').addClass('d-none');
 				$('#whish_lists').addClass('d-none');
 				$('.order-detail-container').addClass('d-none');
-				$('#customer-address').addClass('d-none')
+				$('#customer-address').addClass('d-none');
 				$('#orders').addClass('d-none');
+				$('#qoute-heading').removeClass('d-none');
+				$('#my_quotes_edit').addClass('d-none');
+				$('#update_qoute').addClass('d-none');
 			}
 			function replaceEye(val) {
         		$('#eye_icon_'+val).attr("src", "theme/img/white_eye.png").css('width' , '20px');
@@ -797,7 +809,6 @@
 				$('#edit_address').addClass('d-none');
 				$('#address_row').addClass('d-none');
 				$('#my_quotes').addClass('d-none');
-				
 				$('.order-detail-container').addClass('d-none');
 				$('#customer-address').addClass('d-none')
 				$('#orders').addClass('d-none');
@@ -1361,6 +1372,7 @@
 			$('#filter').addClass('d-none');
 			$('#my_quotes').removeClass('d-none');
 			$('#all_qoutes').addClass('d-none');
+			$('#qoute-heading').removeClass('d-none');
 			jQuery.ajax({
 				url: "{{ url('/my-qoutes/') }}",
 				method: 'GET',
@@ -1413,7 +1425,6 @@
 					console.log(html);
 					$('#my_quotes').addClass('d-none');
 					$('#qoute-heading').addClass('d-none');
-						console.log(html);
 						  $('#user-qoute').append(html);
 						  $('#all_qoutes').removeClass('d-none');
 				          $('#my_quotes_edit').removeClass('d-none');
@@ -1422,11 +1433,11 @@
 				},	
 			});
 		}
-			</script>
+				</script>
 
-			<!-- Remove the container if you want to extend the Footer to full width. -->
+				<!-- Remove the container if you want to extend the Footer to full width. -->
 
-			@include('partials.product-footer')
+				@include('partials.product-footer')
 
-			<!-- End of .container -->
-			@include('partials.footer')
+				<!-- End of .container -->
+				@include('partials.footer')
