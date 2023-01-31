@@ -56,7 +56,6 @@ class UtilHelper
         }
 
         $api_response = $res->getBody()->getContents();
-        dd($api_response);
 
         return $api_response;
     }
