@@ -14,10 +14,10 @@ use Illuminate\Support\Facades\Auth;
 
 class AdminBuyListController extends Controller
 {
-    function __construct()
-    {
-        $this->middleware(['role:Admin']);
-    }
+    // function __construct()
+    // {
+    //     $this->middleware(['role:Admin']);
+    // }
 
     public function index(Request $request)
     {
