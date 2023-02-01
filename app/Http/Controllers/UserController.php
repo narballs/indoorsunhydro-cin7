@@ -239,7 +239,8 @@ class UserController extends Controller
         $user = User::latest()->first();
         $user_id = $user->id;
         Auth::loginUsingId($user_id);
-        if (!empty($request->input('company_website'))) {
+
+        if (!empty($request->input('phone'))) {
             $contact = new Contact;
             $contact->website = $request->input('company_website');
             $contact->company = $request->input('company_name');
@@ -264,7 +265,7 @@ class UserController extends Controller
                 'contact_email' => $user->email,
                 'subject' => 'New User Registration Request',
                 'from' => 'noreply@indoorsunhydro.com',
-                'content' => 'New user registration request received, please reveiw.'
+                'content' => 'New user registration request received, please review.'
             ];
 
 
@@ -288,8 +289,11 @@ class UserController extends Controller
             );
         }
 
-
-        return response()->json(['success' => true, 'created' => true, 'msg' => 'Welcome, new player.']);
+        return response()->json([
+            'success' => true,
+            'created' => true,
+            'msg' => 'Welcome, new player.'
+        ]);
     }
 
     public function my_account(Request $request)

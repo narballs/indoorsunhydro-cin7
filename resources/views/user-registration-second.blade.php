@@ -497,13 +497,13 @@
    						error_text = '';
    						$('#company_name_errors').html(error_text);
    					}
-   					if (typeof error_message.errors.company_website != 'undefined') {
-   						var error_text2 = error_message.errors.company_website;
-   						$('#company_website_errors').html(error_text2);
-   					}
-   					else {
-   						error_text2 = '';
-   					}
+   					// if (typeof error_message.errors.company_website != 'undefined') {
+   					// 	var error_text2 = error_message.errors.company_website;
+   					// 	$('#company_website_errors').html(error_text2);
+   					// }
+   					// else {
+   					// 	error_text2 = '';
+   					// }
    					if (typeof error_message.errors.phone != 'undefined') {
    						var error_text3 = error_message.errors.phone;
    						$('#phone_errors').html(error_text3)
