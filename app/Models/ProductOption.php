@@ -41,4 +41,8 @@ class ProductOption extends Model
     {
         return $this->hasMany('App\Models\Pricingnew', 'option_id', 'option_id');
     }
+
+    public function defaultPrice() {
+        return $this->hasOne('App\Models\Pricingnew', 'option_id', 'option_id');
+    }
 }

@@ -71,32 +71,15 @@
                      }}>60</option>
                </select>
             </div>
-            <div class="col">
-               <label>Show Only</label>
-               <div id="stock">
-                  <?php if(empty($stock) || $stock == 'in-stock') {
-                     $text = 'In stock';
-                     $danger = '';
-                     $stock = 'in-stock';
-                  }
-                  else {
-                     $text = 'Out of Stock';
-                     $danger = 'bg-danger';
-                     $stock = 'out-of-stock';
-                  }   
-                  ?>
-                  <button class="{{ $stock ? $stock : 'in-stock'  }} {{$danger}} in-stock" type="button" id="in-stock"
-                     onclick="inStockOutstock('instock'), handleSelectChange()" value="{{$stock}}">{{$text}}</button>
-                  <!--  <button class="button-cards bg-danger d-none" type="button" id="out-stock" onclick="inStockOutstock('outstock')" style="width:133px !important; height:34px !important;" value="outstock">Out of Stock</button> -->
-
-               </div>
-            </div>
-                <div class="col">
-                <label>Show All</label>
-
-               <button class="all-items" type="button" id="all-items"
-                     onclick="handleSelectChange()" value={{"all-items"}}>All Items
-                  </button>
+             <div class="col">
+               <label>Inventory</label>
+               <select class="form-select" name="inventory" id="inventory" onchange="handleSelectChange()">
+                  <option value="in-stock">In stock</option>
+                  <option value="out-of-stock"  {{ isset($stock) && $stock == 'out-of-stock' ? 'selected="selected"' : ''
+                     }}>Out of Stock</option>
+                  <option value="all-items"  {{ isset($stock) && $stock == 'all-items' ? 'selected="selected"' : ''
+                     }} >All Items</option>
+               </select>
             </div>
          </div>
       </div>
@@ -370,19 +353,26 @@
             }
          }
 
-         function handleSelectChange() {
-               var selected_category = jQuery('#selected_cat').val();
-               var brand = jQuery('#brand').val();
-               var per_page = jQuery('#per_page').val();
-               var stock = jQuery('#in-stock').val();
-               var all_items = jQuery('#all-items').val();
-               var search_price = jQuery('#search_price').val();
-               var category_id = jQuery('#category_id').val();
-               var childeren = jQuery('#childeren').val();
+         function handleSelectChange(searchedOption = '') {
+            var selected_category = jQuery('#selected_cat').val();
+            var brand = jQuery('#brand').val();
+            var per_page = jQuery('#per_page').val();
+            var stock = jQuery('#in-stock').val();
+            var all_items = jQuery('#all-items').val();
+            var search_price = jQuery('#search_price').val();
+            var category_id = jQuery('#category_id').val();
+            var childeren = jQuery('#childeren').val();
+            var inventory = jQuery('#inventory').val();
+
+            if (searchedOption == 'category') {
+               var brand = '';
+               childeren = '';
+            }
    
             if (selected_category != '') {
                basic_url = `?selected_category=${selected_category}`;
             }
+
             if (childeren != '') {
                basic_url = basic_url+ `&childeren_id=${childeren}`;
             }
@@ -397,11 +387,9 @@
                basic_url = basic_url+`&search_price=${search_price}`;
             }
             if (stock != '') {
-               basic_url = basic_url+`&stock=${stock}`;
+                  basic_url = basic_url+`&stock=${inventory }`;
             }
-            if (all_items != '') {
-               basic_url = `?&all_items=${all_items}`;
-            }
+
             window.location.href = basic_url
             
          }
