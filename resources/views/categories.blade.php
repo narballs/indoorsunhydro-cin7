@@ -6,6 +6,7 @@
       PRODUCTS
    </p>
 </div>
+
 <div class="container desktop-view">
    <form id="form-filter">
       <div class="col-md-12">
@@ -57,7 +58,8 @@
                <select class="form-select" id="childeren" name="childeren[]" onchange="handleSelectChange('childeren')">
                   <option value="">Sub Category</option>
                   @foreach($childerens as $key => $childeren)
-                  <option value="{{ $childeren->id }}" {{ isset($childeren_id) && $childeren_id==$childeren->id ? 'selected="selected"'
+                  <option value="{{ $childeren->id }}" {{ isset($childeren_id) && $childeren_id==$childeren->id ?
+                     'selected="selected"'
                      : '' }}>{{ $childeren->name }}</option>
                   @endforeach
                </select>
@@ -65,7 +67,7 @@
 
             <div class="col">
                <label>Result per page</label>
-               <select id="per_page" class="form-select" onchange="handleSelectChange('result_per_page')">
+               <select id="per_page" class="form-select" onchange="handleSelectChange()">
                   <option value="20" {{ $per_page }} {{ isset($per_page) && $per_page==20 ? 'selected="selected"' : ''
                      }}>20</option>
                   <option value="40" {{ $per_page }} {{ isset($per_page) && $per_page==40 ? 'selected="selected"' : ''
@@ -175,7 +177,7 @@
                   <div class="col-md-12">
                      <label>Brand</label>
                      <select class="form-select" id="brand" name="brands[]" onchange="handleSelectChange('brand')">
-                        <option>Select Brand</option>
+                        <option value="0">Select Brand</option>
                         @foreach($brands as $_brand_id => $brand_name)
                         <option value="{{ $_brand_id }}" {{ isset($brand_id) && $brand_id==$_brand_id
                            ? 'selected="selected"' : '' }}>{{ $brand_name }}</option>
@@ -418,14 +420,13 @@
                   if (brand != '') {
                      basic_url = `?brand_id=${brand}`;
                   }
-
+                  if (per_page != '') {
+                     basic_url = basic_url+`&per_page=${per_page}`;
+                  }
                   if (childeren != '') {
                      basic_url = `?childeren_id=${childeren}`;
                   }
 
-                  if (per_page != '') {
-                     basic_url = basic_url+`&per_page=${per_page}`;
-                  }
                   if (search_price != '') {
                      basic_url = basic_url+`&search_price=${search_price}`;
                   }
