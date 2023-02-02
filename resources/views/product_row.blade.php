@@ -41,50 +41,65 @@
             @csrf
             <div class="mt-auto">
                 <?php 
-                foreach($option->price as $price)
-                {
-                    switch ($pricing) {
-                        case "Retail":
-                            $retail_price = $price->retailUSD;
-                            break;
-                        case "Wholesale":
-                            $retail_price = $price->wholesaleUSD;
-                            break;
-                        case "TerraIntern":
-                            $retail_price = $price->terraInternUSD;
-                            break;
-                        case "Sacramento":
-                            $retail_price = $price->sacramentoUSD;
-                            break;
-                        case "Oklahoma":
-                            $retail_price = $price->oklahomaUSD;
-                            break;
-                        case "Calaveras":
-                            $retail_price = $price->calaverasUSD;
-                        break;
-                        case "Tier1":
-                            $retail_price = $price->tier1USD;
-                        break;
-                        case "Tier2":
-                            $retail_price = $price->tier2USD;
-                        break;
-                        case "Tier3":
-                            $retail_price = $price->tier3USD;
-                        break;
-                        case "ComercialOk":
-                            $retail_price = $price->commercialOKUSD;
-                        break;
-                        case "Cost":
-                            $retail_price = $price->costUSD;
-                        break;
-                        default:
-                        $retail_price = $price->retailUSD;
-                        dd($retail_price);
-                        break;
-                        }
-                }
+                //dd($option->price);
+
+                $retail_price = !empty($option->defaultPrice->$db_price_column) ? $option->defaultPrice->$db_price_column : 0;
+
+
+                //echo $db_price_column . '<br />';
+                //$retail_price = !empty($price->$db_price_column) ? $price->$db_price_column : 0;
+
+                //echo '<pre>'; var_export($option->price); echo '</pre>';
+
+                // foreach($option->price as $price)
+                // {
+                //     switch ($pricing) {
+                //         case "Retail":
+                //             $retail_price = $price->retailUSD;
+                //             break;
+                //         case "Wholesale":
+                //             $retail_price = $price->wholesaleUSD;
+                //             break;
+                //         case "TerraIntern":
+                //             $retail_price = $price->terraInternUSD;
+                //             break;
+                //         case "Sacramento":
+                //             $retail_price = $price->sacramentoUSD;
+                //             break;
+                //         case "Oklahoma":
+                //             $retail_price = $price->oklahomaUSD;
+                //             break;
+                //         case "Calaveras":
+                //             $retail_price = $price->calaverasUSD;
+                //         break;
+                //         case "Tier1":
+                //             $retail_price = $price->tier1USD;
+                //         break;
+                //         case "Tier2":
+                //             $retail_price = $price->tier2USD;
+                //         break;
+                //         case "Tier3":
+                //             $retail_price = $price->tier3USD;
+                //         break;
+                //         case "CommercialOK":
+                //             $retail_price = $price->commercialOKUSD;
+                //         break;
+                //         case "Cost":
+                //             $retail_price = $price->costUSD;
+                //         break;
+                //         default:
+                //             $retail_price = $price->retailUSD;
+                //         break;
+                //     }
+                // }
+
+                // if (empty($retail_price)) {
+                //     $retail_price = '9999999';
+                // }
+
+                  //echo 'xxxx =>' . $retail_price; exit;  
                 ?>
-                <h4 class="text-uppercase mb-0 text-center text-danger">${{ number_format($retail_price,2)}}</h4>
+                <h4 class="text-uppercase mb-0 text-center text-danger">${{ number_format($retail_price, 2)}}</h4>
                 @if($product->categories)
                 <p class="category-cart-page mt-4">
                     Category:&nbsp;&nbsp;{{$product->categories->name}}
@@ -94,7 +109,7 @@
                     Category:&nbsp;&nbsp;Unassigned
                 </p>
                 @endif
-                @if($option->stockAvailable > 0)
+                @if ($product->stockAvailable > 0 && $option->stockAvailable > 0)
                 <!-- <button class="ajaxSubmit col w-100 whishlist-button" type="submit" style="max-height: 46px;"
                     id="ajaxSubmit_{{$product->id}}"
                     onclick="addToList('{{$product->product_id}}', '{{$option->option_id}}')">Add to wishlist</button> -->

@@ -75,33 +75,44 @@
                      }}>60</option>
                </select>
             </div>
-            <div class="col">
+            <!-- <div class="col">
                <label>Show Only</label>
 
                <div id="stock">
-                  <?php if(empty($stock) || $stock == 'in-stock') {
+                  <?php 
+                     if (empty($stock) || $stock == 'in-stock') {
                      $text = 'In stock';
                      $danger = '';
-                     $stock = 'in-stock';
+                     //$stock = 'in-stock';
                   }
                   else {
                      $text = 'Out of Stock';
                      $danger = 'bg-danger';
-                     $stock = 'out-of-stock';
+                     //$stock = 'out-of-stock';
                   }   
                   ?>
                   <button class="{{ $stock ? $stock : 'in-stock'  }} {{$danger}}" type="button" id="in-stock"
                      onclick="inStockOutstock('instock'), handleSelectChange()" value="{{$stock}}">{{$text}}
                   </button>
                </div>
-            </div>
+            </div> -->
             <div class="col">
+               <label>Inventory</label>
+               <select class="form-select" name="inventory" id="inventory" onchange="handleSelectChange()">
+                  <option value="in-stock">In stock</option>
+                  <option value="out-of-stock"  {{ isset($stock) && $stock == 'out-of-stock' ? 'selected="selected"' : ''
+                     }}>Out of Stock</option>
+                  <option value="all-items"  {{ isset($stock) && $stock == 'all-items' ? 'selected="selected"' : ''
+                     }} >All Items</option>
+               </select>
+            </div>
+           <!--  <div class="col">
                 <label>Show All</label>
 
-               <button  type="button" class="all-items" id="all-items"
-                     onclick="handleSelectChange()" value={{"all-items"}}>All Items
-                  </button>
-            </div>
+               <button type="button" class="all-items" id="btnAllItems"
+                     onclick="showAllItems()" value={{"all-items"}}>All Items
+               </button>
+            </div> -->
          </div>
       </div>
    </form>
@@ -230,6 +241,7 @@
                </div>
             </div>
          </form>
+         <input type="text" id="all-items" value="" />
       </div>
    </div>
    <div class="row" id="product_rows">
@@ -339,8 +351,6 @@
                   ?>
                   <button class="{{ $stock ? $stock : 'in-stock'  }} {{$danger}}" type="button" id="in-stock"
                      onclick="inStockOutstock('instock'), handleSelectChange()" value="{{$stock}}">{{$text}}</button>
-
-
                </div>
             </div>
          </div>
@@ -348,9 +358,9 @@
    </form>
    <div class="row" id="product_rows">
       @foreach ($products as $key => $product)
-      @foreach($product->options as $option)
-      @include('product_row')
-      @endforeach
+         @foreach($product->options as $option)
+            @include('product_row')
+         @endforeach
       @endforeach
    </div>
    <!--    {{$products->links('pagination::bootstrap-4')}} -->
@@ -371,6 +381,10 @@
   });
 </script>
 <script>
+   function showAllItems() {
+      $('#all-items').val('all-items');
+      handleSelectChange();
+   }
    function showdetails(id, option_id, slug) 
    {
 				window.location.href = '/product-detail/'+ id +'/'+option_id+'/'+slug;
@@ -405,6 +419,9 @@
                var price = jQuery('#search_price').val();
                var brand = jQuery('#brand').val();
                var childeren = jQuery('#childeren').val();
+               var inventory = jQuery('#inventory').val();
+               
+
 
 
                var per_page = jQuery('#per_page').val();
@@ -420,7 +437,7 @@
                }
                if (selected_cat_id != ''){ 
                   var slug = selected_cat_id;
-               var basic_url = '/products/'+selected_cat_id + '/?';
+                  var basic_url = '/products/'+selected_cat_id + '/?';
                   //window.location.href = basic_url;
                   //var basic_url = `/products/${selected_cat_id}/${slug}`;
                }
@@ -447,7 +464,7 @@
                   basic_url = basic_url+`&selected_category_id=${selected_cat_id}`;
                }
                if (stock != '') {
-                  basic_url = basic_url+`&stock=${stock}`;
+                  basic_url = basic_url+`&stock=${inventory }`;
                }
                if (all_items != '') {
                   basic_url = basic_url+ `&all_items=${all_items}`;

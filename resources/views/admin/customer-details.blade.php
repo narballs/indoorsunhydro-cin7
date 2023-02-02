@@ -64,8 +64,8 @@
 											$pricing=='Tier2' ? 'selected="selected"' : '' }}>Tier2</option>
 										<option class="form-group" value="Tier3" {{ $pricing }} {{ isset($pricing) &&
 											$pricing=='Tier3' ? 'selected="selected"' : '' }}>Tier3</option>
-										<option class="form-group" value="ComercialOk" {{ $pricing }} {{ isset($pricing)
-											&& $pricing=='ComercialOk' ? 'selected="selected"' : '' }}>ComercialOk
+										<option class="form-group" value="CommercialOK" {{ $pricing }} {{ isset($pricing)
+											&& $pricing=='CommercialOK' ? 'selected="selected"' : '' }}>CommercialOK
 										</option>
 										<option class="form-group" value="Cost" {{ $pricing }} {{ isset($pricing) &&
 											$pricing=='Cost' ? 'selected="selected"' : '' }}>Cost</option>
