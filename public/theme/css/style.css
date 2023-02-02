@@ -1754,7 +1754,7 @@ input[type=number] {
 }
 
 .in-stock {
-    width: 82px !important;
+    width: 131 !important;
     height: 34px !important;
     background-color: #7BC533;
     color: #FFFFFF !important;
@@ -1762,9 +1762,16 @@ input[type=number] {
 }
 
 .out-of-stock {
-    width: 133px !important;
+    width: 131px !important;
     height: 34px !important;
     background-color: #7BC533;
+    color: #FFFFFF !important;
+    border: none;
+}
+.all-items {
+    width: 118px !important;
+    height: 34px !important;
+    background-color: #323bd3;
     color: #FFFFFF !important;
     border: none;
 }

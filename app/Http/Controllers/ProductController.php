@@ -96,6 +96,10 @@ class ProductController extends Controller
             if (!empty($stock && $stock == 'out-of-stock')) {
                 $products_query->where('stockAvailable', '<', 1);
             }
+            $all_items = $request->get('all_items');
+            if (!empty($all_items && $all_items == 'all-items')) {
+                $all = $products_query;
+            }
 
             if (!empty($selected_category_id)) {
                 $sub_category_ids = Category::where('parent_id', $selected_category_id)->pluck('id')->toArray();
@@ -142,7 +146,8 @@ class ProductController extends Controller
             'lists',
             'pricing',
             'childerens',
-            'childeren_id'
+            'childeren_id',
+            'all'
 
         ));
     }
