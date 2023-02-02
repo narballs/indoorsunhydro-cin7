@@ -147,8 +147,6 @@ class ProductController extends Controller
             'pricing',
             'childerens',
             'childeren_id',
-            'all'
-
         ));
     }
 
