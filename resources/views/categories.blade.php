@@ -57,7 +57,8 @@
                <select class="form-select" id="childeren" name="childeren[]" onchange="handleSelectChange('childeren')">
                   <option value="">Sub Category</option>
                   @foreach($childerens as $key => $childeren)
-                  <option value="{{ $childeren->id }}" {{ isset($childeren_id) && $childeren_id==$childeren->id ? 'selected="selected"'
+                  <option value="{{ $childeren->id }}" {{ isset($childeren_id) && $childeren_id==$childeren->id ?
+                     'selected="selected"'
                      : '' }}>{{ $childeren->name }}</option>
                   @endforeach
                </select>
@@ -74,25 +75,44 @@
                      }}>60</option>
                </select>
             </div>
-            <div class="col">
+            <!-- <div class="col">
                <label>Show Only</label>
 
                <div id="stock">
-                  <?php if(empty($stock) || $stock == 'in-stock') {
+                  <?php 
+                     if (empty($stock) || $stock == 'in-stock') {
                      $text = 'In stock';
                      $danger = '';
-                     $stock = 'in-stock';
+                     //$stock = 'in-stock';
                   }
                   else {
                      $text = 'Out of Stock';
                      $danger = 'bg-danger';
-                     $stock = 'out-of-stock';
+                     //$stock = 'out-of-stock';
                   }   
                   ?>
                   <button class="{{ $stock ? $stock : 'in-stock'  }} {{$danger}}" type="button" id="in-stock"
-                     onclick="inStockOutstock('instock'), handleSelectChange()" value="{{$stock}}">{{$text}}</button>
+                     onclick="inStockOutstock('instock'), handleSelectChange()" value="{{$stock}}">{{$text}}
+                  </button>
                </div>
+            </div> -->
+            <div class="col">
+               <label>Inventory</label>
+               <select class="form-select" name="inventory" id="inventory" onchange="handleSelectChange()">
+                  <option value="in-stock">In stock</option>
+                  <option value="out-of-stock"  {{ isset($stock) && $stock == 'out-of-stock' ? 'selected="selected"' : ''
+                     }}>Out of Stock</option>
+                  <option value="all-items"  {{ isset($stock) && $stock == 'all-items' ? 'selected="selected"' : ''
+                     }} >All Items</option>
+               </select>
             </div>
+           <!--  <div class="col">
+                <label>Show All</label>
+
+               <button type="button" class="all-items" id="btnAllItems"
+                     onclick="showAllItems()" value={{"all-items"}}>All Items
+               </button>
+            </div> -->
          </div>
       </div>
    </form>
@@ -175,7 +195,7 @@
                   <div class="col-md-12">
                      <label>Brand</label>
                      <select class="form-select" id="brand" name="brands[]" onchange="handleSelectChange('brand')">
-                        <option>Select Brand</option>
+                        <option value="0">Select Brand</option>
                         @foreach($brands as $_brand_id => $brand_name)
                         <option value="{{ $_brand_id }}" {{ isset($brand_id) && $brand_id==$_brand_id
                            ? 'selected="selected"' : '' }}>{{ $brand_name }}</option>
@@ -221,6 +241,7 @@
                </div>
             </div>
          </form>
+         <input type="text" id="all-items" value="" />
       </div>
    </div>
    <div class="row" id="product_rows">
@@ -330,8 +351,6 @@
                   ?>
                   <button class="{{ $stock ? $stock : 'in-stock'  }} {{$danger}}" type="button" id="in-stock"
                      onclick="inStockOutstock('instock'), handleSelectChange()" value="{{$stock}}">{{$text}}</button>
-
-
                </div>
             </div>
          </div>
@@ -339,9 +358,9 @@
    </form>
    <div class="row" id="product_rows">
       @foreach ($products as $key => $product)
-      @foreach($product->options as $option)
-      @include('product_row')
-      @endforeach
+         @foreach($product->options as $option)
+            @include('product_row')
+         @endforeach
       @endforeach
    </div>
    <!--    {{$products->links('pagination::bootstrap-4')}} -->
@@ -362,6 +381,10 @@
   });
 </script>
 <script>
+   function showAllItems() {
+      $('#all-items').val('all-items');
+      handleSelectChange();
+   }
    function showdetails(id, option_id, slug) 
    {
 				window.location.href = '/product-detail/'+ id +'/'+option_id+'/'+slug;
@@ -386,6 +409,9 @@
                $("#in-stock").prop("value", "in-stock");
                $("#in-stock").html("In Stock");
             }
+
+            jQuery('#all-items').val('');
+
          }
             function handleSelectChange(searchedOption = '') {
                var category_id = jQuery('#categories').val();
@@ -393,49 +419,57 @@
                var price = jQuery('#search_price').val();
                var brand = jQuery('#brand').val();
                var childeren = jQuery('#childeren').val();
+               var inventory = jQuery('#inventory').val();
+               
+
 
 
                var per_page = jQuery('#per_page').val();
                var stock = jQuery('#in-stock').val();
+               var all_items = jQuery('#all-items').val();
                var search_price = jQuery('#search_price').val();
+             
                var category_id = jQuery('#category_id').val();
                var selected_category_id = jQuery('#categories').val();
                var parent_category_slug = jQuery('#parent_category_slug').val();
-                  if (searchedOption == 'category') {
-                     var brand = '';
-                  }
-                  if (selected_cat_id != ''){ 
-                     var slug = selected_cat_id;
+               if (searchedOption == 'category') {
+                  var brand = '';
+               }
+               if (selected_cat_id != ''){ 
+                  var slug = selected_cat_id;
                   var basic_url = '/products/'+selected_cat_id + '/?';
-                     //window.location.href = basic_url;
-                     //var basic_url = `/products/${selected_cat_id}/${slug}`;
-                  }
-                  else {
-                  
-                     var slug = `${category_id}/${parent_category_slug}`
-                  }
+                  //window.location.href = basic_url;
+                  //var basic_url = `/products/${selected_cat_id}/${slug}`;
+               }
+               else {
+               
+                  var slug = `${category_id}/${parent_category_slug}`
+               }
 
-                  if (brand != '') {
-                     basic_url = `?brand_id=${brand}`;
-                  }
+               if (brand != '') {
+                  basic_url = `?brand_id=${brand}`;
+               }
 
-                  if (childeren != '') {
-                     basic_url = `?childeren_id=${childeren}`;
-                  }
+               if (childeren != '') {
+                  basic_url = `?childeren_id=${childeren}`;
+               }
 
-                  if (per_page != '') {
-                     basic_url = basic_url+`&per_page=${per_page}`;
-                  }
-                  if (search_price != '') {
-                     basic_url = basic_url+`&search_price=${search_price}`;
-                  }
-                  if (selected_category_id != '') {
-                     basic_url = basic_url+`&selected_category_id=${selected_cat_id}`;
-                  }
-                  if (stock != '') {
-                     basic_url = basic_url+`&stock=${stock}`;
-                  }
-                  window.location.href = basic_url;
+               if (per_page != '') {
+                  basic_url = basic_url+`&per_page=${per_page}`;
+               }
+               if (search_price != '') {
+                  basic_url = basic_url+`&search_price=${search_price}`;
+               }
+               if (selected_category_id != '') {
+                  basic_url = basic_url+`&selected_category_id=${selected_cat_id}`;
+               }
+               if (stock != '') {
+                  basic_url = basic_url+`&stock=${inventory }`;
+               }
+               if (all_items != '') {
+                  basic_url = basic_url+ `&all_items=${all_items}`;
+               }
+               window.location.href = basic_url;
             }
             function updateCart(id, option_id) {
                jQuery.ajax({

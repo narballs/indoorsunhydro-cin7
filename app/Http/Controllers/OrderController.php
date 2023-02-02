@@ -157,7 +157,7 @@ class OrderController extends Controller
             $order->currencySymbol = '$';
             $order->user_id = Auth::id();
             $order->status = 'DRAFT';
-            $order->stage = 'Sample string';
+            $order->stage = null;
             $order->paymentTerms = $paymentMethod;
 
             $order->save();
@@ -287,13 +287,13 @@ class OrderController extends Controller
                     "styleCode" => "sample string 1",
                     "barcode" => "sample string 2",
                     "sizeCodes" => "sample string 4",
-                    "lineComments" => "sample string 5",
+                    "lineComments" => null,
                     "unitCost" => $order_item->price,
                     "unitPrice" => $order_item->price,
-                    "discount" => 6,
+                    "discount" => null,
                     "qtyShipped" => 7,
                     "holdingQty" => 8,
-                    "accountCode" => "sample string 9",
+                    "accountCode" => null,
                     "stockControl" => "Undefined",
                     "stockMovements" => [
                         [
