@@ -121,7 +121,7 @@ class ProductController extends Controller
             $pricing = $contact->priceColumn;
             $db_price_column = lcfirst($pricing) . 'USD';
         } else {
-            $pricing = 'Retail';
+            $db_price_column = 'Retail';
         }
 
         $lists = BuyList::where('user_id', $user_id)->get();
