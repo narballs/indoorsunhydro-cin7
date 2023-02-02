@@ -90,8 +90,16 @@
                   }   
                   ?>
                   <button class="{{ $stock ? $stock : 'in-stock'  }} {{$danger}}" type="button" id="in-stock"
-                     onclick="inStockOutstock('instock'), handleSelectChange()" value="{{$stock}}">{{$text}}</button>
+                     onclick="inStockOutstock('instock'), handleSelectChange()" value="{{$stock}}">{{$text}}
+                  </button>
                </div>
+            </div>
+            <div class="col">
+                <label>Show All</label>
+
+               <button class="all-items" type="button" id="all-items"
+                     onclick="inStockOutstock('instock'), handleSelectChange()" value={{"all-items"}}>All Items
+                  </button>
             </div>
          </div>
       </div>
@@ -398,6 +406,7 @@
                var per_page = jQuery('#per_page').val();
                var stock = jQuery('#in-stock').val();
                var search_price = jQuery('#search_price').val();
+               var all_items = jQuery('#all-items').val();
                var category_id = jQuery('#category_id').val();
                var selected_category_id = jQuery('#categories').val();
                var parent_category_slug = jQuery('#parent_category_slug').val();
@@ -434,6 +443,9 @@
                   }
                   if (stock != '') {
                      basic_url = basic_url+`&stock=${stock}`;
+                  }
+                  if (all_items != '') {
+                     basic_url = `?&all_items=${all_items}`;
                   }
                   window.location.href = basic_url;
             }
