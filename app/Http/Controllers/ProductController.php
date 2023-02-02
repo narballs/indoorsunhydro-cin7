@@ -18,7 +18,6 @@ class ProductController extends Controller
 {
     public function showProductByCategory(Request $request, $category_id)
     {
-
         $selected_category_id = $request->get('selected_category_id');
         if (!empty($selected_category_id)) {
         }
@@ -120,8 +119,6 @@ class ProductController extends Controller
         if ($contact) {
             $pricing = $contact->priceColumn;
             $db_price_column = lcfirst($pricing) . 'USD';
-        } else {
-            $db_price_column = 'Retail';
         }
 
         $lists = BuyList::where('user_id', $user_id)->get();
@@ -344,21 +341,32 @@ class ProductController extends Controller
     public function showProductDetail($id, $option_id)
     {
         $product = Product::where('id', $id)->first();
-        $url = 'https://api.cin7.com/api/v1/Stock?where=productId=' . $product->product_id . '&productOptionId=' . $option_id;
-        $client2 = new \GuzzleHttp\Client();
-        $res = $client2->request(
-            'GET',
-            $url,
-            [
-                'auth' => [
-                    'IndoorSunHydroUS',
-                    'faada8a7a5ef4f90abaabb63e078b5c1'
-                ]
+        $location_inventories = [];
+        
+        try {
+            // $url = 'https://api.cin7.com/api/v1/Stock?where=productId=' . $product->product_id . '&productOptionId=' . $option_id;
+            // $client2 = new \GuzzleHttp\Client();
+            // $res = $client2->request(
+            //     'GET',
+            //     $url,
+            //     [
+            //         'auth' => [
+            //             'IndoorSunHydroUS',
+            //             'faada8a7a5ef4f90abaabb63e078b5c1'
+            //         ]
 
-            ]
-        );
-        $inventory = $res->getBody()->getContents();
-        $location_inventories = json_decode($inventory);
+            //     ]
+            // );
+            // $inventory = $res->getBody()->getContents();
+            // $location_inventories = json_decode($inventory);
+        }
+        catch (Exception $ex) {
+            
+        }
+
+        
+
+
         //dd($location_inventories);
         // $invetory = [];
         // foreach($location_inventories as $key=>$location_inventory) {
@@ -405,8 +413,6 @@ class ProductController extends Controller
         } else {
             $pricing = 'Retail';
         }
-
-
 
         return view('product-detail', compact(
             'productOption', 

@@ -44,7 +44,7 @@
                 //dd($option->price);
 
                 $retail_price = !empty($option->defaultPrice->$db_price_column) ? $option->defaultPrice->$db_price_column : 0;
-                
+
 
 
                 //echo $db_price_column . '<br />';
@@ -100,7 +100,7 @@
 
                   //echo 'xxxx =>' . $retail_price; exit;  
                 ?>
-                <h4 class="text-uppercase mb-0 text-center text-danger">${{ number_format($retail_price, 2)}}</h4>
+                <h4 text="{{ $db_price_column }}" class="text-uppercase mb-0 text-center text-danger">${{ number_format($retail_price, 2)}}</h4>
                 @if($product->categories)
                 <p class="category-cart-page mt-4">
                     Category:&nbsp;&nbsp;{{$product->categories->name}}
