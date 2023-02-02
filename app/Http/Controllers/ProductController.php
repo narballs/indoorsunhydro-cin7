@@ -96,9 +96,14 @@ class ProductController extends Controller
             if (!empty($stock && $stock == 'out-of-stock')) {
                 $products_query->where('stockAvailable', '<', 1);
             }
+
             $all_items = $request->get('all_items');
+
             if (!empty($all_items && $all_items == 'all-items')) {
-                $all = $products_query;
+                $products_query = Product::
+                whereIn('category_id', $category_ids)
+                ->with('options.price', 'brand');
+          
             }
 
             if (!empty($selected_category_id)) {
@@ -224,6 +229,8 @@ class ProductController extends Controller
         if (!empty($stock && $stock == 'out-of-stock')) {
             $products_query->where('stockAvailable', '<', 1);
         }
+       
+
         if (empty($search_queries)) {
             $products = $products_query->paginate($per_page);
         } else {
@@ -285,6 +292,12 @@ class ProductController extends Controller
                 $products_query->where('stockAvailable', '<', 1);
             }
 
+            $all_items = $request->get('all_items');
+            if (!empty($all_items && $all_items == 'all-items')) {
+                $products_query = Product::with('options.price', 'brand');
+          
+            }
+
             if (!empty($selected_category_id)) {
                 $sub_category_ids = Category::where('parent_id', $selected_category_id)->pluck('id')->toArray();
             }
@@ -297,13 +310,8 @@ class ProductController extends Controller
                 $parent_category_slug  = '';
             }
         }
-        //$products_query = Product::with('options', 'brand');
-        //$products = $products_query->with('options', 'brand')->paginate($per_page);
-        //dd($products);
-        //$brands = Brand::pluck('name', 'id')->toArray();
         $user_id = Auth::id();
         $lists = BuyList::where('user_id', $user_id)->get();
-        //$contact = Contact::where('user_id', $user_id)->first();
         $contact = '';
         if ($user_id != null) {
             $contact = Contact::where('user_id', $user_id)->first();
