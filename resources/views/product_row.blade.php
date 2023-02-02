@@ -44,6 +44,7 @@
                 //dd($option->price);
 
                 $retail_price = !empty($option->defaultPrice->$db_price_column) ? $option->defaultPrice->$db_price_column : 0;
+                
 
 
                 //echo $db_price_column . '<br />';
