@@ -6,7 +6,6 @@
       PRODUCTS
    </p>
 </div>
-
 <div class="container desktop-view">
    <form id="form-filter">
       <div class="col-md-12">
@@ -67,7 +66,7 @@
 
             <div class="col">
                <label>Result per page</label>
-               <select id="per_page" class="form-select" onchange="handleSelectChange()">
+               <select id="per_page" class="form-select" onchange="handleSelectChange('result_per_page')">
                   <option value="20" {{ $per_page }} {{ isset($per_page) && $per_page==20 ? 'selected="selected"' : ''
                      }}>20</option>
                   <option value="40" {{ $per_page }} {{ isset($per_page) && $per_page==40 ? 'selected="selected"' : ''
@@ -420,13 +419,14 @@
                   if (brand != '') {
                      basic_url = `?brand_id=${brand}`;
                   }
-                  if (per_page != '') {
-                     basic_url = basic_url+`&per_page=${per_page}`;
-                  }
+
                   if (childeren != '') {
                      basic_url = `?childeren_id=${childeren}`;
                   }
 
+                  if (per_page != '') {
+                     basic_url = basic_url+`&per_page=${per_page}`;
+                  }
                   if (search_price != '') {
                      basic_url = basic_url+`&search_price=${search_price}`;
                   }
