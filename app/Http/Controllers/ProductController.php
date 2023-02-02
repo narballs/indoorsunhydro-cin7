@@ -140,7 +140,6 @@ class ProductController extends Controller
             'stock',
             'selected_category_id',
             'lists',
-            'pricing',
             'childerens',
             'childeren_id',
             'db_price_column'
