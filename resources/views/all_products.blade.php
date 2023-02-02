@@ -91,6 +91,13 @@
 
                </div>
             </div>
+                <div class="col">
+                <label>Show All</label>
+
+               <button class="all-items" type="button" id="all-items"
+                     onclick="handleSelectChange()" value={{"all-items"}}>All Items
+                  </button>
+            </div>
          </div>
       </div>
    </form>
@@ -368,6 +375,7 @@
                var brand = jQuery('#brand').val();
                var per_page = jQuery('#per_page').val();
                var stock = jQuery('#in-stock').val();
+               var all_items = jQuery('#all-items').val();
                var search_price = jQuery('#search_price').val();
                var category_id = jQuery('#category_id').val();
                var childeren = jQuery('#childeren').val();
@@ -391,12 +399,15 @@
             if (stock != '') {
                basic_url = basic_url+`&stock=${stock}`;
             }
+            if (all_items != '') {
+               basic_url = `?&all_items=${all_items}`;
+            }
             window.location.href = basic_url
             
          }
 
 			function updateCart(id, option_id) {
-			 jQuery.ajax({
+			   jQuery.ajax({
                 url: "{{ url('/add-to-cart/') }}",
                    method: 'post',
                    data: {
@@ -406,7 +417,7 @@
                       quantity: 1
                    },
                success: function(response) {
-					if(response.status == 'success') {
+					    if (response.status == 'success') {
                         var cart_items = response.cart_items;
                         var cart_total = 0;
                         var total_cart_quantity = 0;

@@ -41,8 +41,6 @@
             @csrf
             <div class="mt-auto">
                 <?php 
-                //dd($option->price);
-
                 foreach($option->price as $price)
                 {
                     switch ($pricing) {
@@ -81,6 +79,7 @@
                         break;
                         default:
                         $retail_price = $price->retailUSD;
+                        dd($retail_price);
                         break;
                         }
                 }

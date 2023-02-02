@@ -98,8 +98,8 @@
             <div class="col">
                 <label>Show All</label>
 
-               <button class="all-items" type="button" id="all-items"
-                     onclick="inStockOutstock('instock'), handleSelectChange()" value={{"all-items"}}>All Items
+               <button  type="button" class="all-items" id="all-items"
+                     onclick="handleSelectChange()" value={{"all-items"}}>All Items
                   </button>
             </div>
          </div>
@@ -395,6 +395,9 @@
                $("#in-stock").prop("value", "in-stock");
                $("#in-stock").html("In Stock");
             }
+
+            jQuery('#all-items').val('');
+
          }
             function handleSelectChange(searchedOption = '') {
                var category_id = jQuery('#categories').val();
@@ -406,49 +409,50 @@
 
                var per_page = jQuery('#per_page').val();
                var stock = jQuery('#in-stock').val();
-               var search_price = jQuery('#search_price').val();
                var all_items = jQuery('#all-items').val();
+               var search_price = jQuery('#search_price').val();
+             
                var category_id = jQuery('#category_id').val();
                var selected_category_id = jQuery('#categories').val();
                var parent_category_slug = jQuery('#parent_category_slug').val();
-                  if (searchedOption == 'category') {
-                     var brand = '';
-                  }
-                  if (selected_cat_id != ''){ 
-                     var slug = selected_cat_id;
-                  var basic_url = '/products/'+selected_cat_id + '/?';
-                     //window.location.href = basic_url;
-                     //var basic_url = `/products/${selected_cat_id}/${slug}`;
-                  }
-                  else {
-                  
-                     var slug = `${category_id}/${parent_category_slug}`
-                  }
+               if (searchedOption == 'category') {
+                  var brand = '';
+               }
+               if (selected_cat_id != ''){ 
+                  var slug = selected_cat_id;
+               var basic_url = '/products/'+selected_cat_id + '/?';
+                  //window.location.href = basic_url;
+                  //var basic_url = `/products/${selected_cat_id}/${slug}`;
+               }
+               else {
+               
+                  var slug = `${category_id}/${parent_category_slug}`
+               }
 
-                  if (brand != '') {
-                     basic_url = `?brand_id=${brand}`;
-                  }
+               if (brand != '') {
+                  basic_url = `?brand_id=${brand}`;
+               }
 
-                  if (childeren != '') {
-                     basic_url = `?childeren_id=${childeren}`;
-                  }
+               if (childeren != '') {
+                  basic_url = `?childeren_id=${childeren}`;
+               }
 
-                  if (per_page != '') {
-                     basic_url = basic_url+`&per_page=${per_page}`;
-                  }
-                  if (search_price != '') {
-                     basic_url = basic_url+`&search_price=${search_price}`;
-                  }
-                  if (selected_category_id != '') {
-                     basic_url = basic_url+`&selected_category_id=${selected_cat_id}`;
-                  }
-                  if (stock != '') {
-                     basic_url = basic_url+`&stock=${stock}`;
-                  }
-                  if (all_items != '') {
-                     basic_url = `?&all_items=${all_items}`;
-                  }
-                  window.location.href = basic_url;
+               if (per_page != '') {
+                  basic_url = basic_url+`&per_page=${per_page}`;
+               }
+               if (search_price != '') {
+                  basic_url = basic_url+`&search_price=${search_price}`;
+               }
+               if (selected_category_id != '') {
+                  basic_url = basic_url+`&selected_category_id=${selected_cat_id}`;
+               }
+               if (stock != '') {
+                  basic_url = basic_url+`&stock=${stock}`;
+               }
+               if (all_items != '') {
+                  basic_url = basic_url+ `&all_items=${all_items}`;
+               }
+               window.location.href = basic_url;
             }
             function updateCart(id, option_id) {
                jQuery.ajax({
