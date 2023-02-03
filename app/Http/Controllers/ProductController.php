@@ -344,21 +344,21 @@ class ProductController extends Controller
         $location_inventories = [];
         
         try {
-            // $url = 'https://api.cin7.com/api/v1/Stock?where=productId=' . $product->product_id . '&productOptionId=' . $option_id;
-            // $client2 = new \GuzzleHttp\Client();
-            // $res = $client2->request(
-            //     'GET',
-            //     $url,
-            //     [
-            //         'auth' => [
-            //             'IndoorSunHydroUS',
-            //             'faada8a7a5ef4f90abaabb63e078b5c1'
-            //         ]
+            $url = 'https://api.cin7.com/api/v1/Stock?where=productId=' . $product->product_id . '&productOptionId=' . $option_id;
+            $client2 = new \GuzzleHttp\Client();
+            $res = $client2->request(
+                'GET',
+                $url,
+                [
+                    'auth' => [
+                        'IndoorSunHydroUS',
+                        'faada8a7a5ef4f90abaabb63e078b5c1'
+                    ]
 
-            //     ]
-            // );
-            // $inventory = $res->getBody()->getContents();
-            // $location_inventories = json_decode($inventory);
+                ]
+            );
+            $inventory = $res->getBody()->getContents();
+            $location_inventories = json_decode($inventory);
         }
         catch (Exception $ex) {
             
@@ -770,7 +770,7 @@ class ProductController extends Controller
         if ($request->ajax()) {
             $brand = $request->input('brand');
             $price = $request->input('price');
-            $instock = $request->input('instock');
+            $stock = $request->input('instock');
             //$perpage = $request->input('perPage');
             $products = Product::with(['options' => function ($q) use ($price, $instock) {
                 $q->where('status', '!=', 'Disabled')->where('retailPrice', '>=', $price)->where('stockAvailable', '>', 0);
@@ -786,7 +786,8 @@ class ProductController extends Controller
 
         $search_queries = $request->all();
 
-         $db_price_column = 'retailUSD';
+        $db_price_column = 'retailUSD';
+          
 
         // if ($contact) {
         //     $pricing = $contact->priceColumn;
@@ -831,7 +832,9 @@ class ProductController extends Controller
                 $products_query->orderBy('retail_price', 'DESC');
             }
         }
+
         $stock = $request->get('stock');
+
 
         if (empty($stock)) {
             $products_query->where('stockAvailable', '>', 0);
@@ -898,12 +901,18 @@ class ProductController extends Controller
             if (empty($stock)) {
                 $products_query->where('stockAvailable', '>', 0);
             }
-            if (!empty($stock) && $stock == 'in-stock') {
+            if (empty($stock) || $stock == 'in-stock') {
                 $products_query->where('stockAvailable', '>', 0);
             }
-            if (!empty($stock) && $stock == 'out-of-stock') {
+            elseif (!empty($stock) && $stock == 'out-of-stock') {
                 $products_query->where('stockAvailable', '<', 1);
             }
+            // if (!empty($stock) && $stock == 'in-stock') {
+            //     $products_query->where('stockAvailable', '>', 0);
+            // }
+            // if (!empty($stock) && $stock == 'out-of-stock') {
+            //     $products_query->where('stockAvailable', '<', 1);
+            // }
 
             if (!empty($selected_category_id)) {
                 $sub_category_ids = Category::where('parent_id', $selected_category_id)->pluck('id')->toArray();
@@ -941,16 +950,16 @@ class ProductController extends Controller
         if ($user_id != null) {
             $contact = Contact::where('user_id', $user_id)->first();
         }
-         $user_id = Auth::id();
+        $user_id = Auth::id();
         $contact = '';
         if ($user_id != null) {
             $contact = Contact::where('user_id', $user_id)->first();
         }
-         $db_price_column = 'retailUSD';
+        $db_price_column = 'retailUSD';
         if ($contact) {
             $pricing = $contact->priceColumn;
         } 
-        return view('search_product.search_product', compact(
+                return view('search_product.search_product', compact(
             'products',
             'brands',
             'price_creteria',
