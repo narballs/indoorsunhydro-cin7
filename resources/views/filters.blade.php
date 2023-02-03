@@ -80,7 +80,7 @@
                   ?>
                <button class="{{ $stock ? $stock : 'in-stock'  }} {{$danger}}" type="button" id="in-stock"
                   onclick="inStockOutstock('instock'), handleSelectChange()" value="{{$stock}}">{{$text}}</button>
-
+               
 
             </div>
          </div>
