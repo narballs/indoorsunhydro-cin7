@@ -410,7 +410,8 @@ class ProductController extends Controller
         if ($contact) {
             $pricing = $contact->priceColumn;
             $db_price_column = lcfirst($pricing) . 'USD';
-        } else {
+        } 
+        else {
             $pricing = 'Retail';
         }
 
@@ -614,7 +615,6 @@ class ProductController extends Controller
 
     public function addToCart(Request $request)
     {
-        // dd($request->all());
         $id = $request->p_id;
         $option_id = $request->option_id;
 
@@ -771,7 +771,6 @@ class ProductController extends Controller
             $brand = $request->input('brand');
             $price = $request->input('price');
             $instock = $request->input('instock');
-
             //$perpage = $request->input('perPage');
             $products = Product::with(['options' => function ($q) use ($price, $instock) {
                 $q->where('status', '!=', 'Disabled')->where('retailPrice', '>=', $price)->where('stockAvailable', '>', 0);
@@ -787,6 +786,12 @@ class ProductController extends Controller
 
         $search_queries = $request->all();
 
+         $db_price_column = 'retailUSD';
+
+        // if ($contact) {
+        //     $pricing = $contact->priceColumn;
+        //     $db_price_column = lcfirst($pricing) . 'USD';
+        // }
         $products_query  = Product::with('options', 'brand', 'categories');
 
         $selected_category_id = $request->get('selected_category');
@@ -936,13 +941,15 @@ class ProductController extends Controller
         if ($user_id != null) {
             $contact = Contact::where('user_id', $user_id)->first();
         }
-
+         $user_id = Auth::id();
+        $contact = '';
+        if ($user_id != null) {
+            $contact = Contact::where('user_id', $user_id)->first();
+        }
+         $db_price_column = 'retailUSD';
         if ($contact) {
             $pricing = $contact->priceColumn;
-        } else {
-            $pricing = 'Retail';
-        }
-
+        } 
         return view('search_product.search_product', compact(
             'products',
             'brands',
@@ -955,8 +962,7 @@ class ProductController extends Controller
             'per_page',
             'searched_value',
             'lists',
-            'pricing'
-
+            'db_price_column'
         ));
     }
 
