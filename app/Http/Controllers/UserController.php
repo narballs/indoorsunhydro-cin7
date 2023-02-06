@@ -29,27 +29,24 @@ use Spatie\QueryBuilder\AllowedFilter;
 
 class UserController extends Controller
 {
-    // function __construct()
+    function __construct()
 
-    // {
-    //     $this->middleware('permission:user-list|user-create|user-edit|user-delete', ['only' => ['index', 'show']]);
-    //     $this->middleware('permission:user-create', ['only' => ['create', 'store']]);
-    //     $this->middleware('permission:user-edit', ['only' => ['edit', 'update']]);
-    //     $this->middleware('permission:user-delete', ['only' => ['destroy']]);
-    //    $this->middleware('guest', ['except' => [
-    //         'invitation_signup'
-    //     ]]);
-    //     //$this->middleware('permission:user-show', ['only' => ['show']]);
+    {
+        $this->middleware('permission:user-list|user-create|user-edit|user-delete', ['only' => ['index', 'show']]);
+        $this->middleware('permission:user-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:user-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:user-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:user-show', ['only' => ['show']]);
 
-    //     //$this->middleware(['role:Admin','permission:user-list']);
+        //$this->middleware(['role:Admin','permission:user-list']);
 
-    //     // $this->middleware(['role:Admin','permission:user-list|user-list']);
-    //     // $this->middleware(['role:users','permission:user-list|user-list']);
-    //     //$this->middleware('permission:user-list|user-create|user-edit|user-delete', ['only' => ['index','show']]);
-    //     //$this->middleware('permission:user-list', ['only' => ['index']]);
-    //     // $this->middleware('permission:users-edit', ['only' => ['edit','update']]);
-    //     // $this->middleware('permission:users-delete', ['only' => ['destroy']]);
-    // }
+        // $this->middleware(['role:Admin','permission:user-list|user-list']);
+        // $this->middleware(['role:users','permission:user-list|user-list']);
+        //$this->middleware('permission:user-list|user-create|user-edit|user-delete', ['only' => ['index','show']]);
+        //$this->middleware('permission:user-list', ['only' => ['index']]);
+        // $this->middleware('permission:users-edit', ['only' => ['edit','update']]);
+        // $this->middleware('permission:users-delete', ['only' => ['destroy']]);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -232,7 +229,6 @@ class UserController extends Controller
 
 
     public function invitation_signup(Request $request) {
-        echo 'jakljskj';exit;
         $validatedData = $request->validate([
                 'email' => 'email|unique:users,email',
                 'password' => 'required',
