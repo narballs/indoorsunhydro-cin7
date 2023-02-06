@@ -22,13 +22,15 @@
 							<ul class="dropdown-menu l dropdown-menu-dark mt-0 pr-4 pl-4"
 								aria-labelledby="navbarDarkDropdownMenuLink" style="width: 346px;">
 								<li><a class="link-dark dropdown-item text-decoration-none nav-link product-mega-menu"
-										href="{{url('products')}}"><b>All Products</b></a></li>
+										href="{{url('products')}}" style="font-size: 12px !important"><b>All
+											Products</b></a></li>
 								@foreach($categories as $category)
 								@if ($category->parent_id == 0)
 								<li>
 									<a class="link-dark dropdown-item text-decoration-none nav-link product-mega-menu"
 										id="category_{{$category->id}}"
-										href="{{ url('products/'.$category->id.'/'.$category->slug) }}">
+										href="{{ url('products/'.$category->id.'/'.$category->slug) }}"
+										style="font-size: 12px !important">
 										{{$category->name}}
 									</a>
 									@endif
@@ -46,24 +48,26 @@
 												<div class="row pl-4 pt-0 pr-4">
 
 													@foreach($category->children->sortBy('name') as $key=>$cat)
-														@if($cat->is_active == 1)
-															@if($count > 10)
-																<div class="col-md-2 pl-0 pr-0"
-																	style="width:600px !important; background-color:white !important">
-																
-															@else
-															
+													@if($cat->is_active == 1)
+													@if($count > 10)
+													<div class="col-md-2 pl-0 pr-0"
+														style="width:600px !important; background-color:white !important">
+
+														@else
+
 														<div class="col-md-12 pl-0 pr-0"
-																style="width:100% !imporant; background-color:white !important">
+															style="width:100% !imporant; background-color:white !important">
 															@endif
 															@if ($count > 0)
-																<li class="dropdown-item" id="category_{{$cat->id}}"
-																	href="{{ url('products/'.$category->id) }}">
+															<li class="dropdown-item" id="category_{{$cat->id}}"
+																href="{{ url('products/'.$category->id) }}" ">
 
-																	<a class="link-dark text-decoration-none nav-link product-mega-menu"
-																		id="category_{{$category->id}}"
-																		href="{{ url('products/'.$cat->id.'/'.$category->slug.'-'.$cat->slug) }}">{{$cat->name}}</a>
-																</li>
+																<a class=" link-dark text-decoration-none nav-link product-mega-menu" id="category_{{$category->id}}"
+																href="{{ url('products/'.$cat->id.'/'.$category->slug.'-'.$cat->slug) }}"
+																style="font-size: 12px !important">
+																{{$cat->name}}
+																</a>
+															</li>
 															@endif
 														</div>
 														@endif
@@ -76,7 +80,7 @@
 								@endforeach
 							</ul>
 						</li>
-						<li class="nav-item me-3">
+						<li class=" nav-item me-3">
 							<a class="nav-link text-uppercase nav-item-links " href="#">
 								About
 							</a>
