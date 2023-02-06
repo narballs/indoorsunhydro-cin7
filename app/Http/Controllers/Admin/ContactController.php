@@ -14,11 +14,13 @@ use App\Mail\Subscribe;
 use App\Helpers\MailHelper;
 use App\Models\User;
 use DB;
+use URL;
 
 
 
 class ContactController extends Controller
 {
+
 
     function __construct()
     {
@@ -282,5 +284,37 @@ class ContactController extends Controller
             ]
         );
         return redirect()->back();
+    }
+
+    public function send_invitation_email(Request $request) {
+        $secret = "QCOM";
+        $sig = hash_hmac('sha256', $request->customer_email, $secret);
+        $url = URL::to("/");
+        $url = $url.'/customer/invitation/'.$sig;
+        $email = $request->customer_email;
+
+        $data = [
+                'email' => $email,
+                'subject' => 'Customer Registration Invitation',
+                'from' => env('MAIL_FROM_ADDRESS'),
+                'content' => 'Customer Registration Invitation',
+                'url' => $url
+            ];
+
+        MailHelper::sendMailNotification('emails.invitaion-emails', $data);
+             $contact_id = $request->contact_id;
+             $contact = Contact::where('contact_id', $contact_id)->update(
+                    [
+                      'hashKey' => $sig,
+                      'hashUsed' => 0,
+                    ]
+            );
+    }
+
+    public function contomer_invitation($hash) 
+    {
+        $contact = Contact::where('hashKey', $hash)->first();
+
+        return view('contomer_invitation', compact('contact'));
     }
 }

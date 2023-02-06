@@ -227,6 +227,23 @@ class UserController extends Controller
         return response()->json(['success' => true, 'created' => true, 'msg' => 'Welcome, new player.']);
     }
 
+
+    public function invitation_signup(Request $request) {
+        $validatedData = $request->validate([
+                'email' => 'email|unique:users,email',
+                'password' => 'required',
+                'confirm_password' => 'required|same:password'
+            ]);
+        //dd($validatedData);
+        $validatedData['password'] = bcrypt($validatedData['password']);
+        $user = User::create([
+               $validatedData
+        ]);
+
+        return back()->with('success', 'User created successfully.');
+    }
+
+
     public function logout()
     {
         \Auth::logout();
