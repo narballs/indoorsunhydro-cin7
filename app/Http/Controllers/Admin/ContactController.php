@@ -24,7 +24,7 @@ class ContactController extends Controller
 
     function __construct()
     {
-        $this->middleware(['role:Admin']);
+       $this->middleware(['role:Admin'])->except('contomer_invitation');
     }
 
     public function supplier()
