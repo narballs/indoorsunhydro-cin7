@@ -8,6 +8,13 @@
     		<span class="badge bg-danger">Inactive</span>
     	@endif
     </td>
+    <td>
+        @if($contact->user_id == '')
+            <span class="badge bg-danger">Unmerged</span>
+        @else 
+            <span class="badge bg-success">Merged</span>
+        @endif
+    </td>
   
     <td>{{$contact->priceColumn}}</td>
     <td>{{$contact->company}}</td>

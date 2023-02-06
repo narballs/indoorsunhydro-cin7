@@ -58,10 +58,6 @@ class SyncAPiData extends Command
                 'GET', 
                 'https://api.cin7.com/api/v1/ProductCategories?page=' . $i, 
                 [
-                    // 'auth' => [
-                    //     env('API_USER'), 
-                    //     env('API_PASSWORD')
-                    // ]
                      'auth' => [
                         'IndoorSunHydroUS', 
                         'faada8a7a5ef4f90abaabb63e078b5c1'
@@ -76,7 +72,6 @@ class SyncAPiData extends Command
             $this->info('Found ' . count($api_categories) . ' from API');
 
             foreach($api_categories as $api_category) {
-
                 $this->info($api_category->id);
                 $category = Category::where('category_id', $api_category->id)->first();
                 if (!empty($category)) {
@@ -105,7 +100,6 @@ class SyncAPiData extends Command
                     $category->save();
                 }
                 else {
-                    //echo 'here';exit;
                     $category = new Category([
                         'id' => $api_category->id,
                         'name' => $api_category->name,
@@ -154,10 +148,7 @@ class SyncAPiData extends Command
                     $this->info('Processing Products ' . $api_product->name);
                     $this->info('---------------------------------------');
                     $product = Product::where('product_id', $api_product->id)->with('options.price')->first();
-                    // foreach($product->options as $pr) {
-                    //     echo $pr->price;
-                    // }
-                    // exit;
+    
                     if ($product) {
                         if ($api_product->categoryIdArray) {
                             $category_id = $api_product->categoryIdArray[0];    

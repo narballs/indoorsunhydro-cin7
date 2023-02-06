@@ -89,16 +89,27 @@
 		              			}
 		              		?>
 								@if($customer->status != 1)
-								<div class="col-md-6">
-								</div>
-								<div class="col-md-2"><button class="btn btn-primary" type="button"
-										onclick="updateContact()">Activate</button>
-								</div>
-								@else
-								<div>
-									<span class="badge bg-success">{{$status}}</span>
-								</div>
+							
+									<div class="col-md-2"><button class="btn btn-primary" type="button"
+											onclick="updateContact()">Activate</button>
+									</div>
+									@else
+									<div>
+										<span class="badge bg-success">{{$status}}</span>
+									</div>
 								@endif
+								@if($customer->user == '')
+							
+									<div class="col-md-2"><button class="btn btn-primary" type="button"
+											onclick="mergeContact()">Unmerged</button>
+									</div>
+									@else
+									<div>
+										<span class="badge bg-success">Merged</span>
+									</div>
+								@endif
+
+								
 								<div class="spinner-border d-none" role="status" style="left: 50% !important;
     margin-left: -25em !important;" id="spinner">
 									<span class="sr-only">Activating...</span>
@@ -111,6 +122,7 @@
 								</div>
 								<div class="col-md-12 mt-2">
 									{{$customer->email}}
+									<input type="hidden" name="customer_email" id="customer_email" value="{{$customer->email}}">
 								</div>
 								<div class="col-md-12 mt-2">
 									{{$customer->phone}}
@@ -344,6 +356,25 @@
     		});
     	}
     	}
+    }
+
+    function mergeContact() {
+    		var contact_id = $( "#contact_id" ).val();
+    		var customer_email = $("#customer_email").val();
+    		jQuery.ajax({
+        		url: "{{ url('admin/send-invitation-email') }}",
+        		method: 'post',
+        		data: {
+            		"_token": "{{ csrf_token() }}",
+            		"contact_id": contact_id,
+            		"customer_email" : customer_email
+            		
+        		}
+        		
+        	
+
+    		});
+
     }
 </script>
 @stop

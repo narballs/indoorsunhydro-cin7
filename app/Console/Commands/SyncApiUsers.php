@@ -59,19 +59,16 @@ class SyncApiUsers extends Command
                 [
                     'auth' => [
                         'IndoorSunHydroUS', 
-                        '34b5bfba86224f6fbec8ef256b92a28a'
+                        'faada8a7a5ef4f90abaabb63e078b5c1'
                     ]
                 ]
             );
 
             $api_users = $res->getBody()->getContents();
             $api_users = json_decode($api_users);
-            // dd($api_users);
-            //$brands = [];
+
             foreach($api_users as $api_user) {
                 $this->info($api_user->id);
-                //$brands[] = $api_product->brand;
-                //dd($api_contact);
                 $this->info('---------------------------------------');
                 $this->info('Processing users ' . $api_user->firstName);
                 $this->info('---------------------------------------');

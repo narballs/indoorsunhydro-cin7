@@ -15,7 +15,10 @@
     color: #FFFFFF;
     height: 95px;
 }
-
+.disable{
+    pointer-events:none;
+    background:grey;
+}
 .cart-counter {
     background-color: #7BC533;
     width: 19px;
