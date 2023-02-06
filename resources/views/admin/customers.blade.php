@@ -50,6 +50,7 @@
                         <th>#</th>
                         <th>Name <i class="fa fa-sort"></i></th>
                         <th>Status <i class="fa fa-sort"></i></th>
+                        <th>Merged</th>
                         <th>Price Tier<i class="fa fa-sort"></i></th>
                         <th>Company</th>
                         <th>Email<i class="fa fa-sort"></i></th>
