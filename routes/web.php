@@ -9,6 +9,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ContactUsController;
 use App\Http\Controllers\CreateCartController;
 use App\Http\Controllers\PermissionsController;
+use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\RolesController;
 use App\Http\Controllers\Admin\TestController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -71,6 +72,7 @@ Route::get('/my-qoute-edit/{id}', [UserController::class, 'my_qoute_edit'])->nam
 Route::get('/user-addresses/', [UserController::class, 'user_addresses'])->name('user_addresses');
 Route::get('/user-order-detail/{id}', [UserController::class, 'user_order_detail'])->name('user-order-detail');
 Route::post('/register/basic/create', [UserController::class, 'process_signup'])->name('register');
+Route::post('/register/basic/invitation', [UserController::class, 'invitation_signup'])->name('invitation.signup');
 Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 
 Route::get('/product-brand/{name}', [ProductController::class, 'showProductByBrands']);
@@ -109,6 +111,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('admin/shipping-method/delete/{id}', [ShippingMethodController::class, 'destroy'])->name('admin.shipping-method.delete');
     Route::get('admin/contacts', [ContactController::class, 'supplier'])->name('admin.contacts');
     Route::get('admin/customers', [ContactController::class, 'customer'])->name('admin.customer');
+    
+    Route::post('admin/send-invitation-email', [ContactController::class, 'send_invitation_email'])->name('admin.send_invitation_email');
     Route::get('admin/customer/create', [ContactController::class, 'customer_create'])->name('admin.customer.create');
     Route::post('admin/customer/store', [ContactController::class, 'customer_store'])->name('admin.customer.store');
     Route::get('admin/customer-detail/{id}', [ContactController::class, 'show_customer'])->name('admin.customer.detail');
@@ -140,6 +144,8 @@ Route::get('product/search', [ProductController::class, 'productSearch'])->name(
 
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
+
+Route::get('/customer/invitation/{hash}', [ContactController::class, 'contomer_invitation']);
 
 Route::group(['middleware' => ['auth']], function () {
 });
