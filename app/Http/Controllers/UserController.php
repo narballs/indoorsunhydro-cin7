@@ -7,7 +7,8 @@ use App\Models\User;
 use App\Models\Contact;
 use App\Models\ApiOrder;
 use App\Models\ApiOrderItem;
-use App\Models\State;
+use App\Models\UsState;
+use App\Models\UsCity;
 use App\Models\BuyList;
 use App\Models\Product;
 use App\Http\Requests\Users\UserSignUpRequest;
@@ -173,9 +174,15 @@ class UserController extends Controller
     }
     public function userRegistration()
     {
-        $states = State::all();
-        //dd($states);
-        return view('user-registration-second', compact('states'));
+        $data['states'] = UsState::get(["state_name", "id"]);
+        return view('user-registration-second',  $data);
+    }
+
+
+    public function fetchCity(Request $request)
+    {
+        $data['cities'] = UsCity::where("state_id", $request->state_id)->get(["city", "id"]);
+        return response()->json($data);
     }
 
     public function process_login(Request $request)
@@ -282,8 +289,8 @@ class UserController extends Controller
                 [
                     'postalAddress1' => $request->input('street_address'),
                     // 'postalAddress2' => $request->input('suit_apartment'),
-                    'postalCity' => $request->input('town_city'),
-                    'postalState' => $request->input('state'),
+                    'state_id' => $request->input('state_id'),
+                    'city_id' => $request->input('city_id'),
                     'postalPostCode' => $request->input('zip')
                 ]
             );

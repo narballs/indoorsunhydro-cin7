@@ -11,6 +11,7 @@ use App\Models\ApiOrderItem;
 use App\Models\Contact;
 use App\Models\State;
 use App\Models\PaymentMethod;
+use App\Models\UsState;
 use Illuminate\Support\Facades\Auth;
 use App\User;
 use Illuminate\Support\Facades\Session;
@@ -20,12 +21,13 @@ class CheckoutController extends Controller
     public function index()
     {
         $user_id = auth()->id();
-        $contact = Contact::where('user_id', $user_id)->first();
+        $contact = Contact::where('user_id', $user_id)->with('states')->with('cities')->first();
+        // dd($contact);
         if ($contact) {
             $isApproved = $contact->contact_id;
         }
         if (Auth::check() && !empty($isApproved)) {
-            $states = State::all();
+            $states = UsState::all();
 
             $payment_methods = PaymentMethod::with('options')->get();
             $user_address = Contact::where('user_id', $user_id)->first();
