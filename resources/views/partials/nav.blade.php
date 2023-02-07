@@ -45,7 +45,7 @@
 											<ul class="dd-horizontal pl-0 pr-0"
 												style="width:100% !important; background-color:white !imporatnt">
 												@endif
-												<div class="row pl-4 pt-0" style="width:100%">
+												<div class="row pl-1 pt-0" style="width:100%">
 													@foreach($category->children->sortBy('name') as $key=>$cat)
 													@if($cat->is_active == 1)
 													@if($count > 10)
