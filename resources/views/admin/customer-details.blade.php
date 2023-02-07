@@ -38,37 +38,37 @@
 									</div>
 								</div>
 								@if ($customer->status == 1)
-								<div class="col-md-6"><b>Pricing:</b>
+								<div class="col-md-4"><b>Pricing:</b>
 									<select onchange="updatePriceColumn(4)" class="pricingColumn">
 										<?php 
 							      	$pricing = $customer->priceColumn;
 							      
 							      	?>
 										<option class="form-group" value="Retail" {{ $pricing }} {{ isset($pricing) &&
-											$pricing=='Retail' ? 'selected="selected"' : '' }}>Retail</option>
-										<option class="form-group" value="Wholesale" {{ $pricing }} {{ isset($pricing)
-											&& $pricing=='Wholesale' ? 'selected="selected"' : '' }}>Wholesale</option>
-										<option class="form-group" value="TerraIntern" {{ $pricing }} {{ isset($pricing)
-											&& $pricing=='TerraIntern' ? 'selected="selected"' : '' }}>TerraIntern
+											$pricing=='RetailUSD' ? 'selected="selected"' : '' }}>Retail</option>
+										<option class="form-group" value="WholesaleUSD" {{ $pricing }} {{ isset($pricing)
+											&& $pricing=='WholesaleUSD' ? 'selected="selected"' : '' }}>Wholesale</option>
+										<option class="form-group" value="TerraInternUSD" {{ $pricing }} {{ isset($pricing)
+											&& $pricing=='TerraInternUSD' ? 'selected="selected"' : '' }}>TerraIntern
 										</option>
-										<option class="form-group" value="Sacramento" {{ $pricing }} {{ isset($pricing)
-											&& $pricing=='Sacramento' ? 'selected="selected"' : '' }}>Sacramento
+										<option class="form-group" value="SacramentoUSD" {{ $pricing }} {{ isset($pricing)
+											&& $pricing=='SacramentoUSD' ? 'selected="selected"' : '' }}>Sacramento
 										</option>
-										<option class="form-group" value="Oklahoma" {{ $pricing }} {{ isset($pricing) &&
-											$pricing=='Oklahoma' ? 'selected="selected"' : '' }}>Oklahoma</option>
-										<option class="form-group" value="Calaveras" {{ $pricing }} {{ isset($pricing)
-											&& $pricing=='Calaveras' ? 'selected="selected"' : '' }}>Calaveras</option>
-										<option class="form-group" value="Tier1" {{ $pricing }} {{ isset($pricing) &&
-											$pricing=='Tier1' ? 'selected="selected"' : '' }}>Tier1</option>
-										<option class="form-group" value="Tier2" {{ $pricing }} {{ isset($pricing) &&
-											$pricing=='Tier2' ? 'selected="selected"' : '' }}>Tier2</option>
-										<option class="form-group" value="Tier3" {{ $pricing }} {{ isset($pricing) &&
-											$pricing=='Tier3' ? 'selected="selected"' : '' }}>Tier3</option>
-										<option class="form-group" value="CommercialOK" {{ $pricing }} {{ isset($pricing)
-											&& $pricing=='CommercialOK' ? 'selected="selected"' : '' }}>CommercialOK
+										<option class="form-group" value="OklahomaUSD" {{ $pricing }} {{ isset($pricing) &&
+											$pricing=='OklahomaUSD' ? 'selected="selected"' : '' }}>Oklahoma</option>
+										<option class="form-group" value="CalaverasUSD" {{ $pricing }} {{ isset($pricing)
+											&& $pricing=='CalaverasUSD' ? 'selected="selected"' : '' }}>Calaveras</option>
+										<option class="form-group" value="Tier1USD" {{ $pricing }} {{ isset($pricing) &&
+											$pricing=='Tier1USD' ? 'selected="selected"' : '' }}>Tier1</option>
+										<option class="form-group" value="Tier2USD" {{ $pricing }} {{ isset($pricing) &&
+											$pricing=='Tier2USD' ? 'selected="selected"' : '' }}>Tier2</option>
+										<option class="form-group" value="Tier3USD" {{ $pricing }} {{ isset($pricing) &&
+											$pricing=='Tier3USD' ? 'selected="selected"' : '' }}>Tier3</option>
+										<option class="form-group" value="CommercialOKUSD" {{ $pricing }} {{ isset($pricing)
+											&& $pricing=='CommercialOKUSD' ? 'selected="selected"' : '' }}>CommercialOK
 										</option>
-										<option class="form-group" value="Cost" {{ $pricing }} {{ isset($pricing) &&
-											$pricing=='Cost' ? 'selected="selected"' : '' }}>Cost</option>
+										<option class="form-group" value="CostUSD" {{ $pricing }} {{ isset($pricing) &&
+											$pricing=='CostUSD' ? 'selected="selected"' : '' }}>Cost</option>
 
 
 									</select>
@@ -98,14 +98,18 @@
 										<span class="badge bg-success">{{$status}}</span>
 									</div>
 								@endif
-								@if($customer->user == '')
-							
-									<div class="col-md-2"><button class="btn btn-primary" type="button"
-											onclick="mergeContact()">Unmerged</button>
+								@if($customer->user == '' && $customer->hashKey == '')
+									<div class="col-md-2"><button class="btn btn-primary btn-sm" type="button"
+											onclick="mergeContact()">Invite</button>
+									</div>
+									@elseif ($customer->hashKey != '' && $customer->hashUsed == 0 )
+									<div>
+										<span class="badge bg-warning" style="margin-left: 12px!important;">Invitation Sent</span>
 									</div>
 									@else
 									<div>
-										<span class="badge bg-success">Merged</span>
+										<span class="badge bg-success"
+										style="margin-left: 12px!important;">Merged</span>
 									</div>
 								@endif
 
@@ -360,6 +364,7 @@
 
     function mergeContact() {
     		var contact_id = $( "#contact_id" ).val();
+    		$('#spinner').removeClass('d-none');
     		var customer_email = $("#customer_email").val();
     		jQuery.ajax({
         		url: "{{ url('admin/send-invitation-email') }}",
@@ -369,10 +374,14 @@
             		"contact_id": contact_id,
             		"customer_email" : customer_email
             		
-        		}
-        		
-        	
-
+        		},
+        		success: function(response){
+        			console.log(response);
+        			if (response.msg == 'success') {
+        				$('#spinner').addClass('d-none');
+        				setInterval('location.reload()', 1000);
+        			}
+    			}
     		});
 
     }

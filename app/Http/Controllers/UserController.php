@@ -7,7 +7,8 @@ use App\Models\User;
 use App\Models\Contact;
 use App\Models\ApiOrder;
 use App\Models\ApiOrderItem;
-use App\Models\State;
+use App\Models\UsState;
+use App\Models\UsCity;
 use App\Models\BuyList;
 use App\Models\Product;
 use App\Http\Requests\Users\UserSignUpRequest;
@@ -173,9 +174,15 @@ class UserController extends Controller
     }
     public function userRegistration()
     {
-        $states = State::all();
-        //dd($states);
-        return view('user-registration-second', compact('states'));
+        $data['states'] = UsState::get(["state_name", "id"]);
+        return view('user-registration-second',  $data);
+    }
+
+
+    public function fetchCity(Request $request)
+    {
+        $data['cities'] = UsCity::where("state_id", $request->state_id)->get(["city", "id"]);
+        return response()->json($data);
     }
 
     public function process_login(Request $request)
@@ -229,15 +236,36 @@ class UserController extends Controller
 
 
     public function invitation_signup(Request $request) {
+ 
+        $contact = Contact::where('email', $request->email)->first();
         $validatedData = $request->validate([
                 'email' => 'email|unique:users,email',
-                'password' => 'required',
+                'password' => 'required|min:10',
                 'confirm_password' => 'required|same:password'
             ]);
-        $validatedData['password'] = bcrypt($validatedData['password']);
+
+        // $validatedData['password'] = bcrypt($validatedData['password']);
+        // $validateData['first_name'] = $contact->firstName;
+        // $validateData['last_name'] = $contact->lastName;
+       
+
         $user = User::create([
-               $validatedData
+           'email' => $request->email,
+           'password' =>  bcrypt($request->password),
+           'first_name' => $contact->firstName,
+           'last_name' => $contact->lastName
         ]);
+
+        // $user = User::create(
+        //    $validatedData
+        // );
+        
+        $contact->user_id = $user->id;
+        $contact->hashUsed = true;
+        $contact->save();
+
+        return redirect('/');
+
 
         return back()->with('success', 'User created successfully.');
     }
@@ -298,8 +326,8 @@ class UserController extends Controller
                 [
                     'postalAddress1' => $request->input('street_address'),
                     // 'postalAddress2' => $request->input('suit_apartment'),
-                    'postalCity' => $request->input('town_city'),
-                    'postalState' => $request->input('state'),
+                    'state_id' => $request->input('state_id'),
+                    'city_id' => $request->input('city_id'),
                     'postalPostCode' => $request->input('zip')
                 ]
             );
@@ -323,7 +351,7 @@ class UserController extends Controller
         $user_address = Contact::where('user_id', $user_id)->first();
         $list = BuyList::where('id', 20)->with('list_products.product.options')->first();
         //dd($user_address);
-        $states = State::all();
+        $states = UsState::all();
         if ($request->ajax()) {
             $user_orders = ApiOrder::where('user_id', $user_id)->with('apiOrderItem')->get();
             foreach ($user_orders as $user_order) {

@@ -39,27 +39,24 @@
 									<ul class="dropdown-menu-dark pl-0 pr-0 border mt-0 dropdown-submenu rounded-2 text-center w-100 ms-2"
 										style="background-color: none !important;">
 										@if($count > 10)
-										<ul class="dd-horizontal border p-0 pr-4"
-											style="width:800px !important; background-color:white !important; margin:0px !important;">
+										<ul class="dd-horizontal border p-0"
+											style="width:850px !important; background-color:white !important; margin:0px !important;">
 											@else
 											<ul class="dd-horizontal pl-0 pr-0"
 												style="width:100% !important; background-color:white !imporatnt">
 												@endif
-												<div class="row pl-4 pt-0 pr-4">
-
+												<div class="row pl-1 pt-0" style="width:100%">
 													@foreach($category->children->sortBy('name') as $key=>$cat)
 													@if($cat->is_active == 1)
 													@if($count > 10)
-													<div class="col-md-2 pl-0 pr-0"
-														style="width:600px !important; background-color:white !important">
-
+													<div class="col-md-2 p-0 w-100"
+														style="width:100% !important; background-color:white !important">
 														@else
-
 														<div class="col-md-12 pl-0 pr-0"
 															style="width:100% !imporant; background-color:white !important">
 															@endif
 															@if ($count > 0)
-															<li class="dropdown-item" id="category_{{$cat->id}}"
+															<li class="dropdown-item p-0" id="category_{{$cat->id}}"
 																href="{{ url('products/'.$category->id) }}" ">
 
 																<a class=" link-dark text-decoration-none nav-link product-mega-menu" id="category_{{$category->id}}"

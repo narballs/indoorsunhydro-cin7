@@ -45,8 +45,8 @@ class CompanyInfoRequest extends FormRequest
                 //     'required',
                 //     'regex:/^[a-zA-Z0-9\s-]+$/'
                 // ],
-                'town_city' => 'required|alpha',
-                'state' => 'required|alpha',
+                'state_id' => 'required',
+                'city_id' => 'required',
                 'zip' => [
                     'required',
                     'regex:/^\d{5}(?:[- ]?\d{4})?$/s'
