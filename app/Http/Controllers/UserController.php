@@ -238,28 +238,27 @@ class UserController extends Controller
     public function invitation_signup(Request $request) {
  
         $contact = Contact::where('email', $request->email)->first();
-
         $validatedData = $request->validate([
                 'email' => 'email|unique:users,email',
-                'password' => 'required',
-                'confirm_password' => 'required|same:password',
-                'first_name' =>  $contact->firstName,
-                'last_name' => $contact->lastName
+                'password' => 'required|min:10',
+                'confirm_password' => 'required|same:password'
             ]);
 
-        $validatedData['password'] = bcrypt($validatedData['password']);
+        // $validatedData['password'] = bcrypt($validatedData['password']);
+        // $validateData['first_name'] = $contact->firstName;
+        // $validateData['last_name'] = $contact->lastName;
        
 
-        // $user = User::create([
-        //    'email' => $request->email,
-        //    'password' =>  bcrypt($request->password),
-        //    'first_name' => $contact->firstName,
-        //    'last_name' => $contact->lastName
-        // ]);
+        $user = User::create([
+           'email' => $request->email,
+           'password' =>  bcrypt($request->password),
+           'first_name' => $contact->firstName,
+           'last_name' => $contact->lastName
+        ]);
 
-        $user = User::create(
-           $validatedData
-        );
+        // $user = User::create(
+        //    $validatedData
+        // );
         
         $contact->user_id = $user->id;
         $contact->hashUsed = true;
@@ -352,7 +351,7 @@ class UserController extends Controller
         $user_address = Contact::where('user_id', $user_id)->first();
         $list = BuyList::where('id', 20)->with('list_products.product.options')->first();
         //dd($user_address);
-        $states = State::all();
+        $states = UsState::all();
         if ($request->ajax()) {
             $user_orders = ApiOrder::where('user_id', $user_id)->with('apiOrderItem')->get();
             foreach ($user_orders as $user_order) {
