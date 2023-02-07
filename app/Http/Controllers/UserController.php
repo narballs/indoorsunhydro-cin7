@@ -290,7 +290,7 @@ class UserController extends Controller
             $contact->company = $request->input('company_name');
             $contact->phone = $request->input('phone');
             $contact->status = 0;
-            $contact->priceColumn = 'Retail';
+            $contact->priceColumn = 'RetailUSD';
             $contact->user_id = $user_id;
             $contact->firstName = $user->first_name;
             $contact->type = 'Customer';
