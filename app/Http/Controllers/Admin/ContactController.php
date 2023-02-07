@@ -258,6 +258,9 @@ class ContactController extends Controller
     {
         $customer =  Contact::find($id);
         $customer->delete();
+        $user_id = $customer->user_id;
+        $user = User::find($user_id);
+        $user->delete();
         return redirect()->back()->with('success', 'Customer Deleted Successfully');
     }
 
