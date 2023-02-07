@@ -17,22 +17,20 @@
 
         <a href="{{ url('product-detail/'.$product->id.'/'.$option->option_id.'/'.$product->slug) }}">
             <span class="d-flex justify-content-center align-content-center">
-
-
                 <img src="{{$option->image}}" class="col-md-10 .image-body offset-1 mt-2"
                     style="width: 120px; max-height: 300px; " />
-
             </span>
         </a>
         @else
-        <span class="d-flex justify-content-center align-items-center">
-            <img src=" {{ asset('theme/img/image_not_available.png') }}" class="w-100  h-75 w-75"
-                onclick="showdetails({{$product->id}}, {{$option->option_id}}, {{$product->slug}}')" />
-        </span>
+        <a href="{{ url('product-detail/'.$product->id.'/'.$option->option_id.'/'.$product->slug) }}">
+            <span class="d-flex justify-content-center align-items-center">
+                <img src=" {{ asset('theme/img/image_not_available.png') }}" class="w-100  h-75 w-75" />
+            </span>
+        </a>
         @endif
         <div class="card-body d-flex flex-column text-center mt-2">
-            <h5 class="card-title" style="font-weight: 500;font-size: 16px;" id="product_name_{{$product->id}}"><a
-                    class="product-row-product-title"
+            <h5 class="card-title" style="font-weight: 500;font-size: 16px;" id="product_name_{{$product->id}}">
+                <a class="product-row-product-title"
                     href="{{ url('product-detail/'.$product->id.'/'.$option->option_id.'/'.$product->slug) }}">{{$product->name}}</a>
             </h5>
 
@@ -42,7 +40,6 @@
             <div class="mt-auto">
                 <?php 
                 //dd($option->price);
-
                 $retail_price = !empty($option->defaultPrice->$db_price_column) ? $option->defaultPrice->$db_price_column : 0;
 
 
@@ -100,7 +97,8 @@
 
                   //echo 'xxxx =>' . $retail_price; exit;  
                 ?>
-                <h4 text="{{ $db_price_column }}" class="text-uppercase mb-0 text-center text-danger">${{ number_format($retail_price, 2)}}</h4>
+                <h4 text="{{ $db_price_column }}" class="text-uppercase mb-0 text-center text-danger">${{
+                    number_format($retail_price, 2)}}</h4>
                 @if($product->categories)
                 <p class="category-cart-page mt-4">
                     Category:&nbsp;&nbsp;{{$product->categories->name}}
