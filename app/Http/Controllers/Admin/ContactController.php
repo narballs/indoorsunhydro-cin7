@@ -15,6 +15,7 @@ use App\Helpers\MailHelper;
 use App\Models\User;
 use DB;
 use URL;
+use Carbon\Carbon;
 
 
 
@@ -287,7 +288,8 @@ class ContactController extends Controller
     }
 
     public function send_invitation_email(Request $request) {
-        $secret = "QCOM";
+        $current_date_time = Carbon::now()->toDateTimeString();
+        $secret = "QCOM".$current_date_time;
         $sig = hash_hmac('sha256', $request->customer_email, $secret);
         $url = URL::to("/");
         $url = $url.'/customer/invitation/'.$sig;
@@ -309,11 +311,26 @@ class ContactController extends Controller
                       'hashUsed' => 0,
                     ]
             );
+        return response()->json([
+            'msg' => 'success',
+            'status' => 200
+
+        ]);
     }
 
     public function contomer_invitation($hash) 
     {
-        $contact = Contact::where('hashKey', $hash)->first();
+         $contact = Contact::where('hashKey', $hash)->first();
+
+         $msg = 'hashKey already used !';
+
+        if($contact->hashUsed == 1){
+
+            return view('contomer_invitation-error', compact('msg'));
+        } else {
+
+            return view('contomer_invitation', compact('contact'));
+        }
 
         return view('contomer_invitation', compact('contact'));
     }

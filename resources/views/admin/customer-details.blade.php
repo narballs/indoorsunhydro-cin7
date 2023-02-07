@@ -38,7 +38,7 @@
 									</div>
 								</div>
 								@if ($customer->status == 1)
-								<div class="col-md-6"><b>Pricing:</b>
+								<div class="col-md-4"><b>Pricing:</b>
 									<select onchange="updatePriceColumn(4)" class="pricingColumn">
 										<?php 
 							      	$pricing = $customer->priceColumn;
@@ -98,14 +98,18 @@
 										<span class="badge bg-success">{{$status}}</span>
 									</div>
 								@endif
-								@if($customer->user == '')
-							
-									<div class="col-md-2"><button class="btn btn-primary" type="button"
-											onclick="mergeContact()">Unmerged</button>
+								@if($customer->user == '' && $customer->hashKey == '')
+									<div class="col-md-2"><button class="btn btn-primary btn-sm" type="button"
+											onclick="mergeContact()">Invite</button>
+									</div>
+									@elseif ($customer->hashKey != '' && $customer->hashUsed == 0 )
+									<div>
+										<span class="badge bg-warning" style="margin-left: 12px!important;">Invitation Sent</span>
 									</div>
 									@else
 									<div>
-										<span class="badge bg-success">Merged</span>
+										<span class="badge bg-success"
+										style="margin-left: 12px!important;">Merged</span>
 									</div>
 								@endif
 
@@ -360,6 +364,7 @@
 
     function mergeContact() {
     		var contact_id = $( "#contact_id" ).val();
+    		$('#spinner').removeClass('d-none');
     		var customer_email = $("#customer_email").val();
     		jQuery.ajax({
         		url: "{{ url('admin/send-invitation-email') }}",
@@ -369,10 +374,14 @@
             		"contact_id": contact_id,
             		"customer_email" : customer_email
             		
-        		}
-        		
-        	
-
+        		},
+        		success: function(response){
+        			console.log(response);
+        			if (response.msg == 'success') {
+        				$('#spinner').addClass('d-none');
+        				setInterval('location.reload()', 1000);
+        			}
+    			}
     		});
 
     }

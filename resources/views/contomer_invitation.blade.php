@@ -1,6 +1,7 @@
 @include('partials.header')
 @include('partials.top-bar')
 @include('partials.search-bar')
+
         @if(Session::has('success'))
         <div class="alert alert-success">
             {{ Session::get('success') }}
@@ -9,6 +10,7 @@
             @endphp
         </div>
         @endif
+
 
    <form action="{{url('/register/basic/invitation')}}" method="POST">
    	@csrf
