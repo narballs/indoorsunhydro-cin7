@@ -15,10 +15,12 @@
     color: #FFFFFF;
     height: 95px;
 }
-.disable{
-    pointer-events:none;
-    background:grey;
+
+.disable {
+    pointer-events: none;
+    background: grey;
 }
+
 .cart-counter {
     background-color: #7BC533;
     width: 19px;
@@ -58,7 +60,7 @@
 
 .popover {
     *transform: translate(314px, 457px) !important;
-    max-width:350px !important;
+    max-width: 350px !important;
 }
 
 .popover-body {
@@ -70,16 +72,20 @@
     margin-left: 10px !important;
     z-index: 9999;
 }
-#pop .popover:has(.show)  {
+
+#pop .popover:has(.show) {
     background-color: black !important;
 }
-.bs-popover-top > .popover-arrow::after, .bs-popover-auto[data-popper-placement^=top] > .popover-arrow::after {
+
+.bs-popover-top>.popover-arrow::after,
+.bs-popover-auto[data-popper-placement^=top]>.popover-arrow::after {
     bottom: 1px;
     border-width: 0.5rem 0.5rem 0;
     border-top-color: #525252 !important;
 }
+
 .bs-popover-top {
-    width:  330px;
+    width: 330px;
     background: #525252 !important;
 }
 
@@ -1415,6 +1421,7 @@ body.swal2-toast-shown .swal2-container {
 .dropdown-menu-dark .dropdown-item:active {
     background-color: #7BC743 !important;
     color: #fff !important;
+    padding: 0px !important;
 }
 
 /*.dropdown-menu-dark:hover li {
@@ -1771,6 +1778,7 @@ input[type=number] {
     color: #FFFFFF !important;
     border: none;
 }
+
 .all-items {
     width: 118px !important;
     height: 34px !important;
