@@ -236,15 +236,36 @@ class UserController extends Controller
 
 
     public function invitation_signup(Request $request) {
+        //echo '<pre>';
+        //print_r($request->all()); exit;
+
+
         $validatedData = $request->validate([
                 'email' => 'email|unique:users,email',
                 'password' => 'required',
                 'confirm_password' => 'required|same:password'
             ]);
+
         $validatedData['password'] = bcrypt($validatedData['password']);
-        $user = User::create([
-               $validatedData
-        ]);
+        $contact = Contact::where('email', $request->email)->first();
+
+        // $user = User::create([
+        //    'email' => $request->email,
+        //    'password' =>  bcrypt($request->password),
+        //    'first_name' => $contact->firstName,
+        //    'last_name' => $contact->lastName
+        // ]);
+
+        $user = User::create(
+           $validatedData
+        );
+        
+        $contact->user_id = $user->id;
+        $contact->hashUsed = true;
+        $contact->save();
+
+        return redirect('/');
+
 
         return back()->with('success', 'User created successfully.');
     }
