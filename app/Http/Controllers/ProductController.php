@@ -114,13 +114,14 @@ class ProductController extends Controller
         //     $pricing = 'Retail';
         // }
 
-        $db_price_column = 'retailUSD';
+        //$db_price_column = 'retailUSD';
 
         if ($contact) {
             $pricing = $contact->priceColumn;
-            $db_price_column = lcfirst($pricing) . 'USD';
         }
-
+        else {
+            $pricing = 'RetailUSD';
+        }
         $lists = BuyList::where('user_id', $user_id)->get();
 
 
@@ -139,7 +140,7 @@ class ProductController extends Controller
             'lists',
             'childerens',
             'childeren_id',
-            'db_price_column'
+            'pricing'
         ));
     }
 
@@ -309,11 +310,11 @@ class ProductController extends Controller
             $contact = Contact::where('user_id', $user_id)->first();
         }
 
-        $db_price_column = 'retailUSD';
+        //$db_price_column = 'retailUSD';
 
         if ($contact) {
             $pricing = $contact->priceColumn;
-            $db_price_column = lcfirst($pricing) . 'USD';
+            // $db_price_column = lcfirst($pricing) . 'USD';
         } else {
             $pricing = 'Retail';
         }
@@ -333,8 +334,8 @@ class ProductController extends Controller
             'lists',
             'pricing',
             'childerens',
-            'childeren_id',
-            'db_price_column'
+            'childeren_id'
+            // 'db_price_column'
         ));
     }
 
@@ -399,28 +400,28 @@ class ProductController extends Controller
             $contact = Contact::where('user_id', $user_id)->first();
         }
 
-        // if ($contact) {
-        //     $pricing = $contact->priceColumn;
-        // } else {
-        //     $pricing = 'Retail';
-        // }
-
-        $db_price_column = 'retailUSD';
-
         if ($contact) {
             $pricing = $contact->priceColumn;
-            $db_price_column = lcfirst($pricing) . 'USD';
-        } 
-        else {
-            $pricing = 'Retail';
+        } else {
+            $pricing = 'RetailUSD';
         }
+
+        //$db_price_column = 'retailUSD';
+
+        // if ($contact) {
+        //     $pricing = $contact->priceColumn;
+        //     $db_price_column = lcfirst($pricing) . 'USD';
+        // } 
+        // else {
+        //     $pricing = 'Retail';
+        // }
 
         return view('product-detail', compact(
             'productOption', 
             'pname', 
             'pricing', 
             'location_inventories',
-            'db_price_column'
+            //'db_price_column'
         ));
     }
     public function showProductByCategory_slug($slug)
@@ -786,13 +787,10 @@ class ProductController extends Controller
 
         $search_queries = $request->all();
 
-        $db_price_column = 'retailUSD';
+        //$db_price_column = 'retailUSD';
           
 
-        // if ($contact) {
-        //     $pricing = $contact->priceColumn;
-        //     $db_price_column = lcfirst($pricing) . 'USD';
-        // }
+    
         $products_query  = Product::with('options', 'brand', 'categories');
 
         $selected_category_id = $request->get('selected_category');
@@ -955,11 +953,14 @@ class ProductController extends Controller
         if ($user_id != null) {
             $contact = Contact::where('user_id', $user_id)->first();
         }
-        $db_price_column = 'retailUSD';
+        //$db_price_column = 'retailUSD';
         if ($contact) {
             $pricing = $contact->priceColumn;
-        } 
-                return view('search_product.search_product', compact(
+        }
+        else {
+            $pricing = 'RetailUSD';
+        }
+        return view('search_product.search_product', compact(
             'products',
             'brands',
             'price_creteria',
@@ -971,7 +972,8 @@ class ProductController extends Controller
             'per_page',
             'searched_value',
             'lists',
-            'db_price_column'
+            'pricing'
+            //'db_price_column'
         ));
     }
 
