@@ -94,7 +94,7 @@
                      }} >All Items</option>
                </select>
             </div>
-            <input type="text" id="all-items" value="" />
+            <input type="hidden" id="all-items" value="" />
    </form>
    <div class="row">
       @foreach ($products as $key => $product)

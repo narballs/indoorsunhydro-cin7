@@ -35,49 +35,48 @@
                                 <div class="d-flex row">
 
                                     <?php 
-                                    $retail_price = !empty($productOption->defaultPrice->$db_price_column) ? $productOption->defaultPrice->$db_price_column : 0;
+                                    // $retail_price = !empty($productOption->defaultPrice->$db_price_column) ? $productOption->defaultPrice->$db_price_column : 0;
 
-                // foreach($productOption->price as $price)
-                //     {
-                //     switch ($pricing) {
-                //         case "Retail":
-                //             $retail_price = $price->retailUSD;
-                //             break;
-                //         case "Wholesale":
-                //             echo 'This is WholeSale';
-                //             $retail_price = $price->wholesaleUSD;
-                //             break;
-                //         case "TerraIntern":
-                //             $retail_price = $price->terraInternUSD;
-                //             break;
-                //         case "Sacramento":
-                //             $retail_price = $price->sacramentoUSD;
-                //             break;
-                //         case "Oklahoma":
-                //             $retail_price = $price->oklahomaUSD;
-                //             break;
-                //         case "Calaveras":
-                //             $retail_price = $price->calaverasUSD;
-                //         break;
-                //         case "Tier1":
-                //             $retail_price = $price->tier1USD;
-                //         break;
-                //         case "Tier2":
-                //             $retail_price = $price->tier2USD;
-                //         break;
-                //         case "Tier3":
-                //             $retail_price = $price->tier3USD;
-                //         break;
-                //         case "ComercialOk":
-                //             $retail_price = $price->commercialOKUSD;
-                //         break;
-                //         case "Cost":
-                //             $retail_price = $price->costUSD;
-                //             default:
-                //             $retail_price = $price->retailUSD;
-                //         break;
-                //         }
-                // }
+                foreach($productOption->price as $price)
+                    {
+                    switch ($pricing) {
+                        case "RetailUSD":
+                            $retail_price = $price->retailUSD;
+                            break;
+                        case "WholesaleUSD":
+                            $retail_price = $price->wholesaleUSD;
+                            break;
+                        case "TerraInternUSD":
+                            $retail_price = $price->terraInternUSD;
+                            break;
+                        case "SacramentoUSD":
+                            $retail_price = $price->sacramentoUSD;
+                            break;
+                        case "OklahomaUSD":
+                            $retail_price = $price->oklahomaUSD;
+                            break;
+                        case "CalaverasUSD":
+                            $retail_price = $price->calaverasUSD;
+                        break;
+                        case "Tier1USD":
+                            $retail_price = $price->tier1USD;
+                        break;
+                        case "Tier2USD":
+                            $retail_price = $price->tier2USD;
+                        break;
+                        case "Tier3USD":
+                            $retail_price = $price->tier3USD;
+                        break;
+                        case "ComercialOkUSD":
+                            $retail_price = $price->commercialOKUSD;
+                        break;
+                        case "CostUSD":
+                            $retail_price = $price->costUSD;
+                            default:
+                            $retail_price = $price->retailUSD;
+                        break;
+                        }
+                }
                 ?>
                                     <div class="product-detail-heading col-xl-12 col-lg-12 col-md-12 col-xs-12"
                                         id="product_name">

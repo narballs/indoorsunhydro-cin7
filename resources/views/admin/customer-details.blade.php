@@ -44,7 +44,7 @@
 							      	$pricing = $customer->priceColumn;
 							      
 							      	?>
-										<option class="form-group" value="Retail" {{ $pricing }} {{ isset($pricing) &&
+										<option class="form-group" value="RetailUSD" {{ $pricing }} {{ isset($pricing) &&
 											$pricing=='RetailUSD' ? 'selected="selected"' : '' }}>Retail</option>
 										<option class="form-group" value="WholesaleUSD" {{ $pricing }} {{ isset($pricing)
 											&& $pricing=='WholesaleUSD' ? 'selected="selected"' : '' }}>Wholesale</option>
