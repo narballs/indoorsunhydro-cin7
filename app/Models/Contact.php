@@ -23,10 +23,10 @@ class Contact extends Model
         'phone',
         'address1',
         'address2',
-        'city',
+        'city_id',
         'postCode',
         'delivery_city',
-        'state',
+        'state_id',
         'postalAddress1',
         'postalAddress2',
         'postalCity',
@@ -46,5 +46,15 @@ class Contact extends Model
     public function apiorders()
     {
         return $this->hasMany('App\Models\ApiOrder', 'contact_id', 'memberId');
+    }
+
+    public function states()
+    {
+        return $this->hasMany('App\Models\UsState', 'id', 'state_id');
+    }
+
+    public function cities()
+    {
+        return $this->hasMany('App\Models\UsCity', 'id', 'city_id');
     }
 }

@@ -1,12 +1,24 @@
 @include('partials.header')
 @include('partials.top-bar')
 @include('partials.search-bar')
+
+
 @if ($message = Session::get('message'))
 <div class="alert alert-danger alert-block">
 	<button type="button" class="close" data-dismiss="alert">×</button>
 	<strong>{{ $message }}</strong>
 </div>
 @endif
+<style>
+	select.form-control:not([size]):not([multiple]) {
+		height: calc(2.25rem + 2px);
+		width: 100%;
+		background-color: lightgray !important;
+		padding: 12px !important;
+		border-radius: 2px !important;
+		height: 49px;
+	}
+</style>
 <div class="container-fluid pl-0 pr-0">
 	<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 pl-0 pr-0">
 		<div class="row">
@@ -155,12 +167,12 @@
 						<div class="form-signup-secondary">
 							<div class="row col-md-12 user-info mt-3">
 								<div class="col-md-12 mt-5">
-									<input type="text" placeholder="&#xf1ad;   Company Name" id="company_name"
+									<input type="text" placeholder="&#xf1ad; Company Name" id="company_name"
 										name="company_name" class="form-control mt-2 company-info fontAwesome">
 									<div class="text-danger" id="company_name_errors"></div>
 								</div>
 								<div class="col-md-12 mt-3">
-									<input type="text" placeholder="&#xf0ac;  Company Website" id="company_website"
+									<input type="text" placeholder="&#xf0ac; Company Website" id="company_website"
 										name="company_website" class="form-control mt-2 company-info fontAwesome"
 										required width="520px">
 									<div class="text-danger" id="company_website_errors"></div>
@@ -254,14 +266,31 @@
 										<div class="text-danger" id="suit_apartment_errors"></div>
 									</div>
 									<div class="col-md-12 mt-3">
-										<input type="text" placeholder="&#xf5a0;  Town/City" name="town_city"
+										<select id="state-dd" placeholder="&#xf276;   State" name="state_id"
+											class="form-control mt-1 fontAwesome">
+											<option value="" class="form-control mt-2 company-info fontAwesome"
+												placeholder=" &#xf276;   State"> &#xf276; State</option>
+											@foreach ($states as $data)
+											<option value="{{$data->id}}">
+												{{$data->state_name}}
+											</option>
+											@endforeach
+										</select>
+										{{-- <input type="text" placeholder="&#xf5a0;  Town/City" name="town_city"
 											class="form-control mt-2 company-info fontAwesome" required>
-										<div class="text-danger" id="town_city_errors"></div>
+										<div class="text-danger" id="town_city_errors"></div> --}}
 									</div>
 									<div class="col-md-6 mt-3">
-										<input type="text" placeholder="&#xf276;   State" id="company_website"
+										<select id="city-dd" placeholder="&#xf5a0;  Town/City" name="city_id"
+											class="form-control mt-2 company-info fontAwesome"> &#xf5a0;
+											Town/City
+											<option value="" placeholder="&#xf5a0;  Town/City" name="town_city"
+												class="form-control mt-2 company-info fontAwesome"> &#xf5a0; Town/City
+											</option>
+										</select>
+										{{-- <input type="text" placeholder="&#xf276;   State" id="company_website"
 											name="state" class="form-control mt-1 fontAwesome" required>
-										<div class="text-danger" id="state_errors"></div>
+										<div class="text-danger" id="state_errors"></div> --}}
 									</div>
 									<div class="col-md-6 mt-3">
 										<input type="text" placeholder="&#xf041;  Zip" id="company_website" name="zip"
@@ -450,7 +479,6 @@
    				
    			},
 
-
        });
 
 	
@@ -460,7 +488,7 @@
 		$('#address-bold').css( 'font-weight', '700' );
 		var company_website = $('input[name=company_website]').val();
 		var company_name = $('input[name=company_name]').val();
-		var phone = $('input[name=phone').val();
+		var phone = $('input[name=phone]').val();
 		
 		jQuery.ajax({
 				method: 'post',
@@ -513,10 +541,7 @@
    					}
    				$('#company-info-error').html(error_text);
    			},
-		});
-
-	
-				
+		});		
 	}
 
 	function thankYou() {
@@ -525,10 +550,9 @@
 
 		var street_address = $('input[name=street_address]').val();
 		var suit_apartment = $('input[name=suit_apartment]').val();
-		var town_city_address = $('input[name=town_city').val();
-		var state = $('input[name=state').val();
-		var zip = $('input[name=zip').val();
-		
+		var state = $('#state-dd').val();
+		var town_city_address = $('#city-dd').val();
+		var zip = $('input[name=zip]').val();
 		jQuery.ajax({
 			method: 'post',
 	        url: "{{ url('/user-contact/') }}",
@@ -536,8 +560,8 @@
 	        	"_token": "{{ csrf_token() }}",
 	        	"street_address" : street_address,
 	        	"suit_apartment": suit_apartment,
-	        	"town_city": town_city_address,
-	        	"state": state,
+	        	"city_id": town_city_address,
+	        	"state_id": state,
 	        	"zip" : zip
 	    	},
 	    		success: function(response) {
@@ -605,5 +629,52 @@
    				},
 	    });
 	}
+</script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+	$(document).ready(function () {
+            $('#state-dd').on('change', function () {
+                var idState = this.value;
+                $("#city-dd").html('');
+                $.ajax({
+                    url: "{{url('api/fetch-cities')}}",
+                    type: "POST",
+                    data: {
+                        state_id: idState,
+                        _token: '{{csrf_token()}}'
+                    },
+                    dataType: 'json',
+                    success: function (result) {
+                        $('#city-dd').html('<option value="" placeholder="&#xf5a0;  Town/City" name="town_city"class="form-control mt-2 company-info fontAwesome"> &#xf5a0; Town/City</option>');
+                        $.each(result.cities, function (key, value) {
+                            $("#city-dd").append('<option value="' + value
+                                .id + '">' + value.city + '</option>');
+                        });
+                        // $('#zip-dd').html('<option value="">Select Zip</option>');
+                    }
+                });
+            });
+            // $('#city-dd').on('change', function () {
+            //     var idZip = this.value;
+            //     $("#zip-dd").html('');
+            //     $.ajax({
+            //         url: "{{url('api/fetch-zip')}}",
+            //         type: "POST",
+            //         data: {
+            //             city_id: ididZip,
+            //             _token: '{{csrf_token()}}'
+            //         },
+            //         dataType: 'json',
+            //         success: function (res) {
+            //             $('#zip-dd').html('<option value="">Select City</option>');
+            //             $.each(res.zip, function (key, value) {
+            //                 $("#zip-dd").append('<option value="' + value
+            //                     .id + '">' + value.name + '</option>');
+            //             });
+            //         }
+            //     });
+            // });
+        });
 
 </script>

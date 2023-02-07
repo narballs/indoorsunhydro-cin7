@@ -62,6 +62,7 @@ Route::get('/products/{id}/{slug}', [ProductController::class, 'showProductByCat
 Route::get('/products/', [ProductController::class, 'showAllProducts']);
 Route::get('/product-detail/{id}/{option_id}/{slug}', [ProductController::class, 'showProductDetail']);
 Route::get('/user/', [UserController::class, 'userRegistration'])->name('user');
+Route::post('api/fetch-cities', [UserController::class, 'fetchCity']);
 Route::post('/login/', [UserController::class, 'process_login'])->name('login');
 Route::post('/user-contact/', [UserController::class, 'save_contact'])->name('save_contact');
 Route::post('/update-contact/', [UserController::class, 'update_contact'])->name('update_contact');
