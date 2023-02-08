@@ -19,7 +19,7 @@
 								aria-expanded="false">
 								Products
 							</a>
-							<ul class="dropdown-menu l dropdown-menu-dark mt-0 pr-4 pl-4"
+							<ul class="dropdown-menu  dropdown-menu-dark mt-0 pr-4 pl-4"
 								aria-labelledby="navbarDarkDropdownMenuLink" style="width: 346px;">
 								<li><a class="link-dark dropdown-item text-decoration-none nav-link product-mega-menu"
 										href="{{url('products')}}" style="font-size: 12px !important"><b>All
@@ -40,12 +40,12 @@
 										style="background-color: none !important;">
 										@if($count > 10)
 										<ul class="dd-horizontal border p-0"
-											style="width:850px !important; background-color:white !important; margin:0px !important;">
+											style="width:900px !important; background-color:white !important; margin:0px !important;">
 											@else
 											<ul class="dd-horizontal pl-0 pr-0"
 												style="width:100% !important; background-color:white !imporatnt">
 												@endif
-												<div class="row pl-1 pt-0" style="width:100%">
+												<div class="row pl-3 pt-0" style="width:100%">
 													@foreach($category->children->sortBy('name') as $key=>$cat)
 													@if($cat->is_active == 1)
 													@if($count > 10)
