@@ -16,4 +16,9 @@ class UsCity extends Model
         'latitude',
         'lanoitude'
     ];
+
+    public function states()
+    {
+        return $this->hasMany('App\Models\UsState', 'id', 'state_id');
+    }
 }
