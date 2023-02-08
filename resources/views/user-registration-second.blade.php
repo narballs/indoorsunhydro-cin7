@@ -637,7 +637,7 @@
             $('#state-dd').on('change', function () {
 				$('#city-dd').on('change', function () {
 					var cityId = this.value;
-		
+					// alert(cityId);
 				});
                 var idState = this.value;
                 $("#city-dd").html('');
@@ -646,7 +646,7 @@
                     type: "POST",
                     data: {
                         state_id: idState,
-						cityID : cityId,
+						// city_id: cityId,
                         _token: '{{csrf_token()}}'
                     },
                     dataType: 'json',
