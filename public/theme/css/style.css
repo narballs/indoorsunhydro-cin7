@@ -1421,7 +1421,6 @@ body.swal2-toast-shown .swal2-container {
 .dropdown-menu-dark .dropdown-item:active {
     background-color: #7BC743 !important;
     color: #fff !important;
-    padding: 0px !important;
 }
 
 /*.dropdown-menu-dark:hover li {
