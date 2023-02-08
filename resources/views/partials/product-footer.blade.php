@@ -28,7 +28,7 @@
 				</p>
 				<p>
 					<a href=" https://www.yelp.com/biz/indoor-sun-hydro-sacramento-5?osq=indoorsun+hydro"
-						class="text-light" style="text-decoration: none">
+						class="text-light pra-footer" style="text-decoration: none">
 						<svg xmlns="http://www.w3.org/2000/svg" width="30" height="25" fill="currentColor"
 							class="bi bi-yelp" viewBox="0 0 16 16">
 							<path
