@@ -107,7 +107,7 @@ class ProductController extends Controller
         if ($user_id != null) {
             $contact = Contact::where('user_id', $user_id)->first();
         }
-
+        //dd($contact);
         // if ($contact) {
         //     $pricing = $contact->priceColumn;
         // } else {
@@ -117,11 +117,13 @@ class ProductController extends Controller
         //$db_price_column = 'retailUSD';
 
         if ($contact) {
+
             $pricing = $contact->priceColumn;
         }
         else {
             $pricing = 'RetailUSD';
         }
+
         $lists = BuyList::where('user_id', $user_id)->get();
 
 
@@ -318,7 +320,6 @@ class ProductController extends Controller
         } else {
             $pricing = 'Retail';
         }
-
         $category_id = $selected_category_id;
 
         return view('all_products', compact(
@@ -628,7 +629,6 @@ class ProductController extends Controller
         if ($user_id) {
             $contact = Contact::where('user_id', $user_id)->first();
             $contact_id = $contact->contact_id;
-
         }
         
         if ($contact_id) {
@@ -637,27 +637,27 @@ class ProductController extends Controller
         if (!empty($user_id) && !empty($contact_id)) {
             foreach ($productOption->products->options as $option) {
                 foreach ($option->price as $price) {
-                    if ($pricing == 'Retail') {
+                    if ($pricing == 'RetailUSD') {
                         $price = $price['retailUSD'];
-                    } else if ($pricing == 'Wholesale') {
+                    } else if ($pricing == 'WholesaleUSD') {
                         $price = $price['wholesaleUSD'];
-                    } else if ($pricing == 'TerraIntern') {
+                    } else if ($pricing == 'TerraInternUSD') {
                         $price = $price['terraInternUSD'];
-                    } else if ($pricing == 'Sacramento') {
+                    } else if ($pricing == 'SacramentoUSD') {
                         $price = $price['sacramentoUSD'];
-                    } else if ($pricing == 'Oklahoma') {
+                    } else if ($pricing == 'OklahomaUSD') {
                         $price = $price['oklahomaUSD'];
-                    } else if ($pricing == 'Calaveras') {
+                    } else if ($pricing == 'CalaverasUSD') {
                         $price = $price['calaverasUSD'];
-                    } else if ($pricing == 'Tier1') {
+                    } else if ($pricing == 'Tier1USD') {
                         $price = $price['tier1USD'];
-                    } else if ($pricing == 'Tier2') {
+                    } else if ($pricing == 'Tier2USD') {
                         $price = $price['tier2USD'];
-                    } else if ($pricing == 'Tier3') {
+                    } else if ($pricing == 'Tier3USD') {
                         $price = $price['tier3USD'];
-                    } else if ($pricing == 'ComercialOk') {
+                    } else if ($pricing == 'ComercialOkUSD') {
                         $price = $price['commercialOKUSD'];
-                    } else if ($pricing == 'Cost') {
+                    } else if ($pricing == 'CostUSD') {
                         $price = $price['costUSD'];
                     } else {
                         $price = $price['retailUSD'];
