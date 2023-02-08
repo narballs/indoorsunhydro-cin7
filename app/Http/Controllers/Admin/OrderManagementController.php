@@ -317,7 +317,6 @@ class OrderManagementController extends Controller
                 ],
             ];
         }
-        //var_export($currentOrder);exit;
         $order = [];
         $order = [
             [
