@@ -266,7 +266,7 @@
 										<div class="text-danger" id="suit_apartment_errors"></div>
 									</div>
 									<div class="col-md-12 mt-3">
-										<select id="state-dd" placeholder="&#xf276;   State" name="state_id"
+										<select id="state-dd" placeholder="&#xf276;   State" name="state"
 											class="form-control mt-1 fontAwesome">
 											<option value="" class="form-control mt-2 company-info fontAwesome"
 												placeholder=" &#xf276;   State"> &#xf276; State</option>
@@ -281,7 +281,7 @@
 										<div class="text-danger" id="town_city_errors"></div> --}}
 									</div>
 									<div class="col-md-6 mt-3">
-										<select id="city-dd" placeholder="&#xf5a0;  Town/City" name="city_id"
+										<select id="city-dd" placeholder="&#xf5a0;  Town/City" name="city"
 											class="form-control mt-2 company-info fontAwesome"> &#xf5a0;
 											Town/City
 											<option value="" placeholder="&#xf5a0;  Town/City" name="town_city"
@@ -635,6 +635,10 @@
 <script>
 	$(document).ready(function () {
             $('#state-dd').on('change', function () {
+				$('#city-dd').on('change', function () {
+					var cityId = this.value;
+		
+				});
                 var idState = this.value;
                 $("#city-dd").html('');
                 $.ajax({
@@ -642,6 +646,7 @@
                     type: "POST",
                     data: {
                         state_id: idState,
+						cityID : cityId,
                         _token: '{{csrf_token()}}'
                     },
                     dataType: 'json',

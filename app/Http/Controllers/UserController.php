@@ -235,31 +235,32 @@ class UserController extends Controller
     }
 
 
-    public function invitation_signup(Request $request) {
- 
+    public function invitation_signup(Request $request)
+    {
+
         $contact = Contact::where('email', $request->email)->first();
         $validatedData = $request->validate([
-                'email' => 'email|unique:users,email',
-                'password' => 'required|min:10',
-                'confirm_password' => 'required|same:password'
-            ]);
+            'email' => 'email|unique:users,email',
+            'password' => 'required|min:10',
+            'confirm_password' => 'required|same:password'
+        ]);
 
         // $validatedData['password'] = bcrypt($validatedData['password']);
         // $validateData['first_name'] = $contact->firstName;
         // $validateData['last_name'] = $contact->lastName;
-       
+
 
         $user = User::create([
-           'email' => $request->email,
-           'password' =>  bcrypt($request->password),
-           'first_name' => $contact->firstName,
-           'last_name' => $contact->lastName
+            'email' => $request->email,
+            'password' =>  bcrypt($request->password),
+            'first_name' => $contact->firstName,
+            'last_name' => $contact->lastName
         ]);
 
         // $user = User::create(
         //    $validatedData
         // );
-        
+
         $contact->user_id = $user->id;
         $contact->hashUsed = true;
         $contact->save();
@@ -322,12 +323,18 @@ class UserController extends Controller
             }
             $contact->save();
         } else {
+
+            $states = UsState::where('id', $request->state_id)->first();
+            $state_name = $states->state_name;
+            $cities = UsCity::where('id', $request->city_id)->first();
+            $city_name = $cities->city;
+
             $contact = Contact::where('user_id', $user_id)->first()->update(
                 [
                     'postalAddress1' => $request->input('street_address'),
                     // 'postalAddress2' => $request->input('suit_apartment'),
-                    'state_id' => $request->input('state_id'),
-                    'city_id' => $request->input('city_id'),
+                    'postalState' => $state_name,
+                    'postalCity' => $city_name,
                     'postalPostCode' => $request->input('zip')
                 ]
             );
