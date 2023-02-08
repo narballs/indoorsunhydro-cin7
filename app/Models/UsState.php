@@ -12,4 +12,9 @@ class UsState extends Model
         'state_code',
         'state_name',
     ];
+
+    public function city()
+    {
+        return $this->hasMany('App\Models\UsCity', 'state_id', 'id');
+    }
 }
