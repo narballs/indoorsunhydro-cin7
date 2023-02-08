@@ -159,7 +159,6 @@ class OrderController extends Controller
             $order->status = 'DRAFT';
             $order->stage = null;
             $order->paymentTerms = $paymentMethod;
-
             $order->save();
 
             $order_id =  $order->id;
