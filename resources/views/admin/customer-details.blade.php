@@ -44,28 +44,33 @@
 							      	$pricing = $customer->priceColumn;
 							      
 							      	?>
-										<option class="form-group" value="RetailUSD" {{ $pricing }} {{ isset($pricing) &&
-											$pricing=='RetailUSD' ? 'selected="selected"' : '' }}>Retail</option>
-										<option class="form-group" value="WholesaleUSD" {{ $pricing }} {{ isset($pricing)
-											&& $pricing=='WholesaleUSD' ? 'selected="selected"' : '' }}>Wholesale</option>
-										<option class="form-group" value="TerraInternUSD" {{ $pricing }} {{ isset($pricing)
-											&& $pricing=='TerraInternUSD' ? 'selected="selected"' : '' }}>TerraIntern
+										<option class="form-group" value="RetailUSD" {{ $pricing }} {{ isset($pricing)
+											&& $pricing=='RetailUSD' ? 'selected="selected"' : '' }}>Retail</option>
+										<option class="form-group" value="WholesaleUSD" {{ $pricing }} {{
+											isset($pricing) && $pricing=='WholesaleUSD' ? 'selected="selected"' : '' }}>
+											Wholesale</option>
+										<option class="form-group" value="TerraInternUSD" {{ $pricing }} {{
+											isset($pricing) && $pricing=='TerraInternUSD' ? 'selected="selected"' : ''
+											}}>TerraIntern
 										</option>
-										<option class="form-group" value="SacramentoUSD" {{ $pricing }} {{ isset($pricing)
-											&& $pricing=='SacramentoUSD' ? 'selected="selected"' : '' }}>Sacramento
+										<option class="form-group" value="SacramentoUSD" {{ $pricing }} {{
+											isset($pricing) && $pricing=='SacramentoUSD' ? 'selected="selected"' : ''
+											}}>Sacramento
 										</option>
-										<option class="form-group" value="OklahomaUSD" {{ $pricing }} {{ isset($pricing) &&
-											$pricing=='OklahomaUSD' ? 'selected="selected"' : '' }}>Oklahoma</option>
-										<option class="form-group" value="CalaverasUSD" {{ $pricing }} {{ isset($pricing)
-											&& $pricing=='CalaverasUSD' ? 'selected="selected"' : '' }}>Calaveras</option>
+										<option class="form-group" value="OklahomaUSD" {{ $pricing }} {{ isset($pricing)
+											&& $pricing=='OklahomaUSD' ? 'selected="selected"' : '' }}>Oklahoma</option>
+										<option class="form-group" value="CalaverasUSD" {{ $pricing }} {{
+											isset($pricing) && $pricing=='CalaverasUSD' ? 'selected="selected"' : '' }}>
+											Calaveras</option>
 										<option class="form-group" value="Tier1USD" {{ $pricing }} {{ isset($pricing) &&
 											$pricing=='Tier1USD' ? 'selected="selected"' : '' }}>Tier1</option>
 										<option class="form-group" value="Tier2USD" {{ $pricing }} {{ isset($pricing) &&
 											$pricing=='Tier2USD' ? 'selected="selected"' : '' }}>Tier2</option>
 										<option class="form-group" value="Tier3USD" {{ $pricing }} {{ isset($pricing) &&
 											$pricing=='Tier3USD' ? 'selected="selected"' : '' }}>Tier3</option>
-										<option class="form-group" value="CommercialOKUSD" {{ $pricing }} {{ isset($pricing)
-											&& $pricing=='CommercialOKUSD' ? 'selected="selected"' : '' }}>CommercialOK
+										<option class="form-group" value="CommercialOKUSD" {{ $pricing }} {{
+											isset($pricing) && $pricing=='CommercialOKUSD' ? 'selected="selected"' : ''
+											}}>CommercialOK
 										</option>
 										<option class="form-group" value="CostUSD" {{ $pricing }} {{ isset($pricing) &&
 											$pricing=='CostUSD' ? 'selected="selected"' : '' }}>Cost</option>
@@ -89,44 +94,56 @@
 		              			}
 		              		?>
 								@if($customer->status != 1)
-							
-									<div class="col-md-2"><button class="btn btn-primary" type="button"
-											onclick="updateContact()">Activate</button>
-									</div>
-									@else
-									<div>
-										<span class="badge bg-success">{{$status}}</span>
-									</div>
+
+								<div class="col-md-2"><button class="btn btn-primary" type="button"
+										onclick="updateContact()">Activate</button>
+								</div>
+								@else
+								<div>
+									<span class="badge bg-success">{{$status}}</span>
+								</div>
 								@endif
 								@if($customer->user == '' && $customer->hashKey == '')
-									<div class="col-md-2"><button class="btn btn-primary btn-sm" type="button"
-											onclick="mergeContact()">Invite</button>
-									</div>
-									@elseif ($customer->hashKey != '' && $customer->hashUsed == 0 )
-									<div>
-										<span class="badge bg-warning" style="margin-left: 12px!important;">Invitation Sent</span>
-									</div>
-									@else
-									<div>
-										<span class="badge bg-success"
-										style="margin-left: 12px!important;">Merged</span>
-									</div>
+								<div class="col-md-2"><button class="btn btn-primary btn-sm" type="button"
+										onclick="mergeContact()">Invite</button>
+								</div>
+								@elseif ($customer->hashKey != '' && $customer->hashUsed == 0 )
+								<div>
+									<span class="badge bg-warning" style="margin-left: 12px!important;">Invitation
+										Sent</span>
+								</div>
+								@else
+								<div>
+									<span class="badge bg-success" style="margin-left: 12px!important;">Merged</span>
+								</div>
 								@endif
 
-								
+
 								<div class="spinner-border d-none" role="status" style="left: 50% !important;
     margin-left: -25em !important;" id="spinner">
 									<span class="sr-only">Activating...</span>
 								</div>
 								<div class="col-md-12">
-									<b>Company:</b> {{$customer->company}}
+									<div class="row">
+										<div class="col-md-4">
+											<b>Company:</b> {{$customer->company}}
+										</div>
+										<div class="col-md-6">
+											@if (!$customer->contact_id)
+											<b>Cin7 ID:</b> <span class="badge bg-info">empty</span>
+											@else
+											<b>Cin7 ID:</b> {{$customer->contact_id}}
+											@endif
+										</div>
+									</div>
 								</div>
 								<div class="col-md-12 mt-2">
 									<b>Website:</b> {{$customer->website}}
 								</div>
 								<div class="col-md-12 mt-2">
 									{{$customer->email}}
-									<input type="hidden" name="customer_email" id="customer_email" value="{{$customer->email}}">
+									<input type="hidden" name="customer_email" id="customer_email"
+										value="{{$customer->email}}">
 								</div>
 								<div class="col-md-12 mt-2">
 									{{$customer->phone}}
