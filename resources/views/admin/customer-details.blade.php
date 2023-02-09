@@ -6,14 +6,11 @@
 @section('content')
 <div class="container-fluid">
 	<div class="container">
-		<!-- Title -->
 		<div class="d-flex justify-content-between align-items-center py-3">
 			<h2 class="h5 mb-0"><a href="#" class="text-muted"></a> Customer Details</h2>
 		</div>
-		<!-- Main content -->
 		<div class="row">
 			<div class="col-lg-8">
-				<!-- Details -->
 				<div class="card mb-4">
 					<div class="card-body">
 						<div class="row mb-5">
