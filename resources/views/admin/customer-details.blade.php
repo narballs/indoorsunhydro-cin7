@@ -109,8 +109,8 @@
 										<span class="badge bg-success">{{$status}}</span>
 									</div>
 									@endif
-									@if($customer->user == '' && $customer->hashKey == '')
-									<<<<<<< HEAD <div class="col-md-2"><button class="btn btn-primary btn-sm"
+								@if($customer->user == '' && $customer->hashKey == '')
+									<div class="col-md-2"><button class="btn btn-primary btn-sm"
 											type="button" onclick="mergeContact()">Invite</button>
 								</div>
 								@elseif ($customer->hashKey != '' && $customer->hashUsed == 0 )
@@ -122,12 +122,12 @@
 								<div>
 									<span class="badge bg-success" style="margin-left: 12px!important;">Merged</span>
 								</div>
-								@endif
-								=======
+								
+								
 								<div class="col-md-2"><button class="btn btn-primary btn-sm" type="button"
 										onclick="mergeContact('email')">Invite</button>
 								</div>
-								@elseif ($customer->hashKey != '' && $customer->hashUsed == 0 )
+								@if ($customer->hashKey != '' && $customer->hashUsed == 0 )
 								<div>
 									<span class="badge bg-warning" style="margin-left: 12px!important;">Invitation
 										Sent</span>
@@ -137,6 +137,7 @@
 								<div>
 									<span class="badge bg-success" style="margin-left: 12px!important;">Merged</span>
 								</div>
+								@endif
 								@endif
 								@if($invitation_url != '')
 								<div class="col-md-12 d-flex">
@@ -148,7 +149,7 @@
 
 								</div>
 								@endif
-								>>>>>>> 88c08dbf197c5db9e16c4dfe6be46c3ca01f7430
+								
 								<div class="spinner-border d-none" role="status" style="left: 50% !important;
     margin-left: -25em !important;" id="spinner">
 									<span class="sr-only">Activating...</span>
