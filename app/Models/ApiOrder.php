@@ -27,7 +27,10 @@ class ApiOrder extends Model
         'currencySymbol',
         'status',
         'stage',
-        'paymentTerms'
+        'paymentTerms',
+        'date',
+        'po_number',
+        'memo'
     ];
     public function contact()
     {
@@ -53,7 +56,7 @@ class ApiOrder extends Model
         return $this->hasMany('App\Models\ApiOrderItem', 'order_id', 'id');
     }
 
-   public function user()
+    public function user()
     {
         return $this->belongsTo('App\Models\User', 'user_id', 'id');
     }
