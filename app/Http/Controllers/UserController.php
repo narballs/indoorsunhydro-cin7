@@ -264,7 +264,7 @@ class UserController extends Controller
         $contact->user_id = $user->id;
         $contact->hashUsed = true;
         $contact->save();
-
+        Auth::loginUsingId($user->id);
         return redirect('/');
 
 
