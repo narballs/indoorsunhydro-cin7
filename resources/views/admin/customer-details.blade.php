@@ -6,82 +6,92 @@
 @section('content')
 
 <div class="container-fluid">
-	<div>
-		<!-- Title -->
-		<div class="d-flex justify-content-between align-items-center py-3">
-			<h2 class="h5 mb-0"><a href="#" class="text-muted"></a> Customer Details</h2>
-		</div>
-		<!-- Main content -->
-		<div class="row">
-			<div class="col-lg-8">
-				<!-- Details -->
-				<div class="card mb-4">
-					<div class="card-body">
-						<div class="row mb-5">
-							<input type="hidden" name="customer_id" id="customer_id" value="{{$customer->id}}">
-							<input type="hidden" name="contact_id" id="contact_id" value="{{$customer->contact_id}}">
-							<div class="row">
-								<div class="text-muted col-md-4">
-									<h5>{{$customer->firstName}} {{$customer->lastName}}
-										@if ($customer->status == 1)
-										<span class="fa fa-edit" onclick="updatePriceColumn(0)"></span>
-										@endif
-									</h5>
-									<div id="first-last-name" class="d-none">
-										<div><input type="text" name="first_name" value="{{$customer->firstName}}">
-										</div>
-										<div class="mt-3"><input type="text" name="last_name"
-												value="{{$customer->lastName}}"></div>
-										<div class="mt-3">
-											<button type="button" value="update"
-												onclick="updatePriceColumn(3)">Update</button>
+	<div class="container">
+		<div>
+			<!-- Title -->
+			<div class="d-flex justify-content-between align-items-center py-3">
+				<h2 class="h5 mb-0"><a href="#" class="text-muted"></a> Customer Details</h2>
+			</div>
+			<div class="row">
+				<div class="col-lg-8">
+					<div class="card mb-4">
+						<div class="card-body">
+							<div class="row mb-5">
+								<input type="hidden" name="customer_id" id="customer_id" value="{{$customer->id}}">
+								<input type="hidden" name="contact_id" id="contact_id"
+									value="{{$customer->contact_id}}">
+								<div class="row">
+									<div class="text-muted col-md-4">
+										<h5>{{$customer->firstName}} {{$customer->lastName}}
+											@if ($customer->status == 1)
+											<span class="fa fa-edit" onclick="updatePriceColumn(0)"></span>
+											@endif
+										</h5>
+										<div id="first-last-name" class="d-none">
+											<div><input type="text" name="first_name" value="{{$customer->firstName}}">
+											</div>
+											<div class="mt-3"><input type="text" name="last_name"
+													value="{{$customer->lastName}}"></div>
+											<div class="mt-3">
+												<button type="button" value="update"
+													onclick="updatePriceColumn(3)">Update</button>
+											</div>
 										</div>
 									</div>
-								</div>
-								@if ($customer->status == 1)
-								<div class="col-md-4"><b>Pricing:</b>
-									<select onchange="updatePriceColumn(4)" class="pricingColumn">
-										<?php 
+									@if ($customer->status == 1)
+									<div class="col-md-4"><b>Pricing:</b>
+										<select onchange="updatePriceColumn(4)" class="pricingColumn">
+											<?php 
 							      	$pricing = $customer->priceColumn;
 							      
 							      	?>
-										<option class="form-group" value="RetailUSD" {{ $pricing }} {{ isset($pricing) &&
-											$pricing=='RetailUSD' ? 'selected="selected"' : '' }}>Retail</option>
-										<option class="form-group" value="WholesaleUSD" {{ $pricing }} {{ isset($pricing)
-											&& $pricing=='WholesaleUSD' ? 'selected="selected"' : '' }}>Wholesale</option>
-										<option class="form-group" value="TerraInternUSD" {{ $pricing }} {{ isset($pricing)
-											&& $pricing=='TerraInternUSD' ? 'selected="selected"' : '' }}>TerraIntern
-										</option>
-										<option class="form-group" value="SacramentoUSD" {{ $pricing }} {{ isset($pricing)
-											&& $pricing=='SacramentoUSD' ? 'selected="selected"' : '' }}>Sacramento
-										</option>
-										<option class="form-group" value="OklahomaUSD" {{ $pricing }} {{ isset($pricing) &&
-											$pricing=='OklahomaUSD' ? 'selected="selected"' : '' }}>Oklahoma</option>
-										<option class="form-group" value="CalaverasUSD" {{ $pricing }} {{ isset($pricing)
-											&& $pricing=='CalaverasUSD' ? 'selected="selected"' : '' }}>Calaveras</option>
-										<option class="form-group" value="Tier1USD" {{ $pricing }} {{ isset($pricing) &&
-											$pricing=='Tier1USD' ? 'selected="selected"' : '' }}>Tier1</option>
-										<option class="form-group" value="Tier2USD" {{ $pricing }} {{ isset($pricing) &&
-											$pricing=='Tier2USD' ? 'selected="selected"' : '' }}>Tier2</option>
-										<option class="form-group" value="Tier3USD" {{ $pricing }} {{ isset($pricing) &&
-											$pricing=='Tier3USD' ? 'selected="selected"' : '' }}>Tier3</option>
-										<option class="form-group" value="CommercialOKUSD" {{ $pricing }} {{ isset($pricing)
-											&& $pricing=='CommercialOKUSD' ? 'selected="selected"' : '' }}>CommercialOK
-										</option>
-										<option class="form-group" value="CostUSD" {{ $pricing }} {{ isset($pricing) &&
-											$pricing=='CostUSD' ? 'selected="selected"' : '' }}>Cost</option>
+											<option class="form-group" value="RetailUSD" {{ $pricing }} {{
+												isset($pricing) && $pricing=='RetailUSD' ? 'selected="selected"' : ''
+												}}>Retail</option>
+											<option class="form-group" value="WholesaleUSD" {{ $pricing }} {{
+												isset($pricing) && $pricing=='WholesaleUSD' ? 'selected="selected"' : ''
+												}}>Wholesale</option>
+											<option class="form-group" value="TerraInternUSD" {{ $pricing }} {{
+												isset($pricing) && $pricing=='TerraInternUSD' ? 'selected="selected"'
+												: '' }}>TerraIntern
+											</option>
+											<option class="form-group" value="SacramentoUSD" {{ $pricing }} {{
+												isset($pricing) && $pricing=='SacramentoUSD' ? 'selected="selected"'
+												: '' }}>Sacramento
+											</option>
+											<option class="form-group" value="OklahomaUSD" {{ $pricing }} {{
+												isset($pricing) && $pricing=='OklahomaUSD' ? 'selected="selected"' : ''
+												}}>Oklahoma</option>
+											<option class="form-group" value="CalaverasUSD" {{ $pricing }} {{
+												isset($pricing) && $pricing=='CalaverasUSD' ? 'selected="selected"' : ''
+												}}>Calaveras</option>
+											<option class="form-group" value="Tier1USD" {{ $pricing }} {{
+												isset($pricing) && $pricing=='Tier1USD' ? 'selected="selected"' : '' }}>
+												Tier1</option>
+											<option class="form-group" value="Tier2USD" {{ $pricing }} {{
+												isset($pricing) && $pricing=='Tier2USD' ? 'selected="selected"' : '' }}>
+												Tier2</option>
+											<option class="form-group" value="Tier3USD" {{ $pricing }} {{
+												isset($pricing) && $pricing=='Tier3USD' ? 'selected="selected"' : '' }}>
+												Tier3</option>
+											<option class="form-group" value="CommercialOKUSD" {{ $pricing }} {{
+												isset($pricing) && $pricing=='CommercialOKUSD' ? 'selected="selected"'
+												: '' }}>CommercialOK
+											</option>
+											<option class="form-group" value="CostUSD" {{ $pricing }} {{ isset($pricing)
+												&& $pricing=='CostUSD' ? 'selected="selected"' : '' }}>Cost</option>
 
 
-									</select>
+										</select>
 
-									<div class="spinner-border d-none" role="status"
-										style="left: 50% !important;margin-left: -25em !important;" id="spinner2">
-										<span class="sr-only">Activating...</span>
+										<div class="spinner-border d-none" role="status"
+											style="left: 50% !important;margin-left: -25em !important;" id="spinner2">
+											<span class="sr-only">Activating...</span>
+										</div>
 									</div>
-								</div>
-								@endif
+									@endif
 
-								<?php 
+									<?php 
 		              			if ($customer->status == 1) {
 		              				$status = 'Active';
 		              			}
@@ -89,8 +99,8 @@
 		              				$status = 'Inactive';
 		              			}
 		              		?>
-								@if($customer->status != 1)
-							
+									@if($customer->status != 1)
+
 									<div class="col-md-2"><button class="btn btn-primary" type="button"
 											onclick="updateContact()">Activate</button>
 									</div>
@@ -98,31 +108,47 @@
 									<div>
 										<span class="badge bg-success">{{$status}}</span>
 									</div>
+									@endif
+									@if($customer->user == '' && $customer->hashKey == '')
+									<<<<<<< HEAD <div class="col-md-2"><button class="btn btn-primary btn-sm"
+											type="button" onclick="mergeContact()">Invite</button>
+								</div>
+								@elseif ($customer->hashKey != '' && $customer->hashUsed == 0 )
+								<div>
+									<span class="badge bg-warning" style="margin-left: 12px!important;">Invitation
+										Sent</span>
+								</div>
+								@else
+								<div>
+									<span class="badge bg-success" style="margin-left: 12px!important;">Merged</span>
+								</div>
 								@endif
-								@if($customer->user == '' && $customer->hashKey == '')
-									<div class="col-md-2"><button class="btn btn-primary btn-sm" type="button"
-											onclick="mergeContact('email')">Invite</button>
-									</div>
-									@elseif ($customer->hashKey != '' && $customer->hashUsed == 0 )
-									<div>
-										<span class="badge bg-warning" style="margin-left: 12px!important;">Invitation Sent</span>
+								=======
+								<div class="col-md-2"><button class="btn btn-primary btn-sm" type="button"
+										onclick="mergeContact('email')">Invite</button>
+								</div>
+								@elseif ($customer->hashKey != '' && $customer->hashUsed == 0 )
+								<div>
+									<span class="badge bg-warning" style="margin-left: 12px!important;">Invitation
+										Sent</span>
 
-									</div>
-									@else
-									<div>
-										<span class="badge bg-success"
-										style="margin-left: 12px!important;">Merged</span>
-									</div>
-								  @endif
-								  @if($invitation_url != '')
-									  <div class="col-md-12 d-flex">
-									  	<b>Invitation Link :</b>
-									  	<span id="copyText1">{{$invitation_url}}  <button type="button" class="btn btn-info btn-sm" onclick="withJquery();">
-	                                       		copy link
-	                                       </button></span>
-	                                     
-								  </div>
-								  @endif
+								</div>
+								@else
+								<div>
+									<span class="badge bg-success" style="margin-left: 12px!important;">Merged</span>
+								</div>
+								@endif
+								@if($invitation_url != '')
+								<div class="col-md-12 d-flex">
+									<b>Invitation Link :</b>
+									<span id="copyText1">{{$invitation_url}} <button type="button"
+											class="btn btn-info btn-sm" onclick="withJquery();">
+											copy link
+										</button></span>
+
+								</div>
+								@endif
+								>>>>>>> 88c08dbf197c5db9e16c4dfe6be46c3ca01f7430
 								<div class="spinner-border d-none" role="status" style="left: 50% !important;
     margin-left: -25em !important;" id="spinner">
 									<span class="sr-only">Activating...</span>
@@ -135,7 +161,8 @@
 								</div>
 								<div class="col-md-12 mt-2">
 									{{$customer->email}}
-									<input type="hidden" name="customer_email" id="customer_email" value="{{$customer->email}}">
+									<input type="hidden" name="customer_email" id="customer_email"
+										value="{{$customer->email}}">
 								</div>
 								<div class="col-md-12 mt-2">
 									{{$customer->phone}}
