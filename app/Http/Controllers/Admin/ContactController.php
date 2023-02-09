@@ -147,6 +147,9 @@ class ContactController extends Controller
             $invitation_url = URL::to("/");
             $invitation_url = $invitation_url.'/customer/invitation/'.$customer->hashKey;
         }
+        else {
+            $invitation_url = '';
+        }
         return view('admin/customer-details', compact('customer', 'statuses', 'customer_orders', 'invitation_url'));
     }
 
