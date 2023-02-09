@@ -91,7 +91,7 @@ class SyncSuppliers extends Command
                     $contact->phone = $api_contact->phone;
                     $contact->address1 = $api_contact->address1;
                     $contact->address1 = $api_contact->address2;
-                    $contact->state_id = $api_contact->state;
+                    $contact->state = $api_contact->state;
                     $contact->postCode = $api_contact->postCode;
                     $contact->postalAddress1 = $api_contact->postalAddress1;
                     $contact->postalAddress2 = $api_contact->postalAddress2;
@@ -118,7 +118,7 @@ class SyncSuppliers extends Command
                         'phone' => $api_contact->phone,
                         'address1' => $api_contact->address1,
                         'address1' => $api_contact->address2,
-                        'state_id' => $api_contact->state,
+                        'state' => $api_contact->state,
                         'postCode' => $api_contact->postCode,
                         'postalAddress1' => $api_contact->postalAddress1,
                         'postalAddress2' => $api_contact->postalAddress2,
