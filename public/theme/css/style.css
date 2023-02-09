@@ -4470,6 +4470,17 @@ select.list-dt:focus {
     margin-left: 6px;
 }
 
+.thank-you-page-select-date-options {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 21px;
+    color: #000000;
+    padding-top: 46px;
+    margin-left: 6px;
+}
+
 .thank-you-page-product-items-payment-method-cart {
     font-family: 'Roboto' !important;
     font-style: normal !important;

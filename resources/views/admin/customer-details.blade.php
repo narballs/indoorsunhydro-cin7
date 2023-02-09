@@ -5,14 +5,14 @@
 @stop
 @section('content')
 <div class="container-fluid">
-	<div class="container">
+	<div class="">
 		<!-- Title -->
 		<div class="d-flex justify-content-between align-items-center py-3">
 			<h2 class="h5 mb-0"><a href="#" class="text-muted"></a> Customer Details</h2>
 		</div>
 		<!-- Main content -->
 		<div class="row">
-			<div class="col-lg-8">
+			<div class="col-lg-9">
 				<!-- Details -->
 				<div class="card mb-4">
 					<div class="card-body">
@@ -94,7 +94,6 @@
 		              			}
 		              		?>
 								@if($customer->status != 1)
-
 								<div class="col-md-2"><button class="btn btn-primary" type="button"
 										onclick="updateContact()">Activate</button>
 								</div>
@@ -117,12 +116,18 @@
 									<span class="badge bg-success" style="margin-left: 12px!important;">Merged</span>
 								</div>
 								@endif
-
-
 								<div class="spinner-border d-none" role="status" style="left: 50% !important;
     margin-left: -25em !important;" id="spinner">
 									<span class="sr-only">Activating...</span>
 								</div>
+								@if ($invitation_url != '')
+								<div class="col-md-12">
+									<b>Invitation url :</b><span id="copyText1">{{$invitation_url}}</span>
+									<button type="button" class="btn btn-info btn-sm" onclick="withJquery();">Copy
+										Link</button>
+								</div>
+								@endif
+
 								<div class="col-md-12">
 									<div class="row">
 										<div class="col-md-4">
@@ -234,7 +239,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-lg-4">
+			<div class="col-lg-3">
 				<!-- Customer Notes -->
 				<div class="card mb-4">
 					<div class="card-body">
@@ -402,5 +407,14 @@
     		});
 
     }
+	function withJquery(){
+		console.time('time1');
+		var temp = $("<input>");
+		$("body").append(temp);
+		temp.val($('#copyText1').text()).select();
+		document.execCommand("copy");
+		temp.remove();
+		console.timeEnd('time1');
+ }
 </script>
 @stop

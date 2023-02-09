@@ -402,6 +402,22 @@
                         </div>
                         @endforeach
                 </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <p class="thank-you-page-select-date-options">Please Select Date</p>
+                        <input type="date" name="date" class="form-control " id="date">
+                    </div>
+                    <div class="col-md-12">
+                        <p class="thank-you-page-select-date-options">PO Number</p>
+                        <input type="text" name="po_number" placeholder="&#xf095; PO Number" id="po_number"
+                            class="form-control fontAwesome">
+                    </div>
+                    <div class="col-md-12">
+                        <p class="thank-you-page-select-date-options">Memo</p>
+                        <input type="text" name="memo" placeholder="&#xf095; Memo" id="memo"
+                            class="form-control fontAwesome">
+                    </div>
+                </div>
             </div>
             <div class="row">
                 <div class="col-md-12 mt-3 py-3" style="background: #F7F7F7; border-radius: 5px;">
@@ -1507,7 +1523,6 @@ $(".next").click(function(){
         step: function(now) {
             // for making fielset appear animation
             opacity = 1 - now;
-
             current_fs.css({
                 'display': 'none',
                 'position': 'relative'
