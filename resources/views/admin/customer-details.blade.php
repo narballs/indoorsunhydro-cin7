@@ -117,8 +117,6 @@
 									<span class="badge bg-success" style="margin-left: 12px!important;">Merged</span>
 								</div>
 								@endif
-
-
 								<div class="spinner-border d-none" role="status" style="left: 50% !important;
     margin-left: -25em !important;" id="spinner">
 									<span class="sr-only">Activating...</span>
