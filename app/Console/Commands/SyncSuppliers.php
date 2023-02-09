@@ -57,14 +57,14 @@ class SyncSuppliers extends Command
                 'https://api.cin7.com/api/v1/Contacts/?page=' . $i,
                 //'https://api.cin7.com/api/v1/Contacts/9888', 
                 [
-                    // 'auth' => [
-                    //     'IndoorSunHydroUS', 
-                    //     'faada8a7a5ef4f90abaabb63e078b5c1'
-                    // ]
-                     'auth' => [
-                       'IndoorSunHydro2US',
-                            '625ab949593e4cd4908b9f42758009f5'
+                    'auth' => [
+                        'IndoorSunHydroUS', 
+                        'faada8a7a5ef4f90abaabb63e078b5c1'
                     ]
+                    //  'auth' => [
+                    //    'IndoorSunHydro2US',
+                    //         '625ab949593e4cd4908b9f42758009f5'
+                    // ]
                 ]
             );
 
@@ -91,7 +91,7 @@ class SyncSuppliers extends Command
                     $contact->phone = $api_contact->phone;
                     $contact->address1 = $api_contact->address1;
                     $contact->address1 = $api_contact->address2;
-                    $contact->state_id = $api_contact->state;
+                    $contact->state = $api_contact->state;
                     $contact->postCode = $api_contact->postCode;
                     $contact->postalAddress1 = $api_contact->postalAddress1;
                     $contact->postalAddress2 = $api_contact->postalAddress2;
@@ -118,7 +118,7 @@ class SyncSuppliers extends Command
                         'phone' => $api_contact->phone,
                         'address1' => $api_contact->address1,
                         'address1' => $api_contact->address2,
-                        'state_id' => $api_contact->state,
+                        'state' => $api_contact->state,
                         'postCode' => $api_contact->postCode,
                         'postalAddress1' => $api_contact->postalAddress1,
                         'postalAddress2' => $api_contact->postalAddress2,
