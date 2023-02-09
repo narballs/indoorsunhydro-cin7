@@ -139,13 +139,15 @@ class ContactController extends Controller
 
     public function show_customer($id)
     {
-
         $customer = Contact::where('id', $id)->first();
 
         $customer_orders =  ApiOrder::where('user_id', $customer->user_id)->with(['createdby', 'processedby'])->limit('5')->get();
         $statuses = OrderStatus::all();
-        // dd($customer_orders);
-        return view('admin/customer-details', compact('customer', 'statuses', 'customer_orders'));
+        if ($customer->hashKey && $customer->hashUsed == false ) {
+            $invitation_url = URL::to("/");
+            $invitation_url = $invitation_url.'/customer/invitation/'.$customer->hashKey;
+        }
+        return view('admin/customer-details', compact('customer', 'statuses', 'customer_orders', 'invitation_url'));
     }
 
     public function activate_customer(Request $request)
@@ -316,7 +318,8 @@ class ContactController extends Controller
             );
         return response()->json([
             'msg' => 'success',
-            'status' => 200
+            'status' => 200,
+            'link' => $url
 
         ]);
     }

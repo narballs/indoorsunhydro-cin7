@@ -4,6 +4,7 @@
 <h1>Dashboard</h1>
 @stop
 @section('content')
+
 <div class="container-fluid">
 	<div class="container">
 		<!-- Title -->
@@ -104,6 +105,22 @@
 								</div>
 								@endif
 								@if($customer->user == '' && $customer->hashKey == '')
+									<div class="col-md-2"><button class="btn btn-primary btn-sm" type="button"
+											onclick="mergeContact('email')">Invite</button>
+									</div>
+									@elseif ($customer->hashKey != '' && $customer->hashUsed == 0 )
+									<div>
+										<span class="badge bg-warning" style="margin-left: 12px!important;">Invitation Sent</span>
+									</div>
+									<div class="col-md-10">
+										<span id="copyText1">{{$invitation_url}}</span>
+                                       <button type="button" class="btn btn-info btn-sm mt-2" onclick="withJquery();">Copy Link</button>
+									</div>
+									@else
+									<div>
+										<span class="badge bg-success"
+										style="margin-left: 12px!important;">Merged</span>
+									</div>
 								<div class="col-md-2"><button class="btn btn-primary btn-sm" type="button"
 										onclick="mergeContact()">Invite</button>
 								</div>
@@ -117,6 +134,8 @@
 									<span class="badge bg-success" style="margin-left: 12px!important;">Merged</span>
 								</div>
 								@endif
+								<div>
+							
 
 
 								<div class="spinner-border d-none" role="status" style="left: 50% !important;
@@ -182,7 +201,6 @@
 								</div>
 							</div>
 						</div>
-
 					</div>
 				</div>
 				<!-- Payment -->
@@ -379,10 +397,11 @@
     	}
     }
 
-    function mergeContact() {
+    function mergeContact(type) {
     		var contact_id = $( "#contact_id" ).val();
     		$('#spinner').removeClass('d-none');
     		var customer_email = $("#customer_email").val();
+
     		jQuery.ajax({
         		url: "{{ url('admin/send-invitation-email') }}",
         		method: 'post',
@@ -393,7 +412,10 @@
             		
         		},
         		success: function(response){
-        			console.log(response);
+       //  			$('#copyText1').val(response.link);
+       //  			var temp = response.link;
+       //  			 temp.val($('#copyText1').text()).select();
+			  		// document.execCommand("copy");
         			if (response.msg == 'success') {
         				$('#spinner').addClass('d-none');
         				setInterval('location.reload()', 1000);
@@ -402,5 +424,14 @@
     		});
 
     }
+   function withJquery(){
+	  console.time('time1');
+		var temp = $("<input>");
+		  $("body").append(temp);
+		  temp.val($('#copyText1').text()).select();
+		  document.execCommand("copy");
+		  temp.remove();
+	     console.timeEnd('time1');
+     }
 </script>
 @stop
