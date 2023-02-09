@@ -57,14 +57,14 @@ class SyncSuppliers extends Command
                 'https://api.cin7.com/api/v1/Contacts/?page=' . $i,
                 //'https://api.cin7.com/api/v1/Contacts/9888', 
                 [
-                    'auth' => [
-                        'IndoorSunHydroUS', 
-                        'faada8a7a5ef4f90abaabb63e078b5c1'
-                    ]
-                    //  'auth' => [
-                    //    'IndoorSunHydro2US',
-                    //         '625ab949593e4cd4908b9f42758009f5'
+                    // 'auth' => [
+                    //     'IndoorSunHydroUS', 
+                    //     'faada8a7a5ef4f90abaabb63e078b5c1'
                     // ]
+                     'auth' => [
+                       'IndoorSunHydro2US',
+                            '625ab949593e4cd4908b9f42758009f5'
+                    ]
                 ]
             );
 
