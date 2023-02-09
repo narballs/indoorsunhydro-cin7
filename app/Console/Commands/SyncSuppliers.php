@@ -47,7 +47,7 @@ class SyncSuppliers extends Command
         // echo env('API_PASSWORD');
         // echo 'here';
         // exit;
-        $total_contact_pages = 15;
+        $total_contact_pages = 35;
 
         for ($i = 1; $i <= $total_contact_pages; $i++) {
             $this->info('Processing page#' . $i);
