@@ -10,7 +10,7 @@
         @if($contact->status == '1')
         <span class="badge bg-success">Active</span>
         @else
-        <span class="badge bg-danger">Inactive</span>
+        <span class="badge bg-danger">disabled</span>
         @endif
     </td>
     <td>
