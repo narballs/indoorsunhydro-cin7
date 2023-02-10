@@ -122,7 +122,11 @@
 								</div>
 								@if ($invitation_url != '')
 								<div class="col-md-12">
-									<b>Invitation url :</b><span id="copyText1">{{$invitation_url}}</span>
+									<a href="http://indoor.local/customer/invitation/ee4ffd0d04ef4e9e2507e6ebf22f02634389110db3b987afdd2da581df7fe58b"
+										class="text-dark">
+										<b>Invitation URL :</b><span id="copyText1"
+											class="d-none">{{$invitation_url}}</span>
+									</a>
 									<button type="button" class="btn btn-info btn-sm" onclick="withJquery();">Copy
 										Link</button>
 								</div>
