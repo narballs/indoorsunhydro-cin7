@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\ApiOrderItem;
 use App\Models\ApiOrder;
 use App\Models\Contact;
+use App\Models\TaxClass;
 use Session;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Redirect;
@@ -32,7 +33,6 @@ class OrderController extends Controller
         $request->validate([
             'method_name' => 'required'
         ]);
-
 
         $paymentMethod = $request->input('method_name');
         $paymentMethodOption = $request->input('method_option');
@@ -159,6 +159,8 @@ class OrderController extends Controller
             $order->status = 'DRAFT';
             $order->stage = null;
             $order->paymentTerms = $paymentMethod;
+            $order->tax_class_id = $request->tax_class_id;
+            $order->total_including_tax = $request->incl_tax;
             $order->save();
 
             $order_id =  $order->id;

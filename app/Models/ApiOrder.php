@@ -30,7 +30,8 @@ class ApiOrder extends Model
         'paymentTerms',
         'date',
         'po_number',
-        'memo'
+        'memo',
+        'tax_class_id'
     ];
     public function contact()
     {
