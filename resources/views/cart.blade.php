@@ -201,6 +201,10 @@
 		</div>
 		<div class="col-md-3 p-0  mt-5">
 			<div class="table-responsive">
+				<?php 
+					$tax = $cart_total * ($tax_rate/100);
+					$total_including_tax = $tax + $cart_total;
+				?>
 				<table class="table mt-4">
 					<thead>
 						<tr>
@@ -215,12 +219,27 @@
 						<tr>
 							<td>
 								<img class=" img-fluid" src="/theme/img/pricing_tag.png">
-								<strong>Total</strong>
+								<strong>Total</strong>(Excl Tax)
 							</td>
 							<td>
 								<span id="cart_grand_total">
 									<strong class="text-danger cart-page-items">
 										${{number_format($cart_total,2)}}
+									</strong>
+								</span>
+							</td>
+						</tr>
+					
+						<tr>
+							<td>
+								<img class=" img-fluid" src="/theme/img/pricing_tag.png">
+								<strong>Total</strong><span>(Incl Tax)</span><div>
+							</td>
+							<td>
+								<span id="cart_grand_total">
+									<strong class="text-danger cart-page-items">
+										${{number_format($total_including_tax, 2)}}
+										
 									</strong>
 								</span>
 							</td>
