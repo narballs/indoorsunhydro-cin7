@@ -728,10 +728,7 @@ class ProductController extends Controller
         if (!empty($user_id)) {
             $contact = Contact::where('user_id', $user_id)->first();
         }
-        $tax_rate = TaxClass::where('is_default' , 1)->plucK('rate');
-        //dd($tax_rate);
-        $tax_rate = $tax_rate[0];
-
+        $tax_class = TaxClass::where('is_default' , 1)->first();
 
 
         if (!empty($cart_items)) {
@@ -743,7 +740,7 @@ class ProductController extends Controller
         return view($view, compact(
             'cart_items',
             'contact',
-            'tax_rate'
+            'tax_class'
         ));
     }
 

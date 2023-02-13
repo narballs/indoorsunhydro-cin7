@@ -318,6 +318,8 @@ class OrderManagementController extends Controller
             ];
         }
         $order = [];
+       // unset($currentOrder['total_including_tax']);
+       // unset($currentOrder['tax_class_id']);
         $order = [
             [
                 $currentOrder,
@@ -368,9 +370,9 @@ class OrderManagementController extends Controller
                 "total" => 100,
                 "currencyCode" => "USD",
                 "currencyRate" => 59.0,
-                "currencySymbol" => "sample string 60",
-                "taxStatus" => "Undefined",
-                "taxRate" => null,
+                "currencySymbol" => "$",
+                "taxStatus" => "Incl",
+                "taxRate" => 8.75,
                 "source" => "sample string 62",
                 "isVoid" => true,
                 "accountingAttributes" =>
@@ -380,9 +382,9 @@ class OrderManagementController extends Controller
                 ],
                 "memberEmail" => "wqszeeshan@gmail.com",
                 "memberCostCenter" => "sample string 6",
-                "memberAlternativeTaxRate" => "sample string 7",
-                "costCenter" => "sample string 8",
-                "alternativeTaxRate" => "sample string 9",
+                "memberAlternativeTaxRate" => "",
+                "costCenter" => null,
+                "alternativeTaxRate" => "8.75%",
                 "estimatedDeliveryDate" => "2022-07-13T15:21:16.1946848+12:00",
                 "salesPersonId" => 10,
                 "salesPersonEmail" => "wqszeeshan@gmail.com",

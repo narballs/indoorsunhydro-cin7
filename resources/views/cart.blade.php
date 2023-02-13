@@ -202,7 +202,7 @@
 		<div class="col-md-3 p-0  mt-5">
 			<div class="table-responsive">
 				<?php 
-					$tax = $cart_total * ($tax_rate/100);
+					$tax = $cart_total * ($tax_class->rate/100);
 					$total_including_tax = $tax + $cart_total;
 				?>
 				<table class="table mt-4">
