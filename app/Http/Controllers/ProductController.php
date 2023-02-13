@@ -11,6 +11,7 @@ use App\Models\Contact;
 use App\Models\Brand;
 use App\Models\BuyList;
 use App\Models\ProductBuyList;
+use App\Models\TaxClass;
 use Auth;
 use DB;
 
@@ -727,6 +728,11 @@ class ProductController extends Controller
         if (!empty($user_id)) {
             $contact = Contact::where('user_id', $user_id)->first();
         }
+        $tax_rate = TaxClass::where('is_default' , 1)->plucK('rate');
+        //dd($tax_rate);
+        $tax_rate = $tax_rate[0];
+
+
 
         if (!empty($cart_items)) {
 
@@ -736,7 +742,8 @@ class ProductController extends Controller
         }
         return view($view, compact(
             'cart_items',
-            'contact'
+            'contact',
+            'tax_rate'
         ));
     }
 
