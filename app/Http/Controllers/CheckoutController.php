@@ -30,7 +30,6 @@ class CheckoutController extends Controller
             $states = UsState::all();
             $payment_methods = PaymentMethod::with('options')->get();
             $user_address = Contact::where('user_id', $user_id)->first();
-            echo 'here';exit;
             return view('checkout/index2', compact('user_address', 'states', 'payment_methods'));
         } else if (Auth::check() && empty($isApproved)) {
             Session::flash('message', "Your account is being reviewed you can't proceed to checkout, however you can make carts");
