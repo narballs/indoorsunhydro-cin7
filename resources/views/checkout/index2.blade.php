@@ -420,6 +420,12 @@
                 </div>
             </div>
             <div class="row">
+                <?php 
+                    $tax = $cart_total * ($tax_class->rate/100);
+                    $total_including_tax = $tax + $cart_total;
+                ?>
+                <input type="text" name="incl_tax" id="incl_tax" value="{{$total_including_tax}}">
+                <input type="text" name="tax_class_id" id="tax_class_id" value="{{$tax_class->id}}">
                 <div class="col-md-12 mt-3 py-3" style="background: #F7F7F7; border-radius: 5px;">
                     <p class="thank-you-page-product-imtes-total-cart">Total</p>
                     <div class="row">
@@ -427,13 +433,15 @@
                             <p class="thank-you-page-product-items-subtotal-cart">Subtotal:</p>
                             {{-- <p class="thank-you-page-product-items-subtotal-cart">Shipping:</p> --}}
                             <p class="thank-you-page-product-items-subtotal-cart">Discount:</p>
-                            <p class="thank-you-page-product-items-subtotal-cart mt-4">Total:</p>
+                            <p class="thank-you-page-product-items-subtotal-cart mt-4">Total:(Excl Tax)</p>
+                            <p class="thank-you-page-product-items-subtotal-cart mt-4">Total:(Incl Tax)</p>
                         </div>
                         <div class="col-md-6 ">
                             <p class=" thank-you-page-product-item-cart">$</p>
                             {{-- <p class=" thank-you-page-product-item-cart">shipping</p> --}}
                             <p class=" thank-you-page-product-item-cart">$</p>
                             <p class=" thank-you-page-product-item-cart mt-4">${{number_format($cart_total,2)}}</p>
+                            <p class="thank-you-page-product-item-cart mt-4" id="tax-rate">${{number_format($total_including_tax, 2)}}</p>
                         </div>
                     </div>
                 </div>
