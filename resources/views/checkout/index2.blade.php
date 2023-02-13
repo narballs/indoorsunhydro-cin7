@@ -424,8 +424,8 @@
                     $tax = $cart_total * ($tax_class->rate/100);
                     $total_including_tax = $tax + $cart_total;
                 ?>
-                <input type="text" name="incl_tax" id="incl_tax" value="{{$total_including_tax}}">
-                <input type="text" name="tax_class_id" id="tax_class_id" value="{{$tax_class->id}}">
+                <input type="hidden" name="incl_tax" id="incl_tax" value="{{$total_including_tax}}">
+                <input type="hidden" name="tax_class_id" id="tax_class_id" value="{{$tax_class->id}}">
                 <div class="col-md-12 mt-3 py-3" style="background: #F7F7F7; border-radius: 5px;">
                     <p class="thank-you-page-product-imtes-total-cart">Total</p>
                     <div class="row">
