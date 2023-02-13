@@ -25,7 +25,7 @@ class ContactController extends Controller
 
     function __construct()
     {
-       $this->middleware(['role:Admin'])->except('contomer_invitation');
+        $this->middleware(['role:Admin'])->except('contomer_invitation');
     }
 
     public function supplier()
@@ -38,9 +38,23 @@ class ContactController extends Controller
     {
         $perPage = $request->get('perPage');
         $search = $request->get('search');
+        $activeCustomer = $request->get('active-customer');
+        // $disabledCustomer = $request->get('disable-customer');
         $contact_query = Contact::where('type', 'Customer');
-        if (!empty($contact_query)) {
-            $contact_query->where('firstName', 'LIKE', '%' . $search . '%')
+        if (!empty($activeCustomer)) {
+            if ($activeCustomer == 'active-customer') {
+                $contact_query = $contact_query->where('status', true);
+                // dd($data);
+            }
+            if ($activeCustomer == 'disable-customer') {
+                $contact_query = $contact_query->where('status', false);
+                // dd($data);
+            }
+        }
+
+
+        if (!empty($search)) {
+            $contact_query = $contact_query->where('firstName', 'LIKE', '%' . $search . '%')
                 ->orWhere('lastName', 'like', '%' . $search . '%')
                 ->orWhere('email', 'like', '%' . $search . '%')
                 ->orWhere('company', 'like', '%' . $search . '%')
@@ -48,11 +62,15 @@ class ContactController extends Controller
                 ->orWhere('mobile', 'like', '%' . $search . '%');
         }
 
+
+
+
         $contacts = $contact_query->paginate($perPage);
         return view('admin/customers', compact(
             'contacts',
             'search',
-            'perPage'
+            'perPage',
+            'activeCustomer',
         ));
     }
 
@@ -143,11 +161,10 @@ class ContactController extends Controller
 
         $customer_orders =  ApiOrder::where('user_id', $customer->user_id)->with(['createdby', 'processedby'])->limit('5')->get();
         $statuses = OrderStatus::all();
-        if ($customer->hashKey && $customer->hashUsed == false ) {
+        if ($customer->hashKey && $customer->hashUsed == false) {
             $invitation_url = URL::to("/");
-            $invitation_url = $invitation_url.'/customer/invitation/'.$customer->hashKey;
-        }
-        else {
+            $invitation_url = $invitation_url . '/customer/invitation/' . $customer->hashKey;
+        } else {
             $invitation_url = '';
         }
         return view('admin/customer-details', compact('customer', 'statuses', 'customer_orders', 'invitation_url'));
@@ -295,30 +312,31 @@ class ContactController extends Controller
         return redirect()->back();
     }
 
-    public function send_invitation_email(Request $request) {
+    public function send_invitation_email(Request $request)
+    {
         $current_date_time = Carbon::now()->toDateTimeString();
-        $secret = "QCOM".$current_date_time;
+        $secret = "QCOM" . $current_date_time;
         $sig = hash_hmac('sha256', $request->customer_email, $secret);
         $url = URL::to("/");
-        $url = $url.'/customer/invitation/'.$sig;
+        $url = $url . '/customer/invitation/' . $sig;
         $email = $request->customer_email;
 
         $data = [
-                'email' => $email,
-                'subject' => 'Customer Registration Invitation',
-                'from' => env('MAIL_FROM_ADDRESS'),
-                'content' => 'Customer Registration Invitation',
-                'url' => $url
-            ];
+            'email' => $email,
+            'subject' => 'Customer Registration Invitation',
+            'from' => env('MAIL_FROM_ADDRESS'),
+            'content' => 'Customer Registration Invitation',
+            'url' => $url
+        ];
 
         MailHelper::sendMailNotification('emails.invitaion-emails', $data);
-             $contact_id = $request->contact_id;
-             $contact = Contact::where('contact_id', $contact_id)->update(
-                    [
-                      'hashKey' => $sig,
-                      'hashUsed' => 0,
-                    ]
-            );
+        $contact_id = $request->contact_id;
+        $contact = Contact::where('contact_id', $contact_id)->update(
+            [
+                'hashKey' => $sig,
+                'hashUsed' => 0,
+            ]
+        );
         return response()->json([
             'msg' => 'success',
             'status' => 200,
@@ -327,13 +345,13 @@ class ContactController extends Controller
         ]);
     }
 
-    public function contomer_invitation($hash) 
+    public function contomer_invitation($hash)
     {
-         $contact = Contact::where('hashKey', $hash)->first();
+        $contact = Contact::where('hashKey', $hash)->first();
 
-         $msg = 'hashKey already used !';
+        $msg = 'hashKey already used !';
 
-        if($contact->hashUsed == 1){
+        if ($contact->hashUsed == 1) {
 
             return view('contomer_invitation-error', compact('msg'));
         } else {

@@ -28,7 +28,6 @@ class CheckoutController extends Controller
         }
         if (Auth::check() && !empty($isApproved)) {
             $states = UsState::all();
-
             $payment_methods = PaymentMethod::with('options')->get();
             $user_address = Contact::where('user_id', $user_id)->first();
             return view('checkout/index2', compact('user_address', 'states', 'payment_methods'));

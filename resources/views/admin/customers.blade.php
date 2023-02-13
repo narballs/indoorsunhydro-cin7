@@ -27,6 +27,21 @@
                     </a>
                 </div>
             </div>
+            <div class="col-md-2">
+                <select name="active_customer" id="active_customer" onchange="perPage()" class="form-control">
+                    <option value="" class="form-control">Active/Disabled </option>
+                    <option value="active-customer" class="form-control" {{ isset($activeCustomer) &&
+                        $activeCustomer=='active-customer' ? 'selected="selected"' : '' }}>Active </option>
+                    <option value="disable-customer" class="form-control" {{ isset($activeCustomer) &&
+                        $activeCustomer=='disable-customer' ? 'selected="selected"' : '' }}>Disabled </option>
+                    {{-- <option value="10" {{ isset($perPage) && $perPage==10 ? 'selected="selected"' : '' }}>10
+                    </option>
+                    <option value="20" {{ isset($perPage) && $perPage==20 ? 'selected="selected"' : '' }}>20</option>
+                    <option value="30" {{ isset($perPage) && $perPage==30 ? 'selected="selected"' : '' }}>30</option>
+                    <option value="30">30</option> --}}
+                </select>
+
+            </div>
             <div class="col-md-4">
                 <div id="custom-search-input">
                     <div class="input-group col-md-12">
@@ -47,7 +62,6 @@
         </div>
     </div>
     <div class="card card-body">
-
         <table class="table table-striped table-hover table-bordered table-customer" id="table">
             <thead>
                 <tr>
@@ -130,9 +144,23 @@
         function perPage() {
             var perPage = $('#per_page').val();
             var search = $('#search').val();
-            // alert(perPage);
-           var basic_url = 'customers?perPage='+perPage+'&search='+search;
+            var activeCustomer = $('#active_customer').val();
+
+            if(perPage !=''){
+                var basic_url = 'customers?perPage='+perPage+'&search='+search;
+                // alert(basic_url);
+            }
+
+           if (activeCustomer != '') {
+               basic_url = basic_url+`&active-customer=${activeCustomer}`;
+            }
+
+        //    if (disabledCustomer != '') {
+        //        basic_url = basic_url+`&disabled-customer=${disabledCustomer}`;
+        //     }
             window.location.href = basic_url;
+
+           
            //alert(basic_url);
         }
         function search() {
