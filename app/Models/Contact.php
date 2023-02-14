@@ -57,4 +57,9 @@ class Contact extends Model
     {
         return $this->hasMany('App\Models\UsCity', 'id', 'city_id');
     }
+
+    public function secondory_contact()
+    {
+        return $this->hasMany('App\Models\SecondaryContact', 'parent_id', 'contact_id');
+    }
 }
