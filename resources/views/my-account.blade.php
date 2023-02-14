@@ -31,8 +31,6 @@
 			MY ACCOUNT
 		</p>
 	</div>
-
-	<?php //dd($user_address);?>
 	<div class="container" style="width:1435px !important;">
 		<div class="row bg-light">
 			<div class="container-fluid" id="main-row">
@@ -197,11 +195,31 @@
 													Account Details
 												</span>
 											</div>
-
-
 										</div>
 									</a>
+								</li>
 
+								<li class="w-100 mb-3" id="additional_users">
+									<a href="#submenu3" class="nav-link px-0 align-middle  px-0 ms-3">
+										<i class="fs-4 bi-grid"></i>
+										<!-- <span class="ms-1 d-none d-sm-inline text-dark fs-5" onclick="accountDetails()">Account Details</span> -->
+										<div class="row">
+											<div class="col-md-2">
+												<span>
+													<img src="theme/img/account_active.png" id="order_active"
+														style="display: none;">
+													<img src="theme/img/account_inactive.png" id="order_inactive">
+												</span>
+											</div>
+											<div class="col-md-10">
+												<span
+													class="ms-1 d-none d-sm-inline  fs-5 ms-3 mt-1 ml-0 pl-0 nav-items-link"
+													onclick="additionalUsers()">
+													Additional Users
+												</span>
+											</div>
+										</div>
+									</a>
 								</li>
 								<li class="border-bottom border-4"
 									style="width: 240px; font-family: Roboto;margin: auto; "></li>
@@ -708,6 +726,149 @@
 								</div>
 							</div>
 						</div>
+
+						<div class="additional-users d-none pr-2" id="additional-users">
+							<div class="row mt-3 detail-heading ms-2 mr-0 ml-0 p-0" id="detail-heading">
+
+								<div class="col-md-12 border-bottom border-4 p-0 mr-3">
+									<div class="row mb-4 mt-3">
+										<div class="col-md-4 ">
+											<img src="theme/img/account_details.png" style="margin: -1px 2px 1px 1px;">
+											<span class="pt-1 my-account-content-heading">Additinal Users</span>
+										</div>
+										<div class="col-md-8">
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-12 pl-0 pr-0 mr-0 ml-0 w-100">
+								<table class="table table-borderless">
+									<thead>
+									<tr>
+										<th>
+											Company
+										</th>
+										<th>
+											First Name
+										</th>
+										<th>
+											Last Name
+										</th>
+										<th>
+											Job Title
+										</th>
+										<th>
+											Email
+										</th>
+										<th>
+											Mobile
+										</th>
+										<th>
+											Phone
+										</th>
+									</tr>
+									</thead>
+									<tbody>
+										@foreach ($childerens->secondory_contact as $childeren)
+										<tr>
+											@if($childeren->company)
+											<td>
+												{{$childeren->company}}
+											</td>
+											@else
+											<td>
+												<span class="badge bg-success">empty</span>
+											</td>
+											@endif
+											@if($childeren->firstName)
+											<td>
+												{{$childeren->firstName}}
+											</td>
+											@else
+											<td>
+												<span class="badge bg-success">empty</span>
+											</td>
+											@endif
+											@if($childeren->lastName)
+											<td>
+												{{$childeren->lastName}}
+											</td>
+											@else
+											<td>
+												<span class="badge bg-success">empty</span>
+											</td>
+											@endif
+											@if($childeren->jobTitle)
+											<td>
+												{{$childeren->jobTitle}}
+											</td>
+											@else
+											<td>
+												<span class="badge bg-success">empty</span>
+											</td>
+											@endif
+											@if($childeren->email)
+											<td>
+												{{$childeren->email}}
+											</td>
+											@else
+											<td>
+												<span class="badge bg-success">empty</span>
+											</td>
+											@endif
+											@if($childeren->mobile)
+											<td>
+												{{$childeren->mobile}}
+											</td>
+											@else
+											<td>
+												<span class="badge bg-success">empty</span>
+											</td>
+											@endif
+											@if($childeren->phone)
+											<td>
+												{{$childeren->phone}}
+											</td>
+											@else
+											<td>
+												<span class="badge bg-success">empty</span>
+											</td>
+											@endif
+										</tr>
+										@endforeach
+									</tbody>
+								</table>
+							</div>
+							
+
+							<div class="row ms-2 mb-5 d-none" id="address_row">
+								<div class="col-md-3">
+								</div>
+								<div class="col-md-9 pl-1">
+									<div class="row mt-3 " style="margin:auto;">
+										<div class="col bg-white mr-3" style="border-radius: 10px !important;">
+											<div class="mt-4 mb-4"><img src="theme/img/user_address.png"><span
+													class="billing-address-heading-subtitle pt-2 ms-2 align-middle address-weight">Order
+													Details</span>
+											</div>
+											<div class="border-bottom"></div>
+											<div id="address_table" class="mt-3 mb-4"></div>
+										</div>
+										<div class="col pl-1 bg-white"
+											style="border-radius: 10px; border: 1px solid #008AD0!important;">
+											<div class="mt-4 mb-4 ms-3"><img src="theme/img/shipping_address2.png"><span
+													class="billing-address-heading-subtitle pt-2 ms-2 align-middle address-weight">Order
+													Details</span>
+											</div>
+											<div class="border-bottom ms-3"></div>
+											<div class="ms-3">
+												<div id="shipping_table" class="mt-3 mb-4"></div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 				@livewireScripts
@@ -735,6 +896,7 @@
 				$('#qoute-heading').removeClass('d-none');
 				$('#my_quotes_edit').addClass('d-none');
 				$('#update_qoute').addClass('d-none');
+				$('#additional-users').addClass('d-none');
 			}
 			function replaceEye(val) {
         		$('#eye_icon_'+val).attr("src", "theme/img/white_eye.png").css('width' , '20px');
@@ -812,6 +974,7 @@
 				$('.order-detail-container').addClass('d-none');
 				$('#customer-address').addClass('d-none')
 				$('#orders').addClass('d-none');
+				$('#additional-users').addClass('d-none');
 				var listitems = '';
 					jQuery.ajax({
 					url: "{{ url('/get-wish-lists/')}}",
@@ -952,6 +1115,8 @@
 				$('.order-detail-container').addClass('d-none');
 				$('#customer-address').addClass('d-none')
 				$('#orders').addClass('d-none');
+				$('#additional-users').addClass('d-none');
+				$('#additional-users').addClass('d-none');	
 				// $('#orders').hide();
 				// $('.intro').show();
 			}
@@ -963,6 +1128,8 @@
 				$('#lineitems').removeClass('d-none');
 				$('#order-detail-container').removeClass('d-none');
 				$('#detail-heading').removeClass('d-none');
+				$('#additional-users').addClass('d-none');
+
 
 				// $('.order-detail-container').removeClass('d-none');
 				// $('#order-detail-container').removeClass('d-none');
@@ -1037,6 +1204,8 @@
 				$('#orders').show();
 				$('#orders').removeClass('d-none');
 				$('#lineitems').addClass('d-none');
+				$('#additional-users').addClass('d-none');
+
 					 jQuery.ajax({
 						url: "{{ url('/my-account/') }}",
 						method: 'GET',	
@@ -1084,6 +1253,9 @@
 				$('#edit_address').addClass('d-none')
 				$('#intro').addClass('d-none');
 				$('#customer-address').removeClass('d-none');
+				$('#additional-users').addClass('d-none');
+				$('#qoute-heading').addClass('d-none');
+				
 				 jQuery.ajax({
 						url: "{{ url('/user-addresses/') }}",
 						method: 'GET',	
@@ -1091,6 +1263,29 @@
 							console.log(data);
 						},
 				})
+			}
+			function additionalUsers() {
+				$('#my_quotes').addClass('d-none');
+				$('#filter').addClass('d-none');
+				$('#orders').addClass('d-none');
+				$('#whishlist').addClass('d-none');
+				$('#detail-heading').addClass('d-none');
+				$('#order_details').addClass('d-none');
+				$('#address_row').addClass('d-none');
+				$('.nav-pills .active').removeClass('active');
+				$('.nav-pills #additional-users').addClass('active');
+				$('#edit_address').addClass('d-none')
+				$('#intro').addClass('d-none');
+				$('#customer-address').addClass('d-none');
+				$('#additional-users').removeClass('d-none');
+				$('#qoute-heading').addClass('d-none');
+				//  jQuery.ajax({
+				// 		url: "{{ url('/user-addresses/') }}",
+				// 		method: 'GET',	
+				// 		success: function(data){
+				// 			console.log(data);
+				// 		},
+				// })
 			}
 			function edit_address() {
 				$('#my_quotes').addClass('d-none');
@@ -1102,10 +1297,13 @@
 				$('.nav-pills #current_address').addClass('active');
 				// $('#customer-address').addClass('d-none');
 				$('#customer-address').addClass('d-none');
-				
 				$('#orders').addClass('d-none');
 				$('#intro').addClass('d-none');
 				$('#order-detail-container').addClass('d-none');
+				$('#additional-users').addClass('d-none');
+				$('#qoute-heading').addClass('d-none');
+
+
 			}
 
 
@@ -1254,6 +1452,8 @@
                    		$("#success_msg").removeClass('d-none');
                    		$(".btn-add-to-cart").prop('disabled', false);
                    		$("#list").removeClass('d-none');
+				        $('#additional-users').addClass('d-none');
+
 
             		}, 
             		error : function(response) {
@@ -1373,6 +1573,8 @@
 			$('#my_quotes').removeClass('d-none');
 			$('#all_qoutes').addClass('d-none');
 			$('#qoute-heading').removeClass('d-none');
+			$('#additional-users').addClass('d-none');
+
 			jQuery.ajax({
 				url: "{{ url('/my-qoutes/') }}",
 				method: 'GET',
@@ -1418,6 +1620,8 @@
 
 		function userQouteEdit(id) {
 			$('#filter').addClass('d-block');
+			$('#additional-users').addClass('d-none');
+
 			jQuery.ajax({
 				url: "{{ url('/my-qoute-edit')}}"+"/"+id,
 				method: 'GET',

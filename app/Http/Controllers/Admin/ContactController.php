@@ -157,8 +157,7 @@ class ContactController extends Controller
 
     public function show_customer($id)
     {
-        $customer = Contact::where('id', $id)->first();
-
+        $customer = Contact::where('id', $id)->with('secondory_contact')->first();
         $customer_orders =  ApiOrder::where('user_id', $customer->user_id)->with(['createdby', 'processedby'])->limit('5')->get();
         $statuses = OrderStatus::all();
         if ($customer->hashKey && $customer->hashUsed == false) {

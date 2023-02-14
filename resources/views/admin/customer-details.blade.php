@@ -190,10 +190,87 @@
 								</div>
 							</div>
 						</div>
-
 					</div>
 				</div>
 				<!-- Payment -->
+				@if ($customer->secondory_contact)
+                <div class="card mb-4">
+					<div class="card-body">
+						<div class="row">
+							<div class="col-lg-12">
+								<h2 class="h5 mb-0"><a href="#" class="text-muted"></a>Secondary Users</h2>
+								<table class="table">
+									<tr>
+										<th>Company</th>
+										<th>First Name</th>
+										<th>Last Name</th>
+										<th>Job Title</th>
+										<th>Email</th>
+										<th>Mobile#</th>
+										<th>Phone</th>
+									</tr>
+									@foreach($customer->secondory_contact as $contact)
+									<tr>
+										@if($contact->company)
+										<td>
+											{{$contact->company}}
+										</td>
+										@else
+										<td>
+											<span class="badge bg-info">empty</span>
+										</td>
+										@endif
+										@if($contact->firstName)
+										<td>
+											{{$contact->firstName}}
+										</td>
+										@else
+										<td>
+											<span class="badge bg-info">empty</span>
+										</td>
+										@endif
+	                                    @if($contact->lastName)
+										<td>
+											{{$contact->lastName}}
+										</td>
+										@else
+										<td>
+											<span class="badge bg-info">empty</span>
+										</td>
+										@endif
+										<td>
+											{{$contact->jobTitle}}
+										</td>
+										<td>
+											{{$contact->email}}
+										</td>
+										@if($contact->mobile)
+										<td>
+											{{$contact->mobile}}
+										</td>
+										@else
+										<td>
+											<span class="badge bg-info">empty</span>
+										</td>
+										@endif
+										  @if($contact->phone)
+										<td>
+											{{$contact->phone}}
+										</td>
+										@else
+										<td>
+											<span class="badge bg-info">empty</span>
+										</td>
+										@endif
+									</tr>
+									@endforeach
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+                @endif
+
 				<div class="card mb-4">
 					<div class="card-body">
 						<div class="row">
@@ -241,6 +318,9 @@
 						</div>
 					</div>
 				</div>
+
+				
+		
 			</div>
 			<div class="col-lg-3">
 				<!-- Customer Notes -->
