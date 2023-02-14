@@ -356,6 +356,7 @@ class UserController extends Controller
         }
         $user = User::where('id', $user_id)->first();
         $user_address = Contact::where('user_id', $user_id)->first();
+        $childerens = Contact::where('user_id', $user_id)->with('secondory_contact')->first();
         $list = BuyList::where('id', 20)->with('list_products.product.options')->first();
         //dd($user_address);
         $states = UsState::all();
@@ -369,7 +370,7 @@ class UserController extends Controller
             return $user_orders;
         }
 
-        return view('my-account', compact('user', 'user_address', 'states'));
+        return view('my-account', compact('user', 'user_address', 'states', 'childerens'));
     }
 
     public function my_qoutes()
