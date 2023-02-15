@@ -113,7 +113,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('admin/contacts', [ContactController::class, 'supplier'])->name('admin.contacts');
     Route::get('admin/customers', [ContactController::class, 'customer'])->name('admin.customer');
     
-    Route::post('admin/send-invitation-email', [ContactController::class, 'send_invitation_email'])->name('admin.send_invitation_email');
+
     Route::get('admin/customer/create', [ContactController::class, 'customer_create'])->name('admin.customer.create');
     Route::post('admin/customer/store', [ContactController::class, 'customer_store'])->name('admin.customer.store');
     Route::get('admin/customer-detail/{id}', [ContactController::class, 'show_customer'])->name('admin.customer.detail');
@@ -138,6 +138,7 @@ Route::group(['middleware' => ['auth']], function () {
     });
 });
 Route::get('product/search', [ProductController::class, 'productSearch'])->name('product_search');
+Route::post('admin/send-invitation-email', [ContactController::class, 'send_invitation_email'])->name('admin.send_invitation_email');
 //Route::resource('buy-list', AdminBuyListController::class)->name('buy-lisy-front');
 
 
