@@ -11,6 +11,7 @@ use App\Models\UsState;
 use App\Models\UsCity;
 use App\Models\BuyList;
 use App\Models\Product;
+use App\Models\SecondaryContact;
 use App\Http\Requests\Users\UserSignUpRequest;
 use App\Http\Requests\Users\CompanyInfoRequest;
 use App\Http\Requests\Users\UserAddressRequest;
@@ -237,33 +238,56 @@ class UserController extends Controller
 
     public function invitation_signup(Request $request)
     {
-
-        $contact = Contact::where('email', $request->email)->first();
         $validatedData = $request->validate([
             'email' => 'email|unique:users,email',
             'password' => 'required|min:10',
             'confirm_password' => 'required|same:password'
         ]);
 
-        // $validatedData['password'] = bcrypt($validatedData['password']);
-        // $validateData['first_name'] = $contact->firstName;
-        // $validateData['last_name'] = $contact->lastName;
+        if ($request->is_secondary == 1) {
+            $secondary_contact = SecondaryContact::where('email', $request->email)->with('contact')->first();
+            $user = User::create([
+                'email' => $request->email,
+                'password' =>  bcrypt($request->password),
+                'first_name' => $secondary_contact->firstName,
+                'last_name' => $secondary_contact->lastName
+            ]);
+            $user_id = $user->id;
+            $contact = Contact::create([
+                'status' => 0,
+                'user_id' => $user_id, 
+                'type' => 'Customer',
+                'pricingColumn' => $secondary_contact->contact->priceColumn,
+                'company' => $secondary_contact->contact->company, 
+                'firstName' => $secondary_contact->firstName,
+                'lastName' => $secondary_contact->lastName,
+                'jobTitle' => $secondary_contact->jobTitle, 
+                'mobile' => $secondary_contact->mobile, 
+                'phone' => $secondary_contact->phone, 
+                'email' => $secondary_contact->email
+            ]); 
+        }
+        else {
+            $contact = Contact::where('email', $request->email)->first();
+        
+
+            // $validatedData['password'] = bcrypt($validatedData['password']);
+            // $validateData['first_name'] = $contact->firstName;
+            // $validateData['last_name'] = $contact->lastName;
 
 
-        $user = User::create([
-            'email' => $request->email,
-            'password' =>  bcrypt($request->password),
-            'first_name' => $contact->firstName,
-            'last_name' => $contact->lastName
-        ]);
+            $user = User::create([
+                'email' => $request->email,
+                'password' =>  bcrypt($request->password),
+                'first_name' => $contact->firstName,
+                'last_name' => $contact->lastName
+            ]);
 
-        // $user = User::create(
-        //    $validatedData
-        // );
-
-        $contact->user_id = $user->id;
-        $contact->hashUsed = true;
-        $contact->save();
+            $contact->user_id = $user->id;
+            $contact->hashUsed = true;
+            $contact->save();
+           
+        }
         Auth::loginUsingId($user->id);
         return redirect('/');
 

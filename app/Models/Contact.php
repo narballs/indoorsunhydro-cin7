@@ -14,6 +14,7 @@ class Contact extends Model
         'contact_id',
         'status',
         'type',
+        'user_id',
         'priceColumn',
         'company',
         'firstName',

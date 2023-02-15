@@ -20,6 +20,8 @@
 				<div class="col-md-12">
 					<input type="text" placeholder="&#xf007;  email" id="email"
 						name="email" class="form-control mt-3 fontAwesome disable" value="{{$contact->email}}">
+					<input type="text" placeholder="&#xf007;  email" id="is_secondary"
+						name="is_secondary" class="form-control mt-3 fontAwesome disable" value="{{$secondary}}">
 					@if ($errors->has('email'))
                     <span class="text-danger">{{ $errors->first('email') }}</span>
                     @endif

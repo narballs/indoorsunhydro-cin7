@@ -238,12 +238,24 @@
 											<span class="badge bg-info">empty</span>
 										</td>
 										@endif
+										@if($contact->jobTitle)
 										<td>
 											{{$contact->jobTitle}}
 										</td>
+										@else
+										<td>
+											<span class="badge bg-info">empty</span>
+										</td>
+										@endif
+										@if($contact->email)
 										<td>
 											{{$contact->email}}
 										</td>
+										@else
+										<td>
+											<span class="badge bg-info">empty</span>
+										</td>
+                                        @endif
 										@if($contact->mobile)
 										<td>
 											{{$contact->mobile}}
