@@ -148,7 +148,7 @@ class OrderController extends Controller
             $order->processedBy  =  79914;
             $order->isApproved    =  false;
             $order->memberId    =  $contact_id;
-            $order->branchId   =  3;
+            $order->branchId   =  null;
             $order->branchEmail  =  'wqszeeshan@gmail.com';
             $order->productTotal      =  $cart_total;
             $order->total        =  $cart_total;
