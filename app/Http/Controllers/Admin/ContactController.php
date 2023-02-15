@@ -16,6 +16,7 @@ use App\Models\User;
 use DB;
 use URL;
 use Carbon\Carbon;
+use App\Models\SecondaryContact;
 
 
 
@@ -313,9 +314,15 @@ class ContactController extends Controller
 
     public function send_invitation_email(Request $request)
     {
+        if(!empty($request->secondory_email)){
+            $active_email = $request->secondory_email;
+        }
+        else {
+            $active_email = $request->customer_email;
+        }
         $current_date_time = Carbon::now()->toDateTimeString();
         $secret = "QCOM" . $current_date_time;
-        $sig = hash_hmac('sha256', $request->customer_email, $secret);
+        $sig = hash_hmac('sha256', $active_email, $secret);
         $url = URL::to("/");
         $url = $url . '/customer/invitation/' . $sig;
         $email = $request->customer_email;
@@ -328,36 +335,63 @@ class ContactController extends Controller
             'url' => $url
         ];
 
-        MailHelper::sendMailNotification('emails.invitaion-emails', $data);
+        //MailHelper::sendMailNotification('emails.invitaion-emails', $data);
         $contact_id = $request->contact_id;
-        $contact = Contact::where('contact_id', $contact_id)->update(
-            [
-                'hashKey' => $sig,
-                'hashUsed' => 0,
-            ]
-        );
-        return response()->json([
-            'msg' => 'success',
-            'status' => 200,
-            'link' => $url
-
-        ]);
+        if(empty($request->secondory_email)) {
+            $contact = Contact::where('contact_id', $contact_id)->update(
+                [
+                    'hashKey' => $sig,
+                    'hashUsed' => 0,
+                ]
+            );
+            return response()->json([
+                'msg' => 'success',
+                'status' => 200,
+                'link' => $url
+            ]);
+        }
+        else {
+            $secondary_contact = SecondaryContact::where('email', $active_email)->update(
+                [
+                    'hashKey' => $sig,
+                    'hashUsed' => 0,
+                ]
+            );
+            return response()->json([
+                'msg' => 'success',
+                'status' => 200,
+                'link' => $url.'?is_secondary=1'
+            ]);
+        }
     }
 
-    public function contomer_invitation($hash)
+    public function contomer_invitation(Request $request, $hash)
     {
+        if ($request->is_secondary) {
+            $secondary = true;
+        }
+        else {
+            $secondary = '';
+        }
         $contact = Contact::where('hashKey', $hash)->first();
+        if ($contact) {
 
-        $msg = 'hashKey already used !';
+            $msg = 'hashKey already used !';
 
-        if ($contact->hashUsed == 1) {
+            if ($contact->hashUsed == 1) {
 
-            return view('contomer_invitation-error', compact('msg'));
-        } else {
+                return view('contomer_invitation-error', compact('msg'));
+            } else {
+
+                return view('contomer_invitation', compact('contact'));
+            }
 
             return view('contomer_invitation', compact('contact'));
         }
-
-        return view('contomer_invitation', compact('contact'));
+        else {
+            $contact = SecondaryContact::where('hashKey', $hash)->first();
+            //($contact);
+            return view('contomer_invitation', compact('contact', 'secondary'));
+        }
     }
 }

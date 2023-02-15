@@ -741,8 +741,8 @@
 									</div>
 								</div>
 							</div>
-							<div class="col-md-12 pl-0 pr-0 mr-0 ml-0 w-100">
-								<table class="table table-borderless">
+							<div class="col-md-10 pl-0 pr-0 mr-0 ml-0 w-100">
+								<table class="table table-borderless" style="width:50%">
 									<thead>
 									<tr>
 										<th>
@@ -760,11 +760,14 @@
 										<th>
 											Email
 										</th>
-										<th>
+										<!-- <th>
 											Mobile
-										</th>
+										</th> -->
 										<th>
 											Phone
+										</th>
+										<th>
+											Status
 										</th>
 									</tr>
 									</thead>
@@ -816,7 +819,7 @@
 												<span class="badge bg-success">empty</span>
 											</td>
 											@endif
-											@if($childeren->mobile)
+										<!-- 	@if($childeren->mobile)
 											<td>
 												{{$childeren->mobile}}
 											</td>
@@ -824,7 +827,7 @@
 											<td>
 												<span class="badge bg-success">empty</span>
 											</td>
-											@endif
+											@endif -->
 											@if($childeren->phone)
 											<td>
 												{{$childeren->phone}}
@@ -834,6 +837,10 @@
 												<span class="badge bg-success">empty</span>
 											</td>
 											@endif
+											<td>
+												<button type="button" class="btn btn-info" onclick="	sendInvitation('{{$childeren->email}}')">		Invite
+												</button>
+											</td>
 										</tr>
 										@endforeach
 									</tbody>
@@ -1255,7 +1262,7 @@
 				$('#customer-address').removeClass('d-none');
 				$('#additional-users').addClass('d-none');
 				$('#qoute-heading').addClass('d-none');
-				
+
 				 jQuery.ajax({
 						url: "{{ url('/user-addresses/') }}",
 						method: 'GET',	
@@ -1305,7 +1312,6 @@
 
 
 			}
-
 
 			function updateContact(user_id) {
 		        var first_name = $('input[name=firstName]').val();
@@ -1601,6 +1607,24 @@
 						  $('#my_quotes_table').html(res);
 						},	
 					});
+		}
+
+		function sendInvitation(email) {
+         var secondory_email = email;
+			jQuery.ajax({
+				url: "{{ url('admin/send-invitation-email')}}",
+				method: 'POST',
+				data: {
+					"_token": "{{ csrf_token() }}",
+					secondory_email : secondory_email
+					
+				},
+				success: function(response) {
+					console.log(response);
+				}
+
+			});
+
 		}
 
 		function userQouteDetail(id) {
