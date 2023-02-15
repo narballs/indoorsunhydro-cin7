@@ -325,10 +325,10 @@ class ContactController extends Controller
         $sig = hash_hmac('sha256', $active_email, $secret);
         $url = URL::to("/");
         $url = $url . '/customer/invitation/' . $sig;
-        $email = $request->customer_email;
+        $active_email = $request->customer_email;
 
         $data = [
-            'email' => $email,
+            'email' => $active_email,
             'subject' => 'Customer Registration Invitation',
             'from' => env('MAIL_FROM_ADDRESS'),
             'content' => 'Customer Registration Invitation',
