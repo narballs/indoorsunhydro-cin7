@@ -63,7 +63,16 @@ $('[data-toggle="popover-hover"]').popover({
   sanitize: false,
   content: $('#popover-form').html(),
 });
-
+		var invitation_sent = sessionStorage.getItem('invitation');
+		if (invitation_sent == 1) {
+			$("#additional_users").addClass("active");
+			$("#additional-users").removeClass("d-none");
+			$('#intro').addClass('d-none');
+			$('.nav-pills #dashboard').addClass('active');
+			$('#dashboard').removeClass('active');
+		} else {
+			$("#additional_users").removeClass("active");
+		}
 	});
 
 </script>

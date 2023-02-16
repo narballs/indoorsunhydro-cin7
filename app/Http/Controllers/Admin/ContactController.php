@@ -26,7 +26,7 @@ class ContactController extends Controller
 
     function __construct()
     {
-        $this->middleware(['role:Admin'])->except('contomer_invitation');
+        $this->middleware(['role:Admin'])->except('contomer_invitation', 'send_invitation_email');
     }
 
     public function supplier()
@@ -324,8 +324,14 @@ class ContactController extends Controller
         $secret = "QCOM" . $current_date_time;
         $sig = hash_hmac('sha256', $active_email, $secret);
         $url = URL::to("/");
-        $url = $url . '/customer/invitation/' . $sig;
-        $email = $request->customer_email;
+        if (!empty($request->secondory_email)){
+            $url = $url . '/customer/invitation/' . $sig.'?is_secondary=1';
+        }
+        else {
+            $url = $url . '/customer/invitation/' . $sig;
+        }
+        $email = $active_email;
+
 
         $data = [
             'email' => $email,
@@ -335,7 +341,7 @@ class ContactController extends Controller
             'url' => $url
         ];
 
-        //MailHelper::sendMailNotification('emails.invitaion-emails', $data);
+        MailHelper::sendMailNotification('emails.invitaion-emails', $data);
         $contact_id = $request->contact_id;
         if(empty($request->secondory_email)) {
             $contact = Contact::where('contact_id', $contact_id)->update(
@@ -373,11 +379,9 @@ class ContactController extends Controller
         else {
             $secondary = '';
         }
+        $msg = 'hashKey already used !';
         $contact = Contact::where('hashKey', $hash)->first();
         if ($contact) {
-
-            $msg = 'hashKey already used !';
-
             if ($contact->hashUsed == 1) {
 
                 return view('contomer_invitation-error', compact('msg'));
@@ -390,8 +394,13 @@ class ContactController extends Controller
         }
         else {
             $contact = SecondaryContact::where('hashKey', $hash)->first();
-            //($contact);
-            return view('contomer_invitation', compact('contact', 'secondary'));
+            if ($contact->hashUsed == 1) {
+
+                return view('contomer_invitation-error', compact('msg'));
+            }
+            else {
+                return view('contomer_invitation', compact('contact', 'secondary'));
+            }
         }
     }
 }
