@@ -18,6 +18,7 @@ use App\Http\Requests\Users\UserAddressRequest;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\Subscribe;
 use App\Helpers\MailHelper;
+use App\Jobs\SyncContacts;
 use Session;
 use Auth;
 use Spatie\Permission\Models\Role;
@@ -246,12 +247,20 @@ class UserController extends Controller
 
         if ($request->is_secondary == 1) {
             $secondary_contact = SecondaryContact::where('email', $request->email)->with('contact')->first();
+            if (empty($secondary_contact)) {
+                return redirect('/');
+            }
             $user = User::create([
                 'email' => $request->email,
                 'password' =>  bcrypt($request->password),
                 'first_name' => $secondary_contact->firstName,
                 'last_name' => $secondary_contact->lastName
             ]);
+
+            SecondaryContact::where('id', $secondary_contact->id)->update([
+                'hashUsed' => 1,
+            ]);
+
             $user_id = $user->id;
             $contact = Contact::create([
                 'status' => 0,
@@ -264,8 +273,18 @@ class UserController extends Controller
                 'jobTitle' => $secondary_contact->jobTitle, 
                 'mobile' => $secondary_contact->mobile, 
                 'phone' => $secondary_contact->phone, 
-                'email' => $secondary_contact->email
-            ]); 
+                'email' => $secondary_contact->email,
+                'hashKey' => $secondary_contact->hashKey,
+                'hashUsed' => 1
+            ]);
+            $encodec = $contact->toArray();
+            unset($encodec['id']);
+            $contact = [
+                    $encodec
+            ];
+            SyncContacts::dispatch('create_contact', $contact);
+
+
         }
         else {
             $contact = Contact::where('email', $request->email)->first();

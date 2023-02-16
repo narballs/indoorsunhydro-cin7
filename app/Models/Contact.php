@@ -36,7 +36,9 @@ class Contact extends Model
         'fax',
         'website',
         'email',
-        'notes'
+        'notes',
+        'hashKey',
+        'hashUsed'
     ];
 
     public function orders()

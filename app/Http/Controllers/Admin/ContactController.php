@@ -324,18 +324,24 @@ class ContactController extends Controller
         $secret = "QCOM" . $current_date_time;
         $sig = hash_hmac('sha256', $active_email, $secret);
         $url = URL::to("/");
-        $url = $url . '/customer/invitation/' . $sig;
-        $active_email = $request->customer_email;
+        if (!empty($request->secondory_email)){
+            $url = $url . '/customer/invitation/' . $sig.'?is_secondary=1';
+        }
+        else {
+            $url = $url . '/customer/invitation/' . $sig;
+        }
+        $email = $active_email;
+
 
         $data = [
-            'email' => $active_email,
+            'email' => $email,
             'subject' => 'Customer Registration Invitation',
             'from' => env('MAIL_FROM_ADDRESS'),
             'content' => 'Customer Registration Invitation',
             'url' => $url
         ];
 
-        //MailHelper::sendMailNotification('emails.invitaion-emails', $data);
+        MailHelper::sendMailNotification('emails.invitaion-emails', $data);
         $contact_id = $request->contact_id;
         if(empty($request->secondory_email)) {
             $contact = Contact::where('contact_id', $contact_id)->update(
@@ -373,11 +379,9 @@ class ContactController extends Controller
         else {
             $secondary = '';
         }
+        $msg = 'hashKey already used !';
         $contact = Contact::where('hashKey', $hash)->first();
         if ($contact) {
-
-            $msg = 'hashKey already used !';
-
             if ($contact->hashUsed == 1) {
 
                 return view('contomer_invitation-error', compact('msg'));
@@ -390,8 +394,13 @@ class ContactController extends Controller
         }
         else {
             $contact = SecondaryContact::where('hashKey', $hash)->first();
-            //($contact);
-            return view('contomer_invitation', compact('contact', 'secondary'));
+            if ($contact->hashUsed == 1) {
+
+                return view('contomer_invitation-error', compact('msg'));
+            }
+            else {
+                return view('contomer_invitation', compact('contact', 'secondary'));
+            }
         }
     }
 }
