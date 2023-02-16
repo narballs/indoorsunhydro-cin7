@@ -200,13 +200,13 @@
 								</li>
 
 								<li class="w-100 mb-3" id="additional_users">
-									<a href="#submenu3" class="nav-link px-0 align-middle  px-0 ms-3">
+									<a href="#additional-user" class="nav-link px-0 align-middle  px-0 ms-3">
 										<i class="fs-4 bi-grid"></i>
 										<!-- <span class="ms-1 d-none d-sm-inline text-dark fs-5" onclick="accountDetails()">Account Details</span> -->
 										<div class="row">
 											<div class="col-md-2">
 												<span>
-													<img src="theme/img/account_active.png" id="order_active"
+													<img src="theme/img/account_active.png" id="additional_active"
 														style="display: none;">
 													<img src="theme/img/account_inactive.png" id="order_inactive">
 												</span>
@@ -214,7 +214,7 @@
 											<div class="col-md-10">
 												<span
 													class="ms-1 d-none d-sm-inline  fs-5 ms-3 mt-1 ml-0 pl-0 nav-items-link"
-													onclick="additionalUsers()">
+													onclick="additionalUsers()" id="auto_click">
 													Additional Users
 												</span>
 											</div>
@@ -737,6 +737,9 @@
 											<span class="pt-1 my-account-content-heading">Additinal Users</span>
 										</div>
 										<div class="col-md-8">
+											<div class="alert alert-primary d-none" role="alert">
+			  								This is a primary alert—check it out!
+											</div>
 										</div>
 									</div>
 								</div>
@@ -837,10 +840,21 @@
 												<span class="badge bg-success">empty</span>
 											</td>
 											@endif
-											<td>
-												<button type="button" class="btn btn-info" onclick="	sendInvitation('{{$childeren->email}}')">		Invite
-												</button>
-											</td>
+											@if($childeren->hashKey == '' && $childeren->hashUsed == 0)
+												<td>
+													<button id="invite" type="button" class="btn btn-info" onclick="	sendInvitation('{{$childeren->email}}')">		Invite
+													</button>
+												</td>
+											@elseif($childeren->hashKey !='' && $childeren->hashUsed == 1)
+												<td>
+												  <span class="badge bg-success">Merged</span>
+												</td>
+											@else 
+												<td>
+													 <span id="invitation_sent" class="badge bg-warning">Invitation Sent</span>
+												</td>
+											@endif
+										
 										</tr>
 										@endforeach
 									</tbody>
@@ -1117,7 +1131,7 @@
 				$('#address_row').addClass('d-none');
 				$('.nav-pills .active').removeClass('active');
 				$('.nav-pills #dashboard').addClass('active');
-				
+				$("#additional_users").removeClass("active");
 				// $('#order_id').hide();
 				$('.order-detail-container').addClass('d-none');
 				$('#customer-address').addClass('d-none')
@@ -1273,6 +1287,7 @@
 			}
 			function additionalUsers() {
 				$('#my_quotes').addClass('d-none');
+				$("#additional_users").addClass("active");
 				$('#filter').addClass('d-none');
 				$('#orders').addClass('d-none');
 				$('#whishlist').addClass('d-none');
@@ -1280,19 +1295,14 @@
 				$('#order_details').addClass('d-none');
 				$('#address_row').addClass('d-none');
 				$('.nav-pills .active').removeClass('active');
-				$('.nav-pills #additional-users').addClass('active');
+				$('.nav-pills #additional_users').addClass('active');
 				$('#edit_address').addClass('d-none')
 				$('#intro').addClass('d-none');
 				$('#customer-address').addClass('d-none');
 				$('#additional-users').removeClass('d-none');
 				$('#qoute-heading').addClass('d-none');
-				//  jQuery.ajax({
-				// 		url: "{{ url('/user-addresses/') }}",
-				// 		method: 'GET',	
-				// 		success: function(data){
-				// 			console.log(data);
-				// 		},
-				// })
+				sessionStorage.removeItem("invitation");
+
 			}
 			function edit_address() {
 				$('#my_quotes').addClass('d-none');
@@ -1610,6 +1620,7 @@
 		}
 
 		function sendInvitation(email) {
+		 var addnew = sessionStorage.setItem('invitation', 1);
          var secondory_email = email;
 			jQuery.ajax({
 				url: "{{ url('admin/send-invitation-email')}}",
@@ -1620,7 +1631,12 @@
 					
 				},
 				success: function(response) {
-					console.log(response);
+
+					if (response.status == 200)
+					{
+						window.location.reload();
+				  		
+					}
 				}
 
 			});

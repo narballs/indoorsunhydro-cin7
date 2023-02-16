@@ -17,7 +17,9 @@ class SecondaryContact extends Model
         'jobTitle',
         'email', 
         'mobile',
-        'phone'
+        'phone',
+        'hashKey',
+        'hashUsed'
     ];
        
         public function contact()
