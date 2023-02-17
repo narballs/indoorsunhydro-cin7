@@ -194,7 +194,7 @@
 				</div>
 				<!-- Payment -->
 				@if ($customer->secondory_contact)
-                <div class="card mb-4">
+				<div class="card mb-4">
 					<div class="card-body">
 						<div class="row">
 							<div class="col-lg-12">
@@ -208,6 +208,7 @@
 										<th>Email</th>
 										<th>Mobile#</th>
 										<th>Phone</th>
+										<th>Status</th>
 									</tr>
 									@foreach($customer->secondory_contact as $contact)
 									<tr>
@@ -229,7 +230,7 @@
 											<span class="badge bg-info">empty</span>
 										</td>
 										@endif
-	                                    @if($contact->lastName)
+										@if($contact->lastName)
 										<td>
 											{{$contact->lastName}}
 										</td>
@@ -255,7 +256,7 @@
 										<td>
 											<span class="badge bg-info">empty</span>
 										</td>
-                                        @endif
+										@endif
 										@if($contact->mobile)
 										<td>
 											{{$contact->mobile}}
@@ -265,7 +266,7 @@
 											<span class="badge bg-info">empty</span>
 										</td>
 										@endif
-										  @if($contact->phone)
+										@if($contact->phone)
 										<td>
 											{{$contact->phone}}
 										</td>
@@ -274,6 +275,16 @@
 											<span class="badge bg-info">empty</span>
 										</td>
 										@endif
+										@if($contact->hashUsed == 1)
+										<td>
+											<span class="badge bg-success">Active</span>
+										</td>
+										@else
+										<td>
+											<span class="badge bg-warning">un Active</span>
+										</td>
+										@endif
+
 									</tr>
 									@endforeach
 								</table>
@@ -281,7 +292,7 @@
 						</div>
 					</div>
 				</div>
-                @endif
+				@endif
 
 				<div class="card mb-4">
 					<div class="card-body">
@@ -331,8 +342,8 @@
 					</div>
 				</div>
 
-				
-		
+
+
 			</div>
 			<div class="col-lg-3">
 				<!-- Customer Notes -->
