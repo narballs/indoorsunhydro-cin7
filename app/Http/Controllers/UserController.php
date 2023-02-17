@@ -20,11 +20,11 @@ use App\Mail\Subscribe;
 use App\Helpers\MailHelper;
 use App\Jobs\SyncContacts;
 use Session;
-use Auth;
 use Spatie\Permission\Models\Role;
-use DB;
-use Hash;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
 
@@ -264,15 +264,15 @@ class UserController extends Controller
             $user_id = $user->id;
             $contact = Contact::create([
                 'status' => 0,
-                'user_id' => $user_id, 
+                'user_id' => $user_id,
                 'type' => 'Customer',
                 'pricingColumn' => $secondary_contact->contact->priceColumn,
-                'company' => $secondary_contact->contact->company, 
+                'company' => $secondary_contact->contact->company,
                 'firstName' => $secondary_contact->firstName,
                 'lastName' => $secondary_contact->lastName,
-                'jobTitle' => $secondary_contact->jobTitle, 
-                'mobile' => $secondary_contact->mobile, 
-                'phone' => $secondary_contact->phone, 
+                'jobTitle' => $secondary_contact->jobTitle,
+                'mobile' => $secondary_contact->mobile,
+                'phone' => $secondary_contact->phone,
                 'email' => $secondary_contact->email,
                 'hashKey' => $secondary_contact->hashKey,
                 'hashUsed' => 1
@@ -280,15 +280,12 @@ class UserController extends Controller
             $encodec = $contact->toArray();
             unset($encodec['id']);
             $contact = [
-                    $encodec
+                $encodec
             ];
             SyncContacts::dispatch('create_contact', $contact);
-
-
-        }
-        else {
+        } else {
             $contact = Contact::where('email', $request->email)->first();
-        
+
 
             // $validatedData['password'] = bcrypt($validatedData['password']);
             // $validateData['first_name'] = $contact->firstName;
@@ -305,19 +302,16 @@ class UserController extends Controller
             $contact->user_id = $user->id;
             $contact->hashUsed = true;
             $contact->save();
-           
         }
         Auth::loginUsingId($user->id);
         return redirect('/');
-
-
         return back()->with('success', 'User created successfully.');
     }
 
 
     public function logout()
     {
-        \Auth::logout();
+        Auth::logout();
 
         return redirect()->route('user');
     }
@@ -506,5 +500,18 @@ class UserController extends Controller
         $count = $data->count();
         return view('admin/users/admin-users', compact('data', 'count'))
             ->with('i', ($request->input('page', 1) - 1) * 5);
+    }
+
+    public function switch_user($id)
+    {
+        Auth::loginUsingId($id);
+        // $contact = Contact::where('user_id', $id)->first();
+        // $encodec = $contact->toArray();
+        // unset($encodec['id']);
+        // $contact = [
+        //     $encodec
+        // ];
+        // SyncContacts::dispatch('create_contact', $contact);
+        return redirect('/');
     }
 }

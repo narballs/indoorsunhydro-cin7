@@ -112,7 +112,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('admin/shipping-method/delete/{id}', [ShippingMethodController::class, 'destroy'])->name('admin.shipping-method.delete');
     Route::get('admin/contacts', [ContactController::class, 'supplier'])->name('admin.contacts');
     Route::get('admin/customers', [ContactController::class, 'customer'])->name('admin.customer');
-    
+
 
     Route::get('admin/customer/create', [ContactController::class, 'customer_create'])->name('admin.customer.create');
     Route::post('admin/customer/store', [ContactController::class, 'customer_store'])->name('admin.customer.store');
@@ -132,6 +132,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('admin/generate-list', [AdminBuyListController::class, 'genrateList']);
     Route::post('admin/share-list', [AdminShareListController::class, 'shareList']);
     Route::get('admin/admin-users', [UserController::class, 'adminUsers']);
+    Route::get('admin/user-switch/{id}', [UserController::class, 'switch_user'])->name('users.switch');
     Route::get('admin/logout', function () {
         Auth::logout();
         return redirect()->route('user');

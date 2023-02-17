@@ -31,7 +31,7 @@
 			MY ACCOUNT
 		</p>
 	</div>
-	<div class="container" style="width:1435px !important;">
+	<div class="container-fluid" style="width:1435px !important;">
 		<div class="row bg-light">
 			<div class="container-fluid" id="main-row">
 				<div class="row my-2" style="border-radius: 0.5rem !important;margin:auto">
@@ -738,41 +738,41 @@
 										</div>
 										<div class="col-md-8">
 											<div class="alert alert-primary d-none" role="alert">
-			  								This is a primary alert—check it out!
+												This is a primary alert—check it out!
 											</div>
 										</div>
 									</div>
 								</div>
 							</div>
-							<div class="col-md-10 pl-0 pr-0 mr-0 ml-0 w-100">
-								<table class="table table-borderless" style="width:50%">
+							<div class="col-md-12 pl-0 pr-0 mr-0 ml-0 w-100">
+								<table class="table table-borderless">
 									<thead>
-									<tr>
-										<th>
-											Company
-										</th>
-										<th>
-											First Name
-										</th>
-										<th>
-											Last Name
-										</th>
-										<th>
-											Job Title
-										</th>
-										<th>
-											Email
-										</th>
-										<!-- <th>
+										<tr>
+											<th>
+												Company
+											</th>
+											<th>
+												First Name
+											</th>
+											<th>
+												Last Name
+											</th>
+											<th>
+												Job Title
+											</th>
+											<th>
+												Email
+											</th>
+											<!-- <th>
 											Mobile
 										</th> -->
-										<th>
-											Phone
-										</th>
-										<th>
-											Status
-										</th>
-									</tr>
+											<th>
+												Phone
+											</th>
+											<th>
+												Status
+											</th>
+										</tr>
 									</thead>
 									<tbody>
 										@foreach ($childerens->secondory_contact as $childeren)
@@ -822,7 +822,7 @@
 												<span class="badge bg-success">empty</span>
 											</td>
 											@endif
-										<!-- 	@if($childeren->mobile)
+											<!-- 	@if($childeren->mobile)
 											<td>
 												{{$childeren->mobile}}
 											</td>
@@ -841,26 +841,28 @@
 											</td>
 											@endif
 											@if($childeren->hashKey == '' && $childeren->hashUsed == 0)
-												<td>
-													<button id="invite" type="button" class="btn btn-info" onclick="	sendInvitation('{{$childeren->email}}')">		Invite
-													</button>
-												</td>
+											<td>
+												<button id="invite" type="button" class="btn btn-info"
+													onclick="	sendInvitation('{{$childeren->email}}')"> Invite
+												</button>
+											</td>
 											@elseif($childeren->hashKey !='' && $childeren->hashUsed == 1)
-												<td>
-												  <span class="badge bg-success">Merged</span>
-												</td>
-											@else 
-												<td>
-													 <span id="invitation_sent" class="badge bg-warning">Invitation Sent</span>
-												</td>
+											<td>
+												<span class="badge bg-success">Merged</span>
+											</td>
+											@else
+											<td>
+												<span id="invitation_sent" class="badge bg-warning">Invitation
+													Sent</span>
+											</td>
 											@endif
-										
+
 										</tr>
 										@endforeach
 									</tbody>
 								</table>
 							</div>
-							
+
 
 							<div class="row ms-2 mb-5 d-none" id="address_row">
 								<div class="col-md-3">
