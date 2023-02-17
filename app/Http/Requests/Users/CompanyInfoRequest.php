@@ -38,8 +38,8 @@ class CompanyInfoRequest extends FormRequest
         } else {
             return [
                 'street_address' => [
-                    'required',
-                    'regex:/^[a-zA-Z0-9\s-]+$/'
+                    'required'
+                    // 'regex:/^[a-zA-Z0-9\s-]+$/'
                 ],
                 // 'suit_apartment' => [
                 //     'required',
