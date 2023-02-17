@@ -140,6 +140,7 @@ Route::group(['middleware' => ['auth']], function () {
 });
 Route::get('product/search', [ProductController::class, 'productSearch'])->name('product_search');
 Route::post('admin/send-invitation-email', [ContactController::class, 'send_invitation_email'])->name('admin.send_invitation_email');
+Route::post('create/secodary/user', [UserController::class, 'create_secondary_user']);
 //Route::resource('buy-list', AdminBuyListController::class)->name('buy-lisy-front');
 
 
@@ -147,8 +148,6 @@ Route::post('admin/send-invitation-email', [ContactController::class, 'send_invi
 
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
-
 Route::get('/customer/invitation/{hash}', [ContactController::class, 'contomer_invitation']);
-
 Route::group(['middleware' => ['auth']], function () {
 });
