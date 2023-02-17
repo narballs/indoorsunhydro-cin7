@@ -401,7 +401,11 @@ class UserController extends Controller
         $user_address = Contact::where('user_id', $user_id)->first();
         $childerens = Contact::where('user_id', $user_id)->with('secondory_contact')->first();
         $list = BuyList::where('id', 20)->with('list_products.product.options')->first();
-        //dd($user_address);
+        $contact = SecondaryContact::where('email', $user_address->email)->first();
+        $parent = Contact::where('contact_id', $contact->parent_id)->get();
+
+        //$secondary_contact = Contact::where('p', $user_id)->with('contact')->first();
+       
         $states = UsState::all();
         if ($request->ajax()) {
             $user_orders = ApiOrder::where('user_id', $user_id)->with('apiOrderItem')->get();
@@ -413,7 +417,7 @@ class UserController extends Controller
             return $user_orders;
         }
 
-        return view('my-account', compact('user', 'user_address', 'states', 'childerens'));
+        return view('my-account', compact('user', 'user_address', 'states', 'childerens', 'parent'));
     }
 
     public function my_qoutes()
