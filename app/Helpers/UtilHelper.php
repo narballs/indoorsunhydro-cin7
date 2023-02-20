@@ -16,6 +16,7 @@ class UtilHelper
      */
     public static function sendRequest($method, $url, $body = [], $extra = [])
     {
+        
         $authHeaders = [
             'headers' => ['Content-type' => 'application/json'],
             'auth' => [
@@ -23,29 +24,30 @@ class UtilHelper
                 env('API_PASSWORD')
             ]
         ];
-        $parameters = [
-            'headers' => ['Content-type' => 'application/json'],
-            'auth' => [
-                'IndoorSunHydro2US',
-                '625ab949593e4cd4908b9f42758009f5'
-            ],
-        ];
+        // $authHeaders = [
+        //     'headers' => ['Content-type' => 'application/json'],
+        //     'auth' => [
+        //         'IndoorSunHydro2US',
+        //         '625ab949593e4cd4908b9f42758009f5'
+        //     ],
+        // ];
 
         if (!empty($body)) {
-            $parameters['json'] = $body;
+            $authHeaders['json'] = $body;
         }
 
         $client = new \GuzzleHttp\Client();
-
+        
+        $res = [];
         switch ($method) {
             case 'POST':
                 $res = $client->post($url, $authHeaders);
                 break;
             case 'PUT':
-                // code...
+                $res = $client->put($url, $authHeaders);
                 break;
             case 'GET':
-                $res = $client->get($url, $authHeaders);
+                $res = $client->get($url, $authHeaders); 
                 break;
 
             default:
