@@ -409,12 +409,12 @@
                     </div>
                     <div class="col-md-12">
                         <p class="thank-you-page-select-date-options">PO Number</p>
-                        <input type="text" name="po_number" placeholder="&#xf095; PO Number" id="po_number"
+                        <input type="text" name="po_number" placeholder=" PO Number" id="po_number"
                             class="form-control fontAwesome">
                     </div>
                     <div class="col-md-12">
                         <p class="thank-you-page-select-date-options">Memo</p>
-                        <input type="text" name="memo" placeholder="&#xf095; Memo" id="memo"
+                        <input type="text" name="memo" placeholder="&#xf328; Memo" id="memo"
                             class="form-control fontAwesome">
                     </div>
                 </div>
