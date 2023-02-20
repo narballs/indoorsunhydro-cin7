@@ -441,7 +441,8 @@
                             {{-- <p class=" thank-you-page-product-item-cart">shipping</p> --}}
                             <p class=" thank-you-page-product-item-cart">$</p>
                             <p class=" thank-you-page-product-item-cart mt-4">${{number_format($cart_total,2)}}</p>
-                            <p class="thank-you-page-product-item-cart mt-4" id="tax-rate">${{number_format($total_including_tax, 2)}}</p>
+                            <p class="thank-you-page-product-item-cart mt-4" id="tax-rate">
+                                ${{number_format($total_including_tax, 2)}}</p>
                         </div>
                     </div>
                 </div>
@@ -1127,7 +1128,7 @@
         </div>
     </div>
 </div>
-<div class="row mt-5 pt-5 desktop-view">
+<div class="row mt-5 pt-5 desktop-view" style="padding-top:100px  !important;">
     @include('partials.product-footer')
 </div>
 
