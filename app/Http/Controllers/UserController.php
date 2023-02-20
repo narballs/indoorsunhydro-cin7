@@ -399,9 +399,9 @@ class UserController extends Controller
         $list = BuyList::where('id', 20)->with('list_products.product.options')->first();
 
         $contact = SecondaryContact::where('email', $user_address->email)->first();
-        if($contact){
-          $parent = Contact::where('contact_id', $contact->parent_id)->get();  
-        }else{
+        if ($contact) {
+            $parent = Contact::where('contact_id', $contact->parent_id)->get();
+        } else {
             $parent = "";
         }
 
@@ -411,7 +411,7 @@ class UserController extends Controller
         // else {
         //     $parent = '';
         // }
-       
+
         $states = UsState::all();
         if ($request->ajax()) {
             $user_orders = ApiOrder::where('user_id', $user_id)->with('apiOrderItem')->get();
@@ -527,6 +527,7 @@ class UserController extends Controller
         return redirect('/');
     }
 
+
     public function create_secondary_user(Request $request) {
 
         $user_id = auth()->user()->id;
@@ -547,11 +548,10 @@ class UserController extends Controller
            'phone' => $request->phone,
         ];
     
-        //$secondary_contact = SecondaryContact::create($secondary_contact_data);
-   
-        //$current_contact = SecondaryContact::where('id', $secondary_contact->id)->first()->toArray();
+        SecondaryContact::create($secondary_contact_data);
 
         unset($secondary_contact_data['parent_id']);
+
 
        $contact = [
             [
@@ -565,9 +565,9 @@ class UserController extends Controller
 
         
         SyncContacts::dispatch('update_contact', $contact);
-        $secondary_contacts = SecondaryContact::orderBy('id', 'desc')->get();
-        return view('secondary-user', compact('secondary_contacts'));
+        $secondary_contacts = SecondaryContact::where('parent_id', $contactId)->orderBy('id', 'desc')->get();
+        
+        return view('secondary-user', compact('secondary_contacts'));    
+    }
 
-    
-}
 }
