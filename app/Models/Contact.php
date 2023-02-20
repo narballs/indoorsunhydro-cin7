@@ -63,6 +63,6 @@ class Contact extends Model
 
     public function secondory_contact()
     {
-        return $this->hasMany('App\Models\SecondaryContact', 'parent_id', 'contact_id');
+        return $this->hasMany('App\Models\SecondaryContact', 'parent_id', 'contact_id')->orderBy('id', 'desc');
     }
 }
