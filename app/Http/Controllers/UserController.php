@@ -28,6 +28,8 @@ use Illuminate\Support\Facades\Hash;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
 
+use App\Helpers\UtilHelper;
+
 
 
 class UserController extends Controller
@@ -525,25 +527,47 @@ class UserController extends Controller
         return redirect('/');
     }
 
-    public function create_secondary_user(Request $request)
-    {
+
+    public function create_secondary_user(Request $request) {
+
         $user_id = auth()->user()->id;
         $contact = Contact::where('user_id', $user_id)->first();
-        $secondary_contact = SecondaryContact::create([
-            'parent_id' => $contact->contact_id,
-            'company' => $contact->company,
-            'firstName' => $request->first_name,
-            'lastName' => $request->last_name,
-            'jobTitle' => $request->job_title,
-            'email' => $request->email,
-            'phone' => $request->phone,
+        $contactId = $contact->contact_id;
 
+        request()->validate([
+           'email' => 'required|email|unique:secondary_contacts,email',
         ]);
 
-        return response()->json([
-            'msg' => 'Secondary User Created',
-            'status' =>  200,
-            'secondary_contact' => $secondary_contact,
-        ]);
+        $secondary_contact_data = [
+           'parent_id' => $contact->contact_id,
+           'company' => $contact->company,
+           'firstName' => $request->first_name,
+           'lastName' => $request->last_name,
+           'jobTitle' => $request->job_title,
+           'email' => $request->email,
+           'phone' => $request->phone,
+        ];
+    
+        SecondaryContact::create($secondary_contact_data);
+
+        unset($secondary_contact_data['parent_id']);
+
+
+       $contact = [
+            [
+                'id' => $contactId,
+                'type' => 'Customer',
+                'secondaryContacts' => [
+                    $secondary_contact_data
+                ]
+            ]
+        ];
+
+        
+        SyncContacts::dispatch('update_contact', $contact);
+        $secondary_contacts = SecondaryContact::where('parent_id', $contactId)->orderBy('id', 'desc')->get();
+        
+        return view('secondary-user', compact('secondary_contacts'));    
     }
+
 }
