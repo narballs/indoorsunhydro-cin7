@@ -409,12 +409,12 @@
                     </div>
                     <div class="col-md-12">
                         <p class="thank-you-page-select-date-options">PO Number</p>
-                        <input type="text" name="po_number" placeholder="&#xf095; PO Number" id="po_number"
+                        <input type="text" name="po_number" placeholder=" PO Number" id="po_number"
                             class="form-control fontAwesome">
                     </div>
                     <div class="col-md-12">
                         <p class="thank-you-page-select-date-options">Memo</p>
-                        <input type="text" name="memo" placeholder="&#xf095; Memo" id="memo"
+                        <input type="text" name="memo" placeholder="&#xf328; Memo" id="memo"
                             class="form-control fontAwesome">
                     </div>
                 </div>
@@ -441,7 +441,8 @@
                             {{-- <p class=" thank-you-page-product-item-cart">shipping</p> --}}
                             <p class=" thank-you-page-product-item-cart">$</p>
                             <p class=" thank-you-page-product-item-cart mt-4">${{number_format($cart_total,2)}}</p>
-                            <p class="thank-you-page-product-item-cart mt-4" id="tax-rate">${{number_format($total_including_tax, 2)}}</p>
+                            <p class="thank-you-page-product-item-cart mt-4" id="tax-rate">
+                                ${{number_format($total_including_tax, 2)}}</p>
                         </div>
                     </div>
                 </div>
@@ -1127,7 +1128,7 @@
         </div>
     </div>
 </div>
-<div class="row mt-5 pt-5 desktop-view">
+<div class="row mt-5 pt-5 desktop-view" style="padding-top:100px  !important;">
     @include('partials.product-footer')
 </div>
 
