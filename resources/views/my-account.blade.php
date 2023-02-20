@@ -713,8 +713,10 @@
 										</div>
 										<div class="col pl-1 bg-white"
 											style="border-radius: 10px; border: 1px solid #008AD0!important;">
-											<div class="mt-4 mb-4 ms-3"><img src="theme/img/shipping_address2.png"><span
-													class="billing-address-heading-subtitle pt-2 ms-2 align-middle address-weight">Order
+											<div class="mt-4 mb-4 ms-3"><img src="theme/img/shipping_address2.png">
+												<span
+													class="billing-address-heading-subtitle pt-2 ms-2 align-middle address-weight">
+													Order
 													Details</span>
 											</div>
 											<div class="border-bottom ms-3"></div>
@@ -734,12 +736,16 @@
 									<div class="row mb-4 mt-3">
 										<div class="col-md-4 ">
 											<img src="theme/img/account_details.png" style="margin: -1px 2px 1px 1px;">
-											<span class="pt-1 my-account-content-heading">Additinal Users</span>
+											@if($parent)
+											<span class="pt-1 my-account-content-heading">Primary  Contact</span>
+											@else
+											<span class="pt-1 my-account-content-heading">Secondary Contact</span>
+											@endif
 										</div>
-										<div class="col-md-8">
-											<div class="alert alert-primary d-none" role="alert">
-												This is a primary alert—check it out!
-											</div>
+										<div class="col-md-4">
+											<button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+				                                  Create Secondary User
+				                            </button>
 										</div>
 									</div>
 								</div>
@@ -775,6 +781,43 @@
 										</tr>
 									</thead>
 									<tbody>
+										@if($parent)
+										<tr>
+											<td>
+												@if($parent[0]['company'])
+												{{$parent[0]['company']}}
+												@else
+													<span class="badge bg-success">empty</span>
+												@endif
+											</td>
+											<td>
+												{{$parent[0]['firstName']}}
+											</td>
+											<td>
+												{{$parent[0]['lastName']}}
+											</td>
+											<td>
+												@if($parent[0]['jobTitle'])
+												 {{$parent[0]['jobTitle']}}
+												 @else
+												<span class="badge bg-success">empty</span>
+												@endif
+											</td>
+											<td>
+												{{$parent[0]['email']}}
+											</td>
+											<td>
+												{{$parent[0]['phone']}}
+											</td>
+											<td>
+												@if($parent[0]['status'] == 1)
+												<span class="badge bg-success">Active</span>
+												@else
+												<span class="badge bg-success">Un Active</span>
+												@endif
+											</td>
+										</tr>
+										@endif
 										@foreach ($childerens->secondory_contact as $childeren)
 										<tr>
 											@if($childeren->company)
@@ -898,8 +941,51 @@
 				@section('css')
 				<link rel="stylesheet" href="../css/admin_custom.css">
 				@stop
-
-
+				<!-- Modal -->
+				<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+				  <div class="modal-dialog modal-dialog-centered">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <h5 class="modal-title" id="staticBackdropLabel">Create Secondary User</h5>
+				        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				      </div>
+				      <div class="modal-body">
+				      	<div class="row">
+				      		<div class="col-md-12">
+				      	<form method="POST">
+						  <div class="mb-3">
+						    <label for="exampleInputEmail1" class="form-label">First Name</label>
+						   		 <input type="text" class="form-control" id="first_name" aria-describedby="emailHelp">
+						   </div>
+						  </div>
+						  <div class="mb-3">
+						    <label for="exampleInputEmail1" class="form-label">Last Name</label>
+						   		 <input type="text" class="form-control" id="last_name" aria-describedby="emailHelp">
+						  </div>
+						  <div class="mb-3 form-check">
+						    <label for="exampleInputEmail1" class="form-label">Job Title</label>
+						   		 <input type="text" class="form-control" id="job_title" aria-describedby="emailHelp">
+						  </div>
+						  <div class="mb-3 form-check">
+						    <label for="exampleInputEmail1" class="form-label">Email</label>
+						   		 <input type="email" class="form-control" id="email" aria-describedby="emailHelp">
+						  </div>
+						    <div class="mb-3 form-check">
+						    <label for="exampleInputEmail1" class="form-label">Phone</label>
+						   		 <input type="number" class="form-control" id="phone" aria-describedby="emailHelp">
+						  </div>
+						</form>
+				      		</div>
+				      	</div>
+				       <div class="modal-footer">
+				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+				        <button type="button" class="btn btn-primary" onclick="CreateSocodoryUser()">Save</button>
+				      </div>
+				      </div>
+				      
+				    </div>
+				  </div>
+				</div>
 				<script>
 					function qoute() {
 				$('#my_quotes_detail_table').addClass('d-none');
@@ -1675,11 +1761,38 @@
 						  $('#all_qoutes').removeClass('d-none');
 				          $('#my_quotes_edit').removeClass('d-none');
 				          $('#my_quotes').addClass('d-none');
-							  dataType: 'html'
+						dataType: 'html'
 				},	
 			});
 		}
-				</script>
+
+
+	function CreateSocodoryUser ()
+		{
+			var first_name = $('#first_name').val();
+			var last_name = $('#last_name').val();
+			var job_title = $('#job_title').val();
+			var email = $('#email').val();
+			var phone = $('#phone').val();
+			jQuery.ajax({
+				url: "{{ url('/create/secodary/user')}}",
+				method: 'POST',
+				data : {
+					"_token": "{{ csrf_token() }}",
+					'first_name' : first_name,
+					'last_name' : last_name,
+					'job_title' : job_title,
+					'email': email,
+					'phone' : phone
+				},
+				  success: function(response) {
+				  	$('$staticBackdrop').hide();
+                  console.log(response);
+				},
+		  });
+
+		}
+</script>
 
 				<!-- Remove the container if you want to extend the Footer to full width. -->
 

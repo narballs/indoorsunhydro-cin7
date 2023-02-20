@@ -395,7 +395,21 @@ class UserController extends Controller
         $user_address = Contact::where('user_id', $user_id)->first();
         $childerens = Contact::where('user_id', $user_id)->with('secondory_contact')->first();
         $list = BuyList::where('id', 20)->with('list_products.product.options')->first();
-        //dd($user_address);
+
+        $contact = SecondaryContact::where('email', $user_address->email)->first();
+        if ($contact) {
+            $parent = Contact::where('contact_id', $contact->parent_id)->get();
+        } else {
+            $parent = "";
+        }
+
+        // if ($parent) {
+        //     $parent = $parent;
+        // }
+        // else {
+        //     $parent = '';
+        // }
+
         $states = UsState::all();
         if ($request->ajax()) {
             $user_orders = ApiOrder::where('user_id', $user_id)->with('apiOrderItem')->get();
@@ -407,7 +421,7 @@ class UserController extends Controller
             return $user_orders;
         }
 
-        return view('my-account', compact('user', 'user_address', 'states', 'childerens'));
+        return view('my-account', compact('user', 'user_address', 'states', 'childerens', 'parent'));
     }
 
     public function my_qoutes()
@@ -509,5 +523,27 @@ class UserController extends Controller
         // ];
         // SyncContacts::dispatch('create_contact', $contact);
         return redirect('/');
+    }
+
+    public function create_secondary_user(Request $request)
+    {
+        $user_id = auth()->user()->id;
+        $contact = Contact::where('user_id', $user_id)->first();
+        $secondary_contact = SecondaryContact::create([
+            'parent_id' => $contact->contact_id,
+            'company' => $contact->company,
+            'firstName' => $request->first_name,
+            'lastName' => $request->last_name,
+            'jobTitle' => $request->job_title,
+            'email' => $request->email,
+            'phone' => $request->phone,
+
+        ]);
+
+        return response()->json([
+            'msg' => 'Secondary User Created',
+            'status' =>  200,
+            'secondary_contact' => $secondary_contact,
+        ]);
     }
 }
