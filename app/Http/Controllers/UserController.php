@@ -57,11 +57,39 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $data = User::orderBy('id', 'DESC')->paginate(5);
+        $page = $request->page;
+        $search = $request->search;
+        $usersData = $request->usersData;
+        // $cin7Merged = $request->get('cin7-merged');
+
+        $user_query = User::orderBy('id', 'DESC')->with('contact');
+
+        if (!empty($usersData)) {
+            if ($usersData == 'admin-user') {
+                $user_query = $user_query->role(['admin']);
+            } elseif ($usersData == 'cin7-merged') {
+                $user_query = $user_query;
+                $user_query = $user_query->whereHas('contact', function ($query) {
+                    $query = $query->whereNotNull('contact_id');
+                })->with('contact');
+            } elseif ($usersData == 'not-merged') {
+                $user_query = $user_query;
+                $user_query = $user_query->whereHas('contact', function ($query) {
+                    $query = $query->whereNull('contact_id');
+                })->with('contact');
+            }
+        }
+
+        if (!empty($search)) {
+            $user_query = $user_query->where('first_name', 'LIKE', '%' . $search . '%')
+                ->orWhere('last_name', 'like', '%' . $search . '%')
+                ->orWhere('email', 'like', '%' . $search . '%');
+        }
+
+        $data = $user_query->paginate(10);
         $users = User::role(['Admin'])->get();
         $count = $users->count();
-
-        return view('admin.users.index', compact('data', 'count'))
+        return view('admin.users.index', compact('data', 'count', 'search', 'usersData'))
             ->with('i', ($request->input('page', 1) - 1) * 5);
     }
 
@@ -505,7 +533,6 @@ class UserController extends Controller
 
     public function adminUsers(Request $request)
     {
-        //$data = User::orderBy('id', 'DESC')->paginate(5);
         $data = User::role(['Admin'])->get();
         $count = $data->count();
         return view('admin/users/admin-users', compact('data', 'count'))
@@ -514,15 +541,21 @@ class UserController extends Controller
 
     public function switch_user($id)
     {
-        Auth::loginUsingId($id);
-        // $contact = Contact::where('user_id', $id)->first();
-        // $encodec = $contact->toArray();
-        // unset($encodec['id']);
-        // $contact = [
-        //     $encodec
-        // ];
-        // SyncContacts::dispatch('create_contact', $contact);
+
+        $test = Auth::loginUsingId($id);
+        $auth_user_email = $test->email;
+        session()->put('logged_in_as_another_user', $auth_user_email);
         return redirect('/');
+    }
+
+
+    public function switch_user_back()
+    {
+        $admin = User::role('Admin')->first();
+        Auth::loginUsingId($admin->id);
+        session()->flash('logged_in_as_another_user', '');
+        //session()->gc_collect_cycles('logged_in_as_another_user', $auth_user_email);
+        return redirect('admin/dashboard');
     }
 
     public function create_secondary_user(Request $request)
