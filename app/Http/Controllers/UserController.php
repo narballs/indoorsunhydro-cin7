@@ -284,7 +284,7 @@ class UserController extends Controller
             $contact = [
                 $encodec
             ];
-            SyncContacts::dispatch('create_contact', $contact);
+            SyncContacts::dispatch('create_contact', $contact)->onQueue(env('QUEUE_NAME'));
         } else {
             $contact = Contact::where('email', $request->email)->first();
 
@@ -523,7 +523,7 @@ class UserController extends Controller
         // $contact = [
         //     $encodec
         // ];
-        // SyncContacts::dispatch('create_contact', $contact);
+        // SyncContacts::dispatch('create_contact', $contact)->onQueue(env('QUEUE_NAME'));
         return redirect('/');
     }
 
@@ -564,7 +564,7 @@ class UserController extends Controller
         ];
 
         
-        SyncContacts::dispatch('update_contact', $contact);
+        SyncContacts::dispatch('update_contact', $contact)->onQueue(env('QUEUE_NAME'));
         $secondary_contacts = SecondaryContact::where('parent_id', $contactId)->orderBy('id', 'desc')->get();
         
         return view('secondary-user', compact('secondary_contacts'));    

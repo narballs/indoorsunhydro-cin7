@@ -22,7 +22,7 @@ class ShippingMethodController extends Controller
         SalesOrders::dispatch('create_order', [
             'id' => 123,
             'orderNumber' => 2314234234
-        ]);
+        ])->onQueue(env('QUEUE_NAME'));
         //echo 'here';exit;
         return view('admin/shipping-methods', compact('shippingmethods'));
     }
