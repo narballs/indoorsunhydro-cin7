@@ -28,6 +28,8 @@ use Illuminate\Support\Facades\Hash;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
 
+use App\Helpers\UtilHelper;
+
 
 
 class UserController extends Controller
@@ -310,7 +312,7 @@ class UserController extends Controller
             $contact = [
                 $encodec
             ];
-            SyncContacts::dispatch('create_contact', $contact);
+            SyncContacts::dispatch('create_contact', $contact)->onQueue(env('QUEUE_NAME'));
         } else {
             $contact = Contact::where('email', $request->email)->first();
 
@@ -545,9 +547,10 @@ class UserController extends Controller
         $test = Auth::loginUsingId($id);
         $auth_user_email = $test->email;
         session()->put('logged_in_as_another_user', $auth_user_email);
+        Auth::loginUsingId($id);
+
         return redirect('/');
     }
-
 
     public function switch_user_back()
     {
@@ -562,21 +565,42 @@ class UserController extends Controller
     {
         $user_id = auth()->user()->id;
         $contact = Contact::where('user_id', $user_id)->first();
-        $secondary_contact = SecondaryContact::create([
+        $contactId = $contact->contact_id;
+
+        $request->validate([
+            'email' => 'required|email|unique:secondary_contacts,email',
+            'firstName' => 'required',
+            'lastName' => 'required',
+            'jobTitle' => 'required',
+            'phone' => 'required',
+        ]);
+
+        $secondary_contact_data = [
             'parent_id' => $contact->contact_id,
             'company' => $contact->company,
-            'firstName' => $request->first_name,
-            'lastName' => $request->last_name,
-            'jobTitle' => $request->job_title,
+            'firstName' => $request->firstName,
+            'lastName' => $request->lastName,
+            'jobTitle' => $request->jobTitle,
             'email' => $request->email,
             'phone' => $request->phone,
+        ];
 
-        ]);
+        SecondaryContact::create($secondary_contact_data);
 
-        return response()->json([
-            'msg' => 'Secondary User Created',
-            'status' =>  200,
-            'secondary_contact' => $secondary_contact,
-        ]);
+        unset($secondary_contact_data['parent_id']);
+
+
+        $contact = [
+            [
+                'id' => $contactId,
+                'type' => 'Customer',
+                'secondaryContacts' => [
+                    $secondary_contact_data
+                ]
+            ]
+        ];
+        SyncContacts::dispatch('update_contact', $contact)->onQueue(env('QUEUE_NAME'));
+        $secondary_contacts = SecondaryContact::where('parent_id', $contactId)->orderBy('id', 'desc')->get();
+        return view('secondary-user', compact('secondary_contacts'));
     }
 }

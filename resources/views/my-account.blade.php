@@ -780,8 +780,8 @@
 											</th>
 										</tr>
 									</thead>
+									@if($parent)
 									<tbody>
-										@if($parent)
 										<tr>
 											<td>
 												@if($parent[0]['company'])
@@ -817,92 +817,11 @@
 												@endif
 											</td>
 										</tr>
+										</tbody>
 										@endif
-										@foreach ($childerens->secondory_contact as $childeren)
-										<tr>
-											@if($childeren->company)
-											<td>
-												{{$childeren->company}}
-											</td>
-											@else
-											<td>
-												<span class="badge bg-success">empty</span>
-											</td>
-											@endif
-											@if($childeren->firstName)
-											<td>
-												{{$childeren->firstName}}
-											</td>
-											@else
-											<td>
-												<span class="badge bg-success">empty</span>
-											</td>
-											@endif
-											@if($childeren->lastName)
-											<td>
-												{{$childeren->lastName}}
-											</td>
-											@else
-											<td>
-												<span class="badge bg-success">empty</span>
-											</td>
-											@endif
-											@if($childeren->jobTitle)
-											<td>
-												{{$childeren->jobTitle}}
-											</td>
-											@else
-											<td>
-												<span class="badge bg-success">empty</span>
-											</td>
-											@endif
-											@if($childeren->email)
-											<td>
-												{{$childeren->email}}
-											</td>
-											@else
-											<td>
-												<span class="badge bg-success">empty</span>
-											</td>
-											@endif
-											<!-- 	@if($childeren->mobile)
-											<td>
-												{{$childeren->mobile}}
-											</td>
-											@else
-											<td>
-												<span class="badge bg-success">empty</span>
-											</td>
-											@endif -->
-											@if($childeren->phone)
-											<td>
-												{{$childeren->phone}}
-											</td>
-											@else
-											<td>
-												<span class="badge bg-success">empty</span>
-											</td>
-											@endif
-											@if($childeren->hashKey == '' && $childeren->hashUsed == 0)
-											<td>
-												<button id="invite" type="button" class="btn btn-info"
-													onclick="	sendInvitation('{{$childeren->email}}')"> Invite
-												</button>
-											</td>
-											@elseif($childeren->hashKey !='' && $childeren->hashUsed == 1)
-											<td>
-												<span class="badge bg-success">Merged</span>
-											</td>
-											@else
-											<td>
-												<span id="invitation_sent" class="badge bg-warning">Invitation
-													Sent</span>
-											</td>
-											@endif
-
-										</tr>
-										@endforeach
-									</tbody>
+										<tbody id="secondary_user">
+											@include('secondary-user', ['secondary_contacts' => $childerens->secondory_contact])
+										</tbody>
 								</table>
 							</div>
 
@@ -955,20 +874,24 @@
 				      	<form method="POST">
 						  <div class="mb-3">
 						    <label for="exampleInputEmail1" class="form-label">First Name</label>
-						   		 <input type="text" class="form-control" id="first_name" aria-describedby="emailHelp">
+						   		 <input type="text" class="form-control" id="first_name_secondary" aria-describedby="emailHelp">
 						   </div>
+						   <div class="text-danger" id="first_name_secondary_errors"></div>
 						  </div>
 						  <div class="mb-3">
 						    <label for="exampleInputEmail1" class="form-label">Last Name</label>
-						   		 <input type="text" class="form-control" id="last_name" aria-describedby="emailHelp">
+						   		 <input type="text" class="form-control" id="last_name_secondary" aria-describedby="emailHelp">
 						  </div>
+						  <div class="text-danger" id="last_name_secondary_errors"></div>
 						  <div class="mb-3 form-check">
 						    <label for="exampleInputEmail1" class="form-label">Job Title</label>
 						   		 <input type="text" class="form-control" id="job_title" aria-describedby="emailHelp">
 						  </div>
+						  <div class="text-danger" id="job_title_secondary_errors"></div>
 						  <div class="mb-3 form-check">
 						    <label for="exampleInputEmail1" class="form-label">Email</label>
 						   		 <input type="email" class="form-control" id="email" aria-describedby="emailHelp">
+						   	 <div class="text-danger" id="secondary_user_email_errors"></div>
 						  </div>
 						    <div class="mb-3 form-check">
 						    <label for="exampleInputEmail1" class="form-label">Phone</label>
@@ -1766,11 +1689,16 @@
 			});
 		}
 
+		// $("#save-project-btn").click(function(event ){
+		//             event.preventDefault();
+		//             storeSecondaryUser(); 
+		//         })
+
 
 	function CreateSocodoryUser ()
 		{
-			var first_name = $('#first_name').val();
-			var last_name = $('#last_name').val();
+			var first_name = $('#first_name_secondary').val();
+			var last_name = $('#last_name_secondary').val();
 			var job_title = $('#job_title').val();
 			var email = $('#email').val();
 			var phone = $('#phone').val();
@@ -1779,16 +1707,79 @@
 				method: 'POST',
 				data : {
 					"_token": "{{ csrf_token() }}",
-					'first_name' : first_name,
-					'last_name' : last_name,
-					'job_title' : job_title,
+					'firstName' : first_name,
+					'lastName' : last_name,
+					'jobTitle' : job_title,
 					'email': email,
 					'phone' : phone
 				},
 				  success: function(response) {
-				  	$('$staticBackdrop').hide();
-                  console.log(response);
+				  	  $("#secondary_user").html(response);
+				  	  $('#staticBackdrop').modal('hide');
 				},
+				error: function(response) {
+					var error_message = response.responseJSON;
+		            var error_text = '';
+		            if (typeof error_message.errors.email != 'undefined') {
+		                error_text = error_message.errors.email;
+		                $('#secondary_user_email_errors').html(error_text);
+		            }
+		            else {
+		                error_text = '';
+		                $('#secondary_user_email_errors').html(error_text);
+		            }
+
+		            if (typeof error_message.errors.firstName != 'undefined') {
+		                error_text = error_message.errors.firstName;
+		                $('#first_name_secondary_errors').html(error_text);
+		               }
+		            else {
+		                error_text = '';
+		                $('#first_name_secondary_errors').html(error_text);
+		            }
+
+
+		            if (typeof error_message.errors.lastName != 'undefined') {
+		                error_text = error_message.errors.lastName;
+		                $('#last_name_secondary_errors').html(error_text);
+		               }
+		            else {
+		                error_text = '';
+		                $('#last_name_secondary_errors').html(error_text);
+		            }
+
+		            if (typeof error_message.errors.jobTitle != 'undefined') {
+		                error_text = error_message.errors.jobTitle;
+		                $('#job_title_secondary_errors').html(error_text);
+		               }
+		            else {
+		                error_text = '';
+		                $('#job_title_secondary_errors').html(error_text);
+		            }
+
+		            // if (typeof error_message.errors.phone != 'undefined') {
+		            //     error_text = error_message.errors.phone;
+		            //     $('#job_title_secondary_errors').html(error_text);
+		            //    }
+		            // else {
+		            //     error_text = '';
+		            //     $('#job_title_secondary_errors').html(error_text);
+		            // }
+					
+					
+
+
+
+
+
+
+					// if (!empty(response.responseJSON.errors.email[0])) {
+					// 	$("#secondary_user_email_errors").html(response.responseJSON.errors.email[0]);
+					// }
+					// else {
+					// 	$("#secondary_user_email_errors").addClass('d-none');
+					// }
+				}
 		  });
 
 		}

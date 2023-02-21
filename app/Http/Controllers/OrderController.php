@@ -148,7 +148,7 @@ class OrderController extends Controller
             $order->processedBy  =  79914;
             $order->isApproved    =  false;
             $order->memberId    =  $contact_id;
-            $order->branchId   =  null;
+            $order->branchId   =  "none";
             $order->branchEmail  =  'wqszeeshan@gmail.com';
             $order->productTotal      =  $cart_total;
             $order->total        =  $cart_total;
@@ -479,8 +479,8 @@ class OrderController extends Controller
             //                 ],
             //              ];
             //dd($order);
-            //SalesOrders::dispatch('list_order', []);
-            //SalesOrders::dispatch('create_order', $order);
+            //SalesOrders::dispatch('list_order', [])->onQueue(env('QUEUE_NAME'));
+            //SalesOrders::dispatch('create_order', $order)->onQueue(env('QUEUE_NAME'));
             session()->forget('cart');
             return \Redirect::route('thankyou', $order_id);
         }
