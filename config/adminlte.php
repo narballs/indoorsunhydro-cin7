@@ -334,45 +334,8 @@ return [
         ],
         [
             'text'    => 'Contacts',
-            'icon'    => 'fas fa-fw fa-share',
-            'submenu' => [
-                // [
-                //     'text' => 'Suppliers',
-                //     'url'  => 'admin/contacts',
-                // ],
-                [
-                    'text' => 'Customers',
-                    'url'  => 'admin/customers',
-                ],
-                // [
-                //     'text'    => 'level_one',
-                //     'url'     => '#',
-                //     'submenu' => [
-                //         [
-                //             'text' => 'level_two',
-                //             'url'  => '#',
-                //         ],
-                //         [
-                //             'text'    => 'level_two',
-                //             'url'     => '#',
-                //             'submenu' => [
-                //                 [
-                //                     'text' => 'level_three',
-                //                     'url'  => '#',
-                //                 ],
-                //                 [
-                //                     'text' => 'level_three',
-                //                     'url'  => '#',
-                //                 ],
-                //             ],
-                //         ],
-                //     ],
-                // ],
-                // [
-                //     'text' => 'level_one',
-                //     'url'  => '#',
-                // ],
-            ],
+            'url'  => 'admin/customers',
+            'icon'    => 'fas fa-fw fa-users',
         ],
         ['header' => 'labels'],
         [
