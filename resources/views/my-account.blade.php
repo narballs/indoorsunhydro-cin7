@@ -876,19 +876,22 @@
 						    <label for="exampleInputEmail1" class="form-label">First Name</label>
 						   		 <input type="text" class="form-control" id="first_name_secondary" aria-describedby="emailHelp">
 						   </div>
+						   <div class="text-danger" id="first_name_secondary_errors"></div>
 						  </div>
 						  <div class="mb-3">
 						    <label for="exampleInputEmail1" class="form-label">Last Name</label>
 						   		 <input type="text" class="form-control" id="last_name_secondary" aria-describedby="emailHelp">
 						  </div>
+						  <div class="text-danger" id="last_name_secondary_errors"></div>
 						  <div class="mb-3 form-check">
 						    <label for="exampleInputEmail1" class="form-label">Job Title</label>
 						   		 <input type="text" class="form-control" id="job_title" aria-describedby="emailHelp">
 						  </div>
+						  <div class="text-danger" id="job_title_secondary_errors"></div>
 						  <div class="mb-3 form-check">
 						    <label for="exampleInputEmail1" class="form-label">Email</label>
 						   		 <input type="email" class="form-control" id="email" aria-describedby="emailHelp">
-						   	 <div class="text-danger" id="secondary_user_email"></div>
+						   	 <div class="text-danger" id="secondary_user_email_errors"></div>
 						  </div>
 						    <div class="mb-3 form-check">
 						    <label for="exampleInputEmail1" class="form-label">Phone</label>
@@ -1704,9 +1707,9 @@
 				method: 'POST',
 				data : {
 					"_token": "{{ csrf_token() }}",
-					'first_name' : first_name,
-					'last_name' : last_name,
-					'job_title' : job_title,
+					'firstName' : first_name,
+					'lastName' : last_name,
+					'jobTitle' : job_title,
 					'email': email,
 					'phone' : phone
 				},
@@ -1715,8 +1718,67 @@
 				  	  $('#staticBackdrop').modal('hide');
 				},
 				error: function(response) {
-					console.log(response);
-					$("#secondary_user_email").html(response.responseJSON.errors.email[0]);
+					var error_message = response.responseJSON;
+		            var error_text = '';
+		            if (typeof error_message.errors.email != 'undefined') {
+		                error_text = error_message.errors.email;
+		                $('#secondary_user_email_errors').html(error_text);
+		            }
+		            else {
+		                error_text = '';
+		                $('#secondary_user_email_errors').html(error_text);
+		            }
+
+		            if (typeof error_message.errors.firstName != 'undefined') {
+		                error_text = error_message.errors.firstName;
+		                $('#first_name_secondary_errors').html(error_text);
+		               }
+		            else {
+		                error_text = '';
+		                $('#first_name_secondary_errors').html(error_text);
+		            }
+
+
+		            if (typeof error_message.errors.lastName != 'undefined') {
+		                error_text = error_message.errors.lastName;
+		                $('#last_name_secondary_errors').html(error_text);
+		               }
+		            else {
+		                error_text = '';
+		                $('#last_name_secondary_errors').html(error_text);
+		            }
+
+		            if (typeof error_message.errors.jobTitle != 'undefined') {
+		                error_text = error_message.errors.jobTitle;
+		                $('#job_title_secondary_errors').html(error_text);
+		               }
+		            else {
+		                error_text = '';
+		                $('#job_title_secondary_errors').html(error_text);
+		            }
+
+		            // if (typeof error_message.errors.phone != 'undefined') {
+		            //     error_text = error_message.errors.phone;
+		            //     $('#job_title_secondary_errors').html(error_text);
+		            //    }
+		            // else {
+		            //     error_text = '';
+		            //     $('#job_title_secondary_errors').html(error_text);
+		            // }
+					
+					
+
+
+
+
+
+
+					// if (!empty(response.responseJSON.errors.email[0])) {
+					// 	$("#secondary_user_email_errors").html(response.responseJSON.errors.email[0]);
+					// }
+					// else {
+					// 	$("#secondary_user_email_errors").addClass('d-none');
+					// }
 				}
 		  });
 
