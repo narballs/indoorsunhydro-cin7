@@ -479,8 +479,8 @@ class OrderController extends Controller
             //                 ],
             //              ];
             //dd($order);
-            //SalesOrders::dispatch('list_order', []);
-            //SalesOrders::dispatch('create_order', $order);
+            //SalesOrders::dispatch('list_order', [])->onQueue(env('QUEUE_NAME'));
+            //SalesOrders::dispatch('create_order', $order)->onQueue(env('QUEUE_NAME'));
             session()->forget('cart');
             return \Redirect::route('thankyou', $order_id);
         }

@@ -222,7 +222,7 @@ class OrderManagementController extends Controller
         SalesOrders::dispatch('create_order', [
             'json' =>
             $order
-        ]);
+        ])->onQueue(env('QUEUE_NAME'));
         exit;
         //  $order_encoded = json_encode($order);
 
@@ -404,7 +404,7 @@ class OrderManagementController extends Controller
 
             ],
         ];
-        SalesOrders::dispatch('create_order', $order);
+        SalesOrders::dispatch('create_order', $order)->onQueue(env('QUEUE_NAME'));
         //         $data = [
         //             'order_id' => $order_id,
         //             'name' =>  'Admin',
