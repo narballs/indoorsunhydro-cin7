@@ -59,11 +59,39 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $data = User::orderBy('id', 'DESC')->paginate(5);
+        $page = $request->page;
+        $search = $request->search;
+        $usersData = $request->usersData;
+        // $cin7Merged = $request->get('cin7-merged');
+
+        $user_query = User::orderBy('id', 'DESC')->with('contact');
+
+        if (!empty($usersData)) {
+            if ($usersData == 'admin-user') {
+                $user_query = $user_query->role(['admin']);
+            } elseif ($usersData == 'cin7-merged') {
+                $user_query = $user_query;
+                $user_query = $user_query->whereHas('contact', function ($query) {
+                    $query = $query->whereNotNull('contact_id');
+                })->with('contact');
+            } elseif ($usersData == 'not-merged') {
+                $user_query = $user_query;
+                $user_query = $user_query->whereHas('contact', function ($query) {
+                    $query = $query->whereNull('contact_id');
+                })->with('contact');
+            }
+        }
+
+        if (!empty($search)) {
+            $user_query = $user_query->where('first_name', 'LIKE', '%' . $search . '%')
+                ->orWhere('last_name', 'like', '%' . $search . '%')
+                ->orWhere('email', 'like', '%' . $search . '%');
+        }
+
+        $data = $user_query->paginate(10);
         $users = User::role(['Admin'])->get();
         $count = $users->count();
-
-        return view('admin.users.index', compact('data', 'count'))
+        return view('admin.users.index', compact('data', 'count', 'search', 'usersData'))
             ->with('i', ($request->input('page', 1) - 1) * 5);
     }
 
@@ -507,7 +535,6 @@ class UserController extends Controller
 
     public function adminUsers(Request $request)
     {
-        //$data = User::orderBy('id', 'DESC')->paginate(5);
         $data = User::role(['Admin'])->get();
         $count = $data->count();
         return view('admin/users/admin-users', compact('data', 'count'))
@@ -516,48 +543,54 @@ class UserController extends Controller
 
     public function switch_user($id)
     {
+
+        $test = Auth::loginUsingId($id);
+        $auth_user_email = $test->email;
+        session()->put('logged_in_as_another_user', $auth_user_email);
         Auth::loginUsingId($id);
-        // $contact = Contact::where('user_id', $id)->first();
-        // $encodec = $contact->toArray();
-        // unset($encodec['id']);
-        // $contact = [
-        //     $encodec
-        // ];
-        // SyncContacts::dispatch('create_contact', $contact)->onQueue(env('QUEUE_NAME'));
+
         return redirect('/');
     }
 
+    public function switch_user_back()
+    {
+        $admin = User::role('Admin')->first();
+        Auth::loginUsingId($admin->id);
+        session()->flash('logged_in_as_another_user', '');
+        //session()->gc_collect_cycles('logged_in_as_another_user', $auth_user_email);
+        return redirect('admin/dashboard');
+    }
 
-    public function create_secondary_user(Request $request) {
-
+    public function create_secondary_user(Request $request)
+    {
         $user_id = auth()->user()->id;
         $contact = Contact::where('user_id', $user_id)->first();
         $contactId = $contact->contact_id;
 
         $request->validate([
-           'email' => 'required|email|unique:secondary_contacts,email',
-           'firstName' => 'required',
-           'lastName' => 'required',
-           'jobTitle' => 'required',
-           'phone' => 'required',
+            'email' => 'required|email|unique:secondary_contacts,email',
+            'firstName' => 'required',
+            'lastName' => 'required',
+            'jobTitle' => 'required',
+            'phone' => 'required',
         ]);
 
         $secondary_contact_data = [
-           'parent_id' => $contact->contact_id,
-           'company' => $contact->company,
-           'firstName' => $request->firstName,
-           'lastName' => $request->lastName,
-           'jobTitle' => $request->jobTitle,
-           'email' => $request->email,
-           'phone' => $request->phone,
+            'parent_id' => $contact->contact_id,
+            'company' => $contact->company,
+            'firstName' => $request->firstName,
+            'lastName' => $request->lastName,
+            'jobTitle' => $request->jobTitle,
+            'email' => $request->email,
+            'phone' => $request->phone,
         ];
-    
+
         SecondaryContact::create($secondary_contact_data);
 
         unset($secondary_contact_data['parent_id']);
 
 
-       $contact = [
+        $contact = [
             [
                 'id' => $contactId,
                 'type' => 'Customer',
@@ -566,12 +599,8 @@ class UserController extends Controller
                 ]
             ]
         ];
-
-        
         SyncContacts::dispatch('update_contact', $contact)->onQueue(env('QUEUE_NAME'));
         $secondary_contacts = SecondaryContact::where('parent_id', $contactId)->orderBy('id', 'desc')->get();
-        
-        return view('secondary-user', compact('secondary_contacts'));    
+        return view('secondary-user', compact('secondary_contacts'));
     }
-
 }
