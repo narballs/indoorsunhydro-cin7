@@ -534,16 +534,20 @@ class UserController extends Controller
         $contact = Contact::where('user_id', $user_id)->first();
         $contactId = $contact->contact_id;
 
-        request()->validate([
+        $request->validate([
            'email' => 'required|email|unique:secondary_contacts,email',
+           'firstName' => 'required',
+           'lastName' => 'required',
+           'jobTitle' => 'required',
+           'phone' => 'required',
         ]);
 
         $secondary_contact_data = [
            'parent_id' => $contact->contact_id,
            'company' => $contact->company,
-           'firstName' => $request->first_name,
-           'lastName' => $request->last_name,
-           'jobTitle' => $request->job_title,
+           'firstName' => $request->firstName,
+           'lastName' => $request->lastName,
+           'jobTitle' => $request->jobTitle,
            'email' => $request->email,
            'phone' => $request->phone,
         ];
