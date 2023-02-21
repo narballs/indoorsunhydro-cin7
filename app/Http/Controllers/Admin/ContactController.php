@@ -181,7 +181,7 @@ class ContactController extends Controller
         $contact = [
             $currentContact
         ];
-        SyncContacts::dispatch('create_contact', $contact);
+        SyncContacts::dispatch('create_contact', $contact)->onQueue(env('QUEUE_NAME'));
         sleep(10);
         $is_updated = Contact::where('id', $contact_id)->pluck('contact_id')->first();
         $admin_users =  DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
