@@ -4,7 +4,9 @@
             <div class="col-md-4"></div>
             <div class="col-md-2">
                 <div class="d-grid gap-2 my-2">
-
+                    @if (session('logged_in_as_another_user'))
+                    <a href="{{url('admin/go-back')}}" class="btn text-white top-bar-logout">Go Back</a>
+                    @endif
                 </div>
             </div>
             <div class="col-md-4 d-flex align-items-center justify-content-end">

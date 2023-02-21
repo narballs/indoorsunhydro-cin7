@@ -133,6 +133,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('admin/share-list', [AdminShareListController::class, 'shareList']);
     Route::get('admin/admin-users', [UserController::class, 'adminUsers']);
     Route::get('admin/user-switch/{id}', [UserController::class, 'switch_user'])->name('users.switch');
+    Route::get('admin/go-back', [UserController::class, 'switch_user_back'])->name('users.switch_user_back');
     Route::get('admin/logout', function () {
         Auth::logout();
         return redirect()->route('user');
