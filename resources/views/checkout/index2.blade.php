@@ -1357,7 +1357,7 @@
         const inputOptions = new Promise((resolve) => {
             setTimeout(() => {
                 resolve({
-                    'Local Delivery': 'Local Delivery',
+                    'C.O.D': 'C.O.D',
                     'Pickup Order': 'Pickup Order'
                 })
             }, 1000)
@@ -1375,7 +1375,7 @@
             allowEscapeKey: false
         }).then((result) => {
             if (result.value !== null) {
-                if (result.value == 'Local Delivery') {
+                if (result.value == 'C.O.D') {
                     $("#local_delivery_1").attr('checked', 'checked');
                 } 
                 else {
