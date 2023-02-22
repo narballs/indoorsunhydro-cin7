@@ -393,7 +393,7 @@ class OrderManagementController extends Controller
                 "paymentTerms" => $currentOrder->paymentTerms,
                 "customerOrderNo" => $currentOrder->po_number,
                 "voucherCode" => "sample string 14",
-                "deliveryInstructions" => "sample string 15",
+                "deliveryInstructions" =>  $currentOrder->memo,
                 "status" => "DRAFT",
                 "stage" => "sample string 4",
                 "invoiceDate" => null,
