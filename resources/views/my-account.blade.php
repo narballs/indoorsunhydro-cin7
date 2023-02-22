@@ -871,7 +871,7 @@
 				      <div class="modal-body">
 				      	<div class="row">
 				      		<div class="col-md-12">
-				      	<form method="POST">
+				      	<form method="POST" id="sample_form">
 						  <div class="mb-3">
 						    <label for="exampleInputEmail1" class="form-label">First Name</label>
 						   		 <input type="text" class="form-control" id="first_name_secondary" aria-describedby="emailHelp">
@@ -887,6 +887,16 @@
 						    <label for="exampleInputEmail1" class="form-label">Job Title</label>
 						   		 <input type="text" class="form-control" id="job_title" aria-describedby="emailHelp">
 						  </div>
+						   <div class="form-group d-none" id="process">
+						        <div class="progress">
+						       <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="">
+       							</div>
+       						</div>
+       					</div>
+       					<div class="spinner-border d-none" role="status"
+								style="left: 50% !important; margin-left: -16em !important;" id="spinner2">
+								<span class="sr-only">Activating...</span>
+							</div>
 						  <div class="text-danger" id="job_title_secondary_errors"></div>
 						  <div class="mb-3 form-check">
 						    <label for="exampleInputEmail1" class="form-label">Email</label>
@@ -901,8 +911,9 @@
 				      		</div>
 				      	</div>
 				       <div class="modal-footer">
-				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-				        <button type="button" class="btn btn-primary" onclick="CreateSocodoryUser()">Save</button>
+					        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+					        <button type="button" class="btn btn-primary" onclick="CreateSocodoryUser()">Save</button>
+						</div>
 				      </div>
 				      </div>
 				      
@@ -937,34 +948,6 @@
 				$('#eye_icon_'+val).attr("src", "theme/img/eye.png");
 			}
 
-			// function createList(type) {
-			// 	if (type == 1) {
-			// 		var type = 'whishlist';
-			// 		var list_name = $('#list').val();
-			// 	}
-			// 	else {
-			// 		var type = 'qoute';
-			// 		var list_name = $('#quote_id').val();
-			// 	}
-			// 	jQuery.ajax({
-			// 		url: "{{ url('/create-list/')}}",
-			// 		method: 'POST',
-			// 		data: {
-			// 			"_token": "{{ csrf_token() }}",
-			// 			list_title : list_name,
-			// 			type : type
-			// 		},
-			// 	success: function (response) {
-			// 		console.log(response.status);
-			// 		$('#exampleModal').modal('hide');
-
-			// 	}
-			// 	});
-			// };
-
-
-			
-
 			function showHidePassword(val) {
 				if (val === "current_password") {
 					var current_password = document.getElementById("current_password");
@@ -990,7 +973,6 @@
 	    				new_confirm_password.type = "password";
 	  				}
   				}
-
 			}
 			function wishLists() {
 
@@ -1014,16 +996,9 @@
 					data: {
 					},
 				        success : function (images) {
-
 				        	$('#wishlist_content').html(images);
 				        	return;
-
 				        	console.log(images[1]);
-							//response.images.slice(-5).forEach(
-							// 	function(item, index){
-							// 		console.log(item.product.options[0].image)
-					
-							// });
 								listitems += '<div class="container p-0">';
 								    listitems +=  '<header class="text-center">'+
 								        	'<h1>My Favourites</h1>'+
@@ -1074,7 +1049,6 @@
 				}});
 			}
 
-			
 			function change_password() {
 				var first_name = $('input[name=first_name').val();
 				var last_name = $('input[name=last_name').val();
@@ -1102,22 +1076,16 @@
 				        		$('#updated-success').html(response.msg);	
   								$('.user_names').html('');
   								$('.user_names').html(first_name + ' '+ ' ' +last_name);
-
   								$('.user_names_dashboard').html('');
   								$('.user_names_dashboard').html(first_name);
-  								
   								$('#first_modal_name').val('');
   								$('#first_modal_name').val(first_name);
-				        		
-
 				        		$('#last_modal_name').val('');
   								$('#last_modal_name').val(last_name);
-
 				        	}
 				        	else {
 				        		$('#password-match-fail').html('Current password is not valid');
 				        	}
-
 	    			},
 	    			error: function (response) {
 	    				console.log(response);
@@ -1125,15 +1093,8 @@
 	    					var errors = response.responseJSON.errors.new_confirm_password[0];
 	    				}
 	    				$('#errors_password_comfimation').html(errors);
-
 	    			}
-				
-	    		}
-
-
-	    		);
-	    	
-		
+	    		});
 			}
 			function dashboard() {
 				$('#my_quotes').addClass('d-none');
@@ -1697,6 +1658,7 @@
 
 	function CreateSocodoryUser ()
 		{
+            $('#spinner2').removeClass('d-none');
 			var first_name = $('#first_name_secondary').val();
 			var last_name = $('#last_name_secondary').val();
 			var job_title = $('#job_title').val();
@@ -1715,8 +1677,9 @@
 				},
 				  success: function(response) {
 				  	  $("#secondary_user").html(response);
-				  	  $('#staticBackdrop').modal('hide');
-				},
+				       $('#staticBackdrop').modal('hide');
+			        },
+
 				error: function(response) {
 					var error_message = response.responseJSON;
 		            var error_text = '';
@@ -1757,28 +1720,6 @@
 		                $('#job_title_secondary_errors').html(error_text);
 		            }
 
-		            // if (typeof error_message.errors.phone != 'undefined') {
-		            //     error_text = error_message.errors.phone;
-		            //     $('#job_title_secondary_errors').html(error_text);
-		            //    }
-		            // else {
-		            //     error_text = '';
-		            //     $('#job_title_secondary_errors').html(error_text);
-		            // }
-					
-					
-
-
-
-
-
-
-					// if (!empty(response.responseJSON.errors.email[0])) {
-					// 	$("#secondary_user_email_errors").html(response.responseJSON.errors.email[0]);
-					// }
-					// else {
-					// 	$("#secondary_user_email_errors").addClass('d-none');
-					// }
 				}
 		  });
 
