@@ -161,6 +161,9 @@ class OrderController extends Controller
             $order->paymentTerms = $paymentMethod;
             $order->tax_class_id = $request->tax_class_id;
             $order->total_including_tax = $request->incl_tax;
+            $order->po_number = $request->po_number;
+            $order->memo = $request->memo;
+            $order->date = $request->date;
             $order->save();
 
             $order_id =  $order->id;
