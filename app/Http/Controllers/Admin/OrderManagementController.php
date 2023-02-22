@@ -318,10 +318,11 @@ class OrderManagementController extends Controller
             ];
         }
         $order = [];
-       // unset($currentOrder['total_including_tax']);
-       // unset($currentOrder['tax_class_id']);
+        // unset($currentOrder['total_including_tax']);
+        // unset($currentOrder['tax_class_id']);
         $order = [
             [
+
                 $currentOrder,
                 "createdDate" => $dateCreated,
                 "modifiedDate" => "",
@@ -357,8 +358,8 @@ class OrderManagementController extends Controller
                 // "billingCountry" => $request->input('country'),
                 "branchId" => 3,
                 "branchEmail" => "wqszeeshan@gmail.com",
-                "projectName" => "sample string 49",
-                "trackingCode" => "sample string 50",
+                "projectName" => "",
+                "trackingCode" => "",
                 "internalComments" => "sample string 51",
                 "productTotal" => 100,
                 "freightTotal" => null,
@@ -397,7 +398,7 @@ class OrderManagementController extends Controller
                 "invoiceDate" => null,
                 "invoiceNumber" => 4232,
                 "dispatchedDate" => null,
-                "logisticsCarrier" => "sample string 2",
+                "logisticsCarrier" => "",
                 "logisticsStatus" => 1,
                 "distributionBranchId" => 1,
                 "lineItems" => $lineItems
