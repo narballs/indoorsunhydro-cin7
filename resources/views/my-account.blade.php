@@ -31,7 +31,7 @@
 			MY ACCOUNT
 		</p>
 	</div>
-	<div class="container-fluid" style="width:1435px !important;">
+	<div class="container-fluid" style="width:1493px !important;">
 		<div class="row bg-light">
 			<div class="container-fluid" id="main-row">
 				<div class="row my-2" style="border-radius: 0.5rem !important;margin:auto">
@@ -338,16 +338,6 @@
 							</table>
 						</div>
 						<div id="update_qoute" class="bg-success text-white text-center fade-out w-50 m-auto"></div>
-
-
-
-
-
-
-
-
-
-
 						<div class="d-none mt-3 mb-3 pr-4 pl-4" id="my_quotes_edit">
 							<div class="col-md-12 border-bottom border-4 pb-4 p-0">
 								<img src="theme/img/orders_main.png" style="margin: -6px 1px 1px 1px;">
@@ -743,9 +733,11 @@
 											@endif
 										</div>
 										<div class="col-md-4">
+											@if(!$parent)
 											<button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
 				                                  Create Secondary User
 				                            </button>
+				                            @endif
 										</div>
 									</div>
 								</div>
@@ -769,14 +761,14 @@
 											<th>
 												Email
 											</th>
-											<!-- <th>
-											Mobile
-										</th> -->
 											<th>
 												Phone
 											</th>
 											<th>
 												Status
+											</th>
+											<th>
+												Type
 											</th>
 										</tr>
 									</thead>
@@ -816,6 +808,9 @@
 												<span class="badge bg-success">Un Active</span>
 												@endif
 											</td>
+											<td>
+												<span class="badge bg-primary">primary contact</span>
+											</td>
 										</tr>
 										</tbody>
 										@endif
@@ -824,8 +819,6 @@
 										</tbody>
 								</table>
 							</div>
-
-
 							<div class="row ms-2 mb-5 d-none" id="address_row">
 								<div class="col-md-3">
 								</div>
