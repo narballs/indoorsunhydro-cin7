@@ -773,6 +773,7 @@ class ProductController extends Controller
     public function productSearch(Request $request)
     {
         if ($request->ajax()) {
+
             $brand = $request->input('brand');
             $price = $request->input('price');
             $stock = $request->input('instock');
@@ -930,7 +931,9 @@ class ProductController extends Controller
         }
 
         $is_search = $request->get('is_search');
+
         $searchvalue = $request->value;
+
         $searchvalue = preg_split('/\s+/', $searchvalue, -1, PREG_SPLIT_NO_EMPTY);
         if (!empty($is_search)) {
             foreach ($searchvalue as $value) {
