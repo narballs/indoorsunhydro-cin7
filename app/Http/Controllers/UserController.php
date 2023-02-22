@@ -27,7 +27,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
-
+use URL;
+use Carbon\Carbon;
 use App\Helpers\UtilHelper;
 
 
@@ -277,6 +278,7 @@ class UserController extends Controller
 
         if ($request->is_secondary == 1) {
             $secondary_contact = SecondaryContact::where('email', $request->email)->with('contact')->first();
+
             if (empty($secondary_contact)) {
                 return redirect('/');
             }
@@ -297,7 +299,7 @@ class UserController extends Controller
                 'user_id' => $user_id,
                 'type' => 'Customer',
                 'pricingColumn' => $secondary_contact->contact->priceColumn,
-                'company' => $secondary_contact->contact->company,
+                'company' => $secondary_contact->company,
                 'firstName' => $secondary_contact->firstName,
                 'lastName' => $secondary_contact->lastName,
                 'jobTitle' => $secondary_contact->jobTitle,
@@ -585,6 +587,14 @@ class UserController extends Controller
         SecondaryContact::create($secondary_contact_data);
 
         unset($secondary_contact_data['parent_id']);
+        $current_date_time = Carbon::now()->toDateTimeString();
+        $secret = "QCOM" . $current_date_time;
+        $sig = hash_hmac('sha256', $request->email, $secret);
+        $url = URL::to("/");
+        if (!empty($request->$request->email)){
+            $url = $url . '/customer/invitation/' . $sig.'?is_secondary=1';
+        }
+     
 
 
         $contact = [
@@ -596,7 +606,23 @@ class UserController extends Controller
                 ]
             ]
         ];
+         $secondary_contact = SecondaryContact::where('email', $request->email)->update(
+                [
+                    'hashKey' => $sig,
+                    'hashUsed' => 0,
+                ]
+            );
+        $data = [
+            'email' => $request->email,
+            'subject' => 'Customer Registration Invitation',
+            'from' => env('MAIL_FROM_ADDRESS'),
+            'content' => 'Customer Registration Invitation',
+            'url' => $url
+        ];
+
+        MailHelper::sendMailNotification('emails.invitaion-emails', $data);
         SyncContacts::dispatch('update_contact', $contact)->onQueue(env('QUEUE_NAME'));
+
         $secondary_contacts = SecondaryContact::where('parent_id', $contactId)->orderBy('id', 'desc')->get();
         return view('secondary-user', compact('secondary_contacts'));
     }
