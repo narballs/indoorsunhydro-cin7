@@ -219,7 +219,7 @@
 						<tr>
 							<td>
 								<img class=" img-fluid" src="/theme/img/pricing_tag.png">
-								<strong>Total</strong>(Excl Tax)
+								<strong>Total</strong> (Excl Tax)
 							</td>
 							<td>
 								<span id="cart_grand_total">
@@ -229,17 +229,18 @@
 								</span>
 							</td>
 						</tr>
-					
+
 						<tr>
 							<td>
-								<img class=" img-fluid" src="/theme/img/pricing_tag.png">
-								<strong>Total</strong><span>(Incl Tax)</span><div>
+								<img class=" img-fluid" src="/theme/img/tax_icon.png">
+								<span>Rate</span> ({{$tax_class->rate}}%)
+								<div>
 							</td>
 							<td>
 								<span id="cart_grand_total">
 									<strong class="text-danger cart-page-items">
 										${{number_format($total_including_tax, 2)}}
-										
+
 									</strong>
 								</span>
 							</td>
