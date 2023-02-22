@@ -543,12 +543,10 @@ class UserController extends Controller
 
     public function switch_user($id)
     {
-
-        $test = Auth::loginUsingId($id);
-        $auth_user_email = $test->email;
+        $switch_user = Auth::loginUsingId($id);
+        $auth_user_email = $switch_user->email;
         session()->put('logged_in_as_another_user', $auth_user_email);
         Auth::loginUsingId($id);
-
         return redirect('/');
     }
 
@@ -557,7 +555,6 @@ class UserController extends Controller
         $admin = User::role('Admin')->first();
         Auth::loginUsingId($admin->id);
         session()->flash('logged_in_as_another_user', '');
-        //session()->gc_collect_cycles('logged_in_as_another_user', $auth_user_email);
         return redirect('admin/dashboard');
     }
 
