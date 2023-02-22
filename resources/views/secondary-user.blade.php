@@ -70,5 +70,8 @@
 												Sent</span>
 								</td>
 								@endif
+								<td>
+									<span class="badge bg-secondary">secondary contact</span>
+								</td>
 							</tr>
 @endforeach 
