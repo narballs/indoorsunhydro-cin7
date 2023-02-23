@@ -29,16 +29,16 @@
 				<p>
 					<a href=" https://www.yelp.com/biz/indoor-sun-hydro-sacramento-5?osq=indoorsun+hydro"
 						class="text-light pra-footer" style="text-decoration: none">
-						<img src="/theme/img/yelp_icons.png" alt="" style="width: 26px;">
-						yelp.com
+						<img src="/theme/img/yelp_icons.png" alt="" class="img-fluid" style="width: 26px;">
+
+					</a>
+					<a href="https://www.instagram.com/indoorsunhydro/" class="text-light pra-footer"
+						style="text-decoration: none">
+						<img src="/theme/img/instagram_icons.png" alt="" class="ps-1" style="width: 32px;">
 					</a>
 				</p>
 				<p>
-					<a href="https://www.instagram.com/indoorsunhydro/" class="text-light pra-footer"
-						style="text-decoration: none">
-						<img src="/theme/img/instagram_icons.png" alt="" style="width: 26px;">
-						instagram.com
-					</a>
+
 				</p>
 			</div>
 			<div class="col-xl-1 col-lg-1 col-md-0 col-sm-0 col-xs-0 text-dark ">
