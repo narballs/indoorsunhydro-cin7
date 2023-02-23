@@ -1680,8 +1680,10 @@
 					'phone' : phone
 				},
 				  success: function(response) {
+				  	$('#spinner2').addClass('d-none');
 				  	  $("#secondary_user").html(response);
-				       $('#staticBackdrop').modal('hide');
+				      $('#staticBackdrop').modal('hide');
+				      $('#sample_form').trigger("reset");
 			        },
 
 				error: function(response) {
