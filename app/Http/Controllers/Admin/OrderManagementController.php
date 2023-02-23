@@ -395,7 +395,7 @@ class OrderManagementController extends Controller
                 "voucherCode" => "sample string 14",
                 "deliveryInstructions" =>  $currentOrder->memo,
                 "status" => "DRAFT",
-                "stage" => "sample string 4",
+                "stage" => "",
                 "invoiceDate" => null,
                 "invoiceNumber" => 4232,
                 "dispatchedDate" => null,
