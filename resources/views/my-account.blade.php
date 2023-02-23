@@ -727,17 +727,18 @@
 										<div class="col-md-4 ">
 											<img src="theme/img/account_details.png" style="margin: -1px 2px 1px 1px;">
 											@if($parent)
-											<span class="pt-1 my-account-content-heading">Primary  Contact</span>
+											<span class="pt-1 my-account-content-heading">Primary Contact</span>
 											@else
 											<span class="pt-1 my-account-content-heading">Secondary Contact</span>
 											@endif
 										</div>
 										<div class="col-md-4">
 											@if(!$parent)
-											<button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-				                                  Create Secondary User
-				                            </button>
-				                            @endif
+											<button type="button" class="btn btn-info" data-bs-toggle="modal"
+												data-bs-target="#staticBackdrop">
+												Create Secondary User
+											</button>
+											@endif
 										</div>
 									</div>
 								</div>
@@ -779,7 +780,7 @@
 												@if($parent[0]['company'])
 												{{$parent[0]['company']}}
 												@else
-													<span class="badge bg-success">empty</span>
+												<span class="badge bg-success">empty</span>
 												@endif
 											</td>
 											<td>
@@ -790,8 +791,8 @@
 											</td>
 											<td>
 												@if($parent[0]['jobTitle'])
-												 {{$parent[0]['jobTitle']}}
-												 @else
+												{{$parent[0]['jobTitle']}}
+												@else
 												<span class="badge bg-success">empty</span>
 												@endif
 											</td>
@@ -812,11 +813,12 @@
 												<span class="badge bg-primary">primary contact</span>
 											</td>
 										</tr>
-										</tbody>
-										@endif
-										<tbody id="secondary_user">
-											@include('secondary-user', ['secondary_contacts' => $childerens->secondory_contact])
-										</tbody>
+									</tbody>
+									@endif
+									<tbody id="secondary_user">
+										@include('secondary-user', ['secondary_contacts' =>
+										$childerens->secondory_contact])
+									</tbody>
 								</table>
 							</div>
 							<div class="row ms-2 mb-5 d-none" id="address_row">
@@ -854,67 +856,76 @@
 				<link rel="stylesheet" href="../css/admin_custom.css">
 				@stop
 				<!-- Modal -->
-				<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-				  <div class="modal-dialog modal-dialog-centered">
-				    <div class="modal-content">
-				      <div class="modal-header">
-				        <h5 class="modal-title" id="staticBackdropLabel">Create Secondary User</h5>
-				        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				      </div>
-				      <div class="modal-body">
-				      	<div class="row">
-				      		<div class="col-md-12">
-				      	<form method="POST" id="sample_form">
-						  <div class="mb-3">
-						    <label for="exampleInputEmail1" class="form-label">First Name</label>
-						   		 <input type="text" class="form-control" id="first_name_secondary" aria-describedby="emailHelp">
-						   </div>
-						   <div class="text-danger" id="first_name_secondary_errors"></div>
-						  </div>
-						  <div class="mb-3">
-						    <label for="exampleInputEmail1" class="form-label">Last Name</label>
-						   		 <input type="text" class="form-control" id="last_name_secondary" aria-describedby="emailHelp">
-						  </div>
-						  <div class="text-danger" id="last_name_secondary_errors"></div>
-						  <div class="mb-3 form-check">
-						    <label for="exampleInputEmail1" class="form-label">Job Title</label>
-						   		 <input type="text" class="form-control" id="job_title" aria-describedby="emailHelp">
-						  </div>
-						   <div class="form-group d-none" id="process">
-						        <div class="progress">
-						       <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="">
-       							</div>
-       						</div>
-       					</div>
-       					<div class="spinner-border d-none" role="status"
-								style="left: 50% !important; margin-left: -16em !important;" id="spinner2">
-								<span class="sr-only">Activating...</span>
+				<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false"
+					tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="staticBackdropLabel">Create Secondary User</h5>
+								<button type="button" class="btn-close" data-bs-dismiss="modal"
+									aria-label="Close"></button>
 							</div>
-						  <div class="text-danger" id="job_title_secondary_errors"></div>
-						  <div class="mb-3 form-check">
-						    <label for="exampleInputEmail1" class="form-label">Email</label>
-						   		 <input type="email" class="form-control" id="email" aria-describedby="emailHelp">
-						   	 <div class="text-danger" id="secondary_user_email_errors"></div>
-						  </div>
-						    <div class="mb-3 form-check">
-						    <label for="exampleInputEmail1" class="form-label">Phone</label>
-						   		 <input type="number" class="form-control" id="phone" aria-describedby="emailHelp">
-						  </div>
-						</form>
-				      		</div>
-				      	</div>
-				       <div class="modal-footer">
-					        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-					        <button type="button" class="btn btn-primary" onclick="CreateSocodoryUser()">Save</button>
+							<div class="modal-body">
+								<div class="row">
+									<div class="col-md-12">
+										<form method="POST" id="sample_form">
+											<div class="mb-3">
+												<label for="exampleInputEmail1" class="form-label">First Name</label>
+												<input type="text" class="form-control" id="first_name_secondary"
+													aria-describedby="emailHelp">
+											</div>
+											<div class="text-danger" id="first_name_secondary_errors"></div>
+									</div>
+									<div class="mb-3">
+										<label for="exampleInputEmail1" class="form-label">Last Name</label>
+										<input type="text" class="form-control" id="last_name_secondary"
+											aria-describedby="emailHelp">
+									</div>
+									<div class="text-danger" id="last_name_secondary_errors"></div>
+									<div class="mb-3 form-check">
+										<label for="exampleInputEmail1" class="form-label">Job Title</label>
+										<input type="text" class="form-control" id="job_title"
+											aria-describedby="emailHelp">
+									</div>
+									<div class="form-group d-none" id="process">
+										<div class="progress">
+											<div class="progress-bar progress-bar-striped active" role="progressbar"
+												aria-valuemin="0" aria-valuemax="100" style="">
+											</div>
+										</div>
+									</div>
+									<div class="spinner-border d-none" role="status"
+										style="left: 50% !important; margin-left: -16em !important;" id="spinner2">
+										<span class="sr-only">Activating...</span>
+									</div>
+									<div class="text-danger" id="job_title_secondary_errors"></div>
+									<div class="mb-3 form-check">
+										<label for="exampleInputEmail1" class="form-label">Email</label>
+										<input type="email" class="form-control" id="email"
+											aria-describedby="emailHelp">
+										<div class="text-danger" id="secondary_user_email_errors"></div>
+									</div>
+									<div class="mb-3 form-check">
+										<label for="exampleInputEmail1" class="form-label">Phone</label>
+										<input type="number" class="form-control" id="phone"
+											aria-describedby="emailHelp">
+									</div>
+									</form>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+								<button type="button" class="btn btn-primary"
+									onclick="CreateSocodoryUser()">Save</button>
+							</div>
 						</div>
-				      </div>
-				      </div>
-				      
-				    </div>
-				  </div>
+					</div>
+
 				</div>
-				<script>
-					function qoute() {
+			</div>
+		</div>
+		<script>
+			function qoute() {
 				$('#my_quotes_detail_table').addClass('d-none');
 				$('#my_quotes').addClass('d-none');
 				$('#filter').removeClass('d-none');
@@ -1704,24 +1715,24 @@
 		                $('#last_name_secondary_errors').html(error_text);
 		            }
 
-		            if (typeof error_message.errors.jobTitle != 'undefined') {
-		                error_text = error_message.errors.jobTitle;
-		                $('#job_title_secondary_errors').html(error_text);
-		               }
-		            else {
-		                error_text = '';
-		                $('#job_title_secondary_errors').html(error_text);
-		            }
+		            // if (typeof error_message.errors.jobTitle != 'undefined') {
+		            //     error_text = error_message.errors.jobTitle;
+		            //     $('#job_title_secondary_errors').html(error_text);
+		            //    }
+		            // else {
+		            //     error_text = '';
+		            //     $('#job_title_secondary_errors').html(error_text);
+		            // }
 
 				}
 		  });
 
 		}
-</script>
+		</script>
 
-				<!-- Remove the container if you want to extend the Footer to full width. -->
+		<!-- Remove the container if you want to extend the Footer to full width. -->
 
-				@include('partials.product-footer')
+		@include('partials.product-footer')
 
-				<!-- End of .container -->
-				@include('partials.footer')
+		<!-- End of .container -->
+		@include('partials.footer')
