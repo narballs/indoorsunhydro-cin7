@@ -567,7 +567,7 @@ class UserController extends Controller
         $contactId = $contact->contact_id;
 
         $request->validate([
-            'email' => 'required|email|unique:secondary_contacts,email',
+            // 'email' => 'required|email|unique:secondary_contacts,email',
             'firstName' => 'required',
             'lastName' => 'required',
         ]);
@@ -589,10 +589,9 @@ class UserController extends Controller
         $secret = "QCOM" . $current_date_time;
         $sig = hash_hmac('sha256', $request->email, $secret);
         $url = URL::to("/");
-        if (!empty($request->$request->email)) {
+        if (!empty($request->email)) {
             $url = $url . '/customer/invitation/' . $sig . '?is_secondary=1';
         }
-
 
 
         $contact = [
