@@ -570,8 +570,6 @@ class UserController extends Controller
             'email' => 'required|email|unique:secondary_contacts,email',
             'firstName' => 'required',
             'lastName' => 'required',
-            'jobTitle' => 'required',
-            'phone' => 'required',
         ]);
 
         $secondary_contact_data = [
@@ -591,10 +589,10 @@ class UserController extends Controller
         $secret = "QCOM" . $current_date_time;
         $sig = hash_hmac('sha256', $request->email, $secret);
         $url = URL::to("/");
-        if (!empty($request->$request->email)){
-            $url = $url . '/customer/invitation/' . $sig.'?is_secondary=1';
+        if (!empty($request->$request->email)) {
+            $url = $url . '/customer/invitation/' . $sig . '?is_secondary=1';
         }
-     
+
 
 
         $contact = [
@@ -606,12 +604,12 @@ class UserController extends Controller
                 ]
             ]
         ];
-         $secondary_contact = SecondaryContact::where('email', $request->email)->update(
-                [
-                    'hashKey' => $sig,
-                    'hashUsed' => 0,
-                ]
-            );
+        $secondary_contact = SecondaryContact::where('email', $request->email)->update(
+            [
+                'hashKey' => $sig,
+                'hashUsed' => 0,
+            ]
+        );
         $data = [
             'email' => $request->email,
             'subject' => 'Customer Registration Invitation',
