@@ -239,7 +239,7 @@
 							<td>
 								<span id="cart_grand_total">
 									<strong class="text-danger cart-page-items">
-										${{number_format($total_including_tax, 2)}}
+										${{number_format($tax, 2)}}
 
 									</strong>
 								</span>
