@@ -149,6 +149,7 @@ class OrderController extends Controller
             $order->isApproved    =  false;
             $order->memberId    =  $contact_id;
             $order->branchId   =  "none";
+            $order->distributionBranchId = 0;
             $order->branchEmail  =  'wqszeeshan@gmail.com';
             $order->productTotal      =  $cart_total;
             $order->total        =  $cart_total;
@@ -164,6 +165,7 @@ class OrderController extends Controller
             $order->po_number = $request->po_number;
             $order->memo = $request->memo;
             $order->date = $request->date;
+
             $order->save();
 
             $order_id =  $order->id;
