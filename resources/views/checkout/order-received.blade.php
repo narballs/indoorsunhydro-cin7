@@ -37,19 +37,19 @@
 					</div>
 					<div class="row ms-5 p-4 me-5 order-confirmation-page-invoice-row"
 						style=" padding-top: 50px !important;">
-						<div class="col-md-1 p-0" style="margin-left: 32px;">
+						<div class=" col-xl-1 col-lg-2 col-md-6 col-sm-12" style="margin-left: 32px;">
 							<p class="order-confirmation-page-order-number-title">Order Number</p>
 							<p class="order-confirmation-page-order-number-item">
 								{{$order->apiOrderItem[0]['order_id']}}
 							</p>
 						</div>
-						<div class="col-md-2 ps-4 ms-3">
+						<div class="col-xl-2 col-lg-3 col-md-6 col-sm-12 ps-4 ms-3">
 							<p class="order-confirmation-page-date-title">Date</p>
 							<p class="order-confirmation-page-date-item">
 								{{$order->apiOrderItem[0]['created_at']->format('F '.'d, Y, '.'g:i A')}}
 							</p>
 						</div>
-						<div class="col-md-1 pe-2 ms-3">
+						<div class="col-xl-1 col-lg-2 col-md-6 col-sm-12 pe-2 ms-3">
 							<p class="order-confirmation-page-mobile-title">
 								Mobile
 							</p>
@@ -57,7 +57,7 @@
 								{{$order->user->contact->phone}}
 							</p>
 						</div>
-						<div class="col-md-2 ps-5">
+						<div class="col-xl-2 col-lg-3 col-md-6 col-sm-12 ps-5">
 							<p class="order-confirmation-page-email-title">
 								Email
 							</p>
@@ -65,21 +65,21 @@
 								{{$order->user->email}}
 							</p>
 						</div>
-						<div class="col-md-2">
+						<div class="col-xl-2 col-lg-3 col-md-6 col-sm-12">
 							<p class="order-confirmation-page-payment-method-title">Payment Method</p>
 							<p class="order-confirmation-page-payment-method-item">{{$order->paymentTerms}}</p>
 						</div>
-						<div class="col-md-1 ps-0">
+						<div class="col-xl-1 col-lg-3 col-md-6 col-sm-12 ps-0">
 							<p class="order-confirmation-page-shipping-title">Shipping</p>
 							<p class="order-confirmation-page-shipping-item">$</p>
 						</div>
-						<div class="col-md-1 ms-4">
+						<div class="col-xl-1 col-lg-3 col-md-6 col-sm-12 ms-4">
 							<p class="order-confirmation-page-tax-title">Tax</p>
 							<p class="order-confirmation-page-tax-item">
 								$
 							</p>
 						</div>
-						<div class="col-md-1 ms-4">
+						<div class="col-xl-1 col-lg-3 col-md-6 col-sm-12 ms-4">
 							<p class="order-confirmation-page-total-title">Total</p>
 							<p class="order-confirmation-page-total-item">
 								${{number_format($order->total, 2)}}
@@ -115,7 +115,7 @@
 													</p>
 													@endif
 													<div class="row mt-4">
-														<div class="col-md-4">
+														<div class="col-xl-4 col-lg-6 col-md-12 col-sm-12">
 															<p class="order-confirmation-page-city-name-title">City</p>
 															@if (!$order->user->contact->city)
 															<p class="order-confirmation-page-city-name-item">
@@ -127,7 +127,7 @@
 															</p>
 															@endif
 														</div>
-														<div class="col-md-4">
+														<div class="col-xl-4 col-lg-6 col-md-12 col-sm-12">
 															<p class="order-confirmation-page-state-name-title">State
 															</p>
 															@if (!$order->user->contact->state)
@@ -140,7 +140,7 @@
 															</p>
 															@endif
 														</div>
-														<div class="col-md-4">
+														<div class="col-xl-4 col-lg-6 col-md-12 col-sm-12">
 															<p class="order-confirmation-page-zip-name-title">Zip</p>
 
 															@if (!$order->user->contact->postCode)
@@ -199,7 +199,7 @@
 													@endif
 
 													<div class="row mt-4">
-														<div class="col-md-4">
+														<div class="col-xl-4 col-lg-6 col-md-12 col-sm-12">
 															<p class="order-confirmation-page-city-name-title">City</p>
 															@if (!$order->user->contact->postalCity)
 															<p class="order-confirmation-page-city-name-item">
@@ -211,7 +211,7 @@
 															</p>
 															@endif
 														</div>
-														<div class="col-md-4">
+														<div class="col-xl-4 col-lg-6 col-md-12 col-sm-12">
 															<p class="order-confirmation-page-state-name-title">State
 															</p>
 															@if (!$order->user->contact->postalState)
@@ -224,7 +224,7 @@
 															</p>
 															@endif
 														</div>
-														<div class="col-md-4">
+														<div class="col-xl-4 col-lg-6 col-md-12 col-sm-12">
 															<p class="order-confirmation-page-zip-name-title">Zip</p>
 															@if (!$order->user->contact->postalPostCode)
 															<p class="order-confirmation-page-zip-name-item">

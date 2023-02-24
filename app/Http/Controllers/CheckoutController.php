@@ -23,12 +23,12 @@ class CheckoutController extends Controller
     {
         $user_id = auth()->id();
         $contact = Contact::where('user_id', $user_id)->with('states')->with('cities')->first();
-        
+
         if ($contact) {
             $isApproved = $contact->contact_id;
         }
         if (Auth::check() && !empty($isApproved)) {
-            $tax_class = TaxClass::where('is_default' , 1)->first();
+            $tax_class = TaxClass::where('is_default', 1)->first();
             $states = UsState::all();
             $payment_methods = PaymentMethod::with('options')->get();
             $user_address = Contact::where('user_id', $user_id)->first();
