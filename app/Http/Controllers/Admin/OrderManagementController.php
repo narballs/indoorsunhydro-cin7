@@ -164,7 +164,7 @@ class OrderManagementController extends Controller
                 "dispatchedDate" => "",
                 "logisticsCarrier" => "sample string 2",
                 "logisticsStatus" => 1,
-                "distributionBranchId" => 1,
+                "distributionBranchId" => 0,
                 "lineItems" =>
                 [
                     [
@@ -401,7 +401,7 @@ class OrderManagementController extends Controller
                 "dispatchedDate" => null,
                 "logisticsCarrier" => "",
                 "logisticsStatus" => 1,
-                "distributionBranchId" => 1,
+                "distributionBranchId" => 0,
                 "lineItems" => $lineItems
 
             ],
