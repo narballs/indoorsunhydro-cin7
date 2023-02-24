@@ -24,7 +24,7 @@
 			<div class="card mt-5 border-0">
 				<div class="card-body ps-5 mt-5 ">
 					<div class="row ps-5">
-						<div class="col-md-12">
+						<div class=" col-xl-12 col-lg-12 col-md-12 col-sm-12">
 							<p class="order-confirmation-page-top-heading">Order Confirmation</p>
 						</div>
 						<div class="col-md-12 mt-4">
@@ -37,13 +37,13 @@
 					</div>
 					<div class="row ms-5 p-4 me-5 order-confirmation-page-invoice-row"
 						style=" padding-top: 50px !important;">
-						<div class=" col-xl-1 col-lg-2 col-md-6 col-sm-12" style="margin-left: 32px;">
+						<div class=" col-xl-1 col-lg-4 col-md-6 col-sm-12" style="margin-left: 32px;">
 							<p class="order-confirmation-page-order-number-title">Order Number</p>
 							<p class="order-confirmation-page-order-number-item">
 								{{$order->apiOrderItem[0]['order_id']}}
 							</p>
 						</div>
-						<div class="col-xl-2 col-lg-3 col-md-6 col-sm-12 ps-4 ms-3">
+						<div class="col-xl-2 col-lg-4 col-md-6 col-sm-12 ps-4 ms-3">
 							<p class="order-confirmation-page-date-title">Date</p>
 							<p class="order-confirmation-page-date-item">
 								{{$order->apiOrderItem[0]['created_at']->format('F '.'d, Y, '.'g:i A')}}

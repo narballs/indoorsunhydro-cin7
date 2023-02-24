@@ -58,11 +58,6 @@
         Checkout
     </p>
 </div>
-<div class=" laptop-view mt-4">
-    <p style="line-height: 95px;" class="fw-bold fs-2 product-btn my-auto border-0 text-white text-center align-middle">
-        Checkout
-    </p>
-</div>
 
 <?php
     $cart_total = 0;
