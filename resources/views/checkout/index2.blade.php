@@ -14,8 +14,51 @@
         border-width: 0;
         border-color: #8C8C8C;
     }
+
+    /* 
+    @media only screen and (max-width: 1024px) and (min-width: 821px) {
+        .desktop-view {
+            display: none !important;
+        }
+
+        .laptop-view-xl {
+            display: none !important;
+        }
+
+
+        .mobile-view {
+            display: none !important;
+        }
+
+        .ipad-view {
+            display: none !important;
+        }
+
+        .laptop-view {
+            display: block !important;
+        }
+    }
+
+    @media only screen and (max-width: 1440px) and (min-width: 1025px) {
+        .laptop-view-xl {
+            display: block !important;
+        }
+
+        .laptop-view {
+            display: none !important;
+        }
+
+        .desktop-view {
+            display: none !important;
+        }
+    } */
 </style>
 <div class="mb-5 desktop-view">
+    <p style="line-height: 95px;" class="fw-bold fs-2 product-btn my-auto border-0 text-white text-center align-middle">
+        Checkout
+    </p>
+</div>
+<div class=" laptop-view mt-4">
     <p style="line-height: 95px;" class="fw-bold fs-2 product-btn my-auto border-0 text-white text-center align-middle">
         Checkout
     </p>
@@ -26,209 +69,19 @@
     $cart_price = 0;
 ?>
 @if(Session::get('cart'))
-
 @foreach(Session::get('cart') as $cart)
 <?php 
-            $total_quatity =  $cart['quantity'];
-            $total_price = $cart['price'] * $total_quatity;
-            $cart_total  = $cart_total + $total_price ;
+    $total_quatity =  $cart['quantity'];
+    $total_price = $cart['price'] * $total_quatity;
+    $cart_total  = $cart_total + $total_price ;
 ?>
 @endforeach
 @endif
-{{-- <div class="container desktop-view" id="">
-    @if(session('message'))
-    <div class="alert alert-danger">
-        {{ session('message') }}
-    </div>
-    @endif
-    @include('checkout.modals.address-modal')
-    <div class="row ">
-        <div class="col-md-7">
-            <div class="billing-address bg-light p-3">
-                <div class="bg-light">
-                    <div style="font-weight: 600; font-size: 20px;">Billing Address</div>
-                    <div class="row mt-2">
-                        <div class="col-md-6 name">
-                            {{$user_address->firstName}} {{$user_address->lastName}}
-                        </div>
-                        <div class="col-md-6 name">
-                            {{$user_address->company}}
-                        </div>
-                    </div>
-                </div>
-                <div class="address-line bg-light">
-                    Address line 1
-                </div>
-                <div class="bg-light name">
-                    {{$user_address->postalAddress1}}
-                </div>
-                <div class="address-line bg-light">
-                    Address line 2
-                </div>
-                <div class="bg-light name">
-                    {{$user_address->postalAddress2}}
-                </div>
-                <div class="row m-0 bg-light">
-                    <div class="col p-0 address-line">
-                        City
-                    </div>
-                    <div class="col p-0 address-line">
-                        State
-                    </div>
-                    <div class=" col p-0 address-line">
-                        Zip
-                    </div>
-                </div>
-                <div class="billing-address bg-light">
-                    <div class="row m-0">
-                        <div class="col p-0 name">
-                            {{$user_address->postalCity}}
-                        </div>
-                        <div class="col p-0 name">
-                            {{$user_address->postalState}}
-                        </div>
-                        <div class="col p-0 name">
-                            {{$user_address->postalPostCode}}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-5" id="shipping_address">
-            <div class="billing-address bg-light p-3">
-                <div class="bg-light">
-                    <div style="font-weight: 600;font-size: 20px;">Shipping Address</div>
-                    <div class="row mt-2">
-                        <div class="col-md-6 name">{{$user_address->firstName}} {{$user_address->lastName}}</div>
-                        <div class="col-md-6 name">{{$user_address->company}}</div>
-                    </div>
-                </div>
-                <div class="address-line bg-light">
-                    Address line 1
-                </div>
-                <div class="bg-light name">
-                    {{$user_address->postalAddress1}}
-                </div>
-                <div class="address-line bg-light">
-                    Address line 2
-                </div>
-                <div class="bg-light name">
-                    {{$user_address->postalAddress2}}
-                </div>
-                <div class="row m-0 bg-light">
-                    <div class="col p-0 address-line">
-                        City
-                    </div>
-                    <div class="col p-0 address-line">
-                        State
-                    </div>
-                    <div class=" col p-0 address-line">
-                        Zip
-                    </div>
-                </div>
-                <div class="billing-address bg-light">
-                    <div class="row m-0">
-                        <div class="col p-0 name">
-                            {{$user_address->postalCity}}
-                        </div>
-                        <div class="col p-0 name">
-                            {{$user_address->postalState}}
-                        </div>
-                        <div class="col p-0 name">
-                            {{$user_address->postalPostCode}}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row mt-5">
-        <div class="col-md-5 order-md-2 mb-4">
-            <div class="cart-headings">Cart Total</div>
-            <div class="border-bottom"></div>
-            <div class="row mt-4 max-width">
-                <div class="col-md-10">
-                    <img src="theme/img/pricing_tag.png">
-                    <span class="totals">Total</span>
-                </div>
-                <div class="col-md-2 text-danger totals">${{number_format($cart_total,2)}}</div>
-            </div>
-            <div class="border-bottom mt-4"></div>
-            <div>
-                <div class="mt-4 payment-option">Delivery Options</div>
-                @foreach($payment_methods as $payment_method)
-                <form class="p-2" action="{{url('order')}}" method="POST" id="order_form" name="order_form">
-                    @csrf
-                    @foreach($payment_method->options as $payment_option)
-                    <div class="row">
-                        <div class="ms-3">
-                            <input type="hidden" value="{{$payment_method->name}}" name="method_name">
-                            <input type="radio" id="local_delivery_{{$payment_option->id}}" name="method_option"
-                                value="{{$payment_option->option_name}}">
-                            <label for="local_delivery payment-option-label">{{$payment_option->option_name}}</label>
-                        </div>
-                    </div>
-                    @endforeach
-                    @endforeach
-            </div>
-        </div>
-        <div class="col-md-7 order-md-1">
-            <div class="cart-headings border-bottom">Items in Cart</div>
-            <div class="row  mt-4">
-                <div class="col-md-10">
-                    <img src="theme/img/box.png">
-                    <span class="ms-1 cart-subtitles">Products</span>
-                </div>
-                <div class="col-md-2"><span class="ms-3 cart-subtitles">Quantity</span></div>
-            </div>
-            <?php
-                $cart_total = 0;
-                $cart_price = 0;
-            ?>
-            @if(Session::get('cart'))
-            @foreach(Session::get('cart') as $cart)
-            <?php 
-                    $total_quatity =  $cart['quantity'];
-                    $total_price = $cart['price'] * $total_quatity;
-                    $cart_total  = $cart_total + $total_price ;
-             ?>
-            <li class="d-flex justify-content-between border-bottom mt-1">
-                @if ($cart['image'])
-                <div class="mt-2">
-                    <img src="{{ $cart['image']}}" alt="" width="70px;">
-                </div>
-                @else
-                <div class="mt-2">
-                    <img src="/theme/img/image_not_available.png" alt="" width="80px">
-                </div>
-                @endif
-                <div class="mt-4 mb-4">
-                    <h6 class="my-0" style="color: #008BD3 !important;">
-                        <a
-                            href="{{ url('product-detail/'. $cart['product_id'] . '/' . $cart['option_id'] . '/' . $cart['slug']) }}">
-                            {{$cart['name']}}
-                        </a>
-                    </h6>
-                </div>
-                <div class="text-muted rounded-circle mt-4" id="circle">{{$cart['quantity']}}</div>
-            </li>
-            @endforeach
-            @endif
-        </div>
-    </div>
-
-    <div class="col-md-6" style="margin-top: 118px !important;margin:auto; !important; max-width:600px !important;">
-        <button type="button" class="button-cards w-100" id="proceed_to_checkout" onclick="validate()">Proceed to
-            checkout</button>
-    </div>
-    </form>
-</div> --}}
 
 <div class="container-fluid w-75 desktop-view">
     <div class="row">
         <div class="col-md-12">
-            <div class="card p-5 border-0" style="background: #FAFAFA;
-            border-radius: 6px;">
+            <div class="card p-5 border-0" style="background: #FAFAFA; border-radius: 6px;">
                 <div class="row">
                     <div class="col-md-6">
                         <div class="row">
@@ -317,7 +170,7 @@
         <div class="col-md-12">
             <p class="item-purchased-thank-you-page">Item Purchased </p>
         </div>
-        <div class="col-md-9 pe-5">
+        <div class=" col-xl-9 col-lg-9 col-md-12 col-sm-12 pe-5">
             <table class="table">
                 <tr>
                     <th class="thank-you-page-table-data-heading">Name</th>
@@ -372,7 +225,7 @@
                             </div>
                         </td>
                         <td>
-                            <p class="pt-4 thank-you-page-product-items-price ">${{number_format($cart['price'],2)}}</p>
+                            <p class="pt-4 thank-you-page-product-items-price">${{number_format($cart['price'],2)}}</p>
                         </td>
                     </tr>
                     @endforeach
@@ -461,6 +314,9 @@
     </div>
 </div>
 
+
+
+
 <!--Mobile View -->
 <!-- MultiStep Form  -->
 <div class="container-fluid mobile-view">
@@ -486,7 +342,8 @@
                                                 <div class="user-info">
                                                     <div class="row">
                                                         <div class="col-md-6">
-                                                            <label class="label mt-5 fw-bold">First Name</label><span
+                                                            <label class="label mt-5 fw-bold">First
+                                                                Name</label><span
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text" placeholder="Enter your first name"
                                                                 id="company_website" name="firstName"
@@ -502,7 +359,8 @@
                                                                 class="form-control fontAwesome ">
                                                         </div>
                                                         <div class="col-md-12 ">
-                                                            <label class="label">company name (optional)</label><span
+                                                            <label class="label">company name
+                                                                (optional)</label><span
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text" placeholder="Enter your company name"
                                                                 value="{{$user_address->company}}" id="company"
@@ -636,7 +494,8 @@
                                         <table class="table mt-5">
                                             <thead>
                                                 <tr>
-                                                    <th style="border-top:none !important" scope="col">Cart Total</th>
+                                                    <th style="border-top:none !important" scope="col">Cart Total
+                                                    </th>
                                                     <th style="border-top:none !important" scope="col"></th>
                                                 </tr>
                                             </thead>
@@ -803,7 +662,8 @@
                                                 <div class="user-info">
                                                     <div class="row">
                                                         <div class="col-md-12">
-                                                            <label class="label mt-5 fw-bold">First Name</label><span
+                                                            <label class="label mt-5 fw-bold">First
+                                                                Name</label><span
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text" placeholder="Enter your first name"
                                                                 id="company_website" name="firstName"
@@ -819,7 +679,8 @@
                                                                 class="form-control fontAwesome ">
                                                         </div>
                                                         <div class="col-md-12 ">
-                                                            <label class="label">company name (optional)</label><span
+                                                            <label class="label">company name
+                                                                (optional)</label><span
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text" placeholder="Enter your company name"
                                                                 value="{{$user_address->company}}" id="company"
@@ -954,7 +815,8 @@
                                         <table class="table mt-5">
                                             <thead>
                                                 <tr>
-                                                    <th style="border-top:none !important" scope="col">Cart Total</th>
+                                                    <th style="border-top:none !important" scope="col">Cart Total
+                                                    </th>
                                                     <th style="border-top:none !important" scope="col"></th>
                                                 </tr>
                                             </thead>
@@ -1131,6 +993,10 @@
 <div class="row mt-5 pt-5 desktop-view" style="padding-top:100px  !important;">
     @include('partials.product-footer')
 </div>
+<div class="row mt-5  laptop-view">
+    @include('partials.product-footer')
+</div>
+
 
 <div class="modal fade" id="address_modal_id" data-dismiss="modal" data-backdrop="false" aria-hidden="true"
     aria-labelledby="exampleModalToggleLabel" tabindex="-1">
@@ -1142,7 +1008,6 @@
             </div>
             <div class="modal-body">
                 <div class="update-address-section" id="address-form-update">
-
                     <form class="needs-validation mt-4 novalidate" action="{{url('order')}}" method="POST">
                         @csrf
                         <div class="alert alert-success mt-3 d-none" id="success_msg"></div>
@@ -1155,7 +1020,6 @@
 
                                 </div>
                             </div>
-
                             <div class="col-md-6 mb-3">
                                 <label for="lastName">Last name</label>
                                 <input type="text" class="form-control bg-light" name="lastName" placeholder=""
@@ -1165,36 +1029,28 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="mb-3">
                             <label for="company">Company Name(optional)</label>
                             <div class="input-group">
                                 <input type="text" class="form-control bg-light" name="company"
                                     placeholder="Enter you company name" value="{{$user_address->company}}" required>
-
                             </div>
                             <div id="error_company" class="text-danger">
 
                             </div>
                         </div>
-
                         <div class="mb-3">
                             <label for="username">Country</label>&nbsp;<span>United States</span>
                             <input type="hidden" name="country" value="United States">
                         </div>
-
-
                         <div class="mb-3">
                             <label for="address">Street Address</label>
                             <input type="text" class="form-control bg-light" name="address"
                                 value="{{$user_address->postalAddress1}}" placeholder="House number and street name"
                                 required>
-
                         </div>
                         <div id="error_address1" class="text-danger">
-
                         </div>
-
                         <div class="mb-3">
                             <label for="address2">Address 2 <span class="text-muted">(Optional)</span></label>
                             <input type="text" class="form-control bg-light" name="address2"
@@ -1202,7 +1058,6 @@
                                 placeholder="Apartment, suite, unit etc (optional)">
                         </div>
                         <div id="error_address2" class="text-danger">
-
                         </div>
                         <div class="mb-3">
                             <label for="town">Town/City <span class="text-muted">(Optional)</span></label>
@@ -1210,7 +1065,6 @@
                                 value="{{$user_address->postalCity}}" placeholder="Enter your town">
                         </div>
                         <div id="error_city" class="text-danger">
-
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
@@ -1219,17 +1073,17 @@
                                 <select class="form-control bg-light" name="state" id="state">
                                     @foreach($states as $state)
                                     <?php 
-                                      if($user_address->postalState == $state->name){
-                                              $selected = 'selected';
-  
-                                      }
-                                      else
-                                      {
-                                           $selected = '';
-                                      }
-                                  
-                                  ?>
-                                    <option value="{{$state->name}}" <?php echo $selected;?>>{{$state->name}}</option>
+                                        if($user_address->postalState == $state->name)
+                                        {
+                                            $selected = 'selected';
+                                            }
+                                        else
+                                        {
+                                            $selected = '';
+                                        }
+                                     ?>
+                                    <option value="{{$state->name}}" <?php echo $selected;?>>{{$state->name}}
+                                    </option>
                                     @endforeach
                                 </select>
                                 <!--    <input type="text" class="form-control bg-light" name="state" value="{{$user_address->postalState}}" placeholder="Enter State" value="" required> -->
@@ -1242,31 +1096,19 @@
                                 <input type="text" class="form-control bg-light" name="zip" placeholder="Enter zip code"
                                     value="{{$user_address->postalPostCode}}" required>
                                 <div id="error_zip" class="text-danger">
-
                                 </div>
                             </div>
                         </div>
-
-
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="phone">Phone</label>
                                 <input type="text" class="form-control bg-light" name="phone"
                                     placeholder="Enter your phone" value="{{$user_address->phone}}" required>
                                 <div id="error_phone" class="text-danger"></div>
-
-
-
                             </div>
-
-                            <!-- <div>
-                      <button calss="btn btn-primary" onclick="updateContact('{{auth()->user()->id}}')">Update</button>
-                  </div> -->
                         </div>
                     </form>
                 </div>
-
-
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn button-cards primary"
@@ -1353,15 +1195,15 @@
             </div>
             <script>
                 function validate(){   
-    if ( ! $("input[name=method_option]").is(':checked') ) {
-        const inputOptions = new Promise((resolve) => {
-            setTimeout(() => {
-                resolve({
-                    'C.O.D': 'C.O.D',
-                    'Pickup Order': 'Pickup Order'
-                })
-            }, 1000)
-        })
+                    if ( ! $("input[name=method_option]").is(':checked') ) {
+                        const inputOptions = new Promise((resolve) => {
+                            setTimeout(() => {
+                            resolve({
+                            'C.O.D': 'C.O.D',
+                            'Pickup Order': 'Pickup Order'
+                        })
+                }, 1000)
+            })
         Swal.fire({
             imageUrl: "theme/img/delivery-icon.png",
             // text: 'Delivery Option',
@@ -1390,6 +1232,7 @@
     $("#order_form").submit(); 
     }
 }
+
 
 function updateAddress() {
     $('#address-form-update').toggle();
