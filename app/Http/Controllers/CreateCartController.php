@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Route;
 use App\Helpers\MailHelper;
 use Session;
 
-
 class CreateCartController extends Controller
 {
     /**
@@ -25,10 +24,8 @@ class CreateCartController extends Controller
     public function create_cart($id)
     {
         $list = BuyList::where('id', $id)->with('list_products.product.options')->first();
-        // foreach($list->list_products as $list_product) {
-        //dd($list->list_products);
-        //$count = 0;
-        foreach($list->list_products as $key=>$list_product) {
+
+        foreach ($list->list_products as $key => $list_product) {
             $cart[$list_product->id] = [
                 "product_id" => $list_product->product_id,
                 "name" => $list_product->product->name,
@@ -39,25 +36,8 @@ class CreateCartController extends Controller
                 'option_id' => $list_product->option_id,
                 "slug" => $list_product->product->slug,
             ];
-        session()->put('cart', $cart);
+            session()->put('cart', $cart);
         }
         return redirect()->route('cart');
-        //  $data = [
-        //     'name' =>  'waqas',
-        //     'subject' => 'Share Test',
-        //     'link' => 'http://indoorsunhydro.local/create-cart/'.$id,
-        //     'from' => 'wqszeeshan@gmail.com'
-        // ];
-        // $subject = '';
-        //         //$adminTemplate = 'emails.admin-share';
-        //         $data['email'] = 'wqszeeshan@gmail.com';
-
-        //         MailHelper::sendMailNotification('emails.admin-share', $data);
-        // dd($cart);
-      //session()->put('cart', $cart);
-        // return redirect()->route('add.to.cart')->with('var', $list);
-
-
-        //return view('index', compact('categories'));
     }
 }
