@@ -9,6 +9,7 @@
   <tr>
     <th>No</th>
     <th>Name</th>
+    <th>last Name</th>
     <th>Email</th>
     <th>Roles</th>
     <th width="280px">Action</th>
@@ -18,7 +19,8 @@
   <tr>
     <td>{{ ++$i }}</td>
     <td>{{ $user->first_name }}</td>
-    <td>{{ $user->email }}</td>
+    <td>{{ $user->last_name }}</td>
+    <td>{{ $user->email}}</td>
     <td>
       @if(!empty($user->getRoleNames()))
       @foreach($user->getRoleNames() as $v)

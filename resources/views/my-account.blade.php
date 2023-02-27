@@ -817,7 +817,7 @@
 									@endif
 									<tbody id="secondary_user">
 										@include('secondary-user', ['secondary_contacts' =>
-										$childerens->secondory_contact])
+										$childerens->secondary_contact])
 									</tbody>
 								</table>
 							</div>
