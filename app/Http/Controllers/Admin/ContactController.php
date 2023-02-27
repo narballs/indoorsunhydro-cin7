@@ -158,7 +158,7 @@ class ContactController extends Controller
 
     public function show_customer($id)
     {
-        $customer = Contact::where('id', $id)->with('secondory_contact')->first();
+        $customer = Contact::where('id', $id)->with('secondary_contact')->first();
         $customer_orders =  ApiOrder::where('user_id', $customer->user_id)->with(['createdby', 'processedby'])->limit('5')->get();
         $statuses = OrderStatus::all();
         if ($customer->hashKey && $customer->hashUsed == false) {
@@ -314,20 +314,18 @@ class ContactController extends Controller
 
     public function send_invitation_email(Request $request)
     {
-        if(!empty($request->secondory_email)){
+        if (!empty($request->secondory_email)) {
             $active_email = $request->secondory_email;
-        }
-        else {
+        } else {
             $active_email = $request->customer_email;
         }
         $current_date_time = Carbon::now()->toDateTimeString();
         $secret = "QCOM" . $current_date_time;
         $sig = hash_hmac('sha256', $active_email, $secret);
         $url = URL::to("/");
-        if (!empty($request->secondory_email)){
-            $url = $url . '/customer/invitation/' . $sig.'?is_secondary=1';
-        }
-        else {
+        if (!empty($request->secondory_email)) {
+            $url = $url . '/customer/invitation/' . $sig . '?is_secondary=1';
+        } else {
             $url = $url . '/customer/invitation/' . $sig;
         }
         $email = $active_email;
@@ -343,7 +341,7 @@ class ContactController extends Controller
 
         MailHelper::sendMailNotification('emails.invitaion-emails', $data);
         $contact_id = $request->contact_id;
-        if(empty($request->secondory_email)) {
+        if (empty($request->secondory_email)) {
             $contact = Contact::where('contact_id', $contact_id)->update(
                 [
                     'hashKey' => $sig,
@@ -355,8 +353,7 @@ class ContactController extends Controller
                 'status' => 200,
                 'link' => $url
             ]);
-        }
-        else {
+        } else {
             $secondary_contact = SecondaryContact::where('email', $active_email)->update(
                 [
                     'hashKey' => $sig,
@@ -366,7 +363,7 @@ class ContactController extends Controller
             return response()->json([
                 'msg' => 'success',
                 'status' => 200,
-                'link' => $url.'?is_secondary=1'
+                'link' => $url . '?is_secondary=1'
             ]);
         }
     }
@@ -375,8 +372,7 @@ class ContactController extends Controller
     {
         if ($request->is_secondary) {
             $secondary = true;
-        }
-        else {
+        } else {
             $secondary = '';
         }
         $msg = 'hashKey already used !';
@@ -391,14 +387,12 @@ class ContactController extends Controller
             }
 
             return view('contomer_invitation', compact('contact'));
-        }
-        else {
+        } else {
             $contact = SecondaryContact::where('hashKey', $hash)->first();
             if ($contact->hashUsed == 1) {
 
                 return view('contomer_invitation-error', compact('msg'));
-            }
-            else {
+            } else {
                 return view('contomer_invitation', compact('contact', 'secondary'));
             }
         }

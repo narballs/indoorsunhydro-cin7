@@ -70,18 +70,20 @@
             <tr>
                 <th>No <i class="fa fa-sort"></th>
                 <th>Name <i class="fa fa-sort"></th>
+                <th>Last Name <i class="fa fa-sort"></th>
                 <th>Email <i class="fa fa-sort"></th>
                 <th>Status <i class="fa fa-sort"></th>
                 <th>Cin7 User-ID <i class="fa fa-sort"></th>
                 <th>Company (Account aka Parent) <i class="fa fa-sort"></th>
+                <th>type<i class="fa fa-sort"></th>
                 <th>Roles <i class="fa fa-sort"></th>
                 <th>Action <i class="fa fa-sort"></th>
             </tr>
-
             @foreach ($data as $key => $user)
             <tr>
                 <td>{{ ++$i }}</td>
                 <td>{{ $user->first_name }}</td>
+                <td>{{ $user->last_name }}</td>
                 <td>{{ $user->email }}</td>
                 <td>
                     @if($user->contact)
@@ -95,6 +97,7 @@
                     @endif
                 </td>
                 <td>
+
                     @if($user->contact)
                     @if($user->contact->contact_id)
                     {{$user->contact->contact_id}}
@@ -116,6 +119,17 @@
                     <span class="badge bg-secondary">empty</span>
                     @endif
 
+                </td>
+                <td>
+                    @if($user->contact)
+                    @if(!empty($user->contact->secondary_contact))
+                    <span class="badge bg-secondary">secondary</span>
+                    @else
+                    <span class="badge bg-primary">primary</span>
+                    @endif
+                    @else
+                    <span class="badge bg-primary">primary</span>
+                    @endif
                 </td>
                 <td>
                     @if(!empty($user->getRoleNames()))
@@ -204,8 +218,6 @@
             var search = $('#search').val();
            if (usersData != '') {
             basic_url = `users?usersData=${usersData}`;
-        //basic_url = 'users?usersData='+usersData+'&search='+search;
-            //  alert(basic_url);
             }
             window.location.href = basic_url;
         }
