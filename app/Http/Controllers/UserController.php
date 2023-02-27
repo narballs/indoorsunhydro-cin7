@@ -65,8 +65,7 @@ class UserController extends Controller
         $usersData = $request->usersData;
         // $cin7Merged = $request->get('cin7-merged');
 
-        $user_query = User::orderBy('id', 'DESC')->with('contact');
-
+        $user_query = User::orderBy('id', 'DESC')->with('contact.secondary_contact');
         if (!empty($usersData)) {
             if ($usersData == 'admin-user') {
                 $user_query = $user_query->role(['admin']);
@@ -425,7 +424,7 @@ class UserController extends Controller
         }
         $user = User::where('id', $user_id)->first();
         $user_address = Contact::where('user_id', $user_id)->first();
-        $childerens = Contact::where('user_id', $user_id)->with('secondory_contact')->first();
+        $childerens = Contact::where('user_id', $user_id)->with('secondary_contact')->first();
         $list = BuyList::where('id', 20)->with('list_products.product.options')->first();
 
         $contact = SecondaryContact::where('email', $user_address->email)->first();
