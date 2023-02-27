@@ -34,11 +34,6 @@
                         $activeCustomer=='active-customer' ? 'selected="selected"' : '' }}>Active </option>
                     <option value="disable-customer" class="form-control" {{ isset($activeCustomer) &&
                         $activeCustomer=='disable-customer' ? 'selected="selected"' : '' }}>Disabled </option>
-                    {{-- <option value="10" {{ isset($perPage) && $perPage==10 ? 'selected="selected"' : '' }}>10
-                    </option>
-                    <option value="20" {{ isset($perPage) && $perPage==20 ? 'selected="selected"' : '' }}>20</option>
-                    <option value="30" {{ isset($perPage) && $perPage==30 ? 'selected="selected"' : '' }}>30</option>
-                    <option value="30">30</option> --}}
                 </select>
 
             </div>
@@ -50,12 +45,10 @@
                                 <i class="fa fa-search"></i>
                             </button>
                         </span>
-                        <!-- <input type="text" class="form-control input-lg" id="search" placeholder="Search" onkeydown="customer_search()" /> -->
                         <form method="get" action="/admin/customers">
                             <input type="text" class="form-control input-lg" id="search" name="search"
                                 placeholder="Search" value="{{ isset($search) ? $search : '' }}" />
                         </form>
-
                     </div>
                 </div>
             </div>
@@ -68,13 +61,14 @@
                     <th>QcomID <i class="fa fa-sort"></th>
                     <th>Cin7ID <i class="fa fa-sort"></th>
                     <th>Name <i class="fa fa-sort"></i></th>
+                    <th>Last Name <i class="fa fa-sort"></i></th>
                     <th>Status <i class="fa fa-sort"></i></th>
-                    <th>Merged</th>
+                    <th>Merged<i class="fa fa-sort"></i></th>
                     <th>Price Tier<i class="fa fa-sort"></i></th>
-                    <th>Company</th>
+                    <th>Company<i class="fa fa-sort"></i></th>
                     <th>Email<i class="fa fa-sort"></i></th>
                     <th class="w-75">Notes<i class="fa fa-sort"></i></th>
-                    <th class="w-25">Actions</th>
+                    <th class="w-25">Actions <i class="fa fa-sort"></i></th>
                 </tr>
             </thead>
             <tbody id="searched">
