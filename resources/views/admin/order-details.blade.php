@@ -65,11 +65,11 @@
 	            					$selected = '';
 	            				}
 	            			?>
-							<select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example"
+					<!-- 		<select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example"
 								id="status">
-								<!-- @foreach($statuses as $status)
+								@foreach($statuses as $status)
 	  							
-	  							@endforeach -->
+	  							@endforeach
 								<option value="0" {{$selected}}>DRAFT
 								</option>
 								<option value="1" {{$selected}}>APPROVED
@@ -77,12 +77,14 @@
 								<option value="2" {{$selected}}>VOID
 								</option>
 
-							</select>
+
+							</select> -->
+							<span class="badge bg-success">VOID</span>
 							<div class="row mb-5">
-								<div class="col-sm-2">
+							<!-- 	<div class="col-sm-2">
 									<input class="btn btn-primary btn-sm" type="button" value="Update"
 										onclick="updateStatus()">
-								</div>
+								</div> -->
 						</form>
 						<form>
 							@csrf
@@ -334,7 +336,7 @@
         		},
          		success: function(response){
          		console.log(response);
-        			setInterval('location.reload()', 7000);
+        			//setInterval('location.reload()', 7000);
     			}
     		});
     	}

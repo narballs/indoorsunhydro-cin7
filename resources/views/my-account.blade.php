@@ -1660,7 +1660,7 @@
 		//         })
 
 
-	function CreateSocodoryUser ()
+	function CreateSocodoryUser()
 		{
             $('#spinner2').removeClass('d-none');
 			var first_name = $('#first_name_secondary').val();
