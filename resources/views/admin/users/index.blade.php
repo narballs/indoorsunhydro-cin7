@@ -75,7 +75,6 @@
                 <th>Status <i class="fa fa-sort"></th>
                 <th>Cin7 User-ID <i class="fa fa-sort"></th>
                 <th>Company (Account aka Parent) <i class="fa fa-sort"></th>
-                <th>type<i class="fa fa-sort"></th>
                 <th>Roles <i class="fa fa-sort"></th>
                 <th>Action <i class="fa fa-sort"></th>
             </tr>
@@ -119,17 +118,6 @@
                     <span class="badge bg-secondary">empty</span>
                     @endif
 
-                </td>
-                <td>
-                    @if($user->contact)
-                    @if(!empty($user->contact->secondary_contact))
-                    <span class="badge bg-secondary">secondary</span>
-                    @else
-                    <span class="badge bg-primary">primary</span>
-                    @endif
-                    @else
-                    <span class="badge bg-primary">primary</span>
-                    @endif
                 </td>
                 <td>
                     @if(!empty($user->getRoleNames()))
