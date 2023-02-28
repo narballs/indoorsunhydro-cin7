@@ -426,20 +426,13 @@ class UserController extends Controller
         $user_address = Contact::where('user_id', $user_id)->first();
         $childerens = Contact::where('user_id', $user_id)->with('secondary_contact')->first();
         $list = BuyList::where('id', 20)->with('list_products.product.options')->first();
-
         $contact = SecondaryContact::where('email', $user_address->email)->first();
+        
         if ($contact) {
             $parent = Contact::where('contact_id', $contact->parent_id)->get();
         } else {
             $parent = "";
         }
-
-        // if ($parent) {
-        //     $parent = $parent;
-        // }
-        // else {
-        //     $parent = '';
-        // }
 
         $states = UsState::all();
         if ($request->ajax()) {
