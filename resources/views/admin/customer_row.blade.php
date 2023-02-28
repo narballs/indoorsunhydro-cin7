@@ -6,6 +6,7 @@
     <td>{{ $contact->contact_id}}</td>
     @endif
     <td><a href="{{ url('admin/customer-detail/'.$contact->id) }}">{{$contact->firstName}}</a></td>
+    <td><a href="{{ url('admin/customer-detail/'.$contact->id) }}">{{$contact->lastName}}</a></td>
     <td>
         @if($contact->status == '1')
         <span class="badge bg-success">Active</span>

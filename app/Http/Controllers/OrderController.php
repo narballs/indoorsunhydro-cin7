@@ -30,6 +30,7 @@ class OrderController extends Controller
 {
     public function store(Request $request)
     {
+        // dd($request->all());
         $request->validate([
             'method_name' => 'required'
         ]);
@@ -37,10 +38,7 @@ class OrderController extends Controller
         $paymentMethod = $request->input('method_name');
         $paymentMethodOption = $request->input('method_option');
         $paymentMethod = $paymentMethodOption;
-
-
         //check if user have already contact with cin7
-
         $existing_contact = Contact::where('user_id', Auth::id())->first();
         if (empty($existing_contact->contact_id)) {
 
