@@ -157,7 +157,7 @@ class OrderManagementController extends Controller
                 "customerOrderNo" => "sample string 13",
                 "voucherCode" => "sample string 14",
                 "deliveryInstructions" => "sample string 15",
-                "status" => "DRAFT",
+                "status" => "VOID",
                 "stage" => "sample string 4",
                 "invoiceDate" => null,
                 "invoiceNumber" => null,
@@ -262,7 +262,6 @@ class OrderManagementController extends Controller
     {
 
         $order_id = $request->input('order_id');
-        // var_dump($order_id);exit;
         $currentOrder = ApiOrder::where('id', $order_id)->first();
         $memberId = $currentOrder->memberId;
         $order_items = ApiOrderItem::with('product.options')->where('order_id', $order_id)->get();
@@ -322,40 +321,14 @@ class OrderManagementController extends Controller
         // unset($currentOrder['tax_class_id']);
         $order = [
             [
-
                 $currentOrder,
                 "createdDate" => $dateCreated,
                 "modifiedDate" => "",
                 "createdBy" => 79914,
                 "processedBy" => 79914,
                 "isApproved" => true,
-                "reference" => 'DEV3' . '-QCOM-' . $order_id,
+                "reference" => $currentOrder->reference,
                 "memberId" => $memberId,
-                // "firstName" => $request->input('firstName'),
-                // "lastName" => $request->input('lastName'),
-                // "company" => $request->input('company'),
-                // "email" => $request->input('email'),
-                // "phone" => $request->input('phone'),
-                // "mobile" => $request->input('phone'),
-                // "fax" => "",
-                // "deliveryFirstName" => $request->input('firstName'),
-                // "deliveryLastName" => $request->input('lastName'),
-                // "deliveryCompany" => $request->input('company'),
-                // "deliveryAddress1" => $request->input('address'),
-                // "deliveryAddress2" => $request->input('address2'),
-                // "deliveryCity" => $request->input('town_city'),
-                // "deliveryState" => $request->input('state'),
-                // "deliveryPostalCode" => $request->input('zip'),
-                // "deliveryCountry" => $request->input('country'),
-                // "billingFirstName" => $request->input('firstName'),
-                // "billingLastName" => $request->input('lastName'),
-                // "billingCompany" => $request->input('company'),
-                // "billingAddress1" => $request->input('address'),
-                // "billingAddress2" => $request->input('address2'),
-                // "billingCity" => $request->input('town_city'),
-                // "billingPostalCode" => $request->input('zip'),
-                // "billingState" => $request->input('state'),
-                // "billingCountry" => $request->input('country'),
                 "branchId" => 3,
                 "branchEmail" => "wqszeeshan@gmail.com",
                 "projectName" => "",
@@ -372,10 +345,9 @@ class OrderManagementController extends Controller
                 "currencyCode" => "USD",
                 "currencyRate" => 59.0,
                 "currencySymbol" => "$",
-                "taxStatus" => "Incl",
+                "taxStatus" => "Excl",
                 "taxRate" => 8.75,
                 "source" => "sample string 62",
-                "isVoid" => true,
                 "accountingAttributes" =>
                 [
                     "importDate" => "2022-07-13T15:21:16.1946848+12:00",
@@ -394,7 +366,7 @@ class OrderManagementController extends Controller
                 "customerOrderNo" => $currentOrder->po_number,
                 "voucherCode" => "sample string 14",
                 "deliveryInstructions" =>  $currentOrder->memo,
-                "status" => "DRAFT",
+                "status" => "VOID",
                 "stage" => "",
                 "invoiceDate" => null,
                 "invoiceNumber" => 4232,
@@ -407,22 +379,6 @@ class OrderManagementController extends Controller
             ],
         ];
         SalesOrders::dispatch('create_order', $order)->onQueue(env('QUEUE_NAME'));
-        //         $data = [
-        //             'order_id' => $order_id,
-        //             'name' =>  'Admin',
-        //             'email' => 'wqszeeshan@gmail.com',
-        //             'contact_email' => 'wqszeeshan@gmail.com',
-        //             'reference' => 'adsasd',
-        //             'subject' => 'Order fullfilled',
-        //             'from' => 'wqszeeshan@gmail.com', 
-        //             'content' => 'Order fullfilled has been fullfilled. from controller.'
-        //         ];
-
-
-        // $data['email'] = 'wqszeeshan@gmail.com';
-        // $adminTemplate = 'emails.approval-notifications';
-        // MailHelper::sendMailNotification('emails.admin-order-fullfillment', $data);
-
     }
 
 
