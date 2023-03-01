@@ -158,7 +158,8 @@ class ContactController extends Controller
 
     public function show_customer($id)
     {
-        $customer = Contact::where('id', $id)->with('secondary_contact')->first();
+        $customer = Contact::where('id', $id)->first();
+        $secondary_contacts = Contact::where('parent_id', $customer->contact_id)->get();
         $customer_orders =  ApiOrder::where('user_id', $customer->user_id)->with(['createdby', 'processedby'])->limit('5')->get();
         $statuses = OrderStatus::all();
         if ($customer->hashKey && $customer->hashUsed == false) {
@@ -167,7 +168,8 @@ class ContactController extends Controller
         } else {
             $invitation_url = '';
         }
-        return view('admin/customer-details', compact('customer', 'statuses', 'customer_orders', 'invitation_url'));
+        return view('admin/customer-details', compact('customer', 'statuses', 'customer_orders',
+         'invitation_url', 'secondary_contacts'));
     }
 
     public function activate_customer(Request $request)
