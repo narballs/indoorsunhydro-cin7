@@ -50,8 +50,8 @@ class SyncSuppliers extends Command
                 'https://api.cin7.com/api/v1/Contacts/?page=' . $i,
                 [
                     'auth' => [
-                        'IndoorSunHydroUS', 
-                        'faada8a7a5ef4f90abaabb63e078b5c1'
+                        'IndoorSunHydro2US', 
+                        '625ab949593e4cd4908b9f42758009f5'
                     ]
                 ]
             );
@@ -68,6 +68,7 @@ class SyncSuppliers extends Command
                     $this->info('Processing contacts ' . $api_contact->firstName);
                     $this->info('---------------------------------------');
                     $contact->contact_id = $api_contact->id;
+                    $contact->is_parent = 1;
                     $contact->status = $api_contact->isActive;
                     $contact->type = $api_contact->type;
                     $contact->company = $api_contact->company;
@@ -90,11 +91,37 @@ class SyncSuppliers extends Command
                     $contact->website = $api_contact->website;
                     $contact->email = $api_contact->email;
                     $contact->notes = $api_contact->notes;
+                    if ($api_contact->secondaryContacts) 
+                      {
+                         foreach($api_contact->secondaryContacts as $secondaryContact) {
+                            $secondaryContact = new Contact ([
+                              'secondary_id' => $secondaryContact->id,
+                              'parent_id'  => $api_contact->id,
+                              'is_parent' => 0,
+                              'firstName' => $secondaryContact->firstName,
+                              'lastName' => $secondaryContact->lastName,
+                              'jobTitle' => $secondaryContact->jobTitle,
+                              'company' => $secondaryContact->company,
+                              'phone' => $secondaryContact->phone,
+                              'mobile' => $secondaryContact->mobile,
+                              'email' => $secondaryContact->email,
+                            ]);
+                            $secondaryContact->save();
+
+                      }
+                    }
+                   
+                    
                     $contact->save();
                 }
                 else {
+                      foreach($api_contact->secondaryContacts as $secondaryContact) {
+                        echo $secondaryContact->id.'---'.$secondaryContact->firstName;
+                    }
+                    
                     $contact = new Contact([
                         'contact_id' => $api_contact->id,
+                         'is_parent' => 1,
                         'status' => $api_contact->isActive,
                         'type' => $api_contact->type,
                         'company' => $api_contact->company,
@@ -116,8 +143,26 @@ class SyncSuppliers extends Command
                         'fax' => $api_contact->fax,
                         'website' => $api_contact->website,
                         'email' => $api_contact->email,
-                        'notes' => $api_contact->notes
+                        'notes' => $api_contact->notes 
                     ]);
+                    if ($api_contact->secondaryContacts) {
+                        foreach($api_contact->secondaryContacts as $secondaryContact) {
+                            $secondaryContact = new Contact ([
+                              'secondary_id' => $secondaryContact->id,
+                              'parent_id'  => $api_contact->id,
+                              'is_parent' => 0,
+                              'firstName' => $secondaryContact->firstName,
+                              'lastName' => $secondaryContact->lastName,
+                              'jobTitle' => $secondaryContact->jobTitle,
+                              'company' => $secondaryContact->company,
+                              'phone' => $secondaryContact->phone,
+                              'mobile' => $secondaryContact->mobile,
+                             'email' => $secondaryContact->email,
+
+                            ]);
+                            $secondaryContact->save();
+                        }
+                    }
                     $contact->save();
                 }
             }
