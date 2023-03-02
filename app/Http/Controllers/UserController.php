@@ -30,8 +30,7 @@ use Spatie\QueryBuilder\AllowedFilter;
 use URL;
 use Carbon\Carbon;
 use App\Helpers\UtilHelper;
-
-
+use Illuminate\Database\Eloquent\Builder;
 
 class UserController extends Controller
 {
@@ -63,6 +62,8 @@ class UserController extends Controller
         $page = $request->page;
         $search = $request->search;
         $usersData = $request->usersData;
+        $secondaryUser = $request->secondaryUser;
+        //dd($secondaryUser);
         // $cin7Merged = $request->get('cin7-merged');
 
         $user_query = User::orderBy('id', 'DESC')->with('contact.secondary_contact');
@@ -70,29 +71,48 @@ class UserController extends Controller
             if ($usersData == 'admin-user') {
                 $user_query = $user_query->role(['admin']);
             } elseif ($usersData == 'cin7-merged') {
-                $user_query = $user_query;
                 $user_query = $user_query->whereHas('contact', function ($query) {
                     $query = $query->whereNotNull('contact_id');
                 })->with('contact');
             } elseif ($usersData == 'not-merged') {
-                $user_query = $user_query;
                 $user_query = $user_query->whereHas('contact', function ($query) {
                     $query = $query->whereNull('contact_id');
                 })->with('contact');
             }
         }
 
-        if (!empty($search)) {
-            $user_query = $user_query->where('first_name', 'LIKE', '%' . $search . '%')
-                ->orWhere('last_name', 'like', '%' . $search . '%')
-                ->orWhere('email', 'like', '%' . $search . '%');
+        if (!empty($secondaryUser)) {
+            if ($secondaryUser == 'secondary-user') {
+                $user_query = $user_query->WhereHas('contact', function ($query) {
+                    $query->where('parent_id', 173);
+                });
+            }
+            if ($secondaryUser == 'primary-user') {
+                //dd('hi');
+                $user_query = $user_query->whereHas('contact', function ($query) {
+                    $query = $query->whereNull('parent_id');
+                })->with('contact');
+            }
         }
 
+        if (!empty($search)) {
+            $user_query = $user_query
+                ->where('first_name', 'LIKE', '%' . $search . '%')
+                ->orWhere('last_name', 'like', '%' . $search . '%')
+                ->orWhere('email', 'like', '%' . $search . '%')
+                ->orWhereHas('contact', function (Builder $query) use ($search) {
+                    $query->where('company', 'LIKE', '%' . $search . '%')
+                        ->orWhere('contact_id', '=', $search);
+                });
+        }
+
+
         $data = $user_query->paginate(10);
+        //dd($data);
         $users = User::role(['Admin'])->get();
         $count = $users->count();
-        return view('admin.users.index', compact('data', 'count', 'search', 'usersData'))
-            ->with('i', ($request->input('page', 1) - 1) * 5);
+        return view('admin.users.index', compact('data', 'count', 'search', 'usersData', 'secondaryUser'))
+            ->with('i', ($request->input('page', 1) - 1) * 10);
     }
 
     /**
@@ -291,7 +311,6 @@ class UserController extends Controller
             SecondaryContact::where('id', $secondary_contact->id)->update([
                 'hashUsed' => 1,
             ]);
-
             $user_id = $user->id;
             $contact = Contact::create([
                 'status' => 0,
@@ -316,13 +335,6 @@ class UserController extends Controller
             SyncContacts::dispatch('create_contact', $contact)->onQueue(env('QUEUE_NAME'));
         } else {
             $contact = Contact::where('email', $request->email)->first();
-
-
-            // $validatedData['password'] = bcrypt($validatedData['password']);
-            // $validateData['first_name'] = $contact->firstName;
-            // $validateData['last_name'] = $contact->lastName;
-
-
             $user = User::create([
                 'email' => $request->email,
                 'password' =>  bcrypt($request->password),
@@ -343,7 +355,6 @@ class UserController extends Controller
     public function logout()
     {
         Auth::logout();
-
         return redirect()->route('user');
     }
 
@@ -427,7 +438,7 @@ class UserController extends Controller
         $childerens = Contact::where('user_id', $user_id)->with('secondary_contact')->first();
         $list = BuyList::where('id', 20)->with('list_products.product.options')->first();
         $contact = SecondaryContact::where('email', $user_address->email)->first();
-        
+
         if ($contact) {
             $parent = Contact::where('contact_id', $contact->parent_id)->get();
         } else {
@@ -584,7 +595,6 @@ class UserController extends Controller
         if (!empty($request->email)) {
             $url = $url . '/customer/invitation/' . $sig . '?is_secondary=1';
         }
-
 
         $contact = [
             [
