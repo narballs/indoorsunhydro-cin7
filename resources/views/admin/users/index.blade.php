@@ -234,7 +234,6 @@
             }
            if (secondaryUser != '') {
             basic_url = basic_url+`&secondaryUser=${secondaryUser}`;
-            alert(basic_url);
             }
 
             window.location.href = basic_url;
