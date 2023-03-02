@@ -85,39 +85,8 @@
 								</div>
 							</div>
 						</div>
-
-						<!-- 	<form method="POST" id="order_status" name="order_status">
-          				<div>
-              				<span class="me-3">Order Status</span>
-            			</div>
-            			<select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" id="status">
-            				<?php //dd($customer);?>
-            			
-
-						</select>
-						<div>
-							<input class="btn btn-primary" type="button" value="Update" onclick="updateStatus()">
-						</div>
-					</form> -->
 						<table class="table table-borderless">
 							<tbody>
-								<?php //dd($orderitems)?>
-								<!--  -->
-								<!-- 	<tr>
-				                <td>
-				                  <div class="d-flex mb-2">
-				                    <div class="flex-shrink-0">
-				                      <img src="https://via.placeholder.com/280x280/FF69B4/000000" alt="" width="35" class="img-fluid">
-				                    </div>
-				                    <div class="flex-lg-grow-1 ms-3">
-				                      <h6 class="small mb-0"><a href="#" class="text-reset">Smartwatch IP68 Waterproof GPS and Bluetooth Support</a></h6>
-				                      <span class="small">Color: White</span>
-				                    </div>
-				                  </div>
-				                </td>
-                				<td>1</td>
-                				<td class="text-end">$79.99</td>
-              				</tr> -->
 							</tbody>
 							<tfoot>
 								<tr>
@@ -125,44 +94,25 @@
 										<sapn class="text-muted"><b>Company:</b></sapn>{{$customer->company}}
 									</td>
 									<td class="text-end"></td>
-
-
-									<?php //dd($customer);?>
 									<td></td>
 									<td></td>
 									<td colspan="2"><b>Pricing Column:</b> {{$customer->priceColumn}}</td>
-
-
 								</tr>
 								<tr>
 									<td colspan="2">
 										<sapn class="text-muted">
 									</td>
 									<td class="text-end"></td>
-
-
-									<?php //dd($customer);?>
 									<td></td>
 									<td></td>
 									<td colspan="2"><b>Email:</b> {{$customer->email}}</td>
-
-
 								</tr>
-								<!--   <tr>
-				            	<td>
-				            	</td>
-				            	<td>
-				            	</td>
-				            	<td colspan="2"><b>Email:</b>{{$customer->email}}</td>
-				            </tr> -->
 								<tr>
 									<td colspan="2">
 										<sapn class="text-muted"><b>Website:</b></sapn>{{$customer->website}}
 									</td>
 									<td class="text-end"></td>
 								</tr>
-
-
 								<tr>
 									<td colspan="2">
 										<sapn class="text-muted"><b>Job Title:</b></sapn>{{$customer->jobTitle}}
@@ -180,7 +130,6 @@
 									</td>
 								</tr>
 								<tr class="fw-bold">
-									<?php //dd($customer);?>
 									<td colspan="2" class="text-muted pt-0 pb-0 ">{{$customer->postalAddress1}}</td>
 									<td></td>
 									<td></td>
@@ -188,7 +137,6 @@
 									<td class="text-end">{{$customer->address1}}</td>
 								</tr>
 								<tr class="fw-bold">
-									<?php //dd($customer);?>
 									<td colspan="2" class="text-muted pt-0 pb-0 ">{{$customer->postalAddress2}}</td>
 									<td></td>
 									<td></td>
@@ -222,12 +170,6 @@
 						<div class="row">
 							<div class="col-lg-12">
 								<h2 class="h5 mb-0"><a href="#" class="text-muted"></a>Order History</h2>
-								<?php //dd($customer->apiorders);
-	              		// foreach($customer->apiorders as $apiorder) {
-	              		// 	echo $apiorder->id;
-	              		// }
-
-	              		?>
 								<table class="table">
 									<tr>
 										<th>Order #</th>
@@ -236,14 +178,11 @@
 										<th>Total</th>
 										<th>Ref#</th>
 									</tr>
-									<?php //dd($customer_orders);?>
 									@foreach($customer_orders as $customer_order)
-									<?php //dd($customer_orders);?>
 									<tr>
 										@if($customer_order->order_id)
 										<td>
 											{{$customer_order->order_id}}
-
 										</td>
 										@else
 										<td class="badge bg-danger">Pending Approval</td>

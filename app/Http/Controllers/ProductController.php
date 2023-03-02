@@ -12,8 +12,9 @@ use App\Models\Brand;
 use App\Models\BuyList;
 use App\Models\ProductBuyList;
 use App\Models\TaxClass;
-use Auth;
-use DB;
+use Exception;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -22,14 +23,9 @@ class ProductController extends Controller
         $selected_category_id = $request->get('selected_category_id');
         if (!empty($selected_category_id)) {
         }
-
         $parent_category = Category::find($category_id);
-
         $parent_category_slug = $parent_category->slug;
-
         $categories = Category::where('parent_id', 0)->get();
-
-
         //git switch branch
         $category_ids = Category::where('parent_id', $category_id)->pluck('id')->toArray();
         array_push($category_ids, $category_id);
@@ -50,11 +46,11 @@ class ProductController extends Controller
         }
         $price_creteria = $request->get('search_price');
         if (!empty($category_ids)) {
-            
+
             $products_query = Product::where('status', '!=', 'Inactive')
                 ->whereIn('category_id', $category_ids)
                 ->with('options.price', 'brand');
-            
+
 
             if (!empty($brand_id)) {
                 $products_query->where('brand_id', $brand_id);
@@ -68,33 +64,27 @@ class ProductController extends Controller
             if (!empty($price_creteria)) {
                 if ($price_creteria == 'brand-a-to-z') {
                     $products_query->orderBy('name', 'ASC');
-                }
-                elseif ($price_creteria == 'brand-z-to-a') {
+                } elseif ($price_creteria == 'brand-z-to-a') {
                     $products_query->orderBy('name', 'DESC');
-                }
-                elseif ($price_creteria == 'best-selling') {
+                } elseif ($price_creteria == 'best-selling') {
                     $products_query->orderBy('views', 'DESC');
-                }
-                elseif ($price_creteria == 'price-low-to-high') {
+                } elseif ($price_creteria == 'price-low-to-high') {
                     $products_query->orderBy('retail_price', 'ASC');
-                }
-                elseif ($price_creteria == 'price-high-to-low') {
+                } elseif ($price_creteria == 'price-high-to-low') {
                     $products_query->orderBy('retail_price', 'DESC');
                 }
-
             }
 
             if (empty($stock) || $stock == 'in-stock') {
                 $products_query->where('stockAvailable', '>', 0);
-            }
-            elseif (!empty($stock) && $stock == 'out-of-stock') {
+            } elseif (!empty($stock) && $stock == 'out-of-stock') {
                 $products_query->where('stockAvailable', '<', 1);
             }
 
             if (!empty($selected_category_id)) {
                 $sub_category_ids = Category::where('parent_id', $selected_category_id)->pluck('id')->toArray();
             }
-            
+
             $products = $products_query->with('options.price', 'brand')->paginate($per_page);
 
             $queries = DB::getQueryLog();
@@ -108,27 +98,15 @@ class ProductController extends Controller
         if ($user_id != null) {
             $contact = Contact::where('user_id', $user_id)->first();
         }
-        //dd($contact);
-        // if ($contact) {
-        //     $pricing = $contact->priceColumn;
-        // } else {
-        //     $pricing = 'Retail';
-        // }
-
-        //$db_price_column = 'retailUSD';
 
         if ($contact) {
 
             $pricing = $contact->priceColumn;
-        }
-        else {
+        } else {
             $pricing = 'RetailUSD';
         }
 
         $lists = BuyList::where('user_id', $user_id)->get();
-
-
-
         return view('categories', compact(
             'products',
             'brands',
@@ -181,11 +159,11 @@ class ProductController extends Controller
         }
 
         $childeren_id = $request->get('childeren_id');
-        
 
-            if (!empty($childeren_id)) {
-                $products_query->where('category_id', $childeren_id);
-            }
+
+        if (!empty($childeren_id)) {
+            $products_query->where('category_id', $childeren_id);
+        }
 
         $price_creteria = $request->get('search_price');
         if (!empty($price_creteria)) {
@@ -211,12 +189,11 @@ class ProductController extends Controller
         }
         $stock = $request->get('stock');
         if (empty($stock) || $stock == 'in-stock') {
-           $products_query->where('stockAvailable', '>', 0);
-        }
-        elseif (!empty($stock) && $stock == 'out-of-stock') {
+            $products_query->where('stockAvailable', '>', 0);
+        } elseif (!empty($stock) && $stock == 'out-of-stock') {
             $products_query->where('stockAvailable', '<', 1);
         }
-       
+
         if (empty($search_queries)) {
             $products = $products_query->paginate($per_page);
         } else {
@@ -242,15 +219,9 @@ class ProductController extends Controller
         $parent_category_slug  = '';
 
         if (!empty($category_ids) && !empty($category_ids[0])) {
-            // $products_query = Product::where('status', '!=', 'Inactive')
-            //     ->where('category_id', $category_id)
-            //     ->with('options', 'brand');
-
             $products_query = Product::where('status', '!=', 'Inactive')
                 ->whereIn('category_id', $category_ids)
-                ->with('options.price', 'brand');    
-
-
+                ->with('options.price', 'brand');
             if (!empty($brand_id)) {
                 $products_query->where('brand_id', $brand_id);
             }
@@ -259,7 +230,6 @@ class ProductController extends Controller
 
                 $products_query->where('category_id', $childeren_id);
             }
-
             if (!empty($price_creteria)) {
                 if ($price_creteria == 'brand-a-to-z') {
                     $products_query->orderBy('name', 'ASC');
@@ -281,15 +251,11 @@ class ProductController extends Controller
                     $products_query->orderBy('retail_price', 'DESC');
                 }
             }
-
-             if (empty($stock) || $stock == 'in-stock') {
+            if (empty($stock) || $stock == 'in-stock') {
                 $products_query->where('stockAvailable', '>', 0);
-            }
-            elseif (!empty($stock) && $stock == 'out-of-stock') {
+            } elseif (!empty($stock) && $stock == 'out-of-stock') {
                 $products_query->where('stockAvailable', '<', 1);
             }
-
-
             if (!empty($selected_category_id)) {
                 $sub_category_ids = Category::where('parent_id', $selected_category_id)->pluck('id')->toArray();
             }
@@ -299,12 +265,8 @@ class ProductController extends Controller
                 $parent_category_slug = $parent_category->slug;
                 $products_query = $products_query->where('category_id', $category_id);
             } else {
-                
             }
-
-
             $products = $products_query->with('options.defaultPrice', 'brand')->paginate($per_page);
-
         }
         $user_id = Auth::id();
         $lists = BuyList::where('user_id', $user_id)->get();
@@ -313,11 +275,8 @@ class ProductController extends Controller
             $contact = Contact::where('user_id', $user_id)->first();
         }
 
-        //$db_price_column = 'retailUSD';
-
         if ($contact) {
             $pricing = $contact->priceColumn;
-            // $db_price_column = lcfirst($pricing) . 'USD';
         } else {
             $pricing = 'Retail';
         }
@@ -345,7 +304,7 @@ class ProductController extends Controller
     {
         $product = Product::where('id', $id)->first();
         $location_inventories = [];
-        
+
         try {
             $url = 'https://api.cin7.com/api/v1/Stock?where=productId=' . $product->product_id . '&productOptionId=' . $option_id;
             $client2 = new \GuzzleHttp\Client();
@@ -362,21 +321,9 @@ class ProductController extends Controller
             );
             $inventory = $res->getBody()->getContents();
             $location_inventories = json_decode($inventory);
-        }
-        catch (Exception $ex) {
-            
+        } catch (Exception $ex) {
         }
 
-        
-
-
-        //dd($location_inventories);
-        // $invetory = [];
-        // foreach($location_inventories as $key=>$location_inventory) {
-        //     $inventory[$key] = $location_inventory->branchName;
-        //     //$location_inventory->branchId;
-        // }
-        // dd($inventory);
         if ($product) {
             $views = $product->views;
             $product->views = $views + 1;
@@ -408,22 +355,12 @@ class ProductController extends Controller
             $pricing = 'RetailUSD';
         }
 
-        //$db_price_column = 'retailUSD';
-
-        // if ($contact) {
-        //     $pricing = $contact->priceColumn;
-        //     $db_price_column = lcfirst($pricing) . 'USD';
-        // } 
-        // else {
-        //     $pricing = 'Retail';
-        // }
 
         return view('product-detail', compact(
-            'productOption', 
-            'pname', 
-            'pricing', 
+            'productOption',
+            'pname',
+            'pricing',
             'location_inventories',
-            //'db_price_column'
         ));
     }
     public function showProductByCategory_slug($slug)
@@ -631,7 +568,7 @@ class ProductController extends Controller
             $contact = Contact::where('user_id', $user_id)->first();
             $contact_id = $contact->contact_id;
         }
-        
+
         if ($contact_id) {
             $pricing = $contact->priceColumn;
         }
@@ -665,14 +602,13 @@ class ProductController extends Controller
                     }
                 }
             }
-        }
-        else {
+        } else {
             foreach ($productOption->products->options as $option) {
                 foreach ($option->price as $price) {
                     $price = $price['retailUSD'];
                 }
             }
-        } 
+        }
 
 
         // if ($pricing == 'Wholesale') {
@@ -728,7 +664,7 @@ class ProductController extends Controller
         if (!empty($user_id)) {
             $contact = Contact::where('user_id', $user_id)->first();
         }
-        $tax_class = TaxClass::where('is_default' , 1)->first();
+        $tax_class = TaxClass::where('is_default', 1)->first();
 
 
         if (!empty($cart_items)) {
@@ -793,9 +729,9 @@ class ProductController extends Controller
         $search_queries = $request->all();
 
         //$db_price_column = 'retailUSD';
-          
 
-    
+
+
         $products_query  = Product::with('options', 'brand', 'categories');
 
         $selected_category_id = $request->get('selected_category');
@@ -906,16 +842,9 @@ class ProductController extends Controller
             }
             if (empty($stock) || $stock == 'in-stock') {
                 $products_query->where('stockAvailable', '>', 0);
-            }
-            elseif (!empty($stock) && $stock == 'out-of-stock') {
+            } elseif (!empty($stock) && $stock == 'out-of-stock') {
                 $products_query->where('stockAvailable', '<', 1);
             }
-            // if (!empty($stock) && $stock == 'in-stock') {
-            //     $products_query->where('stockAvailable', '>', 0);
-            // }
-            // if (!empty($stock) && $stock == 'out-of-stock') {
-            //     $products_query->where('stockAvailable', '<', 1);
-            // }
 
             if (!empty($selected_category_id)) {
                 $sub_category_ids = Category::where('parent_id', $selected_category_id)->pluck('id')->toArray();
@@ -933,17 +862,23 @@ class ProductController extends Controller
         $is_search = $request->get('is_search');
 
         $searchvalue = $request->value;
+        $value = $searchvalue;
+        $products = Product::with(['options' => function ($q) {
+            $q->where('status', '!=', 'Disabled');
+        }])->where('status', '!=', 'Inactive')
+            ->where('name', 'LIKE', '%' . $value . '%')
+            ->orWhere('code', 'LIKE', '%' . $value . '%')->paginate($per_page);
 
-        $searchvalue = preg_split('/\s+/', $searchvalue, -1, PREG_SPLIT_NO_EMPTY);
-        if (!empty($is_search)) {
-            foreach ($searchvalue as $value) {
-                $products = Product::with(['options' => function ($q) {
-                    $q->where('status', '!=', 'Disabled');
-                }])->where('status', '!=', 'Inactive')
-                    ->where('name', 'LIKE', '%' . $value . '%')
-                    ->orWhere('code', 'LIKE', '%' . $value . '%')->paginate($per_page);
-            };
-        }
+        // $searchvalue = preg_split('/\s+/', $searchvalue, -1, PREG_SPLIT_NO_EMPTY);
+        // if (!empty($is_search)) {
+        //     foreach ($searchvalue as $value) {
+        //         $products = Product::with(['options' => function ($q) {
+        //             $q->where('status', '!=', 'Disabled');
+        //         }])->where('status', '!=', 'Inactive')
+        //             ->where('name', 'LIKE', '%' . $value . '%')
+        //             ->orWhere('code', 'LIKE', '%' . $value . '%')->paginate($per_page);
+        //     };
+        // }
 
         $searched_value = $request->value;
 
@@ -963,8 +898,7 @@ class ProductController extends Controller
         //$db_price_column = 'retailUSD';
         if ($contact) {
             $pricing = $contact->priceColumn;
-        }
-        else {
+        } else {
             $pricing = 'RetailUSD';
         }
         return view('search_product.search_product', compact(

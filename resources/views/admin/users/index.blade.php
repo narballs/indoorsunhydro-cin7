@@ -44,7 +44,17 @@
                                 $usersData=='not-merged' ? 'selected="selected"' : '' }}>Not Merged</option>
                         </select>
                     </div>
-                    <div class="col-md-6"></div>
+                    <div class="col-md-6">
+                        <select name="secondary_user" id="secondary-user" onchange="userFilter()" class="form-control"
+                            style="height: 45px;">
+                            <option value="all" class="form-control">Secndary/Primary</option>
+                            <option value="secondary-user" class="form-control" {{ isset($secondaryUser) &&
+                                $secondaryUser=='secondary-user' ? 'selected="selected"' : '' }}>Secondary Users
+                            </option>
+                            <option value="primary-user" class="form-control" {{ isset($secondaryUser) &&
+                                $secondaryUser=='primary-user' ? 'selected="selected"' : '' }}>Primary Users</option>
+                        </select>
+                    </div>
                 </div>
             </div>
             <div class="col-md-5">
@@ -67,6 +77,7 @@
     <div class="card card-body">
         <div id="admin-users"></div>
         <table class="table table-striped table-hover table-bordered" id="user-table">
+
             <tr>
                 <th>No <i class="fa fa-sort"></th>
                 <th>Name <i class="fa fa-sort"></th>
@@ -75,10 +86,12 @@
                 <th>Status <i class="fa fa-sort"></th>
                 <th>Cin7 User-ID <i class="fa fa-sort"></th>
                 <th>Company (Account aka Parent) <i class="fa fa-sort"></th>
+                <th>Type <i class="fa fa-sort"></th>
                 <th>Roles <i class="fa fa-sort"></th>
                 <th>Action <i class="fa fa-sort"></th>
             </tr>
             @foreach ($data as $key => $user)
+
             <tr>
                 <td>{{ ++$i }}</td>
                 <td>{{ $user->first_name }}</td>
@@ -117,7 +130,18 @@
                     @else
                     <span class="badge bg-secondary">empty</span>
                     @endif
-
+                </td>
+                <td>
+                    @if($user->contact)
+                    @if($user->contact->parent_id == '')
+                    <span class="badge bg-primary">Primary</span>
+                    @endif
+                    @if($user->contact->parent_id != '')
+                    <span class="badge bg-secondary">Secondary</span>
+                    @endif
+                    {{-- @else
+                    <span class="badge bg-info">Simple Users</span> --}}
+                    @endif
                 </td>
                 <td>
                     @if(!empty($user->getRoleNames()))
@@ -204,9 +228,15 @@
     function userFilter() {
             var usersData = $('#users').val();
             var search = $('#search').val();
+            var secondaryUser = $('#secondary-user').val();
            if (usersData != '') {
             basic_url = `users?usersData=${usersData}`;
             }
+           if (secondaryUser != '') {
+            basic_url = basic_url+`&secondaryUser=${secondaryUser}`;
+            alert(basic_url);
+            }
+
             window.location.href = basic_url;
         }
     </script>
