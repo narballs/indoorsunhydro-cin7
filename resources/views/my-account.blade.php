@@ -718,135 +718,134 @@
 						</div>
 
 						<div class="additional-users d-none pr-2" id="additional-users">
-							<div class="row mt-3 detail-heading ms-2 mr-0 ml-0 p-0" id="detail-heading">
-
-								<div class="col-md-12 border-bottom border-4 p-0 mr-3">
-									<div class="row mb-4 mt-3">
-										<div class="col-md-4 ">
-											<img src="theme/img/account_details.png" style="margin: -1px 2px 1px 1px;">
-											@if($parent)
-											<span class="pt-1 my-account-content-heading">Primary Contact</span>
-											@else
-											<span class="pt-1 my-account-content-heading">Secondary Contact</span>
-											@endif
-										</div>
-										<div class="col-md-4">
-											@if(!$parent)
-											<button type="button" class="btn btn-info" data-bs-toggle="modal"
-												data-bs-target="#staticBackdrop">
-												Create Secondary User
-											</button>
-											@endif
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="col-md-12 pl-0 pr-0 mr-0 ml-0 w-100">
-								<table class="table table-borderless">
-									<thead>
-										<tr>
-											<th>
-												Company
-											</th>
-											<th>
-												First Name
-											</th>
-											<th>
-												Last Name
-											</th>
-											<th>
-												Job Title
-											</th>
-											<th>
-												Email
-											</th>
-											<th>
-												Phone
-											</th>
-											<th>
-												Status
-											</th>
-											<th>
-												Type
-											</th>
-										</tr>
-									</thead>
-									@if($parent)
-									<tbody>
-										<tr>
-											<td>
-												@if($parent[0]['company'])
-												{{$parent[0]['company']}}
-												@else
-												<span class="badge bg-success">empty</span>
-												@endif
-											</td>
-											<td>
-												{{$parent[0]['firstName']}}
-											</td>
-											<td>
-												{{$parent[0]['lastName']}}
-											</td>
-											<td>
-												@if($parent[0]['jobTitle'])
-												{{$parent[0]['jobTitle']}}
-												@else
-												<span class="badge bg-success">empty</span>
-												@endif
-											</td>
-											<td>
-												{{$parent[0]['email']}}
-											</td>
-											<td>
-												{{$parent[0]['phone']}}
-											</td>
-											<td>
-												@if($parent[0]['status'] == 1)
-												<span class="badge bg-success">Active</span>
-												@else
-												<span class="badge bg-success">Un Active</span>
-												@endif
-											</td>
-											<td>
-												<span class="badge bg-primary">primary contact</span>
-											</td>
-										</tr>
-									</tbody>
-									@endif
-									<tbody id="secondary_user">
-										@include('secondary-user', ['secondary_contacts' =>
-										$childerens->secondary_contact])
-									</tbody>
-								</table>
-							</div>
-							<div class="row ms-2 mb-5 d-none" id="address_row">
-								<div class="col-md-3">
-								</div>
-								<div class="col-md-9 pl-1">
-									<div class="row mt-3 " style="margin:auto;">
-										<div class="col bg-white mr-3" style="border-radius: 10px !important;">
-											<div class="mt-4 mb-4"><img src="theme/img/user_address.png"><span
-													class="billing-address-heading-subtitle pt-2 ms-2 align-middle address-weight">Order
-													Details</span>
-											</div>
-											<div class="border-bottom"></div>
-											<div id="address_table" class="mt-3 mb-4"></div>
-										</div>
-										<div class="col pl-1 bg-white"
-											style="border-radius: 10px; border: 1px solid #008AD0!important;">
-											<div class="mt-4 mb-4 ms-3"><img src="theme/img/shipping_address2.png"><span
-													class="billing-address-heading-subtitle pt-2 ms-2 align-middle address-weight">Order
-													Details</span>
-											</div>
-											<div class="border-bottom ms-3"></div>
-											<div class="ms-3">
-												<div id="shipping_table" class="mt-3 mb-4"></div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
+                            <div class="row mt-3 detail-heading ms-2 mr-0 ml-0 p-0" id="detail-heading">
+                                <div class="col-md-12 border-bottom border-4 p-0 mr-3">
+                                    <div class="row mb-4 mt-3">
+                                        <div class="col-md-4 ">
+                                            <img src="theme/img/account_details.png" style="margin: -1px 2px 1px 1px;">
+                                            @if($parent)
+                                            <span class="pt-1 my-account-content-heading">Primary Contact</span>
+                                            @else
+                                            <span class="pt-1 my-account-content-heading">Secondary Contact</span>
+                                            @endif
+                                        </div>
+                                        <div class="col-md-4">
+                                            @if(!$parent)
+                                            <button type="button" class="btn btn-info" data-bs-toggle="modal"
+                                                data-bs-target="#staticBackdrop">
+                                                Create Secondary User
+                                            </button>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 pl-0 pr-0 mr-0 ml-0 w-100">
+                                <table class="table table-borderless">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                Company
+                                            </th>
+                                            <th>
+                                                First Name
+                                            </th>
+                                            <th>
+                                                Last Name
+                                            </th>
+                                            <th>
+                                                Job Title
+                                            </th>
+                                            <th>
+                                                Email
+                                            </th>
+                                            <th>
+                                                Phone
+                                            </th>
+                                            <th>
+                                                Status
+                                            </th>
+                                            <th>
+                                                Type
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    @if($parent)
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                @if($parent[0]['company'])
+                                                {{$parent[0]['company']}}
+                                                @else
+                                                <span class="badge bg-success">empty</span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                {{$parent[0]['firstName']}}
+                                            </td>
+                                            <td>
+                                                {{$parent[0]['lastName']}}
+                                            </td>
+                                            <td>
+                                                @if($parent[0]['jobTitle'])
+                                                {{$parent[0]['jobTitle']}}
+                                                @else
+                                                <span class="badge bg-success">empty</span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                {{$parent[0]['email']}}
+                                            </td>
+                                            <td>
+                                                {{$parent[0]['phone']}}
+                                            </td>
+                                            <td>
+                                                @if($parent[0]['status'] == 1)
+                                                <span class="badge bg-success">Active</span>
+                                                @else
+                                                <span class="badge bg-success">Un Active</span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-primary">primary contact</span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                    @endif
+                                    <tbody id="secondary_user">
+                                        @include('secondary-user', ['secondary_contacts' =>
+                                        $childerens->secondary_contact])
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="row ms-2 mb-5 d-none" id="address_row">
+                                <div class="col-md-3">
+                                </div>
+                                <div class="col-md-9 pl-1">
+                                    <div class="row mt-3 " style="margin:auto;">
+                                        <div class="col bg-white mr-3" style="border-radius: 10px !important;">
+                                            <div class="mt-4 mb-4"><img src="theme/img/user_address.png"><span
+                                                    class="billing-address-heading-subtitle pt-2 ms-2 align-middle address-weight">Order
+                                                    Details</span>
+                                            </div>
+                                            <div class="border-bottom"></div>
+                                            <div id="address_table" class="mt-3 mb-4"></div>
+                                        </div>
+                                        <div class="col pl-1 bg-white"
+                                            style="border-radius: 10px; border: 1px solid #008AD0!important;">
+                                            <div class="mt-4 mb-4 ms-3"><img src="theme/img/shipping_address2.png"><span
+                                                    class="billing-address-heading-subtitle pt-2 ms-2 align-middle address-weight">Order
+                                                    Details</span>
+                                            </div>
+                                            <div class="border-bottom ms-3"></div>
+                                            <div class="ms-3">
+                                                <div id="shipping_table" class="mt-3 mb-4"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 					</div>
 				</div>
 				@livewireScripts
