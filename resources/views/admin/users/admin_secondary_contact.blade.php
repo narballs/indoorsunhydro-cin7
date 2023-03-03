@@ -94,8 +94,8 @@
 
             <tr>
                 <td>{{ ++$i }}</td>
-                <td>{{ $user->first_name }}</td>
-                <td>{{ $user->last_name }}</td>
+                <td>{{ $user->firstName }}</td>
+                <td>{{ $user->lastName }}</td>
                 <td>{{ $user->email }}</td>
                 <td>
                     @if($user->contact)
@@ -132,23 +132,14 @@
                     @endif
                 </td>
                 <td>
-                    @if($user->contact)
-                    @if($user->contact->secondary_contact)
                     <span class="badge bg-secondary">Secondary</span>
-                    @endif
-                    @if($user->contact->parent_id == '')
-                    <span class="badge bg-primary">Primary</span>
-                    @endif
-                    @else
-                    <span class="badge bg-info">Simple Users</span>
-                    @endif
                 </td>
                 <td>
-                    @if(!empty($user->getRoleNames()))
+                    {{-- @if(!empty($user->getRoleNames()))
                     @foreach($user->getRoleNames() as $v)
                     <label class="badge badge-success">{{ $v }}</label>
                     @endforeach
-                    @endif
+                    @endif --}}
                 </td>
                 <td>
                     <a class="btn btn-info btn-sm" href="{{ route('users.show',$user->id) }}">Show</a>
