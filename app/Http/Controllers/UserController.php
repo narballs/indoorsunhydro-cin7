@@ -442,10 +442,13 @@ class UserController extends Controller
         if (!$user_id) {
             return redirect('/user/');
         }
+
         $user = User::where('id', $user_id)->first();
+      
         $user_address = Contact::where('user_id', $user_id)->first();
         $childerens = Contact::where('user_id', $user_id)->with('secondary_contact')->first();
         $list = BuyList::where('id', 20)->with('list_products.product.options')->first();
+
         $contact = SecondaryContact::where('email', $user_address->email)->first();
         
         if ($contact) {

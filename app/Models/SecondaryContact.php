@@ -12,6 +12,7 @@ class SecondaryContact extends Model
         'secondary_id',
         'parent_id',
         'is_parent',
+        'user_id',
         'company',
         'firstName',
         'lastName',
