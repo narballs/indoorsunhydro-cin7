@@ -132,6 +132,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('admin/generate-list', [AdminBuyListController::class, 'genrateList']);
     Route::post('admin/share-list', [AdminShareListController::class, 'shareList']);
     Route::get('admin/admin-users', [UserController::class, 'adminUsers']);
+     Route::get('admin/get-parent', [ContactController::class, 'getParent']);
+     Route::post('admin/assign-parent-child', [ContactController::class, 'assingParentChild']);
     Route::get('admin/user-switch/{id}', [UserController::class, 'switch_user'])->name('users.switch');
     Route::get('admin/go-back', [UserController::class, 'switch_user_back'])->name('users.switch_user_back');
     Route::get('admin/logout', function () {

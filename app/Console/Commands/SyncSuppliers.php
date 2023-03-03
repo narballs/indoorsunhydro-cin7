@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Models\Contact;
+use App\Models\SecondaryContact;
 
 class SyncSuppliers extends Command
 {
@@ -50,8 +51,8 @@ class SyncSuppliers extends Command
                 'https://api.cin7.com/api/v1/Contacts/?page=' . $i,
                 [
                     'auth' => [
-                        'IndoorSunHydro2US', 
-                        '625ab949593e4cd4908b9f42758009f5'
+                        env('API_USER'),
+                        env('API_PASSWORD')
                     ]
                 ]
             );
@@ -94,7 +95,7 @@ class SyncSuppliers extends Command
                     if ($api_contact->secondaryContacts) 
                       {
                          foreach($api_contact->secondaryContacts as $secondaryContact) {
-                            $secondaryContact = new Contact ([
+                            $secondaryContact = new SecondaryContact ([
                               'secondary_id' => $secondaryContact->id,
                               'parent_id'  => $api_contact->id,
                               'is_parent' => 0,
@@ -147,7 +148,7 @@ class SyncSuppliers extends Command
                     ]);
                     if ($api_contact->secondaryContacts) {
                         foreach($api_contact->secondaryContacts as $secondaryContact) {
-                            $secondaryContact = new Contact ([
+                            $secondaryContact = new SecondaryContact ([
                               'secondary_id' => $secondaryContact->id,
                               'parent_id'  => $api_contact->id,
                               'is_parent' => 0,
