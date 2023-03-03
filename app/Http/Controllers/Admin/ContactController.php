@@ -158,8 +158,7 @@ class ContactController extends Controller
 
     public function show_customer($id)
     {
-        $customer = Contact::where('id', $id)->first();
-        $secondary_contacts = Contact::where('parent_id', $customer->contact_id)->get();
+        $customer = Contact::where('id', $id)->with('secondary_contact')->first();
         $customer_orders =  ApiOrder::where('user_id', $customer->user_id)->with(['createdby', 'processedby'])->limit('5')->get();
         $statuses = OrderStatus::all();
         if ($customer->hashKey && $customer->hashUsed == false) {
@@ -168,8 +167,7 @@ class ContactController extends Controller
         } else {
             $invitation_url = '';
         }
-        return view('admin/customer-details', compact('customer', 'statuses', 'customer_orders',
-         'invitation_url', 'secondary_contacts'));
+        return view('admin/customer-details', compact('customer', 'statuses', 'customer_orders', 'invitation_url'));
     }
 
     public function activate_customer(Request $request)
@@ -398,5 +396,40 @@ class ContactController extends Controller
                 return view('contomer_invitation', compact('contact', 'secondary'));
             }
         }
+    }
+
+    public function getParent(Request $request) {
+        $res = Contact::select("firstName", "contact_id")
+                ->where("firstName","LIKE","%{$request->term}%")
+                ->where("is_parent", 1)
+                ->get();
+        return response()->json($res);
+    }
+
+    public  function assingParentChild(Request $request)
+    {
+        $contact = Contact::where('user_id', $request->user_id)->first();
+        $request->validate([
+            'email' => 'required|email|unique:secondary_contacts,email',
+            'firstName' => 'required',
+            'lastName' => 'required',
+        ]);
+        $secondary_contact_data = [
+            'parent_id' => $request->primary_id,
+            'is_parent' => 0,
+            'company' => $contact->company,
+            'firstName' => $contact->firstName,
+            'lastName' => $contact->lastName,
+            'jobTitle' => $contact->jobTitle,
+            'email' => $contact->email,
+            'phone' => $contact->phone,
+        ];
+
+        SecondaryContact::create($secondary_contact_data);
+        return response()->json([
+            'msg' => 'Assigned Successfully',
+            'status' => 200 
+        ]);
+
     }
 }

@@ -11,6 +11,7 @@ class SecondaryContact extends Model
     protected $fillable = [
         'secondary_id',
         'parent_id',
+        'is_parent',
         'company',
         'firstName',
         'lastName',
