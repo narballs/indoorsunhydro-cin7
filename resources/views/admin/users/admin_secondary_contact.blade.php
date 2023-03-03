@@ -94,8 +94,8 @@
 
             <tr>
                 <td>{{ ++$i }}</td>
-                <td>{{ $user->first_name }}</td>
-                <td>{{ $user->last_name }}</td>
+                <td>{{ $user->firstName }}</td>
+                <td>{{ $user->lastName }}</td>
                 <td>{{ $user->email }}</td>
                 <td>
                     @if($user->contact)
@@ -132,23 +132,14 @@
                     @endif
                 </td>
                 <td>
-                    @if($user->contact)
-                    @if($user->contact->secondary_contact)
                     <span class="badge bg-secondary">Secondary</span>
-                    @endif
-                    @if($user->contact->parent_id == '')
-                    <span class="badge bg-primary">Primary</span>
-                    @endif
-                    @else
-                    <span class="badge bg-info">Simple Users</span>
-                    @endif
                 </td>
                 <td>
-                    @if(!empty($user->getRoleNames()))
+                    {{-- @if(!empty($user->getRoleNames()))
                     @foreach($user->getRoleNames() as $v)
                     <label class="badge badge-success">{{ $v }}</label>
                     @endforeach
-                    @endif
+                    @endif --}}
                 </td>
                 <td>
                     <a class="btn btn-info btn-sm" href="{{ route('users.show',$user->id) }}">Show</a>
@@ -163,43 +154,11 @@
                     {!! Form::close() !!}
                     @endcan
                     <a class="btn btn-success btn-sm" href="{{ url('admin/user-switch/'.$user->id) }}">Switch User</a>
-                   <!-- <a class="btn btn-warning btn-sm" onclick="assignParent('{{$user->id}}')"></a> -->
-                  <button type="button" class="btn btn-primary" data-id="{{$user->id}}" data-toggle="modal" onclick="assignParent('{{$user->id}}')">Set Parent</button>   
-                  <input type="hidden" value='{{$user->id}}' id='{{$user->id}}'>    
                 </td>
             </tr>
             @endforeach
         </table>
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Search Parent</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form id="secondary_id">
-            <input type="select" name="primary_contact" id="primary_contact" class="form-control" value="" onkeyup="suggestion()">
-            <select id="child" class="form-control">
-                
-            </select>
-            <input type="text" name="child_id" value="" id="child_id">
-                <div class="spinner-border d-none" role="status"
-                                        style="left: 50% !important; margin-left: -16em !important;" id="spinner2">
-                                        <span class="sr-only">Activating...</span>
-                                    </div>
-        </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" onclick = "assign()">Save changes</button>
-        </div>
-    </form>
-    </div>
-  </div>
-</div>
+
         <div id="pageination">
             {{$data->appends(Request::all())->links()}}
         </div>
@@ -246,17 +205,17 @@
     @stop
     <script>
         function adminUsers() {
-            $('#user-table').addClass('d-none');
-            $('#pageination').addClass('d-none');
-            $.ajax({
-                   url: "{{ url('admin/admin-users') }}",
-                   method: 'GET',
-                   success: function(response){
-                    console.log(response);
-                    $('#admin-users').html(response);
-                    }
-                });
-        }
+        $('#user-table').addClass('d-none');
+        $('#pageination').addClass('d-none');
+        $.ajax({
+               url: "{{ url('admin/admin-users') }}",
+               method: 'GET',
+               success: function(response){
+                console.log(response);
+                $('#admin-users').html(response);
+                }
+            });
+    }
     function userFilter() {
             var usersData = $('#users').val();
             var search = $('#search').val();
@@ -270,63 +229,4 @@
 
             window.location.href = basic_url;
         }
-    function assignParent(userid) {
-        var user_id = userid;
-        $('#exampleModal').modal('show');
-        $('#child_id').val(user_id);
-
-    }
-
-    function suggestion() {
-        var primary_contact = $('#primary_contact').val();
-        console.log(primary_contact);
-        var res = '';
-       $.ajax({
-                url: "{{ url('admin/get-parent') }}",
-                    method: 'GET',
-                    data :{
-                        term : primary_contact
-                    },
-                   success: function(response){
-                    $.each (response, function (key, value) {
-                            console.log(value.firstName);
-                            res+= '<option value='+ value.contact_id +'>'+ value.firstName + '</option>';
-                            console.log(res);
-                    });
-                        $('#child').html(res);
-                    },
-                });
-    }
-
-    function assign() {
-        var primary_name = $('#primary_contact').val();
-        var user_id = $('#child_id').val();
-        var primary_id = $('#child').val();
-        jQuery.ajax({
-                url: "{{ url('admin/assign-parent-child')}}",
-                method: 'POST',
-                data: {
-                    "_token": "{{ csrf_token() }}",
-                    primary_name : primary_name,
-                    user_id : user_id,
-                    primary_id : primary_id,  
-                },
-                success: function(response) {
-
-                    if (response.status == 200)
-                    {
-                        $('#spinner2').addClass('d-none');
-                   
-                      $('#exampleModal').modal('hide');
-                      $('#secondary_id').trigger("reset");
-                        window.location.reload();
-                        
-                    }
-                }
-
-            });
-
-    }
-
-
     </script>

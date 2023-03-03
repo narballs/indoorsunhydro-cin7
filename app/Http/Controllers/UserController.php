@@ -82,10 +82,29 @@ class UserController extends Controller
             }
         }
 
+        if (!empty($secondaryUser)) {
+            if ($secondaryUser == 'secondary-user') {
+                $user_query = SecondaryContact::where('parent_id', '!=', NULL);
+                $data =  $user_query->paginate(10);
+                return view('admin/users/admin_secondary_contact', compact('data'))
+                    ->with('i', ($request->input('page', 1) - 1) * 10);
+            }
+            if ($secondaryUser == 'primary-user') {
+                $user_query = $user_query->whereHas('contact', function ($query) {
+                    $query = $query->where('parent_id', '=', NULL);
+                })->with('contact');
+            }
+        }
+
         if (!empty($search)) {
             $user_query = $user_query->where('first_name', 'LIKE', '%' . $search . '%')
                 ->orWhere('last_name', 'like', '%' . $search . '%')
-                ->orWhere('email', 'like', '%' . $search . '%');
+                ->orWhere('email', 'like', '%' . $search . '%')
+                ->orWhereHas('contact', function (Builder $query) use ($search) {
+                    $query->where('company', 'LIKE', '%' . $search . '%')
+                        ->orWhere('contact_id', 'LIKE', '%' . $search . '%');
+                });
+
         }
 
         $data = $user_query->paginate(10);
