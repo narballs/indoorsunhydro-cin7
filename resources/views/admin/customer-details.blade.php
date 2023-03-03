@@ -193,7 +193,7 @@
 					</div>
 				</div>
 				<!-- Payment -->
-				@if ($secondary_contacts)
+				@if ($customer->secondary_contact)
 				<div class="card mb-4">
 					<div class="card-body">
 						<div class="row">
@@ -210,7 +210,7 @@
 										<th>Phone</th>
 										<th>Status</th>
 									</tr>
-									@foreach($secondary_contacts as $contact)
+									@foreach($customer->secondary_contact as $contact)
 									<tr>
 										@if($contact->company)
 										<td>

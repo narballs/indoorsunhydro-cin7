@@ -408,24 +408,46 @@ class ContactController extends Controller
 
     public  function assingParentChild(Request $request)
     {
+        //dd($request->all());
         $contact = Contact::where('user_id', $request->user_id)->first();
-        $request->validate([
-            'email' => 'required|email|unique:secondary_contacts,email',
-            'firstName' => 'required',
-            'lastName' => 'required',
-        ]);
+        
+      
         $secondary_contact_data = [
             'parent_id' => $request->primary_id,
             'is_parent' => 0,
             'company' => $contact->company,
+            'user_id' => $contact->user_id,
             'firstName' => $contact->firstName,
             'lastName' => $contact->lastName,
             'jobTitle' => $contact->jobTitle,
             'email' => $contact->email,
             'phone' => $contact->phone,
         ];
-
+        $api_request = [
+            'id' => $request->primary_id,
+            'secondaryContacts' => [
+                'company' => $contact->company,
+                'firstName' => $contact->firstName,
+                'lastName' => $contact->lastName,
+                'jobTitle' => $contact->jobTitle,
+                'email' => $contact->email,
+                'phone' => $contact->phone
+            ],
+        ];
         SecondaryContact::create($secondary_contact_data);
+        //SyncContacts::dispatch('update_contact', $api_request)->onQueue(env('QUEUE_NAME'));
+        $client = new \GuzzleHttp\Client();
+
+        $authHeaders = [
+            'headers' => ['Content-type' => 'application/json'],
+            'auth' => [
+                env('API_USER'),
+                env('API_PASSWORD')
+            ]
+        ];
+        $authHeaders['json'] = json_encode($api_request);
+        $res = $client->put('https://api.cin7.com/api/v1/Contacts', $authHeaders);
+        dd($res);
         return response()->json([
             'msg' => 'Assigned Successfully',
             'status' => 200 
