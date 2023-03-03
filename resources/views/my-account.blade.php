@@ -651,6 +651,8 @@
 										<span class="text-uppercase">(<i class="unchanged-blank">leave blank to leave
 												unchanged</i>)</span></label>
 									<div class="password-container">
+
+
 										<input type="password" id="current_password" name="current_password"
 											class="fontAwesome form-control bg-light" placeholder="">
 										<i class="text-dark eye fa-solid fa-eye"

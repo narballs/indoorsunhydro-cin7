@@ -50,8 +50,8 @@ class SyncOrders extends Command
                 'https://api.cin7.com/api/v1/SalesOrders/', 
                 [
                     'auth' => [
-                        'IndoorSunHydro2US',
-                        '764c3409324f4c14b5eadf8dcdd7dd2f'
+                        env('API_USER'),
+                        env('API_PASSWORD')
                     ]
                 ]
             );
