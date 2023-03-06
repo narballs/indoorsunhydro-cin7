@@ -9,16 +9,12 @@ use App\Models\Order;
 use App\Models\OrderStatus;
 use App\Models\ApiOrder;
 use App\Jobs\SyncContacts;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\Subscribe;
 use App\Helpers\MailHelper;
 use App\Models\User;
-use DB;
-use URL;
 use Carbon\Carbon;
 use App\Models\SecondaryContact;
-
-
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
 
 class ContactController extends Controller
 {
@@ -178,7 +174,7 @@ class ContactController extends Controller
         SyncContacts::dispatch('create_contact', $contact)->onQueue(env('QUEUE_NAME'));
         sleep(10);
         $is_updated = Contact::where('id', $contact_id)->pluck('contact_id')->first();
-        $admin_users =  DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
+        $admin_users = DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
         $admin_users = $admin_users->toArray();
         $users_with_role_admin = User::select("email")
             ->whereIn('id', $admin_users)
@@ -232,19 +228,13 @@ class ContactController extends Controller
 
     public function update_pricing_column(Request $request)
     {
-        //dd($request->all());
         $contact_id = $request->contact_id;
         $priceColumn = $request->pricingCol;
-        //dd()
         $first_name = $request->first_name;
         $last_name = $request->last_name;
         $pricingCol = $request->pricingCol;
-        // dd($pricingCol);
-
         $contact = Contact::where('contact_id', $request->contact_id)->first();
-        //dd($contact);
         if ($pricingCol) {
-            //dd($pricingCol);
             $contact->update(
                 [
                     'priceColumn' => $pricingCol,
@@ -403,10 +393,7 @@ class ContactController extends Controller
 
     public  function assingParentChild(Request $request)
     {
-        //dd($request->all());
         $contact = Contact::where('user_id', $request->user_id)->first();
-        
-      
         $secondary_contact_data = [
             'parent_id' => $request->primary_id,
             'is_parent' => 0,
@@ -430,7 +417,6 @@ class ContactController extends Controller
             ],
         ];
         SecondaryContact::create($secondary_contact_data);
-        //SyncContacts::dispatch('update_contact', $api_request)->onQueue(env('QUEUE_NAME'));
         $client = new \GuzzleHttp\Client();
 
         $authHeaders = [
