@@ -794,7 +794,7 @@
 										</tr>
 									</tbody>
 									@endif
-									<tbody id="secondary_user" class="secondary_user">
+									<tbody id="secondary_user">
 										@include('secondary-user', ['secondary_contacts' =>
 										$childerens->secondary_contact])
 									</tbody>
@@ -1632,11 +1632,6 @@
 				},	
 			});
 		}
-
-		// $("#save-project-btn").click(function(event ){
-		//             event.preventDefault();
-		//             storeSecondaryUser(); 
-		//         })
 
 
 	function CreateSocodoryUser()

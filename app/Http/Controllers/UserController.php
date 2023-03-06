@@ -25,13 +25,8 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Spatie\QueryBuilder\QueryBuilder;
-use Spatie\QueryBuilder\AllowedFilter;
-use URL;
 use Carbon\Carbon;
-use App\Helpers\UtilHelper;
-
-
+use Illuminate\Support\Facades\URL;
 
 class UserController extends Controller
 {
@@ -245,14 +240,11 @@ class UserController extends Controller
 
         $credentials = $request->except(['_token']);
         $user = User::where('email', $request->email)->first();
-        // dd(auth()->attempt($credentials));
-
         if (auth()->attempt($credentials)) {
             if ($user->hasRole(['Admin'])) {
                 session()->flash('message', 'Successfully Logged in');
                 return redirect()->route('admin.view');
             } else {
-                // dd(session()->get('cart'));
                 if (!empty(session()->get('cart'))) {
                     return redirect()->route('cart');
                 } else {
@@ -443,7 +435,7 @@ class UserController extends Controller
         }
 
         $user = User::where('id', $user_id)->first();
-      
+
         $user_address = Contact::where('user_id', $user_id)->first();
         $childerens = Contact::where('user_id', $user_id)->with('secondary_contact')->first();
         $list = BuyList::where('id', 20)->with('list_products.product.options')->first();
@@ -576,6 +568,8 @@ class UserController extends Controller
 
     public function create_secondary_user(Request $request)
     {
+
+        $url = '';
         $user_id = auth()->user()->id;
         $contact = Contact::where('user_id', $user_id)->first();
         $contactId = $contact->contact_id;
@@ -607,7 +601,6 @@ class UserController extends Controller
             $url = $url . '/customer/invitation/' . $sig . '?is_secondary=1';
         }
 
-
         $contact = [
             [
                 'id' => $contactId,
@@ -630,16 +623,15 @@ class UserController extends Controller
             'content' => 'Customer Registration Invitation',
             'url' => $url
         ];
-
         MailHelper::sendMailNotification('emails.invitaion-emails', $data);
         SyncContacts::dispatch('update_contact', $contact)->onQueue(env('QUEUE_NAME'));
         $secondary_contacts = SecondaryContact::where('parent_id', $contactId)->orderBy('id', 'desc')->get();
-        return view('secondary-user', compact('secondary_contacts'));
+        return view('secondary-user', compact('secondary_contacts', 'url'));
     }
     public function delete_secondary_user(Request $request)
     {
         $id = $request->id;
-        $secondary_contacts = SecondaryContact::find($id);
-        $secondary_contacts->delete();
+        $secondary_contact = SecondaryContact::find($id);
+        $secondary_contact->delete();
     }
 }
