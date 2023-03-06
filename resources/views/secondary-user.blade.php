@@ -1,12 +1,12 @@
 @foreach ($secondary_contacts as $childeren)
-<tr>
+<tr id="row-{{$childeren->id}}">
 	@if($childeren->company)
 	<td>
 		{{$childeren->company}}
 	</td>
 	@else
 	<td>
-		<span class="badge bg-success">empty</span>
+		<span class=" badge bg-success">empty</span>
 	</td>
 	@endif
 	@if($childeren->firstName)
@@ -75,13 +75,19 @@
 	</td>
 	<td style="width: 111px !important;">
 		<a href="#"><img src="/theme/img/invite_iccons.png" alt=""></a>
-		<a href="#"><img src="/theme/img/copy_link_iccon.png" alt=""></a>
-		<a href="#" id="{{$childeren->id}}" class="deleteIcon">
-			<img src="/theme/img/delete_iccon.png" alt=""></a>
+		<a href="#" onclick="copyUrlLink()"><img src="/theme/img/copy_link_iccon.png" alt=""></a>
+		<a href="#" id="{{$childeren->id}}" class="deleteIcon"><img src="/theme/img/delete_iccon.png" alt=""></a>
 	</td>
 </tr>
 @endforeach
 
+
+
+<script>
+	function copyUrlLink(){
+		
+	}
+</script>
 
 
 

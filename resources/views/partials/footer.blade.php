@@ -17,7 +17,7 @@
 	// delete employee ajax request
 	 $(document).on('click', '.deleteIcon', function(e) {
         e.preventDefault();
-        let id = $(this).attr('id');
+        var id = $(this).attr('id');
         let csrf = '{{ csrf_token() }}';
         Swal.fire({
           title: 'Are you sure?',
@@ -37,18 +37,17 @@
                 _token: csrf
               },
               success: function(response) {
-                console.log(response);
                 Swal.fire(
                   'Deleted!',
                   'Your file has been deleted.',
                   'success'
                 )
+				$('#row-'+id).remove();
               }
             });
           }
         })
       });
-
 </script>
 <script type="text/javascript">
 	let dropdowns = document.querySelectorAll('.dropdown-toggle')
