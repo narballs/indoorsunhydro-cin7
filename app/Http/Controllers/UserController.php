@@ -105,7 +105,6 @@ class UserController extends Controller
                     $query->where('company', 'LIKE', '%' . $search . '%')
                         ->orWhere('contact_id', 'LIKE', '%' . $search . '%');
                 });
-
         }
 
         $data = $user_query->paginate(10);
@@ -442,12 +441,15 @@ class UserController extends Controller
         if (!$user_id) {
             return redirect('/user/');
         }
+
         $user = User::where('id', $user_id)->first();
+      
         $user_address = Contact::where('user_id', $user_id)->first();
         $childerens = Contact::where('user_id', $user_id)->with('secondary_contact')->first();
         $list = BuyList::where('id', 20)->with('list_products.product.options')->first();
+
         $contact = SecondaryContact::where('email', $user_address->email)->first();
-        
+
         if ($contact) {
             $parent = Contact::where('contact_id', $contact->parent_id)->get();
         } else {
@@ -631,8 +633,13 @@ class UserController extends Controller
 
         MailHelper::sendMailNotification('emails.invitaion-emails', $data);
         SyncContacts::dispatch('update_contact', $contact)->onQueue(env('QUEUE_NAME'));
-
         $secondary_contacts = SecondaryContact::where('parent_id', $contactId)->orderBy('id', 'desc')->get();
         return view('secondary-user', compact('secondary_contacts'));
+    }
+    public function delete_secondary_user(Request $request)
+    {
+        $id = $request->id;
+        $secondary_contacts = SecondaryContact::find($id);
+        $secondary_contacts->delete();
     }
 }

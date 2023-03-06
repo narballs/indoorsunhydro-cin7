@@ -73,5 +73,19 @@
 	<td>
 		<span class="badge bg-secondary">secondary contact</span>
 	</td>
+	<td style="width: 111px !important;">
+		<a href="#"><img src="/theme/img/invite_iccons.png" alt=""></a>
+		<a href="#"><img src="/theme/img/copy_link_iccon.png" alt=""></a>
+		<a href="#" id="{{$childeren->id}}" class="deleteIcon">
+			<img src="/theme/img/delete_iccon.png" alt=""></a>
+	</td>
 </tr>
 @endforeach
+
+
+
+
+<script>
+	// display a modal (small modal)
+  
+</script>
