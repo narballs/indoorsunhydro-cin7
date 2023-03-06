@@ -61,4 +61,9 @@ class ApiOrder extends Model
     {
         return $this->belongsTo('App\Models\User', 'user_id', 'id');
     }
+
+    public function texClasses()
+    {
+        return $this->belongsTo('App\Models\TaxClass', 'tax_class_id', 'id');
+    }
 }
