@@ -40,20 +40,15 @@ class ContactController extends Controller
         $perPage = $request->get('perPage');
         $search = $request->get('search');
         $activeCustomer = $request->get('active-customer');
-        // $disabledCustomer = $request->get('disable-customer');
         $contact_query = Contact::where('type', 'Customer');
         if (!empty($activeCustomer)) {
             if ($activeCustomer == 'active-customer') {
                 $contact_query = $contact_query->where('status', true);
-                // dd($data);
             }
             if ($activeCustomer == 'disable-customer') {
                 $contact_query = $contact_query->where('status', false);
-                // dd($data);
             }
         }
-
-
         if (!empty($search)) {
             $contact_query = $contact_query->where('firstName', 'LIKE', '%' . $search . '%')
                 ->orWhere('lastName', 'like', '%' . $search . '%')
@@ -62,9 +57,6 @@ class ContactController extends Controller
                 ->orWhere('phone', 'like', '%' . $search . '%')
                 ->orWhere('mobile', 'like', '%' . $search . '%');
         }
-
-
-
 
         $contacts = $contact_query->paginate($perPage);
         return view('admin/customers', compact(
@@ -159,6 +151,8 @@ class ContactController extends Controller
     public function show_customer($id)
     {
         $customer = Contact::where('id', $id)->with('secondary_contact')->first();
+        $memeId = $customer->contact_id;
+        $secondary_contacts =  SecondaryContact::where('parent_id', $memeId)->get();
         $customer_orders =  ApiOrder::where('user_id', $customer->user_id)->with(['createdby', 'processedby'])->limit('5')->get();
         $statuses = OrderStatus::all();
         if ($customer->hashKey && $customer->hashUsed == false) {
@@ -167,7 +161,7 @@ class ContactController extends Controller
         } else {
             $invitation_url = '';
         }
-        return view('admin/customer-details', compact('customer', 'statuses', 'customer_orders', 'invitation_url'));
+        return view('admin/customer-details', compact('customer', 'secondary_contacts', 'statuses', 'customer_orders', 'invitation_url'));
     }
 
     public function activate_customer(Request $request)
@@ -398,11 +392,12 @@ class ContactController extends Controller
         }
     }
 
-    public function getParent(Request $request) {
+    public function getParent(Request $request)
+    {
         $res = Contact::select("firstName", "contact_id")
-                ->where("firstName","LIKE","%{$request->term}%")
-                ->where("is_parent", 1)
-                ->get();
+            ->where("firstName", "LIKE", "%{$request->term}%")
+            ->where("is_parent", 1)
+            ->get();
         return response()->json($res);
     }
 
@@ -450,8 +445,7 @@ class ContactController extends Controller
         dd($res);
         return response()->json([
             'msg' => 'Assigned Successfully',
-            'status' => 200 
+            'status' => 200
         ]);
-
     }
 }

@@ -20,6 +20,7 @@ use App\Mail\Subscribe;
 use App\Helpers\MailHelper;
 use App\Models\BuyList;
 use App\Models\ProductBuyList;
+use App\Models\TaxClass;
 use GuzzleHttp\Promise\Create;
 use Illuminate\Support\Carbon as SupportCarbon;
 use Illuminate\Support\Facades\Auth;
@@ -33,16 +34,15 @@ class OrderManagementController extends Controller
 
     public function index()
     {
-        //$orders = Order::all();
         $orders = ApiOrder::with(['createdby', 'processedby', 'contact'])->get();
-        //dd($orders);
         return view('admin/orders', compact('orders'));
     }
 
     public function show($id)
     {
         $statuses = OrderStatus::all();
-        $order = ApiOrder::where('id', $id)->first();
+        $order = ApiOrder::where('id', $id)->with('texClasses')->first();
+        $tax_class = TaxClass::where('is_default', 1)->first();
         $createdDate = $order->created_at;
         $formatedDate = $createdDate->format('jS \of F Y h:i:s A');
         $customer = Contact::where('user_id', $order->user_id)->first();
@@ -53,7 +53,7 @@ class OrderManagementController extends Controller
         }])->where('order_id', $id)->get();
 
         $orderComment = OrderComment::where('order_id', $id)->with('comment')->get();
-        return view('admin/order-details', compact('order', 'orderitems', 'orderComment', 'statuses', 'customer', 'formatedDate'));
+        return view('admin/order-details', compact('order', 'tax_class', 'orderitems', 'orderComment', 'statuses', 'customer', 'formatedDate'));
     }
 
     public function addComments(Request $request)
@@ -247,13 +247,10 @@ class OrderManagementController extends Controller
     public function show_api_order($id)
     {
         $order = ApiOrder::with(['createdby', 'processedby'])->where('id', $id)->first();
-        //dd($order);
         $statuses = OrderStatus::all();
-        //dd($order);
         $customer = Contact::where('contact_id', $order->memberId)->first();
-        //dd($customer_details);
         $orderitems = ApiOrderItem::where('order_id', $id)->with('product')->get();
-        //dd($orderitems);
+
         return view('admin/api-order-details', compact('order', 'statuses', 'orderitems', 'customer'));
     }
 
