@@ -146,9 +146,18 @@ class ContactController extends Controller
 
     public function show_customer($id)
     {
+        $primary_contact = '';
+        $secondary_contact = '';
+        $contact_is_parent = '';
         $customer = Contact::where('id', $id)->with('secondary_contact')->first();
-        $memeId = $customer->contact_id;
-        $secondary_contacts =  SecondaryContact::where('parent_id', $memeId)->get();
+        $user_id = $customer->user_id;
+        $secondary_contact = SecondaryContact::where('user_id', $user_id)->first();
+       if(!empty($secondary_contact->parent_id)){
+            $primary_contact = Contact::where('contact_id', $secondary_contact->parent_id)->first();
+            if($primary_contact->contact_id){
+                $contact_is_parent = $primary_contact->email;
+            }
+        }
         $customer_orders =  ApiOrder::where('user_id', $customer->user_id)->with(['createdby', 'processedby'])->limit('5')->get();
         $statuses = OrderStatus::all();
         if ($customer->hashKey && $customer->hashUsed == false) {
@@ -157,7 +166,14 @@ class ContactController extends Controller
         } else {
             $invitation_url = '';
         }
-        return view('admin/customer-details', compact('customer', 'secondary_contacts', 'statuses', 'customer_orders', 'invitation_url'));
+        return view('admin/customer-details', compact(
+            'customer', 
+            'secondary_contact', 
+            'statuses', 
+            'customer_orders', 
+            'invitation_url', 
+            'contact_is_parent'
+        ));
     }
 
     public function activate_customer(Request $request)
