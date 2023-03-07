@@ -130,7 +130,6 @@
 										Link</button>
 								</div>
 								@endif
-
 								<div class="col-md-12">
 									<div class="row">
 										<div class="col-md-4">
@@ -139,8 +138,14 @@
 										<div class="col-md-6">
 											@if (!$customer->contact_id)
 											<b>Cin7 ID:</b> <span class="badge bg-info">empty</span>
+											<br>
+											@if($contact_is_parent)
+											<b>Parent Account</b><span class="badge bg-success">{{$contact_is_parent}}</span>
+											@endif
 											@else
-											<b>Cin7 ID:</b> {{$customer->contact_id}}
+											@if($customer->contact_id)
+											<b>Cin7 ID:Parent Account</b> {{$customer->contact_id}}
+											@endif
 											@endif
 										</div>
 									</div>
