@@ -59,6 +59,17 @@
 	});
 			
 	$(document).ready(function(){
+		$(document).on('click','#copyUrl', function(){
+			$('#custom_loader').removeClass('d-none');
+			let textValue = $(this).attr('data-id');
+			var temp = $("<input>");
+			$("body").append(temp);
+			temp.val(textValue).select();
+			document.execCommand("copy");
+			temp.remove();
+			console.timeEnd('time1');
+			$('#custom_loader').addClass('d-none');
+		});
 	$('.login-info-box').fadeOut();
 	$('.login-show').addClass('show-log-panel');
 	});
