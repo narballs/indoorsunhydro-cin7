@@ -131,15 +131,15 @@
                     @endif
                 </td>
                 <td>
-                    @if($user->contact)
+                <!--     @if($user->contact)
                     @if($user->contact->is_parent == 1)
+
                     <span class="badge bg-primary">Primary</span>
-                    @else
+                    @elseif ($user->contact->is_parent == null && $user->contact->contact_id == null)
                     <span class="badge bg-secondary">Secondary</span>
                     @endif
-                    @else
-                    <span class="badge bg-info">Simple Users</span>
-                    @endif
+                    @endif -->
+                
                 </td>
                 <td>
                     @if(!empty($user->getRoleNames()))
@@ -161,9 +161,13 @@
                     {!! Form::close() !!}
                     @endcan
                     <a class="btn btn-success btn-sm" href="{{ url('admin/user-switch/'.$user->id) }}">Switch User</a>
+                    @if($user->contact)
+                    @if($user->contact->secondary_contact)
                     <button type="button" class="btn btn-primary btn-sm" data-id="{{$user->id}}" data-toggle="modal"
                         onclick="assignParent('{{$user->id}}')">Set Parent</button>
                     <input type="hidden" value='{{$user->id}}' id='{{$user->id}}'>
+                    @endif
+                    @endif
                 </td>
             </tr>
             @endforeach

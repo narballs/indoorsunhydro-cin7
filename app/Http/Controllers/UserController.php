@@ -87,7 +87,7 @@ class UserController extends Controller
             }
             if ($secondaryUser == 'primary-user') {
                 $user_query = $user_query->whereHas('contact', function ($query) {
-                    $query = $query->where('is_parent', 1);
+                $query = $query->where('is_parent', 1);
                 });
             }
         }
@@ -589,6 +589,7 @@ class UserController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
         ];
+
 
         SecondaryContact::create($secondary_contact_data);
 

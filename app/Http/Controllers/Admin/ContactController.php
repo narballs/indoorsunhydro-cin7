@@ -146,9 +146,18 @@ class ContactController extends Controller
 
     public function show_customer($id)
     {
+        $primary_contact = '';
+        $secondary_contact = '';
+        $contact_is_parent = '';
         $customer = Contact::where('id', $id)->with('secondary_contact')->first();
-        $memeId = $customer->contact_id;
-        $secondary_contacts =  SecondaryContact::where('parent_id', $memeId)->get();
+        $user_id = $customer->user_id;
+        $secondary_contact = SecondaryContact::where('user_id', $user_id)->first();
+       if(!empty($secondary_contact->parent_id)){
+            $primary_contact = Contact::where('contact_id', $secondary_contact->parent_id)->first();
+            if($primary_contact->contact_id){
+                $contact_is_parent = $primary_contact->email;
+            }
+        }
         $customer_orders =  ApiOrder::where('user_id', $customer->user_id)->with(['createdby', 'processedby'])->limit('5')->get();
         $statuses = OrderStatus::all();
         if ($customer->hashKey && $customer->hashUsed == false) {
@@ -157,7 +166,14 @@ class ContactController extends Controller
         } else {
             $invitation_url = '';
         }
-        return view('admin/customer-details', compact('customer', 'secondary_contacts', 'statuses', 'customer_orders', 'invitation_url'));
+        return view('admin/customer-details', compact(
+            'customer', 
+            'secondary_contact', 
+            'statuses', 
+            'customer_orders', 
+            'invitation_url', 
+            'contact_is_parent'
+        ));
     }
 
     public function activate_customer(Request $request)
@@ -405,30 +421,32 @@ class ContactController extends Controller
             'email' => $contact->email,
             'phone' => $contact->phone,
         ];
+        
+        SecondaryContact::create($secondary_contact_data);
+
         $api_request = [
-            'id' => $request->primary_id,
-            'secondaryContacts' => [
-                'company' => $contact->company,
-                'firstName' => $contact->firstName,
-                'lastName' => $contact->lastName,
-                'jobTitle' => $contact->jobTitle,
-                'email' => $contact->email,
-                'phone' => $contact->phone
+            [
+                'id' => $request->primary_id,
+                'type' => 'Customer',
+                'secondaryContacts' => [
+                    [
+                        'company' => $contact->company,
+                        'firstName' => $contact->firstName,
+                        'lastName' => $contact->lastName,
+                        'jobTitle' => $contact->jobTitle,
+                        'email' => $contact->email,
+                        'phone' => $contact->phone
+                    ],
+                ]
             ],
         ];
-        SecondaryContact::create($secondary_contact_data);
-        $client = new \GuzzleHttp\Client();
 
-        $authHeaders = [
-            'headers' => ['Content-type' => 'application/json'],
-            'auth' => [
-                env('API_USER'),
-                env('API_PASSWORD')
-            ]
-        ];
-        $authHeaders['json'] = json_encode($api_request);
-        $res = $client->put('https://api.cin7.com/api/v1/Contacts', $authHeaders);
-        dd($res);
+        $contact_request = $api_request;
+        
+        SyncContacts::dispatch('update_contact', $contact_request)->onQueue(env('QUEUE_NAME'));
+
+        SecondaryContact::create($secondary_contact_data);
+
         return response()->json([
             'msg' => 'Assigned Successfully',
             'status' => 200
