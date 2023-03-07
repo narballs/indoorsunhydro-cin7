@@ -7,6 +7,7 @@
 @stop
 
 @section('content')
+
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <div class="container-fluid">
 	<div class="container">
@@ -40,7 +41,6 @@
 								</div>
 							</div>
 						</div>
-
 						<form method="POST" id="order_status" name="order_status">
 							<div>
 								<span class="me-3">Order Status</span>
@@ -65,26 +65,9 @@
 	            					$selected = '';
 	            				}
 	            			?>
-					<!-- 		<select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example"
-								id="status">
-								@foreach($statuses as $status)
-	  							
-	  							@endforeach
-								<option value="0" {{$selected}}>DRAFT
-								</option>
-								<option value="1" {{$selected}}>APPROVED
-								</option>
-								<option value="2" {{$selected}}>VOID
-								</option>
 
-
-							</select> -->
 							<span class="badge bg-success">VOID</span>
 							<div class="row mb-5">
-							<!-- 	<div class="col-sm-2">
-									<input class="btn btn-primary btn-sm" type="button" value="Update"
-										onclick="updateStatus()">
-								</div> -->
 						</form>
 						<form>
 							@csrf
@@ -142,6 +125,10 @@
 							<th>Totals</th>
 						</tr>
 						<tbody>
+							@php
+							$tax = $order->total * ($tax_class->rate/100);
+							$total_including_tax = $tax + $order->total;
+							@endphp
 							@foreach($orderitems as $item)
 							<tr>
 								<td>
@@ -169,15 +156,39 @@
 								<td colspan="2">Shipping</td>
 								<td class="text-end">$0.00</td>
 							</tr>
+							<tr>
+								<td colspan="2">Add Tax</td>
+								<td class="text-end">${{number_format($tax, 2)}}</td>
+							</tr>
 							<tr class="fw-bold">
 								<td colspan="2"><strong>GRAND TOTAL</strong></td>
-								<td class="text-end">${{$order->total}}</td>
+								<td class="text-end">${{number_format($total_including_tax,2)}}</td>
 							</tr>
 						</tfoot>
 					</table>
 				</div>
 			</div>
 			<!-- Payment -->
+			{{-- <div class="card mb-4">
+				<div class="card-body">
+					<div class="row">
+						<div class="col-lg-6">
+							<h3>Add Text</h3>
+						</div>
+						<div class="col-lg-6">
+							<p class="d-flex justify-content-end">{{$tax}}</p>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-6">
+							<td colspan="2"><strong>GRAND TOTAL</strong></td>
+						</div>
+						<div class="col-md-6">
+							<p class="d-flex justify-content-end">{{$total_including_tax}}</p>
+						</div>
+					</div>
+				</div>
+			</div> --}}
 			<div class="card mb-4">
 				<div class="card-body">
 					<div class="row">

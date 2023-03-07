@@ -116,8 +116,8 @@
 									<span class="badge bg-success" style="margin-left: 12px!important;">Merged</span>
 								</div>
 								@endif
-								<div class="spinner-border d-none" role="status" style="left: 50% !important;
-    margin-left: -25em !important;" id="spinner">
+								<div class="spinner-border d-none" role="status"
+									style="left: 50% !important;margin-left: -25em !important;" id="spinner">
 									<span class="sr-only">Activating...</span>
 								</div>
 								@if ($invitation_url != '')
@@ -350,7 +350,6 @@
 				<div class="card mb-4">
 					<div class="card-body">
 						<h3 class="h6"><strong>Customer Notes</strong></h3>
-
 						<div>{{$customer->notes}}</div>
 					</div>
 
@@ -414,7 +413,6 @@
         			if (response.success == true) {
         				
         			 setInterval('location.reload()', 7000);
-        			 //location.reload();
         			}
         			if (response.success == false) {
         				console.log(response.msg);
@@ -426,7 +424,6 @@
     	}
 
     	function updatePriceColumn(showSpinner) {
-    		//alert(showSpinner);
     		if (showSpinner == 2 ) {
     			$('#spinner').removeClass('d-none');
     			

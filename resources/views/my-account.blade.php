@@ -31,7 +31,7 @@
 			MY ACCOUNT
 		</p>
 	</div>
-	<div class="container-fluid" style="width:1493px !important;">
+	<div class="container-fluid" style="width:1621px  !important;">
 		<div class="row bg-light">
 			<div class="container-fluid" id="main-row">
 				<div class="row my-2" style="border-radius: 0.5rem !important;margin:auto">
@@ -56,7 +56,7 @@
 					</div>
 				</div>
 				<div class="row flex-xl-nowrap p-0 m-0 mr-3">
-					<div class="col-xl-3 col-sm-12 col-xs-12 p-0 bg-white" style="border-radius: 10px !important;">
+					<div class="col-xl-2 col-sm-12 col-xs-12 p-0 bg-white" style="border-radius: 10px !important;">
 						<div
 							class="d-flex flex-column align-items-center align-items-sm-start pt-2 text-white min-vh-100">
 							<a href="/"
@@ -256,7 +256,7 @@
 						</div>
 					</div>
 
-					<div class="col-xl-9 col-sm-12 col-xs-12 py-3 bg-white ms-3"
+					<div class="col-xl-10 col-sm-12 col-xs-12 py-3 bg-white ms-3"
 						style="border-radius: 10px !important;">
 						<div class="intro" id="intro">
 							<div class="col-md-12">
@@ -504,24 +504,6 @@
 									</tbody>
 								</table>
 							</div>
-							<!-- 				<div class="col-md-9 pl-1">
-								<div class="row mt-3 " style="margin:auto;">
-									<div class="col bg-white mr-3" style="border-radius: 10px !important;">
-		  								<div class="mt-4 mb-4"><img src="theme/img/user_address.png"><span class="billing-address-heading-subtitle pt-2 ms-2 align-middle address-weight">Order Details</span>
-		  								</div>
-		  								<div class="border-bottom"></div>
-		  								<div id="address_table" class="mt-3 mb-4"></div>
-									</div>
-									<div class="col pl-1 bg-white" style="border-radius: 10px; border: 1px solid #008AD0!important;">
-		  								<div class="mt-4 mb-4 ms-3"><img src="theme/img/shipping_address2.png"><span class="billing-address-heading-subtitle pt-2 ms-2 align-middle address-weight">Order Details</span>
-		  								</div>
-		  								<div class="border-bottom ms-3"></div>
-		  								<div class="ms-3">
-		  									<div id="shipping_table" class="mt-3 mb-4"></div>
-		  								</div>
-		  							</div>
-								</div>
-							</div> -->
 						</div>
 						<div class="edit_address d-none mt-3 mb-3 pr-4" id="edit_address">
 							<div class="col-md-12 border-bottom border-4 p-0 ms-3 mr-3">
@@ -566,11 +548,7 @@
 
 									</div>
 									<div style="display:none">@include('modal.my-account-modal')</div>
-									<!-- <div class="ms-3"><button class="edit-button">Edit</button></div> -->
 								</div>
-								<!-- <div class="col-md-1"></div> -->
-
-
 								<div class="col-md-5 border-start ms-4">
 									<div class="p-3">
 										<div class="row">
@@ -595,12 +573,10 @@
 										</div>
 									</div>
 								</div>
-								<!-- 	<div class="ms-3"><button class="edit-button" style="">Edit</button></div> -->
 							</div>
 						</div>
 						<div class="customer-details d-none pr-2" id="customer-address">
 							<div class="row mt-3 detail-heading ms-2 mr-0 ml-0 p-0" id="detail-heading">
-
 								<div class="col-md-12 border-bottom border-4 p-0 mr-3">
 									<div class="row mb-4 mt-3">
 										<div class="col-md-4 ">
@@ -643,7 +619,7 @@
 							<div class="border-bottom border-4 mt-3 pt-4"></div>
 							<div class="row align-items-center mt-4">
 								<div class="col-auto">
-									<!-- <label for="inputPassword6" class="col-form-label">Password</label> -->
+
 								</div>
 								<div class="billing-address-heading-subtitle ms-3 pl-0">Password Change</div>
 								<div class="col-md-12">
@@ -770,6 +746,9 @@
 											</th>
 											<th>
 												Type
+											</th>
+											<th>
+												Actions
 											</th>
 										</tr>
 									</thead>
@@ -1654,11 +1633,6 @@
 			});
 		}
 
-		// $("#save-project-btn").click(function(event ){
-		//             event.preventDefault();
-		//             storeSecondaryUser(); 
-		//         })
-
 
 	function CreateSocodoryUser()
 		{
@@ -1669,7 +1643,7 @@
 			var email = $('#email').val();
 			var phone = $('#phone').val();
 			jQuery.ajax({
-				url: "{{ url('/create/secodary/user')}}",
+				url: "{{ url('/create/secondary/user')}}",
 				method: 'POST',
 				data : {
 					"_token": "{{ csrf_token() }}",
@@ -1707,7 +1681,6 @@
 		                $('#first_name_secondary_errors').html(error_text);
 		            }
 
-
 		            if (typeof error_message.errors.lastName != 'undefined') {
 		                error_text = error_message.errors.lastName;
 		                $('#last_name_secondary_errors').html(error_text);
@@ -1717,15 +1690,6 @@
 		                $('#last_name_secondary_errors').html(error_text);
 		            }
 
-		            // if (typeof error_message.errors.jobTitle != 'undefined') {
-		            //     error_text = error_message.errors.jobTitle;
-		            //     $('#job_title_secondary_errors').html(error_text);
-		            //    }
-		            // else {
-		            //     error_text = '';
-		            //     $('#job_title_secondary_errors').html(error_text);
-		            // }
-
 				}
 		  });
 
@@ -1733,8 +1697,6 @@
 		</script>
 
 		<!-- Remove the container if you want to extend the Footer to full width. -->
-
 		@include('partials.product-footer')
-
 		<!-- End of .container -->
 		@include('partials.footer')

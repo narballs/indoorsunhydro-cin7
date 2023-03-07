@@ -132,8 +132,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('admin/generate-list', [AdminBuyListController::class, 'genrateList']);
     Route::post('admin/share-list', [AdminShareListController::class, 'shareList']);
     Route::get('admin/admin-users', [UserController::class, 'adminUsers']);
-     Route::get('admin/get-parent', [ContactController::class, 'getParent']);
-     Route::post('admin/assign-parent-child', [ContactController::class, 'assingParentChild']);
+    Route::get('admin/get-parent', [ContactController::class, 'getParent']);
+    Route::post('admin/assign-parent-child', [ContactController::class, 'assingParentChild']);
     Route::get('admin/user-switch/{id}', [UserController::class, 'switch_user'])->name('users.switch');
     Route::get('admin/go-back', [UserController::class, 'switch_user_back'])->name('users.switch_user_back');
     Route::get('admin/logout', function () {
@@ -143,7 +143,8 @@ Route::group(['middleware' => ['auth']], function () {
 });
 Route::get('product/search', [ProductController::class, 'productSearch'])->name('product_search');
 Route::post('admin/send-invitation-email', [ContactController::class, 'send_invitation_email'])->name('admin.send_invitation_email');
-Route::post('create/secodary/user', [UserController::class, 'create_secondary_user']);
+Route::post('create/secondary/user', [UserController::class, 'create_secondary_user']);
+Route::delete('secondary/user/delete', [UserController::class, 'delete_secondary_user'])->name('secondary_user.delete');
 //Route::resource('buy-list', AdminBuyListController::class)->name('buy-lisy-front');
 
 

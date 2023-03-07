@@ -9,16 +9,12 @@ use App\Models\Order;
 use App\Models\OrderStatus;
 use App\Models\ApiOrder;
 use App\Jobs\SyncContacts;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\Subscribe;
 use App\Helpers\MailHelper;
 use App\Models\User;
-use DB;
-use URL;
 use Carbon\Carbon;
 use App\Models\SecondaryContact;
-
-
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
 
 class ContactController extends Controller
 {
@@ -40,20 +36,15 @@ class ContactController extends Controller
         $perPage = $request->get('perPage');
         $search = $request->get('search');
         $activeCustomer = $request->get('active-customer');
-        // $disabledCustomer = $request->get('disable-customer');
         $contact_query = Contact::where('type', 'Customer');
         if (!empty($activeCustomer)) {
             if ($activeCustomer == 'active-customer') {
                 $contact_query = $contact_query->where('status', true);
-                // dd($data);
             }
             if ($activeCustomer == 'disable-customer') {
                 $contact_query = $contact_query->where('status', false);
-                // dd($data);
             }
         }
-
-
         if (!empty($search)) {
             $contact_query = $contact_query->where('firstName', 'LIKE', '%' . $search . '%')
                 ->orWhere('lastName', 'like', '%' . $search . '%')
@@ -62,9 +53,6 @@ class ContactController extends Controller
                 ->orWhere('phone', 'like', '%' . $search . '%')
                 ->orWhere('mobile', 'like', '%' . $search . '%');
         }
-
-
-
 
         $contacts = $contact_query->paginate($perPage);
         return view('admin/customers', compact(
@@ -159,6 +147,8 @@ class ContactController extends Controller
     public function show_customer($id)
     {
         $customer = Contact::where('id', $id)->with('secondary_contact')->first();
+        $memeId = $customer->contact_id;
+        $secondary_contacts =  SecondaryContact::where('parent_id', $memeId)->get();
         $customer_orders =  ApiOrder::where('user_id', $customer->user_id)->with(['createdby', 'processedby'])->limit('5')->get();
         $statuses = OrderStatus::all();
         if ($customer->hashKey && $customer->hashUsed == false) {
@@ -167,7 +157,7 @@ class ContactController extends Controller
         } else {
             $invitation_url = '';
         }
-        return view('admin/customer-details', compact('customer', 'statuses', 'customer_orders', 'invitation_url'));
+        return view('admin/customer-details', compact('customer', 'secondary_contacts', 'statuses', 'customer_orders', 'invitation_url'));
     }
 
     public function activate_customer(Request $request)
@@ -184,7 +174,7 @@ class ContactController extends Controller
         SyncContacts::dispatch('create_contact', $contact)->onQueue(env('QUEUE_NAME'));
         sleep(10);
         $is_updated = Contact::where('id', $contact_id)->pluck('contact_id')->first();
-        $admin_users =  DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
+        $admin_users = DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
         $admin_users = $admin_users->toArray();
         $users_with_role_admin = User::select("email")
             ->whereIn('id', $admin_users)
@@ -238,19 +228,13 @@ class ContactController extends Controller
 
     public function update_pricing_column(Request $request)
     {
-        //dd($request->all());
         $contact_id = $request->contact_id;
         $priceColumn = $request->pricingCol;
-        //dd()
         $first_name = $request->first_name;
         $last_name = $request->last_name;
         $pricingCol = $request->pricingCol;
-        // dd($pricingCol);
-
         $contact = Contact::where('contact_id', $request->contact_id)->first();
-        //dd($contact);
         if ($pricingCol) {
-            //dd($pricingCol);
             $contact->update(
                 [
                     'priceColumn' => $pricingCol,
@@ -398,19 +382,18 @@ class ContactController extends Controller
         }
     }
 
-    public function getParent(Request $request) {
+    public function getParent(Request $request)
+    {
         $res = Contact::select("firstName", "contact_id")
-                ->where("firstName","LIKE","%{$request->term}%")
-                ->where("is_parent", 1)
-                ->get();
+            ->where("firstName", "LIKE", "%{$request->term}%")
+            ->where("is_parent", 1)
+            ->get();
         return response()->json($res);
     }
 
     public  function assingParentChild(Request $request)
     {
         $contact = Contact::where('user_id', $request->user_id)->first();
-        
-      
         $secondary_contact_data = [
             'parent_id' => $request->primary_id,
             'is_parent' => 0,
@@ -441,16 +424,16 @@ class ContactController extends Controller
                 ]
             ],
         ];
+
         $contact_request = $api_request;
-        //print_r($contact_request);exit;
-        
         
         SyncContacts::dispatch('update_contact', $contact_request)->onQueue(env('QUEUE_NAME'));
 
+        SecondaryContact::create($secondary_contact_data);
+
         return response()->json([
             'msg' => 'Assigned Successfully',
-            'status' => 200 
+            'status' => 200
         ]);
-
     }
 }
