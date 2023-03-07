@@ -405,30 +405,32 @@ class ContactController extends Controller
             'email' => $contact->email,
             'phone' => $contact->phone,
         ];
+        
+        SecondaryContact::create($secondary_contact_data);
+
         $api_request = [
-            'id' => $request->primary_id,
-            'secondaryContacts' => [
-                'company' => $contact->company,
-                'firstName' => $contact->firstName,
-                'lastName' => $contact->lastName,
-                'jobTitle' => $contact->jobTitle,
-                'email' => $contact->email,
-                'phone' => $contact->phone
+            [
+                'id' => $request->primary_id,
+                'type' => 'Customer',
+                'secondaryContacts' => [
+                    [
+                        'company' => $contact->company,
+                        'firstName' => $contact->firstName,
+                        'lastName' => $contact->lastName,
+                        'jobTitle' => $contact->jobTitle,
+                        'email' => $contact->email,
+                        'phone' => $contact->phone
+                    ],
+                ]
             ],
         ];
-        SecondaryContact::create($secondary_contact_data);
-        $client = new \GuzzleHttp\Client();
 
-        $authHeaders = [
-            'headers' => ['Content-type' => 'application/json'],
-            'auth' => [
-                env('API_USER'),
-                env('API_PASSWORD')
-            ]
-        ];
-        $authHeaders['json'] = json_encode($api_request);
-        $res = $client->put('https://api.cin7.com/api/v1/Contacts', $authHeaders);
-        dd($res);
+        $contact_request = $api_request;
+        
+        SyncContacts::dispatch('update_contact', $contact_request)->onQueue(env('QUEUE_NAME'));
+
+        SecondaryContact::create($secondary_contact_data);
+
         return response()->json([
             'msg' => 'Assigned Successfully',
             'status' => 200
