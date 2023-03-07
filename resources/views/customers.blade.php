@@ -35,7 +35,6 @@
                             <input type="text" class="form-control input-lg" id="search" name="search"
                                 placeholder="Search" value="{{ isset($search) ? $search : '' }}" />
                         </form>
-
                     </div>
                 </div>
             </div>
