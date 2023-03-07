@@ -35,7 +35,6 @@ class UtilHelper
         if (!empty($body)) {
             $authHeaders['json'] = $body;
         }
-
         $client = new \GuzzleHttp\Client();
         
         $res = [];

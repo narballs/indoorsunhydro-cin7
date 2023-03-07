@@ -408,7 +408,6 @@ class ContactController extends Controller
 
     public  function assingParentChild(Request $request)
     {
-        //dd($request->all());
         $contact = Contact::where('user_id', $request->user_id)->first();
         
       
@@ -423,31 +422,31 @@ class ContactController extends Controller
             'email' => $contact->email,
             'phone' => $contact->phone,
         ];
+        
+        SecondaryContact::create($secondary_contact_data);
+
         $api_request = [
-            'id' => $request->primary_id,
-            'secondaryContacts' => [
-                'company' => $contact->company,
-                'firstName' => $contact->firstName,
-                'lastName' => $contact->lastName,
-                'jobTitle' => $contact->jobTitle,
-                'email' => $contact->email,
-                'phone' => $contact->phone
+            [
+                'id' => $request->primary_id,
+                'type' => 'Customer',
+                'secondaryContacts' => [
+                    [
+                        'company' => $contact->company,
+                        'firstName' => $contact->firstName,
+                        'lastName' => $contact->lastName,
+                        'jobTitle' => $contact->jobTitle,
+                        'email' => $contact->email,
+                        'phone' => $contact->phone
+                    ],
+                ]
             ],
         ];
-        SecondaryContact::create($secondary_contact_data);
-        //SyncContacts::dispatch('update_contact', $api_request)->onQueue(env('QUEUE_NAME'));
-        $client = new \GuzzleHttp\Client();
+        $contact_request = $api_request;
+        //print_r($contact_request);exit;
+        
+        
+        SyncContacts::dispatch('update_contact', $contact_request)->onQueue(env('QUEUE_NAME'));
 
-        $authHeaders = [
-            'headers' => ['Content-type' => 'application/json'],
-            'auth' => [
-                env('API_USER'),
-                env('API_PASSWORD')
-            ]
-        ];
-        $authHeaders['json'] = json_encode($api_request);
-        $res = $client->put('https://api.cin7.com/api/v1/Contacts', $authHeaders);
-        dd($res);
         return response()->json([
             'msg' => 'Assigned Successfully',
             'status' => 200 
