@@ -39,10 +39,10 @@ class ContactController extends Controller
         $contact_query = Contact::where('type', 'Customer');
         if (!empty($activeCustomer)) {
             if ($activeCustomer == 'active-customer') {
-                $contact_query = $contact_query->where('status', true);
+                $contact_query = $contact_query->where('contact_id', '!=', null);
             }
             if ($activeCustomer == 'disable-customer') {
-                $contact_query = $contact_query->where('status', false);
+                $contact_query = Contact::where('contact_id', NULL);
             }
         }
         if (!empty($search)) {
@@ -151,16 +151,8 @@ class ContactController extends Controller
         $contact_is_parent = '';
 
         $customer = Contact::where('id', $id)->with('secondary_contact')->first();
-
         $user_id = $customer->user_id;
         $secondary_contacts = Contact::where('parent_id', $customer->contact_id)->get();
-        //dd($secondary_contacts);
-        // if(!empty($secondary_contact->parent_id)){
-        //     $primary_contact = Contact::where('contact_id', $secondary_contact->parent_id)->first();
-        //     if($primary_contact->contact_id){
-        //         $contact_is_parent = $primary_contact->email;
-        //     }
-        // }
         $customer_orders =  ApiOrder::where('user_id', $customer->user_id)->with(['createdby', 'processedby'])->limit('5')->get();
         $statuses = OrderStatus::all();
         if ($customer->hashKey && $customer->hashUsed == false) {
@@ -175,6 +167,11 @@ class ContactController extends Controller
             'statuses', 
             'customer_orders', 
             'invitation_url', 
+            'customer',
+            'secondary_contact',
+            'statuses',
+            'customer_orders',
+            'invitation_url',
             'contact_is_parent'
         ));
     }
@@ -424,7 +421,7 @@ class ContactController extends Controller
             'email' => $contact->email,
             'phone' => $contact->phone,
         ];
-        
+
         SecondaryContact::create($secondary_contact_data);
 
         $api_request = [
@@ -445,7 +442,7 @@ class ContactController extends Controller
         ];
 
         $contact_request = $api_request;
-        
+
         SyncContacts::dispatch('update_contact', $contact_request)->onQueue(env('QUEUE_NAME'));
 
         SecondaryContact::create($secondary_contact_data);
