@@ -278,17 +278,22 @@
                     <p class="thank-you-page-product-imtes-total-cart">Total</p>
                     <div class="row">
                         <div class="col-md-6">
-                            <p class="thank-you-page-product-items-subtotal-cart">Subtotal:</p>
-                            {{-- <p class="thank-you-page-product-items-subtotal-cart">Shipping:</p> --}}
-                            <p class="thank-you-page-product-items-subtotal-cart">Discount:</p>
-                            <p class="thank-you-page-product-items-subtotal-cart mt-4">Total:(Excl Tax)</p>
-                            <p class="thank-you-page-product-items-subtotal-cart mt-4">Total:(Incl Tax)</p>
+                            <p class="thank-you-page-product-items-subtotal-cart">
+                                <img class="img-fluid" src="theme/img/pricing_tag.png" width=" 35px">
+                            </p>
+                            <p class="thank-you-page-product-items-subtotal-cart">
+                                <img class=" img-fluid" src="/theme/img/tax_icon.png">
+                                <span>Rate</span> ({{$tax_class->rate}}%)
+                            </p>
+                            <p class="thank-you-page-product-items-subtotal-cart mt-4">
+                                <img class=" img-fluid" src="/theme/img/sub_total_icon.png">
+                                <strong>SubTotal</strong>
+                            </p>
                         </div>
                         <div class="col-md-6 ">
-                            <p class=" thank-you-page-product-item-cart">$</p>
+                            <p class=" thank-you-page-product-item-cart">{{$cart_total}}</p>
                             {{-- <p class=" thank-you-page-product-item-cart">shipping</p> --}}
-                            <p class=" thank-you-page-product-item-cart">$</p>
-                            <p class=" thank-you-page-product-item-cart mt-4">${{number_format($cart_total,2)}}</p>
+                            <p class=" thank-you-page-product-item-cart">${{number_format($tax, 2)}}</p>
                             <p class="thank-you-page-product-item-cart mt-4" id="tax-rate">
                                 ${{number_format($total_including_tax, 2)}}</p>
                         </div>
