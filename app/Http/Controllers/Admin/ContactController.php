@@ -151,7 +151,7 @@ class ContactController extends Controller
         $contact_is_parent = '';
 
         $customer = Contact::where('id', $id)->first();
-        $contact_is_parent = $customer->email;
+        //$contact_is_parent = $customer->email;
         $user_id = $customer->user_id;
         if(!empty($customer->contact_id)) {
             $secondary_contacts = Contact::where('parent_id', $customer->contact_id)->get();
@@ -177,8 +177,7 @@ class ContactController extends Controller
             'secondary_contact',
             'statuses',
             'customer_orders',
-            'invitation_url',
-            'contact_is_parent'
+            'invitation_url'
         ));
     }
 
