@@ -282,11 +282,11 @@
                                 <img class="img-fluid" src="theme/img/pricing_tag.png" width=" 35px">
                             </p>
                             <p class="thank-you-page-product-items-subtotal-cart">
-                                <img class=" img-fluid" src="/theme/img/tax_icon.png">
+                                <img class=" img-fluid" src="/theme/img/tax_icon_check_out_page.png">
                                 <span>Rate</span> ({{$tax_class->rate}}%)
                             </p>
                             <p class="thank-you-page-product-items-subtotal-cart mt-4">
-                                <img class=" img-fluid" src="/theme/img/sub_total_icon.png">
+                                <img class=" img-fluid" src="/theme/img/sub_total_icon_check_out_page.png">
                                 <strong>SubTotal</strong>
                             </p>
                         </div>
@@ -993,10 +993,6 @@
 <div class="row mt-5 pt-5 desktop-view" style="padding-top:100px  !important;">
     @include('partials.product-footer')
 </div>
-<div class="row mt-5  laptop-view">
-    @include('partials.product-footer')
-</div>
-
 
 <div class="modal fade" id="address_modal_id" data-dismiss="modal" data-backdrop="false" aria-hidden="true"
     aria-labelledby="exampleModalToggleLabel" tabindex="-1">
