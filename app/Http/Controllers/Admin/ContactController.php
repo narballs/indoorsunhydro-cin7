@@ -150,9 +150,15 @@ class ContactController extends Controller
         $secondary_contact = '';
         $contact_is_parent = '';
 
-        $customer = Contact::where('id', $id)->with('secondary_contact')->first();
+        $customer = Contact::where('id', $id)->first();
+        $contact_is_parent = $customer->email;
         $user_id = $customer->user_id;
-        $secondary_contacts = Contact::where('parent_id', $customer->contact_id)->get();
+        if($user_id && !empty($customer->contact_id)) {
+            $secondary_contacts = Contact::where('parent_id', $customer->contact_id)->get();
+        }
+        else {
+            $secondary_contacts = '';
+        }
         $customer_orders =  ApiOrder::where('user_id', $customer->user_id)->with(['createdby', 'processedby'])->limit('5')->get();
         $statuses = OrderStatus::all();
         if ($customer->hashKey && $customer->hashUsed == false) {
