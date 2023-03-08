@@ -149,15 +149,10 @@ class ContactController extends Controller
         $primary_contact = '';
         $secondary_contact = '';
         $contact_is_parent = '';
+
         $customer = Contact::where('id', $id)->with('secondary_contact')->first();
         $user_id = $customer->user_id;
-        $secondary_contact = SecondaryContact::where('user_id', $user_id)->first();
-        if (!empty($secondary_contact->parent_id)) {
-            $primary_contact = Contact::where('contact_id', $secondary_contact->parent_id)->first();
-            if ($primary_contact->contact_id) {
-                $contact_is_parent = $primary_contact->email;
-            }
-        }
+        $secondary_contacts = Contact::where('parent_id', $customer->contact_id)->get();
         $customer_orders =  ApiOrder::where('user_id', $customer->user_id)->with(['createdby', 'processedby'])->limit('5')->get();
         $statuses = OrderStatus::all();
         if ($customer->hashKey && $customer->hashUsed == false) {
@@ -167,6 +162,11 @@ class ContactController extends Controller
             $invitation_url = '';
         }
         return view('admin/customer-details', compact(
+            'customer', 
+            'secondary_contacts', 
+            'statuses', 
+            'customer_orders', 
+            'invitation_url', 
             'customer',
             'secondary_contact',
             'statuses',
@@ -354,7 +354,7 @@ class ContactController extends Controller
                 'link' => $url
             ]);
         } else {
-            $secondary_contact = SecondaryContact::where('email', $active_email)->update(
+            $secondary_contact = Contact::where('email', $active_email)->update(
                 [
                     'hashKey' => $sig,
                     'hashUsed' => 0,
@@ -388,7 +388,7 @@ class ContactController extends Controller
 
             return view('contomer_invitation', compact('contact'));
         } else {
-            $contact = SecondaryContact::where('hashKey', $hash)->first();
+            $contact = Contact::where('hashKey', $hash)->first();
             if ($contact->hashUsed == 1) {
 
                 return view('contomer_invitation-error', compact('msg'));

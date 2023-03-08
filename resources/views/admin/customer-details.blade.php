@@ -215,7 +215,7 @@
 										<th>Phone</th>
 										<th>Status</th>
 									</tr>
-									@foreach($customer->secondary_contact as $contact)
+									@foreach($secondary_contacts as $contact)
 									<tr>
 										@if($contact->company)
 										<td>
