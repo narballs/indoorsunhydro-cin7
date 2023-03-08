@@ -139,9 +139,6 @@
 											@if (!$customer->contact_id)
 											<b>Cin7 ID:</b> <span class="badge bg-info">empty</span>
 											<br>
-											<!-- @if($contact_is_parent)
-											<b>Parent Account</b><span class="badge bg-success">{{$contact_is_parent}}</span>
-											@endif -->
 											@else
 											@if($customer->contact_id)
 											<b>Cin7 ID:Parent Account</b> {{$customer->contact_id}}
