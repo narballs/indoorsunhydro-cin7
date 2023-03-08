@@ -5,6 +5,10 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Models\Contact;
 use App\Models\SecondaryContact;
+use App\Models\UserLog;
+use Carbon\Carbon;
+
+
 
 class SyncSuppliers extends Command
 {
@@ -93,33 +97,33 @@ class SyncSuppliers extends Command
                     $contact->email = $api_contact->email;
                     $contact->notes = $api_contact->notes;
                     if ($api_contact->secondaryContacts) 
-                      {
-                         foreach($api_contact->secondaryContacts as $secondaryContact) {
-                            $secondaryContact = new SecondaryContact ([
-                              'secondary_id' => $secondaryContact->id,
-                              'parent_id'  => $api_contact->id,
-                              'is_parent' => 0,
-                              'firstName' => $secondaryContact->firstName,
-                              'lastName' => $secondaryContact->lastName,
-                              'jobTitle' => $secondaryContact->jobTitle,
-                              'company' => $secondaryContact->company,
-                              'phone' => $secondaryContact->phone,
-                              'mobile' => $secondaryContact->mobile,
-                              'email' => $secondaryContact->email,
-                            ]);
-                            $secondaryContact->save();
+                    {
+                        foreach($api_contact->secondaryContacts as $secondaryContact) {
+                            $contact->parent_id = $contact->contact_id;
+                            $contact->secondary_id = $secondaryContact->id;
+                            $contact->is_parent = 0;
+                            $contact->company = $secondaryContact->company;
+                            $contact->firstName = $secondaryContact->firstName;
+                            $contact->lastName = $secondaryContact->lastName;
+                            $contact->jobTitle  = $secondaryContact->jobTitle;
+                            $contact->email = $secondaryContact->email;
+                            $contact->mobile = $secondaryContact->mobile;
+                            $contact->phone = $secondaryContact->phone;
+                            $contact->save();
 
-                      }
+                            $UserLog = new UserLog([
+                               'action' => 'Sync',
+                               'user_notes' => 'Sync from Cin7 at '.Carbon::now()->toDateTimeString(). 'is Secondary Contacts '.'and primary account is '.$api_contact->email, 
+                                ]);       
+                            $UserLog->save();
+                        }
                     }
-                   
-                    
                     $contact->save();
                 }
                 else {
                       foreach($api_contact->secondaryContacts as $secondaryContact) {
                         echo $secondaryContact->id.'---'.$secondaryContact->firstName;
                     }
-                    
                     $contact = new Contact([
                         'contact_id' => $api_contact->id,
                          'is_parent' => 1,
@@ -148,7 +152,7 @@ class SyncSuppliers extends Command
                     ]);
                     if ($api_contact->secondaryContacts) {
                         foreach($api_contact->secondaryContacts as $secondaryContact) {
-                            $secondaryContact = new SecondaryContact ([
+                            $secondaryContact = new Contact ([
                               'secondary_id' => $secondaryContact->id,
                               'parent_id'  => $api_contact->id,
                               'is_parent' => 0,
@@ -159,12 +163,18 @@ class SyncSuppliers extends Command
                               'phone' => $secondaryContact->phone,
                               'mobile' => $secondaryContact->mobile,
                              'email' => $secondaryContact->email,
-
                             ]);
                             $secondaryContact->save();
                         }
                     }
                     $contact->save();
+
+                    $UserLog = new UserLog([
+                        'contact_id' => $api_contact->id,
+                        'action' => 'Sync',
+                        'user_notes' => 'Sync from Cin7 at '.Carbon::now()->toDateTimeString(),        
+                    ]);
+                    $UserLog->save();
                 }
             }
         }
