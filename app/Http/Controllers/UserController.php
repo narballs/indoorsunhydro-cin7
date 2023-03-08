@@ -437,7 +437,7 @@ class UserController extends Controller
         $user = User::where('id', $user_id)->first();
 
         $user_address = Contact::where('user_id', $user_id)->first();
-        $childerens = Contact::where('user_id', $user_id)->with('secondary_contact')->first();
+        $secondary_contacts = Contact::where('parent_id', $user_address->contact_id)->get();
         $list = BuyList::where('id', 20)->with('list_products.product.options')->first();
 
         $contact = SecondaryContact::where('email', $user_address->email)->first();
@@ -459,7 +459,7 @@ class UserController extends Controller
             return $user_orders;
         }
 
-        return view('my-account', compact('user', 'user_address', 'states', 'childerens', 'parent'));
+        return view('my-account', compact('user', 'user_address', 'states', 'secondary_contacts', 'parent'));
     }
 
     public function my_qoutes()
@@ -575,7 +575,7 @@ class UserController extends Controller
         $contactId = $contact->contact_id;
 
         $request->validate([
-            'email' => 'required|email|unique:secondary_contacts,email',
+            'email' => 'required|email|unique:contacts,email',
             'firstName' => 'required',
             'lastName' => 'required',
         ]);
@@ -591,7 +591,7 @@ class UserController extends Controller
         ];
 
 
-        SecondaryContact::create($secondary_contact_data);
+     Contact::create($secondary_contact_data);
 
         unset($secondary_contact_data['parent_id']);
         $current_date_time = Carbon::now()->toDateTimeString();
@@ -611,12 +611,12 @@ class UserController extends Controller
                 ]
             ]
         ];
-        $secondary_contact = SecondaryContact::where('email', $request->email)->update(
-            [
-                'hashKey' => $sig,
-                'hashUsed' => 0,
-            ]
-        );
+        // $secondary_contact = Contact::where('email', $request->email)->update(
+        //     [
+        //         'hashKey' => $sig,
+        //         'hashUsed' => 0,
+        //     ]
+        // );
         $data = [
             'email' => $request->email,
             'subject' => 'Customer Registration Invitation',
@@ -624,15 +624,20 @@ class UserController extends Controller
             'content' => 'Customer Registration Invitation',
             'url' => $url
         ];
-        MailHelper::sendMailNotification('emails.invitaion-emails', $data);
+        // MailHelper::sendMailNotification('emails.invitaion-emails', $data);
         SyncContacts::dispatch('update_contact', $contact)->onQueue(env('QUEUE_NAME'));
-        $secondary_contacts = SecondaryContact::where('parent_id', $contactId)->orderBy('id', 'desc')->get();
-        return view('secondary-user', compact('secondary_contacts', 'url'));
+        return response()->json([
+             'state' => 200,
+             'secondary_contact' => $secondary_contact_data,
+        ]);
+        // $secondary_contacts = Contact::where('parent_id', $contactId)->orderBy('id', 'desc')->get();
+
+        // return view('secondary-user', compact('secondary_contacts', 'url'));
     }
     public function delete_secondary_user(Request $request)
     {
         $id = $request->id;
-        $secondary_contact = SecondaryContact::find($id);
+        $secondary_contact = Contact::find($id);
         $secondary_contact->delete();
     }
 }
