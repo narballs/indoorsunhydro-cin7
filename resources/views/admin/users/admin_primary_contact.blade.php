@@ -12,6 +12,7 @@
     <p>{{ $message }}</p>
 </div>
 @endif
+
 <div class="table-wrapper">
     <div class="table-title">
         <span>
@@ -59,8 +60,9 @@
                             </button>
                         </span>
                         <form method="get" action="/admin/users">
-                            <input type="text" class="form-control input-lg" id="search" name="search"
-                                placeholder="Search" value="{{ isset($search) ? $search : '' }}" />
+                            <input type="text" class="form-control input-lg" id="primary-search"
+                                name="primaryUserSearch" placeholder="Search"
+                                value="{{ isset($primaryUserSearch) ? $primaryUserSearch : '' }}" />
                         </form>
                     </div>
                 </div>
@@ -83,55 +85,37 @@
                 <th>Roles <i class="fa fa-sort"></th>
                 <th>Action <i class="fa fa-sort"></th>
             </tr>
-            @foreach ($data as $key => $user)
+            @foreach ($primary_contacts as $key => $user)
             <tr>
                 <td>{{ ++$i }}</td>
-                <td>{{ $user->first_name }}</td>
-                <td>{{ $user->last_name }}</td>
+                <td>{{ $user->firstName }}</td>
+                <td>{{ $user->lastName }}</td>
                 <td>{{ $user->email }}</td>
                 <td>
-                    @if($user->contact)
-                    @if($user->contact->contact_id)
+                    @if($user->contact_id)
                     <span class="badge bg-success">Merged</span>
                     @else
                     <span class="badge bg-danger">UnMered</span>
                     @endif
-                    @else
-                    <span class="badge bg-danger">UnMered</span>
-                    @endif
                 </td>
                 <td>
-
-                    @if($user->contact)
-                    @if($user->contact->contact_id)
-                    {{$user->contact->contact_id}}
-                    @else
-                    <span class="badge bg-info">empty</span>
-                    @endif
+                    @if($user->contact_id)
+                    {{$user->contact_id}}
                     @else
                     <span class="badge bg-info">empty</span>
                     @endif
                 </td>
                 <td>
-                    @if($user->contact)
-                    @if($user->contact->company)
-                    {{$user->contact->company}}
-                    @else
-                    <span class="badge bg-secondary">empty</span>
-                    @endif
+                    @if($user->company)
+                    {{$user->company}}
                     @else
                     <span class="badge bg-secondary">empty</span>
                     @endif
                 </td>
                 <td>
-                    <span class="badge bg-info">Simple User</span>
+                    <span class="badge bg-primary">primary</span>
                 </td>
                 <td>
-                    @if(!empty($user->getRoleNames()))
-                    @foreach($user->getRoleNames() as $role)
-                    <label class="badge badge-success">{{ $role }}</label>
-                    @endforeach
-                    @endif
                 </td>
                 <td>
                     <a class="btn btn-info btn-sm" href="{{ route('users.show',$user->id) }}">Show</a>
@@ -146,18 +130,14 @@
                     {!! Form::close() !!}
                     @endcan
                     <a class="btn btn-success btn-sm" href="{{ url('admin/user-switch/'.$user->id) }}">Switch User</a>
-                    @if($user->contact)
-                    @if($user->contact->secondary_contact)
                     <button type="button" class="btn btn-primary btn-sm" data-id="{{$user->id}}" data-toggle="modal"
                         onclick="assignParent('{{$user->id}}')">Set Parent</button>
                     <input type="hidden" value='{{$user->id}}' id='{{$user->id}}'>
-                    @endif
-                    @endif
                 </td>
             </tr>
             @endforeach
         </table>
-        <!-- Modal -->
+
         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
             aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -173,7 +153,6 @@
                             <input type="select" name="primary_contact" id="primary_contact" class="form-control"
                                 value="" onkeyup="suggestion()">
                             <select id="child" class="form-control">
-
                             </select>
                             <input type="text" name="child_id" value="" id="child_id">
                             <div class="spinner-border d-none" role="status"
@@ -189,8 +168,9 @@
                 </div>
             </div>
         </div>
+
         <div id="pageination">
-            {{$data->appends(Request::all())->links()}}
+            {{$primary_contacts->appends(Request::all())->links()}}
         </div>
     </div>
     @endsection
@@ -234,31 +214,19 @@
     </style>
     @stop
     <script>
-        function adminUsers() {
-            $('#user-table').addClass('d-none');
-            $('#pageination').addClass('d-none');
-            $.ajax({
-                   url: "{{ url('admin/admin-users') }}",
-                   method: 'GET',
-                   success: function(response){
-                    console.log(response);
-                    $('#admin-users').html(response);
-                    }
-                });
-        }
-    function userFilter() {
+        function userFilter() {
             var usersData = $('#users').val();
-            var search = $('#search').val();
+            var primarySearch = $('#primary-search').val();
             var secondaryUser = $('#secondary-user').val();
            if (usersData != '') {
-            basic_url = `users?usersData=${usersData}`;
+             basic_url = `users?usersData=${usersData}`;
             }
            if (secondaryUser != '') {
-            basic_url = basic_url+`&secondaryUser=${secondaryUser}`;
+            alert('here');
+              basic_url = basic_url+`&secondaryUser=${secondaryUser}`;
             }
-
             window.location.href = basic_url;
-        }
+    }
     function assignParent(userid) {
         var user_id = userid;
         $('#exampleModal').modal('show');
@@ -271,15 +239,15 @@
         console.log(primary_contact);
         var res = '';
        $.ajax({
-                url: "{{ url('admin/get-parent') }}",
-                    method: 'GET',
-                    data :{
-                        term : primary_contact
-                    },
-                   success: function(response){
-                    $.each (response, function (key, value) {
-                            console.log(value.firstName);
-                            res+= '<option value='+ value.contact_id +'>'+ value.firstName + '</option>';
+            url: "{{ url('admin/get-parent') }}",
+                method: 'GET',
+                data :{
+                    term : primary_contact
+                },
+                success: function(response){
+                $.each (response, function (key, value) {
+                    console.log(value.firstName);
+                    res+= '<option value='+ value.contact_id +'>'+ value.firstName + '</option>';
                             console.log(res);
                     });
                         $('#child').html(res);
@@ -316,6 +284,5 @@
             });
 
     }
-
 
     </script>
