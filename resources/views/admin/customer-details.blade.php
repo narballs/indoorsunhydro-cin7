@@ -353,9 +353,21 @@
 					<div class="card-body">
 						<h3 class="h6"><strong>Customer Notes</strong></h3>
 						<div>{{$customer->notes}}</div>
-					</div>
 
+					</div>
 				</div>
+
+				
+					<!-- Customer Notes -->
+					<div class="card mb-4">
+						<div class="card-body">
+							<h3 class="h6"><strong>User Logs</strong></h3>
+							@foreach($logs as $log)
+								<div>{{$log->user_notes}}</div>
+							@endforeach
+						</div>
+					</div>
+		
 			</div>
 		</div>
 	</div>

@@ -11,6 +11,7 @@ class UserLog extends Model
 
     protected $fillable = [
         'contact_id',
+        'secondary_id',
         'user_id',
         'action',
         'user_notes'
