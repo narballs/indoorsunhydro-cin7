@@ -66,8 +66,9 @@
                             </button>
                         </span>
                         <form method="get" action="/admin/users">
-                            <input type="text" class="form-control input-lg" id="search" name="search"
-                                placeholder="Search" value="{{ isset($search) ? $search : '' }}" />
+                            <input type="text" class="form-control input-lg" id="secondary-usersearch"
+                                name="secondaryUserSearch" placeholder="Search"
+                                value="{{ isset($secondaryUserSearch) ? $secondaryUserSearch : '' }}" />
                         </form>
                     </div>
                 </div>
@@ -90,43 +91,29 @@
                 <th>Roles <i class="fa fa-sort"></th>
                 <th>Action <i class="fa fa-sort"></th>
             </tr>
-            @foreach ($data as $key => $user)
-
+            @foreach ($secondary_contacts as $key => $user)
             <tr>
                 <td>{{ ++$i }}</td>
                 <td>{{ $user->firstName }}</td>
                 <td>{{ $user->lastName }}</td>
                 <td>{{ $user->email }}</td>
                 <td>
-                    @if($user->contact)
-                    @if($user->contact->contact_id)
+                    @if($user->contact_id)
                     <span class="badge bg-success">Merged</span>
                     @else
                     <span class="badge bg-danger">UnMered</span>
                     @endif
-                    @else
-                    <span class="badge bg-danger">UnMered</span>
-                    @endif
                 </td>
                 <td>
-
-                    @if($user->contact)
-                    @if($user->contact->contact_id)
-                    {{$user->contact->contact_id}}
-                    @else
-                    <span class="badge bg-info">empty</span>
-                    @endif
+                    @if($user->contact_id)
+                    {{$user->contact_id}}
                     @else
                     <span class="badge bg-info">empty</span>
                     @endif
                 </td>
                 <td>
-                    @if($user->contact)
-                    @if($user->contact->company)
-                    {{$user->contact->company}}
-                    @else
-                    <span class="badge bg-secondary">empty</span>
-                    @endif
+                    @if($user->company)
+                    {{$user->company}}
                     @else
                     <span class="badge bg-secondary">empty</span>
                     @endif
@@ -135,11 +122,6 @@
                     <span class="badge bg-secondary">Secondary</span>
                 </td>
                 <td>
-                    {{-- @if(!empty($user->getRoleNames()))
-                    @foreach($user->getRoleNames() as $v)
-                    <label class="badge badge-success">{{ $v }}</label>
-                    @endforeach
-                    @endif --}}
                 </td>
                 <td>
                     <a class="btn btn-info btn-sm" href="{{ route('users.show',$user->id) }}">Show</a>
@@ -194,7 +176,7 @@
         </div>
 
         <div id="pageination">
-            {{$data->appends(Request::all())->links()}}
+            {{$secondary_contacts->appends(Request::all())->links()}}
         </div>
     </div>
     @endsection
@@ -252,13 +234,17 @@
     }
     function userFilter() {
             var usersData = $('#users').val();
-            var search = $('#search').val();
+            var secondaryUserSearch = $('#secondary-usersearch').val();
             var secondaryUser = $('#secondary-user').val();
+            
            if (usersData != '') {
-            basic_url = `users?usersData=${usersData}`;
+              basic_url = `users?usersData=${usersData}`;
             }
            if (secondaryUser != '') {
-            basic_url = basic_url+`&secondaryUser=${secondaryUser}`;
+              basic_url = basic_url+`&secondaryUser=${secondaryUser}`;
+            }
+           if (secondaryUserSearch != '') {
+              basic_url = basic_url+`&secondaryUserSearch=${secondaryUserSearch}`;
             }
 
             window.location.href = basic_url;

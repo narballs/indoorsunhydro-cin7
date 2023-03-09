@@ -152,9 +152,6 @@ class ContactController extends Controller
         $contact_is_parent = '';
         $customer = Contact::where('id', $id)->first();
         $logs = UserLog::where('contact_id', $customer->contact_id)->get();
-        // $logs = UserLog::where('secondary_id', $customer->secondary_id);
-        // $logs = $logs->get();
-        //dd($logs);
         $user_id = $customer->user_id;
         if(!empty($customer->contact_id)) {
             $secondary_contacts = Contact::where('parent_id', $customer->contact_id)->get();
