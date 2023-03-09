@@ -222,7 +222,6 @@
              basic_url = `users?usersData=${usersData}`;
             }
            if (secondaryUser != '') {
-            alert('here');
               basic_url = basic_url+`&secondaryUser=${secondaryUser}`;
             }
             window.location.href = basic_url;
