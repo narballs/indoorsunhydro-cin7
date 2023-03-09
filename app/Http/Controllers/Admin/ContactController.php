@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use App\Models\SecondaryContact;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
+use App\Models\UserLog;
 
 class ContactController extends Controller
 {
@@ -149,9 +150,11 @@ class ContactController extends Controller
         $primary_contact = '';
         $secondary_contact = '';
         $contact_is_parent = '';
-
         $customer = Contact::where('id', $id)->first();
-        //$contact_is_parent = $customer->email;
+        $logs = UserLog::where('contact_id', $customer->contact_id)->get();
+        // $logs = UserLog::where('secondary_id', $customer->secondary_id);
+        // $logs = $logs->get();
+        //dd($logs);
         $user_id = $customer->user_id;
         if(!empty($customer->contact_id)) {
             $secondary_contacts = Contact::where('parent_id', $customer->contact_id)->get();
@@ -177,7 +180,8 @@ class ContactController extends Controller
             'secondary_contact',
             'statuses',
             'customer_orders',
-            'invitation_url'
+            'invitation_url',
+            'logs'
         ));
     }
 

@@ -377,8 +377,6 @@
    				error_text += '<br />' + error_message.errors.email[0];
 
    				$('#signup_error').html(error_text);
-
-
    			}
        });
 		
@@ -500,7 +498,13 @@
 		        	"phone": phone
 		    	},
 		    	success: function(response) {
-		    		if (response.success == true) {
+		    		if (response.code == 201) {
+		    			$("#thanks").removeClass('d-none');
+		    			$(".address").hide();
+		    			$("#company-detail").addClass('d-none');
+
+		    		}
+		    		else if (response.success == true) {
 		    			$('#company-round').attr('src','/theme/img/round-border.png');
 						$('#building').attr('src','/theme/img/building.png');
 						$('#timer').attr('src','/theme/img/round-solid.png');
@@ -514,9 +518,7 @@
 		    	},
 		    	error: function (response) {
    					var error_message = response.responseJSON;
-
    					var error_text = '';
-   					//error_text += error_message.message;
    					if (typeof error_message.errors.company_name != 'undefined') {
    						error_text = error_message.errors.company_name;
    						$('#company_name_errors').html(error_text);
@@ -525,13 +527,6 @@
    						error_text = '';
    						$('#company_name_errors').html(error_text);
    					}
-   					// if (typeof error_message.errors.company_website != 'undefined') {
-   					// 	var error_text2 = error_message.errors.company_website;
-   					// 	$('#company_website_errors').html(error_text2);
-   					// }
-   					// else {
-   					// 	error_text2 = '';
-   					// }
    					if (typeof error_message.errors.phone != 'undefined') {
    						var error_text3 = error_message.errors.phone;
    						$('#phone_errors').html(error_text3)
