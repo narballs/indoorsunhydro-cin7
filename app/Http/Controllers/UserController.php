@@ -355,7 +355,6 @@ public function index(Request $request)
                             'updated' => true,
                             'msg' => 'Existing contact updated'
                             ]);
-
                     }
 
                 }
