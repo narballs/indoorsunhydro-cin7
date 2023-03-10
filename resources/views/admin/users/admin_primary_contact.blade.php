@@ -130,9 +130,6 @@
                     {!! Form::close() !!}
                     @endcan
                     <a class="btn btn-success btn-sm" href="{{ url('admin/user-switch/'.$user->id) }}">Switch User</a>
-                    <button type="button" class="btn btn-primary btn-sm" data-id="{{$user->id}}" data-toggle="modal"
-                        onclick="assignParent('{{$user->id}}')">Set Parent</button>
-                    <input type="hidden" value='{{$user->id}}' id='{{$user->id}}'>
                 </td>
             </tr>
             @endforeach
