@@ -347,7 +347,8 @@
         		},
          		success: function(response){
          		console.log(response);
-        			//setInterval('location.reload()', 7000);
+        			setInterval('location.reload()', 7000);
+        				$('#spinner').addClass('d-none');
     			}
     		});
     	}

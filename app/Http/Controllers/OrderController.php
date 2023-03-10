@@ -40,14 +40,24 @@ class OrderController extends Controller
         $paymentMethod = $paymentMethodOption;
         //check if user have already contact with cin7
         $existing_contact = Contact::where('user_id', Auth::id())->first();
-        if (empty($existing_contact->contact_id)) {
+        // if (empty($existing_contact->contact_id)) {
 
-            Session::flash('message', "Your account is being reviewed you can't make order, you can still make carts");
-            return redirect('/checkout/');
+        //     Session::flash('message', "Your account is being reviewed you can't make order, you can still make carts");
+        //     return redirect('/checkout/');
+        // }
+        $session_contact_id = Session::get('contact_id');
+        $contact = Contact::where('contact_id', $session_contact_id)->first();
+        if ($contact) {
+            $active_contact_id = $contact->contact_id;
         }
-
-        $contact_id = Contact::where('user_id', Auth::id())->pluck('contact_id')->first();
-        if ($contact_id) {
+        else {
+           $contact = Contact::where('secondary_id', $session_contact_id)->first(); 
+           $active_contact_id = $contact->parent_id;
+        }
+        // dd($active_contact_id);
+        
+  
+        if ($active_contact_id) {
             $order = new ApiOrder;
             $cart_items = session()->get('cart');
             $cart_total = 0;
@@ -67,7 +77,7 @@ class OrderController extends Controller
             $order->createdBy =  79914;
             $order->processedBy  =  79914;
             $order->isApproved    =  false;
-            $order->memberId    =  $contact_id;
+            $order->memberId    =  $active_contact_id;
             $order->branchId   =  "none";
             $order->distributionBranchId = 0;
             $order->branchEmail  =  'wqszeeshan@gmail.com';
@@ -168,13 +178,13 @@ class OrderController extends Controller
                     $adminTemplate = 'emails.admin-order-received';
                     $data['email'] = $role_admin->email;
 
-                    MailHelper::sendMailNotification('emails.admin-order-received', $data);
+                    //MailHelper::sendMailNotification('emails.admin-order-received', $data);
                 }
             }
 
             $data['subject'] = 'Your order has been received';
             $data['email'] = $email;
-            MailHelper::sendMailNotification('emails.admin-order-received', $data);
+           // MailHelper::sendMailNotification('emails.admin-order-received', $data);
 
             $lineItems = [];
             foreach ($order_items as $order_item) {

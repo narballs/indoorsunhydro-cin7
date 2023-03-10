@@ -668,7 +668,6 @@ class ProductController extends Controller
 
 
         if (!empty($cart_items)) {
-
             $view = 'cart';
         } else {
             $view = 'empty-cart';
