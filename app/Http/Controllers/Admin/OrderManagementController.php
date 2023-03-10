@@ -32,10 +32,20 @@ class OrderManagementController extends Controller
         $this->middleware(['role:Admin']);
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $orders = ApiOrder::with(['createdby', 'processedby', 'contact'])->get();
-        return view('admin/orders', compact('orders'));
+        $search = $request->get('search');
+        $orders_query = ApiOrder::with(['createdby', 'processedby', 'contact'])->orderBy('id', 'DESC');
+        if (!empty($search)) {
+            $orders_query = $orders_query->where('order_id', 'LIKE', '%' . $search . '%')
+                ->orWhere('createdDate', 'like', '%' . $search . '%')
+                ->orWhere('modifiedDate', 'like', '%' . $search . '%')
+                ->orWhere('reference', 'like', '%' . $search . '%')
+                ->orWhere('total', 'like', '%' . $search . '%')
+                ->orWhere('stage', 'like', '%' . $search . '%');
+        }
+        $orders =  $orders_query->paginate(10);
+        return view('admin/orders', compact('orders', 'search'));
     }
 
     public function show($id)

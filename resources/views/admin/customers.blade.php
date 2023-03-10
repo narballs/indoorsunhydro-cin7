@@ -94,68 +94,62 @@
             </div>
         </div>
     </div>
-    @stop
+</div>
+@stop
 
-    @section('css')
-    <link rel="stylesheet" href="/css/admin_custom.css">
-    <style type="text/css">
-        #custom-search-input {
-            padding: 3px;
-            border: solid 1px #E4E4E4;
-            border-radius: 6px;
-            background-color: #fff;
-        }
+@section('css')
+<link rel="stylesheet" href="/css/admin_custom.css">
+<style type="text/css">
+    #custom-search-input {
+        padding: 3px;
+        border: solid 1px #E4E4E4;
+        border-radius: 6px;
+        background-color: #fff;
+    }
 
-        #custom-search-input input {
-            border: 0;
-            box-shadow: none;
-        }
+    #custom-search-input input {
+        border: 0;
+        box-shadow: none;
+    }
 
-        #custom-search-input button {
-            margin: 2px 0 0 0;
-            background: none;
-            box-shadow: none;
-            border: 0;
-            color: #666666;
-            padding: 0 8px 0 10px;
-            border-right: solid 1px #ccc;
-        }
+    #custom-search-input button {
+        margin: 2px 0 0 0;
+        background: none;
+        box-shadow: none;
+        border: 0;
+        color: #666666;
+        padding: 0 8px 0 10px;
+        border-right: solid 1px #ccc;
+    }
 
-        #custom-search-input button:hover {
-            border: 0;
-            box-shadow: none;
-            border-left: solid 1px #ccc;
-        }
+    #custom-search-input button:hover {
+        border: 0;
+        box-shadow: none;
+        border-left: solid 1px #ccc;
+    }
 
-        #custom-search-input .glyphicon-search {
-            font-size: 23px;
-        }
-    </style>
-    @stop
+    #custom-search-input .glyphicon-search {
+        font-size: 23px;
+    }
+</style>
+@stop
 
-    @section('js')
-    <script>
-        function perPage() {
+@section('js')
+<script>
+    function perPage() {
             var perPage = $('#per_page').val();
             var search = $('#search').val();
             var activeCustomer = $('#active_customer').val();
 
             if(perPage !=''){
                 var basic_url = 'customers?perPage='+perPage+'&search='+search;
-                // alert(basic_url);
             }
 
            if (activeCustomer != '') {
                basic_url = basic_url+`&active-customer=${activeCustomer}`;
             }
 
-        //    if (disabledCustomer != '') {
-        //        basic_url = basic_url+`&disabled-customer=${disabledCustomer}`;
-        //     }
             window.location.href = basic_url;
-
-           
-           //alert(basic_url);
         }
         function search() {
             var $rows = $('#table tr');
@@ -197,5 +191,5 @@
                 });
             }
         }
-    </script>
-    @stop
+</script>
+@stop
