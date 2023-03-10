@@ -364,6 +364,7 @@
 					$( ".white-panel" ).add();
 					$("#login-form-section").removeClass('d-none');
 					$("#company").removeClass('d-none');
+
 				}
    			},
    			error: function (response) {
@@ -424,7 +425,14 @@
 
     		},
     	success: function(response) {
-      			console.log(response.success);
+      			console.log(response.msg);
+      			if(response.msg == 'Existing contact updated') {
+      				console.log(response.code);
+      				$("#thanks").removeClass('d-none');
+		    			$(".address").hide();
+		    			$(".company-row").addClass('d-none');
+		    			$(".company-row").hide();
+      			}
       			if (response.success == true) {
       				$('#sign-up').attr('src','/theme/img/round-border.png');
 					$('#arrow').attr('src','/theme/img/arrow.png');
