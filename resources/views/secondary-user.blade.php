@@ -1,5 +1,4 @@
 @foreach ($secondary_contacts as $childeren)
-
 <tr id="row-{{$childeren->id}}">
 	@if($childeren->company)
 	<td>

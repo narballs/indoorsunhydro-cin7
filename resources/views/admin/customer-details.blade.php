@@ -139,9 +139,6 @@
 											@if (!$customer->contact_id)
 											<b>Cin7 ID:</b> <span class="badge bg-info">empty</span>
 											<br>
-											@if($contact_is_parent)
-											<b>Parent Account</b><span class="badge bg-success">{{$contact_is_parent}}</span>
-											@endif
 											@else
 											@if($customer->contact_id)
 											<b>Cin7 ID:Parent Account</b> {{$customer->contact_id}}
@@ -198,7 +195,7 @@
 					</div>
 				</div>
 				<!-- Payment -->
-				@if ($customer->secondary_contact)
+				@if ($secondary_contacts)
 				<div class="card mb-4">
 					<div class="card-body">
 						<div class="row">
@@ -215,7 +212,7 @@
 										<th>Phone</th>
 										<th>Status</th>
 									</tr>
-									@foreach($customer->secondary_contact as $contact)
+									@foreach($secondary_contacts as $contact)
 									<tr>
 										@if($contact->company)
 										<td>
@@ -356,9 +353,21 @@
 					<div class="card-body">
 						<h3 class="h6"><strong>Customer Notes</strong></h3>
 						<div>{{$customer->notes}}</div>
-					</div>
 
+					</div>
 				</div>
+
+				
+					<!-- Customer Notes -->
+					<div class="card mb-4">
+						<div class="card-body">
+							<h3 class="h6"><strong>User Logs</strong></h3>
+							@foreach($logs as $log)
+								<div>{{$log->user_notes}}</div>
+							@endforeach
+						</div>
+					</div>
+		
 			</div>
 		</div>
 	</div>
