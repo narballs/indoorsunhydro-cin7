@@ -40,8 +40,27 @@
 							<div class="col-md-2">
 							</div>
 							<div class="col-md-4 text-left mt-2">
-								<span class="d-block my-acount-profile text-capitalize">{{$user->first_name}}</span>
+								<span class="d-block my-acount-profile text-capitalize">{{$user->first_name}} {{$user->last_name}}</span>
 								<span class="d-block" style="font-family: Roboto">{{$user->email}}</span>
+								<div class="col-md-12 ps-0">
+									<form action="">
+										<select class="form-select" name="company_switch" id="company_switch" onchange="switch_company()" aria-label="Default select example" style="background: #F4FFEC !important;">
+											<option class="form-select">Select one company</option>
+											@foreach($companies as $company)
+												@php
+													if($company->contact_id) {
+														$contact_id = $company->contact_id;
+													} 
+													else {
+														$contact_id = $company->secondary_id;
+													}
+												@endphp
+											  	<option class="form-control" value="{{$contact_id}}">{{$company->company}}</option>
+											@endforeach
+										</select>
+								</form>
+									
+								</div>
 							</div>
 							<div class="col-md-6 col-xl-6 col-xs-12 col-12 col-sm-12">
 							</div>
@@ -1785,6 +1804,26 @@
 				}
 		  });
 
+		}
+
+		function switch_company(contactId) {
+			var company = $('#company_switch').val();
+			jQuery.ajax({
+				url: "{{ url('/switch-company/')}}",
+				method: 'POST',
+				data : {
+					"_token": "{{ csrf_token() }}",
+					'companyId' : company
+				},
+				  success: function(response) {
+				  	$('#spinner2').addClass('d-none');
+				  	  console.log(response.secondary_contact.company);
+				  	  // $("#secondary_user").html(response);
+				      $('#staticBackdrop').modal('hide');
+				      $('#sample_form').trigger("reset");
+				      $('#auto_click').trigger('click');
+			        }
+			    });
 		}
 		</script>
 

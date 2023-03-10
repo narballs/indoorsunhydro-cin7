@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
+use Session;
 use Illuminate\Support\Facades\URL;
 
 class UserController extends Controller
@@ -524,6 +525,7 @@ public function index(Request $request)
         {
 
             $user_id = auth()->id();
+
             if (!$user_id) {
                 return redirect('/user/');
             }
@@ -534,7 +536,9 @@ public function index(Request $request)
             $secondary_contacts = Contact::where('parent_id', $user_address->contact_id)->get();
             $list = BuyList::where('id', 20)->with('list_products.product.options')->first();
 
-            $contact = SecondaryContact::where('email', $user_address->email)->first();
+            $contact = Contact::where('email', $user_address->email)->first();
+            $companies = Contact::where('user_id', $user_id)->get();
+
 
             if ($contact) {
                 $parent = Contact::where('contact_id', $contact->parent_id)->get();
@@ -553,7 +557,7 @@ public function index(Request $request)
                 return $user_orders;
             }
 
-            return view('my-account', compact('user', 'user_address', 'states', 'secondary_contacts', 'parent'));
+            return view('my-account', compact('user', 'user_address', 'states', 'secondary_contacts', 'parent', 'companies'));
         }
 
     public function my_qoutes()
@@ -728,11 +732,27 @@ public function index(Request $request)
 
             // return view('secondary-user', compact('secondary_contacts', 'url'));
         }
-    public function delete_secondary_user(Request $request)
+        public function delete_secondary_user(Request $request)
         {
             $id = $request->id;
             $secondary_contact = Contact::find($id);
             $secondary_contact->delete();
         }
+
+        public function switch_company(Request $request) {
+            $contact_id = $request->companyId;
+            $contact = Contact::where('contact_id', $request->companyId)->first();
+            if (!empty($contact)) {
+                $active_contact_id = $contact->contact_id;
+                Session::put('contact_id', $active_contact_id );
+            }
+            else {
+                $contact = Contact::where('secondary_id', $request->companyId)->first();
+                $active_contact_id = $contact->secondary_id;
+                Session::put('contact_id', $active_contact_id );
+            }
+        }
+
+
 }
 
