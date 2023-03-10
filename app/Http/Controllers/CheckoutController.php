@@ -27,13 +27,13 @@ class CheckoutController extends Controller
         if ($contact) {
             $isApproved = $contact->contact_id;
         }
-        if (Auth::check() && !empty($isApproved)) {
+        if (Auth::check() && (!empty($contact->contact_id) || !empty($contact->secondary_id))) {
             $tax_class = TaxClass::where('is_default', 1)->first();
             $states = UsState::all();
             $payment_methods = PaymentMethod::with('options')->get();
             $user_address = Contact::where('user_id', $user_id)->first();
             return view('checkout/index2', compact('user_address', 'states', 'payment_methods', 'tax_class'));
-        } else if (Auth::check() && empty($isApproved)) {
+        } else if (Auth::check() && (!empty($contact->contact_id) || !empty($contact->secondary_id))) {
             Session::flash('message', "Your account is being reviewed you can't proceed to checkout, however you can make carts");
             return redirect('/cart/');
         } else {

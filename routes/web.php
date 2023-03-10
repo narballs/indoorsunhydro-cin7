@@ -62,6 +62,7 @@ use Illuminate\Support\Facades\Auth;
     Route::get('/user-addresses/', [UserController::class, 'user_addresses'])->name('user_addresses');
     Route::get('/user-order-detail/{id}', [UserController::class, 'user_order_detail'])->name('user-order-detail');
     Route::post('/register/basic/create', [UserController::class, 'process_signup'])->name('register');
+    Route::post('/switch-company/', [UserController::class, 'switch_company'])->name('switch-company');
     Route::post('/register/basic/invitation', [UserController::class, 'invitation_signup'])->name('invitation.signup');
     Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 
