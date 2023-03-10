@@ -48,107 +48,107 @@ class UserController extends Controller
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
-         */
-    public function index(Request $request)
-        {
-            $page = $request->page;
-            $search = $request->search;
-            $primaryUserSearch = $request->primaryUserSearch;
-            $secondaryUserSearch = $request->secondaryUserSearch;
-            $usersData = $request->usersData;
-            $secondaryUser = $request->secondaryUser;
-            $user_query = User::orderBy('id', 'DESC');
-            if (!empty($usersData)) {
-                if ($usersData == 'admin-user') {
-                    $user_query = $user_query->role(['admin']);
-                } elseif ($usersData == 'cin7-merged') {
-                    $Cin7Merged = Contact::whereNotNull('contact_id');
-                    $primary_contacts =  $Cin7Merged->paginate(10);
-                    return view('admin.users.admin_primary_contact', compact(
-                        'primary_contacts',
-                        'secondaryUser',
-                        'usersData'
-                    ))
-                        ->with('i', ($request->input('page', 1) - 1) * 10);
-                } elseif ($usersData == 'not-merged') {
-                    $Cin7notMerged = Contact::whereNull('contact_id');
-                    $secondary_contacts =  $Cin7notMerged->paginate(10);
-                    return view('admin.users.admin_secondary_contact', compact(
-                        'secondary_contacts',
-                        'secondaryUser',
-                        'usersData'
-                    ))
-                        ->with('i', ($request->input('page', 1) - 1) * 10);
-                }
-            }
-            if (!empty($secondaryUser)) {
-                if ($secondaryUser == 'secondary-user') {
-                    $user_query = Contact::where('is_parent', 0);
-                    $secondary_contacts =  $user_query->paginate(10);
-                    return view('admin.users.admin_secondary_contact', compact(
-                        'secondary_contacts',
-                        'secondaryUser'
-                    ))
-                        ->with('i', ($request->input('page', 1) - 1) * 10);
-                }
-                if ($secondaryUser == 'primary-user') {
-                    $user_query = Contact::where('is_parent', 1);
-                    $primary_contacts =  $user_query->paginate(10);
-                    return view('admin.users.admin_primary_contact', compact(
-                        'primary_contacts',
-                        'secondaryUser'
-                    ))
-                        ->with('i', ($request->input('page', 1) - 1) * 10);
-                }
-            }
-            if (!empty($search)) {
-                $user_query = $user_query->where('first_name', 'LIKE', '%' . $search . '%')
-                    ->orWhere('last_name', 'like', '%' . $search . '%')
-                    ->orWhere('email', 'like', '%' . $search . '%');
-            }
-            if (!empty($primaryUserSearch)) {
-                $primary_contacts = Contact::where('firstName', 'LIKE', '%' . $primaryUserSearch . '%')
-                    ->orWhere('lastName', 'like', '%' . $primaryUserSearch . '%')
-                    ->orWhere('email', 'like', '%' . $primaryUserSearch . '%')
-                    ->orWhere('contact_id', 'like', '%' . $primaryUserSearch . '%')
-                    ->orWhere('company', 'like', '%' . $primaryUserSearch . '%');
-                $primary_contacts =  $primary_contacts->paginate(10);
+     */
+public function index(Request $request)
+    {
+        $page = $request->page;
+        $search = $request->search;
+        $primaryUserSearch = $request->primaryUserSearch;
+        $secondaryUserSearch = $request->secondaryUserSearch;
+        $usersData = $request->usersData;
+        $secondaryUser = $request->secondaryUser;
+        $user_query = User::orderBy('id', 'DESC');
+        if (!empty($usersData)) {
+            if ($usersData == 'admin-user') {
+                $user_query = $user_query->role(['admin']);
+            } elseif ($usersData == 'cin7-merged') {
+                $Cin7Merged = Contact::whereNotNull('contact_id');
+                $primary_contacts =  $Cin7Merged->paginate(10);
                 return view('admin.users.admin_primary_contact', compact(
                     'primary_contacts',
                     'secondaryUser',
-                    'primaryUserSearch'
+                    'usersData'
                 ))
                     ->with('i', ($request->input('page', 1) - 1) * 10);
-            }
-            if (!empty($secondaryUserSearch)) {
-                $secondary_contacts = Contact::where('firstName', 'LIKE', '%' . $secondaryUserSearch . '%')
-                    ->orWhere('lastName', 'like', '%' . $secondaryUserSearch . '%')
-                    ->orWhere('email', 'like', '%' . $secondaryUserSearch . '%')
-                    ->orWhere('contact_id', 'like', '%' . $secondaryUserSearch . '%')
-                    ->orWhere('company', 'like', '%' . $secondaryUserSearch . '%');
-                $secondary_contacts =  $secondary_contacts->paginate(10);
+            } elseif ($usersData == 'not-merged') {
+                $Cin7notMerged = Contact::whereNull('contact_id');
+                $secondary_contacts =  $Cin7notMerged->paginate(10);
                 return view('admin.users.admin_secondary_contact', compact(
                     'secondary_contacts',
                     'secondaryUser',
-                    'secondaryUserSearch'
+                    'usersData'
                 ))
-                    ->with(
-                        'i',
-                        ($request->input('page', 1) - 1) * 10
-                    );
+                    ->with('i', ($request->input('page', 1) - 1) * 10);
             }
-            $data = $user_query->paginate(10);
-            $users = User::role(['Admin'])->get();
-            $count = $users->count();
-            return view('admin.users.index', compact(
-                'data',
-                'count',
-                'search',
-                'usersData',
-                'secondaryUser'
-            ))
-                ->with('i', ($request->input('page', 1) - 1) * 5);
         }
+        if (!empty($secondaryUser)) {
+            if ($secondaryUser == 'secondary-user') {
+                $user_query = Contact::where('is_parent', 0);
+                $secondary_contacts =  $user_query->paginate(10);
+                return view('admin.users.admin_secondary_contact', compact(
+                    'secondary_contacts',
+                    'secondaryUser'
+                ))
+                    ->with('i', ($request->input('page', 1) - 1) * 10);
+            }
+            if ($secondaryUser == 'primary-user') {
+                $user_query = Contact::where('is_parent', 1);
+                $primary_contacts =  $user_query->paginate(10);
+                return view('admin.users.admin_primary_contact', compact(
+                    'primary_contacts',
+                    'secondaryUser'
+                ))
+                    ->with('i', ($request->input('page', 1) - 1) * 10);
+            }
+        }
+        if (!empty($search)) {
+            $user_query = $user_query->where('first_name', 'LIKE', '%' . $search . '%')
+                ->orWhere('last_name', 'like', '%' . $search . '%')
+                ->orWhere('email', 'like', '%' . $search . '%');
+        }
+        if (!empty($primaryUserSearch)) {
+            $primary_contacts = Contact::where('firstName', 'LIKE', '%' . $primaryUserSearch . '%')
+                ->orWhere('lastName', 'like', '%' . $primaryUserSearch . '%')
+                ->orWhere('email', 'like', '%' . $primaryUserSearch . '%')
+                ->orWhere('contact_id', 'like', '%' . $primaryUserSearch . '%')
+                ->orWhere('company', 'like', '%' . $primaryUserSearch . '%');
+            $primary_contacts =  $primary_contacts->paginate(10);
+            return view('admin.users.admin_primary_contact', compact(
+                'primary_contacts',
+                'secondaryUser',
+                'primaryUserSearch'
+            ))
+                ->with('i', ($request->input('page', 1) - 1) * 10);
+        }
+        if (!empty($secondaryUserSearch)) {
+            $secondary_contacts = Contact::where('firstName', 'LIKE', '%' . $secondaryUserSearch . '%')
+                ->orWhere('lastName', 'like', '%' . $secondaryUserSearch . '%')
+                ->orWhere('email', 'like', '%' . $secondaryUserSearch . '%')
+                ->orWhere('contact_id', 'like', '%' . $secondaryUserSearch . '%')
+                ->orWhere('company', 'like', '%' . $secondaryUserSearch . '%');
+            $secondary_contacts =  $secondary_contacts->paginate(10);
+            return view('admin.users.admin_secondary_contact', compact(
+                'secondary_contacts',
+                'secondaryUser',
+                'secondaryUserSearch'
+            ))
+                ->with(
+                    'i',
+                    ($request->input('page', 1) - 1) * 10
+                );
+        }
+        $data = $user_query->paginate(10);
+        $users = User::role(['Admin'])->get();
+        $count = $users->count();
+        return view('admin.users.index', compact(
+            'data',
+            'count',
+            'search',
+            'usersData',
+            'secondaryUser'
+        ))
+            ->with('i', ($request->input('page', 1) - 1) * 5);
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -324,6 +324,40 @@ class UserController extends Controller
                         "last_name" => $request->get('last_name'),
                         "password" => bcrypt($request->get('password'))
                     ]);
+                    $user = User::latest()->first();
+                    $registering_email = $user->email;
+                    // serach weather contact already exist;
+                    $existing_contacts = Contact::where('email', $registering_email)->get(); 
+                    if ($existing_contacts->isNotEmpty()) {
+                        foreach($existing_contacts as $existing_contact) {
+                            $existing_contact->user_id = $user->id;
+                            $existing_contact->save();
+                            if ($existing_contact->secondary_id) {
+                                $secondary_id = $existing_contact->secondary_id;
+                            }
+                            else {
+                                $secondary_id = '';
+                            }
+                            if ($existing_contact->contact_id || $existing_contact->secondary_id) {
+                                $user_log = UserLog::create([
+                                    'user_id' => $user->id,
+                                    'secondary_id' => $secondary_id,
+                                    'contact_id' => $existing_contact->contact_id,
+                                    'action' => 'Singup',
+                                    'user_notes' => 'Existing Contact in Cin7 '.Carbon::now()->toDateTimeString()
+                                ]);
+                            }
+                            Auth::loginUsingId($user->id);
+                        }
+                        return response()->json([
+                            'code' => 201,
+                            'success' => true,
+                            'updated' => true,
+                            'msg' => 'Existing contact updated'
+                            ]);
+
+                    }
+
                 }
 
             return response()->json(['success' => true, 'created' => true, 'msg' => 'Welcome, new player.']);
