@@ -529,11 +529,20 @@ public function index(Request $request)
             if (!$user_id) {
                 return redirect('/user/');
             }
-
             $user = User::where('id', $user_id)->first();
 
             $user_address = Contact::where('user_id', $user_id)->first();
-            $secondary_contacts = Contact::where('parent_id', $user_address->contact_id)->get();
+            $secondary_contacts = Contact::where('user_id', $user_id)->with('parent')->get();
+           // echo '<pre>';print_r($secondary_contacts);exit;
+            // dd($secondary_contacts);
+            // foreach($secondary_contacts as $secondary_contact) {
+            //     echo $secondary_contact->email;echo '<pre>';
+            //    foreach($secondary_contact->parent as $parent) {
+            //     echo $parent->email;
+            //    }
+            // }
+            // exit;
+       
             $list = BuyList::where('id', 20)->with('list_products.product.options')->first();
 
             $contact = Contact::where('email', $user_address->email)->first();
@@ -649,6 +658,7 @@ public function index(Request $request)
 
     public function switch_user($id)
         {
+
             $switch_user = Auth::loginUsingId($id);
             $auth_user_email = $switch_user->email;
             session()->put('logged_in_as_another_user', $auth_user_email);

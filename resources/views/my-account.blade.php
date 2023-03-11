@@ -50,12 +50,14 @@
 												@php
 													if($company->contact_id) {
 														$contact_id = $company->contact_id;
+														$primary = '(primary)';
 													} 
 													else {
 														$contact_id = $company->secondary_id;
+														$primary = '(secondary)';
 													}
 												@endphp
-											  	<option class="form-control" value="{{$contact_id}}">{{$company->company}}</option>
+											  	<option class="form-control" value="{{$contact_id}}">{{$company->company}} {{$primary}}</option>
 											@endforeach
 										</select>
 								</form>
@@ -771,7 +773,7 @@
 											</th>
 										</tr>
 									</thead>
-									@if($parent)
+							<!-- 		@if($parent)
 									<tbody>
 										<tr>
 											<td>
@@ -812,9 +814,11 @@
 											</td>
 										</tr>
 									</tbody>
-									@endif
+									@endif -->
 									<tbody id="secondary_user">
+										<?php $secondary_contacts;?>
 										@foreach ($secondary_contacts as $childeren)
+										  
 										<tr id="row-{{$childeren->id}}">
 											@if($childeren->company)
 											<td>
@@ -887,7 +891,11 @@
 											</td>
 											@endif
 											<td>
-												<span class="badge bg-secondary">secondary contact</span>
+												@if($childeren->contact_id != NULL)
+													<span class="badge bg-primary">primary contact</span>
+												 @else
+												    <span class="badge bg-secondary">secondary contact</span>
+												 @endif
 											</td>
 											<td style="width: 111px !important;">
 												<a href="#"><img src="/theme/img/invite_iccons.png" alt=""></a>
@@ -904,7 +912,57 @@
 												<a href="#" id="{{$childeren->id}}" class="deleteIcon"><img src="/theme/img/delete_iccon.png" alt=""></a>
 											</td>
 										</tr>
+											@foreach($childeren->parent as $parent)
+										  	<tr class="bg-warning text-white">
 
+										  		<td>
+										  			{{$parent->company}}
+										  		</td>
+										  		@if($parent->firstName)
+										  			<td>
+										  				{{$parent->firstName}}
+										  			</td>
+										  		@else
+										  		<td>	
+                                                   <span class="badge bg-secondary">empty</span>
+										  		</td>
+										  		@endif
+										  		@if($parent->lastName)
+										  		<td>
+										  			{{$parent->lastName}}
+										  		</td>
+										  		@else
+										  		<td>
+										  			<span class="badge bg-secondary">empty</span>
+										  		</td>
+										  		@endif
+										  		@if($parent->jobTitle)
+										  		<td>
+										  			{{$parent->jobTitle}}
+										  		</td>
+										  		@else
+										  		<td>
+										  			<span class="badge bg-secondary">empty</span>
+										  		</td>
+										  		@endif
+										  		<td>
+										  			{{$parent->email}}
+										  		</td>
+										  		@if($parent->phone)
+										  		<td>
+										  			{{$parent->phone}}
+										  		</td>
+										  		@else
+										  		<td>	
+										  			<span class="badge bg-secondary">empty</span>
+										  		</td>
+										  		@endif
+										  		<td></td>
+										  		<td>
+										  			<span class="badge bg-success">parent account</span>
+										  		</td>
+										  	</tr>
+										@endforeach
 										@endforeach
 									</tbody>
 								</table>
