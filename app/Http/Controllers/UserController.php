@@ -316,19 +316,30 @@ public function index(Request $request)
                 $user = User::create([
                     'email' => strtolower($request->get('email'))
                 ]);
-                    return response()->json(['success' => true, 'created' => true, 'msg' => 'Welcome, new player.']);
+                    return response()->json([
+                        'success' => true,
+                         'created' => true, 
+                         'msg' => 'Welcome, new player.'
+                     ]);
+
                 } else {
                     $user = User::latest()->first();
                     $user_id = $user->id;
-                    $user_Update = User::where("id", $user_id)->update([
-                        "first_name" => $request->get('first_name'),
-                        "last_name" => $request->get('last_name'),
-                        "password" => bcrypt($request->get('password'))
-                    ]);
-                    $user = User::latest()->first();
                     $registering_email = $user->email;
-                    // serach weather contact already exist;
                     $existing_contacts = Contact::where('email', $registering_email)->get(); 
+                    if ($existing_contacts->isNotEmpty()) {
+                        $user_Update = User::where("id", $user_id)->update([
+                            "password" => bcrypt($request->get('password'))
+                        ]);
+                    }
+                    else {
+                        $user_Update = User::where("id", $user_id)->update([
+                            "first_name" => $request->get('first_name'),
+                            "last_name" => $request->get('last_name'),
+                            "password" => bcrypt($request->get('password'))
+                        ]);
+                    }
+                   
                     if ($existing_contacts->isNotEmpty()) {
                         foreach($existing_contacts as $existing_contact) {
                             $existing_contact->user_id = $user->id;
@@ -576,15 +587,7 @@ public function index(Request $request)
             $secondary_contacts = Contact::whereIn('id', $all_ids)->get();
 
 
-           // echo '<pre>';print_r($secondary_contacts);exit;
-            // dd($secondary_contacts);
-            // foreach($secondary_contacts as $secondary_contact) {
-            //     echo $secondary_contact->email;echo '<pre>';
-            //    foreach($secondary_contact->parent as $parent) {
-            //     echo $parent->email;
-            //    }
-            // }
-            // exit;
+           
        
             $list = BuyList::where('id', 20)->with('list_products.product.options')->first();
 

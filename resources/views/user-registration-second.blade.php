@@ -206,16 +206,18 @@
 						<div class="form-signup-secondary">
 							<div class="user-info">
 								<div class="row mt-3">
-									<div class="col-md-6">
-										<input type="text" placeholder="&#xf007;  First Name" id="company_website"
-											name="first_name" class="form-control mt-3 fontAwesome">
-										<div class="text-danger" id="first_name_errors"></div>
-									</div>
-									<div class="col-md-6">
-										<input type="text" placeholder="&#xf007;  Last Name" id="company_website"
-											name="last_name" class="form-control fontAwesome mt-3">
-										<div class="text-danger" id="last_name_errors"></div>
-									</div>
+									
+										<div class="col-md-6">
+											<input type="text" placeholder="&#xf007;  First Name" id="user_first_name"
+												name="first_name" class="form-control mt-3 fontAwesome">
+											<div class="text-danger" id="first_name_errors"></div>
+										</div>
+										<div class="col-md-6">
+											<input type="text" placeholder="&#xf007;  Last Name" id="user_last_name"
+												name="last_name" class="form-control fontAwesome mt-3">
+											<div class="text-danger" id="last_name_errors"></div>
+										</div>
+									
 									<div class="col-md-12">
 										<input type="password" placeholder="&#xf023;  Password" id="company_name"
 											name="password" class="form-control mt-2 company-info fontAwesome mt-3">
@@ -364,6 +366,9 @@
 					$( ".white-panel" ).add();
 					$("#login-form-section").removeClass('d-none');
 					$("#company").removeClass('d-none');
+					$('#user_first_name').addClass('d-none');
+		    		$('#user_last_name').addClass('d-none');
+
 
 				}
    			},
@@ -510,7 +515,7 @@
 		    			$("#thanks").removeClass('d-none');
 		    			$(".address").hide();
 		    			$("#company-detail").addClass('d-none');
-
+		    			
 		    		}
 		    		else if (response.success == true) {
 		    			$('#company-round').attr('src','/theme/img/round-border.png');
@@ -550,6 +555,8 @@
 	function thankYou() {
 		$('#address-bold').css( 'font-weight', 'normal');
 		$('#thankyou-bold').css( 'font-weight', '700' );
+		$('#user_first_name').removeClass('d-none');
+		 $('#user_last_name').removeClass('d-none');
 
 		var street_address = $('input[name=street_address]').val();
 		var suit_apartment = $('input[name=suit_apartment]').val();
@@ -579,6 +586,8 @@
 						$(".company-address").hide();
 						$( ".white-panel" ).removeClass();
 						$("#thanks").removeClass('d-none');
+						$('#user_first_name').removeClass('d-none');
+		    			$('#user_last_name').removeClass('d-none');
 					}
 
 		    	},
