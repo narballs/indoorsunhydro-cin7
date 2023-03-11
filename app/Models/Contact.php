@@ -64,8 +64,13 @@ class Contact extends Model
         return $this->hasMany('App\Models\UsCity', 'id', 'city_id');
     }
 
-    public function secondary_contact()
+    public function children()
     {
-        return $this->hasMany('App\Models\SecondaryContact', 'parent_id', 'contact_id')->orderBy('id', 'desc');
+        return $this->belongsTo('App\Models\Contact', 'conatct_id','parent_id');
+    }
+
+    public function parent()
+    {
+        return $this->hasMany('App\Models\Contact', 'contact_id', 'parent_id');
     }
 }
