@@ -912,57 +912,6 @@
 												<a href="#" id="{{$childeren->id}}" class="deleteIcon"><img src="/theme/img/delete_iccon.png" alt=""></a>
 											</td>
 										</tr>
-											@foreach($childeren->parent as $parent)
-										  	<tr class="bg-warning text-white">
-
-										  		<td>
-										  			{{$parent->company}}
-										  		</td>
-										  		@if($parent->firstName)
-										  			<td>
-										  				{{$parent->firstName}}
-										  			</td>
-										  		@else
-										  		<td>	
-                                                   <span class="badge bg-secondary">empty</span>
-										  		</td>
-										  		@endif
-										  		@if($parent->lastName)
-										  		<td>
-										  			{{$parent->lastName}}
-										  		</td>
-										  		@else
-										  		<td>
-										  			<span class="badge bg-secondary">empty</span>
-										  		</td>
-										  		@endif
-										  		@if($parent->jobTitle)
-										  		<td>
-										  			{{$parent->jobTitle}}
-										  		</td>
-										  		@else
-										  		<td>
-										  			<span class="badge bg-secondary">empty</span>
-										  		</td>
-										  		@endif
-										  		<td>
-										  			{{$parent->email}}
-										  		</td>
-										  		@if($parent->phone)
-										  		<td>
-										  			{{$parent->phone}}
-										  		</td>
-										  		@else
-										  		<td>	
-										  			<span class="badge bg-secondary">empty</span>
-										  		</td>
-										  		@endif
-										  		<td></td>
-										  		<td>
-										  			<span class="badge bg-success">parent account</span>
-										  		</td>
-										  	</tr>
-										@endforeach
 										@endforeach
 									</tbody>
 								</table>
