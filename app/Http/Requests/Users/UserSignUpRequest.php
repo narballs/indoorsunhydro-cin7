@@ -29,14 +29,14 @@ class UserSignUpRequest extends FormRequest
             ];
         } else {
             return [
-                'first_name' => [
-                    'required',
-                    'regex:/^[a-zA-Z ]*$/'
-                ],
-                'last_name' =>  [
-                    'required',
-                    'regex:/^[a-zA-Z ]*$/'
-                ],
+            //     'first_name' => [
+            //         'required',
+            //         'regex:/^[a-zA-Z ]*$/'
+            //     ],
+            //     'last_name' =>  [
+            //         'required',
+            //         'regex:/^[a-zA-Z ]*$/'
+            //     ],
                 'password' => 'required',
                 'confirm_password' => 'required|same:password'
             ];
