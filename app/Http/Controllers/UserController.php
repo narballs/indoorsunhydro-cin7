@@ -844,7 +844,8 @@ class UserController extends Controller
             $data['plain'] = $plain_password;
             MailHelper::sendMailNotification('emails.reset-password', $data);
 
-    }
+         return redirect()->back()->with('success', 'password send Successfully');
+      }
 
     public function reset_password(Request $request) {
         User::where('email', $request->email)
