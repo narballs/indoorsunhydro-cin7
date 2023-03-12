@@ -153,6 +153,8 @@
                     <input type="hidden" value='{{$user->id}}' id='{{$user->id}}'>
                     @endif
                     @endif
+                    <a class="btn btn-warning btn-sm" href="{{ url('admin/send-password/'.$user->id) }}">Send password</a>
+
                 </td>
             </tr>
             @endforeach

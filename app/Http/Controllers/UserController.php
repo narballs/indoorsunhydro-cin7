@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
+use App\Helpers\MailHelper;
 
 class UserController extends Controller
 {
@@ -300,7 +301,12 @@ class UserController extends Controller
                 if (!empty(session()->get('cart'))) {
                     return redirect()->route('cart');
                 } else {
-                    return redirect()->route('my_account');
+                    if ($user->is_updated == 1) {
+                        return redirect()->route('my_account');
+                    }
+                    else {
+                         return view('reset-password', compact('user'));
+                    }
                 }
             }
         } else {
@@ -824,5 +830,29 @@ class UserController extends Controller
                 'message' => 'Company Switch Successfully !'
             ]);
         }
+    }
+
+
+
+    public function send_password($id) {
+        $user = User::where('id',$id)->first();
+        $plain_password = $user->new_password;
+            $data['email'] = $user->email;
+            $data['content'] = 'Password Reset';
+            $data['subject'] = 'Password Reset';
+            $data['from'] = env('MAIL_FROM_ADDRESS');
+            $data['plain'] = $plain_password;
+            MailHelper::sendMailNotification('emails.reset-password', $data);
+
+    }
+
+    public function reset_password(Request $request) {
+        User::where('email', $request->email)
+        ->update([
+            'password' => bcrypt($request->password),
+            'is_updated' => 1
+        ]);
+        return redirect('my-account');
+
     }
 }

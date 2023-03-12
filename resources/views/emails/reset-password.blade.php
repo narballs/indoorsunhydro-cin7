@@ -9,5 +9,6 @@
     <p>{{$plain}}</p>
    
     <p>Thank you</p>
+    <a href="{{url('user')}}" class="btn btn-sucess">set password</a>
 </body>
 </html>
