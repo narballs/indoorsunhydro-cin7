@@ -369,7 +369,6 @@
 					$('#user_first_name').addClass('d-none');
 		    		$('#user_last_name').addClass('d-none');
 
-
 				}
    			},
    			error: function (response) {
