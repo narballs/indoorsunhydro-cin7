@@ -76,6 +76,11 @@
 								</div>
 							</div>
 							<div class="col-md-6 col-xl-6 col-xs-12 col-12 col-sm-12">
+								@if ($message = Session::get('success'))
+								<div class="alert alert-danger  text-dark">
+									<p>{{ $message }}</p>
+								</div>
+								@endif
 							</div>
 						</div>
 					</div>
