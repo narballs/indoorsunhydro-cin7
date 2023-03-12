@@ -199,7 +199,9 @@
 						<div class="col-lg-6">
 							<h3 class="h6">Billing address</h3>
 							<address>
+								@if(!empty($customer->firstName && $customer->lastName))
 								<strong>{{$customer->firstName}}&nbsp;{{$customer->lastName}}</strong><br>
+								@endif
 								{{$customer->postalAddress1}}<br>
 								{{$customer->postalAddress2}}<br>
 								{{$customer->postalCity}}, {{$customer->state}}<br>

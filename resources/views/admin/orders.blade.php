@@ -54,9 +54,9 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($orders as $key=>$order)
+                @foreach($orders as $order)
                 <tr>
-                    <td>{{$key+1}}</td>
+                    <td>{{$order->id}}</td>
                     <td>{{$order->createdDate}}</td>
                     <td>
                         @if($order->createdby)

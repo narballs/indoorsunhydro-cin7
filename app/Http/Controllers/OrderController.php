@@ -9,22 +9,11 @@ use App\Models\Product;
 use App\Models\ApiOrderItem;
 use App\Models\ApiOrder;
 use App\Models\Contact;
-use App\Models\TaxClass;
-use Session;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Redirect;
 use Carbon\Carbon;
-use App\Jobs\SalesOrders;
-use App\Models\PaymentMethod;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\Subscribe;
-use App\Helpers\MailHelper;
-use Spatie\Permission\Models\Role;
-use DB;
-
-
+use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB as FacadesDB;
+use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
@@ -49,14 +38,13 @@ class OrderController extends Controller
         $contact = Contact::where('contact_id', $session_contact_id)->first();
         if ($contact) {
             $active_contact_id = $contact->contact_id;
-        }
-        else {
-           $contact = Contact::where('secondary_id', $session_contact_id)->first(); 
-           $active_contact_id = $contact->parent_id;
+        } else {
+            $contact = Contact::where('secondary_id', $session_contact_id)->first();
+            $active_contact_id = $contact->parent_id;
         }
         // dd($active_contact_id);
-        
-  
+
+
         if ($active_contact_id) {
             $order = new ApiOrder;
             $cart_items = session()->get('cart');
@@ -184,7 +172,7 @@ class OrderController extends Controller
 
             $data['subject'] = 'Your order has been received';
             $data['email'] = $email;
-           // MailHelper::sendMailNotification('emails.admin-order-received', $data);
+            // MailHelper::sendMailNotification('emails.admin-order-received', $data);
 
             $lineItems = [];
             foreach ($order_items as $order_item) {
