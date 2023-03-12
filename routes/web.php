@@ -123,6 +123,7 @@ use Illuminate\Support\Facades\Auth;
         Route::get('admin/get-parent', [ContactController::class, 'getParent']);
         Route::post('admin/assign-parent-child', [ContactController::class, 'assingParentChild']);
         Route::get('admin/user-switch/{id}', [UserController::class, 'switch_user'])->name('users.switch');
+        Route::get('admin/send-password/{id}', [UserController::class, 'send_password'])->name('users.send_password');
         Route::get('admin/go-back', [UserController::class, 'switch_user_back'])->name('users.switch_user_back');
         Route::get('admin/logout', function () {
             Auth::logout();
@@ -134,6 +135,7 @@ use Illuminate\Support\Facades\Auth;
     Route::post('create/secondary/user', [UserController::class, 'create_secondary_user']);
     Route::delete('secondary/user/delete', [UserController::class, 'delete_secondary_user'])->name('secondary_user.delete');
     Route::post('/reset-password', [UserController::class, 'reset_password'])->name('reset_password');
+
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('/customer/invitation/{hash}', [ContactController::class, 'contomer_invitation']);
     Route::group(['middleware' => ['auth']], function () {});

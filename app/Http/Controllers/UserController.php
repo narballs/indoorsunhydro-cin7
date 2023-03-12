@@ -825,4 +825,9 @@ class UserController extends Controller
             ]);
         }
     }
+
+    public function send_password($id) {
+        dd($id);
+
+    }
 }
