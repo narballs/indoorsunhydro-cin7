@@ -16,11 +16,16 @@
                     </div>
                     @if(Auth::user())
                     <div>
+                        @php
+                        $session_contact_company = Session::get('company');
+                        @endphp
                         <a class="text-white top-bar-logout" href="{{ route('logout') }}"
                             onclick="event.preventDefault(); document.getElementById('frm-logout').submit();">
                             <span class="menu-title">Logout</span>
+                            @if(!empty($session_contact_company))
+                            <span class="top-bar-logout"> ({{$session_contact_company}})</span>
+                            @endif
                         </a>
-
                         <form style="display:none;" id="frm-logout" action="{{ route('logout') }}" method="POST">
                             {{ csrf_field() }}
                             <input class="btn btn-link text-white" type="submit" value="logout">

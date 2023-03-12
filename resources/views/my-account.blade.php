@@ -40,28 +40,39 @@
 							<div class="col-md-2">
 							</div>
 							<div class="col-md-4 text-left mt-2">
-								<span class="d-block my-acount-profile text-capitalize">{{$user->first_name}} {{$user->last_name}}</span>
+								<span class="d-block my-acount-profile text-capitalize">{{$user->first_name}}
+									{{$user->last_name}}</span>
 								<span class="d-block" style="font-family: Roboto">{{$user->email}}</span>
 								<div class="col-md-12 ps-0">
+									@php
+									$session_contact_id = Session::get('contact_id');
+									@endphp
 									<form action="">
-										<select class="form-select" name="company_switch" id="company_switch" onchange="switch_company()" aria-label="Default select example" style="background: #F4FFEC !important;">
+										<select class="form-select" name="company_switch" id="company_switch"
+											onchange="switch_company()" aria-label="Default select example"
+											style="background: #F4FFEC !important;">
 											<option class="form-select">Select one company</option>
 											@foreach($companies as $company)
-												@php
-													if($company->contact_id) {
-														$contact_id = $company->contact_id;
-														$primary = '(primary)';
-													} 
-													else {
-														$contact_id = $company->secondary_id;
-														$primary = '(secondary)';
-													}
-												@endphp
-											  	<option class="form-control" value="{{$contact_id}}">{{$company->company}} {{$primary}}</option>
+											@php
+											if($company->contact_id) {
+											$contact_id = $company->contact_id;
+											$primary = '(primary)';
+											}
+											else {
+											$contact_id = $company->secondary_id;
+											$primary = '(secondary)';
+											}
+											@endphp
+											<option class="form-control" value="{{$contact_id}}" {{ (
+												$session_contact_id==$contact_id) ? 'selected' : '' }}>
+												{{$company->company}}{{$primary}}
+												{{$contact_id}}
+
+											</option>
 											@endforeach
 										</select>
-								</form>
-									
+									</form>
+
 								</div>
 							</div>
 							<div class="col-md-6 col-xl-6 col-xs-12 col-12 col-sm-12">
@@ -773,7 +784,7 @@
 											</th>
 										</tr>
 									</thead>
-							<!-- 		@if($parent)
+									<!-- 		@if($parent)
 									<tbody>
 										<tr>
 											<td>
@@ -818,7 +829,7 @@
 									<tbody id="secondary_user">
 										<?php $secondary_contacts;?>
 										@foreach ($secondary_contacts as $childeren)
-										  
+
 										<tr id="row-{{$childeren->id}}">
 											@if($childeren->company)
 											<td>
@@ -892,24 +903,27 @@
 											@endif
 											<td>
 												@if($childeren->contact_id != NULL)
-													<span class="badge bg-primary">primary contact</span>
-												 @else
-												    <span class="badge bg-secondary">secondary contact</span>
-												 @endif
+												<span class="badge bg-primary">primary contact</span>
+												@else
+												<span class="badge bg-secondary">secondary contact</span>
+												@endif
 											</td>
 											<td style="width: 111px !important;">
 												<a href="#"><img src="/theme/img/invite_iccons.png" alt=""></a>
 												@php
 												$url = URL::to("/");
-												$url = $url . '/customer/invitation/' . $childeren->hashKey . '?is_secondary=1';
+												$url = $url . '/customer/invitation/' . $childeren->hashKey .
+												'?is_secondary=1';
 												@endphp
 												<a class="btn text-dark p-0">
 													<span id="copyUrl" data-id="{{$url}}">
-														<img src="/theme/img/copy_link_iccon.png" class="d-block" alt="">
+														<img src="/theme/img/copy_link_iccon.png" class="d-block"
+															alt="">
 													</span>
 
 												</a>
-												<a href="#" id="{{$childeren->id}}" class="deleteIcon"><img src="/theme/img/delete_iccon.png" alt=""></a>
+												<a href="#" id="{{$childeren->id}}" class="deleteIcon"><img
+														src="/theme/img/delete_iccon.png" alt=""></a>
 											</td>
 										</tr>
 										@endforeach
