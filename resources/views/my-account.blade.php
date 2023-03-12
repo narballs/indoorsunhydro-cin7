@@ -66,8 +66,6 @@
 											<option class="form-control" value="{{$contact_id}}" {{ (
 												$session_contact_id==$contact_id) ? 'selected' : '' }}>
 												{{$company->company}}{{$primary}}
-												{{$contact_id}}
-
 											</option>
 											@endforeach
 										</select>
@@ -1842,12 +1840,7 @@
 					'companyId' : company
 				},
 				  success: function(response) {
-				  	$('#spinner2').addClass('d-none');
-				  	  console.log(response.secondary_contact.company);
-				  	  // $("#secondary_user").html(response);
-				      $('#staticBackdrop').modal('hide');
-				      $('#sample_form').trigger("reset");
-				      $('#auto_click').trigger('click');
+				  	 window.location.reload();
 			        }
 			    });
 		}
