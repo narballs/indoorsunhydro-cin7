@@ -55,17 +55,18 @@ class RandomPasswordGenerator extends Command
 
 
                 $user->password = $encrypted_password;
+                $user->new_password = $plain_password;
                 $user->hash = $hash;
                 $user->save();
-                if ($user->email == 'acozy88@gmail.com') {
-                    $data['name'] = 'Waqas Zeeshan';
-                    $data['email'] = 'wqszeeshan@gmail.com';
-                    $data['content'] = 'Password Reset';
-                    $data['subject'] = 'Password Reset';
-                    $data['from'] = env('MAIL_FROM_ADDRESS');
-                    $data['plain'] = $plain_password;
-                    MailHelper::sendMailNotification('emails.reset-password', $data);
-                }
+                // if ($user->email == 'acozy88@gmail.com') {
+                //     $data['name'] = 'Waqas Zeeshan';
+                //     $data['email'] = 'wqszeeshan@gmail.com';
+                //     $data['content'] = 'Password Reset';
+                //     $data['subject'] = 'Password Reset';
+                //     $data['from'] = env('MAIL_FROM_ADDRESS');
+                //     $data['plain'] = $plain_password;
+                //     MailHelper::sendMailNotification('emails.reset-password', $data);
+                // }
             }
             
             // $contacts = Contact::all();
