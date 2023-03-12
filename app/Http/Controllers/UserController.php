@@ -301,7 +301,13 @@ public function index(Request $request)
                     if (!empty(session()->get('cart'))) {
                         return redirect()->route('cart');
                     } else {
-                        return redirect()->route('my_account');
+                        if ($user->is_updated  == 1) {
+                            return redirect()->route('my_account');
+                        }
+                        else {
+                            return view('reset-password', compact('user'));
+                        }
+
                     }
                 }
             } else {
@@ -814,6 +820,16 @@ public function index(Request $request)
                 $active_contact_id = $contact->secondary_id;
                 Session::put('contact_id', $active_contact_id );
             }
+        }
+
+        public function reset_password(Request $request) {
+            User::where('email', $request->email)
+            ->update([
+                'password' => bcrypt($request->password),
+                'is_updated' => 1
+            ]);
+            return redirect('my-account');
+
         }
 
 

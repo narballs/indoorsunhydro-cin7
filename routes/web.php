@@ -133,6 +133,7 @@ use Illuminate\Support\Facades\Auth;
     Route::post('admin/send-invitation-email', [ContactController::class, 'send_invitation_email'])->name('admin.send_invitation_email');
     Route::post('create/secondary/user', [UserController::class, 'create_secondary_user']);
     Route::delete('secondary/user/delete', [UserController::class, 'delete_secondary_user'])->name('secondary_user.delete');
+    Route::post('/reset-password', [UserController::class, 'reset_password'])->name('reset_password');
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('/customer/invitation/{hash}', [ContactController::class, 'contomer_invitation']);
     Route::group(['middleware' => ['auth']], function () {});
