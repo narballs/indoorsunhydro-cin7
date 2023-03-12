@@ -807,6 +807,10 @@ class UserController extends Controller
                 'contact_id' => $active_contact_id,
                 'company' => $active_company
             ]);
+            return response()->json([
+                'status' => '204',
+                'message' => 'Company Switch Successfully !'
+            ]);
         } else {
             $contact = Contact::where('secondary_id', $request->companyId)->first();
             $active_contact_id = $contact->secondary_id;
@@ -814,6 +818,10 @@ class UserController extends Controller
             Session::put([
                 'contact_id' => $active_contact_id,
                 'company' => $active_company
+            ]);
+            return response()->json([
+                'status' => '204',
+                'message' => 'Company Switch Successfully !'
             ]);
         }
     }
