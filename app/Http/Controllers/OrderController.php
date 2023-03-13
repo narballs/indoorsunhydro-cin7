@@ -55,7 +55,7 @@ class OrderController extends Controller
                 }
                 //moving to Api order items
                 $dateCreated = Carbon::now();
-                $createdDate = '2022-07-31T23:43:38';
+                $createdDate = Carbon::now();
                 $order->createdDate = $createdDate;
                 $order->modifiedDate = $createdDate;
                 $order->createdBy =  79914;
