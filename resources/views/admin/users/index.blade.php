@@ -97,7 +97,7 @@
                 </td>
                 <td>
                     @if ($user->contact)
-                    {{$user->contact->firstName}}
+                    {{$user->contact->lastName}}
                     @elseif ($user->last_name)
                     {{ $user->last_name }}
                     @else
@@ -170,9 +170,11 @@
                     @endif
                     @endif
                     @if($user->is_updated == 0)
-                    <a class="btn btn-warning btn-sm" href="{{ url('admin/send-password/'.$user->id) }}">Send password</a>
-                    @else 
-                    <a class="btn btn-danger btn-sm disabled" href="{{ url('admin/send-password/'.$user->id) }}">Send password</a>
+                    <a class="btn btn-warning btn-sm" href="{{ url('admin/send-password/'.$user->id) }}">Send
+                        password</a>
+                    @else
+                    <a class="btn btn-danger btn-sm disabled" href="{{ url('admin/send-password/'.$user->id) }}">Send
+                        password</a>
                     @endif
                 </td>
             </tr>
