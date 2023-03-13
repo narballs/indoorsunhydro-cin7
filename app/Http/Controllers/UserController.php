@@ -853,7 +853,7 @@ class UserController extends Controller
         $data['from'] = env('MAIL_FROM_ADDRESS');
         $data['plain'] = $plain_password;
         MailHelper::sendMailNotification('emails.reset-password', $data);
-
+    }
 
 
     public function reset_password(Request $request)
