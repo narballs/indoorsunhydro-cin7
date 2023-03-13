@@ -42,8 +42,8 @@ class UserToContacts extends Command
         {
             $users = User::all();
             foreach($users as $user){
-                $axisting_email = $user->email;
-                $contact = Contact::where('email',$axisting_email)->get();
+                $existing_email = $user->email;
+                $contact = Contact::where('email',$existing_email)->get();
                   if(!empty($contact)){
                    foreach ($contact as $data){
                     $data->user_id = $user->id;
