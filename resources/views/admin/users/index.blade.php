@@ -169,9 +169,11 @@
                     <input type="hidden" value='{{$user->id}}' id='{{$user->id}}'>
                     @endif
                     @endif
-                    <a class="btn btn-warning btn-sm" href="{{ url('admin/send-password/'.$user->id) }}">Send
-                        password</a>
-
+                    @if($user->is_updated == 0)
+                    <a class="btn btn-warning btn-sm" href="{{ url('admin/send-password/'.$user->id) }}">Send password</a>
+                    @else 
+                    <a class="btn btn-danger btn-sm disabled" href="{{ url('admin/send-password/'.$user->id) }}">Send password</a>
+                    @endif
                 </td>
             </tr>
             @endforeach
