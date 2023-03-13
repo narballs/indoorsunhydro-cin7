@@ -17,14 +17,15 @@ use App\Http\Requests\Users\UserSignUpRequest;
 use App\Http\Requests\Users\CompanyInfoRequest;
 use App\Jobs\SyncContacts;
 use Spatie\Permission\Models\Role;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 use App\Helpers\MailHelper;
+use \Illuminate\Support\Str;
+use \Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -835,19 +836,24 @@ class UserController extends Controller
     }
 
 
+    public function send_password($id) {
+        $user = User::where('id',$id)->first();
+        $plain_password = Str::random(10) . date('YmdHis');
+        $encrypted_password = bcrypt($plain_password);
+        $hash = Str::random(10000) . $user->first_name . date('YmdHis');
+        $hash = md5($hash);
 
-    public function send_password($id)
-    {
-        $user = User::where('id', $id)->first();
-        $plain_password = $user->new_password;
+        $user->password = $encrypted_password;
+        $user->hash = $hash;
+        $user->save();
+
         $data['email'] = $user->email;
         $data['content'] = 'Password Reset';
         $data['subject'] = 'Password Reset';
         $data['from'] = env('MAIL_FROM_ADDRESS');
         $data['plain'] = $plain_password;
         MailHelper::sendMailNotification('emails.reset-password', $data);
-        return redirect()->back()->with('success', 'password send Successfully');
-    }
+
 
 
     public function reset_password(Request $request)
