@@ -59,7 +59,7 @@ class UserController extends Controller
         $secondaryUserSearch = $request->secondaryUserSearch;
         $usersData = $request->usersData;
         $secondaryUser = $request->secondaryUser;
-        $user_query = User::orderBy('id', 'DESC');
+        $user_query = User::orderBy('id', 'DESC')->with('contact');
         if (!empty($usersData)) {
             if ($usersData == 'admin-user') {
                 $user_query = $user_query->role(['admin']);
