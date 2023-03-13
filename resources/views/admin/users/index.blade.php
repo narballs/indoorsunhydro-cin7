@@ -86,8 +86,24 @@
             @foreach ($data as $key => $user)
             <tr>
                 <td>{{ ++$i }}</td>
-                <td>{{ $user->first_name }}</td>
-                <td>{{ $user->last_name }}</td>
+                <td>
+                    @if ($user->contact)
+                    {{ $user->contact->firstName }}
+                    @elseif ($user->first_name)
+                    {{ $user->first_name }}
+                    @else
+                    <span class="badge bg-info">empty</span>
+                    @endif
+                </td>
+                <td>
+                    @if ($user->contact)
+                    {{$user->contact->firstName}}
+                    @elseif ($user->last_name)
+                    {{ $user->last_name }}
+                    @else
+                    <span class="badge bg-info">empty</span>
+                    @endif
+                </td>
                 <td>{{ $user->email }}</td>
                 <td>
                     @if($user->contact)
@@ -153,7 +169,8 @@
                     <input type="hidden" value='{{$user->id}}' id='{{$user->id}}'>
                     @endif
                     @endif
-                    <a class="btn btn-warning btn-sm" href="{{ url('admin/send-password/'.$user->id) }}">Send password</a>
+                    <a class="btn btn-warning btn-sm" href="{{ url('admin/send-password/'.$user->id) }}">Send
+                        password</a>
 
                 </td>
             </tr>
