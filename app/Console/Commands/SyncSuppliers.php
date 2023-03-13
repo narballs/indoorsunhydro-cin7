@@ -9,7 +9,6 @@ use App\Models\UserLog;
 use Carbon\Carbon;
 
 
-
 class SyncSuppliers extends Command
 {
     /**
@@ -55,10 +54,10 @@ class SyncSuppliers extends Command
                 'https://api.cin7.com/api/v1/Contacts/?page=' . $i,
                 [
                     'auth' => [
-                        // env('API_USER'),
-                        // env('API_PASSWORD')
-                        'IndoorSunHydroUS',
-                        'faada8a7a5ef4f90abaabb63e078b5c1'
+                        env('API_USER'),
+                        env('API_PASSWORD')
+                        // 'IndoorSunHydroUS',
+                        // 'faada8a7a5ef4f90abaabb63e078b5c1'
                     ]
                 ]
             );
@@ -98,38 +97,63 @@ class SyncSuppliers extends Command
                     $contact->website = $api_contact->website;
                     $contact->email = $api_contact->email;
                     $contact->notes = $api_contact->notes;
+                    $contact->save();
+
                     if ($api_contact->secondaryContacts) 
-                        // dd($api_contact->secondaryContacts);
                     {
-                        foreach($api_contact->secondaryContacts as $secondaryContact) {
-                            $contact->parent_id = $contact->contact_id;
-                            $contact->secondary_id = $secondaryContact->id;
-                            $contact->is_parent = 0;
-                            $contact->company = $secondaryContact->company;
-                            $contact->firstName = $secondaryContact->firstName;
-                            $contact->lastName = $secondaryContact->lastName;
-                            $contact->jobTitle  = $secondaryContact->jobTitle;
-                            $contact->email = $secondaryContact->email;
-                            $contact->mobile = $secondaryContact->mobile;
-                            $contact->phone = $secondaryContact->phone;
-                            $contact->save();
+                        foreach($api_contact->secondaryContacts as $apiSecondaryContact) {
+                            $secondary_contact = Contact::where('secondary_id', $apiSecondaryContact->id)
+                                ->where('parent_id', $contact->contact_id)
+                                ->first();
+                            if ($secondary_contact) {
+
+                                $secondary_contact->secondary_id = $apiSecondaryContact->id;
+                                $secondary_contact->is_parent = 0;
+                                $secondary_contact->company = $apiSecondaryContact->company;
+                                $secondary_contact->firstName = $apiSecondaryContact->firstName;
+                                $secondary_contact->lastName = $apiSecondaryContact->lastName;
+                                $secondary_contact->jobTitle  = $apiSecondaryContact->jobTitle;
+                                $secondary_contact->email = $apiSecondaryContact->email;
+                                $secondary_contact->mobile = $apiSecondaryContact->mobile;
+                                $secondary_contact->phone = $apiSecondaryContact->phone;
+                                $secondary_contact->save();
+                            }
+                            else {
+                                $secondary_contact = new Contact();
+
+                                // parent_id
+                                $secondary_contact->parent_id = $contact->contact_id;
+
+                                $secondary_contact->secondary_id = $apiSecondaryContact->id;
+                                $secondary_contact->is_parent = 0;
+                                $secondary_contact->company = $apiSecondaryContact->company;
+                                $secondary_contact->firstName = $apiSecondaryContact->firstName;
+                                $secondary_contact->lastName = $apiSecondaryContact->lastName;
+                                $secondary_contact->jobTitle  = $apiSecondaryContact->jobTitle;
+                                $secondary_contact->email = $apiSecondaryContact->email;
+                                $secondary_contact->mobile = $apiSecondaryContact->mobile;
+                                $secondary_contact->phone = $apiSecondaryContact->phone;
+                                $secondary_contact->save();
+                            }
+
+                            
 
                             $UserLog = new UserLog([
                                'action' => 'Sync',
                                'user_notes' => 'Sync from Cin7 at '.Carbon::now()->toDateTimeString(). 'is Secondary Contacts '.'and primary account is '.$api_contact->email, 
-                                ]);       
+                            ]);       
                             $UserLog->save();
                         }
                     }
-                    $contact->save();
+                    
                 }
                 else {
-                      foreach($api_contact->secondaryContacts as $secondaryContact) {
+                    foreach($api_contact->secondaryContacts as $secondaryContact) {
                         echo $secondaryContact->id.'---'.$secondaryContact->firstName;
                     }
                     $contact = new Contact([
                         'contact_id' => $api_contact->id,
-                         'is_parent' => 1,
+                        'is_parent' => 1,
                         'status' => $api_contact->isActive,
                         'type' => $api_contact->type,
                         'company' => $api_contact->company,
