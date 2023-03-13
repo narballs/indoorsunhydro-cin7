@@ -105,7 +105,11 @@ class UserController extends Controller
         if (!empty($search)) {
             $user_query = $user_query->where('first_name', 'LIKE', '%' . $search . '%')
                 ->orWhere('last_name', 'like', '%' . $search . '%')
-                ->orWhere('email', 'like', '%' . $search . '%');
+                ->orWhere('email', 'like', '%' . $search . '%')
+                ->orWhereHas('contact', function ($query) use ($search) {
+                    $query->where('contact_id', 'like', '%' . $search . '%')
+                        ->orWhere('company', 'like', '%' . $search . '%');
+                });
         }
         if (!empty($primaryUserSearch)) {
             $primary_contacts = Contact::where('firstName', 'LIKE', '%' . $primaryUserSearch . '%')
@@ -303,9 +307,8 @@ class UserController extends Controller
                 } else {
                     if ($user->is_updated == 1) {
                         return redirect()->route('my_account');
-                    }
-                    else {
-                         return view('reset-password', compact('user'));
+                    } else {
+                        return view('reset-password', compact('user'));
                     }
                 }
             }
@@ -751,7 +754,6 @@ class UserController extends Controller
             'phone' => $request->phone,
         ];
 
-
         Contact::create($secondary_contact_data);
 
         unset($secondary_contact_data['parent_id']);
@@ -834,26 +836,27 @@ class UserController extends Controller
 
 
 
-    public function send_password($id) {
-        $user = User::where('id',$id)->first();
+    public function send_password($id)
+    {
+        $user = User::where('id', $id)->first();
         $plain_password = $user->new_password;
-            $data['email'] = $user->email;
-            $data['content'] = 'Password Reset';
-            $data['subject'] = 'Password Reset';
-            $data['from'] = env('MAIL_FROM_ADDRESS');
-            $data['plain'] = $plain_password;
-            MailHelper::sendMailNotification('emails.reset-password', $data);
+        $data['email'] = $user->email;
+        $data['content'] = 'Password Reset';
+        $data['subject'] = 'Password Reset';
+        $data['from'] = env('MAIL_FROM_ADDRESS');
+        $data['plain'] = $plain_password;
+        MailHelper::sendMailNotification('emails.reset-password', $data);
+        return redirect()->back()->with('success', 'password send Successfully');
+    }
 
-         return redirect()->back()->with('success', 'password send Successfully');
-      }
 
-    public function reset_password(Request $request) {
+    public function reset_password(Request $request)
+    {
         User::where('email', $request->email)
-        ->update([
-            'password' => bcrypt($request->password),
-            'is_updated' => 1
-        ]);
+            ->update([
+                'password' => bcrypt($request->password),
+                'is_updated' => 1
+            ]);
         return redirect('my-account');
-
     }
 }
