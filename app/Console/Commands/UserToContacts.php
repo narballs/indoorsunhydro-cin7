@@ -44,10 +44,11 @@ class UserToContacts extends Command
             foreach($users as $user){
                 $existing_email = $user->email;
                 $contact = Contact::where('email',$existing_email)->get();
-                  if(!empty($contact)){
-                   foreach ($contact as $data){
-                    $data->user_id = $user->id;
-                     $data->save();
+                if (!empty($contact)){
+                    foreach ($contact as $data){
+                        Contact::firstOrCreate([
+                            'user_id' => $data->user_id
+                        ]);
                    }
                 }
             }
