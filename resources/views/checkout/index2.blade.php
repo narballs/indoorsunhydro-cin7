@@ -236,6 +236,9 @@
                 <div class="col-md-12 mt-2">
                     @foreach($payment_methods as $payment_method)
                     <form action="{{url('order')}}" method="POST" id="order_form" name="order_form">
+                        @php
+                        $session_contact_id = Session::get('contact_id');
+                        @endphp
                         @csrf
                         <div class="row">
                             @foreach($payment_method->options as $payment_option)
@@ -1190,7 +1193,7 @@
                 Valid first name is required.
             </div>
             <script>
-                function validate(){   
+                function validate(){ 
                     if ( ! $("input[name=method_option]").is(':checked') ) {
                         const inputOptions = new Promise((resolve) => {
                             setTimeout(() => {
@@ -1200,32 +1203,102 @@
                         })
                 }, 1000)
             })
-        Swal.fire({
-            imageUrl: "theme/img/delivery-icon.png",
-            // text: 'Delivery Option',
-            title: 'Please choose delivery option',
-            input: 'radio',
-            inputOptions: inputOptions,
-            showCancelButton: false,
-            confirmButtonColor: '#8282ff',
-            confirmButtonText: 'Continue',
-            allowOutsideClick: false,
-            allowEscapeKey: false
-        }).then((result) => {
-            if (result.value !== null) {
-                if (result.value == 'C.O.D') {
-                    $("#local_delivery_1").attr('checked', 'checked');
-                } 
-                else {
-                $("#local_delivery_2").attr('checked', 'checked'); 
+            Swal.fire({
+                imageUrl: "theme/img/delivery-icon.png",
+                title: 'Please choose delivery option',
+                input: 'radio',
+                inputOptions: inputOptions,
+                showCancelButton: false,
+                confirmButtonColor: '#8282ff',
+                confirmButtonText: 'Continue',
+                allowOutsideClick: false,
+                allowEscapeKey: false
+            }).then((result) => {
+                    if (result.value !== null) {
+                        var companiesData = {}
+                        jQuery.ajax({
+                                method: 'GET',
+                                url: "{{ url('/my-account/') }}",
+                                success: function(response) 
+                                    {
+                                        $.each(response.companies, function( index, value ) 
+                                            {
+                                             let companyID = null;
+                                            if (value.contact_id) 
+                                                {
+                                                    companyID = value.contact_id;
+                                                }
+                                            if (value.secondary_id) 
+                                                {
+                                                    companyID = value.secondary_id;
+                                                }
+                                                companiesData[companyID] = value.company
+                                            });
+                                                    // console.log(companies);
+                                   } 
+                                });
+                                const companiesDate = new Promise((resolve) => {
+                                    setTimeout(() => {
+                                        resolve(companiesData)
+                                    }, 1000)
+                                })   
+                            Swal.fire({
+                                title: 'Please choose the Company',
+                                showCancelButton: false,
+                                input:'radio',
+                                inputOptions: companiesDate,
+                                confirmButtonColor: '#8282ff',
+                                confirmButtonText: 'Continue',
+                                allowOutsideClick: false,
+                                allowEscapeKey: false
+                            }).then((result) => {
+                                if (result.value !== null) {
+                                   // $("#order_form").submit();     
+                                }
+                        });
+                    if (result.value == 'C.O.D') {
+                        $("#local_delivery_1").attr('checked', 'checked');
+                    } 
+                    else {
+                    $("#local_delivery_2").attr('checked', 'checked'); 
+                    }
                 }
-                $("#order_form").submit();
-            }
         });
     }
-
     else {
-    $("#order_form").submit(); 
+        jQuery.ajax({
+                    method: 'GET',
+                    url: "{{ url('/my-account/') }}",
+                    success: function(response) 
+                        {
+                            $.each(response.companies, function( index, value ) 
+                                {
+                                 let companyID = null;
+                                if (value.contact_id) 
+                                    {
+                                        companyID = value.contact_id;
+                                    }
+                                if (value.secondary_id) 
+                                    {
+                                        companyID = value.secondary_id;
+                                    }
+                                    companiesData[companyID] = value.company
+                                });
+                                        // console.log(companies);
+                       } 
+                });
+        Swal.fire({
+                title: 'Please choose the Company',
+                showCancelButton: false,
+                confirmButtonColor: '#8282ff',
+                confirmButtonText: 'Continue',
+                allowOutsideClick: false,
+                allowEscapeKey: false
+            }).then((result) => {
+                if (result.value !== null) {
+                    // $("#order_form").submit(); 
+                }
+        });
     }
 }
 
@@ -1266,9 +1339,7 @@ function updateContact(user_id) {
                 "email" : email
             },
             success: function(response) {
-
                 if(response.success == true) {
-
                     $('.modal-backdrop').remove()
                     $('#success_msg').removeClass('d-none');
                     $('#success_msg').html(response.msg);
@@ -1276,7 +1347,6 @@ function updateContact(user_id) {
                 }
             },
             error: function (response) {
-                
                 var error_message = response.responseJSON;
                 console.log(error_message);
                 var error_text = '';

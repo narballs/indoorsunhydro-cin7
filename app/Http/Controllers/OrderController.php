@@ -223,9 +223,10 @@ class OrderController extends Controller
                 session()->forget('cart');
                 return \Redirect::route('thankyou', $order_id);
             }
-        } else {
-            return redirect('my-account')->with('success', 'Please Select Company Then Place Over Order Thanks !');
         }
+        // else {
+        //     return redirect('my-account')->with('success', 'Please Select Company Then Place Over Order Thanks !');
+        // }
 
         //print_r($order);exit;
         $client = new \GuzzleHttp\Client();
