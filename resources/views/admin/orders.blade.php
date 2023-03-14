@@ -57,7 +57,7 @@
                 @foreach($orders as $order)
                 <tr>
                     <td>{{$order->id}}</td>
-                    <td>{{$order->createdDate}}</td>
+                    <td>{{$order->created_at->format('F '.'d, Y, '.'g:i A')}}</td>
                     <td>
                         @if($order->createdby)
                         {{$order->createdby->firstName}} {{$order->createdby->lastName}}</td>
