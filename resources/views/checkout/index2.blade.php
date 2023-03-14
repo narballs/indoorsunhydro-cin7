@@ -1215,55 +1215,47 @@
                 allowEscapeKey: false
             }).then((result) => {
                     if (result.value !== null) {
-                        var companiesData = []
+                        var companiesData = {}
                         jQuery.ajax({
-                                    method: 'GET',
-                                    url: "{{ url('/my-account/') }}",
-                                    success: function(response) {
-                                        console.log(response.companies);
-                                        companies = "";
-                                                companies += '<select>';
-                                                $.each(response.companies, function( index, value ) {
-                                                    var isActive_id = "";
-                                                    if(value.contact_id){
-                                                        isActive_id = value.contact_id;
-                                                    } else {
-                                                        isActive_id = value.secondary_id;
-                                                    }
-                                                    console.log("ids", isActive_id)
-                                                    // companies += '<option class="select-form" value="'+ isActive_id +'">' + value.company +'</option>';
-                                                    companiesData.push({
-                                                        isActive_id: value.company
-                                                    })
-                                                });
-                                                companies += '</select>';
-                                                $('#companesDate').empty('').append(companies);
-                                        // console.log(companies);
-                                    } 
+                                method: 'GET',
+                                url: "{{ url('/my-account/') }}",
+                                success: function(response) 
+                                    {
+                                        $.each(response.companies, function( index, value ) 
+                                            {
+                                             let companyID = null;
+                                            if (value.contact_id) 
+                                                {
+                                                    companyID = value.contact_id;
+                                                }
+                                            if (value.secondary_id) 
+                                                {
+                                                    companyID = value.secondary_id;
+                                                }
+                                                companiesData[companyID] = value.company
+                                            });
+                                                    // console.log(companies);
+                                   } 
                                 });
-                                console.log("companies test", companiesData)
-                                // const companesDate = new Promise((resolve) => {
-                                //     setTimeout(() => {
-                                //         resolve({
-                                //             'C.O.D': 'C.O.D',
-                                //             'Pickup Order': 'Pickup Order'
-                                //         })
-                                //     }, 1000)
-                                // })   
-                        Swal.fire({
-                            title: 'Please choose the Company',
-                            showCancelButton: false,
-                            input:'radio',
-                            inputOptions: inputOptions,
-                            confirmButtonColor: '#8282ff',
-                            confirmButtonText: 'Continue',
-                            allowOutsideClick: false,
-                            allowEscapeKey: false
-                        }).then((result) => {
-                            if (result.value !== null) {
-                                
-                            }
-                    });
+                                const companiesDate = new Promise((resolve) => {
+                                    setTimeout(() => {
+                                        resolve(companiesData)
+                                    }, 1000)
+                                })   
+                            Swal.fire({
+                                title: 'Please choose the Company',
+                                showCancelButton: false,
+                                input:'radio',
+                                inputOptions: companiesDate,
+                                confirmButtonColor: '#8282ff',
+                                confirmButtonText: 'Continue',
+                                allowOutsideClick: false,
+                                allowEscapeKey: false
+                            }).then((result) => {
+                                if (result.value !== null) {
+                                   // $("#order_form").submit();     
+                                }
+                        });
                     if (result.value == 'C.O.D') {
                         $("#local_delivery_1").attr('checked', 'checked');
                     } 
@@ -1277,9 +1269,23 @@
         jQuery.ajax({
                     method: 'GET',
                     url: "{{ url('/my-account/') }}",
-                    success: function(response) {
-                    console.log(response.companies[0]['company']);
-                    }
+                    success: function(response) 
+                        {
+                            $.each(response.companies, function( index, value ) 
+                                {
+                                 let companyID = null;
+                                if (value.contact_id) 
+                                    {
+                                        companyID = value.contact_id;
+                                    }
+                                if (value.secondary_id) 
+                                    {
+                                        companyID = value.secondary_id;
+                                    }
+                                    companiesData[companyID] = value.company
+                                });
+                                        // console.log(companies);
+                       } 
                 });
         Swal.fire({
                 title: 'Please choose the Company',

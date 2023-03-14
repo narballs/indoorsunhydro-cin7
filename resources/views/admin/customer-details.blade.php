@@ -106,6 +106,9 @@
 								<div class="col-md-2"><button class="btn btn-primary btn-sm" type="button"
 										onclick="mergeContact()">Invite</button>
 								</div>
+								<div class="col-md-2"><button class="btn btn-primary btn-sm" type="button"
+										onclick="refreshContact()">Refresh Contact</button>
+								</div>
 								@elseif ($customer->hashKey != '' && $customer->hashUsed == 0 )
 								<div>
 									<span class="badge bg-warning" style="margin-left: 12px!important;">Invitation
