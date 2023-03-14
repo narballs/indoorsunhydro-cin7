@@ -538,92 +538,87 @@ class UserController extends Controller
 
     public function my_account(Request $request)
     {
-
-        $user_id = auth()->id();
-
-        if (!$user_id) {
-            return redirect('/user/');
-        }
-
-        $user = User::where('id', $user_id)->first();
-
-        $user_ids = $parent_ids = $contact_ids = [];
-
-        $contacts_by_email = Contact::where('email', $user->email)->get();
-
-        if (!empty($contacts_by_email)) {
-            foreach ($contacts_by_email as $email_contact) {
-                if (!empty($email_contact->user_id)) {
-                    $user_ids[] = $email_contact->user_id;
-                }
-
-                if (!empty($email_contact->parent_id)) {
-                    $parent_ids[] = $email_contact->parent_id;
-                }
-
-                if (!empty($email_contact->contact_id)) {
-                    $contact_ids[] = $email_contact->contact_id;
-                }
-            }
-        }
-
-        $ids_array_1 = $ids_array_2 = $ids_array_3 = [];
-
-        if (!empty($user_ids)) {
-            $ids_array_1 = Contact::whereIn('user_id', $user_ids)->pluck('id')->toArray();
-        }
-
-        if (!empty($contact_ids)) {
-            $ids_array_2 = Contact::whereIn('parent_id', $contact_ids)->pluck('id')->toArray();
-        }
-
-        if (!empty($parent_ids)) {
-            $ids_array_3 = Contact::whereIn('contact_id', $parent_ids)->pluck('id')->toArray();
-        }
-
-        $all_ids = array_merge($ids_array_1, $ids_array_2, $ids_array_3);
-
-
-
-
-        $user_address = Contact::where('user_id', $user_id)->first();
-        //$secondary_contacts = Contact::where('user_id', $user_id)->with('parent')->with('children')->get();
-        $secondary_contacts = Contact::whereIn('id', $all_ids)->get();
-
-
-
-
-        $list = BuyList::where('id', 20)->with('list_products.product.options')->first();
-
-        $contact = Contact::where('email', $user_address->email)->first();
-        $companies = Contact::where('user_id', $user_id)->get();
-
-
-        if ($contact) {
-            $parent = Contact::where('contact_id', $contact->parent_id)->get();
-        } else {
-            $parent = "";
-        }
-
-        $states = UsState::all();
         if ($request->ajax()) {
-            $user_orders = ApiOrder::where('user_id', $user_id)->with('apiOrderItem')->get();
-            foreach ($user_orders as $user_order) {
-                $createdDate = $user_order->created_at;
-                $user_order->createdDate = $createdDate->format('F \  j, Y');
+            $companies = Contact::where('user_id', auth()->user()->id)->get();
+            return response()->json([
+                'message' => 'success',
+                'companies' => $companies
+            ]);
+        } else {
+            $user_id = auth()->id();
+            if (!$user_id) {
+                return redirect('/user/');
             }
 
-            return $user_orders;
-        }
+            $user = User::where('id', $user_id)->first();
 
-        return view('my-account', compact(
-            'user',
-            'user_address',
-            'states',
-            'secondary_contacts',
-            'parent',
-            'companies'
-        ));
+            $user_ids = $parent_ids = $contact_ids = [];
+
+            $contacts_by_email = Contact::where('email', $user->email)->get();
+
+            if (!empty($contacts_by_email)) {
+                foreach ($contacts_by_email as $email_contact) {
+                    if (!empty($email_contact->user_id)) {
+                        $user_ids[] = $email_contact->user_id;
+                    }
+
+                    if (!empty($email_contact->parent_id)) {
+                        $parent_ids[] = $email_contact->parent_id;
+                    }
+
+                    if (!empty($email_contact->contact_id)) {
+                        $contact_ids[] = $email_contact->contact_id;
+                    }
+                }
+            }
+
+            $ids_array_1 = $ids_array_2 = $ids_array_3 = [];
+
+            if (!empty($user_ids)) {
+                $ids_array_1 = Contact::whereIn('user_id', $user_ids)->pluck('id')->toArray();
+            }
+
+            if (!empty($contact_ids)) {
+                $ids_array_2 = Contact::whereIn('parent_id', $contact_ids)->pluck('id')->toArray();
+            }
+
+            if (!empty($parent_ids)) {
+                $ids_array_3 = Contact::whereIn('contact_id', $parent_ids)->pluck('id')->toArray();
+            }
+
+            $all_ids = array_merge($ids_array_1, $ids_array_2, $ids_array_3);
+            $user_address = Contact::where('user_id', $user_id)->first();
+            $secondary_contacts = Contact::whereIn('id', $all_ids)->get();
+            $list = BuyList::where('id', 20)->with('list_products.product.options')->first();
+            $contact = Contact::where('email', $user_address->email)->first();
+            $companies = Contact::where('user_id', $user_id)->get();
+
+            if ($contact) {
+                $parent = Contact::where('contact_id', $contact->parent_id)->get();
+            } else {
+                $parent = "";
+            }
+
+            $states = UsState::all();
+            if ($request->ajax()) {
+                $user_orders = ApiOrder::where('user_id', $user_id)->with('apiOrderItem')->get();
+                foreach ($user_orders as $user_order) {
+                    $createdDate = $user_order->created_at;
+                    $user_order->createdDate = $createdDate->format('F \  j, Y');
+                }
+
+                return $user_orders;
+            }
+
+            return view('my-account', compact(
+                'user',
+                'user_address',
+                'states',
+                'secondary_contacts',
+                'parent',
+                'companies'
+            ));
+        }
     }
 
     public function my_qoutes()
