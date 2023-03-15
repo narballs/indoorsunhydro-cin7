@@ -66,14 +66,6 @@ class OrderManagementController extends Controller
         return view('admin/order-details', compact('order', 'tax_class', 'orderitems', 'orderComment', 'statuses', 'customer', 'formatedDate'));
     }
 
-    public function order_delete(Request $request)
-    {
-        $id = $request->id;
-        $orderDelete = ApiOrder::find($id);
-        $orderDelete->delete();
-        return response()->json(['success' => 200]);
-    }
-
     public function addComments(Request $request)
     {
         $comment = $request->input('comment');
