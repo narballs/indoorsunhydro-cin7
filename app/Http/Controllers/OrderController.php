@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 //use Auth\Http\AuthControllers\Auth;
+
+use App\Helpers\MailHelper;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\OrderItem;

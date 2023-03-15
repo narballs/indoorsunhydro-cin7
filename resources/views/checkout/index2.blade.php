@@ -1341,18 +1341,6 @@
         }else {
             $("#order_form").submit();
         }
-        Swal.fire({
-            title: 'Please choose the Company',
-            showCancelButton: false,
-            confirmButtonColor: '#8282ff',
-            confirmButtonText: 'Continue',
-            allowOutsideClick: false,
-            allowEscapeKey: false
-        }).then((result) => {
-            if (result.value !== null) {
-                // $("#order_form").submit(); 
-            }
-        });
     }
 }
 
