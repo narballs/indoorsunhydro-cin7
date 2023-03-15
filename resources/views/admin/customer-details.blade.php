@@ -10,6 +10,7 @@
 		<div class="d-flex justify-content-between align-items-center py-3">
 			<h2 class="h5 mb-0"><a href="#" class="text-muted"></a> Customer Details</h2>
 		</div>
+		<div class="bg-success d-none" id="contact_refresh">Contact refreshed successfully</div>
 		<!-- Main content -->
 		<div class="row">
 			<div class="col-lg-9">
@@ -20,7 +21,7 @@
 							<input type="hidden" name="customer_id" id="customer_id" value="{{$customer->id}}">
 							<input type="hidden" name="contact_id" id="contact_id" value="{{$customer->contact_id}}">
 							<div class="row">
-								<div class="text-muted col-md-4">
+								<div class="text-muted col-md-3">
 									<h5>{{$customer->firstName}} {{$customer->lastName}}
 										@if ($customer->status == 1)
 										<span class="fa fa-edit" onclick="updatePriceColumn(0)"></span>
@@ -103,12 +104,18 @@
 								</div>
 								@endif
 								@if($customer->user == '' && $customer->hashKey == '')
-								<div class="col-md-2"><button class="btn btn-primary btn-sm" type="button"
+									<div class="col-md-1"><button class="btn btn-primary btn-sm" type="button"
 										onclick="mergeContact()">Invite</button>
-								</div>
-								<div class="col-md-2"><button class="btn btn-primary btn-sm" type="button"
-										onclick="refreshContact({{$customer->contact_id}})">Refresh Contact</button>
-								</div>
+									</div>
+									@if($customer->contact_id)
+										<div class="col-md-2"><button class="btn btn-primary btn-sm" type="button"
+												onclick="refreshContact({{$customer->contact_id}}, 'primary')">Refresh Contact</button>
+										</div>
+									@else 
+										<div class="col-md-2"><button class="btn btn-primary btn-sm" type="button"
+												onclick="refreshContact({{$customer->secondary_id}}, 'secondary')">Refresh Contact</button>
+										</div>
+									@endif
 								@elseif ($customer->hashKey != '' && $customer->hashUsed == 0 )
 								<div>
 									<span class="badge bg-warning" style="margin-left: 12px!important;">Invitation
@@ -154,7 +161,7 @@
 									<b>Website:</b> {{$customer->website}}
 								</div>
 								<div class="col-md-12 mt-2">
-									{{$customer->email}}
+									<div id="refreshed_email">{{$customer->email}}</div>
 									<input type="hidden" name="customer_email" id="customer_email"
 										value="{{$customer->email}}">
 								</div>
@@ -379,6 +386,7 @@
 
 @section('css')
 <link rel="stylesheet" href="/css/admin_custom.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @stop
 
 @section('js')
@@ -537,21 +545,44 @@
 		console.timeEnd('time1');
  	}
 
- 	function refreshContact(contactId) {
+ 	function refreshContact(contactId, type) {
+
+ 		$('#spinner').removeClass('d-none');
  		jQuery.ajax({
         	url: "{{ url('admin/refresh-contact') }}",
         	method: 'post',
         	data: {
             	"_token": "{{ csrf_token() }}",
-            	"contactId" : contactId
-            
+            	"contactId" : contactId, 
+            	"type" : type
         	},
-        		
         	success: function(response){
-       
+        		$('#refreshed_email').html(response.updated_email);
+        		$('#spinner').addClass('d-none');
+        	   let timerInterval
+			Swal.fire({
+	  				title: 'Please wait syncing from cin7',
+	  				html: 'I will close in <b></b> milliseconds.',
+	 				 timer: 1500,
+	  				timerProgressBar: true,
+	  			didOpen: () => {
+	    			Swal.showLoading()
+	    			const b = Swal.getHtmlContainer().querySelector('b')
+	    			timerInterval = setInterval(() => {
+	      				b.textContent = Swal.getTimerLeft()
+	    			}, 100)
+	  			},
+		  		willClose: () => {
+		    		clearInterval(timerInterval)
+		  		}
+			}).then((result) => {
+  			/* Read more about handling dismissals below */
+		  		if (result.dismiss === Swal.DismissReason.timer) {
+		  		}
+			})
 
     		}
-    	});
+   		});
  	}
 </script>
 @stop
