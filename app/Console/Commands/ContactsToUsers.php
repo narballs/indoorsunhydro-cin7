@@ -43,15 +43,15 @@ class ContactsToUsers extends Command
      * @return int
      */
     public function handle()
-        {
-            $contacts = Contact::all();
-            foreach($contacts as $contact) {
-               $email = $contact->email;
-               if ($email) {
-                    $user = User::firstOrCreate([
-                        'email' => $email
-                    ]);
-                } 
-            }
+    {
+        $contacts = Contact::all();
+        foreach($contacts as $contact) {
+            $email = $contact->email;
+            if ($email) {
+                $user = User::firstOrCreate([
+                    'email' => $email
+                ]);
+            } 
         }
+    }
 }

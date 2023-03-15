@@ -461,23 +461,67 @@ class ContactController extends Controller
 
     public function refreshContact(Request $request) {
         $contact_id  = $request->contactId;
-        $contact = Contact::where('contact_id', $contact_id)->first();
-        $client = new \GuzzleHttp\Client();
 
-        $res = $client->request(
-            'GET', 
-            'https://api.cin7.com/api/v1/Contacts/' . $contact_id, 
-            [
-                'auth' => [
-                    env('API_USER'),
-                    env('API_PASSWORD')
+        if ($request->type == 'primary') { 
+            $contact = Contact::where('contact_id', $contact_id)->first();
+            $client = new \GuzzleHttp\Client();
+
+            $res = $client->request(
+                'GET', 
+                'https://api.cin7.com/api/v1/Contacts/' . $contact_id, 
+                [
+                    'auth' => [
+                        env('API_USER'),
+                        env('API_PASSWORD')
+                    ]
                 ]
-            ]
-        );
-        $api_contact = $res->getBody()->getContents();
-        $api_contact = json_decode($api_contact);
-        Contact::where('contact_id', $contact_id)->update([
-            'email'  => $api_contact->email
-        ]);
+            );
+            $api_contact = $res->getBody()->getContents();
+            $api_contact = json_decode($api_contact);
+            Contact::where('contact_id', $contact_id)->update([
+                'email'  => $api_contact->email
+            ]);
+
+            return response()->json([
+                'status' => '200',
+                'message' => 'Contact Refreshed Successfully',
+                'updated_email' => $api_contact->email
+            ]);
+        }
+
+        elseif ($request->type == 'secondary') {
+
+            $contact = Contact::where('secondary_id', $contact_id)->first();
+            $parent_id = $contact->parent_id;
+            $client = new \GuzzleHttp\Client();
+
+            $res = $client->request(
+                'GET', 
+                'https://api.cin7.com/api/v1/Contacts/' . $parent_id, 
+                [
+                    'auth' => [
+                        env('API_USER'),
+                        env('API_PASSWORD')
+                    ]
+                ]
+            );
+
+            $api_secondary_contact = $res->getBody()->getContents();
+            $api_secondary_contact = json_decode($api_secondary_contact);
+
+            foreach ($api_secondary_contact->secondaryContacts as $api_secondary_contact) {
+                if ($api_secondary_contact->id == $contact_id ) {
+                     Contact::where('secondary_id', $contact_id)->update([
+                        'email'  => $api_secondary_contact->email
+                    ]);
+                }
+            }
+            
+            return response()->json([
+                'status' => '200',
+                'message' => 'Contact Refreshed Successfully',
+                'updated_email' => $api_secondary_contact->email
+            ]);
+        }
     }
 }
