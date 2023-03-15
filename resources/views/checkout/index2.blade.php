@@ -1215,87 +1215,143 @@
                 allowEscapeKey: false
             }).then((result) => {
                     if (result.value !== null) {
-                        var companiesData = {}
-                        jQuery.ajax({
-                                method: 'GET',
-                                url: "{{ url('/my-account/') }}",
-                                success: function(response) 
-                                    {
-                                        $.each(response.companies, function( index, value ) 
+                        var sessionContact_id = '{{ Session::get('contact_id');}}';
+                        if(sessionContact_id == ''){
+                            var companiesData = {}
+                                jQuery.ajax({
+                                        method: 'GET',
+                                        url: "{{ url('/my-account/') }}",
+                                        success: function(response) 
                                             {
-                                             let companyID = null;
-                                            if (value.contact_id) 
-                                                {
-                                                    companyID = value.contact_id;
-                                                }
-                                            if (value.secondary_id) 
-                                                {
-                                                    companyID = value.secondary_id;
-                                                }
-                                                companiesData[companyID] = value.company
+                                                $.each(response.companies, function( index, value ) 
+                                                    {
+                                                    let companyID = null;
+                                                    if (value.contact_id) 
+                                                        {
+                                                            companyID = value.contact_id+"-P";
+                                                        }
+                                                    if (value.secondary_id) 
+                                                        {
+                                                            companyID = value.secondary_id+"-S";;
+                                                        }
+                                                        companiesData[companyID] = value.company
+                                                    });
+                                        } 
+                                        });
+                                        const companiesDate = new Promise((resolve) => {
+                                            setTimeout(() => {
+                                                resolve(companiesData)
+                                            }, 1000)
+                                        })
+                                    Swal.fire({
+                                        title: 'Please choose the Company',
+                                        showCancelButton: false,
+                                        input:'radio',
+                                        inputOptions: companiesDate,
+                                        confirmButtonColor: '#8282ff',
+                                        confirmButtonText: 'Continue',
+                                        allowOutsideClick: false,
+                                        allowEscapeKey: false
+                                    }).then((result) => {
+                                        if (result.value !== null) {
+                                            var contact_id = result.value;
+                                            $.ajax({
+                                                url: "{{ url('/switch-company-select/') }}",
+                                                method: 'POST',
+                                                data: {
+                                                        "_token": "{{ csrf_token() }}",
+                                                        contact_id: contact_id,
+                                                        },
+                                                    success: function (response){
+                                                        $("#order_form").submit();     
+                                                    }                                  
                                             });
-                                                    // console.log(companies);
-                                   } 
+                                        }
                                 });
-                                const companiesDate = new Promise((resolve) => {
-                                    setTimeout(() => {
-                                        resolve(companiesData)
-                                    }, 1000)
-                                })   
-                            Swal.fire({
-                                title: 'Please choose the Company',
-                                showCancelButton: false,
-                                input:'radio',
-                                inputOptions: companiesDate,
-                                confirmButtonColor: '#8282ff',
-                                confirmButtonText: 'Continue',
-                                allowOutsideClick: false,
-                                allowEscapeKey: false
-                            }).then((result) => {
-                                if (result.value !== null) {
-                                   // $("#order_form").submit();     
+                            if (result.value == 'C.O.D') {
+                                $("#local_delivery_1").attr('checked', 'checked');
+                            } 
+                            else {
+                            $("#local_delivery_2").attr('checked', 'checked'); 
+                            }
+                            } else {
+                                if (result.value == 'C.O.D') {
+                                    $("#local_delivery_1").attr('checked', 'checked');
+                                }  else {
+                                 $("#local_delivery_2").attr('checked', 'checked'); 
                                 }
-                        });
-                    if (result.value == 'C.O.D') {
-                        $("#local_delivery_1").attr('checked', 'checked');
-                    } 
-                    else {
-                    $("#local_delivery_2").attr('checked', 'checked'); 
-                    }
+                                 $("#order_form").submit(); 
+                            }
                 }
         });
     }
     else {
-        jQuery.ajax({
-                    method: 'GET',
-                    url: "{{ url('/my-account/') }}",
-                    success: function(response) 
-                        {
-                            $.each(response.companies, function( index, value ) 
-                                {
-                                 let companyID = null;
-                                if (value.contact_id) 
-                                    {
-                                        companyID = value.contact_id;
-                                    }
-                                if (value.secondary_id) 
-                                    {
-                                        companyID = value.secondary_id;
-                                    }
-                                    companiesData[companyID] = value.company
-                                });
-                       } 
-        Swal.fire({
-                title: 'Please choose the Company',
-                showCancelButton: false,
-                confirmButtonColor: '#8282ff',
-                confirmButtonText: 'Continue',
-                allowOutsideClick: false,
-                allowEscapeKey: false
-            }).then((result) => {
+        var sessionContact_id = '{{ Session::get('contact_id');}}';
+        if(sessionContact_id == ''){
+        var companiesData = {}
+            jQuery.ajax({
+                method: 'GET',
+                url: "{{ url('/my-account/') }}",
+                success: function(response) {
+                    $.each(response.companies, function( index, value ) 
+                    {
+                        let companyID = null;
+                        if (value.contact_id) 
+                            {
+                                companyID = value.contact_id+"-P";
+                            }
+                        if (value.secondary_id) 
+                            {
+                                companyID = value.secondary_id+"-S";;
+                            }
+                            companiesData[companyID] = value.company
+                        });
+                    } 
+                });
+                const companiesDate = new Promise((resolve) => {
+                    setTimeout(() => {
+                        resolve(companiesData)
+                    }, 1000)
+                })   
+                Swal.fire({
+                    title: 'Please choose the Company',
+                    showCancelButton: false,
+                    input:'radio',
+                    inputOptions: companiesDate,
+                    confirmButtonColor: '#8282ff',
+                    confirmButtonText: 'Continue',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                }).then((result) => {
                 if (result.value !== null) {
-                    // $("#order_form").submit(); 
+                    var contact_id = result.value;
+                    $.ajax({
+                        url: "{{ url('/switch-company-select/') }}",
+                        method: 'POST',
+                        data: {
+                                "_token": "{{ csrf_token() }}",
+                                contact_id: contact_id,
+                                },
+                            success: function (response){
+                                $("#order_form").submit();     
+                            }                                  
+                    });
                 }
+            });
+        }else {
+            $("#order_form").submit();
+        }
+        Swal.fire({
+            title: 'Please choose the Company',
+            showCancelButton: false,
+            confirmButtonColor: '#8282ff',
+            confirmButtonText: 'Continue',
+            allowOutsideClick: false,
+            allowEscapeKey: false
+        }).then((result) => {
+            if (result.value !== null) {
+                // $("#order_form").submit(); 
+            }
         });
     }
 }
@@ -1476,14 +1532,14 @@ $(".previous").click(function(){
     });
 });
 
-    $('.radio-group .radio').click(function(){
-    $(this).parent().find('.radio').removeClass('selected');
-    $(this).addClass('selected');
-    });
+                            $('.radio-group .radio').click(function(){
+                            $(this).parent().find('.radio').removeClass('selected');
+                            $(this).addClass('selected');
+                            });
 
-    $(".submit").click(function(){
-    return false;
-   })
-    
+                            $(".submit").click(function(){
+                            return false;
+                        })
+                            
 });
             </script>
