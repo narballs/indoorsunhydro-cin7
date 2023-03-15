@@ -162,13 +162,13 @@ class OrderController extends Controller
                         $adminTemplate = 'emails.admin-order-received';
                         $data['email'] = $role_admin->email;
 
-                        //MailHelper::sendMailNotification('emails.admin-order-received', $data);
+                        MailHelper::sendMailNotification('emails.admin-order-received', $data);
                     }
                 }
 
                 $data['subject'] = 'Your order has been received';
                 $data['email'] = $email;
-                // MailHelper::sendMailNotification('emails.admin-order-received', $data);
+                MailHelper::sendMailNotification('emails.admin-order-received', $data);
 
                 $lineItems = [];
                 foreach ($order_items as $order_item) {
