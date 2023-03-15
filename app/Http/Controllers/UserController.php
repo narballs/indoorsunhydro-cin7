@@ -788,7 +788,7 @@ class UserController extends Controller
             'content' => 'Customer Registration Invitation',
             'url' => $url
         ];
-        // MailHelper::sendMailNotification('emails.invitaion-emails', $data);
+        MailHelper::sendMailNotification('emails.invitaion-emails', $data);
         SyncContacts::dispatch('update_contact', $contact)->onQueue(env('QUEUE_NAME'));
         return response()->json([
             'state' => 200,
@@ -851,7 +851,7 @@ class UserController extends Controller
         $data['email'] = $user->email;
         $data['content'] = 'Password Reset';
         $data['subject'] = 'Password Reset';
-        $data['from'] = env('MAIL_FROM_ADDRESS');
+        $data['from'] = 'noreply@indoorsunhydro.com';
         $data['plain'] = $plain_password;
         MailHelper::sendMailNotification('emails.reset-password', $data);
 

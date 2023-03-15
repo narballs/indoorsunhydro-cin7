@@ -110,7 +110,7 @@ class SalesOrders implements ShouldQueue
             foreach ($users_with_role_admin as $role_admin) {
                 $data['email'] = $role_admin->email;
                 $adminTemplate = 'emails.approval-notifications';
-                //MailHelper::sendMailNotification('emails.admin-order-fullfillment', $data);
+                MailHelper::sendMailNotification('emails.admin-order-fullfillment', $data);
             }
         }
 
