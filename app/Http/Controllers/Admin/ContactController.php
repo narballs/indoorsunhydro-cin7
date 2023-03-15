@@ -233,7 +233,7 @@ class ContactController extends Controller
             MailHelper::sendMailNotification('emails.approval-notifications', $data);
 
 
-            // MailHelper::sendMailNotification('emails.admin-order-received', $data);
+            MailHelper::sendMailNotification('emails.admin-order-received', $data);
             return response()->json([
                 'success' => true,
                 'created' => true,
