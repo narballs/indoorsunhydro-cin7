@@ -188,6 +188,7 @@ class SyncAPiData extends Command
                     if ($api_product->productOptions) {
                         foreach($api_product->productOptions as $api_productOption) {
                             $product_option = ProductOption::with('price')->where('option_id',$api_productOption->id)->first();
+
                             if ($product_option) {
                                 $product_option->option1 = $api_productOption->option1;
                                 $product_option->option_id = $api_productOption->id;
