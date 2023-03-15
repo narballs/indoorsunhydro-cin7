@@ -92,8 +92,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('admin/orders', [OrderManagementController::class, 'index'])->name('admin.orders');
     Route::get('admin/order/create', [OrderManagementController::class, 'create'])->name('admin.order.create');
     Route::get('/admin/order-detail/{id}', [OrderManagementController::class, 'show'])->name('admin.order.detail');
-    Route::delete('/admin/order-delete/', [OrderManagementController::class, 'order_delete'])->name('admin.order.delete');
-    // Route::get('/admin/order-delete/{id}', [OrderManagementController::class, 'order_delete'])->name('admin.order.delete');
     Route::post('admin/order-comments', [OrderManagementController::class, 'addComments'])->name('admin.order.comments');
     Route::post('admin/order-status', [OrderManagementController::class, 'updateStatus'])->name('update.order.status');
     Route::get('admin/shipping-methods', [ShippingMethodController::class, 'index'])->name('admin.shipping-methods');
