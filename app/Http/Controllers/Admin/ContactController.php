@@ -458,4 +458,26 @@ class ContactController extends Controller
             'status' => 200
         ]);
     }
+
+    public function refreshContact(Request $request) {
+        $contact_id  = $request->contactId;
+        $contact = Contact::where('contact_id', $contact_id)->first();
+        $client = new \GuzzleHttp\Client();
+
+        $res = $client->request(
+            'GET', 
+            'https://api.cin7.com/api/v1/Contacts/' . $contact_id, 
+            [
+                'auth' => [
+                    env('API_USER'),
+                    env('API_PASSWORD')
+                ]
+            ]
+        );
+        $api_contact = $res->getBody()->getContents();
+        $api_contact = json_decode($api_contact);
+        Contact::where('contact_id', $contact_id)->update([
+            'email'  => $api_contact->email
+        ]);
+    }
 }

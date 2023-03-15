@@ -76,7 +76,6 @@ class SyncContacts implements ShouldQueue
                 $res = UtilHelper::sendRequest('POST', $this->_apiBaseURL . 'v1/Contacts', $this->_body, []);
                 break;
             case 'update_contact':
-
                 $res = UtilHelper::sendRequest('PUT', $this->_apiBaseURL . 'v1/Contacts', $this->_body, []);
                 break;
             case 'list_contact':

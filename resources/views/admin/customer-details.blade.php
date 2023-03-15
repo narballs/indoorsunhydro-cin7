@@ -106,6 +106,9 @@
 								<div class="col-md-2"><button class="btn btn-primary btn-sm" type="button"
 										onclick="mergeContact()">Invite</button>
 								</div>
+								<div class="col-md-2"><button class="btn btn-primary btn-sm" type="button"
+										onclick="refreshContact({{$customer->contact_id}})">Refresh Contact</button>
+								</div>
 								@elseif ($customer->hashKey != '' && $customer->hashUsed == 0 )
 								<div>
 									<span class="badge bg-warning" style="margin-left: 12px!important;">Invitation
@@ -532,6 +535,23 @@
 		document.execCommand("copy");
 		temp.remove();
 		console.timeEnd('time1');
- }
+ 	}
+
+ 	function refreshContact(contactId) {
+ 		jQuery.ajax({
+        	url: "{{ url('admin/refresh-contact') }}",
+        	method: 'post',
+        	data: {
+            	"_token": "{{ csrf_token() }}",
+            	"contactId" : contactId
+            
+        	},
+        		
+        	success: function(response){
+       
+
+    		}
+    	});
+ 	}
 </script>
 @stop

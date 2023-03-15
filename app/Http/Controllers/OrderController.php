@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 //use Auth\Http\AuthControllers\Auth;
+
+use App\Helpers\MailHelper;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -223,9 +225,10 @@ class OrderController extends Controller
                 session()->forget('cart');
                 return \Redirect::route('thankyou', $order_id);
             }
-        } else {
-            return redirect('my-account')->with('success', 'Please Select Company Then Place Over Order Thanks !');
         }
+        // else {
+        //     return redirect('my-account')->with('success', 'Please Select Company Then Place Over Order Thanks !');
+        // }
 
         //print_r($order);exit;
         $client = new \GuzzleHttp\Client();
