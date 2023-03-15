@@ -169,8 +169,7 @@ $('[data-toggle="popover-hover"]').popover({
 				$('#subtotal_' + product_id).html(subtotal);
 				return false;
 			}
-
-
+			
 			jQuery.ajax({
 				url: "{{ url('admin/add-to-list') }}",
 				method: 'post',

@@ -26,6 +26,7 @@ use App\Helpers\MailHelper;
 use \Illuminate\Support\Str;
 use \Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Redis;
 
 class UserController extends Controller
 {
@@ -803,7 +804,7 @@ class UserController extends Controller
     public function switch_company(Request $request)
     {
         $contact_id = $request->companyId;
-        $contact = Contact::where('contact_id', $request->companyId)->first();
+        $contact = Contact::where('contact_id', $contact_id)->first();
         if (!empty($contact)) {
             $active_contact_id = $contact->contact_id;
             $active_company = $contact->company;
@@ -816,7 +817,7 @@ class UserController extends Controller
                 'message' => 'Company Switch Successfully !'
             ]);
         } else {
-            $contact = Contact::where('secondary_id', $request->companyId)->first();
+            $contact = Contact::where('secondary_id', $contact_id)->first();
             $active_contact_id = $contact->secondary_id;
             $active_company = $contact->company;
             Session::put([
@@ -828,6 +829,29 @@ class UserController extends Controller
                 'message' => 'Company Switch Successfully !'
             ]);
         }
+    }
+    public function switch_company_select(Request $request)
+    {
+        $contact_id = $request->contact_id;
+        $rawContactID = explode('-', $contact_id);
+
+        if ($rawContactID[1] == 'P') {
+            $contact = Contact::where('contact_id', $rawContactID[0])->first();
+            $active_contact_id = $contact->contact_id;
+        }
+        if ($rawContactID[1] == 'S') {
+            $contact = Contact::where('secondary_id', $rawContactID[0])->first();
+            $active_contact_id = $contact->secondary_id;
+        }
+        $active_company = $contact->company;
+        Session::put([
+            'contact_id' => $active_contact_id,
+            'company' => $active_company
+        ]);
+        return response()->json([
+            'status' => '204',
+            'message' => 'Company Switch Select Successfully !'
+        ]);
     }
 
 
