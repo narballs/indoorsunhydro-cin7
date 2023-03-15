@@ -784,7 +784,7 @@ class UserController extends Controller
             'content' => 'Customer Registration Invitation',
             'url' => $url
         ];
-        // MailHelper::sendMailNotification('emails.invitaion-emails', $data);
+        MailHelper::sendMailNotification('emails.invitaion-emails', $data);
         SyncContacts::dispatch('update_contact', $contact)->onQueue(env('QUEUE_NAME'));
         return response()->json([
             'state' => 200,
