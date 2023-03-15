@@ -20,7 +20,16 @@
                     </a>
                 </div>
             </div>
-            <div class="col-md-6"></div>
+            <div class="col-md-6">
+                @if ($message = Session::get('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <strong>{{$message}}</strong>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                @endif
+            </div>
             <div class="col-md-4">
                 <div id="custom-search-input">
                     <div class="input-group col-md-12">
@@ -55,7 +64,7 @@
             </thead>
             <tbody>
                 @foreach($orders as $order)
-                <tr>
+                <tr id="row-{{$order->id}}">
                     <td>{{$order->id}}</td>
                     <td>{{$order->created_at->format('F '.'d, Y, '.'g:i A')}}</td>
                     <td>
@@ -73,8 +82,13 @@
                             data-toggle="tooltip" data-original-title="View"><i class="fas fa-eye"></i></a>
                         <a href="#" class="edit" title="" data-toggle="tooltip" data-original-title="Edit"><i
                                 class="fas fa-pen"></i></a>
-                        <a href="#" class="delete" title="" data-toggle="tooltip" data-original-title="Delete"><i
-                                class="fas fa-trash-alt"></i></a>
+                        {{-- <a href="{{url('admin/order-delete/'.$order->id)}}" class="delete deleteIcon" title=""
+                            data-toggle="tooltip" data-original-title="Delete">
+                            <i class="fas fa-trash-alt"></i>
+                        </a> --}}
+                        <a href="#" class="deleteOrder" id="{{$order->id}}">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
                     </td>
                 </tr>
                 @endforeach
@@ -126,20 +140,57 @@
 @stop
 
 @section('js')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    //  delete employee ajax request
+	 $(document).on('click', '.deleteOrder', function(e) {
+        e.preventDefault();
+        var id = $(this).attr('id');
+        let csrf = '{{ csrf_token() }}';
+        Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            $.ajax({
+              url: '{{ url('/admin/order-delete') }}',
+              method: 'delete',
+              data: {
+                id: id,
+                _token: csrf
+              },
+              success: function(response) {
+                Swal.fire(
+                  'Deleted!',
+                  'Your orders has been deleted.',
+                  'success'
+                )
+				$('#row-'+id).remove();
+              }
+            });
+          }
+        })
+      });
+</script>
 <script>
     function perPage() {
-            var search = $('#search').val();
-            var activeCustomer = $('#active_customer').val();
+        var search = $('#search').val();
+        var activeCustomer = $('#active_customer').val();
 
-            if(perPage !=''){
-                var basic_url = 'customers?perPage='+perPage+'&search='+search;
-            }
+        if(perPage !=''){
+        var basic_url = 'customers?perPage='+perPage+'&search='+search;
+        }
 
-           if (activeCustomer != '') {
-               basic_url = basic_url+`&active-customer=${activeCustomer}`;
-            }
+        if (activeCustomer != '') {
+        basic_url = basic_url+`&active-customer=${activeCustomer}`;
+        }
 
-            window.location.href = basic_url;
-        } 
+        window.location.href = basic_url;
+}
 </script>
 @stop
