@@ -1284,9 +1284,7 @@
                                     }
                                     companiesData[companyID] = value.company
                                 });
-                                        // console.log(companies);
                        } 
-                });
         Swal.fire({
                 title: 'Please choose the Company',
                 showCancelButton: false,
