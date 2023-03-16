@@ -530,8 +530,8 @@ class ContactController extends Controller
                 'status' => '200',
                 'message' => 'Contact Refreshed Successfully',
                 'updated_email' => $api_secondary_contact->email,
-                'updated_firstName' => $api_contact->firstName,
-                'updated_lastName' => $api_contact->lastName
+                'updated_firstName' => $api_contact->api_secondary_contact,
+                'updated_lastName' => $api_contact->api_secondary_contact
             ]);
         }
     }
