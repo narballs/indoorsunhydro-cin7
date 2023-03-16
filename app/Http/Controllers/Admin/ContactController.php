@@ -16,6 +16,7 @@ use App\Models\SecondaryContact;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use App\Models\UserLog;
+use Illuminate\Support\Str;
 
 class ContactController extends Controller
 {
@@ -151,6 +152,7 @@ class ContactController extends Controller
         $secondary_contact = '';
         $contact_is_parent = '';
         $customer = Contact::where('id', $id)->first();
+        $pricing = $customer->priceColumn;
         $logs = UserLog::where('contact_id', $customer->contact_id)->get();
         $user_id = $customer->user_id;
         if(!empty($customer->contact_id)) {
@@ -167,6 +169,7 @@ class ContactController extends Controller
         } else {
             $invitation_url = '';
         }
+        //echo $customer->pricing;exit;
         return view('admin/customer-details', compact(
             'customer', 
             'secondary_contacts', 
@@ -178,7 +181,8 @@ class ContactController extends Controller
             'statuses',
             'customer_orders',
             'invitation_url',
-            'logs'
+            'logs',
+            'pricing'
         ));
     }
 
@@ -461,7 +465,6 @@ class ContactController extends Controller
 
     public function refreshContact(Request $request) {
         $contact_id  = $request->contactId;
-
         if ($request->type == 'primary') { 
             $contact = Contact::where('contact_id', $contact_id)->first();
             $client = new \GuzzleHttp\Client();
@@ -479,13 +482,19 @@ class ContactController extends Controller
             $api_contact = $res->getBody()->getContents();
             $api_contact = json_decode($api_contact);
             Contact::where('contact_id', $contact_id)->update([
-                'email'  => $api_contact->email
+                'email'  => $api_contact->email,
+                'firstName' => $api_contact->firstName,
+                'lastName' => $api_contact->lastName,
+                'priceColumn' => $api_contact->priceColumn
             ]);
-
+            $str = str_replace("\r", '', $api_contact->priceColumn);
             return response()->json([
                 'status' => '200',
                 'message' => 'Contact Refreshed Successfully',
-                'updated_email' => $api_contact->email
+                'updated_email' => $api_contact->email,
+                'updated_firstName' => $api_contact->firstName,
+                'updated_lastName' => $api_contact->lastName, 
+                'updated_priceColumn' => $str
             ]);
         }
 
@@ -520,7 +529,9 @@ class ContactController extends Controller
             return response()->json([
                 'status' => '200',
                 'message' => 'Contact Refreshed Successfully',
-                'updated_email' => $api_secondary_contact->email
+                'updated_email' => $api_secondary_contact->email,
+                'updated_firstName' => $api_contact->firstName,
+                'updated_lastName' => $api_contact->lastName
             ]);
         }
     }
