@@ -18,9 +18,9 @@
                     <div class="row ms-0">
                         <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 col-xs-12">
                             <div class="images">
-                                @if($productOption->image)
+                                @if ($productOption->products->images)
                                 <div class="text-center mt-5">
-                                    <img id="main-image" src="{{$productOption->image}}" class="img-fluid" />
+                                    <img id="main-image" src="{{$productOption->products->images}}" class="img-fluid" />
                                 </div>
                                 @else
                                 <div class="text-center mt-5">
