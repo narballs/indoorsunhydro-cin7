@@ -190,9 +190,6 @@ class SyncAPiData extends Command
                             $product_option = ProductOption::with('price')->where('option_id',$api_productOption->id)->first();
 
                             if ($product_option) {
-                                if ($api_productOption->productId == '13874') {
-                                    dd($api_productOption);
-                                }
                                 $product_option->option1 = $api_productOption->option1;
                                 $product_option->option_id = $api_productOption->id;
                                 $product_option->product_id = $api_productOption->productId;
