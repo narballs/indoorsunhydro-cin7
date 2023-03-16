@@ -23,6 +23,7 @@ use App\Http\Controllers\Users\RoleController;
 use App\Http\Controllers\Admin\AdminBuyListController;
 use App\Http\Controllers\Admin\AdminShareListController;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 /*
 |--------------------------------------------------------------------------
@@ -128,6 +129,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('admin/go-back', [UserController::class, 'switch_user_back'])->name('users.switch_user_back');
     Route::get('admin/logout', function () {
         Auth::logout();
+        Session::forget('logged_in_as_another_user');
         return redirect()->route('user');
     });
 });
