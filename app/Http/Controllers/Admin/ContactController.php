@@ -517,22 +517,21 @@ class ContactController extends Controller
 
             $api_secondary_contact = $res->getBody()->getContents();
             $api_secondary_contact = json_decode($api_secondary_contact);
-
             foreach ($api_secondary_contact->secondaryContacts as $api_secondary_contact) {
+
                 if ($api_secondary_contact->id == $contact_id ) {
-                     Contact::where('secondary_id', $contact_id)->update([
+                    $updated_contact = Contact::where('secondary_id', $contact_id)->update([
                         'email'  => $api_secondary_contact->email
+                    ]);
+                    return response()->json([
+                        'status' => '200',
+                        'message' => 'Contact Refreshed Successfully',
+                        'updated_email' => $api_secondary_contact->email,
+                        'updated_firstName' => $api_secondary_contact->firstName,
+                        'updated_lastName' => $api_secondary_contact->lastName
                     ]);
                 }
             }
-            
-            return response()->json([
-                'status' => '200',
-                'message' => 'Contact Refreshed Successfully',
-                'updated_email' => $api_secondary_contact->email,
-                'updated_firstName' => $api_secondary_contact->firstName,
-                'updated_lastName' => $api_secondary_contact->lastName
-            ]);
         }
     }
 }
