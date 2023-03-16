@@ -4,6 +4,7 @@
 <h1>Dashboard</h1>
 @stop
 @section('content')
+
 <div class="container-fluid">
 	<div class="">
 		<!-- Title -->
@@ -22,7 +23,7 @@
 							<input type="hidden" name="contact_id" id="contact_id" value="{{$customer->contact_id}}">
 							<div class="row">
 								<div class="text-muted col-md-3">
-									<h5>{{$customer->firstName}} {{$customer->lastName}}
+									<h5><span id="refreshed_firstname">{{$customer->firstName}}</span><span id="refreshed_lastname"> {{$customer->lastName}}</span>
 										@if ($customer->status == 1)
 										<span class="fa fa-edit" onclick="updatePriceColumn(0)"></span>
 										@endif
@@ -40,9 +41,10 @@
 								</div>
 								@if ($customer->status == 1)
 								<div class="col-md-4"><b>Pricing:</b>
-									<select onchange="updatePriceColumn(4)" class="pricingColumn">
+									<select onchange="updatePriceColumn(4)" class="pricingColumn" id="pricingColumn">
 										<?php 
-							      	$pricing = $customer->priceColumn;
+							      	// $pricing = $customer->priceColumn;
+							      	// echo $pricing;exit;
 							      
 							      	?>
 										<option class="form-group" value="RetailUSD" {{ $pricing }} {{ isset($pricing)
@@ -558,9 +560,13 @@
         	},
         	success: function(response){
         		$('#refreshed_email').html(response.updated_email);
+        		$('#refreshed_firstname').html(response.updated_firstName);
+        		$('#refreshed_lastname').html(response.updated_lastName);
+        		console.log(response.updated_priceColumn);
+        		$('#pricingColumn').find('option[value="'+response.updated_priceColumn+'"]').prop('selected', true);
         		$('#spinner').addClass('d-none');
-        	   let timerInterval
-			Swal.fire({
+        	   	let timerInterval
+				Swal.fire({
 	  				title: 'Please wait syncing from cin7',
 	  				html: 'I will close in <b></b> milliseconds.',
 	 				 timer: 1500,
@@ -575,7 +581,7 @@
 		  		willClose: () => {
 		    		clearInterval(timerInterval)
 		  		}
-			}).then((result) => {
+				}).then((result) => {
   			/* Read more about handling dismissals below */
 		  		if (result.dismiss === Swal.DismissReason.timer) {
 		  		}

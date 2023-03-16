@@ -186,7 +186,7 @@ class SyncAPiData extends Command
                         }
                         $product->save();
                     if ($api_product->productOptions) {
-                        foreach($api_product->productOptions as $api_productOption) {
+                        foreach ($api_product->productOptions as $api_productOption) {
                             $product_option = ProductOption::with('price')->where('option_id',$api_productOption->id)->first();
 
                             if ($product_option) {
@@ -211,7 +211,6 @@ class SyncAPiData extends Command
                                 $product_option->specialDays =  $api_productOption->specialDays;
                                 $product_option->image =  !empty($api_productOption->image) ? $api_productOption->image->link: '';
                                 $product_option->save();
-                                //dd($product_option);
                                 $priceColumn = Pricingnew::where('option_id', $product_option->option_id)->first();
                                 if (empty($priceColumn)) {
                                     $priceColumn = new Pricingnew([
@@ -322,7 +321,7 @@ class SyncAPiData extends Command
                     ]);
                     $product->save();
                     if ($api_product->productOptions) {
-                        foreach($api_product->productOptions as $api_productOption) {
+                        foreach ($api_product->productOptions as $api_productOption) {
                             $productOption = new ProductOption([
                                         'option_id' =>  $api_productOption->id,
                                         'product_id' =>  $api_productOption->productId,
@@ -359,44 +358,3 @@ class SyncAPiData extends Command
     }
 }
 
-
-
-
-
-
-//         $this->info('Finished.');
-// }
-        
-
-        // $client2 = new \GuzzleHttp\Client();
-        // $res2 = $client2->request(
-        //     'GET', 
-        //     'https://api.cin7.com/api/v1/Products/', 
-        //     [
-        //         'auth' => [
-        //             'IndoorSunHydroUS', 
-        //             '304d9151b3624a7ba1e647ab13137c8a'
-        //         ]
-        //     ]
-        // );
-        // $products = $res2->getBody()->getContents();
-        // $products = json_decode($products);
-        // //var_dump($products->id);exit;
-        // //var_dump($products->productOptions[0]->code);exit;
-        // foreach($products as $key=>$product){
-        //     $productObj = new Product;
-        //     $productObj->product_id = $product->id;
-        //     $productObj->name  = $product->name;
-            
-        //     $productObj->code = $product->productOptions[0]->code;
-        //     //$productObj->images = $product->images[0]->link;
-        //     $productObj->category_id = $product->categoryIdArray[0];
-        //     $productObj->retail_price = $product->productOptions[0]->retailPrice;
-        //     $productObj->stockAvailable = $product->productOptions[0]->stockAvailable;
-        //     $productObj->save();
-        // }
-       // exit;
-        
-//     }
-// }
-//}
