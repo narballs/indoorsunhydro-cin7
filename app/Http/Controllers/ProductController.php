@@ -321,6 +321,7 @@ class ProductController extends Controller
             );
             $inventory = $res->getBody()->getContents();
             $location_inventories = json_decode($inventory);
+            
         } catch (Exception $ex) {
         }
 
@@ -330,7 +331,6 @@ class ProductController extends Controller
             $product->save();
         }
         $productOption = ProductOption::where('option_id', $option_id)->with('products.categories', 'price')->first();
-        //dd($productOption->products->images);
         if ($productOption->products->categories != '') {
             $category = Category::where('category_id', $productOption->products->categories->category_id)->first();
             $parent_category = Category::where('category_id', $category->parent_id)->first();
