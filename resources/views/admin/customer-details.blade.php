@@ -113,7 +113,7 @@
 										<div class="col-md-2"><button class="btn btn-primary btn-sm" type="button"
 												onclick="refreshContact({{$customer->contact_id}}, 'primary')">Refresh Contact</button>
 										</div>
-									@else 
+									@elseif($customer->secondary_id) 
 										<div class="col-md-2"><button class="btn btn-primary btn-sm" type="button"
 												onclick="refreshContact({{$customer->secondary_id}}, 'secondary')">Refresh Contact</button>
 										</div>
@@ -559,6 +559,7 @@
             	"type" : type
         	},
         	success: function(response){
+        		console.log(response);
         		$('#refreshed_email').html(response.updated_email);
         		$('#refreshed_firstname').html(response.updated_firstName);
         		$('#refreshed_lastname').html(response.updated_lastName);
