@@ -35,6 +35,8 @@ use Illuminate\Support\Facades\Session;
 
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
+Route::get('send-password/fornt-end/{id}', [UserController::class, 'send_password_fornt_end'])->name('users.send_password_fornt');
+
 Route::get('send-mail', function () {
     $details = [
         'title' => 'Mail from waqas',
@@ -155,7 +157,7 @@ Route::get('/my-qoute-edit/{id}', [UserController::class, 'my_qoute_edit'])->nam
 Route::get('/user-addresses/', [UserController::class, 'user_addresses'])->name('user_addresses');
 Route::get('/user-order-detail/{id}', [UserController::class, 'user_order_detail'])->name('user-order-detail');
 Route::post('/register/basic/create', [UserController::class, 'process_signup'])->name('register');
-Route::post('/switch-company/', [UserController::class, 'qw'])->name('switch-company');
+Route::post('/switch-company/', [UserController::class, 'switch_company'])->name('switch-company');
 Route::post('/register/basic/invitation', [UserController::class, 'invitation_signup'])->name('invitation.signup');
 Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 
