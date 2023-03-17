@@ -889,8 +889,9 @@ class UserController extends Controller
     }
 
 
-    public function send_password($id)
+    public function send_password_fornt_end($id)
     {
+
         $user = User::where('id', $id)->first();
         $plain_password = Str::random(10) . date('YmdHis');
         $encrypted_password = bcrypt($plain_password);
@@ -905,7 +906,28 @@ class UserController extends Controller
         $data['content'] = 'Password Reset';
         $data['subject'] = 'Password Reset';
         $data['from'] = env('MAIL_FROM_ADDRESS');
-        //$data['from'] = env('MAIL_FROM_ADDRESS');
+        $data['plain'] = $plain_password;
+        MailHelper::sendMailNotification('emails.reset-password', $data);
+
+        return redirect()->back()->with('success', 'Password Send Successfully !');
+    }
+    public function send_password($id)
+    {
+
+        $user = User::where('id', $id)->first();
+        $plain_password = Str::random(10) . date('YmdHis');
+        $encrypted_password = bcrypt($plain_password);
+        $hash = Str::random(10000) . $user->first_name . date('YmdHis');
+        $hash = md5($hash);
+
+        $user->password = $encrypted_password;
+        $user->hash = $hash;
+        $user->save();
+
+        $data['email'] = $user->email;
+        $data['content'] = 'Password Reset';
+        $data['subject'] = 'Password Reset';
+        $data['from'] = env('MAIL_FROM_ADDRESS');
         $data['plain'] = $plain_password;
         MailHelper::sendMailNotification('emails.reset-password', $data);
 
