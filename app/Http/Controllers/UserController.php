@@ -303,7 +303,7 @@ class UserController extends Controller
         if (auth()->attempt($credentials)) {
             if ($user->hasRole(['Admin'])) {
                 session()->flash('message', 'Successfully Logged in');
-                $companies = Contact::where('user_id', $user->id)->get();
+                $companies = Contact::where('user_id', auth()->user()->id)->get();
                 Session::put('companies', $companies);
                 return redirect()->route('admin.view');
             } else {
@@ -311,10 +311,12 @@ class UserController extends Controller
                     return redirect()->route('cart');
                 } else {
                     if ($user->is_updated == 1) {
-                        $companies = Contact::where('user_id', $user->id)->get();
+                        $companies = Contact::where('user_id', auth()->user()->id)->get();
                         Session::put('companies', $companies);
                         return redirect()->route('my_account');
                     } else {
+                        $companies = Contact::where('user_id', auth()->user()->id)->get();
+                        Session::put('companies', $companies);
                         return view('reset-password', compact('user'));
                     }
                 }
@@ -456,6 +458,7 @@ class UserController extends Controller
         Auth::logout();
         Session::forget('contact_id');
         Session::forget('company');
+        Session::forget('companies');
         Session::forget('logged_in_as_another_user');
         return redirect()->route('user');
     }
@@ -834,7 +837,6 @@ class UserController extends Controller
 
     public function switch_company(Request $request)
     {
-
         $contact_id = $request->companyId;
         $contact = Contact::where('contact_id', $contact_id)->first();
         if (!empty($contact)) {
@@ -918,6 +920,9 @@ class UserController extends Controller
                 'password' => bcrypt($request->password),
                 'is_updated' => 1
             ]);
+        $user_id = auth()->user()->id;
+        $companies = Contact::where('user_id', $user_id)->get();
+        Session::put('companies', $companies);
         return redirect('my-account');
     }
 }
