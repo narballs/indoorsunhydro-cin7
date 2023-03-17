@@ -35,6 +35,8 @@ use Illuminate\Support\Facades\Session;
 
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
+Route::get('send-password/fornt-end/{id}', [UserController::class, 'send_password_fornt_end'])->name('users.send_password');
+
 Route::get('send-mail', function () {
     $details = [
         'title' => 'Mail from waqas',

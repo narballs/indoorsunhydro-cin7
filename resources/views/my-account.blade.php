@@ -75,10 +75,13 @@
 							</div>
 							<div class="col-md-6 col-xl-6 col-xs-12 col-12 col-sm-12">
 								@if ($message = Session::get('success'))
-								<div class="alert alert-danger  text-dark">
-									<p>{{ $message }}</p>
-								</div>
-								@endif
+									<div class="alert alert-success alert-dismissible fade show" role="alert">
+										<strong>{{ $message }}</strong> 
+										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+								  @endif
 							</div>
 						</div>
 					</div>
@@ -782,53 +785,8 @@
 											<th>
 												Type
 											</th>
-											<th>
-												Actions
-											</th>
 										</tr>
 									</thead>
-									<!-- 		@if($parent)
-									<tbody>
-										<tr>
-											<td>
-												@if($parent[0]['company'])
-												{{$parent[0]['company']}}
-												@else
-												<span class="badge bg-success">empty</span>
-												@endif
-											</td>
-											<td>
-												{{$parent[0]['firstName']}}
-											</td>
-											<td>
-												{{$parent[0]['lastName']}}
-											</td>
-											<td>
-												@if($parent[0]['jobTitle'])
-												{{$parent[0]['jobTitle']}}
-												@else
-												<span class="badge bg-success">empty</span>
-												@endif
-											</td>
-											<td>
-												{{$parent[0]['email']}}
-											</td>
-											<td>
-												{{$parent[0]['phone']}}
-											</td>
-											<td>
-												@if($parent[0]['status'] == 1)
-												<span class="badge bg-success">Active</span>
-												@else
-												<span class="badge bg-success">Un Active</span>
-												@endif
-											</td>
-											<td>
-												<span class="badge bg-primary">primary contact</span>
-											</td>
-										</tr>
-									</tbody>
-									@endif -->
 									<tbody id="secondary_user">
 										<?php $secondary_contacts;?>
 										@foreach ($secondary_contacts as $childeren)
@@ -888,45 +846,17 @@
 												<span class="badge bg-success">empty</span>
 											</td>
 											@endif
-											@if($childeren->hashKey == '' && $childeren->hashUsed == 0)
 											<td>
-												<button id="invite" type="button" class="btn btn-info btn-sm"
-													onclick="	sendInvitation('{{$childeren->email}}')"> Invite
-												</button>
+												@php
+												@endphp
+												<a href="{{url('send-password/fornt-end/'.$childeren->user_id)}}" class="btn btn-secondary btn-sm">send password</a>
 											</td>
-											@elseif($childeren->hashKey !='' && $childeren->hashUsed == 1)
-											<td>
-												<span class="badge bg-success">Merged</span>
-											</td>
-											@else
-											<td>
-												<span id="invitation_sent" class="badge bg-warning">Invitation
-													Sent</span>
-											</td>
-											@endif
 											<td>
 												@if($childeren->contact_id != NULL)
 												<span class="badge bg-primary">primary contact</span>
 												@else
 												<span class="badge bg-secondary">secondary contact</span>
 												@endif
-											</td>
-											<td style="width: 111px !important;">
-												<a href="#"><img src="/theme/img/invite_iccons.png" alt=""></a>
-												@php
-												$url = URL::to("/");
-												$url = $url . '/customer/invitation/' . $childeren->hashKey .
-												'?is_secondary=1';
-												@endphp
-												<a class="btn text-dark p-0">
-													<span id="copyUrl" data-id="{{$url}}">
-														<img src="/theme/img/copy_link_iccon.png" class="d-block"
-															alt="">
-													</span>
-
-												</a>
-												<a href="#" id="{{$childeren->id}}" class="deleteIcon"><img
-														src="/theme/img/delete_iccon.png" alt=""></a>
 											</td>
 										</tr>
 										@endforeach
@@ -1220,14 +1150,11 @@
 				$('.nav-pills .active').removeClass('active');
 				$('.nav-pills #dashboard').addClass('active');
 				$("#additional_users").removeClass("active");
-				// $('#order_id').hide();
 				$('.order-detail-container').addClass('d-none');
 				$('#customer-address').addClass('d-none')
 				$('#orders').addClass('d-none');
 				$('#additional-users').addClass('d-none');
 				$('#additional-users').addClass('d-none');	
-				// $('#orders').hide();
-				// $('.intro').show();
 			}
 
 			function userOrderDetail(id) {
@@ -1239,9 +1166,6 @@
 				$('#detail-heading').removeClass('d-none');
 				$('#additional-users').addClass('d-none');
 
-
-				// $('.order-detail-container').removeClass('d-none');
-				// $('#order-detail-container').removeClass('d-none');
 				var id = id;
 				$('#orders').addClass('d-none');
 				//$('.order')
@@ -1264,7 +1188,6 @@
 							result.order_items.forEach(
 								function(item, index){
 									var product_total = item.price * item.quantity;
-									//var product_total = retail_price * item.quantity;
 									subtotal = product_total + subtotal;
 									lineitems +='<tr class="border-bottom table-row-content" style="height:70px"><td style="width:491px"><a href="">'+item.product.name+'</a>'+'<td class="cart-basket d-flex align-items-center justify-content-center float-sm-end quantity-counter rounded-circle mt-4">'+item.quantity+'</td><td></td><td class="table-order-number text-dark text-end">$'+ item.price * item.quantity.toFixed(2)+'</td></tr>';
 									
@@ -1277,7 +1200,6 @@
 							lineitems += '<tr class="border-bottom" style="height:70px"><td class="table-row-content">'+'<img src="theme/img/arrow_1.png">'+' <span>Delivery Method </span>'+'</td><td><td></td></td><td class="table-order-number text-dark text-end">'+result.user_order.paymentTerms+'</td><td class="table-order-number text-dark ">'+' '+'</td></tr>';
 							lineitems += '<tr class="border-bottom" style="height:70px"><td class="table-row-content">  '+'   Total'+'</td><td></td><td></td><td class="table-order-number  text-end text-danger">$'+subtotal.toFixed(2)+'</td><td class="table-order-number text-dark">'+' '+'</td></tr>';
 							var address = '';
-							//address = result.user_address.firstName;
 							address = '<span class="address-user-details">'+'<strong>'+result.user_address.firstName+'&nbsp'+result.user_address.lastName+'</strong>'+'</span>';
 							address += '<span>  '+result.user_address.postalAddress1+'</span>';
 							address += '<span>  '+result.user_address.postalAddress2+'</span>';	
@@ -1288,8 +1210,6 @@
 							$('#lineitems').html(lineitems);
 							$('#address_table').html(address);
 							$('#shipping_table').html(address);
-
-							// $("#detail-heading").slideUp();
 							$([document.documentElement, document.body]).animate({
         					scrollTop: $("#main-row").offset().top
     						}, 1000);
@@ -1303,12 +1223,10 @@
                 $('#all_qoutes').addClass('d-none');
 				$('.nav-pills .active').removeClass('active');
 				$('.nav-pills #recent_orders').addClass('active');
-				//$(this).addClass("active");
 				$('#whishlist').addClass('d-none');
 				$('#customer-address').addClass('d-none');
 				$('#order-detail-container').addClass('d-none');
 				$('#edit_address').addClass('d-none');
-				//let productId = $('#p_'+id).val();
 				$('#intro').addClass('d-none');
 				$('#orders').show();
 				$('#orders').removeClass('d-none');
@@ -1342,7 +1260,6 @@
            						'</tr>';
 
    								});
-							//console.log(res);
 						  $('#order_table').html(res);
 						},					
 	
