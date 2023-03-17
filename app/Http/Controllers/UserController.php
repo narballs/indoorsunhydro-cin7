@@ -292,6 +292,7 @@ class UserController extends Controller
 
     public function process_login(Request $request)
     {
+
         $request->validate([
             'email' => 'required',
             'password' => 'required'
@@ -308,6 +309,8 @@ class UserController extends Controller
                     return redirect()->route('cart');
                 } else {
                     if ($user->is_updated == 1) {
+                        $companies = Contact::where('user_id', $user->id)->get();
+                        Session::put('companies', $companies);
                         return redirect()->route('my_account');
                     } else {
                         return view('reset-password', compact('user'));
@@ -451,6 +454,7 @@ class UserController extends Controller
         Auth::logout();
         Session::forget('contact_id');
         Session::forget('company');
+        Session::forget('logged_in_as_another_user');
         return redirect()->route('user');
     }
 
@@ -711,11 +715,36 @@ class UserController extends Controller
 
     public function switch_user($id)
     {
+        Session::forget('contact_id');
+        Session::forget('company');
 
         $switch_user = Auth::loginUsingId($id);
         $auth_user_email = $switch_user->email;
         session()->put('logged_in_as_another_user', $auth_user_email);
         Auth::loginUsingId($id);
+        $contact_id = auth()->user()->id;
+        $contact = Contact::where('user_id', $contact_id)->first();
+        $companies = Contact::where('user_id', auth()->user()->id)->get();
+        if (!empty($contact)) {
+            $active_contact_id = $contact->contact_id;
+            $active_company = $contact->company;
+            Session::put([
+                'contact_id' => $active_contact_id,
+                'company' => $active_company
+            ]);
+            Session::put('companies', $companies);
+            return redirect('/');
+        } else {
+            $contact = Contact::where('secondary_id', $contact_id)->first();
+            $active_contact_id = $contact->secondary_id;
+            $active_company = $contact->company;
+            Session::put([
+                'contact_id' => $active_contact_id,
+                'company' => $active_company
+            ]);
+            Session::put('companies', $companies);
+            return redirect('/');
+        }
         return redirect('/');
     }
 
@@ -803,6 +832,7 @@ class UserController extends Controller
 
     public function switch_company(Request $request)
     {
+
         $contact_id = $request->companyId;
         $contact = Contact::where('contact_id', $contact_id)->first();
         if (!empty($contact)) {

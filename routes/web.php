@@ -8,10 +8,6 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ContactUsController;
 use App\Http\Controllers\CreateCartController;
-use App\Http\Controllers\PermissionsController;
-use App\Http\Controllers\InvitationController;
-use App\Http\Controllers\RolesController;
-use App\Http\Controllers\Admin\TestController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\OrderManagementController;
 use App\Http\Controllers\Admin\ShippingMethodController;
@@ -23,6 +19,8 @@ use App\Http\Controllers\Users\RoleController;
 use App\Http\Controllers\Admin\AdminBuyListController;
 use App\Http\Controllers\Admin\AdminShareListController;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Session;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,7 +41,7 @@ Route::get('send-mail', function () {
         'body' => 'This is for testing email using smtp',
         'name' => 'jjjj'
     ];
-    \Mail::to('naris@letswebnow.com')->send(new \App\Mail\Subscribe($details));
+    Mail::to('naris@letswebnow.com')->send(new \App\Mail\Subscribe($details));
     dd("Email is Sent.");
 });
 
@@ -128,6 +126,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('admin/go-back', [UserController::class, 'switch_user_back'])->name('users.switch_user_back');
     Route::get('admin/logout', function () {
         Auth::logout();
+        Session::forget('logged_in_as_another_user');
         return redirect()->route('user');
     });
 });
