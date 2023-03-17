@@ -73,7 +73,7 @@ class OrderController extends Controller
                 $order->currencyRate      =  59.0;
                 $order->currencySymbol = '$';
                 $order->user_id = Auth::id();
-                $order->status = "VOID";
+                $order->status = "DRAFT";
                 $order->stage = null;
                 $order->paymentTerms = $paymentMethod;
                 $order->tax_class_id = $request->tax_class_id;

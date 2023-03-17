@@ -65,7 +65,17 @@
                     <td>{{$order->reference}}</td>
                     <td>{{$order->total}}</td>
                     <td>{{$order->stage}}</td>
-                    <td>{{$order->status}}</td>
+                    <td>
+                        @if($order->status == 0)
+                          <span class="badge badge-success">DRAFT</span>
+                        @elseif($order->status == 1)
+                           <span class="badge badge-success">APPROVED</span>
+                        @elseif($order->status == 2)
+                         <span class="badge badge-success">VOID</span>
+                        @else 
+                           {{$order->status}}
+                        @endif
+                    </td>
                     <td>{{$order->apiApproval}}</td>
                     <td>{{$order->paymentTerms}}</td>
                     <td>
