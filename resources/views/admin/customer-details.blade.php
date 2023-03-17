@@ -562,7 +562,7 @@
         		console.log(response);
         		$('#refreshed_email').html(response.updated_email);
         		$('#refreshed_firstname').html(response.updated_firstName);
-        		$('#refreshed_lastname').html(response.updated_lastName);
+        		$('#refreshed_lastname').html(' '+response.updated_lastName);
         		console.log(response.updated_priceColumn);
         		$('#pricingColumn').find('option[value="'+response.updated_priceColumn+'"]').prop('selected', true);
         		$('#spinner').addClass('d-none');
