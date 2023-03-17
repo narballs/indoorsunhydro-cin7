@@ -26,7 +26,6 @@ use App\Helpers\MailHelper;
 use \Illuminate\Support\Str;
 use \Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Redis;
 
 class UserController extends Controller
 {
@@ -37,15 +36,6 @@ class UserController extends Controller
         $this->middleware('permission:user-edit', ['only' => ['edit', 'update']]);
         $this->middleware('permission:user-delete', ['only' => ['destroy']]);
         $this->middleware('permission:user-show', ['only' => ['show']]);
-
-        //$this->middleware(['role:Admin','permission:user-list']);
-
-        // $this->middleware(['role:Admin','permission:user-list|user-list']);
-        // $this->middleware(['role:users','permission:user-list|user-list']);
-        //$this->middleware('permission:user-list|user-create|user-edit|user-delete', ['only' => ['index','show']]);
-        //$this->middleware('permission:user-list', ['only' => ['index']]);
-        // $this->middleware('permission:users-edit', ['only' => ['edit','update']]);
-        // $this->middleware('permission:users-delete', ['only' => ['destroy']]);
     }
     /**
      * Display a listing of the resource.
