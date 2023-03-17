@@ -139,17 +139,17 @@
 </header>
 <script>
     function switch_company_user(contact_id) {
-            var company = contact_id;
-             jQuery.ajax({
-                url: "{{ url('/switch-company/')}}",
-                method: 'POST',
-                data : {
-                    "_token": "{{ csrf_token() }}",
-                    'companyId' : company
-                },
-                  success: function(response) {
-                     window.location.reload();
-                    }
-                });
-        }
+		var company = contact_id;
+			jQuery.ajax({
+				url: "{{ url('/switch-company/')}}",
+				method: 'POST',
+				data : {
+					"_token": "{{ csrf_token() }}",
+					'companyId' : company
+			     },
+				success: function(response) {
+				  	 window.location.reload();
+			        }
+			    });
+	}
 </script>
