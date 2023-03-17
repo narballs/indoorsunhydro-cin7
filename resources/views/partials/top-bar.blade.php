@@ -103,10 +103,10 @@
                         class="cart-basket d-flex align-items-center justify-content-center float-sm-end cart-counter rounded-circle"
                         id="top_cart_quantity">
                         <?php
-      						$total_quantity	 = 0;
-      						$grand_total = 0;
+                            $total_quantity  = 0;
+                            $grand_total = 0;
 
-      					?>
+                        ?>
 
                         @if(Session::get('cart'))
                         @foreach(Session::get('cart') as $cart)
@@ -139,17 +139,17 @@
 </header>
 <script>
     function switch_company_user(contact_id) {
-			var company = contact_id;
-			 jQuery.ajax({
+		var company = contact_id;
+			jQuery.ajax({
 				url: "{{ url('/switch-company/')}}",
 				method: 'POST',
 				data : {
 					"_token": "{{ csrf_token() }}",
 					'companyId' : company
-				},
-				  success: function(response) {
+			     },
+				success: function(response) {
 				  	 window.location.reload();
 			        }
 			    });
-		}
+	}
 </script>
