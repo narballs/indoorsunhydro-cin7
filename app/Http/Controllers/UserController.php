@@ -303,6 +303,8 @@ class UserController extends Controller
         if (auth()->attempt($credentials)) {
             if ($user->hasRole(['Admin'])) {
                 session()->flash('message', 'Successfully Logged in');
+                $companies = Contact::where('user_id', $user->id)->get();
+                Session::put('companies', $companies);
                 return redirect()->route('admin.view');
             } else {
                 if (!empty(session()->get('cart'))) {
