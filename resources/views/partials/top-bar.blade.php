@@ -44,7 +44,7 @@
                                 </a>
                                   </li>
                                   <li class="nav-item dropdown position-static">
-                                      @if(!empty($session_contact_company))
+                                    @if(!empty($session_contact_company))
                                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                                       data-mdb-toggle="dropdown" aria-expanded="false">
                                       <span class="top-bar-logout text-light"> ({{$session_contact_company}})</span>
@@ -52,7 +52,7 @@
                                     @else
                                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                                       data-mdb-toggle="dropdown" aria-expanded="false">
-                                      <span class="top-bar-logout text-light"> (Seletct Company)</span>
+                                      <span class="top-bar-logout text-light"> Select  Company</span>
                                     </a>
                                     @endif
                                     <!-- Dropdown menu -->
@@ -75,9 +75,10 @@
                                                         else {
                                                             $contact_id = $company->secondary_id;
                                                             $primary = '(secondary)';
+                                                           
                                                         }
                                                     @endphp
-                                                <a type="button" id="company-{{$contact_id}}" class="list-group-item list-group-item-action" onclick="switch_company({{$contact_id}})">{{$company->company}} <span style="font-size: small;">{{ $primary}}</span></a>
+                                                <a type="button"  class="list-group-item list-group-item-action" onclick="switch_company_user({{$contact_id}})">{{$company->company}} <span style="font-size: small;">{{ $primary}}</span></a>
                                                 @endforeach
                                             </div>
                                           </div>
@@ -137,7 +138,7 @@
     </div>
 </header>
 <script>
-    function switch_company(contact_id) {
+    function switch_company_user(contact_id) {
 			var company = contact_id;
 			 jQuery.ajax({
 				url: "{{ url('/switch-company/')}}",

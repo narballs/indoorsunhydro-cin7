@@ -221,6 +221,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('admin/go-back', [UserController::class, 'switch_user_back'])->name('users.switch_user_back');
     Route::get('admin/logout', function () {
         Auth::logout();
+        Session::forget('contact_id');
+        Session::forget('company');
+        Session::forget('companies');
+        Session::forget('logged_in_as_another_user');
         return redirect()->route('user');
     });
 });
