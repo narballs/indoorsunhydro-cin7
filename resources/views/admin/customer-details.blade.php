@@ -23,7 +23,7 @@
 							<input type="hidden" name="contact_id" id="contact_id" value="{{$customer->contact_id}}">
 							<div class="row">
 								<div class="text-muted col-md-3">
-									<h5><span id="refreshed_firstname">{{$customer->firstName}}</span><span id="refreshed_lastname"> {{$customer->lastName}}</span>
+									<h5><span id="refreshed_firstname">{{$customer->firstName}}</span><span id="refreshed_lastname" class="ms-2"> {{$customer->lastName}}</span>
 										@if ($customer->status == 1)
 										<span class="fa fa-edit" onclick="updatePriceColumn(0)"></span>
 										@endif
