@@ -18,6 +18,7 @@
 		<!-- Main content -->
 		<div class="row">
 			<div class="col-lg-8">
+
 				<!-- Details -->
 				<div class="card mb-4">
 					<div class="card-body">
@@ -45,28 +46,26 @@
 							<div>
 								<span class="me-3">Order Status</span>
 							</div>
-							<?php $status = $order->status;
-	            				if ($status == 'DRAFT') {
-	            					$selected = 'selected';
-	            				}
-	            				else {
-	            					$selected = '';
-	            				}
-	            				if($status == 'APPROVED') {
-	            					$selected = 'selected';
-	            				}
-	            				else {
-	            					$selected = '';
-	            				}
-	            				if ($status == 'VOID'){
-	            					$selected = 'selected';
-	            				}
-	            				else {
-	            					$selected = '';
-	            				}
-	            			?>
-
-							<span class="badge bg-success">VOID</span>
+							@if(!empty($order->order_id))
+		            			<select onchange="updateStatus()" id="status">
+		            				<option value='0' {{ isset($status) &&
+	                                $status=='0' ? 'selected="selected"' : '' }}>DRAFT</option>
+		            				<option value='1' {{ isset($status) &&
+	                                $status=='1' ? 'selected="selected"' : '' }}>APPROVED</option>
+		            				<option value='2' {{ isset($status) &&
+	                                $status=='2' ? 'selected="selected"' : '' }}>VOID</option>
+		            			</select>
+		            		@else
+		            		     <select disabled="" onchange="updateStatus()" id="status">
+		            				<option value='0' {{ isset($status) &&
+	                                $status=='0' ? 'selected="selected"' : '' }}>DRAFT</option>
+		            				<option value='1' {{ isset($status) &&
+	                                $status=='1' ? 'selected="selected"' : '' }}>APPROVED</option>
+		            				<option value='2' {{ isset($status) &&
+	                                $status=='2' ? 'selected="selected"' : '' }}>VOID</option>
+		            			</select>
+		            		@endif
+	            			<input type="hidden" value="{{$order->id}}" id="order_id_status">
 							<div class="row mb-5">
 						</form>
 						<form>
@@ -260,12 +259,12 @@
 					<span><a href="#" class="text-decoration-underline" target="_blank">FF1234567890</a> <i class="bi bi-box-arrow-up-right</i> </span>
 		        <hr>
 		        <h3 class=" h6">Address</h3>
-							<address>
-								<strong>{{$customer->firstName}} {{$customer->Name}}</strong><br>
-								{{$customer->postalAddress1}}, {{$customer->postalAddress2}}<br>
-								{{$customer->postalCity}}, <br>
-								<abbr title="Phone">P:</abbr> ({{$customer->phone}})
-							</address>
+						<address>
+							<strong>{{$customer->firstName}} {{$customer->Name}}</strong><br>
+							{{$customer->postalAddress1}}, {{$customer->postalAddress2}}<br>
+							{{$customer->postalCity}}, <br>
+							<abbr title="Phone">P:</abbr> ({{$customer->phone}})
+						</address>
 				</div>
 			</div>
 		</div>
@@ -304,15 +303,16 @@
     	}
 
     	function updateStatus() {
+
     		var status = $( "#status" ).val();
-    		var order_id = $( "#order_id" ).val();
+    		var order_id_status = $( "#order_id_status" ).val();
     		jQuery.ajax({
         		url: "{{ url('admin/order-status') }}",
         		method: 'post',
         		data: {
             		"_token": "{{ csrf_token() }}",
             		"status" : status,
-            		"order_id": order_id
+            		"order_id_status": order_id_status
         		},
         		success: function(response){
         			window.location.reload();

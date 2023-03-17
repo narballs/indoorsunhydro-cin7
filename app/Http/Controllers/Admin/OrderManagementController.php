@@ -79,10 +79,10 @@ class OrderManagementController extends Controller
 
     public function updateStatus(Request $request)
     {
-        $order_id = $request->input('order_id');
-        $status = $request->input('status');
-        //dd($request->all());
-        $order = Order::find($order_id);
+   
+        $order_id = $request->order_id_status;
+        $status = $request->status;
+        $order = ApiOrder::where('id', $order_id)->first();
         $order->status = $status;
         $order->save();
         $order_comment = new OrderComment;
@@ -90,6 +90,22 @@ class OrderManagementController extends Controller
         $order_comment->order_id = $order_id;
         $order_comment->comment = $comment;
         $order_comment->save();
+        if ($status == 2) {
+            $isVoid = true;
+        } 
+        else {
+            $isVoid = false;
+        }
+        $json_body =
+        [
+            [
+                "id" => $order->order_id,
+                "status" => $status,
+                "isVoid" =>  $isVoid
+            ]
+        ];
+        SalesOrders::dispatch('update_order', $json_body)->onQueue(env('QUEUE_NAME'));
+        return redirect()->back()->with('success', 'Order Status changed successfully !');
     }
 
     public function create()
