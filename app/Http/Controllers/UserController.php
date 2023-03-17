@@ -292,6 +292,7 @@ class UserController extends Controller
 
     public function process_login(Request $request)
     {
+
         $request->validate([
             'email' => 'required',
             'password' => 'required'
@@ -308,6 +309,8 @@ class UserController extends Controller
                     return redirect()->route('cart');
                 } else {
                     if ($user->is_updated == 1) {
+                        $companies = Contact::where('user_id', $user->id)->get();
+                        Session::put('companies', $companies);
                         return redirect()->route('my_account');
                     } else {
                         return view('reset-password', compact('user'));
