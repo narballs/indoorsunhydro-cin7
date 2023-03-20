@@ -116,7 +116,7 @@ class SyncSuppliers extends Command
                                 $secondary_contact->email = $apiSecondaryContact->email;
                                 $secondary_contact->mobile = $apiSecondaryContact->mobile;
                                 $secondary_contact->phone = $apiSecondaryContact->phone;
-                                $secondary_contact->priceColumn = $api_contact->priaceColumn;
+                                $secondary_contact->priceColumn = $api_contact->priceColumn;
                                 $secondary_contact->save();
                             }
                             else {
