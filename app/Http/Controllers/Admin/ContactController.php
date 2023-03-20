@@ -502,6 +502,8 @@ class ContactController extends Controller
 
             $contact = Contact::where('secondary_id', $contact_id)->first();
             $parent_id = $contact->parent_id;
+            $pricing_column = Contact::where('parent_id', $parent_id)->first();
+            $pricing_column = $pricing_column->priceColumn;
             $client = new \GuzzleHttp\Client();
 
             $res = $client->request(
@@ -521,7 +523,10 @@ class ContactController extends Controller
 
                 if ($api_secondary_contact->id == $contact_id ) {
                     $updated_contact = Contact::where('secondary_id', $contact_id)->update([
-                        'email'  => $api_secondary_contact->email
+                        'email'  => $api_secondary_contact->email,
+                        'priceColumn' => $pricing_column,
+                        'firstName' => $api_secondary_contact->firstName,
+                        'lastName' => $api_secondary_contact->lastName
                     ]);
                     return response()->json([
                         'status' => '200',
