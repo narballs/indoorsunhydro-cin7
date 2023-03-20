@@ -116,6 +116,7 @@ class SyncSuppliers extends Command
                                 $secondary_contact->email = $apiSecondaryContact->email;
                                 $secondary_contact->mobile = $apiSecondaryContact->mobile;
                                 $secondary_contact->phone = $apiSecondaryContact->phone;
+                                $secondary_contact->priceColumn = $api_contact->priaceColumn;
                                 $secondary_contact->save();
                             }
                             else {
@@ -133,6 +134,7 @@ class SyncSuppliers extends Command
                                 $secondary_contact->email = $apiSecondaryContact->email;
                                 $secondary_contact->mobile = $apiSecondaryContact->mobile;
                                 $secondary_contact->phone = $apiSecondaryContact->phone;
+                                $secondary_contact->priceColumn = $api_contact->priceColumn;
                                 $secondary_contact->save();
                             }
 
@@ -180,16 +182,17 @@ class SyncSuppliers extends Command
                     if ($api_contact->secondaryContacts) {
                         foreach($api_contact->secondaryContacts as $secondaryContact) {
                             $secondaryContact = new Contact ([
-                              'secondary_id' => $secondaryContact->id,
-                              'parent_id'  => $api_contact->id,
-                              'is_parent' => 0,
-                              'firstName' => $secondaryContact->firstName,
-                              'lastName' => $secondaryContact->lastName,
-                              'jobTitle' => $secondaryContact->jobTitle,
-                              'company' => $secondaryContact->company,
-                              'phone' => $secondaryContact->phone,
-                              'mobile' => $secondaryContact->mobile,
-                             'email' => $secondaryContact->email,
+                                'secondary_id' => $secondaryContact->id,
+                                'parent_id'  => $api_contact->id,
+                                'is_parent' => 0,
+                                'firstName' => $secondaryContact->firstName,
+                                'lastName' => $secondaryContact->lastName,
+                                'jobTitle' => $secondaryContact->jobTitle,
+                                'company' => $secondaryContact->company,
+                                'priceColumn' => $api_contact->priceColumn,
+                                'phone' => $secondaryContact->phone,
+                                'mobile' => $secondaryContact->mobile,
+                                'email' => $secondaryContact->email,
                             ]);
                             $secondaryContact->save();
                         }
