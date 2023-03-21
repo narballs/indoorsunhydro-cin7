@@ -100,40 +100,43 @@ class UserController extends Controller
                 ->orWhere('email', 'like', '%' . $search . '%')
                 ->orWhereHas('contact', function ($query) use ($search) {
                     $query->where('contact_id', 'like', '%' . $search . '%')
-                        ->orWhere('company', 'like', '%' . $search . '%');
+                        ->orWhere('company', 'like', '%' . $search . '%')
+                        ->orWhere('email', 'like', '%' . $search . '%')
+                        ->orWhere('firstName', 'like', '%' . $search . '%')
+                        ->orWhere('lastName', 'like', '%' . $search . '%');
                 });
         }
-        if (!empty($primaryUserSearch)) {
-            $primary_contacts = Contact::where('firstName', 'LIKE', '%' . $primaryUserSearch . '%')
-                ->orWhere('lastName', 'like', '%' . $primaryUserSearch . '%')
-                ->orWhere('email', 'like', '%' . $primaryUserSearch . '%')
-                ->orWhere('contact_id', 'like', '%' . $primaryUserSearch . '%')
-                ->orWhere('company', 'like', '%' . $primaryUserSearch . '%');
-            $primary_contacts =  $primary_contacts->paginate(10);
-            return view('admin.users.admin_primary_contact', compact(
-                'primary_contacts',
-                'secondaryUser',
-                'primaryUserSearch'
-            ))
-                ->with('i', ($request->input('page', 1) - 1) * 10);
-        }
-        if (!empty($secondaryUserSearch)) {
-            $secondary_contacts = Contact::where('firstName', 'LIKE', '%' . $secondaryUserSearch . '%')
-                ->orWhere('lastName', 'like', '%' . $secondaryUserSearch . '%')
-                ->orWhere('email', 'like', '%' . $secondaryUserSearch . '%')
-                ->orWhere('contact_id', 'like', '%' . $secondaryUserSearch . '%')
-                ->orWhere('company', 'like', '%' . $secondaryUserSearch . '%');
-            $secondary_contacts =  $secondary_contacts->paginate(10);
-            return view('admin.users.admin_secondary_contact', compact(
-                'secondary_contacts',
-                'secondaryUser',
-                'secondaryUserSearch'
-            ))
-                ->with(
-                    'i',
-                    ($request->input('page', 1) - 1) * 10
-                );
-        }
+        // if (!empty($primaryUserSearch)) {
+        //     $primary_contacts = Contact::where('firstName', 'LIKE', '%' . $primaryUserSearch . '%')
+        //         ->orWhere('lastName', 'like', '%' . $primaryUserSearch . '%')
+        //         ->orWhere('email', 'like', '%' . $primaryUserSearch . '%')
+        //         ->orWhere('contact_id', 'like', '%' . $primaryUserSearch . '%')
+        //         ->orWhere('company', 'like', '%' . $primaryUserSearch . '%');
+        //     $primary_contacts =  $primary_contacts->paginate(10);
+        //     return view('admin.users.admin_primary_contact', compact(
+        //         'primary_contacts',
+        //         'secondaryUser',
+        //         'primaryUserSearch'
+        //     ))
+        //         ->with('i', ($request->input('page', 1) - 1) * 10);
+        // }
+        // if (!empty($secondaryUserSearch)) {
+        //     $secondary_contacts = Contact::where('firstName', 'LIKE', '%' . $secondaryUserSearch . '%')
+        //         ->orWhere('lastName', 'like', '%' . $secondaryUserSearch . '%')
+        //         ->orWhere('email', 'like', '%' . $secondaryUserSearch . '%')
+        //         ->orWhere('contact_id', 'like', '%' . $secondaryUserSearch . '%')
+        //         ->orWhere('company', 'like', '%' . $secondaryUserSearch . '%');
+        //     $secondary_contacts =  $secondary_contacts->paginate(10);
+        //     return view('admin.users.admin_secondary_contact', compact(
+        //         'secondary_contacts',
+        //         'secondaryUser',
+        //         'secondaryUserSearch'
+        //     ))
+        //         ->with(
+        //             'i',
+        //             ($request->input('page', 1) - 1) * 10
+        //         );
+        // }
         $data = $user_query->paginate(10);
         $users = User::role(['Admin'])->get();
         $count = $users->count();
