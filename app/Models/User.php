@@ -12,7 +12,7 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable
 {
 
-    use HasApiTokens, HasFactory, Notifiable,HasRoles;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -49,6 +49,6 @@ class User extends Authenticatable
 
     public function contact()
     {
-        return $this->belongsTo('App\Models\Contact', 'id', 'user_id');
+        return $this->hasMany('App\Models\Contact', 'user_id', 'id');
     }
 }
