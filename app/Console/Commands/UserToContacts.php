@@ -40,18 +40,7 @@ class UserToContacts extends Command
      */
     public function handle()
         {
-            // $users = User::all();
-            // foreach($users as $user){
-            //     $existing_email = $user->email;
-            //     $contact = Contact::where('email',$existing_email)->get();
-            //     if (!empty($contact)){
-            //         foreach ($contact as $data){
-            //             Contact::firstOrCreate([
-            //                 'user_id' => $data->user_id
-            //             ]);
-            //        }
-            //     }
-            // }
+      
             $users = User::all();
             foreach($users as $user) {
                 $user_id = $user->id;

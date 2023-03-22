@@ -109,7 +109,7 @@
                     Category:&nbsp;&nbsp;Unassigned
                 </p>
                 @endif
-                @if ($product->stockAvailable > 0 && $option->stockAvailable > 0)
+                @if ($product->stockAvailable > 0 || $option->stockAvailable > 0)
                 <!-- <button class="ajaxSubmit col w-100 whishlist-button" type="submit" style="max-height: 46px;"
                     id="ajaxSubmit_{{$product->id}}"
                     onclick="addToList('{{$product->product_id}}', '{{$option->option_id}}')">Add to wishlist</button> -->
