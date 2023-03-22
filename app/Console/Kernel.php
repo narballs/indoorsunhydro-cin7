@@ -19,7 +19,9 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
-          $schedule->command('Sync:ApiData')
+        $schedule->command('Sync:ApiData')
+            ->hourly();
+        $schedule->command('Sync:Stock')
             ->hourly();
     }
 
