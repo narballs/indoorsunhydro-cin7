@@ -41,12 +41,12 @@ class SyncStock extends Command
        
         $client2 = new \GuzzleHttp\Client();
         $products = Product::all()->pluck('product_id', 'stockAvailable');
-        $total_products_pages = 250;
+        $total_products_pages = 2;
 
-
+        $total_stock = 0;
         for ($i = 1; $i <= $total_products_pages; $i++) {
-            $this->info('Processing page#' . $i);
-            sleep(2);
+            //$this->info('Processing page#' . $i);
+            sleep(1);
 
             $res = $client2->request(
                 'GET', 
@@ -61,21 +61,23 @@ class SyncStock extends Command
             );
             $api_stock = $res->getBody()->getContents();
             $api_stock = json_decode($api_stock);
+            $this->info('ids' .$api_stock[0]->productId);
+            
             $total_stock = 0;
-            //$product = Product::where('product_id',$api_stock[0]->productId)->first();
-            $product = Product::find($api_stock[0]->productId);
+            
             foreach($api_stock as $stock) {
-                //dd($stock);
+              $product = Product::where('product_id', $stock->productId)->first();
                 $this->info('--------------------');
                 $this->info($stock->available);
-                $total_stock_1 = $total_stock + $stock->available;
-                $available_stock = intval($total_stock_1);
+                $total_stock = $total_stock + $stock->available;
             }
+          
             if (!empty($product)) { 
-                $product->stockAvailable = $available_stock;
-                $product->save();
+                if ($product->stockAvailable != $total_stock) {
+                    $product->stockAvailable = $total_stock;
+                    $product->save();
+                }
             }
         }
     }
-
 }
