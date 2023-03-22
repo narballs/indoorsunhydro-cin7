@@ -53,7 +53,7 @@ class UserController extends Controller
         $user_query = User::orderBy('id', 'DESC')->with('contact');
         if (!empty($usersData)) {
             if ($usersData == 'admin-user') {
-                $user_query = $user_query->role(['Admin', 'superadmin']);
+                $user_query = $user_query->role(['Admin']);
             } elseif ($usersData == 'cin7-merged') {
                 $user_query = $user_query->orWhereHas('contact', function ($query) {
                     $query->whereNotNull('contact_id');
