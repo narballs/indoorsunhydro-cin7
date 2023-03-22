@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Models\Product;
+use App\Models\ProductOption;
 class SyncStock extends Command
 {
     /**
@@ -36,16 +37,19 @@ class SyncStock extends Command
      *
      * @return int
      */
+    
     public function handle()
     {
        
         $client2 = new \GuzzleHttp\Client();
         $products = Product::all()->pluck('product_id', 'stockAvailable');
-        $total_products_pages = 2;
+        $total_products_pages = 150;
 
         $total_stock = 0;
+
+        $product_array = [];
+
         for ($i = 1; $i <= $total_products_pages; $i++) {
-            //$this->info('Processing page#' . $i);
             sleep(1);
 
             $res = $client2->request(
@@ -55,27 +59,38 @@ class SyncStock extends Command
                     'auth' => [
                         'IndoorSunHydroUS', 
                         'faada8a7a5ef4f90abaabb63e078b5c1'
-                    ]
-                     
+                    ]                     
                 ]
             );
             $api_stock = $res->getBody()->getContents();
             $api_stock = json_decode($api_stock);
-            $this->info('ids' .$api_stock[0]->productId);
             
             $total_stock = 0;
             
-            foreach($api_stock as $stock) {
-              $product = Product::where('product_id', $stock->productId)->first();
-                $this->info('--------------------');
-                $this->info($stock->available);
-                $total_stock = $total_stock + $stock->available;
+            foreach ($api_stock as $stock) {
+
+                if (isset($product_array[$stock->productId])) {
+                    $product_array[$stock->productId]['quantity'] = $product_array[$stock->productId]['quantity'] + $stock->available;
+                }
+                else {
+                    $product_array[$stock->productId] = [
+                        'quantity' => $stock->available
+                    ];
+                }
+            
             }
-          
-            if (!empty($product)) { 
-                if ($product->stockAvailable != $total_stock) {
-                    $product->stockAvailable = $total_stock;
-                    $product->save();
+
+            if (!empty($product_array)) {
+                foreach ($product_array as $product_id => $stock_quantity) {
+                    $product_option = ProductOption::where('product_id', $product_id)->first();
+
+                    if (!empty($product_option) && $product_option->stockAvailable != $stock_quantity['quantity'])
+                    {
+                        $product_option->stockAvailable = $stock_quantity['quantity'];
+                        $product_option->stockOnHand = $stock_quantity['quantity'];
+                        $product_option->save();
+                    }
+
                 }
             }
         }
