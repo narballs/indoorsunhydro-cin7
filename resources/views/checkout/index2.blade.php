@@ -1220,7 +1220,7 @@
                             var companiesData = {}
                                 jQuery.ajax({
                                         method: 'GET',
-                                        url: "{{ url('/my-account/') }}",
+                                        url: "{{ url('/select-companiens-to-order/') }}",
                                         success: function(response) 
                                             {
                                                 $.each(response.companies, function( index, value ) 
@@ -1291,7 +1291,7 @@
         var companiesData = {}
             jQuery.ajax({
                 method: 'GET',
-                url: "{{ url('/my-account/') }}",
+                url: "{{ url('/select-companiens-to-order') }}",
                 success: function(response) {
                     $.each(response.companies, function( index, value ) 
                     {
@@ -1520,14 +1520,14 @@ $(".previous").click(function(){
     });
 });
 
-                            $('.radio-group .radio').click(function(){
-                            $(this).parent().find('.radio').removeClass('selected');
-                            $(this).addClass('selected');
-                            });
+    $('.radio-group .radio').click(function(){
+    $(this).parent().find('.radio').removeClass('selected');
+    $(this).addClass('selected');
+    });
 
-                            $(".submit").click(function(){
-                            return false;
-                        })
+    $(".submit").click(function(){
+    return false;
+})
                             
 });
             </script>

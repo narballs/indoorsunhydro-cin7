@@ -26,12 +26,13 @@ class PermissionTableSeeder extends Seeder
            'order-list',
            'contact-list',
            'user-logout',
-           'edit-profile'
+           'edit-profile', 
+           'order-approve'
         ];
 
         
         foreach ($permissions as $permission) {
-            Permission::create(['name' => $permission]);
+            Permission::firstOrCreate(['name' => $permission]);
         }
     }
 }

@@ -26,6 +26,7 @@ use App\Helpers\MailHelper;
 use \Illuminate\Support\Str;
 use \Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
+use App\Jobs\SalesOrders;
 
 class UserController extends Controller
 {
@@ -495,6 +496,30 @@ class UserController extends Controller
     public function my_account(Request $request)
     {
         if ($request->ajax()) {
+            $user_id = auth()->id();
+               $companies = Contact::where('user_id', auth()->user()->id)->get();
+               $user = User::where('id', $user_id)->first();
+               $can_approve_order = $user->hasRole('Order Approver');
+              
+
+                $user_orders = ApiOrder::where('user_id', $user_id)->with('contact')->with('apiOrderItem')->orderBy('id', 'desc')->get();
+                foreach ($user_orders as $user_order) {
+                    $createdDate = $user_order->created_at;
+                    $user_order->createdDate = $createdDate->format('F \  j, Y');
+                }
+
+                $response = [
+                    'can_approve_order' => $can_approve_order,
+                    'user_orders' => $user_orders
+                ];
+
+                return $response;
+
+                return $user_orders;
+
+            
+        }
+        if ($request->ajax()) {
             $companies = Contact::where('user_id', auth()->user()->id)->get();
             return response()->json([
                 'message' => 'success',
@@ -562,8 +587,12 @@ class UserController extends Controller
                     $createdDate = $user_order->created_at;
                     $user_order->createdDate = $createdDate->format('F \  j, Y');
                 }
-
                 return $user_orders;
+
+                // return response()->json([
+                //     'data' => $user_order 
+
+                // ]);
             }
 
             return view('my-account', compact(
@@ -893,4 +922,141 @@ class UserController extends Controller
         Session::put('companies', $companies);
         return redirect('my-account');
     }
+
+    public function user_order_approve(Request $request) {
+        $order_id = $request->order_id;
+        $currentOrder = ApiOrder::where('id', $order_id)->first();
+        $memberId = $currentOrder->memberId;
+        $order_items = ApiOrderItem::with('product.options')->where('order_id', $order_id)->get();
+        $dateCreated = Carbon::now();
+        $lineItems = [];
+        foreach ($order_items as $order_item) {
+            $lineItems[] = [
+                "id" => $order_item->product->product_id,
+                "createdDate" => '2022-07-31T23:43:38Z',
+                "transaction" => '12',
+                "parentId" => 1,
+                "productId" => $order_item->product->product_id,
+                "productOptionId" => null,
+                "integrationRef" => "sample string 15",
+                "sort" => 16,
+                "code" => $order_item->product->code,
+                "name" => $order_item->product->name,
+                "option1" => $order_item->product->option1,
+                "option2" => $order_item->product->option2,
+                "option3" => $order_item->product->option,
+                "qty" => $order_item->quantity,
+                "styleCode" => "sample string 1",
+                "barcode" => "sample string 2",
+                "sizeCodes" => "sample string 4",
+                "lineComments" => null,
+                "unitCost" => $order_item->price,
+                "unitPrice" => $order_item->price,
+                "discount" => null,
+                "qtyShipped" => 7,
+                "holdingQty" => 8,
+                "accountCode" => null,
+                "stockControl" => "Undefined",
+                "stockMovements" => [
+                    [
+                        "batch" => "sample string 1",
+                        "quantity" => 2.0,
+                        "serial" => "sample string 3"
+                    ],
+                    [
+                        "batch" => "sample string 1",
+                        "quantity" => 2.0,
+                        "serial" => "sample string 3"
+                    ],
+                ],
+                "sizes" => [
+                    [
+                        "name" => "sample string 1",
+                        "code" => "sample string 2",
+                        "barcode" => "sample string 3",
+                        "qty" => 4.0
+                    ]
+                ],
+            ];
+        }
+        $order = [];
+        $order = [
+            [
+                $currentOrder,
+                "createdDate" => $dateCreated,
+                "modifiedDate" => "",
+                "createdBy" => 79914,
+                "processedBy" => 79914,
+                "isApproved" => true,
+                "reference" => $currentOrder->reference,
+                "memberId" => 403,
+                "branchId" => 3,
+                "branchEmail" => "wqszeeshan@gmail.com",
+                "projectName" => "",
+                "trackingCode" => "",
+                "internalComments" => "sample string 51",
+                "productTotal" => 100,
+                "freightTotal" => null,
+                "freightDescription" => null,
+                "surcharge" => null,
+                "surchargeDescription" => null,
+                "discountTotal" => null,
+                "discountDescription" => null,
+                "total" => 100,
+                "currencyCode" => "USD",
+                "currencyRate" => 59.0,
+                "currencySymbol" => "$",
+                "taxStatus" => "Excl",
+                "taxRate" => 8.75,
+                "source" => "sample string 62",
+                "accountingAttributes" =>
+                [
+                    "importDate" => "2022-07-13T15:21:16.1946848+12:00",
+                    "accountingImportStatus" => "NotImported"
+                ],
+                "memberEmail" => "wqszeeshan@gmail.com",
+                "memberCostCenter" => "sample string 6",
+                "memberAlternativeTaxRate" => "",
+                "costCenter" => null,
+                "alternativeTaxRate" => "8.75%",
+                // "estimatedDeliveryDate" => "2022-07-13T15:21:16.1946848+12:00",
+                "estimatedDeliveryDate" => $currentOrder->date,
+                "salesPersonId" => 10,
+                "salesPersonEmail" => "wqszeeshan@gmail.com",
+                "paymentTerms" => $currentOrder->paymentTerms,
+                "customerOrderNo" => $currentOrder->po_number,
+                "voucherCode" => "sample string 14",
+                "deliveryInstructions" =>  $currentOrder->memo,
+                "status" => "VOID",
+                "stage" => "",
+                "invoiceDate" => null,
+                "invoiceNumber" => 4232,
+                "dispatchedDate" => null,
+                "logisticsCarrier" => "",
+                "logisticsStatus" => 1,
+                "distributionBranchId" => 0,
+                "lineItems" => $lineItems
+
+            ],
+        ];
+        SalesOrders::dispatch('create_order', $order)->onQueue(env('QUEUE_NAME'));
+        //$currentOrder = ApiOrder::where('id', $order_id)->first();
+
+        return response()->json(['success' => true]);
+    }
+
+    public function verify_order(Request $request) {
+        $order_id = $request->order_id;
+        $order = ApiOrder::where('id', $order_id)->first();
+        return $data = $order;
+    }
+
+    public function chooise_companie (Request $request) {
+        if ($request->ajax()) {
+              $companies = Contact::where('user_id', auth()->user()->id)->get();
+                return response()->json([
+                    'message' => 'success',
+                    'companies' => $companies
+                ]);
+     }      }
 }
