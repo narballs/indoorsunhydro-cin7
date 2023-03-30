@@ -151,6 +151,7 @@ Route::post('/login/', [UserController::class, 'process_login'])->name('login');
 Route::post('/user-contact/', [UserController::class, 'save_contact'])->name('save_contact');
 Route::post('/update-contact/', [UserController::class, 'update_contact'])->name('update_contact');
 Route::get('/my-account/', [UserController::class, 'my_account'])->name('my_account');
+Route::get('select-companiens-to-order', [UserController::class,'chooise_companie']);
 Route::get('/my-qoutes/', [UserController::class, 'my_qoutes'])->name('my_qoutes');
 Route::get('/my-qoutes-details/{id}', [UserController::class, 'my_qoutes_details'])->name('my_qoutes_details');
 Route::get('/my-qoute-edit/{id}', [UserController::class, 'my_qoute_edit'])->name('my_qoute_edit');
@@ -229,6 +230,8 @@ Route::group(['middleware' => ['auth']], function () {
 Route::get('product/search', [ProductController::class, 'productSearch'])->name('product_search');
 Route::post('admin/send-invitation-email', [ContactController::class, 'send_invitation_email'])->name('admin.send_invitation_email');
 Route::post('create/secondary/user', [UserController::class, 'create_secondary_user']);
+Route::post('user-order-approve', [UserController::class, 'user_order_approve']);
+Route::post('/verify-order/', [UserController::class, 'verify_order']);
 Route::delete('secondary/user/delete', [UserController::class, 'delete_secondary_user'])->name('secondary_user.delete');
 Route::post('/reset-password', [UserController::class, 'reset_password'])->name('reset_password');
 

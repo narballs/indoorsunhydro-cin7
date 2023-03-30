@@ -79,7 +79,7 @@ class SyncStock extends Command
                 }
             
             }
-
+            
             if (!empty($product_array)) {
                 foreach ($product_array as $product_id => $stock_quantity) {
                     $product_option = ProductOption::where('product_id', $product_id)->first();

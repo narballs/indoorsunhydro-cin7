@@ -29,8 +29,8 @@
 						</div>
 						<div class="col-md-12 mt-4">
 							<p class="order-confirmation-page-title">
-								{{$order->user->contact->firstName}}
-								{{$order->user->contact->lastName}}.
+								{{$order_contact->firstName}}
+								{{$order_contact->lastName}}
 								<span class="order-confirmation-page-user-name">Your order has been received.</span>
 							</p>
 						</div>
@@ -54,7 +54,7 @@
 								Mobile
 							</p>
 							<p class="order-confirmation-page-mobile-item">
-								{{$order->user->contact->phone}}
+								{{$order_contact->phone}}
 							</p>
 						</div>
 						<div class="col-xl-2 col-lg-3 col-md-6 col-sm-12 ps-5">
@@ -97,60 +97,60 @@
 									<div class="row">
 										<div class="col-md-12">
 											<p class="order-confirmation-page-first-name-last-name-user-name pt-3">
-												{{$order->user->contact->firstName}}
-												{{$order->user->contact->lastName}}
+												{{$order_contact->firstName}}
+												{{$order_contact->lastName}}
 											</p>
 											<div class="row">
 												<div class="col-md-6">
 													<p class="order-confirmation-page-address-line-one-title">
 														Address line 1
 													</p>
-													@if (!$order->user->contact->address1)
+													@if (!$order_contact->address1)
 													<p class="order-confirmation-page-address-line-one-item">
 														Addressline1 empty
 													</p>
 													@else
 													<p class="order-confirmation-page-address-line-one-item">
-														{{$order->user->contact->address1}}
+														{{$order_contact->address1}}
 													</p>
 													@endif
 													<div class="row mt-4">
 														<div class="col-xl-4 col-lg-6 col-md-12 col-sm-12">
 															<p class="order-confirmation-page-city-name-title">City</p>
-															@if (!$order->user->contact->city)
+															@if (!$order_contact->city)
 															<p class="order-confirmation-page-city-name-item">
 																City empty
 															</p>
 															@else
 															<p class="order-confirmation-page-city-name-item">
-																{{$order->user->contact->city}}
+																{{$order_contact->city}}
 															</p>
 															@endif
 														</div>
 														<div class="col-xl-4 col-lg-6 col-md-12 col-sm-12">
 															<p class="order-confirmation-page-state-name-title">State
 															</p>
-															@if (!$order->user->contact->state)
+															@if (!$order_contact->state)
 															<p class="order-confirmation-page-state-name-item">
 																State empty
 															</p>
 															@else
 															<p class="order-confirmation-page-state-name-item">
-																{{$order->user->contact->state}}
+																{{$order_contact->state}}
 															</p>
 															@endif
 														</div>
 														<div class="col-xl-4 col-lg-6 col-md-12 col-sm-12">
 															<p class="order-confirmation-page-zip-name-title">Zip</p>
 
-															@if (!$order->user->contact->postCode)
+															@if (!$order_contact->postCode)
 															<p class="order-confirmation-page-zip-name-item">
 																zip empty
 															</p>
 															@else
 															<p class="order-confirmation-page-zip-name-item">
 
-																{{$order->user->contact->postCode}}
+																{{$order_contact->postCode}}
 															</p>
 															@endif
 														</div>
@@ -160,9 +160,9 @@
 													<p class="order-confirmation-page-address-line-tow-title">
 														Address line 1
 													</p>
-													@if ($order->user->contact->address2)
+													@if ($order_contact->address2)
 													<p class="order-confirmation-page-address-line-tow-item">
-														{{$order->user->contact->address2}}
+														{{$order_contact->address2}}
 													</p>
 													@endif
 													<p class="order-confirmation-page-address-line-tow-item">
@@ -180,59 +180,59 @@
 									<div class="row">
 										<div class="col-md-12">
 											<p class="order-confirmation-page-first-name-last-name-user-name pt-3">
-												{{$order->user->contact->firstName}}
-												{{$order->user->contact->lastName}}
+												{{$order_contact->firstName}}
+												{{$order_contact->lastName}}
 											</p>
 											<div class="row">
 												<div class="col-md-6">
 													<p class="order-confirmation-page-address-line-one-title">
 														Address line 1
 													</p>
-													@if (!$order->user->contact->postalAddress1)
+													@if (!$order_contact->postalAddress1)
 													<p class="order-confirmation-page-address-line-one-item">
 														Address Line 1 Empty
 													</p>
 													@else
 													<p class="order-confirmation-page-address-line-one-item">
-														{{$order->user->contact->postalAddress1}}
+														{{$order_contact->postalAddress1}}
 													</p>
 													@endif
 
 													<div class="row mt-4">
 														<div class="col-xl-4 col-lg-6 col-md-12 col-sm-12">
 															<p class="order-confirmation-page-city-name-title">City</p>
-															@if (!$order->user->contact->postalCity)
+															@if (!$order_contact->postalCity)
 															<p class="order-confirmation-page-city-name-item">
 																City empty
 															</p>
 															@else
 															<p class="order-confirmation-page-city-name-item">
-																{{$order->user->contact->postalCity}}
+																{{$order_contact->postalCity}}
 															</p>
 															@endif
 														</div>
 														<div class="col-xl-4 col-lg-6 col-md-12 col-sm-12">
 															<p class="order-confirmation-page-state-name-title">State
 															</p>
-															@if (!$order->user->contact->postalState)
+															@if (!$order_contact->postalState)
 															<p class="order-confirmation-page-state-name-item">
 																State empty
 															</p>
 															@else
 															<p class="order-confirmation-page-state-name-item">
-																{{$order->user->contact->postalState}}
+																{{$order_contact->postalState}}
 															</p>
 															@endif
 														</div>
 														<div class="col-xl-4 col-lg-6 col-md-12 col-sm-12">
 															<p class="order-confirmation-page-zip-name-title">Zip</p>
-															@if (!$order->user->contact->postalPostCode)
+															@if (!$order_contact->postalPostCode)
 															<p class="order-confirmation-page-zip-name-item">
 																zip empty
 															</p>
 															@else
 															<p class="order-confirmation-page-zip-name-item">
-																{{$order->user->contact->postalPostCode}}
+																{{$order_contact->postalPostCode}}
 															</p>
 															@endif
 														</div>
@@ -242,13 +242,13 @@
 													<p class="order-confirmation-page-address-line-tow-title">
 														Address line 2
 													</p>
-													@if (!$order->user->contact->postalAddress2)
+													@if (!$order_contact->postalAddress2)
 													<p class="order-confirmation-page-address-line-tow-item">
 														Address Line 2 Empty
 													</p>
 													@else
 													<p class="order-confirmation-page-address-line-tow-item">
-														{{$order->user->contact->postalAddress2}}
+														{{$order_contact->postalAddress2}}
 													</p>
 													@endif
 
@@ -367,14 +367,14 @@
 											<div class="address-line bg-light mb-1">
 												Your Name
 											</div>
-											{{$order->user->contact->firstName}}
-											{{$order->user->contact->lastName}}
+											{{$order_contact->firstName}}
+											{{$order_contact->lastName}}
 										</div>
 										<div class="col-md-6 name mt-4">
 											<div class="address-line bg-light mb-1">
 												Your Company Name
 											</div>
-											{{$order->user->contact->company}}
+											{{$order_contact->company}}
 										</div>
 									</div>
 								</div>
@@ -383,13 +383,13 @@
 								</div>
 
 								<div class="bg-light name">
-									{{$order->user->contact->postalAddress1}}
+									{{$order_contact->postalAddress1}}
 								</div>
 								<div class="address-line bg-light">
 									Address line 2
 								</div>
 								<div class="bg-light name">
-									{{$order->user->contact->postalAddress2}}
+									{{$order_contact->postalAddress2}}
 								</div>
 								<div class="row m-0 bg-light">
 									<div class="col p-0 address-line">
@@ -405,13 +405,13 @@
 								<div class="billing-address bg-light">
 									<div class="row m-0">
 										<div class="col p-0 name">
-											{{$order->user->contact->postalCity}}
+											{{$order_contact->postalCity}}
 										</div>
 										<div class="col p-0 name">
-											{{$order->user->contact->postalState}}
+											{{$order_contact->postalState}}
 										</div>
 										<div class="col p-0 name">
-											{{$order->user->contact->postalPostCode}}
+											{{$order_contact->postalPostCode}}
 										</div>
 									</div>
 								</div>
@@ -426,14 +426,14 @@
 											<div class="address-line bg-light mb-1">
 												My Name
 											</div>
-											{{$order->user->contact->firstName}}
-											{{$order->user->contact->lastName}}
+											{{$order_contact->firstName}}
+											{{$order_contact->lastName}}
 										</div>
 										<div class="col-md-6 name mt-4">
 											<div class="address-line bg-light mb-1">
 												My Company Name
 											</div>
-											{{$order->user->contact->company}}
+											{{$order_contact->company}}
 
 										</div>
 									</div>
@@ -443,13 +443,13 @@
 								</div>
 
 								<div class="bg-light name">
-									{{$order->user->contact->postalAddress1}}
+									{{$order_contact->postalAddress1}}
 								</div>
 								<div class="address-line bg-light">
 									Address line 2
 								</div>
 								<div class="bg-light name">
-									{{$order->user->contact->postalAddress2}}
+									{{$order_contact->postalAddress2}}
 								</div>
 								<div class="row m-0 bg-light">
 									<div class="col p-0 address-line">
@@ -465,13 +465,13 @@
 								<div class="billing-address bg-light">
 									<div class="row m-0">
 										<div class="col p-0 name">
-											{{$order->user->contact->postalCity}}
+											{{$order_contact->postalCity}}
 										</div>
 										<div class="col p-0 name">
-											{{$order->user->contact->postalState}}
+											{{$order_contact->postalState}}
 										</div>
 										<div class="col p-0 name">
-											{{$order->user->contact->postalPostCode}}
+											{{$order_contact->postalPostCode}}
 										</div>
 									</div>
 								</div>
@@ -539,7 +539,7 @@
 									<td class="table-items-sub-item">{{$order->id}}</td>
 									<td class="table-items-sub-item">{{$formatedDate}}</td>
 									<td class="table-items-sub-item">{{$order->user->email}}</td>
-									<td class="table-items-sub-item">{{$order->user->contact->phone}}</td>
+									<td class="table-items-sub-item">{{$order_contact->phone}}</td>
 								</tr>
 								<tr class="table-heading">
 									<td class="table-heading-subheading">Shipping</td>
