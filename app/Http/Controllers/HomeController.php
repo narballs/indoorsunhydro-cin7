@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use Session;
 
 
 class HomeController extends Controller
@@ -15,7 +16,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-
+        // session::forget('companies');
+        //  session::forget('cart');
         $categories = Category::orderBy('name', 'ASC')
             ->with('products')->where('is_active', 1)
             ->get();

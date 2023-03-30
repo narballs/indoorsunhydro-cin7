@@ -43,7 +43,9 @@ class CheckoutController extends Controller
     }
     public function thankyou($id)
     {
+
         $order = ApiOrder::where('id', $id)->with('user.contact', 'apiOrderItem.product.options')->first();
+        $order_contact = Contact::where('contact_id', $order->memberId)->first();
         $createdDate = $order->created_at;
         $formatedDate = $createdDate->format('F  j, Y h:i:s A');
         $orderitems = ApiOrderItem::where('order_id', $id)->with('product')->get();
@@ -51,7 +53,8 @@ class CheckoutController extends Controller
         $best_products = Product::where('status', '!=', 'Inactive')->orderBy('views', 'DESC')->limit(4)->get();
         $user_id = Auth::id();
         $contact = Contact::where('user_id', $user_id)->first();
+
         $pricing = $contact->priceColumn;
-        return view('checkout/order-received', compact('order', 'orderitems', 'formatedDate', 'count', 'best_products', 'pricing'));
+        return view('checkout/order-received', compact('order', 'orderitems', 'order_contact', 'formatedDate', 'count', 'best_products', 'pricing'));
     }
 }

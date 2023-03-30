@@ -345,7 +345,9 @@
 									<td class="pl-0" style="width:90px;">Order</td>
 									<td style="width: 200px;">Date</td>
 									<td style="width: 185px">Status</td>
+									<td style="width:350px">Company</td>
 									<td style="width:350px">Total</td>
+									<td style="width:350px">Cin7 Status</td>
 									<td class="text-center pr-0" style="width:103px;">Action</td>
 								</tr>
 								<!-- <tr class="border-bottom ms-3 mr-3"></tr> -->
@@ -1176,7 +1178,9 @@
 						id : id,
 					
 					},
-					success: function(result){
+					success: function(resposne){
+						console.log(resposne);
+						var result = resposne;
 						console.log(result.user_address)
 							var order_id = '';
 							order_id += 'Order #'+ '<strong>'+result.user_order.id+'</strong>'+' was placed on '+'<strong>'+result.user_order.createdDate +'</strong>'+' and is currently '+'<strong>'+result.user_order.status+'</strong>';
@@ -1236,7 +1240,10 @@
 					 jQuery.ajax({
 						url: "{{ url('/my-account/') }}",
 						method: 'GET',	
-						success: function(data) {
+						success: function(response) {
+							var data = response.user_orders;
+							var can_approve_order = response.can_approve_order;
+
 							console.log(data);
 							var res='';
 							var total_items = 0;
@@ -1249,17 +1256,33 @@
 							});
 							console.log(total_items);
 							console.log(total_items);
+							console.log(value.order_id);
 							var temp = value.createdDate;
             				res +=
-            					'<tr class="table-row-content border-bottom">'+
+            					'<tr class="table-row-content border-bottom" id="'+value.id+'">'+
                 					'<td class="table-order-number pl-0">#'+value.id+'</td>'+
                 					'<td>'+temp+'</td>'+
                 					'<td>'+value.status+'</td>'+
-                					'<td><strong>'+'$'+value.total.toFixed(2)+'</strong>'+' For ('+total_items+' '+' items)'+'</td>'+
-                					'<td class="pr-0">'+'<a onclick=userOrderDetail('+value.id+') onmouseover=replaceEye('+value.id+') onmouseout= replaceEye2('+value.id+');>'+'<button class="btn btn-outline-success view-btn p-0" type="" style="width:100%;height:32px;"><img src="theme/img/eye.png" class="mr-1 mb-1" id="eye_icon_'+value.id+'"></i>View</button>'+'</td></a>'+
+                						'<td>'+value.contact.company+'</td>'+
+                					'<td><strong>'+'$'+value.total.toFixed(2)+'</strong>'+' For ('+total_items+' '+' items)'+'</td>';
+                			if (value.order_id != null) {
+                				res += '<td id="status_'+value.id+'">'+'Approved'+'</td>';
+
+                			}
+                			else {
+                				res += '<td>'+'<span id="status_'+value.id+'">Pending</span>'+' <input type="hidden" id="verify_order_'+value.id+'" value=""></td>';
+                			}
+
+                			
+         
+                			res += '<td class="pr-0">'+'<a onclick=userOrderDetail('+value.id+') onmouseover=replaceEye('+value.id+') onmouseout= replaceEye2('+value.id+');>'+'<button class="btn btn-outline-success view-btn p-0" type="" style="width:100%;height:32px;"><img src="theme/img/eye.png" class="mr-1 mb-1" id="eye_icon_'+value.id+'"></i>View</button>'+'</td></a>';
+           					if (can_approve_order && value.isApproved != 1) {
+                				res += '<td><button class="btn btn-outline-primary btn-sm" onclick="approveOrder('+value.id+')" id="approve_'+value.id+'">Approve</button></td>'+
            						'</tr>';
+                			}
 
    								});
+
 						  $('#order_table').html(res);
 						},					
 	
@@ -1760,6 +1783,49 @@
 				  	 window.location.reload();
 			        }
 			    });
+		}
+
+		function approveOrder(id) {
+			var order_id = id; 
+			jQuery.ajax({
+				url: "{{ url('/user-order-approve/')}}",
+				method: 'POST',
+				data : {
+					"_token": "{{ csrf_token() }}",
+					"order_id" : order_id
+				},
+				success: function(response) {
+				  	console.log(response);
+				  	//window.setInterval(console.log, 1000);
+				  	$('#verify_order_' + order_id).val(1);
+				  	setInterval( function() { verify_order(order_id); }, 1000 );
+				}, 	
+			});
+
+			function verify_order(order_id) {
+				if ($('#verify_order_' + order_id).val() == '0') {
+					//console.log('loop stopped');
+					return false;
+				}
+				console.log('processing loop ...');
+
+				jQuery.ajax({
+					url: "{{ url('/verify-order/')}}",
+					method: 'POST',
+					data : {
+						"_token": "{{ csrf_token() }}",
+						"order_id" : order_id
+					},
+					success: function(data) {
+						if (data.order_id) {
+							$('#verify_order_' + order_id).val(0);
+							$('#status_'+ order_id).html('Approved');
+							$('#approve_'+ order_id).addClass('d-none');
+						}
+					},					
+				});
+			}
+			
 		}
 		</script>
 

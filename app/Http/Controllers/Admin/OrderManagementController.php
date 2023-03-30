@@ -29,7 +29,7 @@ class OrderManagementController extends Controller
 {
     function __construct()
     {
-        $this->middleware(['role:Admin']);
+       $this->middleware(['role:Admin'])->except('order_full_fill', 'send_invitation_email');
     }
 
     public function index(Request $request)
