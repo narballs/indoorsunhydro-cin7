@@ -88,6 +88,7 @@ class SalesOrders implements ShouldQueue
                 break;
         }
         $response = json_decode($res);
+        dd($response);
         $order_id = $response[0]->id;
         $reference = $response[0]->code;
         echo $order_id . '-----' . $reference;
