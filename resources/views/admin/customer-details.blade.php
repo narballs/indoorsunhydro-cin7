@@ -589,7 +589,9 @@
 			})
 
     		}
+
    		});
+   		window.location.reload();
  	}
 </script>
 @stop

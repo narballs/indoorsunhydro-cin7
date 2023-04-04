@@ -476,17 +476,57 @@ class ContactController extends Controller
                     'auth' => [
                         env('API_USER'),
                         env('API_PASSWORD')
+                        // 'IndoorSunHydroUS',
+                        // 'faada8a7a5ef4f90abaabb63e078b5c1'
                     ]
                 ]
             );
             $api_contact = $res->getBody()->getContents();
             $api_contact = json_decode($api_contact);
+
             Contact::where('contact_id', $contact_id)->update([
                 'email'  => $api_contact->email,
                 'firstName' => $api_contact->firstName,
                 'lastName' => $api_contact->lastName,
                 'priceColumn' => $api_contact->priceColumn
             ]);
+            if ($api_contact->secondaryContacts) {
+                foreach($api_contact->secondaryContacts as $apiSecondaryContact) {
+                $secondary_contact = Contact::where('secondary_id', $apiSecondaryContact->id)->where('parent_id', $contact->contact_id)->first();
+                        if ($secondary_contact) {
+
+                            $secondary_contact->secondary_id = $apiSecondaryContact->id;
+                            $secondary_contact->is_parent = 0;
+                            $secondary_contact->company = $apiSecondaryContact->company;
+                            $secondary_contact->firstName = $apiSecondaryContact->firstName;
+                            $secondary_contact->lastName = $apiSecondaryContact->lastName;
+                            $secondary_contact->jobTitle  = $apiSecondaryContact->jobTitle;
+                            $secondary_contact->email = $apiSecondaryContact->email;
+                            $secondary_contact->mobile = $apiSecondaryContact->mobile;
+                            $secondary_contact->phone = $apiSecondaryContact->phone;
+                            $secondary_contact->priceColumn = $api_contact->priceColumn;
+                            $secondary_contact->save();
+                        }
+                        else {
+                            $secondary_contact = new Contact();
+
+                                // parent_id
+                            $secondary_contact->parent_id = $contact->contact_id;
+
+                            $secondary_contact->secondary_id = $apiSecondaryContact->id;
+                            $secondary_contact->is_parent = 0;
+                            $secondary_contact->company = $apiSecondaryContact->company;
+                            $secondary_contact->firstName = $apiSecondaryContact->firstName;
+                            $secondary_contact->lastName = $apiSecondaryContact->lastName;
+                            $secondary_contact->jobTitle  = $apiSecondaryContact->jobTitle;
+                            $secondary_contact->email = $apiSecondaryContact->email;
+                            $secondary_contact->mobile = $apiSecondaryContact->mobile;
+                            $secondary_contact->phone = $apiSecondaryContact->phone;
+                            $secondary_contact->priceColumn = $api_contact->priceColumn;
+                            $secondary_contact->save();
+                        }
+                    }
+            }
             $str = str_replace("\r", '', $api_contact->priceColumn);
             return response()->json([
                 'status' => '200',

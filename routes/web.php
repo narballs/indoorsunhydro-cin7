@@ -232,6 +232,8 @@ Route::post('admin/send-invitation-email', [ContactController::class, 'send_invi
 Route::post('create/secondary/user', [UserController::class, 'create_secondary_user']);
 Route::post('user-order-approve', [UserController::class, 'user_order_approve']);
 Route::post('/verify-order/', [UserController::class, 'verify_order']);
+Route::post('/send-order-approval-email/', [UserController::class, 'send_order_approval_email']);
+
 Route::delete('secondary/user/delete', [UserController::class, 'delete_secondary_user'])->name('secondary_user.delete');
 Route::post('/reset-password', [UserController::class, 'reset_password'])->name('reset_password');
 
