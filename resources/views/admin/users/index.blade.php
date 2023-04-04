@@ -81,7 +81,6 @@
                     <th>Name <i class="fa fa-sort"></th>
                     <th>Last Name <i class="fa fa-sort"></th>
                     <th>Email <i class="fa fa-sort"></th>
-                    <th>Status <i class="fa fa-sort"></th>
                     <th>Cin7 User-ID <i class="fa fa-sort"></th>
                     <th>Company (Account aka Parent) <i class="fa fa-sort"></th>
                     <th>Type <i class="fa fa-sort"></th>
@@ -111,23 +110,14 @@
                                 @endif
                             </td>
                             <td>{{ $user->email }}</td>
-                            <td>
-                                @if ($contact)
-                                    @if ($contact->contact_id)
-                                        <span class="badge bg-success">Merged</span>
-                                    @else
-                                        <span class="badge bg-danger">UnMered</span>
-                                    @endif
-                                @else
-                                @endif
-                            </td>
+                  
                             <td>
 
                                 @if ($contact)
                                     @if ($contact->contact_id)
                                         {{ $contact->contact_id }}
                                     @else
-                                        <span class="badge bg-info">empty</span>
+                                       {{ $contact->parent_id }}
                                     @endif
                                 @else
                                     <span class="badge bg-info">empty</span>

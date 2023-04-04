@@ -60,10 +60,10 @@
                     <td>{{$order->created_at->format('F '.'d, Y, '.'g:i A')}}</td>
                     <td>
                         @if($order->createdby)
-                        {{$order->createdby->firstName}} {{$order->createdby->lastName}}</td>
+                        {{$order->contact->firstName}} {{$order->contact->lastName}}</td>
                     @endif
                     <td>{{$order->reference}}</td>
-                    <td>{{$order->total}}</td>
+                    <td>${{$order->total}}</td>
                     <td>{{$order->stage}}</td>
                     <td>
                         @if($order->status == 0)

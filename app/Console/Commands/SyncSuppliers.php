@@ -48,7 +48,7 @@ class SyncSuppliers extends Command
 
         for ($i = 1; $i <= $total_contact_pages; $i++) {
             $this->info('Processing page#' . $i);
-            sleep(3);
+            sleep(5);
             $res = $client2->request(
                 'GET', 
                 'https://api.cin7.com/api/v1/Contacts/?page=' . $i,
@@ -109,7 +109,7 @@ class SyncSuppliers extends Command
 
                                 $secondary_contact->secondary_id = $apiSecondaryContact->id;
                                 $secondary_contact->is_parent = 0;
-                                $secondary_contact->company = $apiSecondaryContact->company;
+                                $secondary_contact->company = $contact->company;
                                 $secondary_contact->firstName = $apiSecondaryContact->firstName;
                                 $secondary_contact->lastName = $apiSecondaryContact->lastName;
                                 $secondary_contact->jobTitle  = $apiSecondaryContact->jobTitle;
@@ -127,7 +127,7 @@ class SyncSuppliers extends Command
 
                                 $secondary_contact->secondary_id = $apiSecondaryContact->id;
                                 $secondary_contact->is_parent = 0;
-                                $secondary_contact->company = $apiSecondaryContact->company;
+                                $secondary_contact->company = $contact->company;
                                 $secondary_contact->firstName = $apiSecondaryContact->firstName;
                                 $secondary_contact->lastName = $apiSecondaryContact->lastName;
                                 $secondary_contact->jobTitle  = $apiSecondaryContact->jobTitle;

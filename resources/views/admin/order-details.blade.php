@@ -202,9 +202,9 @@
 								<strong>{{$customer->firstName}}&nbsp;{{$customer->lastName}}</strong><br>
 								@endif
 								{{$customer->postalAddress1}}<br>
-								{{$customer->postalAddress2}}<br>
-								{{$customer->postalCity}}, {{$customer->state}}<br>
-								<abbr title="Phone">P:</abbr> ({{$customer->phone}})
+								{{$customer->postalAddress2}}
+								{{$customer->postalCity}}, {{$customer->state}}
+								<p title="Phone" class="m-0">P:({{$customer->mobile}})</p> 
 							</address>
 						</div>
 					</div>
@@ -255,15 +255,15 @@
 				<!-- Shipping information -->
 				<div class="card-body">
 					<h3 class="h6">Shipping Information</h3>
-					<strong>Shipping Method</strong>
-					<span><a href="#" class="text-decoration-underline" target="_blank">FF1234567890</a> <i class="bi bi-box-arrow-up-right</i> </span>
+				
 		        <hr>
 		        <h3 class=" h6">Address</h3>
 						<address>
-							<strong>{{$customer->firstName}} {{$customer->Name}}</strong><br>
+							<strong>{{$customer->firstName}} {{$customer->lastName}}</strong><br>
 							{{$customer->postalAddress1}}, {{$customer->postalAddress2}}<br>
-							{{$customer->postalCity}}, <br>
-							<abbr title="Phone">P:</abbr> ({{$customer->phone}})
+							{{$customer->postalCity}},
+							<p title="Phone" class="mb-0">P: ({{$customer->mobile}})</p>
+							<p title="Phone">{{$customer->email}}</p>
 						</address>
 				</div>
 			</div>
