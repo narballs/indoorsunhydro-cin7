@@ -1796,9 +1796,9 @@
 				},
 				success: function(response) {
 				  	console.log(response);
-				  	//window.setInterval(console.log, 1000);
 				  	$('#verify_order_' + order_id).val(1);
 				  	setInterval( function() { verify_order(order_id); }, 1000 );
+			
 				}, 	
 			});
 
@@ -1821,6 +1821,17 @@
 							$('#verify_order_' + order_id).val(0);
 							$('#status_'+ order_id).html('Approved');
 							$('#approve_'+ order_id).addClass('d-none');
+							$.ajax({
+				            	type: "post",
+
+				            	url: "{{ url('/send-order-approval-email/')}}",
+				            	data: {
+									"_token": "{{ csrf_token() }}",
+									"order_id" : order_id
+								},
+				            	success: function (data) {
+	            				}
+	        				});
 						}
 					},					
 				});

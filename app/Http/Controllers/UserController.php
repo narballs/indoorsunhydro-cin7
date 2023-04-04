@@ -23,6 +23,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 use App\Helpers\MailHelper;
+use App\Helpers\UserHelper;
 use \Illuminate\Support\Str;
 use \Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
@@ -66,12 +67,15 @@ class UserController extends Controller
             }
         }
         if (!empty($secondaryUser)) {
+
             if ($secondaryUser == 'secondary-user') {
                 $user_query = $user_query->orWhereHas('contact', function ($query) {
-                    $query->whereNotNull('secondary_id');
+                    $query->whereNotNull('secondary_id')->with('childeren');
                 });
+                $user = $user_query->limit(10)->get();
             }
             if ($secondaryUser == 'primary-user') {
+
                 $user_query = $user_query->orWhereHas('contact', function ($query) {
                     $query->whereNotNull('contact_id');
                 });
@@ -500,9 +504,24 @@ class UserController extends Controller
                $companies = Contact::where('user_id', auth()->user()->id)->get();
                $user = User::where('id', $user_id)->first();
                $can_approve_order = $user->hasRole('Order Approver');
+
+               $all_ids = UserHelper::getAllMemberIds($user);
+               $contact_ids = Contact::whereIn('id', $all_ids)->pluck('contact_id')->toArray();
               
 
-                $user_orders = ApiOrder::where('user_id', $user_id)->with('contact')->with('apiOrderItem')->orderBy('id', 'desc')->get();
+                // $user_orders = ApiOrder::where('user_id', $user_id)
+                //     ->with('contact')
+                //     ->with('apiOrderItem')
+                //     ->orderBy('id', 'desc')
+                //     ->get();
+
+                $user_orders = ApiOrder::whereIn('memberId', $contact_ids)
+                    ->with('contact')
+                    ->with('apiOrderItem')
+                    ->orderBy('id', 'desc')
+                    ->get();    
+                
+
                 foreach ($user_orders as $user_order) {
                     $createdDate = $user_order->created_at;
                     $user_order->createdDate = $createdDate->format('F \  j, Y');
@@ -533,41 +552,8 @@ class UserController extends Controller
 
             $user = User::where('id', $user_id)->first();
 
-            $user_ids = $parent_ids = $contact_ids = [];
+            $all_ids = UserHelper::getAllMemberIds($user);
 
-            $contacts_by_email = Contact::where('email', $user->email)->get();
-
-            if (!empty($contacts_by_email)) {
-                foreach ($contacts_by_email as $email_contact) {
-                    if (!empty($email_contact->user_id)) {
-                        $user_ids[] = $email_contact->user_id;
-                    }
-
-                    if (!empty($email_contact->parent_id)) {
-                        $parent_ids[] = $email_contact->parent_id;
-                    }
-
-                    if (!empty($email_contact->contact_id)) {
-                        $contact_ids[] = $email_contact->contact_id;
-                    }
-                }
-            }
-
-            $ids_array_1 = $ids_array_2 = $ids_array_3 = [];
-
-            if (!empty($user_ids)) {
-                $ids_array_1 = Contact::whereIn('user_id', $user_ids)->pluck('id')->toArray();
-            }
-
-            if (!empty($contact_ids)) {
-                $ids_array_2 = Contact::whereIn('parent_id', $contact_ids)->pluck('id')->toArray();
-            }
-
-            if (!empty($parent_ids)) {
-                $ids_array_3 = Contact::whereIn('contact_id', $parent_ids)->pluck('id')->toArray();
-            }
-
-            $all_ids = array_merge($ids_array_1, $ids_array_2, $ids_array_3);
             $user_address = Contact::where('user_id', $user_id)->first();
             $secondary_contacts = Contact::whereIn('id', $all_ids)->get();
             $list = BuyList::where('id', 20)->with('list_products.product.options')->first();
@@ -925,7 +911,7 @@ class UserController extends Controller
 
     public function user_order_approve(Request $request) {
         $order_id = $request->order_id;
-        $currentOrder = ApiOrder::where('id', $order_id)->first();
+        $currentOrder = ApiOrder::where('id', $order_id)->with('contact')->first();
         $memberId = $currentOrder->memberId;
         $order_items = ApiOrderItem::with('product.options')->where('order_id', $order_id)->get();
         $dateCreated = Carbon::now();
@@ -989,7 +975,6 @@ class UserController extends Controller
                 "processedBy" => 79914,
                 "isApproved" => true,
                 "reference" => $currentOrder->reference,
-                "memberId" => 403,
                 "branchId" => 3,
                 "branchEmail" => "wqszeeshan@gmail.com",
                 "projectName" => "",
@@ -1051,7 +1036,19 @@ class UserController extends Controller
         return $data = $order;
     }
 
-    public function chooise_companie (Request $request) {
+    public function send_order_approval_email(Request $request) {
+        $order = ApiOrder::where('id', $request->order_id)->with('contact')->with('apiOrderItem')->first();
+        $data['email'] = $order->contact->email;
+        $data['addresses'] = $addresses;
+        $data['order'] =  $order;
+        $data['content'] = 'Order Approved';
+        $data['subject'] = 'Order Approved';
+        $data['from'] = env('MAIL_FROM_ADDRESS');
+        MailHelper::sendMailNotification('emails.order-approver-email', $data);
+       
+    }
+
+    public function chooise_companie(Request $request) {
         if ($request->ajax()) {
               $companies = Contact::where('user_id', auth()->user()->id)->get();
                 return response()->json([
