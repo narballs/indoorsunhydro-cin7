@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 //use Auth\Http\AuthControllers\Auth;
 
 use App\Helpers\MailHelper;
+use App\Helpers\UserHelper;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -82,6 +83,8 @@ class OrderController extends Controller
                 $order->date = $request->date;
                 $order->save();
 
+
+               
                 $order_id =  $order->id;
                 $currentOrder = ApiOrder::where('id', $order->id)->first();
                 $apiApproval = $currentOrder->apiApproval;
@@ -170,6 +173,35 @@ class OrderController extends Controller
                 $data['subject'] = 'Your order has been received';
                 $data['email'] = $email;
                 MailHelper::sendMailNotification('emails.admin-order-received', $data);
+
+                $email_sent_to_users = [];
+                $user = User::where('id',  Auth::id())->first();
+                $all_ids = UserHelper::getAllMemberIds($user);
+                $all_members = Contact::whereIn('id', $all_ids)->get();
+                foreach($all_members as $member) {
+                    $member_user = User::find($member->user_id);
+
+
+                    if (!empty($member_user) && $member_user->hasRole(['Order Approver'])) {
+                        if (isset($email_sent_to_users[$member_user->id])) {
+                            continue;
+                        }
+
+                        $email_sent_to_users[$member_user->id] = $member_user;
+                        $data['name'] = $member_user->firstName;
+                        $data['subject'] = 'New order awaiting approval';
+                        $data['email'] = $member_user->email;
+             
+
+                        // echo $member_user->email  . $member_user->id . ' => This user can approve order<br />';
+                        MailHelper::sendMailNotification('emails.user-order-received', $data);
+
+                    }
+                    // else {
+                    //     echo $member_user->email  . $member_user->id . ' => Can not approve user<br />';
+                    // }
+                    
+                }
 
                 $lineItems = [];
                 foreach ($order_items as $order_item) {
