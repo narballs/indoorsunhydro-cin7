@@ -506,7 +506,9 @@ class UserController extends Controller
                $can_approve_order = $user->hasRole('Order Approver');
 
                $all_ids = UserHelper::getAllMemberIds($user);
-               $contact_ids = Contact::whereIn('id', $all_ids)->pluck('contact_id')->toArray();
+               $contact_ids = Contact::whereIn('id', $all_ids)
+               ->pluck('contact_id')
+               ->toArray();
               
 
                 // $user_orders = ApiOrder::where('user_id', $user_id)
@@ -605,7 +607,11 @@ class UserController extends Controller
     public function my_qoutes_details($id)
     {
         $user_id = auth()->id();
-        $list = BuyList::where('user_id', $user_id)->where('id', $id)->where('type', 'qoute')->with('list_products.product.options')->first();
+        $list = BuyList::where('user_id', $user_id)
+            ->where('id', $id)
+            ->where('type', 'qoute')
+            ->with('list_products.product.options')
+            ->first();
 
         return view('user-list-detail', compact(
             'list'
@@ -912,6 +918,7 @@ class UserController extends Controller
     public function user_order_approve(Request $request) {
         $order_id = $request->order_id;
         $currentOrder = ApiOrder::where('id', $order_id)->with('contact')->first();
+
         $memberId = $currentOrder->memberId;
         $order_items = ApiOrderItem::with('product.options')->where('order_id', $order_id)->get();
         $dateCreated = Carbon::now();
@@ -977,6 +984,7 @@ class UserController extends Controller
                 "reference" => $currentOrder->reference,
                 "branchId" => 3,
                 "branchEmail" => "wqszeeshan@gmail.com",
+                "memberId" => $memberId,
                 "projectName" => "",
                 "trackingCode" => "",
                 "internalComments" => "sample string 51",
