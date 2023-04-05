@@ -1047,7 +1047,7 @@ class UserController extends Controller
     public function send_order_approval_email(Request $request) {
         $order = ApiOrder::where('id', $request->order_id)->with('contact')->with('apiOrderItem')->first();
         $data['email'] = $order->contact->email;
-        $data['addresses'] = $addresses;
+        // $data['addresses'] = $addresses;
         $data['order'] =  $order;
         $data['content'] = 'Order Approved';
         $data['subject'] = 'Order Approved';
