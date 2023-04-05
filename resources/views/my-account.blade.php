@@ -1823,13 +1823,13 @@
 							$('#approve_'+ order_id).addClass('d-none');
 							$.ajax({
 				            	type: "post",
-
 				            	url: "{{ url('/send-order-approval-email/')}}",
 				            	data: {
 									"_token": "{{ csrf_token() }}",
 									"order_id" : order_id
 								},
 				            	success: function (data) {
+				            		
 	            				}
 	        				});
 						}
