@@ -32,12 +32,7 @@
 
 {!! Form::model($user, ['method' => 'PATCH','route' => ['users.update', $user->id]]) !!}
 <div class="row">
-    <div class="col-xs-12 col-sm-12 col-md-12 mt-3">
-        <div class="form-group">
-            <strong>Name:</strong>
-            {!! Form::text('name', null, array('placeholder' => 'Name','class' => 'form-control')) !!}
-        </div>
-    </div>
+
     <div class="col-xs-12 col-sm-12 col-md-12">
         <div class="form-group">
             <strong>Email:</strong>
@@ -56,7 +51,19 @@
             {!! Form::password('confirm-password', array('placeholder' => 'Confirm Password','class' => 'form-control')) !!}
         </div>
     </div>
-    <div class="col-xs-12 col-sm-12 col-md-12">
+    <div class="col-xs-12 col-sm-12 col-md-6">
+        <div class="form-group">
+            <strong>Companies</strong>
+           
+           @foreach($user->contact as $contact) 
+                <div>{{$contact->company}}</div>
+                <div class="ms-2">
+                   <input class="ms-2" name="companies[]" type="checkbox" value="{{$contact->company}}"> &nbsp;Order Approver
+                </div>
+           @endforeach
+        </div>
+    </div>
+        <div class="col-xs-12 col-sm-12 col-md-6">
         <div class="form-group">
             <strong>Role:</strong>
             {!! Form::select('roles[]', $roles,$userRole, array('class' => 'form-control','multiple')) !!}
