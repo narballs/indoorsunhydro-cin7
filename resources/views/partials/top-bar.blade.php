@@ -66,6 +66,7 @@
                                         <div class="row my-4">
                                           <div class="col-md-12">
                                             <div class="list-group list-group-flush">
+                                            @if(Auth::user())
                                                 @foreach ( $companies as $company)
                                                     @php
                                                         if($company->contact_id) {
@@ -80,6 +81,7 @@
                                                     @endphp
                                                 <a type="button"  class="list-group-item list-group-item-action" onclick="switch_company_user({{$contact_id}})">{{$company->company}} <span style="font-size: small;">{{ $primary}}</span></a>
                                                 @endforeach
+                                            @endif
                                             </div>
                                           </div>
                                         </div>
