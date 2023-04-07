@@ -55,6 +55,9 @@ class OrderController extends Controller
                         $cart_total  = $cart_total + $total_price;
                     }
                 }
+                else {
+                    return redirect('/');
+                }
                 //moving to Api order items
                 $dateCreated = Carbon::now();
                 $createdDate = Carbon::now();
@@ -92,15 +95,21 @@ class OrderController extends Controller
                 $currentOrder->save();
                 $currentOrder = ApiOrder::where('id', $order->id)->first();
                 $reference = $currentOrder->reference;
-
-                foreach ($cart_items as $cart_item) {
-                    $OrderItem = new ApiOrderItem;
-                    $OrderItem->order_id = $order_id;
-                    $OrderItem->product_id = $cart_item['product_id'];
-                    $OrderItem->quantity =  $cart_item['quantity'];
-                    $OrderItem->price = $cart_item['price'];
-                    $OrderItem->option_id = $cart_item['option_id'];
-                    $OrderItem->save();
+                if (session()->has('cart')) {
+                    foreach ($cart_items as $cart_item) {
+                        $OrderItem = new ApiOrderItem;
+                        $OrderItem->order_id = $order_id;
+                        $OrderItem->product_id = $cart_item['product_id'];
+                        $OrderItem->quantity =  $cart_item['quantity'];
+                        $OrderItem->price = $cart_item['price'];
+                        $OrderItem->option_id = $cart_item['option_id'];
+                        $OrderItem->save();
+                    }
+                }
+                else {
+                    echo 'l;lklkl';exit;
+                    session()->forget('cart');
+                    return redirect('/');
                 }
 
                 $order_items = ApiOrderItem::with('order', 'product.options')->where('order_id', $order_id)->get();

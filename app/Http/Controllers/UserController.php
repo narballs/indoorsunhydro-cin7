@@ -173,7 +173,8 @@ class UserController extends Controller
     public function edit($id)
     {
         $this->middleware('permission:user-edit', ['only' => ['edit', 'update']]);
-        $user = User::find($id);
+        $user = User::where('id', $id)->with('contact')->first();
+        //dd($user);
         $roles = Role::pluck('name', 'name')->all();
         $userRole = $user->roles->pluck('name', 'name')->all();
         return view('admin.users.edit', compact(
@@ -193,25 +194,35 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'name' => 'required',
             'email' => 'required|email|unique:users,email,' . $id,
             'password' => 'same:confirm-password',
-            'roles' => 'required'
+            'roles' => 'required',
+            'companies' => 'required'
         ]);
-
+        $companies = $request->companies;
         $input = $request->all();
         if (!empty($input['password'])) {
             $input['password'] = Hash::make($input['password']);
         } else {
             $input = Arr::except($input, array('password'));
         }
-
+        $company = $request->company;
         $user = User::find($id);
         $user->update($input);
         DB::table('model_has_roles')->where('model_id', $id)->delete();
-
+        
+        foreach($companies as $company) {
+            DB::table('model_has_roles')->insert(
+                array(
+                    'role_id' => 5,
+                    'model_type' => 'App\Models\User', 
+                    'model_id' => $id,
+                    'company' => $company
+                )
+            );
+          
+        }
         $user->assignRole($request->input('roles'));
-
         return redirect()->route('users.index')
             ->with('success', 'User updated successfully');
     }
