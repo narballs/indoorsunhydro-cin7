@@ -54,10 +54,8 @@ class SyncSuppliers extends Command
                 'https://api.cin7.com/api/v1/Contacts/?page=' . $i,
                 [
                     'auth' => [
-                        // env('API_USER'),
-                        // env('API_PASSWORD')
-                        'IndoorSunHydroUS',
-                        'faada8a7a5ef4f90abaabb63e078b5c1'
+                        env('API_USER'),
+                        env('API_PASSWORD')
                     ]
                 ]
             );
