@@ -809,7 +809,7 @@ class UserController extends Controller
             'content' => 'Customer Registration Invitation',
             'url' => $url
         ];
-       // MailHelper::sendMailNotification('emails.invitaion-emails', $data);
+       MailHelper::sendMailNotification('emails.invitaion-emails', $data);
         SyncContacts::dispatch('update_contact', $contact)->onQueue(env('QUEUE_NAME'));
         return response()->json([
             'state' => 200,
@@ -898,7 +898,7 @@ class UserController extends Controller
         $data['subject'] = 'Password Reset';
         $data['from'] = env('MAIL_FROM_ADDRESS');
         $data['plain'] = $plain_password;
-       // MailHelper::sendMailNotification('emails.reset-password', $data);
+        MailHelper::sendMailNotification('emails.reset-password', $data);
 
         return redirect()->back()->with('success', 'Password Send Successfully !');
     }
@@ -920,7 +920,7 @@ class UserController extends Controller
         $data['subject'] = 'Password Reset';
         $data['from'] = env('MAIL_FROM_ADDRESS');
         $data['plain'] = $plain_password;
-        //MailHelper::sendMailNotification('emails.reset-password', $data);
+        MailHelper::sendMailNotification('emails.reset-password', $data);
 
         return redirect()->back()->with('success', 'Password Send Successfully !');
     }
@@ -1076,7 +1076,7 @@ class UserController extends Controller
         $data['content'] = 'Order Approved';
         $data['subject'] = 'Order Approved';
         $data['from'] = env('MAIL_FROM_ADDRESS');
-        //MailHelper::sendMailNotification('emails.order-approver-email', $data);
+        MailHelper::sendMailNotification('emails.order-approver-email', $data);
        
     }
 
