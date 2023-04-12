@@ -47,7 +47,7 @@
                             </a>
                 </div>
             </div>
-            <div class="col-md-4 d-flex align-items-center justify-content-end">
+            <div class="col-md-4 d-flex align-items-center justify-content-start">
                 <a href="{{ '/user/' }}" class="text-white d-flex align-items-end mt-2">
                     <div>
                         <img src="/theme/img/users-icons-top-bar (2).png" class="img-fluid w-75">
