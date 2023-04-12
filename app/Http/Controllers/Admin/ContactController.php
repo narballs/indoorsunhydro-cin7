@@ -227,17 +227,17 @@ class ContactController extends Controller
                 foreach ($users_with_role_admin as $role_admin) {
                     $data['email'] = $role_admin->email;
                     $adminTemplate = 'emails.approval-notifications';
-                    //MailHelper::sendMailNotification('emails.approval-notifications', $data);
+                    MailHelper::sendMailNotification('emails.approval-notifications', $data);
                 }
             }
             $data['name'] = $name;
             $data['email'] = $email;
             $data['content'] = 'Your account has been approved';
             $data['subject'] = 'Your account has been approved';
-            //MailHelper::sendMailNotification('emails.approval-notifications', $data);
+            MailHelper::sendMailNotification('emails.approval-notifications', $data);
 
 
-            //MailHelper::sendMailNotification('emails.admin-order-received', $data);
+            MailHelper::sendMailNotification('emails.admin-order-received', $data);
             return response()->json([
                 'success' => true,
                 'created' => true,
@@ -349,7 +349,7 @@ class ContactController extends Controller
             'url' => $url
         ];
 
-        //MailHelper::sendMailNotification('emails.invitaion-emails', $data);
+        MailHelper::sendMailNotification('emails.invitaion-emails', $data);
         $contact_id = $request->contact_id;
         if (empty($request->secondory_email)) {
             $contact = Contact::where('contact_id', $contact_id)->update(
