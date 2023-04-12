@@ -54,13 +54,18 @@
     <div class="col-xs-12 col-sm-12 col-md-6">
         <div class="form-group">
             <strong>Companies</strong>
-           
-           @foreach($user->contact as $contact) 
-                <div>{{$contact->company}}</div>
-                <div class="ms-2">
-                   <input class="ms-2" name="companies[]" type="checkbox" value="{{$contact->company}}"> &nbsp;Order Approver
-                </div>
-           @endforeach
+            <?php $final_array = [];?>
+            <?php //dd($companies);?>
+            @foreach($user->contact as $contact)
+               <div>{{$contact->company}}</div>
+               @foreach($companies as $company)
+                    <div>
+                        <input class="ms-2" id="contact_{{$contact->contact_id}}"  name="companies[]" type="checkbox" value="{{$contact->company}}" {{ $company->company == $contact->company ? 'checked="checked"' : '' }}>
+                          &nbsp;Order Approver
+                    </div>
+                @endforeach
+               
+            @endforeach
         </div>
     </div>
         <div class="col-xs-12 col-sm-12 col-md-6">
