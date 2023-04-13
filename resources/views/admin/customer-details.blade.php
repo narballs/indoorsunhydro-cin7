@@ -145,7 +145,7 @@
 								<div class="col-md-12">
 									<div class="row">
 										<div class="col-md-4">
-											<b>Company:</b> {{$customer->company}}
+											<b>Company:</b> <span id="refreshed_company">{{$customer->company}}</span>
 										</div>
 										<div class="col-md-6">
 											@if (!$customer->contact_id)
@@ -563,35 +563,17 @@
         		$('#refreshed_email').html(response.updated_email);
         		$('#refreshed_firstname').html(response.updated_firstName);
         		$('#refreshed_lastname').html(' '+response.updated_lastName);
+        		$('#refreshed_company').html(response.updated_company);
         		console.log(response.updated_priceColumn);
         		$('#pricingColumn').find('option[value="'+response.updated_priceColumn+'"]').prop('selected', true);
         		$('#spinner').addClass('d-none');
-        	   	let timerInterval
-				Swal.fire({
-	  				title: 'Please wait syncing from cin7',
-	  				html: 'I will close in <b></b> milliseconds.',
-	 				 timer: 1500,
-	  				timerProgressBar: true,
-	  			didOpen: () => {
-	    			Swal.showLoading()
-	    			const b = Swal.getHtmlContainer().querySelector('b')
-	    			timerInterval = setInterval(() => {
-	      				b.textContent = Swal.getTimerLeft()
-	    			}, 100)
-	  			},
-		  		willClose: () => {
-		    		clearInterval(timerInterval)
-		  		}
-				}).then((result) => {
-  			/* Read more about handling dismissals below */
-		  		if (result.dismiss === Swal.DismissReason.timer) {
-		  		}
-			})
-
+        	   	
     		}
 
-   		});
-   		window.location.reload();
+   		})
+   		setTimeout(function(){
+   			window.location.reload();
+   		}, 5000);
  	}
 </script>
 @stop

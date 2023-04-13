@@ -476,19 +476,17 @@ class ContactController extends Controller
                     'auth' => [
                         env('API_USER'),
                         env('API_PASSWORD')
-                        // 'IndoorSunHydroUS',
-                        // 'faada8a7a5ef4f90abaabb63e078b5c1'
                     ]
                 ]
             );
             $api_contact = $res->getBody()->getContents();
             $api_contact = json_decode($api_contact);
-
             Contact::where('contact_id', $contact_id)->update([
                 'email'  => $api_contact->email,
                 'firstName' => $api_contact->firstName,
                 'lastName' => $api_contact->lastName,
-                'priceColumn' => $api_contact->priceColumn
+                'priceColumn' => $api_contact->priceColumn,
+                'company' => $api_contact->company
             ]);
             if ($api_contact->secondaryContacts) {
                 foreach($api_contact->secondaryContacts as $apiSecondaryContact) {
@@ -534,7 +532,8 @@ class ContactController extends Controller
                 'updated_email' => $api_contact->email,
                 'updated_firstName' => $api_contact->firstName,
                 'updated_lastName' => $api_contact->lastName, 
-                'updated_priceColumn' => $str
+                'updated_priceColumn' => $str,
+                'updated_company' => $api_contact->company
             ]);
         }
 
@@ -556,9 +555,9 @@ class ContactController extends Controller
                     ]
                 ]
             );
-
             $api_secondary_contact = $res->getBody()->getContents();
             $api_secondary_contact = json_decode($api_secondary_contact);
+           
             foreach ($api_secondary_contact->secondaryContacts as $api_secondary_contact) {
 
                 if ($api_secondary_contact->id == $contact_id ) {
