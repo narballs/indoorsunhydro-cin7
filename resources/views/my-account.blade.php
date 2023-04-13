@@ -1243,8 +1243,8 @@
 						success: function(response) {
 							var data = response.user_orders;
 							var can_approve_order = response.can_approve_order;
-
-							console.log(data);
+							var order_approver_for_company = response.order_approver_for_company;
+							console.log(order_approver_for_company);
 							var res='';
 							var total_items = 0;
 						$.each (data, function (key, value) {
@@ -1276,7 +1276,7 @@
                 			
          
                 			res += '<td class="pr-0">'+'<a onclick=userOrderDetail('+value.id+') onmouseover=replaceEye('+value.id+') onmouseout= replaceEye2('+value.id+');>'+'<button class="btn btn-outline-success view-btn p-0" type="" style="width:100%;height:32px;"><img src="theme/img/eye.png" class="mr-1 mb-1" id="eye_icon_'+value.id+'"></i>View</button>'+'</td></a>';
-           					if (can_approve_order && value.isApproved != 1) {
+           					if (can_approve_order && value.isApproved != 1 && order_approver_for_company === true) {
                 				res += '<td><button class="btn btn-outline-primary btn-sm" onclick="approveOrder('+value.id+')" id="approve_'+value.id+'">Approve</button></td>'+
            						'</tr>';
                 			}

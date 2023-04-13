@@ -174,13 +174,18 @@ class UserController extends Controller
     {
         $this->middleware('permission:user-edit', ['only' => ['edit', 'update']]);
         $user = User::where('id', $id)->with('contact')->first();
-        //dd($user);
         $roles = Role::pluck('name', 'name')->all();
         $userRole = $user->roles->pluck('name', 'name')->all();
+        $companies = DB::table('custom_roles')
+        ->where('user_id', $id)
+        ->get();
+
+
         return view('admin.users.edit', compact(
             'user',
             'roles',
-            'userRole'
+            'userRole',
+            'companies'
         ));
     }
 
@@ -200,6 +205,8 @@ class UserController extends Controller
             'companies' => 'required'
         ]);
         $companies = $request->companies;
+        // dd($companies);
+        
         $input = $request->all();
         if (!empty($input['password'])) {
             $input['password'] = Hash::make($input['password']);
@@ -210,17 +217,15 @@ class UserController extends Controller
         $user = User::find($id);
         $user->update($input);
         DB::table('model_has_roles')->where('model_id', $id)->delete();
-        
+        DB::table('custom_roles')->where('user_id', $id)->delete();
         foreach($companies as $company) {
-            DB::table('model_has_roles')->insert(
+            DB::table('custom_roles')->insert(
                 array(
                     'role_id' => 5,
-                    'model_type' => 'App\Models\User', 
-                    'model_id' => $id,
+                    'user_id' => $id,
                     'company' => $company
                 )
             );
-          
         }
         $user->assignRole($request->input('roles'));
         return redirect()->route('users.index')
@@ -515,9 +520,21 @@ class UserController extends Controller
                $companies = Contact::where('user_id', auth()->user()->id)->get();
                $user = User::where('id', $user_id)->first();
                $can_approve_order = $user->hasRole('Order Approver');
+            $selected_company = Session::get('company');
 
-               $all_ids = UserHelper::getAllMemberIds($user);
-               $contact_ids = Contact::whereIn('id', $all_ids)
+            $custom_roles_with_company = DB::table('custom_roles')
+            ->where('user_id', $user_id)->where('company', $selected_company)
+            ->first();
+            if ($custom_roles_with_company && $custom_roles_with_company->company == $selected_company) {
+                $order_approver_for_company = true;
+            }
+            else {
+                $order_approver_for_company = false;
+            }
+
+
+            $all_ids = UserHelper::getAllMemberIds($user);
+            $contact_ids = Contact::whereIn('id', $all_ids)
                ->pluck('contact_id')
                ->toArray();
               
@@ -542,7 +559,8 @@ class UserController extends Controller
 
                 $response = [
                     'can_approve_order' => $can_approve_order,
-                    'user_orders' => $user_orders
+                    'user_orders' => $user_orders,
+                    'order_approver_for_company' => $order_approver_for_company
                 ];
 
                 return $response;
@@ -551,13 +569,8 @@ class UserController extends Controller
 
             
         }
-        if ($request->ajax()) {
-            $companies = Contact::where('user_id', auth()->user()->id)->get();
-            return response()->json([
-                'message' => 'success',
-                'companies' => $companies
-            ]);
-        } else {
+   
+        else {
             $user_id = auth()->id();
             if (!$user_id) {
                 return redirect('/user/');
@@ -796,7 +809,7 @@ class UserController extends Controller
             'content' => 'Customer Registration Invitation',
             'url' => $url
         ];
-        MailHelper::sendMailNotification('emails.invitaion-emails', $data);
+       MailHelper::sendMailNotification('emails.invitaion-emails', $data);
         SyncContacts::dispatch('update_contact', $contact)->onQueue(env('QUEUE_NAME'));
         return response()->json([
             'state' => 200,
