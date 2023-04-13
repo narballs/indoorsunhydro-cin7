@@ -51,28 +51,29 @@
             {!! Form::password('confirm-password', array('placeholder' => 'Confirm Password','class' => 'form-control')) !!}
         </div>
     </div>
+    
     <div class="col-xs-12 col-sm-12 col-md-6">
+        <div class="form-group"><strong>Custom Roles</strong></div>
         <div class="form-group">
             <strong>Companies</strong>
-            <?php $final_array = [];?>
-            <?php //dd($companies);?>
-            @foreach($user->contact as $contact)
-               <div>{{$contact->company}}</div>
-               @foreach($companies as $company)
+            @foreach ($companies as $company)
+               <div>{{$company}}</div>
+               @foreach($custom_company_roles as $custom_role_id => $custom_role_name)
                     <div>
-                        <input class="ms-2" id="contact_{{$contact->contact_id}}"  name="companies[]" type="checkbox" value="{{$contact->company}}" {{ $company->company == $contact->company ? 'checked="checked"' : '' }}>
-                          &nbsp;Order Approver
+                        <input type="checkbox" class="ms-2" @if (isset($custom_roles[$company][$custom_role_id])) checked="checked" @endif name="custom_company_roles[{{ $company }}][{{ $custom_role_id }}]" />
+                        <label> {{ $custom_role_name }}</label>
                     </div>
-                @endforeach
-               
+                @endforeach 
             @endforeach
         </div>
     </div>
-        <div class="col-xs-12 col-sm-12 col-md-6">
-        <div class="form-group">
-            <strong>Role:</strong>
-            {!! Form::select('roles[]', $roles,$userRole, array('class' => 'form-control','multiple')) !!}
-        </div>
+
+
+    <div class="col-xs-12 col-sm-12 col-md-6">
+    <div class="form-group">
+        <strong>Role:</strong>
+        {!! Form::select('roles[]', $roles,$userRole, array('class' => 'form-control','multiple')) !!}
+    </div>
     </div>
     <div class="col-xs-12 col-sm-12 col-md-12 text-center">
         <button type="submit" class="btn btn-primary">Submit</button>
