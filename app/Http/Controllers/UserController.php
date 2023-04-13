@@ -13,6 +13,8 @@ use App\Models\UserLog;
 use App\Models\BuyList;
 use App\Models\Product;
 use App\Models\SecondaryContact;
+use App\Models\CustomCompanyRole;
+use App\Models\CustomRole;
 use App\Http\Requests\Users\UserSignUpRequest;
 use App\Http\Requests\Users\CompanyInfoRequest;
 use App\Jobs\SyncContacts;
@@ -176,16 +178,30 @@ class UserController extends Controller
         $user = User::where('id', $id)->with('contact')->first();
         $roles = Role::pluck('name', 'name')->all();
         $userRole = $user->roles->pluck('name', 'name')->all();
-        $companies = DB::table('custom_roles')
-        ->where('user_id', $id)
-        ->get();
+
+        $custom_company_rol_ids = CustomCompanyRole::pluck('role_id')->toArray();
+
+        $custom_company_roles = Role::whereIn('id', $custom_company_rol_ids)->pluck('name', 'id')->all();
+
+        $companies = Contact::where('user_id', $id)->pluck('company')->all();
+
+        $custom_roles = [];
+
+        $all_custom_roles = CustomRole::where('user_id', $id)->get();
+        if (!empty($all_custom_roles)) {
+            foreach ($all_custom_roles as $custom_role) {
+                $custom_roles[$custom_role->company][$custom_role->role_id] = true;
+            }
+        }
 
 
         return view('admin.users.edit', compact(
             'user',
             'roles',
             'userRole',
-            'companies'
+            'companies',
+            'custom_roles',
+            'custom_company_roles'
         ));
     }
 
@@ -198,14 +214,16 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
+
         $this->validate($request, [
             'email' => 'required|email|unique:users,email,' . $id,
             'password' => 'same:confirm-password',
             'roles' => 'required',
-            'companies' => 'required'
         ]);
-        $companies = $request->companies;
-        // dd($companies);
+
+
+        $custom_company_roles = $request->custom_company_roles;
+        
         
         $input = $request->all();
         if (!empty($input['password'])) {
@@ -216,20 +234,49 @@ class UserController extends Controller
         $company = $request->company;
         $user = User::find($id);
         $user->update($input);
+
         DB::table('model_has_roles')->where('model_id', $id)->delete();
         DB::table('custom_roles')->where('user_id', $id)->delete();
-        foreach($companies as $company) {
-            DB::table('custom_roles')->insert(
-                array(
-                    'role_id' => 5,
-                    'user_id' => $id,
-                    'company' => $company
-                )
-            );
-        }
+
         $user->assignRole($request->input('roles'));
-        return redirect()->route('users.index')
-            ->with('success', 'User updated successfully');
+
+        if (!empty($custom_company_roles)) {
+            foreach ($custom_company_roles as $company_name => $custom_company_roles) {
+                foreach ($custom_company_roles as $role_id => $checked_value) {
+                    if ($checked_value == 'on') {
+                        CustomRole::create([
+                            'role_id' => $role_id,
+                            'user_id' => $id,
+                            'company' => $company_name
+                        ]);
+                        
+                        // DB::table('custom_roles')->insert(
+                        //     array(
+                        //         'role_id' => $role_id,
+                        //         'user_id' => $id,
+                        //         'company' => $company_name
+                        //     )
+                        // );
+                    }
+                }
+
+            }
+        }
+        
+        // foreach($companies as $company) {
+        //     DB::table('custom_roles')->insert(
+        //         array(
+        //             'role_id' => 5,
+        //             'user_id' => $id,
+        //             'company' => $company
+        //         )
+        //     );
+        // }
+
+        
+
+
+        return redirect()->route('users.index')->with('success', 'User updated successfully');
     }
 
     /**
@@ -517,33 +564,26 @@ class UserController extends Controller
     {
         if ($request->ajax()) {
             $user_id = auth()->id();
-               $companies = Contact::where('user_id', auth()->user()->id)->get();
-               $user = User::where('id', $user_id)->first();
-               $can_approve_order = $user->hasRole('Order Approver');
+            $companies = Contact::where('user_id', auth()->user()->id)->get();
+            $user = User::where('id', $user_id)->first();
+            $can_approve_order = $user->hasRole('Order Approver');
             $selected_company = Session::get('company');
 
             $custom_roles_with_company = DB::table('custom_roles')
-            ->where('user_id', $user_id)->where('company', $selected_company)
-            ->first();
-            if ($custom_roles_with_company && $custom_roles_with_company->company == $selected_company) {
+                ->where('user_id', $user_id)
+                ->where('company', $selected_company)
+                ->first();
+            if (!empty($custom_roles_with_company) && $custom_roles_with_company->company == $selected_company) {
                 $order_approver_for_company = true;
             }
             else {
                 $order_approver_for_company = false;
             }
 
-
             $all_ids = UserHelper::getAllMemberIds($user);
             $contact_ids = Contact::whereIn('id', $all_ids)
                ->pluck('contact_id')
                ->toArray();
-              
-
-                // $user_orders = ApiOrder::where('user_id', $user_id)
-                //     ->with('contact')
-                //     ->with('apiOrderItem')
-                //     ->orderBy('id', 'desc')
-                //     ->get();
 
                 $user_orders = ApiOrder::whereIn('memberId', $contact_ids)
                     ->with('contact')
@@ -564,10 +604,6 @@ class UserController extends Controller
                 ];
 
                 return $response;
-
-                return $user_orders;
-
-            
         }
    
         else {
@@ -600,11 +636,6 @@ class UserController extends Controller
                     $user_order->createdDate = $createdDate->format('F \  j, Y');
                 }
                 return $user_orders;
-
-                // return response()->json([
-                //     'data' => $user_order 
-
-                // ]);
             }
 
             return view('my-account', compact(
