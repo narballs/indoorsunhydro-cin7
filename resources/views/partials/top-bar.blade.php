@@ -1,5 +1,5 @@
 <header class="p-2  text-white top-bar-height w-100 header-top">
-    <div class="container">
+    <div class="container" style=" max-width: 1468px !important;">
         <div class="row">
             <div class="col-md-4"></div>
             <div class="col-md-2">
@@ -9,8 +9,7 @@
                     @endif
                 </div>
             </div>
-
-            <div class="col-md-2 d-flex justify-content-center align-items-center mt-2">
+            <div class="col-md-4 d-flex justify-content-center align-items-center mt-2">
                 <div style="font-family: 'Poppins';">
                     <img class="basket-icon" src="/theme/img/Bascket.png">
                     <span
@@ -39,7 +38,8 @@
                         data-bs-placement="right"
                         data-bs-content="add <strong class='text-success'>$2500.00</strong> more to your cart and get <span class='text-danger'>5% off </span>"><span
                             id="top_cart_total"><a href="{{ '/cart/' }}"
-                                class="text-white d-flex align-items-end ms-3"><span id="topbar_cart_total"
+                                class="text-white d-flex align-items-end ms-3"
+                                style="    margin-top: -18px !important;"><span id="topbar_cart_total"
                                     class="ms-2 cart-counter-details">
                                     {{ number_format($grand_total, 2) }}</span>&nbsp;(<span id="cart_items_quantity"
                                     class="cart-counter-details">{{ $total_quantity }}</span>&nbsp;<span
@@ -47,10 +47,10 @@
                             </a>
                 </div>
             </div>
-            <div class="col-md-4 d-flex align-items-center justify-content-start">
+            <div class="col-md-2 d-flex align-items-center justify-content-end">
                 <a href="{{ '/user/' }}" class="text-white d-flex align-items-end mt-2">
                     <div>
-                        <img src="/theme/img/users-icons-top-bar (2).png" class="img-fluid w-75">
+                        <img src="/theme/img/users-icons-top-bar (2).png" class="img-fluid w-100">
                     </div>
                     @if (Auth::user())
                         <div>
@@ -61,29 +61,19 @@
                                 {{ csrf_field() }}
                                 <input class="btn btn-link text-white" type="submit" value="logout">
                             </form>
-                            <nav class="navbar navbar-expand-lg navbar-light company-nave-bar-conatainer">
+                            <nav class="navbar navbar-expand-lg navbar-light company-nave-bar-conatainer"
+                                style="margin-top: -12px !important">
                                 <!-- Toggle button -->
                                 <button class="navbar-toggler px-0 text-light" type="button" data-mdb-toggle="collapse"
                                     data-mdb-target="#navbarExample1" aria-controls="navbarExample1"
                                     aria-expanded="false" aria-label="Toggle navigation">
                                     <i class="fas fa-bars"></i>
                                 </button>
-
                                 <!-- Collapsible wrapper -->
                                 <div class="collapse navbar-collapse" id="navbarExample1">
                                     <!-- Left links -->
                                     <ul class="navbar-nav me-auto ps-lg-0" style="padding-left: 0.15rem">
                                         <!-- Navbar dropdown -->
-                                        <li>
-                                            <a class="text-white top-bar-logout" href="{{ route('logout') }}"
-                                                onclick="event.preventDefault(); document.getElementById('frm-logout').submit();">
-                                                <span class="menu-title">
-                                                    <img src="/theme/img/user-icon-top-bar.png" alt=""
-                                                        class="img-fluid w-25">
-                                                    &nbsp;&nbsp;&nbsp;&nbsp;Logout
-                                                </span>
-                                            </a>
-                                        </li>
                                         <li class="nav-item dropdown position-static">
                                             @if (!empty($session_contact_company))
                                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
@@ -92,10 +82,12 @@
                                                         ({{ $session_contact_company }})</span>
                                                 </a>
                                             @else
-                                                <a class="nav-link dropdown-toggle p-0 " href="#"
+                                                <a class="nav-link dropdown-toggle p-0  text-white" href="#"
                                                     id="navbarDropdown" role="button" data-mdb-toggle="dropdown"
-                                                    aria-expanded="false" style="padding-top: 11px !important; ">
-                                                    <span class="top-bar-logout text-light"> Select Company</span>
+                                                    aria-expanded="false">
+                                                    <img src="/theme/img/users-icons-top-bar (2).png" class="img-fluid">
+                                                    <span class="text-white">Select
+                                                        Company</span>
                                                 </a>
                                             @endif
                                             <!-- Dropdown menu -->
@@ -133,6 +125,16 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                        </li>
+                                        <li style="margin: auto !important;">
+                                            <a class="text-white top-bar-logout" href="{{ route('logout') }}"
+                                                onclick="event.preventDefault(); document.getElementById('frm-logout').submit();">
+                                                <span class="menu-title">
+                                                    <img src="/theme/img/back-last-icons.png" alt=""
+                                                        class="img-fluid">
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;Logout
+                                                </span>
+                                            </a>
                                         </li>
                                     </ul>
                                 </div>

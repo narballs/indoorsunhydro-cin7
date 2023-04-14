@@ -562,7 +562,7 @@ a {
     color: rgba(0, 0, 0, .9) !important;
     font-style: normal;
     font-weight: 700;
-    font-size: 16px;
+    font-size: 14px;
     line-height: 24px;
     text-transform: uppercase;
 }
@@ -1608,13 +1608,12 @@ input[type=number] {
     background-color: #212121 !important;
 }
 
-.companies-nav-topbar {}
 
 .cart-counter-details {
     font-family: 'Poppins';
     font-style: normal;
     font-weight: 600;
-    font-size: 14px;
+    font-size: 15px;
 }
 
 .top-bar-logout {
@@ -1832,10 +1831,11 @@ input[type=number] {
 
 
 .basket-icon {
-    width: 35px;
-    height: 27px;
+    width: 47px;
+    height: 40px;
+    margin-left: -18px;
     left: 0px;
-    margin-top: 12px;
+    margin-top: -6px;
 }
 
 .product-detail-page-product-name {
