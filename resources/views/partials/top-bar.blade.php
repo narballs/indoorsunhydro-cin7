@@ -141,7 +141,9 @@
                             </nav>
                         </div>
                     @else
-                        <div class="register-counter-details ms-3">Login or Register</div>
+                        <div class="register-counter-details ms-2">
+                            <p class="mb-2 login-in-register">Login or Register</p>
+                        </div>
                     @endif
                 </a>
             </div>
