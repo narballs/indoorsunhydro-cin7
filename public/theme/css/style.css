@@ -1838,6 +1838,14 @@ input[type=number] {
     margin-top: -6px;
 }
 
+.login-in-register {
+    font-size: 15px;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 600;
+
+}
+
 .product-detail-page-product-name {
     font-family: 'Poppins' !important;
     font-size: 400px !important;
