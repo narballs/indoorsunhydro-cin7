@@ -480,14 +480,27 @@ class ContactController extends Controller
                 ]
             );
             $api_contact = $res->getBody()->getContents();
+
+
             $api_contact = json_decode($api_contact);
+            $pricing = preg_replace('/\R/', '', $api_contact->priceColumn);
             Contact::where('contact_id', $contact_id)->update([
                 'email'  => $api_contact->email,
                 'firstName' => $api_contact->firstName,
                 'lastName' => $api_contact->lastName,
-                'priceColumn' => $api_contact->priceColumn,
-                'company' => $api_contact->company
+                'priceColumn' => $pricing,
+                'company' => $api_contact->company,
+                'phone' => $api_contact->phone,
+                'mobile' => $api_contact->mobile,
+                'website' => $api_contact->website,
+                'postalAddress1' => $api_contact->postalAddress1,
+                'postalAddress2' => $api_contact->postalAddress2,
+                'postCode' => $api_contact->postCode,
+                'postalState' => $api_contact->postalState,
+                'postalCity' => $api_contact->postalCity,
+                'status' => $api_contact->isActive
             ]);
+
             if ($api_contact->secondaryContacts) {
                 foreach($api_contact->secondaryContacts as $apiSecondaryContact) {
                 $secondary_contact = Contact::where('secondary_id', $apiSecondaryContact->id)->where('parent_id', $contact->contact_id)->first();
@@ -507,10 +520,7 @@ class ContactController extends Controller
                         }
                         else {
                             $secondary_contact = new Contact();
-
-                                // parent_id
                             $secondary_contact->parent_id = $contact->contact_id;
-
                             $secondary_contact->secondary_id = $apiSecondaryContact->id;
                             $secondary_contact->is_parent = 0;
                             $secondary_contact->company = $apiSecondaryContact->company;
@@ -565,14 +575,17 @@ class ContactController extends Controller
                         'email'  => $api_secondary_contact->email,
                         'priceColumn' => $pricing_column,
                         'firstName' => $api_secondary_contact->firstName,
-                        'lastName' => $api_secondary_contact->lastName
+                        'lastName' => $api_secondary_contact->lastName,
+                        'mobile' => $api_secondary_contact->mobile,
+                        'phone' =>    $secondary_contact->phone = $api_secondary_contact->phone
                     ]);
                     return response()->json([
                         'status' => '200',
                         'message' => 'Contact Refreshed Successfully',
                         'updated_email' => $api_secondary_contact->email,
                         'updated_firstName' => $api_secondary_contact->firstName,
-                        'updated_lastName' => $api_secondary_contact->lastName
+                        'updated_lastName' => $api_secondary_contact->lastName,
+                        'updated_company' => $api_secondary_contact->company
                     ]);
                 }
             }
