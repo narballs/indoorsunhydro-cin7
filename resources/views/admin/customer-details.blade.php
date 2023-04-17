@@ -39,12 +39,19 @@
 										</div>
 									</div>
 								</div>
-								@if ($customer->status == 1)
+								@if ($customer)
+								
+								<?php 
+								$pricing = $customer->priceColumn;
+								// $pricing = Str::replace('/r', ' ', $pricing);
+								// dd($pricing);
+								?>
 								<div class="col-md-4"><b>Pricing:</b>
 									<select onchange="updatePriceColumn(4)" class="pricingColumn" id="pricingColumn">
-										<?php 
-							      	// $pricing = $customer->priceColumn;
-							      	// echo $pricing;exit;
+									<?php 
+							      		$pricing = $customer->priceColumn;
+							      		// echo $pricing;exit;
+							      		//$pricing = 'WholesaleUSD'
 							      
 							      	?>
 										<option class="form-group" value="RetailUSD" {{ $pricing }} {{ isset($pricing)
@@ -89,26 +96,30 @@
 								@endif
 
 								<?php 
-		              			if ($customer->status == 1) {
-		              				$status = 'Active';
-		              			}
-		              			else {
-		              				$status = 'Inactive';
-		              			}
-		              		?>
+			              			if ($customer->status == 1) {
+			              				$status = 'Active';
+			              			}
+			              			else {
+			              				$status = 'Inactive';
+			              			}
+		              			?>
 								@if($customer->status != 1)
-								<div class="col-md-2"><button class="btn btn-primary" type="button"
+								<!-- <div class="col-md-2"><button class="btn btn-primary" type="button"
 										onclick="updateContact()">Activate</button>
+								</div> -->
+								<div>
+									<span class="badge bg-warning">{{$status}}</span>
 								</div>
 								@else
 								<div>
 									<span class="badge bg-success">{{$status}}</span>
 								</div>
 								@endif
+
 								@if($customer->user == '' && $customer->hashKey == '')
-									<div class="col-md-1"><button class="btn btn-primary btn-sm" type="button"
+							<!-- 		<div class="col-md-1"><button class="btn btn-primary btn-sm" type="button"
 										onclick="mergeContact()">Invite</button>
-									</div>
+									</div> -->
 									@if($customer->contact_id)
 										<div class="col-md-2"><button class="btn btn-primary btn-sm" type="button"
 												onclick="refreshContact({{$customer->contact_id}}, 'primary')">Refresh Contact</button>
@@ -132,7 +143,7 @@
 									style="left: 50% !important;margin-left: -25em !important;" id="spinner">
 									<span class="sr-only">Activating...</span>
 								</div>
-								@if ($invitation_url != '')
+						<!-- 		@if ($invitation_url != '')
 								<div class="col-md-12">
 									<a href="{{$invitation_url}}" class="text-dark">
 										<b>Invitation URL :</b><span id="copyText1"
@@ -141,10 +152,10 @@
 									<button type="button" class="btn btn-info btn-sm" onclick="withJquery();">Copy
 										Link</button>
 								</div>
-								@endif
+								@endif -->
 								<div class="col-md-12">
 									<div class="row">
-										<div class="col-md-4">
+										<div class="col-md-3">
 											<b>Company:</b> <span id="refreshed_company">{{$customer->company}}</span>
 										</div>
 										<div class="col-md-6">
@@ -289,13 +300,13 @@
 											<span class="badge bg-info">empty</span>
 										</td>
 										@endif
-										@if($contact->hashUsed == 1)
+										@if($contact)
 										<td>
 											<span class="badge bg-success">Active</span>
 										</td>
 										@else
 										<td>
-											<span class="badge bg-warning">un Active</span>
+											<span class="badge bg-warning">Active</span>
 										</td>
 										@endif
 
@@ -560,13 +571,13 @@
         	},
         	success: function(response){
         		console.log(response);
-        		$('#refreshed_email').html(response.updated_email);
-        		$('#refreshed_firstname').html(response.updated_firstName);
-        		$('#refreshed_lastname').html(' '+response.updated_lastName);
-        		$('#refreshed_company').html(response.updated_company);
-        		console.log(response.updated_priceColumn);
-        		$('#pricingColumn').find('option[value="'+response.updated_priceColumn+'"]').prop('selected', true);
-        		$('#spinner').addClass('d-none');
+        		// $('#refreshed_email').html(response.updated_email);
+        		// $('#refreshed_firstname').html(response.updated_firstName);
+        		// $('#refreshed_lastname').html(' '+response.updated_lastName);
+        		// $('#refreshed_company').html(response.updated_company);
+        		// console.log(response.updated_priceColumn);
+        		// $('#pricingColumn').find('option[value="'+response.updated_priceColumn+'"]').prop('selected', true);
+        		// $('#spinner').addClass('d-none');
         	   	
     		}
 

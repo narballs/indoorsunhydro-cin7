@@ -16,8 +16,10 @@ class HomeController extends Controller
      */
     public function index()
     {
+
         // session::forget('companies');
         //  session::forget('cart');
+        //  exit;
         $categories = Category::orderBy('name', 'ASC')
             ->with('products')->where('is_active', 1)
             ->get();
