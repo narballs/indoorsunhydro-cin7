@@ -92,7 +92,7 @@
             <td scope=" row">
              <div class="d-flex align-items-center">
                                                                                         
-                                                                @if (!empty($cart['image']))
+                                                                 @if (!empty($cart['image']))
                                                                 <img src="{{ $cart['image'] }}"
                                                                     class="img-fluid rounded-3" style="width: 120px;"
                                                                     alt="Book">
@@ -255,7 +255,7 @@
                         </td>
                         <td class="pe-0">
                             <span id="cart_grand_total">
-                                <strong class=" d-flex justify-content-end cart-page-items">
+                                <strong class=" d-flex justify-content-end cart-page-items text-danger">
                                     ${{ number_format($total_including_tax, 2) }}
                                 </strong>
                             </span>

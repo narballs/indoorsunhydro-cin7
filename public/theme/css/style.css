@@ -2,6 +2,9 @@
     #icons background-color: #E32029;
 }
 
+@import url('https://fonts.googleapis.com/css?family=Mukta');
+@import url('https://fonts.cdnfonts.com/css/regular');
+
 .mobile-view {
     display: none !important;
 }
@@ -251,7 +254,6 @@ h1 {
     color: #7BC533 !important;
 }
 
-@import url('https://fonts.googleapis.com/css?family=Mukta');
 
 a {
     text-decoration: none;
@@ -484,6 +486,11 @@ a {
 .checkbox-lg .form-check-input {
     width: 25px;
     height: 25px;
+}
+
+.form-check-input:checked {
+    background-color: #7BC533 !important;
+    border-color: #7BC533 !important;
 }
 
 .form-check-label {
@@ -2158,15 +2165,15 @@ input[type=number] {
     .dont-have-an-account {
         font-family: 'Poppins' !important;
         font-style: normal !important;
-        font-weight: 700 !important;
-        font-size: 22px !important;
+        font-weight: 500 !important;
+        font-size: 21px !important;
         line-height: 48px !important;
         letter-spacing: 0.05em !important;
         color: #FFFFFF !important;
     }
 
     .dont-have-an-account-pra {
-        font-family: 'Poppins' !important;
+        font-family: 'Regular', sans-serif !important;
         font-style: normal !important;
         font-weight: 500 !important;
         font-size: 16px !important;
@@ -2244,7 +2251,7 @@ input[type=number] {
     .dont-have-an-account {
         font-family: 'Poppins' !important;
         font-style: normal !important;
-        font-weight: 700 !important;
+        font-weight: 500 !important;
         font-size: 22px !important;
         line-height: 48px !important;
         letter-spacing: 0.05em !important;
@@ -2252,7 +2259,7 @@ input[type=number] {
     }
 
     .dont-have-an-account-pra {
-        font-family: 'Poppins' !important;
+        font-family: 'Regular', sans-serif !important;
         font-style: normal !important;
         font-weight: 500 !important;
         font-size: 16px !important;
@@ -2331,7 +2338,7 @@ input[type=number] {
     }
 
     .dont-have-an-account-pra {
-        font-family: 'Poppins' !important;
+        font-family: 'Regular', sans-serif !important;
         font-style: normal !important;
         font-weight: 500 !important;
         font-size: 13px !important;
@@ -2367,7 +2374,7 @@ input[type=number] {
     }
 
     .dont-have-an-account-pra {
-        font-family: 'Poppins';
+        font-family: 'Regular', sans-serif !important;
         font-style: normal;
         font-weight: 500;
         font-size: 13px;
@@ -2497,12 +2504,12 @@ input[type=number] {
 
     .dont-have-an-account {
         font-family: 'Poppins';
-        font-weight: 700;
+        font-weight: 500;
         font-size: 12px;
     }
 
     .dont-have-an-account-pra {
-        font-family: 'Poppins';
+        font-family: 'Regular', sans-serif !important;
         font-style: normal;
         font-weight: 500;
         font-size: 9px;
@@ -2570,7 +2577,7 @@ input[type=number] {
 
     .dont-have-an-account {
         font-family: 'Poppins' !important;
-        font-weight: 700 !important;
+        font-weight: 500 !important;
         font-size: 19px !important;
         color: #FFFFFF !important;
         line-height: 17px !important;
@@ -3472,7 +3479,7 @@ input[type=number] {
     .dont-have-an-account {
         font-family: 'Poppins' !important;
         font-style: normal !important;
-        font-weight: 700 !important;
+        font-weight: 500 !important;
         font-size: 12px !important;
         line-height: 48px !important;
         letter-spacing: 0.05em !important;
@@ -3481,7 +3488,7 @@ input[type=number] {
     }
 
     .dont-have-an-account-pra {
-        font-family: 'Poppins';
+        font-family: 'Regular', sans-serif !important;
         font-style: normal;
         font-weight: 200 !important;
         font-size: 6px !important;
@@ -3725,12 +3732,12 @@ input[type=number] {
 
     .dont-have-an-account {
         font-family: 'Poppins';
-        font-weight: 700;
+        font-weight: 500;
         font-size: 12px;
     }
 
     .dont-have-an-account-pra {
-        font-family: 'Poppins';
+        font-family: 'Regular', sans-serif !important;
         font-style: normal;
         font-weight: 500;
         font-size: 9px;
