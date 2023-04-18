@@ -586,6 +586,8 @@ a {
     border-bottom: none;
 }
 
+.thank-you-page-product-item-cart-total-cart-page {}
+
 .link-dark {
     font-style: normal;
     font-weight: 400;
@@ -4505,7 +4507,7 @@ select.list-dt:focus {
     font-size: 18px;
     line-height: 21px;
     color: #000000;
-    padding-top: 46px;
+    padding-top: 18px;
     margin-left: 6px;
 }
 
@@ -4544,6 +4546,19 @@ select.list-dt:focus {
     font-size: 16px;
     line-height: 37px !important;
     color: #000000;
+    display: flex;
+    justify-content: end;
+}
+
+.thank-you-page-product-item-cart-total {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 25px;
+    line-height: 37px !important;
+    color: #000000;
+    display: flex;
+    justify-content: end;
 }
 
 .img-size-32 {
