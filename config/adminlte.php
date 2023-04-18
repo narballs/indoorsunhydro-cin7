@@ -1,5 +1,4 @@
 <?php
-
 return [
 
     /*
@@ -44,7 +43,7 @@ return [
     |
     */
     'logo' => '<b>Admin</b>LTE',
-    'logo_img' => '/vendor/almasaeed2010/adminlte/dist/img/AdminLTELogo.png',
+    // 'logo_img' => '/vendor/almasaeed2010/adminlte/dist/img/AdminLTELogo.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
@@ -289,11 +288,7 @@ return [
             'url'  => 'admin/roles',
             'icon' => 'fas fa-fw fa-user',
         ],
-        // [
-        //     'text' => 'change_password',
-        //     'url'  => 'admin/settings',
-        //     'icon' => 'fas fa-fw fa-lock',
-        // ],
+
         [
             'text'    => 'multilevel',
             'icon'    => 'fas fa-fw fa-share',
