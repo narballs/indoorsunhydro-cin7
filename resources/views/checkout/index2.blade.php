@@ -79,9 +79,9 @@ $cart_price = 0;
             <div class="card p-5 border-0" style="background: #FAFAFA; border-radius: 6px;">
                 <div class="row">
                     <div class="col-md-6">
-                        <div class="row">
+                        <div class="row" style="border-bottom: 2px dashed #CDCDCD;">
                             <div class="col-md-6">
-                                <p class="billing-address-thank-you-page-heading">Billing Address</p>
+                                <p class="billing-address-thank-you-page-heading mb-0">Billing Address</p>
                             </div>
                             <div class="col-md-6">
                                 <a data-bs-toggle="modal" href="#address_modal_id" role="button" class="float-end">
@@ -123,7 +123,7 @@ $cart_price = 0;
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <p class="billing-address-thank-you-page-heading">Billing Address</p>
+                        <p class="billing-address-thank-you-page-heading billing-border">Shipping Address</p>
                         <div class="row">
                             <div class="col-md-12">
                                 <p class="user-first-name-thank-you-page"> {{ $user_address->firstName }}
