@@ -4372,8 +4372,12 @@ select.list-dt:focus {
     flex: none;
     order: 1;
     flex-grow: 0;
-    border-bottom: 2px dashed #CDCDCD;
+    /* border-bottom: 2px dashed #CDCDCD; */
     padding-bottom: 43px;
+}
+
+.billing-border {
+    border-bottom: 2px dashed #CDCDCD;
 }
 
 .user-first-name-thank-you-page {
@@ -4390,7 +4394,7 @@ select.list-dt:focus {
     font-family: 'Roboto';
     font-style: normal;
     font-weight: 400;
-    font-size: 16px;
+    font-size: 15px;
     line-height: 19px;
     color: #000000;
     margin-bottom: 0px;
