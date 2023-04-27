@@ -21,19 +21,27 @@ class CheckoutController extends Controller
 {
     public function index()
     {
+
         $user_id = auth()->id();
         $contact = Contact::where('user_id', $user_id)->with('states')->with('cities')->first();
+
 
         if ($contact) {
             $isApproved = $contact->contact_id;
         }
+        if ($contact->status == false) {
+            Session::flash('message', "Your account is inactive can't proceed to checkout, however you can make carts , please contact support to ativate the account");
+            return redirect('/cart/');
+        }
+
         if (Auth::check() && (!empty($contact->contact_id) || !empty($contact->secondary_id))) {
             $tax_class = TaxClass::where('is_default', 1)->first();
             $states = UsState::all();
             $payment_methods = PaymentMethod::with('options')->get();
             $user_address = Contact::where('user_id', $user_id)->first();
             return view('checkout/index2', compact('user_address', 'states', 'payment_methods', 'tax_class'));
-        } else if (Auth::check() && (!empty($contact->contact_id) || !empty($contact->secondary_id))) {
+        } 
+        else if (Auth::check() && (!empty($contact->contact_id) || !empty($contact->secondary_id))) {
             Session::flash('message', "Your account is being reviewed you can't proceed to checkout, however you can make carts");
             return redirect('/cart/');
         } else {
