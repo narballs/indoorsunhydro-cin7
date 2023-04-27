@@ -238,76 +238,85 @@
 									@foreach($secondary_contacts as $contact)
 									<tr>
 										@if($contact->company)
-										<td>
-											{{$contact->company}}
-										</td>
+											<td>
+												{{$contact->company}}
+											</td>
 										@else
-										<td>
-											<span class="badge bg-info">empty</span>
-										</td>
+											<td>
+												<span class="badge bg-info">empty</span>
+											</td>
 										@endif
 										@if($contact->firstName)
-										<td>
-											{{$contact->firstName}}
-										</td>
+											<td>
+												{{$contact->firstName}}
+											</td>
 										@else
-										<td>
-											<span class="badge bg-info">empty</span>
-										</td>
+											<td>
+												<span class="badge bg-info">empty</span>
+											</td>
 										@endif
 										@if($contact->lastName)
-										<td>
-											{{$contact->lastName}}
-										</td>
+											<td>
+												{{$contact->lastName}}
+											</td>
 										@else
-										<td>
-											<span class="badge bg-info">empty</span>
-										</td>
+											<td>
+												<span class="badge bg-info">empty</span>
+											</td>
 										@endif
 										@if($contact->jobTitle)
-										<td>
-											{{$contact->jobTitle}}
-										</td>
+											<td>
+												{{$contact->jobTitle}}
+											</td>
 										@else
-										<td>
-											<span class="badge bg-info">empty</span>
-										</td>
+											<td>
+												<span class="badge bg-info">empty</span>
+											</td>
 										@endif
 										@if($contact->email)
-										<td>
-											{{$contact->email}}
-										</td>
+											<td>
+												{{$contact->email}}
+											</td>
 										@else
-										<td>
-											<span class="badge bg-info">empty</span>
-										</td>
+											<td>
+												<span class="badge bg-info">empty</span>
+											</td>
 										@endif
 										@if($contact->mobile)
-										<td>
-											{{$contact->mobile}}
-										</td>
+											<td>
+												{{$contact->mobile}}
+											</td>
 										@else
-										<td>
-											<span class="badge bg-info">empty</span>
-										</td>
+											<td>
+												<span class="badge bg-info">empty</span>
+											</td>
 										@endif
 										@if($contact->phone)
-										<td>
-											{{$contact->phone}}
-										</td>
+											<td>
+												{{$contact->phone}}
+											</td>
 										@else
-										<td>
-											<span class="badge bg-info">empty</span>
-										</td>
+											<td>
+												<span class="badge bg-info">empty</span>
+											</td>
 										@endif
-										@if($contact)
-										<td>
-											<span class="badge bg-success">Active</span>
-										</td>
+										@if($contact && $customer->status == 1)
+											<td>
+												<span class="badge bg-success">Active</span>
+											</td>
+											<td>
+													<!-- Default checked -->
+												<div class="custom-control custom-switch">
+												  <input type="checkbox" class="custom-control-input" id="customSwitch1" {{ isset($contact->status)
+											&& $contact->status==1 ? 'checked="checked"' : '' }}>
+												  <label class="custom-control-label" for="customSwitch1"></label>
+												</div>
+											</td>
+
 										@else
-										<td>
-											<span class="badge bg-warning">Active</span>
-										</td>
+											<td>
+												<span class="badge bg-warning">Inactive</span>
+											</td>
 										@endif
 
 									</tr>
@@ -585,6 +594,10 @@
    		setTimeout(function(){
    			window.location.reload();
    		}, 5000);
+ 	}
+
+ 	function disableSecondary(secondary_id) {
+ 		console.log(secondary_id);
  	}
 </script>
 @stop
