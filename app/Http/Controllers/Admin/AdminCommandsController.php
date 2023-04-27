@@ -25,7 +25,7 @@ class AdminCommandsController extends Controller
         }
         catch (\Exception $e) {
             return response()->json([
-                'status' => 'success', 
+                'status' => 'error', 
                 'message' => $e->getMessage()
             ]);
         }
