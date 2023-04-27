@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\OrderManagementController;
 use App\Http\Controllers\Admin\ShippingMethodController;
 use App\Http\Controllers\Admin\ContactController;
+use App\Http\Controllers\Admin\AdminCommandsController;
 use App\Http\Controllers\ChangePasswordController;
 use App\Http\Controllers\Admin\CustomerSearchController;
 use App\Http\Controllers\Admin\AdminProductController;
@@ -101,6 +102,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('admin/shipping-method/delete/{id}', [ShippingMethodController::class, 'destroy'])->name('admin.shipping-method.delete');
     Route::get('admin/contacts', [ContactController::class, 'supplier'])->name('admin.contacts');
     Route::get('admin/customers', [ContactController::class, 'customer'])->name('admin.customer');
+
+    Route::get('admin/commands/import_contacts', [AdminCommandsController::class, 'import_contacts'])->name('admin.commands.import_contacts');
 
 
     Route::get('admin/customer/create', [ContactController::class, 'customer_create'])->name('admin.customer.create');
