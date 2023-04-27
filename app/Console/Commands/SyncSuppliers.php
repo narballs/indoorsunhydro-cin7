@@ -115,6 +115,7 @@ class SyncSuppliers extends Command
                                 $secondary_contact->mobile = $apiSecondaryContact->mobile;
                                 $secondary_contact->phone = $apiSecondaryContact->phone;
                                 $secondary_contact->priceColumn = $api_contact->priceColumn;
+                                $secondary_contact->status = 1;
                                 $secondary_contact->save();
                             }
                             else {
@@ -133,6 +134,7 @@ class SyncSuppliers extends Command
                                 $secondary_contact->mobile = $apiSecondaryContact->mobile;
                                 $secondary_contact->phone = $apiSecondaryContact->phone;
                                 $secondary_contact->priceColumn = $api_contact->priceColumn;
+                                $secondary_contact->status = 1;
                                 $secondary_contact->save();
                             }
 
@@ -183,6 +185,7 @@ class SyncSuppliers extends Command
                                 'secondary_id' => $secondaryContact->id,
                                 'parent_id'  => $api_contact->id,
                                 'is_parent' => 0,
+                                'status' => 1,
                                 'firstName' => $secondaryContact->firstName,
                                 'lastName' => $secondaryContact->lastName,
                                 'jobTitle' => $secondaryContact->jobTitle,

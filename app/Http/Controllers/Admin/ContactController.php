@@ -577,7 +577,8 @@ class ContactController extends Controller
                         'firstName' => $api_secondary_contact->firstName,
                         'lastName' => $api_secondary_contact->lastName,
                         'mobile' => $api_secondary_contact->mobile,
-                        'phone' =>    $secondary_contact->phone = $api_secondary_contact->phone
+                        'phone' =>    $secondary_contact->phone = $api_secondary_contact->phone,
+                        'status' => 1
                     ]);
                     return response()->json([
                         'status' => '200',
