@@ -9,6 +9,7 @@ dist/
 vendor/
 .env
 composer.lock
+public/theme/css/admin_custom.css
 
 
 # Compiled Java class files

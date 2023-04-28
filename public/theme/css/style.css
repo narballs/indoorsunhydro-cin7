@@ -4982,6 +4982,10 @@ select.list-dt:focus {
     margin-top: 98px;
 }
 
+.custom-control-indicator {
+    background-color: #28a745 !important;
+}
+
 /* order confirmation page end */
 
 

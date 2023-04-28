@@ -93,6 +93,7 @@
                                             <!-- Dropdown menu -->
                                             @php
                                                 $companies = Session::get('companies');
+
                                             @endphp
                                             <div class="dropdown-menu w-100 mt-0" aria-labelledby="navbarDropdown"
                                                 style="
@@ -109,16 +110,28 @@
                                                                                 if ($company->contact_id) {
                                                                                     $contact_id = $company->contact_id;
                                                                                     $primary = '(primary)';
+
                                                                                 } else {
                                                                                     $contact_id = $company->secondary_id;
                                                                                     $primary = '(secondary)';
                                                                                 }
+                                                                                if ($company->status == 0) {
+                                                                                    $disabled = 'disabled';
+                                                                                    $disable_text = '(Disabled)';
+                                                                                    $muted = 'text-muted';
+                                                                                }
+                                                                                else {
+                                                                                    $disabled = '';
+                                                                                    $disable_text = '';
+                                                                                    $muted = '';
+                                                                                }
+
                                                                             @endphp
-                                                                            <a type="button"
-                                                                                class="list-group-item list-group-item-action"
+                                                                            <a type="button" 
+                                                                                class="list-group-item list-group-item-action {{$disabled}} {{$muted}}" 
                                                                                 onclick="switch_company_user({{ $contact_id }})">{{ $company->company }}
                                                                                 <span
-                                                                                    style="font-size: small;">{{ $primary }}</span></a>
+                                                                                    style="font-size: small;" class="{{$muted}}">{{ $primary }} </span></a>
                                                                         @endforeach
                                                                     @endif
                                                                 @endif
