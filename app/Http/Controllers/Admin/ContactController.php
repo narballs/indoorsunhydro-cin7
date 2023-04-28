@@ -463,6 +463,8 @@ class ContactController extends Controller
         ]);
     }
 
+
+
     public function refreshContact(Request $request) {
         $contact_id  = $request->contactId;
         if ($request->type == 'primary') { 
@@ -508,6 +510,7 @@ class ContactController extends Controller
 
                             $secondary_contact->secondary_id = $apiSecondaryContact->id;
                             $secondary_contact->is_parent = 0;
+                            $secondary_contact->status = 1;
                             $secondary_contact->company = $apiSecondaryContact->company;
                             $secondary_contact->firstName = $apiSecondaryContact->firstName;
                             $secondary_contact->lastName = $apiSecondaryContact->lastName;
@@ -523,6 +526,7 @@ class ContactController extends Controller
                             $secondary_contact->parent_id = $contact->contact_id;
                             $secondary_contact->secondary_id = $apiSecondaryContact->id;
                             $secondary_contact->is_parent = 0;
+                            $secondary_contact->status = 1;
                             $secondary_contact->company = $apiSecondaryContact->company;
                             $secondary_contact->firstName = $apiSecondaryContact->firstName;
                             $secondary_contact->lastName = $apiSecondaryContact->lastName;
@@ -591,5 +595,21 @@ class ContactController extends Controller
                 }
             }
         }
+    }
+
+
+    public function disableSecondary(Request $request) {
+        $contact = Contact::where('id', $request->contactId)->first();
+        if ($contact->status == 1) {
+            $contact->status = 0;
+        } 
+        else {
+            $contact->status = 1;
+        }
+        $contact->save();
+
+        return response()->json([
+            'msg' => 'success'
+        ], 200);
     }
 }

@@ -29,7 +29,9 @@ class CheckoutController extends Controller
         if ($contact) {
             $isApproved = $contact->contact_id;
         }
-        if ($contact->status == false) {
+        // dd($contact);
+        // dd($contact->status);
+        if ($contact->status == 0) {
             Session::flash('message', "Your account is inactive can't proceed to checkout, however you can make carts , please contact support to ativate the account");
             return redirect('/cart/');
         }

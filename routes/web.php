@@ -222,6 +222,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('admin/get-parent', [ContactController::class, 'getParent']);
     Route::get('admin/get-parent', [ContactController::class, 'getParent']);
     Route::post('admin/refresh-contact', [ContactController::class, 'refreshContact']);
+    Route::post('admin/disable-secondary', [ContactController::class, 'disableSecondary']);
     Route::get('admin/user-switch/{id}', [UserController::class, 'switch_user'])->name('users.switch');
     Route::get('admin/send-password/{id}', [UserController::class, 'send_password'])->name('users.send_password');
     Route::get('admin/go-back', [UserController::class, 'switch_user_back'])->name('users.switch_user_back');

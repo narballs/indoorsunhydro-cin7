@@ -1246,6 +1246,7 @@ $cart_price = 0;
                                         method: 'GET',
                                         url: "{{ url('/select-companiens-to-order/') }}",
                                         success: function(response) {
+                                            console.log(response.companies);
                                             $.each(response.companies, function(index, value) {
                                                 let companyID = null;
                                                 if (value.contact_id) {
@@ -1254,7 +1255,9 @@ $cart_price = 0;
                                                 if (value.secondary_id) {
                                                     companyID = value.secondary_id + "-S";;
                                                 }
-                                                companiesData[companyID] = value.company
+                                                if(value.status == 1) {
+                                                    companiesData[companyID] = value.company;
+                                                }
                                             });
                                         }
                                     });
