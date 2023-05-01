@@ -4983,7 +4983,7 @@ select.list-dt:focus {
 }
 
 .custom-control-indicator {
-    background-color: #28a745 !important;
+    background-color:#28a745;
 }
 
 /* order confirmation page end */
