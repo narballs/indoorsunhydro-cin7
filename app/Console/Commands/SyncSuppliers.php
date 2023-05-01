@@ -115,7 +115,13 @@ class SyncSuppliers extends Command
                                 $secondary_contact->mobile = $apiSecondaryContact->mobile;
                                 $secondary_contact->phone = $apiSecondaryContact->phone;
                                 $secondary_contact->priceColumn = $api_contact->priceColumn;
-                                $secondary_contact->status = 1;
+                                //$secondary_contact->status = 1;
+                                if ($secondary_contact->status == 0) {
+                                    $secondary_contact->status = 0;
+                                }
+                                else {
+                                    $secondary_contact->status = 1;
+                                }
                                 $secondary_contact->save();
                             }
                             else {
