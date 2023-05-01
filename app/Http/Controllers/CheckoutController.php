@@ -23,14 +23,16 @@ class CheckoutController extends Controller
     {
 
         $user_id = auth()->id();
-        $contact = Contact::where('user_id', $user_id)->where('status', 1)->with('states')->with('cities')->first();
+        $selected_company = Session::get('company');
+        
+        $contact = Contact::where('user_id', $user_id)->where('status', 1)->where('company', $selected_company)->with('states')->with('cities')->first();
+      
 
 
         if ($contact) {
             $isApproved = $contact->contact_id;
         }
-        // dd($contact);
-        // dd($contact->status);
+        
         if ($contact->status == 0) {
             Session::flash('message', "Your account is inactive can't proceed to checkout, however you can make carts , please contact support to activate the account");
             return redirect('/cart/');
