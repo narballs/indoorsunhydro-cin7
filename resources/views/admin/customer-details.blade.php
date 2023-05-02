@@ -234,6 +234,7 @@
 											<th>Mobile#</th>
 											<th>Phone</th>
 											<th>Status</th>
+											<th></th>
 										</tr>
 										@foreach($secondary_contacts as $contact)
 										<tr>
