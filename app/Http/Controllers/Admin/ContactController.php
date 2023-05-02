@@ -161,7 +161,7 @@ class ContactController extends Controller
         else {
             $secondary_contacts = '';
         }
-        $customer_orders =  ApiOrder::where('user_id', $customer->user_id)->with(['createdby', 'processedby'])->limit('5')->get();
+        $customer_orders =  ApiOrder::where('user_id', $customer->user_id)->with(['createdby', 'processedby'])->get();
         $statuses = OrderStatus::all();
         if ($customer->hashKey && $customer->hashUsed == false) {
             $invitation_url = URL::to("/");
