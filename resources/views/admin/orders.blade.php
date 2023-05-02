@@ -59,8 +59,11 @@
                     <td>{{$order->id}}</td>
                     <td>{{$order->created_at->format('F '.'d, Y, '.'g:i A')}}</td>
                     <td>
-                        @if($order->createdby)
-                        {{$order->contact->firstName}} {{$order->contact->lastName}}</td>
+                    
+                    @if($order->createdby )
+                        @if($order->contact)
+                            {{$order->contact->firstName}} {{$order->contact->lastName}}</td>
+                        @endif
                     @endif
                     <td>{{$order->reference}}</td>
                     <td>${{$order->total}}</td>
