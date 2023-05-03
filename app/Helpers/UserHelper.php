@@ -8,6 +8,8 @@ use App\Mail\Subscribe;
 
 use App\Models\Contact;
 
+use Session;
+
 class UserHelper
 {
     /**
@@ -55,5 +57,32 @@ class UserHelper
 
         $member_ids = array_merge($ids_array_1, $ids_array_2, $ids_array_3);
         return $member_ids;
+    }
+
+    public static function switch_company($contact_id) {
+        $contact = Contact::where('contact_id', $contact_id)->first();
+        
+        if (!empty($contact)) {
+            $active_contact_id = $contact->contact_id;
+            $active_company = $contact->company;
+            Session::put([
+                'contact_id' => $active_contact_id,
+                'company' => $active_company
+            ]);
+
+        } else {
+            $contact = Contact::where('secondary_id', $contact_id)->first();
+            $active_contact_id = $contact->secondary_id;
+            $active_company = $contact->company;
+            Session::put([
+                'contact_id' => $active_contact_id,
+                'company' => $active_company
+            ]);
+        }
+
+        return response()->json([
+            'status' => '204',
+            'message' => 'Company Switch Successfully !'
+        ]);
     }
 }
