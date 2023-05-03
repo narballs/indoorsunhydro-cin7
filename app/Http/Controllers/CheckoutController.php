@@ -23,8 +23,14 @@ class CheckoutController extends Controller
     {
 
         $user_id = auth()->id();
-        $selected_company = Session::get('company');
+
         
+        
+        $selected_company = Session::get('company'); 
+        if (!$selected_company) {
+            Session::flash('message', "Please Seclect a company for which you want to make an order for");
+            return redirect('/cart/');
+        }
         $contact = Contact::where('user_id', $user_id)->where('status', 1)->where('company', $selected_company)->with('states')->with('cities')->first();
       
 
