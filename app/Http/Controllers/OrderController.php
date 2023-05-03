@@ -42,7 +42,6 @@ class OrderController extends Controller
                 $active_contact_id = $contact->parent_id;
             }
 
-
             if ($active_contact_id) {
                 $order = new ApiOrder;
                 $cart_items = session()->get('cart');
@@ -54,8 +53,7 @@ class OrderController extends Controller
                         $total_price = $cart_item['price'] * $total_quatity;
                         $cart_total  = $cart_total + $total_price;
                     }
-                }
-                else {
+                } else {
                     return redirect('/');
                 }
                 //moving to Api order items
@@ -86,8 +84,6 @@ class OrderController extends Controller
                 $order->date = $request->date;
                 $order->save();
 
-
-               
                 $order_id =  $order->id;
                 $currentOrder = ApiOrder::where('id', $order->id)->first();
                 $apiApproval = $currentOrder->apiApproval;
@@ -105,9 +101,9 @@ class OrderController extends Controller
                         $OrderItem->option_id = $cart_item['option_id'];
                         $OrderItem->save();
                     }
-                }
-                else {
-                    echo 'l;lklkl';exit;
+                } else {
+                    echo 'l;lklkl';
+                    exit;
                     session()->forget('cart');
                     return redirect('/');
                 }
@@ -141,8 +137,6 @@ class OrderController extends Controller
                     'count' => $count,
                     'order_id' => $order_id,
                 ];
-
-
 
                 $name = $contact->firstName;
                 $email =  $contact->email;
@@ -187,7 +181,7 @@ class OrderController extends Controller
                 $user = User::where('id',  Auth::id())->first();
                 $all_ids = UserHelper::getAllMemberIds($user);
                 $all_members = Contact::whereIn('id', $all_ids)->get();
-                foreach($all_members as $member) {
+                foreach ($all_members as $member) {
                     $member_user = User::find($member->user_id);
 
 
@@ -200,16 +194,15 @@ class OrderController extends Controller
                         $data['name'] = $member_user->firstName;
                         $data['subject'] = 'New order awaiting approval';
                         $data['email'] = $member_user->email;
-             
+
 
                         // echo $member_user->email  . $member_user->id . ' => This user can approve order<br />';
                         MailHelper::sendMailNotification('emails.user-order-received', $data);
-
                     }
                     // else {
                     //     echo $member_user->email  . $member_user->id . ' => Can not approve user<br />';
                     // }
-                    
+
                 }
 
                 $lineItems = [];
