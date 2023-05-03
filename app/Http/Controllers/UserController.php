@@ -318,6 +318,9 @@ class UserController extends Controller
             if ($user->hasRole(['Admin'])) {
                 session()->flash('message', 'Successfully Logged in');
                 $companies = Contact::where('user_id', auth()->user()->id)->get();
+                if ($companies->count() == 1) {
+                    UserHelper::switch_company($companies[0]->contact_id);
+                }
                 Session::put('companies', $companies);
                 return redirect()->route('admin.view');
             } else {
