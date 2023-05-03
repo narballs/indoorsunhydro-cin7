@@ -807,8 +807,9 @@
                 $('#cart_subtotal').html('$' + cart_total.toFixed(2));
                 $('#cart_grand_total').html('<strong>$' + cart_total.toFixed(2) + '<strong>');
                 $('#top_cart_quantity').html(total_cart_quantity);
-                $('#topbar_cart_total').html('$' + parseFloat(cart_total));
+                //$('#topbar_cart_total').html('$' + parseFloat(cart_total));
                 jQuery('.alert').html(response.success);
+                location.reload();
             }
         });
     }
