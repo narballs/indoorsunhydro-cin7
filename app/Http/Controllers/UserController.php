@@ -311,9 +311,9 @@ class UserController extends Controller
             'email' => 'required',
             'password' => 'required'
         ]);
-
         $credentials = $request->except(['_token']);
         $user = User::where('email', $request->email)->first();
+        //dd($user);
         if (auth()->attempt($credentials)) {
             if ($user->hasRole(['Admin'])) {
                 session()->flash('message', 'Successfully Logged in');
@@ -326,11 +326,17 @@ class UserController extends Controller
                 } else {
                     if ($user->is_updated == 1) {
                         $companies = Contact::where('user_id', auth()->user()->id)->get();
+
+                        if ($companies->count() == 1) {
+                            UserHelper::switch_company($companies[0]->contact_id);
+                        }
+
                         Session::put('companies', $companies);
                         return redirect()->route('my_account');
                     } else {
                         $companies = Contact::where('user_id', auth()->user()->id)->get();
                         Session::put('companies', $companies);
+                        
                         return view('reset-password', compact('user'));
                     }
                 }
@@ -860,7 +866,11 @@ class UserController extends Controller
     public function switch_company(Request $request)
     {
         $contact_id = $request->companyId;
+
+        return UserHelper::switch_company($contact_id);
+
         $contact = Contact::where('contact_id', $contact_id)->first();
+        
         if (!empty($contact)) {
             $active_contact_id = $contact->contact_id;
             $active_company = $contact->company;
@@ -880,6 +890,7 @@ class UserController extends Controller
                 'contact_id' => $active_contact_id,
                 'company' => $active_company
             ]);
+
             return response()->json([
                 'status' => '204',
                 'message' => 'Company Switch Successfully !'
