@@ -29,7 +29,7 @@ class OrderManagementController extends Controller
 {
     function __construct()
     {
-       $this->middleware(['role:Admin'])->except('order_full_fill', 'send_invitation_email');
+        $this->middleware(['role:Admin'])->except('order_full_fill', 'send_invitation_email');
     }
 
     public function index(Request $request)
@@ -79,7 +79,7 @@ class OrderManagementController extends Controller
 
     public function updateStatus(Request $request)
     {
-   
+
         $order_id = $request->order_id_status;
         $status = $request->status;
         $order = ApiOrder::where('id', $order_id)->first();
@@ -92,18 +92,17 @@ class OrderManagementController extends Controller
         $order_comment->save();
         if ($status == 2) {
             $isVoid = true;
-        } 
-        else {
+        } else {
             $isVoid = false;
         }
         $json_body =
-        [
             [
-                "id" => $order->order_id,
-                "status" => $status,
-                "isVoid" =>  $isVoid
-            ]
-        ];
+                [
+                    "id" => $order->order_id,
+                    "status" => $status,
+                    "isVoid" =>  $isVoid
+                ]
+            ];
         SalesOrders::dispatch('update_order', $json_body)->onQueue(env('QUEUE_NAME'));
         return redirect()->back()->with('success', 'Order Status changed successfully !');
     }
