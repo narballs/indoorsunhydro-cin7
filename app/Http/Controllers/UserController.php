@@ -318,13 +318,18 @@ class UserController extends Controller
             if ($user->hasRole(['Admin'])) {
                 session()->flash('message', 'Successfully Logged in');
                 $companies = Contact::where('user_id', auth()->user()->id)->get();
-                if ($companies->count() == 1) {
+                 if ($companies->count() == 1) {
                     UserHelper::switch_company($companies[0]->contact_id);
                 }
                 Session::put('companies', $companies);
                 return redirect()->route('admin.view');
             } else {
                 if (!empty(session()->get('cart'))) {
+                    $companies = Contact::where('user_id', auth()->user()->id)->get();
+                    if ($companies->count() == 1) {
+                        UserHelper::switch_company($companies[0]->contact_id);
+                    }
+                Session::put('companies', $companies);
                     return redirect()->route('cart');
                 } else {
                     if ($user->is_updated == 1) {
