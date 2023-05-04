@@ -20,6 +20,8 @@ class ApiOrder extends Model
         'branchId',
         'branchEmail',
         'productTotal',
+        'primaryId',
+        'secondaryId',
         'total',
         'apiApproval',
         'currencyCode',
@@ -41,6 +43,15 @@ class ApiOrder extends Model
     public function createdby()
     {
         return $this->belongsTo('App\Models\ApiUser', 'createdBy', 'user_id');
+    }
+    public function secondary_contact()
+    {
+        return $this->belongsTo('App\Models\Contact', 'secondaryId', 'secondary_id');
+    }
+
+    public function primary_contact()
+    {
+        return $this->belongsTo('App\Models\Contact', 'primaryId', 'contact_id');
     }
 
     public function processedby()
