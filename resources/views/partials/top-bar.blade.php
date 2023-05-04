@@ -39,7 +39,7 @@
                         data-bs-content="add <strong class='text-success'>$2500.00</strong> more to your cart and get <span class='text-danger'>5% off </span>"><span
                             id="top_cart_total"><a href="{{ '/cart/' }}"
                                 class="text-white d-flex align-items-end ms-3"
-                                style="    margin-top: -18px !important;"><span id="topbar_cart_total"
+                                style="margin-top: -18px !important;"><span id="topbar_cart_total"
                                     class="ms-2 cart-counter-details">
                                     {{ number_format($grand_total, 2) }}</span>&nbsp;(<span id="cart_items_quantity"
                                     class="cart-counter-details">{{ $total_quantity }}</span>&nbsp;<span
@@ -93,7 +93,7 @@
                                             <!-- Dropdown menu -->
                                             @php
                                                 $companies = Session::get('companies');
-
+                                                
                                             @endphp
                                             <div class="dropdown-menu w-100 mt-0" aria-labelledby="navbarDropdown"
                                                 style="
@@ -104,13 +104,12 @@
                                                         <div class="col-md-12">
                                                             <div class="list-group list-group-flush">
                                                                 @if (Auth::user())
-                                                                    @if($companies)
+                                                                    @if ($companies)
                                                                         @foreach ($companies as $company)
                                                                             @php
                                                                                 if ($company->contact_id) {
                                                                                     $contact_id = $company->contact_id;
                                                                                     $primary = '(primary)';
-
                                                                                 } else {
                                                                                     $contact_id = $company->secondary_id;
                                                                                     $primary = '(secondary)';
@@ -119,19 +118,19 @@
                                                                                     $disabled = 'disabled';
                                                                                     $disable_text = '(Disabled)';
                                                                                     $muted = 'text-muted';
-                                                                                }
-                                                                                else {
+                                                                                } else {
                                                                                     $disabled = '';
                                                                                     $disable_text = '';
                                                                                     $muted = '';
                                                                                 }
-
+                                                                                
                                                                             @endphp
-                                                                            <a type="button" 
-                                                                                class="list-group-item list-group-item-action {{$disabled}} {{$muted}}" 
+                                                                            <a type="button"
+                                                                                class="list-group-item list-group-item-action {{ $disabled }} {{ $muted }}"
                                                                                 onclick="switch_company_user({{ $contact_id }})">{{ $company->company }}
-                                                                                <span
-                                                                                    style="font-size: small;" class="{{$muted}}">{{ $primary }} </span></a>
+                                                                                <span style="font-size: small;"
+                                                                                    class="{{ $muted }}">{{ $primary }}
+                                                                                </span></a>
                                                                         @endforeach
                                                                     @endif
                                                                 @endif
@@ -141,13 +140,12 @@
                                                 </div>
                                             </div>
                                         </li>
-                                        <li style="margin: auto !important;">
+                                        <li style="position: absolute;left: 35%;top: 28%;">
                                             <a class="text-white top-bar-logout" href="{{ route('logout') }}"
                                                 onclick="event.preventDefault(); document.getElementById('frm-logout').submit();">
                                                 <span class="menu-title">
-                                                    <img src="/theme/img/back-last-icons.png" alt=""
-                                                        class="img-fluid">
-                                                    &nbsp;&nbsp;&nbsp;&nbsp;Logout
+                                                    <img style="width: 42px;" src="/theme/img/back-last-icons.png"
+                                                        alt="" class="img-fluid"> &nbsp;Logout
                                                 </span>
                                             </a>
                                         </li>
