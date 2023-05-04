@@ -84,6 +84,29 @@
                                 @elseif($order->isApproved == 1)
                                     <div class="col-md-12" style=";
 							">
+
+								<button type="button" class="btn btn-secondary btn-sm" disabled>
+									Cancel Order
+								</button>
+							</div>
+							@else
+							<div class="col-md-12">
+								<input type="hidden" value="{{$orderitems[0]['order_id']}}" id="order_id">
+								<input class="btn btn-danger btn-sm" type="button" value="Cancel Order"
+									onclick=" cancelOrder(); addComment(0);">
+							</div>
+							
+							
+					<!-- <div class=" spinner-border d-none" role="status" id="spinner">
+								<span class="sr-only" style="margin-left: 227px">Activating...</span>
+							</div> -->
+						</form>
+						@endif
+						<form>
+							@csrf
+							@if($order->isApproved == 1)
+							<div class="col-md-12" style="margin-top: -31px;
+
                                         <button type="button" class="btn btn-secondary btn-sm" disabled>
                                             Cancel Order
                                         </button>
@@ -103,6 +126,7 @@
                                 @csrf
                                 @if ($order->isApproved == 1)
                                     <div class="col-md-12" style="margin-top: -31px;
+
 							 margin-left: 122px;">
                                         <button type="button" class="btn btn-secondary btn-sm" disabled>
                                             Fullfilled
@@ -111,6 +135,78 @@
                                 @elseif ($order->isApproved == 2)
                                     <div class="col-md-12" style="margin-left: 122px;
 							margin-top: -29px;">
+
+								<button type="button" class="btn btn-danger btn-sm" disabled>
+									Fullfilled
+								</button>
+							</div>
+							@else
+							<div class="col-md-12" style="margin-left: 50px;">
+								<input class="btn btn-primary btn-sm" type="button" value="Fullfill Order"
+									onclick="fullFillOrder()">
+							</div>
+							<div class="spinner-border d-none" role="status" id="spinner">
+								<span class="sr-only" style="margin-left: 227px">Activating...</span>
+							</div>
+							@endif
+						</form>
+					</div>
+					<div class="progress d-none" id = "progress_bar">
+					  	<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+					</div>
+					<table class="table mt-2">
+						<tr>
+							<th>Line Items</th>
+							<th>Quantity</th>
+							<th>Totals</th>
+						</tr>
+						<tbody>
+							@php
+							$tax = $order->total * ($tax_class->rate/100);
+							$total_including_tax = $tax + $order->total;
+							@endphp
+							@foreach($orderitems as $item)
+							<tr>
+								<td>
+									<div class="d-flex mb-2">
+										<div class="flex-shrink-0 mx-4">
+											<img src="{{$item->product->images}}" alt="" width="35" class="img-fluid">
+										</div>
+										<div class="flex-lg-grow-1 ms-3">
+											<h6 class="small mb-0"><a href="#"
+													class="text-reset">{{$item->Product->name}}</a></h6>
+										</div>
+									</div>
+								</td>
+								<td class="ms-2">{{$item->quantity}}</td>
+								<td class="text-end">${{$item->price}}</td>
+							</tr>
+							@endforeach
+						</tbody>
+						<tfoot>
+							<tr>
+								<td colspan="2">Subtotal</td>
+								<td class="text-end">${{$order->total}}</td>
+							</tr>
+							<tr>
+								<td colspan="2">Shipping</td>
+								<td class="text-end">$0.00</td>
+							</tr>
+							<tr>
+								<td colspan="2">Add Tax</td>
+								<td class="text-end">${{number_format($tax, 2)}}</td>
+							</tr>
+							<tr class="fw-bold">
+								<td colspan="2"><strong>GRAND TOTAL</strong></td>
+								<td class="text-end">${{number_format($total_including_tax,2)}}</td>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+			</div>
+			<!-- Payment -->
+			 <div class="card mb-4">
+
                                         <button type="button" class="btn btn-danger btn-sm" disabled>
                                             Fullfilled
                                         </button>
@@ -178,7 +274,8 @@
                     </div>
                 </div>
                 <!-- Payment -->
-                {{-- <div class="card mb-4">
+               <div class="card mb-4">
+
 				<div class="card-body">
 					<div class="row">
 						<div class="col-lg-6">
@@ -350,6 +447,55 @@
             })
         }
 
+
+    	function fullFillOrder() {
+    		var status = $( "#status" ).val();
+    		var order_id = $( "#order_id" ).val();
+    		$('#progress_bar').removeClass('d-none');
+
+    		jQuery.ajax({
+    			   xhr: function() {
+        var xhr = new window.XMLHttpRequest();
+
+        // Upload progress
+        xhr.upload.addEventListener("progress", function(evt){
+            if (evt.lengthComputable) {
+                var percentComplete = evt.loaded / evt.total;
+                //Do something with upload progress
+                console.log(percentComplete);
+            }
+       }, false);
+       
+       // Download progress
+       xhr.addEventListener("progress", function(evt){
+           if (evt.lengthComputable) {
+               var percentComplete = evt.loaded / evt.total;
+               // Do something with download progress
+               console.log(percentComplete);
+           }
+       }, false);
+       
+       return xhr;
+    },
+    			
+        		url: "{{ url('admin/order-full-fill') }}",
+        		method: 'post',
+        		data: {
+            		"_token": "{{ csrf_token() }}",
+            		"order_id": order_id
+        		},
+         		success: function(response){
+         		console.log(response);
+        			//setInterval('location.reload()', 7000);
+        				$('#progress_bar').addClass('d-none');
+    			}
+    		});
+    	}
+</script>
+
+
+@stop
+
         function fullFillOrder() {
             var status = $("#status").val();
             var order_id = $("#order_id").val();
@@ -370,3 +516,4 @@
         }
     </script>
 @stop
+

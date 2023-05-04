@@ -1621,14 +1621,14 @@ input[type=number] {
 .cart-counter-details {
     font-family: 'Poppins';
     font-style: normal;
-    font-weight: 600;
+    font-weight: 500;
     font-size: 15px;
 }
 
 .top-bar-logout {
     font-family: 'Poppins';
     font-style: normal;
-    font-weight: 600;
+    font-weight: 500;
     font-size: 14px;
 }
 
@@ -1840,18 +1840,16 @@ input[type=number] {
 
 
 .basket-icon {
-    width: 47px;
-    height: 40px;
-    margin-left: -18px;
-    left: 0px;
-    margin-top: -6px;
+
+    margin-left: -6px;
+
 }
 
 .login-in-register {
     font-size: 15px;
     font-family: 'Poppins';
     font-style: normal;
-    font-weight: 600;
+    font-weight: 500;
 
 }
 
@@ -4983,7 +4981,7 @@ select.list-dt:focus {
 }
 
 .custom-control-indicator {
-    background-color:#28a745;
+    background-color: #28a745;
 }
 
 /* order confirmation page end */
