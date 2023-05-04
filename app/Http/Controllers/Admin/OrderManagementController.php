@@ -283,7 +283,7 @@ class OrderManagementController extends Controller
 
     public function order_full_fill(Request $request)
     {
-
+        
         $order_id = $request->input('order_id');
         $currentOrder = ApiOrder::where('id', $order_id)->first();
         $memberId = $currentOrder->memberId;
