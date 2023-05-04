@@ -85,9 +85,11 @@
 								<input class="btn btn-danger btn-sm" type="button" value="Cancel Order"
 									onclick=" cancelOrder(); addComment(0);">
 							</div>
-							<div class=" spinner-border d-none" role="status" id="spinner">
+							
+							
+					<!-- <div class=" spinner-border d-none" role="status" id="spinner">
 								<span class="sr-only" style="margin-left: 227px">Activating...</span>
-							</div>
+							</div> -->
 						</form>
 						@endif
 						<form>
@@ -117,7 +119,10 @@
 							@endif
 						</form>
 					</div>
-					<table class="table">
+					<div class="progress d-none" id = "progress_bar">
+					  	<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+					</div>
+					<table class="table mt-2">
 						<tr>
 							<th>Line Items</th>
 							<th>Quantity</th>
@@ -339,8 +344,33 @@
     	function fullFillOrder() {
     		var status = $( "#status" ).val();
     		var order_id = $( "#order_id" ).val();
-    		$('#spinner').removeClass('d-none');
+    		$('#progress_bar').removeClass('d-none');
+
     		jQuery.ajax({
+    			   xhr: function() {
+        var xhr = new window.XMLHttpRequest();
+
+        // Upload progress
+        xhr.upload.addEventListener("progress", function(evt){
+            if (evt.lengthComputable) {
+                var percentComplete = evt.loaded / evt.total;
+                //Do something with upload progress
+                console.log(percentComplete);
+            }
+       }, false);
+       
+       // Download progress
+       xhr.addEventListener("progress", function(evt){
+           if (evt.lengthComputable) {
+               var percentComplete = evt.loaded / evt.total;
+               // Do something with download progress
+               console.log(percentComplete);
+           }
+       }, false);
+       
+       return xhr;
+    },
+    			
         		url: "{{ url('admin/order-full-fill') }}",
         		method: 'post',
         		data: {
@@ -349,10 +379,12 @@
         		},
          		success: function(response){
          		console.log(response);
-        			setInterval('location.reload()', 7000);
-        				$('#spinner').addClass('d-none');
+        			//setInterval('location.reload()', 7000);
+        				$('#progress_bar').addClass('d-none');
     			}
     		});
     	}
 </script>
+
+
 @stop
