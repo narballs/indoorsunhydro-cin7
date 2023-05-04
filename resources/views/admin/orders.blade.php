@@ -55,52 +55,56 @@
                     </tr>
                 </thead>
                 <tbody>
+
                     @foreach ($orders as $order)
                         <tr>
                             <td>{{ $order->id }}</td>
                             <td>{{ $order->created_at->format('F ' . 'd, Y, ' . 'g:i A') }}</td>
                             <td>
-                                @if ($order->createdby)
-                                    @if ($order->contact)
-                                        {{ $order->contact->firstName }} {{ $order->contact->lastName }}
+                                @if (!empty($order->primaryId) && !empty($order->primary_contact))
+                                    <span title="Secondary Contact">{{ $order->primary_contact->firstName }}
+                                        {{ $order->primary_contact->lastName }}</span>
+                                @elseif (!empty($order->secondaryId) && !empty($order->secondary_contact))
+                                    <span title="Secondary Contact">{{ $order->secondary_contact->firstName }}
+                                        {{ $order->secondary_contact->lastName }}</span>
+                                @elseif (!empty($order->contact))
+                                    {{ $order->contact->firstName }} {{ $order->contact->lastName }}
+                                @endif
                             </td>
-                    @endif
-                    @endif
-                    <td>
-                        @if ($order->contact)
-                            {{ $order->contact->email }}
-                        @endif
-                    </td>
-                    <td>{{ $order->reference }}</td>
-                    <td>${{ $order->total }}</td>
-                    <td>
-                        @if ($order->contact)
-                            @if ($order->contact->company)
-                                {{ $order->contact->company }}
-                            @endif
-                        @endif
+                            <td>
+                                @if ($order->contact)
+                                    {{ $order->contact->email }}
+                                @endif
+                            </td>
+                            <td>{{ $order->reference }}</td>
+                            <td>${{ $order->total }}</td>
+                            <td>
+                                @if ($order->contact)
+                                    @if ($order->contact->company)
+                                        {{ $order->contact->company }}
+                                    @endif
+                                @endif
 
-                    </td>
-
-                    <td>
-                        @if ($order->isApproved == 0)
-                            <span class="badge badge-warning">New</span>
-                        @elseif ($order->isApproved == 1)
-                            <span class="badge badge-success">Fullfilled</span>
-                        @elseif ($order->isApproved == 2)
-                            <span class="badge badge-danger">Cancelled</span>
-                        @endif
-                    </td>
-                    <td>{{ $order->paymentTerms }}</td>
-                    <td>
-                        <a href="{{ url('admin/order-detail/' . $order->id) }}" class="view" title=""
-                            data-toggle="tooltip" data-original-title="View"><i class="fas fa-eye"></i></a>
-                        <a href="#" class="edit" title="" data-toggle="tooltip" data-original-title="Edit"><i
-                                class="fas fa-pen"></i></a>
-                        <a href="#" class="delete" title="" data-toggle="tooltip"
-                            data-original-title="Delete"><i class="fas fa-trash-alt"></i></a>
-                    </td>
-                    </tr>
+                            </td>
+                            <td>
+                                @if ($order->isApproved == 0)
+                                    <span class="badge badge-warning">New</span>
+                                @elseif ($order->isApproved == 1)
+                                    <span class="badge badge-success">Fullfilled</span>
+                                @elseif ($order->isApproved == 2)
+                                    <span class="badge badge-danger">Cancelled</span>
+                                @endif
+                            </td>
+                            <td>{{ $order->paymentTerms }}</td>
+                            <td>
+                                <a href="{{ url('admin/order-detail/' . $order->id) }}" class="view" title=""
+                                    data-toggle="tooltip" data-original-title="View"><i class="fas fa-eye"></i></a>
+                                <a href="#" class="edit" title="" data-toggle="tooltip"
+                                    data-original-title="Edit"><i class="fas fa-pen"></i></a>
+                                <a href="#" class="delete" title="" data-toggle="tooltip"
+                                    data-original-title="Delete"><i class="fas fa-trash-alt"></i></a>
+                            </td>
+                        </tr>
                     @endforeach
                 </tbody>
             </table>

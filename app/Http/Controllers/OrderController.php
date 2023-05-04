@@ -34,14 +34,12 @@ class OrderController extends Controller
         $session_contact_id = Session::get('contact_id');
         if (!empty($session_contact_id)) {
             $contact = Contact::where('contact_id', $session_contact_id)->first();
-
             if ($contact) {
                 $active_contact_id = $contact->contact_id;
             } else {
                 $contact = Contact::where('secondary_id', $session_contact_id)->first();
                 $active_contact_id = $contact->parent_id;
             }
-
             if ($active_contact_id) {
                 $order = new ApiOrder;
                 $cart_items = session()->get('cart');
@@ -56,23 +54,31 @@ class OrderController extends Controller
                 } else {
                     return redirect('/');
                 }
-                //moving to Api order items
+                $session_contact_id = Session::get('contact_id');
+
+                $is_primary = Contact::where('contact_id', $session_contact_id)->first();
+                if ($is_primary == null) {
+                    $order->secondaryId = $session_contact_id;
+                } else {
+                    $order->primaryId = $session_contact_id;
+                }
                 $dateCreated = Carbon::now();
                 $createdDate = Carbon::now();
                 $order->createdDate = $createdDate;
                 $order->modifiedDate = $createdDate;
-                $order->createdBy =  79914;
-                $order->processedBy  =  79914;
-                $order->isApproved    =  false;
-                $order->memberId    =  $active_contact_id;
-                $order->branchId   =  "none";
+                $order->createdBy = 79914;
+                $order->processedBy = 79914;
+                $order->isApproved = false;
+                $order->memberId = $active_contact_id;
+                $order->branchId = "none";
                 $order->distributionBranchId = 0;
-                $order->branchEmail  =  'wqszeeshan@gmail.com';
-                $order->productTotal      =  $cart_total;
-                $order->total        =  $cart_total;
-                $order->currencyCode      =  'USD';
-                $order->currencyRate      =  59.0;
+                $order->branchEmail = 'wqszeeshan@gmail.com';
+                $order->productTotal = $cart_total;
+                $order->total = $cart_total;
+                $order->currencyCode = 'USD';
+                $order->currencyRate = 59.0;
                 $order->currencySymbol = '$';
+
                 $order->user_id = Auth::id();
                 $order->status = "DRAFT";
                 $order->stage = null;
@@ -89,7 +95,8 @@ class OrderController extends Controller
                 $apiApproval = $currentOrder->apiApproval;
                 $currentOrder->reference = 'DEV4' . '-QCOM-' . $order_id;
                 $currentOrder->save();
-                $currentOrder = ApiOrder::where('id', $order->id)->first();
+                $currentOrder = ApiOrder::where('id', $order->id)->with('contact')->first();
+
                 $reference = $currentOrder->reference;
                 if (session()->has('cart')) {
                     foreach ($cart_items as $cart_item) {

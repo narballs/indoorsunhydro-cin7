@@ -36,6 +36,7 @@ class OrderManagementController extends Controller
     {
         $search = $request->get('search');
         $orders_query = ApiOrder::with(['createdby', 'processedby', 'contact'])->orderBy('id', 'DESC');
+
         if (!empty($search)) {
             $orders_query = $orders_query->where('order_id', 'LIKE', '%' . $search . '%')
                 ->orWhere('createdDate', 'like', '%' . $search . '%')
@@ -282,7 +283,7 @@ class OrderManagementController extends Controller
 
     public function order_full_fill(Request $request)
     {
-        
+
         $order_id = $request->input('order_id');
         $currentOrder = ApiOrder::where('id', $order_id)->first();
         $memberId = $currentOrder->memberId;
@@ -341,6 +342,9 @@ class OrderManagementController extends Controller
         $order = [];
         // unset($currentOrder['total_including_tax']);
         // unset($currentOrder['tax_class_id']);
+        // unset parimyId  and unset member id
+        unset($currentOrder['primaryId']);
+        unset($currentOrder['memberId']);
         $order = [
             [
                 $currentOrder,
