@@ -149,7 +149,7 @@ class OrderController extends Controller
                 $email =  $contact->email;
                 $reference  =  $currentOrder->reference;
                 $template = 'emails.admin-order-received';
-                $admin_users = DB::table('model_has_roles')->where('role_id', 3)->pluck('model_id');
+                $admin_users = DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
              
                 $admin_users = $admin_users->toArray();
 
