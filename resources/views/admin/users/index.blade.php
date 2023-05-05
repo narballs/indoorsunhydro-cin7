@@ -110,14 +110,14 @@
                                 @endif
                             </td>
                             <td>{{ $user->email }}</td>
-                  
+
                             <td>
 
                                 @if ($contact)
                                     @if ($contact->contact_id)
                                         {{ $contact->contact_id }}
                                     @else
-                                       {{ $contact->parent_id }}
+                                        {{ $contact->parent_id }}
                                     @endif
                                 @else
                                     <span class="badge bg-info">empty</span>
