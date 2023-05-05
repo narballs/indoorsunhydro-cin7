@@ -69,8 +69,8 @@
                         <th>Price Tier<i class="fa fa-sort"></i></th>
                         <th>Company<i class="fa fa-sort"></i></th>
                         <th>Email<i class="fa fa-sort"></i></th>
-                        <th class="w-75">Notes<i class="fa fa-sort"></i></th>
-                        <th class="w-25">Actions <i class="fa fa-sort"></i></th>
+                        <th class="">Notes<i class="fa fa-sort"></i></th>
+                        <th class="">Actions <i class="fa fa-sort"></i></th>
                     </tr>
                 </thead>
                 <tbody id="searched">
