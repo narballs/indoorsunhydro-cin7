@@ -50,7 +50,7 @@
                         <th>Order Total <i class="fa fa-sort"></i></th>
                         <th>Company Name</th>
                         {{-- <th>Status <i class="fa fa-sort"></i></th> --}}
-                        <th>Fullfilment</th>
+                        <th>Stage</th>
                         <th>Payment Term</th>
                     </tr>
                 </thead>
