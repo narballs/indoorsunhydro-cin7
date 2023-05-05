@@ -94,9 +94,10 @@
                                         <input class="btn btn-danger btn-sm" type="button" value="Cancel Order"
                                             onclick=" cancelOrder(); addComment(0);">
                                     </div>
-                                    <div class=" spinner-border d-none" role="status" id="spinner">
+
+                                    <!-- <div class=" spinner-border d-none" role="status" id="spinner">
                                         <span class="sr-only" style="margin-left: 227px">Activating...</span>
-                                    </div>
+                                    </div> -->
                             </form>
                             @endif
                             <form>
@@ -125,8 +126,14 @@
                                     </div>
                                 @endif
                             </form>
-                        </div>
-                        <table class="table">
+                       
+						</div>
+	                        <div class="progress border d-none w-50" id="progress-bar" style="position: absolute !important;top: 27% !important;left: 25% !important;">
+	    						<div class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar" aria-valuenow="100" aria-valuemin="" aria-valuemax="100"></div>
+	  						</div>
+	  						<div class="bg-success text-white text-center" id="fullfill_success"></div>
+	  						<div class="bg-warning text-white text-center" id="fullfill_failed"></div>
+                        <table class="table mt-3">
                             <tr>
                                 <th>Line Items</th>
                                 <th>Quantity</th>
@@ -353,7 +360,24 @@
         function fullFillOrder() {
             var status = $("#status").val();
             var order_id = $("#order_id").val();
-            $('#spinner').removeClass('d-none');
+            var delay = 7000;
+            $('#progress-bar').removeClass('d-none');
+			jQuery(".progress-bar").each(function(i) {
+			  jQuery(this).delay(delay * i).animate({
+			    width: $(this).attr('aria-valuenow') + '%'
+			  }, delay);
+
+			  jQuery(this).prop('Counter', 0).animate({
+			    Counter: $(this).text()
+			  }, {
+			    duration: delay,
+			    // easing: 'swing',
+			    step: function(now) {
+			      jQuery(this).text(Math.ceil(now) + '%');
+			       
+			    }
+			  });
+			})
             jQuery.ajax({
                 url: "{{ url('admin/order-full-fill') }}",
                 method: 'post',
@@ -363,8 +387,30 @@
                 },
                 success: function(response) {
                     console.log(response);
+
+                    //setInterval('location.reload()', 7000);
+                    //$('#success').removeClass('d-none');
+                     jQuery.ajax({
+                url: "{{ url('admin/check-status') }}",
+                method: 'post',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "order_id": order_id
+                },
+                success: function(response) {
+                    console.log(response.status);
+                    if (response.status === 'Order fullfilled successfully') {
+                    	$('#fullfill_success').html(response.status);
+                    }
+                    else {
+                    	$('#fullfill_failed').html(response.status);
+                    }
+
+                    $('#progress-bar').addClass('d-none');
                     setInterval('location.reload()', 7000);
-                    $('#spinner').addClass('d-none');
+                	}
+            	});   
+                      
                 }
             });
         }

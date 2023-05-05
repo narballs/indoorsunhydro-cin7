@@ -81,7 +81,7 @@ class OrderController extends Controller
 
                 $order->user_id = Auth::id();
                 $order->status = "DRAFT";
-                $order->stage = null;
+                $order->stage = "New";
                 $order->paymentTerms = $paymentMethod;
                 $order->tax_class_id = $request->tax_class_id;
                 $order->total_including_tax = $request->incl_tax;
@@ -94,6 +94,7 @@ class OrderController extends Controller
                 $currentOrder = ApiOrder::where('id', $order->id)->first();
                 $apiApproval = $currentOrder->apiApproval;
                 $currentOrder->reference = 'DEV4' . '-QCOM-' . $order_id;
+             
                 $currentOrder->save();
                 $currentOrder = ApiOrder::where('id', $order->id)->with('contact')->first();
 
@@ -109,8 +110,6 @@ class OrderController extends Controller
                         $OrderItem->save();
                     }
                 } else {
-                    echo 'l;lklkl';
-                    exit;
                     session()->forget('cart');
                     return redirect('/');
                 }
