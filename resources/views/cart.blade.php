@@ -92,7 +92,7 @@
             <td scope=" row">
              <div class="d-flex align-items-center">
                                                                                         
-                                                                 @if (!empty($cart['image']))
+                                                                      @if (!empty($cart['image']))
                                                                 <img src="{{ $cart['image'] }}"
                                                                     class="img-fluid rounded-3" style="width: 120px;"
                                                                     alt="Book">
@@ -222,7 +222,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>
+                        <td class="ps-0">
                             <img class=" img-fluid" src="/theme/img/sub-totals-icon.png">
                             <strong class=" cart-total">Subtotal</strong>
                         </td>
@@ -235,7 +235,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>
+                        <td class="ps-0">
                             <img class=" img-fluid" src="/theme/img/text-rate-icon.png">
                             <span> <strong class="cart-total">Rate({{ $tax_class->rate }}%)</strong> </span>
                             <div>
@@ -249,7 +249,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>
+                        <td class="ps-0">
                             <img class=" img-fluid" src="/theme/img/total-icon.png">
                             <strong class="cart-total">SubTotal</strong>
                         </td>
