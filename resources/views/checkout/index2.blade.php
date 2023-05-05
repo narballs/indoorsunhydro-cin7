@@ -1255,7 +1255,7 @@ $cart_price = 0;
                                                 if (value.secondary_id) {
                                                     companyID = value.secondary_id + "-S";;
                                                 }
-                                                if(value.status == 1) {
+                                                if (value.status == 1) {
                                                     companiesData[companyID] = value.company;
                                                 }
                                             });
