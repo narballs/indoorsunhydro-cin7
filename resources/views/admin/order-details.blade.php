@@ -128,7 +128,7 @@
                             </form>
                        
 						</div>
-	                        <div class="progress border d-none w-50" id="progress-bar" style="position: absolute !important;top: 27% !important;left: 25% !important;">
+	                        <div class="progress border d-none w-50 mx-auto" id="progress-bar">
 	    						<div class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar" aria-valuenow="100" aria-valuemin="" aria-valuemax="100"></div>
 	  						</div>
 	  						<div class="bg-success text-white text-center" id="fullfill_success"></div>
@@ -367,13 +367,13 @@
 			    width: $(this).attr('aria-valuenow') + '%'
 			  }, delay);
 
-			  jQuery(this).prop('Counter', 0).animate({
+			  jQuery(this).prop('Counter', 1).animate({
 			    Counter: $(this).text()
 			  }, {
 			    duration: delay,
 			    // easing: 'swing',
 			    step: function(now) {
-			      jQuery(this).text(Math.ceil(now) + '%');
+			      jQuery(this).text(Math.ceil(100) + '%');
 			       
 			    }
 			  });
