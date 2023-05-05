@@ -41,7 +41,7 @@
                                 class="text-white d-flex align-items-end ms-3"
                                 style="margin-top: -18px !important;"><span id="topbar_cart_total"
                                     class="ms-2 cart-counter-details">
-                                    {{ number_format($grand_total, 2) }}</span>&nbsp;(<span id="cart_items_quantity"
+                                    ${{ number_format($grand_total, 2) }}</span>&nbsp;(<span id="cart_items_quantity"
                                     class="cart-counter-details">{{ $total_quantity }}</span>&nbsp;<span
                                     class="cart-counter-details">items</span> )
                             </a>
