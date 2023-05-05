@@ -286,6 +286,7 @@ class OrderManagementController extends Controller
 
         $order_id = $request->input('order_id');
         $currentOrder = ApiOrder::where('id', $order_id)->first();
+
         $memberId = $currentOrder->memberId;
         $order_items = ApiOrderItem::with('product.options')->where('order_id', $order_id)->get();
         $dateCreated = Carbon::now();
@@ -393,7 +394,6 @@ class OrderManagementController extends Controller
                 "voucherCode" => "sample string 14",
                 "deliveryInstructions" =>  $currentOrder->memo,
                 "status" => "VOID",
-                "stage" => "",
                 "invoiceDate" => null,
                 "invoiceNumber" => 4232,
                 "dispatchedDate" => null,
@@ -446,5 +446,22 @@ class OrderManagementController extends Controller
             'message' => 'Order Cancel successfully ! ',
 
         ]);
+    }
+
+    public function check_order_status(Request $request) {
+        sleep(10);
+        $order = ApiOrder::where('id', $request->order_id)->first();
+        //dd($order->order_id);
+        if ($order->order_id != null) {
+            $msg = 'Order fullfilled successfully';
+        }
+        else {
+             $msg = 'Order fullfilled failed please try later';
+        }
+        return response()->json([
+            'status' => $msg
+        ]);
+
+       
     }
 }
