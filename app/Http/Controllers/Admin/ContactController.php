@@ -536,6 +536,25 @@ class ContactController extends Controller
                             $secondary_contact->phone = $apiSecondaryContact->phone;
                             $secondary_contact->priceColumn = $api_contact->priceColumn;
                             $secondary_contact->save();
+                            $id = $secondary_contact->id;
+                            $contact_info = Contact::where('id', $id)->first();
+                            $email = $contact_info->email;
+                            if ($email) {
+                                $user = User::where('email', $email)->first();
+                                if (empty($user)) {
+                                    $user = User::firstOrCreate([
+                                            'email' => $email
+                                    ]);
+                                }
+                            }
+
+                            $user_contact = User::where('email', $email)->first();
+                            $user_contact_id = $user_contact->id;
+                            $contacts = Contact::where('email', $email)->get();
+                            foreach($contacts as $contact) {
+                                $contact->user_id = $user_contact_id;
+                                $contact->save();
+                            }
                         }
                     }
             }
