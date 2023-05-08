@@ -52,6 +52,7 @@
                         {{-- <th>Status <i class="fa fa-sort"></i></th> --}}
                         <th>Stage</th>
                         <th>Payment Term</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -84,7 +85,6 @@
                                         {{ $order->contact->company }}
                                     @endif
                                 @endif
-
                             </td>
                             <td>
                                 @if ($order->isApproved == 0)
