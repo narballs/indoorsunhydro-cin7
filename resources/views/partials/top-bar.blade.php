@@ -9,9 +9,9 @@
                     @endif
                 </div>
             </div>
-            <div class="col-md-4 d-flex justify-content-center align-items-center mt-2">
+            <div class="col-md-4 d-flex ps-5 mt-2">
                 <div style="font-family: 'Poppins';">
-                    <img class="basket-icon" src="/theme/img/Bascket.png">
+                    <img class="basket-icon mt-2" src="/theme/img/Bascket.png">
                     <span
                         class="cart-basket d-flex align-items-center justify-content-center float-sm-end cart-counter rounded-circle"
                         id="top_cart_quantity">
@@ -38,8 +38,7 @@
                         data-bs-placement="right"
                         data-bs-content="add <strong class='text-success'>$2500.00</strong> more to your cart and get <span class='text-danger'>5% off </span>"><span
                             id="top_cart_total"><a href="{{ '/cart/' }}"
-                                class="text-white d-flex align-items-end ms-3"
-                                style="margin-top: -18px !important;"><span id="topbar_cart_total"
+                                class="text-white d-flex align-items-end ms-3"><span id="topbar_cart_total"
                                     class="ms-2 cart-counter-details">
                                     ${{ number_format($grand_total, 2) }}</span>&nbsp;(<span id="cart_items_quantity"
                                     class="cart-counter-details">{{ $total_quantity }}</span>&nbsp;<span
@@ -78,7 +77,9 @@
                                             @if (!empty($session_contact_company))
                                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
                                                     role="button" data-mdb-toggle="dropdown" aria-expanded="false">
-                                                    <span class="top-bar-logout text-light">
+                                                    <span
+                                                        class="top-bar-logout text-light d-flex justify-content-lg-start"
+                                                        style="    margin-left: -62px;">
                                                         ({{ $session_contact_company }})</span>
                                                 </a>
                                             @else
