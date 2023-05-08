@@ -83,7 +83,7 @@
                     <th>Email <i class="fa fa-sort"></th>
                     <th>Cin7 User-ID <i class="fa fa-sort"></th>
                     <th>Company (Account aka Parent) <i class="fa fa-sort"></th>
-                    <th>Secondary Company <i class="fa fa-sort"></th>
+                    <th>Secondary Contact Company <i class="fa fa-sort"></th>
                     <th>Type <i class="fa fa-sort"></th>
                     <th>Roles <i class="fa fa-sort"></th>
                     <th>Action <i class="fa fa-sort"></th>
