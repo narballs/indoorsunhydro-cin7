@@ -74,7 +74,7 @@
         </div>
         <div class="card card-body">
             <div id="admin-users"></div>
-            <table class="table table-striped table-hover table-bordered" id="user-table">
+            <table class="table table-striped table-hover table-bordered table-responsive" id="user-table">
 
                 <tr>
                     <th>No <i class="fa fa-sort"></th>
@@ -83,6 +83,7 @@
                     <th>Email <i class="fa fa-sort"></th>
                     <th>Cin7 User-ID <i class="fa fa-sort"></th>
                     <th>Company (Account aka Parent) <i class="fa fa-sort"></th>
+                    <th>Secondary Company <i class="fa fa-sort"></th>
                     <th>Type <i class="fa fa-sort"></th>
                     <th>Roles <i class="fa fa-sort"></th>
                     <th>Action <i class="fa fa-sort"></th>
@@ -110,9 +111,7 @@
                                 @endif
                             </td>
                             <td>{{ $user->email }}</td>
-
                             <td>
-
                                 @if ($contact)
                                     @if ($contact->contact_id)
                                         {{ $contact->contact_id }}
@@ -125,7 +124,18 @@
                             </td>
                             <td>
                                 @if ($contact)
-                                    @if ($contact->company)
+                                    @if ($contact->is_parent == 1)
+                                        {{ $contact->company }}
+                                    @else
+                                        <span class="badge bg-secondary">empty</span>
+                                    @endif
+                                @else
+                                    <span class="badge bg-secondary">empty</span>
+                                @endif
+                            </td>
+                            <td>
+                                @if ($contact)
+                                    @if ($contact->is_parent == 0)
                                         {{ $contact->company }}
                                     @else
                                         <span class="badge bg-secondary">empty</span>
