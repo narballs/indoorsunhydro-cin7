@@ -285,7 +285,7 @@ $cart_price = 0;
                 <div class="col-md-12 mt-3 py-3" style="background: #F7F7F7; border-radius: 5px;">
                     <p class="thank-you-page-product-imtes-total-cart">Total</p>
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-6 mt-1">
                             <p class="thank-you-page-product-items-subtotal-cart">
                                 {{-- <img class="img-fluid" src="theme/img/pricing_tag.png" width=" 35px"> --}}
                                 Subtotal
@@ -304,8 +304,8 @@ $cart_price = 0;
                             </p>
 
                         </div>
-                        <div class="col-md-6 ">
-                            <p class=" thank-you-page-product-item-cart mb-0">{{ $cart_total }}</p>
+                        <div class="col-md-6">
+                            <p class=" thank-you-page-product-item-cart mb-0">${{ number_format($cart_total, 2) }}</p>
                             {{-- <p class=" thank-you-page-product-item-cart">shipping</p> --}}
                             <p class=" thank-you-page-product-item-cart mb-0">${{ number_format($tax, 2) }}</p>
                             <p class=" thank-you-page-product-item-cart mb-0">$ 0</p>
@@ -319,7 +319,7 @@ $cart_price = 0;
     </div>
     <div class="row">
         <div class="col-md-4 m-auto"
-            style="margin-top: 118px !important;margin:auto; !important; max-width:600px !important;">
+            style="margin-top: 192px !important;margin:auto; !important; max-width:600px !important;">
             <button type="button" class="button-cards w-100" id="proceed_to_checkout" onclick="validate()"
                 style="background: #008BD3 ;
             border-radius: 5px;">Proceed
