@@ -2,13 +2,13 @@
     <div class="container-fluid" style=" max-width: 1468px !important;">
         <div class="row justify-content-end">
             <div class="col-md-2">
-                <div class="d-grid gap-2 my-2">
+                <div class="d-grid gap-2">
                     @if (session('logged_in_as_another_user'))
-                        <a href="{{ url('admin/go-back') }}" class="btn text-white top-bar-logout">Go Back</a>
+                        <a href="{{ url('admin/go-back') }}" class="btn text-white top-bar-logout mt-3">Go Back</a>
                     @endif
                 </div>
             </div>
-            <div class="col-md-4 d-flex ps-5 mt-2">
+            <div class="col-md-3 d-flex ps-5 mt-2">
                 <div style="font-family: 'Poppins';">
                     <img class="basket-icon mt-2" src="/theme/img/Bascket.png">
                     <span
@@ -157,7 +157,8 @@
                                                                     src="/theme/img/back-last-icons.png" alt=""
                                                                     class="img-fluid">
                                                             </div>
-                                                            <div class="col-md-6">&nbsp;&nbsp;&nbsp;Logout</div>
+                                                            <div class="col-md-6">
+                                                                &nbsp;&nbsp;&nbsp;Logout</div>
                                                         </div>
                                                     </a>
                                                 </li>
