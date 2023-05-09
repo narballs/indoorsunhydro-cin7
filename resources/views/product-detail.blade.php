@@ -92,6 +92,7 @@
                                 <div class="mt-4 mb-3"> <span class="text-uppercase text-muted brand"></span>
 
                                     <div class="price d-flex flex-row align-items-center">
+                                        @if ()
                                         @if ($productOption->stockAvailable > 0)
                                         <span
                                             class="rounded-pill cursor product-detail-quantity d-flex justify-content-center align-items-center"
@@ -112,6 +113,7 @@
                                             <small class="dis-price">&nbsp;</small> <span class="instock-label">IN
                                                 STOCK</span>
                                         </div>
+
                                         @else
                                         <div>
                                             <small class="dis-price">&nbsp;</small><span class="text-danger">OUT OF

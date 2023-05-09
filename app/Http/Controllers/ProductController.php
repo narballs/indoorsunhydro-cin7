@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Cart;
 use App\Models\ProductOption;
 use Session;
 use App\Models\Contact;
@@ -560,7 +561,7 @@ class ProductController extends Controller
         $option_id = $request->option_id;
 
         $productOption = ProductOption::where('option_id', $option_id)->with('products.options.price')->first();
-        $cart = session()->get('cart', []);
+        $cart = session()->get('cart');
         $user_id = Auth::id();
 
         $contact_id = '';
@@ -620,7 +621,11 @@ class ProductController extends Controller
         // }
 
         if (isset($cart[$id])) {
+            //echo '<pre>';var_export($cart[$id]);exit;
+           //dd($cart[$id]);exit;
+            //dd($cart[$id]);
             $cart[$id]['quantity'] += $request->quantity;
+            
         } else {
             $cart[$id] = [
                 "product_id" => $productOption->products->product_id,
@@ -632,7 +637,12 @@ class ProductController extends Controller
                 'option_id' => $productOption->option_id,
                 "slug" => $productOption->products->slug,
             ];
+            //$cart[$id]['user_id'] = $user_id;
+            //$cart[$id]['is_active'] = 1;
+
+           //$qoute = Cart::create($cart[$id]);
         }
+
         $request->session()->put('cart', $cart);
         $cart_items = session()->get('cart');
         return response()->json([

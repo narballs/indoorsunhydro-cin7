@@ -157,7 +157,7 @@
                                                                     src="/theme/img/back-last-icons.png" alt=""
                                                                     class="img-fluid">
                                                             </div>
-                                                            <div class="col-md-6">&nbsp;Logout</div>
+                                                            <div class="col-md-6">&nbsp;&nbsp;&nbsp;Logout</div>
                                                         </div>
                                                     </a>
                                                 </li>

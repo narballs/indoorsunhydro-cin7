@@ -186,6 +186,7 @@ class SyncAPiData extends Command
                         }
                         $product->save();
                     if ($api_product->productOptions) {
+
                         foreach ($api_product->productOptions as $api_productOption) {
                             $product_option = ProductOption::with('price')->where('option_id',$api_productOption->id)->first();
 
@@ -194,21 +195,21 @@ class SyncAPiData extends Command
                                 $product_option->option_id = $api_productOption->id;
                                 $product_option->product_id = $api_productOption->productId;
                                 $product_option->code = $api_productOption->code;
-                                $product_option->productOptionSizeCode =  $api_productOption->productOptionSizeCode;
-                                $product_option->supplierCode =  $api_productOption->supplierCode;
-                                $product_option->option1 =  $api_productOption->option1;
-                                $product_option->option2 =  $api_productOption->option2;
-                                $product_option->option3 =  $api_productOption->option3;
-                                $product_option->optionWeight =  $api_productOption->optionWeight;
-                                $product_option->size =  $api_productOption->size;
-                                $product_option->retailPrice =  $api_productOption->priceColumns->sacramentoUSD;
-                                $product_option->wholesalePrice =  $api_productOption->wholesalePrice;
-                                $product_option->vipPrice =  $api_productOption->vipPrice;
-                                $product_option->specialPrice =  $api_productOption->specialPrice;
-                                $product_option->specialsStartDate =  $api_productOption->specialsStartDate;
-                                $product_option->stockAvailable =  $api_productOption->stockAvailable;
-                                $product_option->stockOnHand =  $api_productOption->stockOnHand;
-                                $product_option->specialDays =  $api_productOption->specialDays;
+                                $product_option->productOptionSizeCode = $api_productOption->productOptionSizeCode;
+                                $product_option->supplierCode = $api_productOption->supplierCode;
+                                $product_option->option1 = $api_productOption->option1;
+                                $product_option->option2 = $api_productOption->option2;
+                                $product_option->option3 = $api_productOption->option3;
+                                $product_option->optionWeight = $api_productOption->optionWeight;
+                                $product_option->size = $api_productOption->size;
+                                $product_option->retailPrice =$api_productOption->priceColumns->sacramentoUSD;
+                                $product_option->wholesalePrice = $api_productOption->wholesalePrice;
+                                $product_option->vipPrice = $api_productOption->vipPrice;
+                                $product_option->specialPrice = $api_productOption->specialPrice;
+                                $product_option->specialsStartDate = $api_productOption->specialsStartDate;
+                                $product_option->stockAvailable = $api_productOption->stockAvailable;
+                                $product_option->stockOnHand = $api_productOption->stockOnHand;
+                                $product_option->specialDays = $api_productOption->specialDays;
                                 $product_option->image =  !empty($api_productOption->image) ? $api_productOption->image->link: '';
                                 $product_option->save();
                                 $priceColumn = Pricingnew::where('option_id', $product_option->option_id)->first();
