@@ -133,9 +133,11 @@
                                                                                     <a type="button"
                                                                                         class="list-group-item list-group-item-action p-0 {{ $disabled }} {{ $muted }}"
                                                                                         onclick="switch_company_user({{ $contact_id }})">{{ $company->company }}
-                                                                                        <span style="font-size: small;"
+                                                                                        <span
+                                                                                            style="font-size: 9px;font-family: 'Poppins';"
                                                                                             class="{{ $muted }}">{{ $primary }}
-                                                                                        </span></a>
+                                                                                        </span>
+                                                                                    </a>
                                                                                 @endforeach
                                                                             @endif
                                                                         @endif
