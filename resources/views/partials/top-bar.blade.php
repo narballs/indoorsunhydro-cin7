@@ -131,7 +131,7 @@
                                                                                         
                                                                                     @endphp
                                                                                     <a type="button"
-                                                                                        class="list-group-item list-group-item-action {{ $disabled }} {{ $muted }}"
+                                                                                        class="list-group-item list-group-item-action p-0 {{ $disabled }} {{ $muted }}"
                                                                                         onclick="switch_company_user({{ $contact_id }})">{{ $company->company }}
                                                                                         <span style="font-size: small;"
                                                                                             class="{{ $muted }}">{{ $primary }}
