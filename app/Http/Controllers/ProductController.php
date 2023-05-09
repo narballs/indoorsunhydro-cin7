@@ -566,21 +566,26 @@ class ProductController extends Controller
         $user_id = Auth::id();
 
         $contact_id = '';
+        $secondary_id = '';
 
         if ($user_id) {
             $contact = Contact::where('user_id', $user_id)->first();
             $contact_id = $contact->contact_id;
+            $secondary_id = $contact->secondary_id;
         }
 
-        if ($contact_id) {
+        if ($contact_id || $secondary_id) {
             $pricing = $contact->priceColumn;
         }
+        //dd($pricing);
         if (!empty($user_id) && !empty($contact_id)) {
             foreach ($productOption->products->options as $option) {
                 foreach ($option->price as $price) {
 
                     if ($pricing == 'RetailUSD') {
+
                         $price = $price['retailUSD'];
+
                     } 
                     if ($pricing == 'WholesaleUSD') {
                         $price = $price['wholesaleUSD'];
@@ -617,7 +622,8 @@ class ProductController extends Controller
                     // }
                 }
             }
-        } else {
+        } 
+        else {
             foreach ($productOption->products->options as $option) {
                 foreach ($option->price as $price) {
                     $price = $price['retailUSD'];
