@@ -81,7 +81,7 @@
                                                             data-mdb-toggle="dropdown" aria-expanded="false">
                                                             <span
                                                                 class="top-bar-logout text-light d-flex justify-content-lg-start"
-                                                                style="">
+                                                                style="    margin-top: -3px !important;">
                                                                 ({{ $session_contact_company }})</span>
                                                         </a>
                                                     @else
