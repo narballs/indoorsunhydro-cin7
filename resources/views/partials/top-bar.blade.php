@@ -1,3 +1,25 @@
+<style>
+    .navbar-light .navbar-nav .dropdown-toggle:focus,
+    .dropdown-toggle:hover {
+        width: 345px !important;
+        background: #212121 !important;
+        border-radius: 5px 5px 0px 0px !important;
+    }
+
+    .dropdown-toggle::after {
+        display: inline-block;
+        width: 0;
+        height: 0;
+        margin-left: 0.255em;
+        vertical-align: 0.255em;
+        content: "";
+        border-top: 0.3em solid;
+        border-right: 0.3em solid transparent;
+        border-bottom: 0;
+        border-left: 0.3em solid transparent;
+        color: #212121 !important;
+    }
+</style>
 <header class="p-2  text-white top-bar-height w-100 header-top">
     <div class="container" style=" max-width: 1468px !important;">
         <div class="row">
@@ -99,7 +121,9 @@
                                             <div class="dropdown-menu w-100 mt-0" aria-labelledby="navbarDropdown"
                                                 style="
                                        border-top-left-radius: 0;
-                                       border-top-right-radius: 0;">
+                                       border-top-right-radius: 0;
+                                       margin-left: -162px;
+                                        margin-top: -24px !important;">
                                                 <div class="container">
                                                     <div class="row my-4">
                                                         <div class="col-md-12">
