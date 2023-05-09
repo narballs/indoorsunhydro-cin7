@@ -758,7 +758,7 @@ class UserController extends Controller
     {
         Session::forget('contact_id');
         Session::forget('company');
-
+        Session::forget('cart');
         $switch_user = Auth::loginUsingId($id);
         $auth_user_email = $switch_user->email;
         session()->put('logged_in_as_another_user', $auth_user_email);
