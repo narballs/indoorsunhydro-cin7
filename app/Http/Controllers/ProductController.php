@@ -21,7 +21,7 @@ class ProductController extends Controller
 {
     public function showProductByCategory(Request $request, $category_id)
     {
-       
+
         $selected_category_id = $request->get('selected_category_id');
         if (!empty($selected_category_id)) {
         }
@@ -578,31 +578,43 @@ class ProductController extends Controller
         if (!empty($user_id) && !empty($contact_id)) {
             foreach ($productOption->products->options as $option) {
                 foreach ($option->price as $price) {
+
                     if ($pricing == 'RetailUSD') {
                         $price = $price['retailUSD'];
-                    } else if ($pricing == 'WholesaleUSD') {
+                    } 
+                    if ($pricing == 'WholesaleUSD') {
                         $price = $price['wholesaleUSD'];
-                    } else if ($pricing == 'TerraInternUSD') {
+                    } 
+                    if ($pricing == 'TerraInternUSD') {
                         $price = $price['terraInternUSD'];
-                    } else if ($pricing == 'SacramentoUSD') {
+                    } 
+                    if ($pricing == 'SacramentoUSD') {
                         $price = $price['sacramentoUSD'];
-                    } else if ($pricing == 'OklahomaUSD') {
+                    } 
+                    if ($pricing == 'OklahomaUSD') {
                         $price = $price['oklahomaUSD'];
-                    } else if ($pricing == 'CalaverasUSD') {
+                    } 
+                    if ($pricing == 'CalaverasUSD') {
                         $price = $price['calaverasUSD'];
-                    } else if ($pricing == 'Tier1USD') {
+                    } 
+                    if ($pricing == 'Tier1USD') {
                         $price = $price['tier1USD'];
-                    } else if ($pricing == 'Tier2USD') {
+                    } 
+                    if ($pricing == 'Tier2USD') {
                         $price = $price['tier2USD'];
-                    } else if ($pricing == 'Tier3USD') {
+                    } 
+                    if ($pricing == 'Tier3USD') {
                         $price = $price['tier3USD'];
-                    } else if ($pricing == 'ComercialOkUSD') {
+                    } 
+                    if ($pricing == 'ComercialOkUSD') {
                         $price = $price['commercialOKUSD'];
-                    } else if ($pricing == 'CostUSD') {
+                    } 
+                    if ($pricing == 'CostUSD') {
                         $price = $price['costUSD'];
-                    } else {
-                        $price = $price['retailUSD'];
-                    }
+                    } 
+                    // else {
+                    //     $price = $price['retailUSD'];
+                    // }
                 }
             }
         } else {
@@ -613,7 +625,7 @@ class ProductController extends Controller
             }
         }
 
-
+        //dd($price);
         // if ($pricing == 'Wholesale') {
         //    $price = $productOption->wholesalePrice;
         // }
@@ -638,6 +650,7 @@ class ProductController extends Controller
                 'option_id' => $productOption->option_id,
                 "slug" => $productOption->products->slug,
             ];
+            //dd($cart[$id]);
             //$cart[$id]['user_id'] = $user_id;
             //$cart[$id]['is_active'] = 1;
 
@@ -645,6 +658,7 @@ class ProductController extends Controller
         }
 
         $request->session()->put('cart', $cart);
+        //dd(session()->get('cart'));
         $cart_items = session()->get('cart');
         return response()->json([
             'status' => 'success',
