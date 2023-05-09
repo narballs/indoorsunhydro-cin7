@@ -462,6 +462,7 @@
                window.location.href = basic_url;
             }
             function updateCart(id, option_id) {
+
                jQuery.ajax({
                      url: "{{ url('/add-to-cart/') }}",
                         method: 'post',
@@ -484,7 +485,7 @@
                                  var price = parseFloat(item.price);
                                  var quantity = parseFloat(item.quantity);
 
-                                 var subtotal = parseInt(price * quantity);
+                                 var subtotal = parseFloat(price * quantity);
                                  var cart_total = cart_total + subtotal;
                                  var total_cart_quantity = total_cart_quantity + quantity;
                                  $('#subtotal_' + product_id).html('$'+subtotal);

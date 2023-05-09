@@ -21,6 +21,7 @@ class ProductController extends Controller
 {
     public function showProductByCategory(Request $request, $category_id)
     {
+       
         $selected_category_id = $request->get('selected_category_id');
         if (!empty($selected_category_id)) {
         }
