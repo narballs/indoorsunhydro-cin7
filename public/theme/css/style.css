@@ -1619,17 +1619,24 @@ input[type=number] {
 
 
 .cart-counter-details {
-    font-family: 'Poppins';
-    font-style: normal;
-    font-weight: 500;
+    margin-top: -3px !important;
     font-size: 15px;
+    font-weight: 400;
+    font-family: 'Poppins';
+}
+
+.select-comapny-top-bar {
+    font-family: 'Poppins' !important;
+    font-weight: 400 !important;
+    font-size: 15px !important;
+    margin-top: -4px;
 }
 
 .top-bar-logout {
     font-family: 'Poppins';
     font-style: normal;
-    font-weight: 500;
-    font-size: 14px;
+    font-weight: 400;
+    font-size: 15px;
 }
 
 .register-counter-details {
@@ -1849,7 +1856,7 @@ input[type=number] {
     font-size: 15px;
     font-family: 'Poppins';
     font-style: normal;
-    font-weight: 500;
+    font-weight: 400;
 
 }
 
