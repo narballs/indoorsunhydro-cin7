@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\ApiOrder;
 use App\Models\ApiOrderItem;
 use App\Models\Contact;
+use App\Models\Cart;
 use App\Models\State;
 use App\Models\PaymentMethod;
 use App\Models\UsState;
@@ -70,6 +71,10 @@ class CheckoutController extends Controller
         $count = $orderitems->count();
         $best_products = Product::where('status', '!=', 'Inactive')->orderBy('views', 'DESC')->limit(4)->get();
         $user_id = Auth::id();
+        Cart::where('user_id', $user_id)->where('is_active', 1)->delete();
+    
+        Session::forget('cart');
+
         $contact = Contact::where('user_id', $user_id)->first();
 
         $pricing = $contact->priceColumn;

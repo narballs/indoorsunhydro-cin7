@@ -30,6 +30,7 @@ use \Illuminate\Support\Str;
 use \Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
 use App\Jobs\SalesOrders;
+use App\Models\Cart;
 
 class UserController extends Controller
 {
@@ -313,10 +314,39 @@ class UserController extends Controller
         ]);
         $credentials = $request->except(['_token']);
         $user = User::where('email', $request->email)->first();
-        //dd($user);
+        //$active_qoute = Cart::where()
         if (auth()->attempt($credentials)) {
+            $user_id = auth()->user()->id;
+            $cart = [];
+            $active_qoutes = Cart::where('user_id', $user_id)->where('is_active', 1)->get();
+            foreach($active_qoutes as $active_qoute) {
+                $cart[$active_qoute->qoute_id] = [
+                    "product_id" => $active_qoute->product_id,
+                    "name" => $active_qoute->name,
+                    "quantity" => $active_qoute->quantity,
+                    "price" => $active_qoute->price,
+                    "code" => $active_qoute->code,
+                    "image" => $active_qoute->image,
+                    'option_id' => $active_qoute->option_id,
+                    "slug" => $active_qoute->slug,
+                ]; 
+                Session::put('cart', $cart);
+
+            }
             if ($user->hasRole(['Admin'])) {
                 session()->flash('message', 'Successfully Logged in');
+
+
+                //dd($cart);
+
+                // foreach($active_qoute as $qoute) {
+                //     unset($qoute->user_id);
+                // }
+
+
+
+                
+                //dd($active_qoute);
                 $companies = Contact::where('user_id', auth()->user()->id)->get();
                  if ($companies->count() == 1) {
                     UserHelper::switch_company($companies[0]->contact_id);
@@ -487,6 +517,7 @@ class UserController extends Controller
         Session::forget('contact_id');
         Session::forget('company');
         Session::forget('companies');
+        Session::forget('cart');
         Session::forget('logged_in_as_another_user');
         return redirect()->route('user');
     }
