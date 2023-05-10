@@ -158,13 +158,13 @@
                                                     <a class="text-white top-bar-logout" href="{{ route('logout') }}"
                                                         onclick="event.preventDefault(); document.getElementById('frm-logout').submit();">
                                                         <div class="d-flex align-items-center">
-                                                            <div class="col-md-6 ">
+                                                            <div class="col-md-6 ps-0">
                                                                 <img style="width:42px;"
                                                                     src="/theme/img/back-last-icons.png" alt="">
                                                             </div>
-                                                            <div class="col-md-6 ">
-                                                                <p class="top-bar-logout pt-3">
-                                                                    Logout
+                                                            <div class="col-md-6 p-0 ">
+                                                                <p class="top-bar-logout" style="padding-top: 12px;">
+                                                                    &nbsp;&nbsp;Logout
                                                                 </p>
                                                             </div>
                                                         </div>
