@@ -46,7 +46,7 @@
                         <th>Date Created <i class="fa fa-sort"></i></th>
                         <th>Created by <i class="fa fa-sort"></i></th>
                         <th>Order Submitter Email <i class="fa fa-sort"></i></th>
-                        <th>Primay Account Email <i class="fa fa-sort"></i></th>
+                        <th>Primary Account Email <i class="fa fa-sort"></i></th>
                         <th>Reference <i class="fa fa-sort"></i></th>
                         <th>Order Total <i class="fa fa-sort"></i></th>
                         <th>Company Name <i class="fa fa-sort"></i> </th>
@@ -96,6 +96,15 @@
                                     @endif
                                 @endif
                             </td>
+                            {{-- <td>
+                                @if (!empty($order->primaryId) && !empty($order->primary_contact))
+                                    {{ $order->primary_contact->company }}
+                                @elseif (!empty($order->secondaryId) && !empty($order->secondary_contact))
+                                    {{ $order->secondary_contact->company }}
+                                @elseif (!empty($order->contact))
+                                    {{ $order->contact->company }}
+                                @endif
+                            </td> --}}
                             <td>
                                 @if ($order->isApproved == 0)
                                     <span class="badge badge-warning">New</span>
