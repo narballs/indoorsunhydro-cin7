@@ -45,14 +45,15 @@
                         <th>#</th>
                         <th>Date Created <i class="fa fa-sort"></i></th>
                         <th>Created by <i class="fa fa-sort"></i></th>
-                        <th>Email <i class="fa fa-sort"></i></th>
-                        <th>Reference</th>
+                        <th>Order Submitter Email <i class="fa fa-sort"></i></th>
+                        <th>Primay Account Email <i class="fa fa-sort"></i></th>
+                        <th>Reference <i class="fa fa-sort"></i></th>
                         <th>Order Total <i class="fa fa-sort"></i></th>
-                        <th>Company Name</th>
+                        <th>Company Name <i class="fa fa-sort"></i> </th>
                         {{-- <th>Status <i class="fa fa-sort"></i></th> --}}
-                        <th>Stage</th>
-                        <th>Payment Term</th>
-                        <th>Actions</th>
+                        <th>Stage <i class="fa fa-sort"></i></th>
+                        <th>Payment Term <i class="fa fa-sort"></i></th>
+                        <th>Actions <i class="fa fa-sort"></i></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -70,6 +71,15 @@
                                         {{ $order->secondary_contact->lastName }}</span>
                                 @elseif (!empty($order->contact))
                                     {{ $order->contact->firstName }} {{ $order->contact->lastName }}
+                                @endif
+                            </td>
+                            <td>
+                                @if (!empty($order->primaryId) && !empty($order->primary_contact))
+                                    <span title="Secondary Contact">{{ $order->primary_contact->email }}</span>
+                                @elseif (!empty($order->secondaryId) && !empty($order->secondary_contact))
+                                    <span title="Secondary Contact">{{ $order->secondary_contact->email }}</span>
+                                @elseif (!empty($order->contact))
+                                    {{ $order->contact->email }} {{ $order->contact->lastName }}
                                 @endif
                             </td>
                             <td>
