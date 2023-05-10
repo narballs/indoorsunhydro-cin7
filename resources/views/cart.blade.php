@@ -91,7 +91,7 @@
             <td scope=" row">
              <div class="d-flex align-items-center">
                                                                                         
-                                                                                 @if (!empty($cart['image']))
+                                                                                  @if (!empty($cart['image']))
                                                                 <img src="{{ $cart['image'] }}"
                                                                     class="img-fluid rounded-3" style="width: 120px;"
                                                                     alt="Book">
@@ -963,13 +963,6 @@
 
     .top-bar-height {
         height: 78px;
-    }
-
-    .cart-counter-details {
-        font-family: 'Poppins';
-        font-style: normal;
-        font-weight: 600;
-        font-size: 14px;
     }
 </style>
 
