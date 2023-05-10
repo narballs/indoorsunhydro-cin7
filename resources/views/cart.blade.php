@@ -88,11 +88,10 @@
              </a>
              </span>
             </td>
-
             <td scope=" row">
              <div class="d-flex align-items-center">
                                                                                         
-                                                                      @if (!empty($cart['image']))
+                                                                                 @if (!empty($cart['image']))
                                                                 <img src="{{ $cart['image'] }}"
                                                                     class="img-fluid rounded-3" style="width: 120px;"
                                                                     alt="Book">
@@ -407,7 +406,7 @@
                                                     <button type="button"
                                                         class="btn btn-primary coupon-code-modal-btn ps-0"
                                                         data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                                                        applay coupon
+                                                        apply coupon
                                                     </button>
                                                 </div>
                                             </div>
@@ -627,7 +626,7 @@
                                                 <button type="button"
                                                     class="btn btn-primary coupon-code-modal-btn ps-0"
                                                     data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                                                    applay coupon
+                                                    apply coupon
                                                 </button>
                                             </div>
                                         </div>
@@ -757,7 +756,7 @@
                 </div>
             </div>
             <div class="modal-footer border-0 p-0 mt-2 d-flex justify-content-center align-items-center">
-                <button type="button" class="btn btn-primary w-75 applay-coupon-code-modal-btn">applay
+                <button type="button" class="btn btn-primary w-75 applay-coupon-code-modal-btn">apply
                     coupon</button>
             </div>
         </div>
