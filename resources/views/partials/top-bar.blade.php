@@ -4,7 +4,11 @@
             <div class="col-md-2">
                 <div class="d-grid gap-2">
                     @if (session('logged_in_as_another_user'))
-                        <a href="{{ url('admin/go-back') }}" class="btn text-white top-bar-logout mt-3">Go Back</a>
+                        <a href="{{ url('admin/go-back') }}" class="btn text-white top-bar-logout mt-3 "
+                            style=" font-size: 16px;
+                        font-family: 'Poppins';
+                        font-weight: 400;">Go
+                            Back</a>
                     @endif
                 </div>
             </div>
@@ -73,15 +77,14 @@
                                     <ul class="navbar-nav me-auto ps-lg-0" style="">
                                         <!-- Navbar dropdown -->
                                         <div class="row">
-                                            <div class="col-md-8">
+                                            <div class="col-md-8 pe-0">
                                                 <li class="nav-item dropdown position-static">
                                                     @if (!empty($session_contact_company))
-                                                        <a class="nav-link dropdown-toggle" href="#"
-                                                            id="navbarDropdown" role="button"
+                                                        <a style="margin-left: 14px;" class="nav-link dropdown-toggle"
+                                                            href="#" id="navbarDropdown" role="button"
                                                             data-mdb-toggle="dropdown" aria-expanded="false">
                                                             <span
-                                                                class="top-bar-logout text-light d-flex justify-content-lg-start"
-                                                                style="    margin-top: -3px !important;">
+                                                                class="select-comapny-top-bar text-light d-flex justify-content-lg-start">
                                                                 ({{ $session_contact_company }})</span>
                                                         </a>
                                                     @else
@@ -101,9 +104,10 @@
                                                     @endphp
                                                     <div class="dropdown-menu w-100 mt-0"
                                                         aria-labelledby="navbarDropdown"
-                                                        style="
-                                               border-top-left-radius: 0;
-                                               border-top-right-radius: 0;">
+                                                        style="border-top-left-radius: 0;
+                                                        border-top-right-radius: 0;
+                                                        margin-left: 13px !important;
+                                                        margin-top: -6px !important;">
                                                         <div class="container">
                                                             <div class="row my-4">
                                                                 <div class="col-md-12">
@@ -149,18 +153,20 @@
                                                 </li>
 
                                             </div>
-                                            <div class="col-md-4">
+                                            <div class="col-md-4 ps-0">
                                                 <li style="">
                                                     <a class="text-white top-bar-logout" href="{{ route('logout') }}"
                                                         onclick="event.preventDefault(); document.getElementById('frm-logout').submit();">
                                                         <div class="d-flex align-items-center">
-                                                            <div class="col-md-6">
-                                                                <img style="max-width: fit-content;"
-                                                                    src="/theme/img/back-last-icons.png" alt=""
-                                                                    class="img-fluid">
+                                                            <div class="col-md-6 ">
+                                                                <img style="width:42px;"
+                                                                    src="/theme/img/back-last-icons.png" alt="">
                                                             </div>
-                                                            <div class="col-md-6">
-                                                                &nbsp;&nbsp;&nbsp;Logout</div>
+                                                            <div class="col-md-6 ">
+                                                                <p class="top-bar-logout pt-3">
+                                                                    Logout
+                                                                </p>
+                                                            </div>
                                                         </div>
                                                     </a>
                                                 </li>
