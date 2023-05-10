@@ -563,6 +563,7 @@ class ProductController extends Controller
 
         $productOption = ProductOption::where('option_id', $option_id)->with('products.options.price')->first();
         $cart = session()->get('cart');
+        //dd($cart);
         $user_id = Auth::id();
 
         $contact_id = '';
@@ -630,20 +631,15 @@ class ProductController extends Controller
             }
         }
 
-        //dd($price);
-        // if ($pricing == 'Wholesale') {
-        //    $price = $productOption->wholesalePrice;
-        // }
-        // else {
-        //     $price = $productOption->retailPrice;
-        // }
-
         if (isset($cart[$id])) {
-            //echo '<pre>';var_export($cart[$id]);exit;
-           //dd($cart[$id]);exit;
-            //dd($cart[$id]);
+            $product_in_active_cart = Cart::where('qoute_id', $id)->first();
+            if ($product_in_active_cart) {
+                $current_quantity = $product_in_active_cart->quantity;
+                $product_in_active_cart->quantity = $current_quantity + $request->quantity;
+                $product_in_active_cart->save();
+            }
             $cart[$id]['quantity'] += $request->quantity;
-            
+
         } else {
             $cart[$id] = [
                 "product_id" => $productOption->products->product_id,
@@ -655,11 +651,11 @@ class ProductController extends Controller
                 'option_id' => $productOption->option_id,
                 "slug" => $productOption->products->slug,
             ];
-            //dd($cart[$id]);
-            //$cart[$id]['user_id'] = $user_id;
-            //$cart[$id]['is_active'] = 1;
+            $cart[$id]['user_id'] = $user_id;
+            $cart[$id]['is_active'] = 1;
+            $cart[$id]['qoute_id'] = $id;
 
-           //$qoute = Cart::create($cart[$id]);
+            $qoute = Cart::create($cart[$id]);
         }
 
         $request->session()->put('cart', $cart);
@@ -675,7 +671,9 @@ class ProductController extends Controller
     {
         if ($request->id) {
             $cart = session()->get('cart');
+            //dd($request->id);
             if (isset($cart[$request->id])) {
+               $qoute = Cart::where('qoute_id', $request->id)->delete();
                 unset($cart[$request->id]);
             }
 
@@ -714,20 +712,24 @@ class ProductController extends Controller
     {
 
         $items = $request->post('items_quantity');
-        $cart_items = session()->get('cart');
 
+        $cart_items = session()->get('cart');
+        //dd($items);
         if (!empty($items)) {
             foreach ($items as $item) {
                 $product_id = $item['id'];
+                
 
                 $cart_item = isset($cart_items[$product_id]) ? $cart_items[$product_id] : array();
 
                 if (!empty($cart_item) && $cart_item['quantity'] != $item['quantity']) {
                     Session::put('cart.' . $product_id . '.quantity', $item['quantity']);
+                    $qoute = Cart::where('qoute_id', $product_id)->first();
+                    $qoute->quantity = $item['quantity'];
+                    $qoute->save();
                 }
             }
         }
-
         $cart_items = session()->get('cart');
 
         return response()->json([
