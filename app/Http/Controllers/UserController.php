@@ -314,7 +314,6 @@ class UserController extends Controller
         ]);
         $credentials = $request->except(['_token']);
         $user = User::where('email', $request->email)->first();
-        //$active_qoute = Cart::where()
         if (auth()->attempt($credentials)) {
             $user_id = auth()->user()->id;
             $cart = [];

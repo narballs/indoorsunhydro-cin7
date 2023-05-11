@@ -563,8 +563,12 @@ class ProductController extends Controller
 
         $productOption = ProductOption::where('option_id', $option_id)->with('products.options.price')->first();
         $cart = session()->get('cart');
-        //dd($cart);
-        $user_id = Auth::id();
+        if(Auth::id() !== null){
+            $user_id = Auth::id();
+        }
+        else {
+            $user_id = '';
+        }
 
         $contact_id = '';
         $secondary_id = '';
@@ -659,7 +663,6 @@ class ProductController extends Controller
         }
 
         $request->session()->put('cart', $cart);
-        //dd(session()->get('cart'));
         $cart_items = session()->get('cart');
         return response()->json([
             'status' => 'success',
@@ -714,7 +717,6 @@ class ProductController extends Controller
         $items = $request->post('items_quantity');
 
         $cart_items = session()->get('cart');
-        //dd($items);
         if (!empty($items)) {
             foreach ($items as $item) {
                 $product_id = $item['id'];
