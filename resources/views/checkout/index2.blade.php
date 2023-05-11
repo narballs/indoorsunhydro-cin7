@@ -85,7 +85,7 @@ $cart_price = 0;
                             </div>
                             <div class="col-md-6">
                                 <a data-bs-toggle="modal" href="#address_modal_id" role="button" class="float-end">
-                                    <img src="/theme/img/thank_you_page_edit_icon.png" alt="">
+                                    <img src="/theme/img/thank_you_page_edit_icon.png" alt="" class="d-none">
                                 </a>
                             </div>
                         </div>
