@@ -497,6 +497,72 @@ $categories = NavHelper::getCategories();
                                 </form>
                             </a>
                         </li>
+                        <li class="nav-item dropdown position-static">
+                            @if (!empty($session_contact_company))
+                                <a style="margin-left: 23px;" class="nav-link dropdown-toggle" href="#"
+                                    id="navbarDropdown" role="button" data-mdb-toggle="dropdown"
+                                    aria-expanded="false">
+                                    <span class="select-comapny-top-bar-mobile d-flex justify-content-lg-start">
+                                        ({{ $session_contact_company }})</span>
+                                </a>
+                            @else
+                                <a class="nav-link dropdown-toggle p-0  text-white" href="#"
+                                    id="navbarDropdown" role="button" data-mdb-toggle="dropdown"
+                                    aria-expanded="false">
+                                    <span class="text-dark">Select Company</span>
+                                </a>
+                            @endif
+                            <!-- Dropdown menu -->
+                            @php
+                                $companies = Session::get('companies');
+                            @endphp
+                            <div class="dropdown-menu w-100 mt-0" aria-labelledby="navbarDropdown"
+                                style="border-top-left-radius: 0;
+								border-top-right-radius: 0;
+								margin-left: 13px !important;
+								margin-top: -6px !important;">
+                                <div class="container">
+                                    <div class="row my-4">
+                                        <div class="col-md-12">
+                                            <div class="list-group list-group-flush">
+                                                @if (Auth::user())
+                                                    @if ($companies)
+                                                        @foreach ($companies as $company)
+                                                            @php
+                                                                if ($company->contact_id) {
+                                                                    $contact_id = $company->contact_id;
+                                                                    $primary = '(primary)';
+                                                                } else {
+                                                                    $contact_id = $company->secondary_id;
+                                                                    $primary = '(secondary)';
+                                                                }
+                                                                if ($company->status == 0) {
+                                                                    $disabled = 'disabled';
+                                                                    $disable_text = '(Disabled)';
+                                                                    $muted = 'text-muted';
+                                                                } else {
+                                                                    $disabled = '';
+                                                                    $disable_text = '';
+                                                                    $muted = '';
+                                                                }
+                                                                
+                                                            @endphp
+                                                            <a type="button"
+                                                                class="list-group-item list-group-item-action p-0 {{ $disabled }} {{ $muted }}"
+                                                                onclick="switch_company_user({{ $contact_id }})">{{ $company->company }}
+                                                                <span style="font-size: 9px;font-family: 'Poppins';"
+                                                                    class="{{ $muted }}">{{ $primary }}
+                                                                </span>
+                                                            </a>
+                                                        @endforeach
+                                                    @endif
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
                     @else
                         <li class="nav-item">
                             <div class="register-counter-details ps-4">
