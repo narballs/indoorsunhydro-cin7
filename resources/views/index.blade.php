@@ -59,13 +59,14 @@
                                             </div>
                                             <div class="col p-0 thumb">
                                                 <a class="thumbnail">
-                                                    <img class="img-fluid" src="theme/img/quest_small.png" width="143px"
-                                                        height="44px" class="img-responsive img-fluid"></a>
+                                                    <img class="img-fluid" src="theme/img/quest_small.png"
+                                                        width="143px" height="44px"
+                                                        class="img-responsive img-fluid"></a>
                                             </div>
                                             <div class="col thumb">
                                                 <a class="thumbnail">
-                                                    <img class="img-fluid" src="theme/img/hydroponics.png" width="167px"
-                                                        height="72px" class="img-responsive img-fluid">
+                                                    <img class="img-fluid" src="theme/img/hydroponics.png"
+                                                        width="167px" height="72px" class="img-responsive img-fluid">
                                                 </a>
                                             </div>
                                             <div class="col thumb p-0">
@@ -117,7 +118,7 @@
                     </div>
                     <div class="col-md-4 home-page-product-section">
                         <div class="mt-5">
-                            <a class="link-dark text-decoration-none text-white" href="{{ url('products')}}">
+                            <a class="link-dark text-decoration-none text-white" href="{{ url('products') }}">
                                 <img class="img-fluid home-page-product-img" src="theme/img/all_products.png">
                             </a>
                         </div>
@@ -126,19 +127,19 @@
                         <div class="row mt-3">
                             <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                                 <a class="link-dark text-decoration-none text-white"
-                                    href="{{ url('product-brand/Trolmaster')}}">
+                                    href="{{ url('product-brand/Trolmaster') }}">
                                     <img class="img-fluid home-page-product-img" src="theme/img/troll_master.png">
                                 </a>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                                 <a class="link-dark text-decoration-none text-white"
-                                    href="{{ url('products/253/ac-dehumidification-humidification')}}">
+                                    href="{{ url('products/253/ac-dehumidification-humidification') }}">
                                     <img class="img-fluid home-page-product-img" src="theme/img/quest.png">
                                 </a>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                                 <a class="link-dark text-decoration-none text-white"
-                                    href="{{ url('product-brand/Advanced Nutrients')}}">
+                                    href="{{ url('product-brand/Advanced Nutrients') }}">
                                     <img class="img-fluid home-page-product-img" src="theme/img/nutrients_box.png">
                                 </a>
                             </div>
@@ -148,19 +149,19 @@
                         <div class="row mt-3 gx-5">
                             <div class="col-md-4">
                                 <a class="link-dark text-decoration-none text-white"
-                                    href="{{ url('products/7/lighting')}}">
+                                    href="{{ url('products/7/lighting') }}">
                                     <img class="img-fluid home-page-product-img" src="theme/img/lightening.png">
                                 </a>
                             </div>
                             <div class="col-md-4">
                                 <a class="link-dark text-decoration-none text-white"
-                                    href="{{ url('product-brand/Mills Nutrients')}}">
+                                    href="{{ url('product-brand/Mills Nutrients') }}">
                                     <img class="img-fluid home-page-product-img" src="theme/img/can.png">
                                 </a>
                             </div>
                             <div class="col-md-4">
                                 <a class="link-dark text-decoration-none text-white"
-                                    href="{{ url('products/7/lighting')}}">
+                                    href="{{ url('products/7/lighting') }}">
                                     <img class="img-fluid home-page-product-img" src="theme/img/lux_lightening.png">
                                 </a>
                             </div>
@@ -195,7 +196,8 @@
                             <img src="/theme/img/Icon_quality.png" class="img-fluid" alt="">
                         </div>
                         <h4 class="thumbnail-items text-center mt-5">Quality Products</h4>
-                        <p class="thumbnail-pra mt-3">we only carry products that we stand by, we honor all manufacturer
+                        <p class="thumbnail-pra mt-3">we only carry products that we stand by, we honor all
+                            manufacturer
                             warranties</p>
                     </div>
                 </div>
@@ -210,7 +212,7 @@
 </body>
 
 <script>
-    $("#superior_brands").on('click', function(){ 
+    $("#superior_brands").on('click', function() {
         window.location.href = '/products/';
     });
 </script>

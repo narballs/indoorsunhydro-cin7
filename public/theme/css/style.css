@@ -3081,6 +3081,14 @@ input[type=number] {
 }
 
 @media only screen and (max-width: 425px) and (min-width: 360px) {
+    .select-comapny-top-bar-mobile {
+        font-size: 14px !important;
+        font-family: 'Poppins' !important;
+        font-weight: 600 !important;
+        color: #000 !important;
+        padding-left: 7px !important;
+    }
+
     .mobile-view {
         display: block !important;
     }
