@@ -179,7 +179,7 @@
 										value="{{$customer->email}}">
 								</div>
 								<div class="col-md-12 mt-2">
-									{{$customer->phone}}
+									{{$customer->phone}}{{$customer->mobile}}
 								</div>
 								<div class="col-md-12 mt-5">
 									<div class="row">
