@@ -82,7 +82,7 @@
                                         id="product_name">
                                         <h3 class="product-detail-heading">{{$productOption->products->name}}</h3>
                                     </div>
-
+                                    <?php //dd($productOption->products->status);?>
                                     <div class="col-md-12 d-flex">
                                         <span class="text-danger product-detail-price" id="product_price">
                                             ${{number_format($retail_price,2)}}
@@ -92,32 +92,39 @@
                                 <div class="mt-4 mb-3"> <span class="text-uppercase text-muted brand"></span>
 
                                     <div class="price d-flex flex-row align-items-center">
-                                        @if ($productOption->stockAvailable > 0)
-                                        <span
-                                            class="rounded-pill cursor product-detail-quantity d-flex justify-content-center align-items-center"
-                                            data-toggle="popover-hover" data-bs-container="body" data-placement="top"
-                                            data-bs-placement="top" data-bs-content="Top popover"
-                                            style=" cursor: pointer;"><span class="">
-                                                {{$productOption->stockAvailable}}</span></span>
-                                        <div>
+                                        @if ($productOption->products->status != 'Inactive')
+                                            @if ($productOption->stockAvailable > 0)
+                                                <span
+                                                    class="rounded-pill cursor product-detail-quantity d-flex justify-content-center align-items-center"
+                                                    data-toggle="popover-hover" data-bs-container="body" data-placement="top"
+                                                    data-bs-placement="top" data-bs-content="Top popover"
+                                                    style=" cursor: pointer;"><span class="">
+                                                        {{$productOption->stockAvailable}}</span></span>
+                                                <div>
 
-                                            <!--   <a style="width:20px !important;" href="#" data-toggle="popover-click" data-placement="top" class="subscribe">
-                                                <i class="fa-solid fa-heart" id="test" 
-                                                     data-toggle="popover" data-placement="top"
-                                                     ></i>
+                                                    <!--   <a style="width:20px !important;" href="#" data-toggle="popover-click" data-placement="top" class="subscribe">
+                                                        <i class="fa-solid fa-heart" id="test" 
+                                                             data-toggle="popover" data-placement="top"
+                                                             ></i>
 
-                                            </a> -->
+                                                    </a> -->
 
 
-                                            <small class="dis-price">&nbsp;</small> <span class="instock-label">IN
-                                                STOCK</span>
-                                        </div>
+                                                    <small class="dis-price">&nbsp;</small> <span class="instock-label">IN
+                                                        STOCK</span>
+                                                </div>
 
-                                        @else
-                                        <div>
-                                            <small class="dis-price">&nbsp;</small><span class="text-danger">OUT OF
-                                                STOCK</span>
-                                        </div>
+                                                @else
+                                                <div>
+                                                    <small class="dis-price">&nbsp;</small><span class="text-danger">OUT OF
+                                                        STOCK</span>
+                                                </div>
+                                            @endif
+                                        @else 
+                                            <div>
+                                                    <small class="dis-price">&nbsp;</small><span class="text-danger">NOT AVAILABLE FOR SALE</span>
+                                                </div>
+
                                         @endif
                                     </div>
                                 </div>
