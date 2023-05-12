@@ -1,7 +1,7 @@
 <?php
 $categories = NavHelper::getCategories();
 ?>
-<div class="col-xl-12 col-lg-12 col-md-6  col-sm-6 col-xs-6 p-0 header-top">
+<div class="col-xl-12 col-lg-12 col-md-6  col-sm-6 col-xs-6 p-0 header-top mb-2">
     <nav class="navbar navbar-expand-lg navbar-light bg-transparent pb-0 justify-content-start">
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -13,7 +13,7 @@ $categories = NavHelper::getCategories();
             <div class="collapse navbar-collapse justify-content-center collapse show" id="navbarNavDarkDropdown">
                 <div class="collapse navbar-collapse justify-content-center collapse show" id="navbarNavDarkDropdown">
                     <ul class="navbar-nav d-flex">
-                        <li class="nav-item dropdown">
+                        <li class="nav-item dropdown mx-4">
                             <a class="nav-link dropdown-toggle product-mega-menu" href="#"
                                 id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown"
                                 aria-expanded="false">
@@ -78,19 +78,19 @@ $categories = NavHelper::getCategories();
                 @endforeach
                 </ul>
                 </li>
-                <li class=" nav-item me-3">
+                <li class=" nav-item me-3 mx-4">
                     <a class="nav-link text-uppercase nav-item-links " href="#">
                         About
                     </a>
                 </li>
 
-                <li class="nav-item me-4">
+                <li class="nav-item me-4 mx-4">
                     <a class="nav-link text-uppercase nav-item-links" href="{{ url('contact-us') }}">
                         Contact
                     </a>
                 </li>
 
-                <li class="nav-item me-3">
+                <li class="nav-item me-3 mx-4">
                     <a class="nav-link text-uppercase nav-item-links" href="{{ url('my-account') }} ">My
                         account
                     </a>
