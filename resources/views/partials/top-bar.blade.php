@@ -92,15 +92,15 @@
                                                                         href="#" id="navbarDropdown" role="button"
                                                                         data-mdb-toggle="dropdown" aria-expanded="false">
                                                                         <span
-                                                                            class="select-comapny-top-bar texr-dark d-flex justify-content-lg-start">
+                                                                            class="select-comapny-top-bar d-flex justify-content-lg-start">
                                                                             ({{ $session_contact_company }})</span>
                                                                     </a>
                                                                 @else
-                                                                    <a class="nav-link dropdown-toggle p-0  text-white"
+                                                                    <a class="nav-link dropdown-toggle p-0 mt-1 select_company_toggle"
                                                                         href="#" id="navbarDropdown" role="button"
                                                                         data-mdb-toggle="dropdown" aria-expanded="false">
             
-                                                                        <span class="" style="color:#242424;">Select
+                                                                        <span class="p-1 d-flex justify-content-lg-start hover_color">Select
                                                                             Company</span>
                                                                     </a>
                                                                 @endif
@@ -113,8 +113,8 @@
                                                                     aria-labelledby="navbarDropdown"
                                                                     style="border-top-left-radius: 0;
                                                                     border-top-right-radius: 0;
-                                                                    margin-left: 28px !important;
-                                                                    margin-top: -6px !important;">
+                                                                    margin-left: 15px !important;
+                                                                    margin-top: -12px !important;">
                                                                     <div class="container">
                                                                         <div class="row my-4">
                                                                             <div class="col-md-12">

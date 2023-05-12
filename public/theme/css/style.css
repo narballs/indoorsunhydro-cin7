@@ -843,6 +843,19 @@ a {
     color: #FFFFFF;
 }
 
+.hover_color  {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 16px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    text-transform: capitalize;
+    color: #242424;
+
+}
 
 .navbar-light .navbar-nav .nav-link {
     color: #373737 !important;
