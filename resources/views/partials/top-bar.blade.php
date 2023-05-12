@@ -1,18 +1,15 @@
-<header class="p-2  text-white top-bar-height w-100 header-top">
-    <div class="container-fluid" style=" max-width: 1468px !important;">
+<header class="bg-white  text-dark top-bar-height w-100 header-top">
+    <div class="container-fluid my-1" style=" max-width: 1468px !important;">
         <div class="row justify-content-end">
-            <div class="col-md-2">
-                <div class="d-grid gap-2">
+            {{-- <div class="col-md-3 d-flex align-items-center justify-content-end">
+                <div class="mt-1">
                     @if (session('logged_in_as_another_user'))
-                        <a href="{{ url('admin/go-back') }}" class="btn text-white top-bar-logout mt-3 "
-                            style=" font-size: 16px;
-                        font-family: 'Poppins';
-                        font-weight: 400;">Go
-                            Back</a>
+                        <a href="{{ url('admin/go-back') }}" class="top-bar-logout mt-3 "
+                            style=" font-size: 16px;font-family: 'Poppins';font-weight: 400; color:#242424;text-decoration:none;">Go Back</a>
                     @endif
                 </div>
-            </div>
-            <div class="col-md-3 d-flex ps-5 mt-2">
+            </div> --}}
+            {{-- <div class="col-md-3 d-flex ps-5 mt-2">
                 <div style="font-family: 'Poppins';">
                     <img class="basket-icon mt-2" src="/theme/img/Bascket.png">
                     <span
@@ -41,147 +38,158 @@
                         data-bs-placement="right"
                         data-bs-content="add <strong class='text-success'>$2500.00</strong> more to your cart and get <span class='text-danger'>5% off </span>"><span
                             id="top_cart_total"><a href="{{ '/cart/' }}"
-                                class="text-white d-flex align-items-end ms-3"><span id="topbar_cart_total"
-                                    class="ms-2 cart-counter-details">
-                                    ${{ number_format($grand_total, 2) }}</span>&nbsp;(<span id="cart_items_quantity"
+                                class="text-white d-flex align-items-end ms-3"> n${{ number_format($grand_total, 2) }}</span>&nbsp;(<span id="cart_items_quantity"
                                     class="cart-counter-details">{{ $total_quantity }}</span>&nbsp;<span
                                     class="cart-counter-details">items</span> )
                             </a>
                 </div>
-            </div>
-            <div class="col-md-2 d-flex align-items-center justify-content-end">
-                <a href="{{ '/user/' }}" class="text-white d-flex align-items-end mt-1">
-                    <div>
-                        <img src="/theme/img/users-icons-top-bar (2).png" class="img-fluid w-100">
-                    </div>
-                    @if (Auth::user())
-                        <div>
-                            @php
-                                $session_contact_company = Session::get('company');
-                            @endphp
-                            <form style="display:none;" id="frm-logout" action="{{ route('logout') }}" method="POST">
-                                {{ csrf_field() }}
-                                <input class="btn btn-link text-white" type="submit" value="logout">
-                            </form>
-                            <nav class="navbar navbar-expand-lg navbar-light company-nav-bar-conatainer p-0"
-                                style="">
-                                <!-- Toggle button -->
-                                <button class="navbar-toggler px-0 text-light" type="button" data-mdb-toggle="collapse"
-                                    data-mdb-target="#navbarExample1" aria-controls="navbarExample1"
-                                    aria-expanded="false" aria-label="Toggle navigation">
-                                    <i class="fas fa-bars"></i>
-                                </button>
-                                <!-- Collapsible wrapper -->
-                                <div class="collapse navbar-collapse" id="navbarExample1">
-                                    <!-- Left links -->
-                                    <ul class="navbar-nav me-auto ps-lg-0" style="">
-                                        <!-- Navbar dropdown -->
-                                        <div class="row">
-                                            <div class="col-md-8 pe-0">
-                                                <li class="nav-item dropdown position-static">
-                                                    @if (!empty($session_contact_company))
-                                                        <a style="margin-left: 14px;" class="nav-link dropdown-toggle"
-                                                            href="#" id="navbarDropdown" role="button"
-                                                            data-mdb-toggle="dropdown" aria-expanded="false">
-                                                            <span
-                                                                class="select-comapny-top-bar text-light d-flex justify-content-lg-start">
-                                                                ({{ $session_contact_company }})</span>
-                                                        </a>
-                                                    @else
-                                                        <a class="nav-link dropdown-toggle p-0  text-white"
-                                                            href="#" id="navbarDropdown" role="button"
-                                                            data-mdb-toggle="dropdown" aria-expanded="false">
-                                                            <img src="/theme/img/users-icons-top-bar (2).png"
-                                                                class="img-fluid">
-                                                            <span class="text-white">Select
-                                                                Company</span>
-                                                        </a>
-                                                    @endif
-                                                    <!-- Dropdown menu -->
-                                                    @php
-                                                        $companies = Session::get('companies');
-                                                        
-                                                    @endphp
-                                                    <div class="dropdown-menu w-100 mt-0"
-                                                        aria-labelledby="navbarDropdown"
-                                                        style="border-top-left-radius: 0;
-                                                        border-top-right-radius: 0;
-                                                        margin-left: 13px !important;
-                                                        margin-top: -6px !important;">
-                                                        <div class="container">
-                                                            <div class="row my-4">
-                                                                <div class="col-md-12">
-                                                                    <div class="list-group list-group-flush">
-                                                                        @if (Auth::user())
-                                                                            @if ($companies)
-                                                                                @foreach ($companies as $company)
-                                                                                    @php
-                                                                                        if ($company->contact_id) {
-                                                                                            $contact_id = $company->contact_id;
-                                                                                            $primary = '(primary)';
-                                                                                        } else {
-                                                                                            $contact_id = $company->secondary_id;
-                                                                                            $primary = '(secondary)';
-                                                                                        }
-                                                                                        if ($company->status == 0) {
-                                                                                            $disabled = 'disabled';
-                                                                                            $disable_text = '(Disabled)';
-                                                                                            $muted = 'text-muted';
-                                                                                        } else {
-                                                                                            $disabled = '';
-                                                                                            $disable_text = '';
-                                                                                            $muted = '';
-                                                                                        }
-                                                                                        
-                                                                                    @endphp
-                                                                                    <a type="button"
-                                                                                        class="list-group-item list-group-item-action p-0 {{ $disabled }} {{ $muted }}"
-                                                                                        onclick="switch_company_user({{ $contact_id }})">{{ $company->company }}
-                                                                                        <span
-                                                                                            style="font-size: 9px;font-family: 'Poppins';"
-                                                                                            class="{{ $muted }}">{{ $primary }}
-                                                                                        </span>
-                                                                                    </a>
-                                                                                @endforeach
-                                                                            @endif
-                                                                        @endif
+            </div> --}}
+            <div class="col-md-4"></div>
+            <div class="col-md-6">
+                <div class="col-md-12">
+                    <div class="row mx-1">
+                        <div class="col-xl-5  col-lg-4 col-md-5 d-flex justify-content-end align-items-center">
+                            <div class="mt-1">
+                                @if (session('logged_in_as_another_user'))
+                                    <a href="{{ url('admin/go-back') }}" class="top-bar-logout mt-3 "
+                                        style=" font-size: 16px;font-family: 'Poppins';font-weight: 400; color:#242424;text-decoration:none;">Go Back</a>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-xl-7 col-lg-8 col-md-5 d-flex align-items-center justify-content-center">
+                            <a href="{{ '/user/' }}" class="text-white d-flex align-items-end mt-1">
+                                {{-- <div>
+                                    <img src="/theme/img/users-icons-top-bar (2).png" class="img-fluid w-100">
+                                </div> --}}
+                                {{-- <i class="fa fa-user" style="color:#979797 !important;font-size:25px;"></i> --}}
+                                @if (Auth::user())
+                                    <div>
+                                        @php
+                                            $session_contact_company = Session::get('company');
+                                        @endphp
+                                        <form style="display:none;" id="frm-logout" action="{{ route('logout') }}" method="POST">
+                                            {{ csrf_field() }}
+                                            <input class="btn btn-link text-white" type="submit" value="logout">
+                                        </form>
+                                        <nav class="navbar navbar-expand-lg navbar-light company-nav-bar-conatainer p-0"
+                                            style="">
+                                            <!-- Toggle button -->
+                                            <button class="navbar-toggler px-0 text-light" type="button" data-mdb-toggle="collapse"
+                                                data-mdb-target="#navbarExample1" aria-controls="navbarExample1"
+                                                aria-expanded="false" aria-label="Toggle navigation">
+                                                <i class="fas fa-bars"></i>
+                                            </button>
+                                            <!-- Collapsible wrapper -->
+                                            <div class="collapse navbar-collapse" id="navbarExample1">
+                                                <!-- Left links -->
+                                                <ul class="navbar-nav me-auto ps-lg-0" style="">
+                                                    <!-- Navbar dropdown -->
+                                                    <div class="row">
+                                                        <div class="col-md-9 col-lg-7 col-xl-9 pe-0">
+                                                            <li class="nav-item dropdown position-static">
+                                                                @if (!empty($session_contact_company))
+                                                                    <a style="margin-left: 14px;" class="nav-link dropdown-toggle"
+                                                                        href="#" id="navbarDropdown" role="button"
+                                                                        data-mdb-toggle="dropdown" aria-expanded="false">
+                                                                        <span
+                                                                            class="select-comapny-top-bar d-flex justify-content-lg-start">
+                                                                            ({{ $session_contact_company }})</span>
+                                                                    </a>
+                                                                @else
+                                                                    <a class="nav-link dropdown-toggle p-0 mt-1 select_company_toggle"
+                                                                        href="#" id="navbarDropdown" role="button"
+                                                                        data-mdb-toggle="dropdown" aria-expanded="false">
+            
+                                                                        <span class="p-1 d-flex justify-content-lg-start hover_color">Select
+                                                                            Company</span>
+                                                                    </a>
+                                                                @endif
+                                                                <!-- Dropdown menu -->
+                                                                @php
+                                                                    $companies = Session::get('companies');
+                                                                    
+                                                                @endphp
+                                                                <div class="dropdown-menu w-100 mt-0"
+                                                                    aria-labelledby="navbarDropdown"
+                                                                    style="border-top-left-radius: 0;
+                                                                    border-top-right-radius: 0;
+                                                                    margin-left: 15px !important;
+                                                                    margin-top: -12px !important;">
+                                                                    <div class="container">
+                                                                        <div class="row my-4">
+                                                                            <div class="col-md-12">
+                                                                                <div class="list-group list-group-flush">
+                                                                                    @if (Auth::user())
+                                                                                        @if ($companies)
+                                                                                            @foreach ($companies as $company)
+                                                                                                @php
+                                                                                                    if ($company->contact_id) {
+                                                                                                        $contact_id = $company->contact_id;
+                                                                                                        $primary = '(primary)';
+                                                                                                    } else {
+                                                                                                        $contact_id = $company->secondary_id;
+                                                                                                        $primary = '(secondary)';
+                                                                                                    }
+                                                                                                    if ($company->status == 0) {
+                                                                                                        $disabled = 'disabled';
+                                                                                                        $disable_text = '(Disabled)';
+                                                                                                        $muted = 'text-muted';
+                                                                                                    } else {
+                                                                                                        $disabled = '';
+                                                                                                        $disable_text = '';
+                                                                                                        $muted = '';
+                                                                                                    }
+                                                                                                    
+                                                                                                @endphp
+                                                                                                <a type="button"
+                                                                                                    class="list-group-item list-group-item-action p-0 {{ $disabled }} {{ $muted }}"
+                                                                                                    onclick="switch_company_user({{ $contact_id }})">{{ $company->company }}
+                                                                                                    <span
+                                                                                                        style="font-size: 9px;font-family: 'Poppins';"
+                                                                                                        class="{{ $muted }}">{{ $primary }}
+                                                                                                    </span>
+                                                                                                </a>
+                                                                                            @endforeach
+                                                                                        @endif
+                                                                                    @endif
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
+                                                            </li>
+            
+                                                        </div>
+                                                        <div class="col-md-3 col-xl-3 col-lg-4 ps-0">
+                                                            <li style="">
+                                                                <a style="color:#242424;" class="top-bar-logout" href="{{ route('logout') }}"
+                                                                    onclick="event.preventDefault(); document.getElementById('frm-logout').submit();">
+                                                                    <div class="d-flex align-items-center">
+                                                                        
+                                                                        <div class="col-md-12 p-0 ">
+                                                                            <p class="top-bar-logout" style="padding-top: 12px; color:#242424;">
+                                                                                &nbsp;&nbsp;Logout
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                </a>
+                                                            </li>
                                                         </div>
                                                     </div>
-                                                </li>
-
+                                                </ul>
                                             </div>
-                                            <div class="col-md-4 ps-0">
-                                                <li style="">
-                                                    <a class="text-white top-bar-logout" href="{{ route('logout') }}"
-                                                        onclick="event.preventDefault(); document.getElementById('frm-logout').submit();">
-                                                        <div class="d-flex align-items-center">
-                                                            <div class="col-md-6 ps-0">
-                                                                <img style="width:42px;"
-                                                                    src="/theme/img/back-last-icons.png" alt="">
-                                                            </div>
-                                                            <div class="col-md-6 p-0 ">
-                                                                <p class="top-bar-logout" style="padding-top: 12px;">
-                                                                    &nbsp;&nbsp;Logout
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                    </a>
-                                                </li>
-                                            </div>
-                                        </div>
-                                    </ul>
-                                </div>
-                            </nav>
+                                        </nav>
+                                    </div>
+                                @else
+                                    <div class="register-counter-details ms-2">
+                                        <p class="mb-0 login-in-register" style="color: #242424;"> <i class="fa fa-user mx-2" style="color:#979797 !important;font-size:25px;"></i> Login or Register</p>
+                                    </div>
+                                @endif
+                            </a>
                         </div>
-                    @else
-                        <div class="register-counter-details ms-2">
-                            <p class="mb-2 login-in-register">Login or Register</p>
-                        </div>
-                    @endif
-                </a>
+                    </div>
+                </div>
+               
             </div>
         </div>
     </div>

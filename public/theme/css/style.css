@@ -109,7 +109,7 @@
 }
 
 .top-search-group {
-    width: 25rem !important;
+    width: 28rem !important;
 }
 
 .sub-menu {
@@ -843,9 +843,22 @@ a {
     color: #FFFFFF;
 }
 
+.hover_color  {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 16px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    text-transform: capitalize;
+    color: #242424;
+
+}
 
 .navbar-light .navbar-nav .nav-link {
-    color: #000 !important;
+    color: #373737 !important;
 }
 
 
@@ -1431,7 +1444,7 @@ body.swal2-toast-shown .swal2-container {
 .navbar-light .navbar-nav .nav-link:hover {
     background-color: #7BC743;
     color: #fff !important;
-
+    border-radius: 5px;
 }
 
 .dropdown-menu-dark .dropdown-item.active,
@@ -1609,8 +1622,9 @@ input[type=number] {
 }
 
 .top-bar-height {
-    height: 78px;
-    background-color: #212121 !important;
+    /* height: 78px;
+    background-color: #212121 !important; */
+    border-bottom: 1.20452px solid #EFEFEF;
 }
 
 .company-nave-bar-conatainer {

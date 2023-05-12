@@ -1,16 +1,15 @@
 <div class="container-fluid mt-3 header-top">
-    <div class="row header-top">
-        <div class="col-xl-1 col-lg-0 col-md-0 col-sm-0 col-xs-0 "></div>
-        <div class="col-xl-2 col-lg-3 col-md-6 col-sm-6 col-xs-6">
-            <a class="navbar-brand" href="/">
-                <img class="top-img img-fluid" src="{{ url('/theme/img/indoor_sun.png') }}" ;>
+    <div class="row header-top justify-content-center align-items-center">
+        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-xs-6 d-flex align-items-center justify-content-center">
+            <a class="navbar-brand d-flex justify-content-center" href="/">
+                <img class="top-img" src="{{ url('/theme/img/indoor_sun.png') }}" ;>
             </a>
         </div>
-        <div class="col-xl-5 col-lg-6 col-md-12 col-sm-6 col-xs-6 mt-2 top-header-navigation p-0">
+        {{-- <div class="col-xl-5 col-lg-6 col-md-12 col-sm-6 col-xs-6 mt-2 top-header-navigation p-0">
             @include('partials.nav')
-        </div>
-        <div class=" col-xl-3 col-lg-3 col-md-12 col-sm-12 col-xs-12 top-reach-bar">
-            <form class="d-flex mt-3" method="get" action="{{route('product_search')}}">
+        </div> --}}
+        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-xs-12 top-reach-bar d-flex align-items-center justify-content-center">
+            <form class="d-flex" method="get" action="{{route('product_search')}}">
                 <input type="hidden" id="is_search" name="is_search" value="1">
                 <div class="input-group top-search-group">
                     <input type="text" class="form-control" placeholder="What are you searching for" aria-label="Search"
@@ -23,6 +22,45 @@
                     </span>
                 </div>
             </form>
+        </div>
+        <div class="col-md-4 d-flex align-items-center ps-5 justify-content-center">
+            <div style="font-family: 'Poppins';">
+                <img class="basket-icon mt-2" src="/theme/img/Bascket.png">
+                <span
+                    class="cart-basket d-flex align-items-center justify-content-center float-sm-end cart-counter rounded-circle"
+                    id="top_cart_quantity">
+                    <?php
+                    $total_quantity = 0;
+                    $grand_total = 0;
+                    
+                    ?>
+                    @if (Session::get('cart'))
+                        @foreach (Session::get('cart') as $cart)
+                            <?php
+                            $total_q[] = $cart['quantity'];
+                            $total_quantity = array_sum($total_q);
+                            $total_price[] = $cart['price'] * $cart['quantity'];
+                            $grand_total = array_sum($total_price);
+                            ?>
+                        @endforeach
+                    @endif
+                    {{ $total_quantity }}
+                </span>
+            </div>
+            <div>
+                <span class="mx-4" style="font-family: 'Roboto';font-style: normal;font-weight: 400;font-size: 16px;line-height: 30px;letter-spacing: -0.006em;">Shopping Cart</span>
+                <a class="p-0 cart-price btn btn-secondary" data-bs-container="body" data-bs-toggle="popover"
+                    data-bs-placement="right" data-bs-content="add <strong class='text-success'>$2500.00</strong> more to your cart and get <span class='text-danger'>5% off </span>">
+                    <span id="top_cart_total"><a href="{{ '/cart/' }}"  class="d-flex align-items-center ms-3" style="color: #7bc533;">
+                    <span id="topbar_cart_total" class="ms-2 cart-counter-details"> ${{ number_format($grand_total, 2) }}</span>&nbsp;
+                    <span id="cart_items_quantity" class="cart-counter-details">({{ $total_quantity }}</span>&nbsp;<span class="cart-counter-details">items)</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-xl-5 col-lg-8 col-md-12 col-sm-6 col-xs-6 mt-2 top-header-navigation p-0">
+            @include('partials.nav')
         </div>
     </div>
 </div>
