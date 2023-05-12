@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\Cart;
 use App\Models\ProductOption;
 use Session;
+use Str;
 use App\Models\Contact;
 use App\Models\Brand;
 use App\Models\BuyList;
@@ -636,6 +637,7 @@ class ProductController extends Controller
         }
 
         if (isset($cart[$id])) {
+            $hash_cart = session()->get('cart_hash');
             $product_in_active_cart = Cart::where('qoute_id', $id)->first();
             if ($product_in_active_cart) {
                 $current_quantity = $product_in_active_cart->quantity;
@@ -645,6 +647,15 @@ class ProductController extends Controller
             $cart[$id]['quantity'] += $request->quantity;
 
         } else {
+
+            $hash_cart = $request->session()->get('cart_hash');
+            $cart_hash_exist = session()->has('cart_hash');
+
+
+            if ($cart_hash_exist == false) {
+                $request->session()->put('cart_hash', Str::random(10));
+            }
+
             $cart[$id] = [
                 "product_id" => $productOption->products->product_id,
                 "name" => $productOption->products->name,
@@ -654,11 +665,12 @@ class ProductController extends Controller
                 "image" => $productOption->image,
                 'option_id' => $productOption->option_id,
                 "slug" => $productOption->products->slug,
+                "cart_hash" => session()->get('cart_hash')
             ];
             $cart[$id]['user_id'] = $user_id;
             $cart[$id]['is_active'] = 1;
             $cart[$id]['qoute_id'] = $id;
-
+            
             $qoute = Cart::create($cart[$id]);
         }
 
@@ -667,6 +679,7 @@ class ProductController extends Controller
         return response()->json([
             'status' => 'success',
             'cart_items' => $cart_items,
+            'cart' => $cart,
         ]);
     }
 

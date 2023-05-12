@@ -74,6 +74,7 @@ class CheckoutController extends Controller
         Cart::where('user_id', $user_id)->where('is_active', 1)->delete();
     
         Session::forget('cart');
+        Session::forget('cart_hash');
 
         $contact = Contact::where('user_id', $user_id)->first();
 
