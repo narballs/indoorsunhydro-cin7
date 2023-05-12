@@ -19,6 +19,7 @@ class Cart extends Model
         'option_id',
         'slug',
         'user_id',
-        'is_active'
+        'is_active',
+        'cart_hash'
     ];
 }

@@ -16,9 +16,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-
+       //session::forget('cart_hash');
         // session::forget('companies');
-        // session::forget('cart');
+        //session::forget('cart');
         // $cart = session::get('cart');
         //dd($cart);exit;
         //  exit;
