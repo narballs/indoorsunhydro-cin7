@@ -146,7 +146,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-9 d-flex justify-content-end" style="">
-                                            @if($productOption->stockAvailable > 0)
+                                            @if($productOption->stockAvailable > 0 || $productOption->products->status != 'Inactive')
                                             <button class=" button-cards product-detail-button-cards text-uppercase"
                                                 style="" type="button" id="ajaxSubmit">
                                                 <a class="text-white">Add to cart

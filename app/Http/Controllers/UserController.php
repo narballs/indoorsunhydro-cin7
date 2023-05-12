@@ -314,9 +314,20 @@ class UserController extends Controller
         ]);
         $credentials = $request->except(['_token']);
         $user = User::where('email', $request->email)->first();
+        $cart = [];
         if (auth()->attempt($credentials)) {
             $user_id = auth()->user()->id;
-            $cart = [];
+            if ($request->session()->has('cart_hash')) {
+                $cart_hash = $request->session()->get('cart_hash');
+                $cart_items = Cart::where('cart_hash', $cart_hash)->where('is_active', 1)->where('user_id', 0)->get();
+                foreach($cart_items as $cart_item) {
+                    $cart_item->user_id = $user_id;
+                    $cart_item->save();
+                }
+            }
+            
+
+           
             $active_qoutes = Cart::where('user_id', $user_id)->where('is_active', 1)->get();
             foreach($active_qoutes as $active_qoute) {
                 $cart[$active_qoute->qoute_id] = [
