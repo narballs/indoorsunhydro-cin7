@@ -45,16 +45,18 @@
                     </div>
                 </td>
             </tr>
+            <br>
             <tr>
                 <td>
                     <div style="border-bottom: 1px solid gray;margin-bottom:50px !important">
-                        <p style="font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Arial,'Roboto' !important; font-size: 15px !important;
+                        <p
+                            style="font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Arial,'Roboto' !important; font-size: 15px !important;
                             line-height: 32px !important;
                             font-weight: 400 !important;
                             color: #333333 !important;
                             margin: 11px 0 26px; !important">
-                            Hey {{$reference}},<br>
-                            {{$content}}<br>
+                            Hey {{ $reference }},<br>
+                            {{ $content }}<br><br>
                         <table>
 
                             <tr>
@@ -63,10 +65,10 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td><b>QCOM Order ID:</b> {{$order_id}}</td>
+                                <td><b>QCOM Order ID:</b> {{ $order_id }}</td>
                             </tr>
                             <tr>
-                                <td><b>Cin7 Order ID: {{$reference}}</b></td>
+                                <td><b>Cin7 Order ID: {{ $reference }}</b></td>
                             </tr>
 
                         </table>
@@ -81,3 +83,4 @@
 </body>
 
 </html>
+<br><br>
