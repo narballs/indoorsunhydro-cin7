@@ -66,10 +66,6 @@
             <div style="width: 100%">
                 <div class="card border-0 thank-you-page-background-img" style="background-color: #F5F5F5 !important;
                 border-radius: 10px !important;
-                /* background-image: url('https://stage.indoorsunhydro.com/theme/img/thank-background.png') !important; */
-                /* background-repeat: no-repeat !important; */
-                /* width: 100% !important; */
-                /* background-size: 100% !important; */
                 padding-bottom: 146px !important;
                 padding-top: 92px !important;">
                     <div class="row" style="padding-bottom: 77px !important;">
@@ -161,13 +157,7 @@
                                                     letter-spacing: 0.025em;
                                                     color: #000000;">Hey
                                                         {{$addresses['billing_address']['firstName']}},<br>
-                                                        Thank you for your purchase! This email is to confirm your order
-                                                        with IndoorSunHydro,<br>
-                                                        This order will be delivered to you within 2 to 3 working days
-                                                        Registered Courier.
-                                                        We <br>will send you another email with your shipment tracking
-                                                        details as soon as we ship your
-                                                        order.</p>
+                                                 </p> Order exceeded the credit limit please review and perform required action.
                                                 </div>
                                                 <div class="mt-5" style="margin-top: 50px !important;">
                                                     <div style="display: flex;">
