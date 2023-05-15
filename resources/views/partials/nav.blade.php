@@ -89,12 +89,7 @@ $categories = NavHelper::getCategories();
                         Contact
                     </a>
                 </li>
-
-                <li class="nav-item me-3 mx-4">
-                    <a class="nav-link text-uppercase nav-item-links" href="{{ url('my-account') }} ">My
-                        account
-                    </a>
-                </li>
+                
                 </ul>
             </div>
             <!-- here -->
