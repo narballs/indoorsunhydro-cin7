@@ -1,205 +1,200 @@
 <script src="https://unpkg.com/@popperjs/core@2"></script>
-<script src="{{asset('//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js')}}"></script>
-<script src="{{asset('/theme/bootstrap5/js/bootstrap.js')}}"></script>
-<script src="{{asset('//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js')}}"></script>
+<script src="{{ asset('//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js') }}"></script>
+<script src="{{ asset('/theme/bootstrap5/js/bootstrap.js') }}"></script>
+<script src="{{ asset('//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js') }}"></script>
 
 <script src="https://kit.fontawesome.com/ec19ec29f3.js" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/feather-icons"></script>
 
 <script type="text/javascript">
-	var popover = new bootstrap.Popover(document.querySelector('.cart-price'), {
-	container: 'body',
-	html:  true
-	});
-	feather.replace();
+    var popover = new bootstrap.Popover(document.querySelector('.cart-price'), {
+        container: 'body',
+        html: true
+    });
+    feather.replace();
 </script>
 <script>
-	// delete employee ajax request
-	 $(document).on('click', '.deleteIcon', function(e) {
+    // delete employee ajax request
+    $(document).on('click', '.deleteIcon', function(e) {
         e.preventDefault();
         var id = $(this).attr('id');
         let csrf = '{{ csrf_token() }}';
         Swal.fire({
-          title: 'Are you sure?',
-          text: "You won't be able to revert this!",
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Yes, delete it!'
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
-          if (result.isConfirmed) {
-            $.ajax({
-              url: '{{ route('secondary_user.delete') }}',
-              method: 'delete',
-              data: {
-                id: id,
-                _token: csrf
-              },
-              success: function(response) {
-                Swal.fire(
-                  'Deleted!',
-                  'Your file has been deleted.',
-                  'success'
-                )
-				$('#row-'+id).remove();
-              }
-            });
-          }
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '{{ route('secondary_user.delete') }}',
+                    method: 'delete',
+                    data: {
+                        id: id,
+                        _token: csrf
+                    },
+                    success: function(response) {
+                        Swal.fire(
+                            'Deleted!',
+                            'Your file has been deleted.',
+                            'success'
+                        )
+                        $('#row-' + id).remove();
+                    }
+                });
+            }
         })
-      });
+    });
 </script>
 <script type="text/javascript">
-	let dropdowns = document.querySelectorAll('.dropdown-toggle')
-		dropdowns.forEach((dd)=>{
-		dd.addEventListener('click', function (e) {
-	var el = this.nextElementSibling
-	el.style.display = el.style.display==='block'?'none':'block'
-	})
-	});
-			
-	$(document).ready(function(){
-		$(document).on('click','#copyUrl', function(){
-			$('#custom_loader').removeClass('d-none');
-			let textValue = $(this).attr('data-id');
-			var temp = $("<input>");
-			$("body").append(temp);
-			temp.val(textValue).select();
-			document.execCommand("copy");
-			temp.remove();
-			console.timeEnd('time1');
-			$('#custom_loader').addClass('d-none');
-		});
-	$('.login-info-box').fadeOut();
-	$('.login-show').addClass('show-log-panel');
-	});
-	$('.login-reg-panel input[type="radio"]').on('change', function() {
-	if($('#log-login-show').is(':checked')) {
-	$('.register-info-box').fadeOut();
-	$('.login-info-box').fadeIn();
-	$('.white-panel').addClass('right-log');
-	$('.register-show').addClass('show-log-panel');
-	$('.login-show').removeClass('show-log-panel');
-	}
-	else if($('#log-reg-show').is(':checked')) {
-	$('.register-info-box').fadeIn();
-	$('.login-info-box').fadeOut();
-	$('.white-panel').removeClass('right-log');
-	$('.login-show').addClass('show-log-panel');
-	$('.register-show').removeClass('show-log-panel');
-	}
-	});
+    let dropdowns = document.querySelectorAll('.dropdown-toggle')
+    dropdowns.forEach((dd) => {
+        dd.addEventListener('click', function(e) {
+            var el = this.nextElementSibling
+            el.style.display = el.style.display === 'block' ? 'none' : 'block'
+        })
+    });
+
+    $(document).ready(function() {
+        $(document).on('click', '#copyUrl', function() {
+            $('#custom_loader').removeClass('d-none');
+            let textValue = $(this).attr('data-id');
+            var temp = $("<input>");
+            $("body").append(temp);
+            temp.val(textValue).select();
+            document.execCommand("copy");
+            temp.remove();
+            console.timeEnd('time1');
+            $('#custom_loader').addClass('d-none');
+        });
+        $('.login-info-box').fadeOut();
+        $('.login-show').addClass('show-log-panel');
+    });
+    $('.login-reg-panel input[type="radio"]').on('change', function() {
+        if ($('#log-login-show').is(':checked')) {
+            $('.register-info-box').fadeOut();
+            $('.login-info-box').fadeIn();
+            $('.white-panel').addClass('right-log');
+            $('.register-show').addClass('show-log-panel');
+            $('.login-show').removeClass('show-log-panel');
+        } else if ($('#log-reg-show').is(':checked')) {
+            $('.register-info-box').fadeIn();
+            $('.login-info-box').fadeOut();
+            $('.white-panel').removeClass('right-log');
+            $('.login-show').addClass('show-log-panel');
+            $('.register-show').removeClass('show-log-panel');
+        }
+    });
 </script>
 <script type="text/javascript">
-	$(document).ready(function() {
-    	// popovers initialization - on hover
-$('[data-toggle="popover-click"]').popover({
-  html: true,
-  trigger: 'clcik',
-  placement: 'top',
-  sanitize:false,
-  content: function () { return '<img src="' + $(this).data('img') + '" />'; }
-});
+    $(document).ready(function() {
+        // popovers initialization - on hover
+        $('[data-toggle="popover-click"]').popover({
+            html: true,
+            trigger: 'clcik',
+            placement: 'top',
+            sanitize: false,
+            content: function() {
+                return '<img src="' + $(this).data('img') + '" />';
+            }
+        });
 
-// popovers initialization - on click
-$('[data-toggle="popover-hover"]').popover({
-	
-  html: true,
-  trigger: 'hover',
-  placement: 'top',
-  sanitize: false,
-  content: $('#popover-form').html(),
-});
-		var invitation_sent = sessionStorage.getItem('invitation');
-		if (invitation_sent == 1) {
-			$("#additional_users").addClass("active");
-			$("#additional-users").removeClass("d-none");
-			$('#intro').addClass('d-none');
-			$('.nav-pills #dashboard').addClass('active');
-			$('#dashboard').removeClass('active');
-		} else {
-			$("#additional_users").removeClass("active");
-		}
-	});
+        // popovers initialization - on click
+        $('[data-toggle="popover-hover"]').popover({
 
+            html: true,
+            trigger: 'hover',
+            placement: 'top',
+            sanitize: false,
+            content: $('#popover-form').html(),
+        });
+        var invitation_sent = sessionStorage.getItem('invitation');
+        if (invitation_sent == 1) {
+            $("#additional_users").addClass("active");
+            $("#additional-users").removeClass("d-none");
+            $('#intro').addClass('d-none');
+            $('.nav-pills #dashboard').addClass('active');
+            $('#dashboard').removeClass('active');
+        } else {
+            $("#additional_users").removeClass("active");
+        }
+    });
 </script>
 <script>
-	$( document ).ready(function() {
-		var list_id = $("#list_id").val();
-		if (list_id == '') {
-			$(".btn-add-to-cart").prop('disabled', true);
-		}
-		else {
-			$(".btn-add-to-cart").prop('disabled', false);
-		}
-		$('body').on('click', '.btn-add-to-cart', function() {
-			var id = $(this).attr('id');
-			var product_id = id.replace('btn_', '');
-			var row = $('#product_row_' + product_id).length;
+    $(document).ready(function() {
+        var list_id = $("#list_id").val();
+        if (list_id == '') {
+            $(".btn-add-to-cart").prop('disabled', true);
+        } else {
+            $(".btn-add-to-cart").prop('disabled', false);
+        }
+        $('body').on('click', '.btn-add-to-cart', function() {
+            var id = $(this).attr('id');
+            var product_id = id.replace('btn_', '');
+            var row = $('#product_row_' + product_id).length;
 
-			if (row > 0) {
-				var difference = 0;
-				var subtotal_before_update = parseFloat($('#subtotal_' + product_id).html());
-				console.log('difference => ' + difference);
-				console.log('sub total before update  => ' + subtotal_before_update);
+            if (row > 0) {
+                var difference = 0;
+                var subtotal_before_update = parseFloat($('#subtotal_' + product_id).html());
+                console.log('difference => ' + difference);
+                console.log('sub total before update  => ' + subtotal_before_update);
 
-				var retail_price = parseFloat($('#retail_price_' + product_id).html());
-				var quantity = parseFloat($('#quantity_' + product_id).val());
-				var subtotal = parseFloat($('#subtotal_' + product_id).html());
-				
-				quantity++;
-				subtotal = retail_price * quantity;
+                var retail_price = parseFloat($('#retail_price_' + product_id).html());
+                var quantity = parseFloat($('#quantity_' + product_id).val());
+                var subtotal = parseFloat($('#subtotal_' + product_id).html());
 
-				difference = subtotal_before_update - subtotal;
+                quantity++;
+                subtotal = retail_price * quantity;
 
-				console.log('difference => ' + difference);
+                difference = subtotal_before_update - subtotal;
 
-				var grand_total = $('#grand_total').html();
-				grand_total = parseFloat(grand_total);
+                console.log('difference => ' + difference);
 
-				console.log('Grand Total => ' + grand_total);
+                var grand_total = $('#grand_total').html();
+                grand_total = parseFloat(grand_total);
 
-
-				grand_total = grand_total - difference;
-				$('#grand_total').html(grand_total);
-
-				console.log('Grand Total => ' + grand_total);
-
-				$('#quantity_' + product_id).val(quantity);
-				$('#subtotal_' + product_id).html(subtotal);
-				return false;
-			}
-			
-			jQuery.ajax({
-				url: "{{ url('admin/add-to-list') }}",
-				method: 'post',
-				data: {
-				"_token": "{{ csrf_token() }}",
-					product_id: product_id,
-					//option_id: option_id
-				},
-				success: function(response) {
-					$('#product_list').append(response);
-					console.log(response);
-					var grand_total = $('#grand_total').html();
-					grand_total = parseFloat(grand_total);
-
-					var retail_price = $('#btn_' + product_id).attr('data-retail-price');
-					console.log(retail_price);
-
-					var subtotal = retail_price * 1;
-
-					grand_total = grand_total + subtotal;
-
-					$('#grand_total').html(grand_total);
-				}
-			});
-		});
-
-		
-	});
+                console.log('Grand Total => ' + grand_total);
 
 
+                grand_total = grand_total - difference;
+                $('#grand_total').html(grand_total);
+
+                console.log('Grand Total => ' + grand_total);
+
+                $('#quantity_' + product_id).val(quantity);
+                $('#subtotal_' + product_id).html(subtotal);
+                return false;
+            }
+
+            jQuery.ajax({
+                url: "{{ url('admin/add-to-list') }}",
+                method: 'post',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    product_id: product_id,
+                    //option_id: option_id
+                },
+                success: function(response) {
+                    $('#product_list').append(response);
+                    console.log(response);
+                    var grand_total = $('#grand_total').html();
+                    grand_total = parseFloat(grand_total);
+
+                    var retail_price = $('#btn_' + product_id).attr('data-retail-price');
+                    console.log(retail_price);
+
+                    var subtotal = retail_price * 1;
+
+                    grand_total = grand_total + subtotal;
+
+                    $('#grand_total').html(grand_total);
+                }
+            });
+        });
 
 
+    });
 </script>
