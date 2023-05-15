@@ -41,7 +41,8 @@ class Contact extends Model
         'email',
         'notes',
         'hashKey',
-        'hashUsed'
+        'hashUsed',
+        'credit_limit'
     ];
 
     public function orders()

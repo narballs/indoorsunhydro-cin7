@@ -17,6 +17,7 @@ use App\Models\TaxClass;
 use Illuminate\Support\Facades\Auth;
 use App\User;
 use Illuminate\Support\Facades\Session;
+use App\Helpers\MailHelper;
 
 class CheckoutController extends Controller
 {
@@ -33,13 +34,23 @@ class CheckoutController extends Controller
             return redirect('/cart/');
         }
         $contact = Contact::where('user_id', $user_id)->where('status', 1)->where('company', $selected_company)->with('states')->with('cities')->first();
+        
+        $cart_items = session()->get('cart');
+        // $credit_limit = $contact->credit_limit;
+        //dd($contact);
+        $cart_total = 0;
+        foreach($cart_items as $cart_item) {
+            $row_price = $cart_item['quantity'] * $cart_item['price'];
+            $cart_total = $row_price + $cart_total;
+        }
       
-
-
+        // if ($credit_limit < $cart_total) {
+        //     MailHelper::sendMailNotification('emails.admin-order-received', $data);
+        // }
         if ($contact) {
             $isApproved = $contact->contact_id;
         }
-        
+      
         if ($contact->status == 0) {
             Session::flash('message', "Your account is inactive can't proceed to checkout, however you can make carts , please contact support to activate the account");
             return redirect('/cart/');

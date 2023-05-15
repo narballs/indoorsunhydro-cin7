@@ -94,6 +94,8 @@ class SyncSuppliers extends Command
                     $contact->fax = $api_contact->fax;
                     $contact->website = $api_contact->website;
                     $contact->email = $api_contact->email;
+                    $contact->credit_limit = $api_contact->creditLimit;
+                    $contact->balance_owing = $api_contact->balanceOwing;
                     $contact->notes = $api_contact->notes;
                     $contact->save();
 
@@ -115,7 +117,8 @@ class SyncSuppliers extends Command
                                 $secondary_contact->mobile = $apiSecondaryContact->mobile;
                                 $secondary_contact->phone = $apiSecondaryContact->phone;
                                 $secondary_contact->priceColumn = $api_contact->priceColumn;
-                                //$secondary_contact->status = 1;
+                                $secondary_contact->credit_limit = $api_contact->creditLimit;
+                                $secondary_contact->balance_owing = $api_contact->balanceOwing;
                                 if ($secondary_contact->status == 0) {
                                     $secondary_contact->status = 0;
                                 }
@@ -140,6 +143,8 @@ class SyncSuppliers extends Command
                                 $secondary_contact->mobile = $apiSecondaryContact->mobile;
                                 $secondary_contact->phone = $apiSecondaryContact->phone;
                                 $secondary_contact->priceColumn = $api_contact->priceColumn;
+                                $secondary->contact->credit_limit = $api_contact->creditLimit;
+                                $secondary->contact->balance_owing = $api_contact->balanceOwing;
                                 $secondary_contact->status = 1;
                                 $secondary_contact->save();
                             }
@@ -183,6 +188,8 @@ class SyncSuppliers extends Command
                         'fax' => $api_contact->fax,
                         'website' => $api_contact->website,
                         'email' => $api_contact->email,
+                        'credit_limit' => $api_contact->creditLimit,
+                        'balance_owing' =>$api_contact->balanceOwing,
                         'notes' => $api_contact->notes 
                     ]);
                     if ($api_contact->secondaryContacts) {
@@ -200,6 +207,8 @@ class SyncSuppliers extends Command
                                 'phone' => $secondaryContact->phone,
                                 'mobile' => $secondaryContact->mobile,
                                 'email' => $secondaryContact->email,
+                                'credit_limit' => $api_contact->creditLimit
+
                             ]);
                             $secondaryContact->save();
                         }
