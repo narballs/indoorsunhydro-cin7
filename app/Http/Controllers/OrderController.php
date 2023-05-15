@@ -173,17 +173,32 @@ class OrderController extends Controller
 
                 if (!empty($users_with_role_admin)) {
                     foreach ($users_with_role_admin as $role_admin) {
-                        $subject = '';
+                        $subject = 'New order received';
                         $adminTemplate = 'emails.admin-order-received';
                         $data['email'] = $role_admin->email;
 
                         MailHelper::sendMailNotification('emails.admin-order-received', $data);
+                        echo 'this is admin Email';
                     }
                 }
+                $credit_limit = $contact->credit_limit;
+                $parent_email = Contact::where('contact_id', $active_contact_id)->first();
 
-                $data['subject'] = 'Your order has been received';
-                $data['email'] = $email;
+                if ($credit_limit < $cart_total) {
+                    if ($is_primary == null) {
+                        $data['subject'] = 'Credit limit reached';
+                        $data['email'] = $parent_email->email;
+              
+                        MailHelper::sendMailNotification('emails.credit-limit-reached', $data);
+                        echo 'this is primary account Eamil';
+                    }
+                }
+                else {
+                    $data['subject'] = 'Your order has been received';
+                    $data['email'] = $email;
+                }
                 MailHelper::sendMailNotification('emails.admin-order-received', $data);
+
 
                 $email_sent_to_users = [];
                 $user = User::where('id',  Auth::id())->first();

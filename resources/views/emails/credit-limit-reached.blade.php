@@ -66,10 +66,6 @@
             <div style="width: 100%">
                 <div class="card border-0 thank-you-page-background-img" style="background-color: #F5F5F5 !important;
                 border-radius: 10px !important;
-                /* background-image: url('https://stage.indoorsunhydro.com/theme/img/thank-background.png') !important; */
-                /* background-repeat: no-repeat !important; */
-                /* width: 100% !important; */
-                /* background-size: 100% !important; */
                 padding-bottom: 146px !important;
                 padding-top: 92px !important;">
                     <div class="row" style="padding-bottom: 77px !important;">
@@ -118,7 +114,7 @@
                                                     letter-spacing: 0.545em;
                                                     color: #575757;
                                                     ">Thank you for your order</p>
-                                                    <h1> This is Admin MAin Account Email </h1>
+                                                    <h1>this is Secondary Primary Account  Email </h1>
                                                 </div>
                                                 {{-- <div class="col-md-5 pt-5" style="width: width: 50%;">
                                                     <div class="pt-5" style="padding-top: 35px!important;
@@ -162,13 +158,7 @@
                                                     letter-spacing: 0.025em;
                                                     color: #000000;">Hey
                                                         {{$addresses['billing_address']['firstName']}},<br>
-                                                        Thank you for your purchase! This email is to confirm your order
-                                                        with IndoorSunHydro,<br>
-                                                        This order will be delivered to you within 2 to 3 working days
-                                                        Registered Courier.
-                                                        We <br>will send you another email with your shipment tracking
-                                                        details as soon as we ship your
-                                                        order.</p>
+                                                 </p> Order exceeded the credit limit please review and perform required action.
                                                 </div>
                                                 <div class="mt-5" style="margin-top: 50px !important;">
                                                     <div style="display: flex;">
@@ -294,6 +284,7 @@
                                                 </div>
                                             </div>
                                         </div>
+
                                         <div class=" col-md-5 thnak-you-page-box-billing-address mt-5" style="    width: 31%;
                                             background: #fbfbfb;
                                             border-radius: 10px;
