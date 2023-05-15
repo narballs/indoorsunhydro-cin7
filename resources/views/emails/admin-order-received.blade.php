@@ -118,7 +118,6 @@
                                                     letter-spacing: 0.545em;
                                                     color: #575757;
                                                     ">Thank you for your order</p>
-                                                    <h1> This is Admin MAin Account Email </h1>
                                                 </div>
                                                 {{-- <div class="col-md-5 pt-5" style="width: width: 50%;">
                                                     <div class="pt-5" style="padding-top: 35px!important;

@@ -176,9 +176,8 @@ class OrderController extends Controller
                         $subject = 'New order received';
                         $adminTemplate = 'emails.admin-order-received';
                         $data['email'] = $role_admin->email;
-
                         MailHelper::sendMailNotification('emails.admin-order-received', $data);
-                        echo 'this is admin Email';
+
                     }
                 }
                 $credit_limit = $contact->credit_limit;
@@ -190,7 +189,6 @@ class OrderController extends Controller
                         $data['email'] = $parent_email->email;
               
                         MailHelper::sendMailNotification('emails.credit-limit-reached', $data);
-                        echo 'this is primary account Eamil';
                     }
                 }
                 else {
