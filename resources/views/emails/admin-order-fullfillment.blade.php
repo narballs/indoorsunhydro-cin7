@@ -43,6 +43,7 @@
                     <div style="margin-top:100px; border-bottom: 1px solid gray">
                         <h2>Order Fullfilled</h2>
                     </div>
+                    <br><br>
                 </td>
             </tr>
             <br>
