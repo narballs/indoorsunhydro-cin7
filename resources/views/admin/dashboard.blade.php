@@ -22,7 +22,7 @@
                         <div class="col-md-12 mt-4" id="div_message"></div>
                     </div>
 
-                    
+
                 </div>
             </div>
         </div>
@@ -35,10 +35,9 @@
     <link rel="stylesheet" href="{{ asset('/css/admin_custom.css') }}">
     <link href="https://fonts.cdnfonts.com/css/poppins" rel="stylesheet">
 @endsection
-
 @section('js')
     <script>
-        $( document ).ready(function() {
+        $(document).ready(function() {
             $('#div_import_contacts').hide();
 
             $('body').on('click', '.btn-import-contacts', function() {
@@ -47,23 +46,24 @@
                 $('#div_import_contacts').show();
                 $('#div_message').html('Importing Contacts... Please do not close this window.');
 
-                
-            $.ajax({
-				url: "{{ url('admin/commands/import_contacts') }}",
-				method: 'get',
-				data: {},
-				success: function(response) {
-					btn.prop('disabled', false);
-                    $('#div_import_contacts').hide();
 
-                    if (response.status == 'success') {
-                        $('#div_message').html('<div class="alert alert-success">' + response.message + '</div>');
+                $.ajax({
+                    url: "{{ url('admin/commands/import_contacts') }}",
+                    method: 'get',
+                    data: {},
+                    success: function(response) {
+                        btn.prop('disabled', false);
+                        $('#div_import_contacts').hide();
+
+                        if (response.status == 'success') {
+                            $('#div_message').html('<div class="alert alert-success">' +
+                                response.message + '</div>');
+                        } else {
+                            $('#div_message').html('<div class="alert alert-danger">' + response
+                                .message + '</div>');
+                        }
                     }
-                    else {
-                        $('#div_message').html('<div class="alert alert-danger">' + response.message + '</div>');
-                    }
-				}
-			});
+                });
 
             });
         });

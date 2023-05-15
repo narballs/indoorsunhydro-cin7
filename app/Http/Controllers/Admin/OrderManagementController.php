@@ -448,20 +448,34 @@ class OrderManagementController extends Controller
         ]);
     }
 
-    public function check_order_status(Request $request) {
+    public function check_order_status(Request $request)
+    {
         sleep(10);
         $order = ApiOrder::where('id', $request->order_id)->first();
         //dd($order->order_id);
         if ($order->order_id != null) {
             $msg = 'Order fullfilled successfully';
-        }
-        else {
-             $msg = 'Order fullfilled failed please try later';
+        } else {
+            $msg = 'Order fullfilled failed please try later';
         }
         return response()->json([
             'status' => $msg
         ]);
+    }
+    // destroy order 
 
-       
+    public function destroy(Request $request)
+    {
+        $order_id = $request->id;
+        $api_order_id = ApiOrder::where('id', $order_id)->first();
+        $api_order_item = ApiOrderItem::where('order_id', $api_order_id->id)->get();
+        foreach ($api_order_item as $item) {
+            $item->delete();
+        }
+        ApiOrder::find($order_id)->delete();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Order deleted successfully ! ',
+        ]);
     }
 }

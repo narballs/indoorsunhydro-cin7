@@ -1,11 +1,7 @@
 @extends('adminlte::page')
-
 @section('title', 'Dashboard')
-
 @section('content_header')
-
 @stop
-
 @section('content')
     <div class="table-wrapper">
         <div class="table-title">
@@ -57,73 +53,72 @@
                     </tr>
                 </thead>
                 <tbody>
-
                     @foreach ($orders as $order)
-                        <tr>
-                            <td>{{ $order->id }}</td>
-                            <td>{{ $order->created_at->format('F ' . 'd, Y, ' . 'g:i A') }}</td>
-                            <td>
-                                @if (!empty($order->primaryId) && !empty($order->primary_contact))
-                                    <span title="Secondary Contact">{{ $order->primary_contact->firstName }}
-                                        {{ $order->primary_contact->lastName }}</span>
-                                @elseif (!empty($order->secondaryId) && !empty($order->secondary_contact))
-                                    <span title="Secondary Contact">{{ $order->secondary_contact->firstName }}
-                                        {{ $order->secondary_contact->lastName }}</span>
-                                @elseif (!empty($order->contact))
-                                    {{ $order->contact->firstName }} {{ $order->contact->lastName }}
-                                @endif
-                            </td>
-                            <td>
-                                @if (!empty($order->primaryId) && !empty($order->primary_contact))
-                                    <span title="Secondary Contact">{{ $order->primary_contact->email }}</span>
-                                @elseif (!empty($order->secondaryId) && !empty($order->secondary_contact))
-                                    <span title="Secondary Contact">{{ $order->secondary_contact->email }}</span>
-                                @elseif (!empty($order->contact))
-                                    {{ $order->contact->email }} {{ $order->contact->lastName }}
-                                @endif
-                            </td>
-                            <td>
-                                @if ($order->contact)
-                                    {{ $order->contact->email }}
-                                @endif
-                            </td>
-                            <td>{{ $order->reference }}</td>
-                            <td>${{ $order->total }}</td>
-                            <td>
-                                @if ($order->contact)
-                                    @if ($order->contact->company)
-                                        {{ $order->contact->company }}
+                        @if (empty($order))
+                            <tr>
+                                <td>
+                                    <div class="alert alert-danger">No Orders Found</div>
+                                </td>
+                            </tr>
+                        @else
+                            <tr id="row-{{ $order->id }}">
+                                <td>{{ $order->id }}</td>
+                                <td>{{ $order->created_at->format('F ' . 'd, Y, ' . 'g:i A') }}</td>
+                                <td>
+                                    @if (!empty($order->primaryId) && !empty($order->primary_contact))
+                                        <span title="Secondary Contact">{{ $order->primary_contact->firstName }}
+                                            {{ $order->primary_contact->lastName }}</span>
+                                    @elseif (!empty($order->secondaryId) && !empty($order->secondary_contact))
+                                        <span title="Secondary Contact">{{ $order->secondary_contact->firstName }}
+                                            {{ $order->secondary_contact->lastName }}</span>
+                                    @elseif (!empty($order->contact))
+                                        {{ $order->contact->firstName }} {{ $order->contact->lastName }}
                                     @endif
-                                @endif
-                            </td>
-                            {{-- <td>
-                                @if (!empty($order->primaryId) && !empty($order->primary_contact))
-                                    {{ $order->primary_contact->company }}
-                                @elseif (!empty($order->secondaryId) && !empty($order->secondary_contact))
-                                    {{ $order->secondary_contact->company }}
-                                @elseif (!empty($order->contact))
-                                    {{ $order->contact->company }}
-                                @endif
-                            </td> --}}
-                            <td>
-                                @if ($order->isApproved == 0)
-                                    <span class="badge badge-warning">New</span>
-                                @elseif ($order->isApproved == 1)
-                                    <span class="badge badge-success">Fullfilled</span>
-                                @elseif ($order->isApproved == 2)
-                                    <span class="badge badge-danger">Cancelled</span>
-                                @endif
-                            </td>
-                            <td>{{ $order->paymentTerms }}</td>
-                            <td>
-                                <a href="{{ url('admin/order-detail/' . $order->id) }}" class="view" title=""
-                                    data-toggle="tooltip" data-original-title="View"><i class="fas fa-eye"></i></a>
-                                <a href="#" class="edit" title="" data-toggle="tooltip"
-                                    data-original-title="Edit"><i class="fas fa-pen"></i></a>
-                                <a href="#" class="delete" title="" data-toggle="tooltip"
-                                    data-original-title="Delete"><i class="fas fa-trash-alt"></i></a>
-                            </td>
-                        </tr>
+                                </td>
+                                <td>
+                                    @if (!empty($order->primaryId) && !empty($order->primary_contact))
+                                        <span title="Secondary Contact">{{ $order->primary_contact->email }}</span>
+                                    @elseif (!empty($order->secondaryId) && !empty($order->secondary_contact))
+                                        <span title="Secondary Contact">{{ $order->secondary_contact->email }}</span>
+                                    @elseif (!empty($order->contact))
+                                        {{ $order->contact->email }} {{ $order->contact->lastName }}
+                                    @endif
+                                </td>
+                                <td>
+                                    @if ($order->contact)
+                                        {{ $order->contact->email }}
+                                    @endif
+                                </td>
+                                <td>{{ $order->reference }}</td>
+                                <td>${{ $order->total }}</td>
+                                <td>
+                                    @if ($order->contact)
+                                        @if ($order->contact->company)
+                                            {{ $order->contact->company }}
+                                        @endif
+                                    @endif
+                                </td>
+                                <td>
+                                    @if ($order->isApproved == 0)
+                                        <span class="badge badge-warning">New</span>
+                                    @elseif ($order->isApproved == 1)
+                                        <span class="badge badge-success">Fullfilled</span>
+                                    @elseif ($order->isApproved == 2)
+                                        <span class="badge badge-danger">Cancelled</span>
+                                    @endif
+                                </td>
+                                <td>{{ $order->paymentTerms }}</td>
+                                <td>
+                                    <a href="{{ url('admin/order-detail/' . $order->id) }}" class="view" title=""
+                                        data-toggle="tooltip" data-original-title="View"><i class="fas fa-eye"></i></a>
+                                    <a href="#" class="edit" title="" data-toggle="tooltip"
+                                        data-original-title="Edit"><i class="fas fa-pen"></i></a>
+                                    <a href="#" class="delete deleteIcon" id="{{ $order->id }}" title=""
+                                        data-toggle="tooltip" data-original-title="Delete"><i
+                                            class="fas fa-trash-alt"></i></a>
+                                </td>
+                            </tr>
+                        @endif
                     @endforeach
                 </tbody>
             </table>
@@ -189,4 +184,41 @@
             window.location.href = basic_url;
         }
     </script>
+    <script>
+        // delete employee ajax request
+        $(document).on('click', '.deleteIcon', function(e) {
+            e.preventDefault();
+            var id = $(this).attr('id');
+            let csrf = '{{ csrf_token() }}';
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't delete this order!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        url: '{{ route('admin.order.delete') }}',
+                        method: 'delete',
+                        data: {
+                            id: id,
+                            _token: csrf
+                        },
+                        success: function(response) {
+                            Swal.fire(
+                                'Deleted!',
+                                'Your order has been deleted.',
+                                'success'
+                            )
+                            $('#row-' + id).remove();
+                        }
+                    });
+                }
+            })
+        });
+    </script>
 @stop
+@section('plugins.Sweetalert2', true);
