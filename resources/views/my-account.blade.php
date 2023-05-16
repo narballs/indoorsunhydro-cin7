@@ -162,7 +162,7 @@
 												<span
 													class="ms-1 d-none d-sm-inline  fs-5 ms-3 mt-1 ml-0 pl-0 nav-items-link"
 													onclick="wishLists()">
-													Whishlists
+													Favourites
 												</span>
 											</div>
 										</div>
@@ -393,14 +393,14 @@
 							<div class="col-md-8 border-bottom border-4 d-flex pb-4 p-0 bg-white">
 								<img src="/theme/img/heartfilled.png" style="margin: 5px 3px 0px 9px;" width="28px"
 									height="28px">
-								<span class="pt-1 my-account-content-heading">Whishlists</span>
+								<span class="pt-1 my-account-content-heading">Favourites</span>
 							</div>
 							<div class="col-md-4 border-bottom" style="    padding-left: 151px;">
 								<button class="btn btn-outline-success" data-bs-toggle="modal"
 									data-bs-target="#exampleModal">Create List</button>
 							</div>
 
-							<div class="col-md-8 bg-light m-auto rounded-end pt-3 pb-3" style="" id="wishlist_content">
+							<div class="col-md-5 bg-light m-auto rounded-end pt-3 pb-3" style="" id="wishlist_content">
 
 							</div>
 						</div>
@@ -1044,56 +1044,57 @@
 					data: {
 					},
 				        success : function (images) {
+				        	console.log(images);
 				        	$('#wishlist_content').html(images);
-				        	return;
-				        	console.log(images[1]);
-								listitems += '<div class="container p-0">';
-								    listitems +=  '<header class="text-center">'+
-								        	'<h1>My Favourites</h1>'+
-								    		'</header>'+
+				   //      	return;
+				   //      	console.log(images[1]);
+							// 	listitems += '<div class="container p-0">';
+							// 	    listitems +=  '<header class="text-center">'+
+							// 	        	'<h1>My Favourites</h1>'+
+							// 	    		'</header>'+
 						
-									'<div class="row">'+
-										  '<div class="col-md-8 col-sm-12 co-xs-12 gal-item">'+
-											   	'<div class="row h-50">'+
-													  '<div class="col-md-12 col-sm-12 co-xs-12 gal-item">'+
-																'<div class="box buy-list-box">'+
-															 '<img src="' + images[0] + '" class="img-ht img-fluid rounded">'+
-																'</div>'+
-														'</div>'+
-												'</div>'+
+							// 		'<div class="row">'+
+							// 			  '<div class="col-md-8 col-sm-12 co-xs-12 gal-item">'+
+							// 				   	'<div class="row h-50">'+
+							// 						  '<div class="col-md-12 col-sm-12 co-xs-12 gal-item">'+
+							// 									'<div class="box buy-list-box">'+
+							// 								 '<img src="' + images[0] + '" class="img-ht img-fluid rounded">'+
+							// 									'</div>'+
+							// 							'</div>'+
+							// 					'</div>'+
 										  
-										    '<div class="row h-50 mt-3">'+
-													 '<div class="col-md-6 col-sm-6 co-xs-12 gal-item pt-0">'+
-													  '<div class="box buy-list-box">'+
-														'<img src="http://fakeimg.pl/748x177/" class="img-ht img-fluid rounded">'+
-													'</div>'+
-													'</div>'+
+							// 			    '<div class="row h-50 mt-3">'+
+							// 						 '<div class="col-md-6 col-sm-6 co-xs-12 gal-item pt-0">'+
+							// 						  '<div class="box buy-list-box">'+
+							// 							'<img src="http://fakeimg.pl/748x177/" class="img-ht img-fluid rounded">'+
+							// 						'</div>'+
+							// 						'</div>'+
 
-													'<div class="col-md-6 col-sm-6 co-xs-12 gal-item pt-0">'+
-													 '<div class="box buy-list-box">'+
-														'<img src="http://fakeimg.pl/371x370/" class="img-ht img-fluid rounded">'+
-													'</div>'+
-													'</div>'+
-									            '</div>'+
-									      '</div>'+
+							// 						'<div class="col-md-6 col-sm-6 co-xs-12 gal-item pt-0">'+
+							// 						 '<div class="box buy-list-box">'+
+							// 							'<img src="http://fakeimg.pl/371x370/" class="img-ht img-fluid rounded">'+
+							// 						'</div>'+
+							// 						'</div>'+
+							// 		            '</div>'+
+							// 		      '</div>'+
 
-								           '<div class="col-md-4 col-sm-6 co-xs-12 gal-item">'+
-											   '<div class="col-md-12 col-sm-6 co-xs-12 gal-item h-25 pl-0 pr-0">'+
-												'<div class="box buy-list-box">'+
-													'<img src="http://fakeimg.pl/748x177/" class="img-ht img-fluid rounded">'+
-												'</div>'+
-												'</div>'+
+							// 	           '<div class="col-md-4 col-sm-6 co-xs-12 gal-item">'+
+							// 				   '<div class="col-md-12 col-sm-6 co-xs-12 gal-item h-25 pl-0 pr-0">'+
+							// 					'<div class="box buy-list-box">'+
+							// 						'<img src="http://fakeimg.pl/748x177/" class="img-ht img-fluid rounded">'+
+							// 					'</div>'+
+							// 					'</div>'+
 
-												  '<div class="col-md-12 col-sm-6 co-xs-12 gal-item h-76 p-0">'+
-												   '<div class="box buy-list-box">'+
-													'<img src="http://fakeimg.pl/748x177/" class="img-ht img-fluid rounded">'+
-												'</div>'+
-												'</div>'+
-								            '</div>'+
-									'</div>'+
-								'<br/>'+
-							'</div>';
-							$('#wishlist_content').html(listitems);
+							// 					  '<div class="col-md-12 col-sm-6 co-xs-12 gal-item h-76 p-0">'+
+							// 					   '<div class="box buy-list-box">'+
+							// 						'<img src="http://fakeimg.pl/748x177/" class="img-ht img-fluid rounded">'+
+							// 					'</div>'+
+							// 					'</div>'+
+							// 	            '</div>'+
+							// 		'</div>'+
+							// 	'<br/>'+
+							// '</div>';
+							// $('#wishlist_content').html(listitems);
 				}});
 			}
 

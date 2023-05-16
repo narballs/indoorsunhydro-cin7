@@ -1,19 +1,20 @@
-<!-- <button type="button" class="btn btn-lg btn-danger" 
-        data-toggle="popover" title="Popover title" onclick="pop()"
-        data-content="And here's some amazing content. It's very engaging. Right?">
-     Click to toggle popover
-</button> -->
-<?php //dd($product->images);?>
 <div class="col-sm-12 col-md-6 col-lg-3 d-flex align-self-stretch mt-3 mb-3">
     <div class="card shadow-sm mb-4 w-100 h-100">
         @if($product->images != '')
 
-        <a style="width:20px !important;" href="#" data-toggle="popover-click" class="subscribe">
+        <a style="width:20px !important;" href="#"  class="subscribe">
             <i class="fa-solid fa-heart" onclick="addToList('{{$product->product_id}}', '{{$option->option_id}}')"
                 id="{{$option->option_id}}" data-toggle="popover"
                 onclick="addToList('{{$product->product_id}}', '{{$option->option_id}}')"></i>
 
         </a>
+
+   <!--      <a style="width:20px !important;" href="#" data-toggle="popover-click" class="subscribe">
+            <i class="fa-solid fa-heart" onclick="addToList('{{$product->product_id}}', '{{$option->option_id}}')"
+                id="{{$option->option_id}}" data-toggle="popover"
+                onclick="addToList('{{$product->product_id}}', '{{$option->option_id}}')"></i>
+
+        </a> -->
 
         <a href="{{ url('product-detail/'.$product->id.'/'.$option->option_id.'/'.$product->slug) }}">
             <span class="d-flex justify-content-center align-content-center">
