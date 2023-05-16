@@ -1632,11 +1632,20 @@ input[type=number] {
 }
 
 
-.cart-counter-details {
+/* .cart-counter-details {
     margin-top: -3px !important;
     font-size: 15px;
     font-weight: 400;
     font-family: 'Poppins';
+} */
+.cart-counter-details {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 30px;
+    letter-spacing: -0.006em;
+    color: #7BC533;
 }
 
 .select-comapny-top-bar {
@@ -5184,6 +5193,15 @@ select.list-dt:focus {
     align-items: center;
     letter-spacing: -0.006em;
     color: #212121;    
+}
+
+.font_style_menu {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    color: #373737;
 }
 /* order confirmation page end */
 

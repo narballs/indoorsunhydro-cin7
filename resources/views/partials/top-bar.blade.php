@@ -91,7 +91,7 @@
                                                                         href="#" id="navbarDropdown" role="button"
                                                                         data-mdb-toggle="dropdown" aria-expanded="false">
                                                                         <span class="top-header-items hover_it">
-                                                                            ({{ $session_contact_company }})</span>
+                                                                            {{ $session_contact_company }}</span>
                                                                     </a>
                                                                 @else
                                                                     <a class="select_company_hover nav-link dropdown-toggle select_company_top"
