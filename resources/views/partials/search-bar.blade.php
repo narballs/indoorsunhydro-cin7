@@ -29,7 +29,7 @@
         </div>
         <div class="col-md-3 d-flex align-items-center">
             <div style="font-family: 'Poppins';">
-                <img class="basket-icon mt-2" src="/theme/img/icons/Cart-icon.svg">
+                <img class="basket-icon mt-2" src="{{asset('/theme/img/icons/Cart-icon.svg')}}">
                 <span
                     class="cart-basket d-flex align-items-center justify-content-center float-sm-end cart-counter rounded-circle"
                     id="top_cart_quantity">
