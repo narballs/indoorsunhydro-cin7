@@ -44,8 +44,8 @@
                             </a>
                 </div>
             </div> --}}
-            <div class="col-md-4"></div>
-            <div class="col-md-7">
+            <div class="col-md-5"></div>
+            <div class="col-md-6">
                 <div class="col-md-12">
                     <div class="row mx-1">
                         <div class="col-xl-4 col-lg-3 d-flex justify-content-center">
