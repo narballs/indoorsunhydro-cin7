@@ -44,18 +44,18 @@
                             </a>
                 </div>
             </div> --}}
-            <div class="col-md-4"></div>
-            <div class="col-md-7">
+            <div class="col-md-6"></div>
+            <div class="col-md-6">
                 <div class="col-md-12">
                     <div class="row mx-1">
-                        <div class="col-xl-4 col-lg-3 d-flex justify-content-center">
+                        <div class="col-xl-3 col-lg-3 d-flex justify-content-end">
                             <div class="mt-2">
                                 @if (session('logged_in_as_another_user'))
                                     <a href="{{ url('admin/go-back') }}" class="top-bar-logout mt-3 top-header-items">Go Back</a>
                                 @endif
                             </div>
                         </div>
-                        <div class="col-xl-8 col-lg-9">
+                        <div class="col-xl-9 col-lg-9 mx-auto">
                             <a href="{{ '/user/' }}" class="text-white d-flex align-items-end">
                                 {{-- <div>
                                     <img src="/theme/img/users-icons-top-bar (2).png" class="img-fluid w-100">
