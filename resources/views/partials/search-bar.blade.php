@@ -29,7 +29,7 @@
         </div>
         <div class="col-md-3 d-flex align-items-center">
             <div style="font-family: 'Poppins';">
-                <img class="basket-icon mt-2" src="/theme/img/Bascket.png">
+                <img class="basket-icon mt-2" src="/theme/img/icons/Cart-icon.svg">
                 <span
                     class="cart-basket d-flex align-items-center justify-content-center float-sm-end cart-counter rounded-circle"
                     id="top_cart_quantity">
@@ -51,9 +51,9 @@
                     {{ $total_quantity }}
                 </span>
             </div>
-            <div>
+            <div class="d-flex align-items-center" style="flex-direction: column;">
                 <span class="mx-4 shopping_cart_text">Shopping Cart</span>
-                <a class="p-0 cart-price btn btn-secondary" data-bs-container="body" data-bs-toggle="popover"
+                <a style="margin-top: -10px;" class="p-0 cart-price btn btn-secondary" data-bs-container="body" data-bs-toggle="popover"
                     data-bs-placement="right" data-bs-content="add <strong class='text-success'>$2500.00</strong> more to your cart and get <span class='text-danger'>5% off </span>">
                     <span id="top_cart_total"><a href="{{ '/cart/' }}"  class="d-flex align-items-center ms-3" style="color: #7bc533;">
                     <span id="topbar_cart_total" class="ms-2 cart-counter-details"> ${{ number_format($grand_total, 2) }}</span>&nbsp;

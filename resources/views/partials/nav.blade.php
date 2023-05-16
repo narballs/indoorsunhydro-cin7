@@ -14,9 +14,9 @@ $categories = NavHelper::getCategories();
                 <div class="collapse navbar-collapse justify-content-center collapse show" id="navbarNavDarkDropdown">
                     <ul class="navbar-nav d-flex">
                         <li class="nav-item dropdown mx-4">
-                            <a class="nav-link dropdown-toggle product-mega-menu" href="#"
+                            <a class="nav-link dropdown-toggle product-mega-menu font_style_menu" href="#"
                                 id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown"
-                                aria-expanded="false">
+                                aria-expanded="false" >
                                 Products
                             </a>
                             <ul class="dropdown-menu  dropdown-menu-dark mt-0 pr-4 pl-4"
@@ -79,13 +79,13 @@ $categories = NavHelper::getCategories();
                 </ul>
                 </li>
                 <li class=" nav-item me-3 mx-4">
-                    <a class="nav-link text-uppercase nav-item-links " href="#">
+                    <a class="nav-link text-uppercase nav-item-links font_style_menu" href="#">
                         About
                     </a>
                 </li>
 
                 <li class="nav-item me-4 mx-4">
-                    <a class="nav-link text-uppercase nav-item-links" href="{{ url('contact-us') }}">
+                    <a class="nav-link text-uppercase nav-item-links font_style_menu" href="{{ url('contact-us') }}">
                         Contact
                     </a>
                 </li>
