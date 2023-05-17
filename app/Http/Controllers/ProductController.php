@@ -970,6 +970,7 @@ class ProductController extends Controller
     {
         $user_id = Auth::id();
 
+
         //check if user have list already
 
         $user_lists = BuyList::where('user_id', $user_id)->exists();
@@ -1001,7 +1002,8 @@ class ProductController extends Controller
     public function getWishlists()
     {
         $user_id = Auth::id();
-        $lists = BuyList::where('user_id', $user_id)->where('type', 'wishlist')->with('list_products.product.options')->get();
+        $lists = BuyList::where('user_id', $user_id)->with('list_products.product.options.price')->get();
+        
 
         //$list_title = $list->title;
         $images = [];
@@ -1031,7 +1033,6 @@ class ProductController extends Controller
     {
         $user_id = Auth::id();
         $lists = BuyList::where('user_id', $user_id)->where('type', 'wishlist')->get();
-        dd($lists);
         return response()->json([
             'msg' => 'success',
             'lists' => $lists
