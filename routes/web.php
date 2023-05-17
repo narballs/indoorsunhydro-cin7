@@ -94,6 +94,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('admin/order/create', [OrderManagementController::class, 'create'])->name('admin.order.create');
     Route::get('/admin/order-detail/{id}', [OrderManagementController::class, 'show'])->name('admin.order.detail');
     Route::post('admin/order-comments', [OrderManagementController::class, 'addComments'])->name('admin.order.comments');
+    Route::delete('admin/order/delete', [OrderManagementController::class, 'destroy'])->name('admin.order.delete');
     Route::post('admin/order-status', [OrderManagementController::class, 'updateStatus'])->name('update.order.status');
     Route::get('admin/shipping-methods', [ShippingMethodController::class, 'index'])->name('admin.shipping-methods');
     Route::get('admin/shipping-method/{id}', [ShippingMethodController::class, 'edit'])->name('admin.shipping-method');
@@ -155,7 +156,7 @@ Route::post('/login/', [UserController::class, 'process_login'])->name('login');
 Route::post('/user-contact/', [UserController::class, 'save_contact'])->name('save_contact');
 Route::post('/update-contact/', [UserController::class, 'update_contact'])->name('update_contact');
 Route::get('/my-account/', [UserController::class, 'my_account'])->name('my_account');
-Route::get('select-companiens-to-order', [UserController::class,'chooise_companie']);
+Route::get('select-companiens-to-order', [UserController::class, 'chooise_companie']);
 Route::get('/my-qoutes/', [UserController::class, 'my_qoutes'])->name('my_qoutes');
 Route::get('/my-qoutes-details/{id}', [UserController::class, 'my_qoutes_details'])->name('my_qoutes_details');
 Route::get('/my-qoute-edit/{id}', [UserController::class, 'my_qoute_edit'])->name('my_qoute_edit');
