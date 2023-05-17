@@ -25,7 +25,7 @@
     }
 </style>
 <div class="bg-light">
-<<<<<<< HEAD
+
 	<div class="mb-5">
 		<p style="line-height: 95px;"
 			class="fw-bold fs-2 product-btn my-auto border-0 text-white text-center align-middle">
