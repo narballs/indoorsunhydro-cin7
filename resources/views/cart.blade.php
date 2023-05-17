@@ -431,7 +431,7 @@
                                                     <td>
                                                         <div class="d-flex">
                                                             <span class="">
-                                                                <img src="theme/img/pricing_tag.png" width=" 22px">
+                                                                <img src="/theme/img/pricing_tag.png" width=" 22px">
                                                             </span>
                                                             <span>
                                                                 <p class="cart-total-checkout-page ps-3">Total</p>
@@ -654,7 +654,7 @@
                                                 <td>
                                                     <div class="d-flex">
                                                         <span class="">
-                                                            <img src="theme/img/pricing_tag.png" width=" 22px">
+                                                            <img src="/theme/img/pricing_tag.png" width=" 22px">
                                                         </span>
                                                         <span>
                                                             <p class="cart-total-checkout-page ps-3">Total</p>
