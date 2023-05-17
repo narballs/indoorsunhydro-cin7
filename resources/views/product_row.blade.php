@@ -110,7 +110,7 @@
 					onclick="addToList('{{$product->product_id}}', '{{$option->option_id}}')">Add to wishlist</button> -->
 				<button class="ajaxSubmit button-cards col w-100 mt-2" type="submit" style="max-height: 46px;"
 					id="ajaxSubmit_{{$product->id}}"
-					onclick="updateCart('{{$product->id}}', '{{$option->option_id}}')">Add to cart {{$option->option_id}}</button>
+					onclick="updateCart('{{$product->id}}', '{{$option->option_id}}')">Add to cart</button>
 				@else
 				<button class="ajaxSubmit text-white bg-danger bg-gradient button-cards col w-100 autocomplete=off"
 					tabindex="-1" type="submit" style="max-height: 46px;" id="ajaxSubmit_{{$product->id}}" disabled
@@ -194,6 +194,7 @@
 			}
 
 		function addToList(product_id, option_id, status) {
+		
 			var list_id = $("input[name='list_id']:checked").val();
 			var option_id = option_id;
 			$.ajax({
