@@ -336,10 +336,12 @@ $cart_price = 0;
 <!--Mobile View -->
 <!-- MultiStep Form  -->
 <div class="container-fluid mobile-view">
+    
     <div class="row justify-content-center mt-0">
         <div class="col-11 col-sm-9 col-md-7 col-lg-6 text-center p-0">
             <div class="card border-0 px-0">
                 <div class="row">
+                    
                     <div class="col-md-12 mx-0">
                         <div id="msform">
                             <!-- progressbar -->
@@ -356,7 +358,9 @@ $cart_price = 0;
                                         <div class="card-body p-0 m-0">
                                             <div class="form-signup-secondary">
                                                 <div class="user-info">
+                                                    
                                                     <div class="row">
+                                                        
                                                         <div class="col-md-6">
                                                             <label class="label mt-5 fw-bold">First
                                                                 Name</label><span
@@ -442,25 +446,27 @@ $cart_price = 0;
                                                                 id="emailAddress" name="password"
                                                                 class="form-control  company-info fontAwesome ">
                                                         </div>
-                                                        <div class="d-flex justify-content-center align-items-center">
-                                                            <div>
-                                                                <img class="img-fluid coupon-code-modal-btn"
-                                                                    src="/theme/img/modal-icon1.png" alt="">
-                                                            </div>
-                                                            <button type="button"
-                                                                class="btn btn-primary fw-blod coupon-code-modal-btn ps-0"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#staticBackdrop">
-                                                                applay coupon
-                                                            </button>
-                                                        </div>
+                                                        
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <input type="button" name="next" class="next action-button" value="Next Step" />
+                                <button class="next action-button btn btn-success w-100 text-white mt-4" style="height:50px;font-size: 14px; font-family:'Poppins'; font-weight:bold;background:#7bc533 !important;border: none !important;padding: 10px 5px; border-radius:0px "> NEXT STEP </button>
+                                <div class="d-flex justify-content-center align-items-center">
+                                    <div>
+                                        <img class="img-fluid coupon-code-modal-btn"
+                                            src="/theme/img/modal-icon1.png" alt="">
+                                    </div>
+                                    <button type="button"
+                                        class="btn btn-primary fw-blod coupon-code-modal-btn ps-0"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#staticBackdrop">
+                                        applay coupon
+                                    </button>
+                                </div>
+                                {{-- <input type="button" name="next" class="next action-button" value="Next Step" /> --}}
                             </fieldset>
                             <fieldset>
                                 <div class="form-card">

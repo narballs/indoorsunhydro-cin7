@@ -142,14 +142,15 @@ $categories = NavHelper::getCategories();
         </div>
         <div class="p-0">
             <nav class="navbar navbar-expand-lg navbar-light p-0">
-                <div class="container-fluid">
+                <div class="container-fluid mobile_nav_items" style="">
                     <a class="navbar-brand" href="/">
-                        <img class="top-img" src="/theme/img/indoor_sun.png">
+                        <img class="top-img mx-0" src="/theme/img/indoor_sun.png" >
                     </a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    <button style="" class="navbar-toggler p-2 mr-2 text-white text-uppercase mobile_nav_btn mt-1" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
+                        {{-- <span class="navbar-toggler-icon"></span> --}}
+                        <i class="fa fa-bars" aria-hidden="true"></i> Menu
                     </button>
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav d-flex">
@@ -351,10 +352,7 @@ $categories = NavHelper::getCategories();
 {{-- ipad view start --}}
 <div class="container-fluid ipad-view p-0 m-0">
     <div class="row">
-        <div class="bg-dark"
-            style="font-family: 'Poppins'; font-size:14px;     padding-left: 252px;
-			height: 62px;
-			padding-top: 11px;">
+        <div class="bg-dark ipad_second_row" style="">
             <img class="basket-icon" src="/theme/img/Bascket.png">
             <span
                 class="cart-basket d-flex align-items-center justify-content-center float-sm-end cart-counter rounded-circle"
@@ -393,13 +391,14 @@ $categories = NavHelper::getCategories();
         </div>
         <div>
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <div class="container-fluid">
+                <div class="container-fluid ipad_nav_items">
                     <a class="navbar-brand" href="/"><img class="top-img" src="/theme/img/indoor_sun.png"
                             ;></a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    <button style="" class="navbar-toggler p-2 mt-2 text-white text-uppercase ipad_menu_btn" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
+                        {{-- <span class="navbar-toggler-icon"></span> --}}
+                        <i class="fa fa-bars" aria-hidden="true"></i> Menu
                     </button>
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav d-flex">
