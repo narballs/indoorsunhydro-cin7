@@ -46,15 +46,15 @@
 @endforeach
 @foreach($lists as $list)
     @foreach ($list->list_products as $product)
+
         @foreach($product->product->options as $option)
             <div>
                 @foreach($option->price as $price)
-                dd({{Session::get('contact_id')}}
-                    <!--  {{dd($price->retailUSD)}} -->
+                
                     <table class="table">
                         <tbody>
-                            <tr style="border-bottom :1px solid lightgray;" >
-                                <td style="width:400px; border:none;"> 
+                            <tr style="border-bottom :1px solid lightgray; " >
+                                <td style="width:400px; border:none;vertical-align: middle;"> 
                                     {{$product->product->name}}
                                 </td>
                                 <td style="border:none;"> 
@@ -64,8 +64,8 @@
                                         <img src="/theme/image_not_available.png" class="" width="50px" height="50px">
                                     @endif
                                 </td>
-                                <td style="border:none;">
-                                    ${{$product->product->retail_price}}
+                                <td style="border:none; vertical-align: middle;">
+                                    ${{$product->sub_total}}
                                 </td>
                             </tr>
                         </tbody>

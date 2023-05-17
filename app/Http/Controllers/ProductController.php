@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\Cart;
 use App\Models\ProductOption;
+use App\Models\Pricingnew;
 use Session;
 use Str;
 use App\Models\Contact;
@@ -109,7 +110,24 @@ class ProductController extends Controller
             $pricing = 'RetailUSD';
         }
 
-        $lists = BuyList::where('user_id', $user_id)->get();
+      $contact_id = session()->get('contact_id');
+
+      $user_list = BuyList::where('user_id', $user_id)
+            ->where('contact_id', $contact_id)
+            ->first();
+
+      $user_buy_list_options = [];
+
+        if (!empty($user_list)) {
+            $user_buy_list_options = ProductBuyList::where('list_id', $user_list->id)->pluck('option_id', 'option_id')->toArray();
+        }      
+
+      $lists = BuyList::where('user_id', $user_id)
+            ->where('contact_id', $contact_id)
+            ->with('list_products')
+            ->get();
+
+
         return view('categories', compact(
             'products',
             'brands',
@@ -124,7 +142,9 @@ class ProductController extends Controller
             'lists',
             'childerens',
             'childeren_id',
-            'pricing'
+            'pricing',
+            'user_buy_list_options'
+            // 'product_buy_list'
         ));
     }
 
@@ -972,27 +992,64 @@ class ProductController extends Controller
 
 
         //check if user have list already
+        $contact_id = session()->get('contact_id');
+        $contact =  Contact::where('contact_id', $contact_id)->orWhere('secondary_id', $contact_id)->first();
+        // dd($contact);
+        if ($contact->secondary_id) {
+            $contact =  Contact::where('secondary_id', $contact->secondary_id)->first();
+            $parent_id = $contact->parent_id;
+            $contact_pricing =  Contact::where('contact_id', $parent_id)->first();
+            $contact_pricing = $contact->priceColumn;
 
-        $user_lists = BuyList::where('user_id', $user_id)->exists();
+        } else {
+            $contact_pricing = $contact->priceColumn;
+        }
+        $prices = Pricingnew::where('option_id', $request->option_id)->pluck($contact_pricing);
+        foreach($prices as $price) {
+            $active_price = $price;
+        }
+      
+        
+        $user_lists = BuyList::where('user_id', $user_id)->where('contact_id', $contact_id)->where('title', 'My Favourites')->exists();
         if ($user_lists == false) {
             $wishlist = new BuyList();
             $wishlist->title = 'My Favourites';
             $wishlist->status = 'Public';
             $wishlist->description = 'My Favourites';
             $wishlist->user_id = $user_id;
+            $wishlist->contact_id = $contact_id;
             $wishlist->save();
             $list_id = $wishlist->id;
         } else {
-            $list = BuyList::where('title', 'My Favourites')->where('user_id', $user_id)->first();
+            $list = BuyList::where('title', 'My Favourites')->where('user_id', $user_id)->where('contact_id', $contact_id)->first();
             $list_id = $list->id;
         }
 
-        $product_buy_list = new ProductBuyList();
-        $product_buy_list->list_id = $list_id;
-        $product_buy_list->product_id = $request->product_id;
-        $product_buy_list->option_id = $request->option_id;
-        $product_buy_list->quantity = $request->quantity;
-        $product_buy_list->save();
+        $status = $request->get('status');
+        if (!empty($status)) {
+            $product_buy_list = ProductBuyList::where('list_id', $list_id)
+                ->where('product_id', $request->product_id)
+                ->where('option_id', $request->option_id)
+                ->first();
+
+            if (!empty($product_buy_list)) {
+                $product_buy_list->delete();
+            }    
+
+        }
+        else {
+            $product_buy_list = new ProductBuyList();
+            $product_buy_list->list_id = $list_id;
+            $product_buy_list->product_id = $request->product_id;
+            $product_buy_list->option_id = $request->option_id;
+            $product_buy_list->sub_total = $active_price;
+            $product_buy_list->quantity = $request->quantity;
+            $product_buy_list->save();
+        }
+
+        
+
+
         return response()->json([
             'success' => true,
             'msg' => 'List created Successully !'
@@ -1002,9 +1059,10 @@ class ProductController extends Controller
     public function getWishlists()
     {
         $user_id = Auth::id();
-        $lists = BuyList::where('user_id', $user_id)->with('list_products.product.options.price')->get();
+        $contact_id = session()->get('contact_id');
+        $lists = BuyList::where('user_id', $user_id)->where('contact_id', $contact_id )->with('list_products.product.options.price')->where('title', 'My Favourites')->get();
         
-
+        // dd($lists);
         //$list_title = $list->title;
         $images = [];
         // dd($lists);
