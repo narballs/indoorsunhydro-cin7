@@ -358,6 +358,7 @@ class UserController extends Controller
                 
                 //dd($active_qoute);
                 $companies = Contact::where('user_id', auth()->user()->id)->get();
+
                  if ($companies->count() == 1) {
                     UserHelper::switch_company($companies[0]->contact_id);
                 }
@@ -367,7 +368,12 @@ class UserController extends Controller
                 if (!empty(session()->get('cart'))) {
                     $companies = Contact::where('user_id', auth()->user()->id)->get();
                     if ($companies->count() == 1) {
-                        UserHelper::switch_company($companies[0]->contact_id);
+                        if ($companies[0]->contact_id == null) {
+                            UserHelper::switch_company($companies[0]->secondary_id);
+                        }
+                        else {
+                            UserHelper::switch_company($companies[0]->contact_id);
+                        }
                     }
                 Session::put('companies', $companies);
                     return redirect()->route('cart');
@@ -529,6 +535,7 @@ class UserController extends Controller
         Session::forget('companies');
         Session::forget('cart');
         Session::forget('logged_in_as_another_user');
+        Session::flush();
         return redirect()->route('user');
     }
 

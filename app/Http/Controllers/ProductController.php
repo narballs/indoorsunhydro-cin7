@@ -111,10 +111,10 @@ class ProductController extends Controller
         }
 
       $contact_id = session()->get('contact_id');
-
       $user_list = BuyList::where('user_id', $user_id)
             ->where('contact_id', $contact_id)
             ->first();
+
 
       $user_buy_list_options = [];
 
@@ -994,7 +994,14 @@ class ProductController extends Controller
         //check if user have list already
         $contact_id = session()->get('contact_id');
         $contact =  Contact::where('contact_id', $contact_id)->orWhere('secondary_id', $contact_id)->first();
-        // dd($contact);
+        if (empty($contact_id || $user_id)) {
+            return response()->json([
+                'success' => false,
+                'msg' => 'Please make sure you are logged in and chosen the company !'
+            ]);
+        }
+
+      
         if ($contact->secondary_id) {
             $contact =  Contact::where('secondary_id', $contact->secondary_id)->first();
             $parent_id = $contact->parent_id;
