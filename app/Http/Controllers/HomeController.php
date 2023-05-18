@@ -16,11 +16,11 @@ class HomeController extends Controller
      */
     public function index()
     {
-       //session::forget('cart_hash');
-        // session::forget('companies');
-        //session::forget('cart');
-        // $cart = session::get('cart');
-        //dd($cart);exit;
+       // session::forget('cart_hash');
+       //  session::forget('companies');
+       //  session::forget('cart');
+       //  $cart = session::get('cart');
+       
         //  exit;
         $categories = Category::orderBy('name', 'ASC')
             ->with('products')->where('is_active', 1)
