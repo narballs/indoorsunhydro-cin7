@@ -42,11 +42,7 @@ class UserController extends Controller
         $this->middleware('permission:user-delete', ['only' => ['destroy']]);
         $this->middleware('permission:user-show', ['only' => ['show']]);
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index(Request $request)
     {
         $page = $request->page;
@@ -95,7 +91,6 @@ class UserController extends Controller
                         ->orWhere('firstName', 'like', '%' . $search . '%')
                         ->orWhere('lastName', 'like', '%' . $search . '%');
                 });
-            // dd($user_query->get());
         }
 
         $data = $user_query->paginate(10);
@@ -111,11 +106,6 @@ class UserController extends Controller
             ->with('i', ($request->input('page', 1) - 1) * 5);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         $roles = Role::pluck('name', 'name')->all();
@@ -124,13 +114,6 @@ class UserController extends Controller
         ));
     }
 
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $this->validate($request, [
@@ -155,24 +138,13 @@ class UserController extends Controller
             );
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function show($id)
     {
         $user = User::find($id);
         return view('admin.users.show', compact('user'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         $this->middleware('permission:user-edit', ['only' => ['edit', 'update']]);
@@ -195,7 +167,6 @@ class UserController extends Controller
             }
         }
 
-
         return view('admin.users.edit', compact(
             'user',
             'roles',
@@ -206,13 +177,6 @@ class UserController extends Controller
         ));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
 
@@ -240,7 +204,6 @@ class UserController extends Controller
         DB::table('custom_roles')->where('user_id', $id)->delete();
 
         $user->assignRole($request->input('roles'));
-
         if (!empty($custom_company_roles)) {
             foreach ($custom_company_roles as $company_name => $custom_company_roles) {
                 foreach ($custom_company_roles as $role_id => $checked_value) {
@@ -250,31 +213,10 @@ class UserController extends Controller
                             'user_id' => $id,
                             'company' => $company_name
                         ]);
-
-                        // DB::table('custom_roles')->insert(
-                        //     array(
-                        //         'role_id' => $role_id,
-                        //         'user_id' => $id,
-                        //         'company' => $company_name
-                        //     )
-                        // );
                     }
                 }
             }
         }
-
-        // foreach($companies as $company) {
-        //     DB::table('custom_roles')->insert(
-        //         array(
-        //             'role_id' => 5,
-        //             'user_id' => $id,
-        //             'company' => $company
-        //         )
-        //     );
-        // }
-
-
-
 
         return redirect()->route('users.index')->with('success', 'User updated successfully');
     }
@@ -297,7 +239,6 @@ class UserController extends Controller
         return view('user-registration-second',  $data);
     }
 
-
     public function fetchCity(Request $request)
     {
         $data['cities'] = UsCity::where("state_id", $request->state_id)->get(["city", "id"]);
@@ -306,7 +247,6 @@ class UserController extends Controller
 
     public function process_login(Request $request)
     {
-
         $request->validate([
             'email' => 'required',
             'password' => 'required'
@@ -324,7 +264,6 @@ class UserController extends Controller
                     $cart_item->save();
                 }
             }
-
             $active_qoutes = Cart::where('user_id', $user_id)->where('is_active', 1)->get();
             foreach ($active_qoutes as $active_qoute) {
                 $cart[$active_qoute->qoute_id] = [
@@ -350,10 +289,6 @@ class UserController extends Controller
                     }
                 }
                 Session::put('companies', $companies);
-                // if ($companies->count() == 1) {
-                //     UserHelper::switch_company($companies[0]->contact_id);
-                // }
-                // Session::put('companies', $companies);
                 return redirect()->route('admin.view');
             } else {
                 $companies = Contact::where('user_id', auth()->user()->id)->get();
@@ -371,7 +306,9 @@ class UserController extends Controller
                     if ($user->is_updated == 1) {
                         $companies = Contact::where('user_id', auth()->user()->id)->get();
 
-                        if ($companies->count() == 1) {
+                        if ($companies[0]->contact_id == null) {
+                            UserHelper::switch_company($companies[0]->secondary_id);
+                        } else {
                             UserHelper::switch_company($companies[0]->contact_id);
                         }
                         Session::put('companies', $companies);
@@ -890,12 +827,7 @@ class UserController extends Controller
                 ]
             ]
         ];
-        // $secondary_contact = Contact::where('email', $request->email)->update(
-        //     [
-        //         'hashKey' => $sig,
-        //         'hashUsed' => 0,
-        //     ]
-        // );
+
         $data = [
             'email' => $request->email,
             'subject' => 'Customer Registration Invitation',
@@ -909,9 +841,6 @@ class UserController extends Controller
             'state' => 200,
             'secondary_contact' => $secondary_contact_data,
         ]);
-        // $secondary_contacts = Contact::where('parent_id', $contactId)->orderBy('id', 'desc')->get();
-
-        // return view('secondary-user', compact('secondary_contacts', 'url'));
     }
     public function delete_secondary_user(Request $request)
     {
@@ -1156,9 +1085,8 @@ class UserController extends Controller
 
             ],
         ];
-        SalesOrders::dispatch('create_order', $order)->onQueue(env('QUEUE_NAME'));
-        //$currentOrder = ApiOrder::where('id', $order_id)->first();
-
+        SalesOrders::dispatch('create_order', $order)
+            ->onQueue(env('QUEUE_NAME'));
         return response()->json(['success' => true]);
     }
 
@@ -1173,7 +1101,6 @@ class UserController extends Controller
     {
         $order = ApiOrder::where('id', $request->order_id)->with('contact')->with('apiOrderItem')->first();
         $data['email'] = $order->contact->email;
-        // $data['addresses'] = $addresses;
         $data['order'] =  $order;
         $data['content'] = 'Order Approved';
         $data['subject'] = 'Order Approved';
