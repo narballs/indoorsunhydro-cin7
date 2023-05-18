@@ -349,22 +349,31 @@ class UserController extends Controller
 
                 $companies = Contact::where('user_id', auth()->user()->id)->get();
 
-                // if ($companies->count() == 1) {
-                //     UserHelper::switch_company($companies[0]->contact_id);
-                // }
+                    if ($companies->count() == 1) {
+                        if ($companies[0]->contact_id == null) {
+                            UserHelper::switch_company($companies[0]->secondary_id);
+                             dd($companies[0]->contact_id."ddd");
+                        }
+                        else {
+                            dd($companies[0]->contact_id."kkk");
+                            UserHelper::switch_company($companies[0]->contact_id);
+                        }
+                    }
                 Session::put('companies', $companies);
                 return redirect()->route('admin.view');
                 } else {
-                    if (!empty(session()->get('cart'))) {
                     $companies = Contact::where('user_id', auth()->user()->id)->get();
-                    // if ($companies->count() == 1) {
-                    //     if ($companies[0]->contact_id == null) {
-                    //         UserHelper::switch_company($companies[0]->secondary_id);
-                    //     }
-                    //     else {
-                    //         UserHelper::switch_company($companies[0]->contact_id);
-                    //     }
-                    // }
+                     if ($companies->count() == 1) {
+                        if ($companies[0]->contact_id == null) {
+                            UserHelper::switch_company($companies[0]->secondary_id);
+                        }
+                        else {
+                            UserHelper::switch_company($companies[0]->contact_id);
+                        }
+                    }
+                if (!empty(session()->get('cart'))) {
+                    
+                   
                 Session::put('companies', $companies);
                 return redirect()->route('cart');
                 } else {
