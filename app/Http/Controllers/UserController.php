@@ -224,8 +224,8 @@ class UserController extends Controller
 
 
         $custom_company_roles = $request->custom_company_roles;
-        
-        
+
+
         $input = $request->all();
         if (!empty($input['password'])) {
             $input['password'] = Hash::make($input['password']);
@@ -250,7 +250,7 @@ class UserController extends Controller
                             'user_id' => $id,
                             'company' => $company_name
                         ]);
-                        
+
                         // DB::table('custom_roles')->insert(
                         //     array(
                         //         'role_id' => $role_id,
@@ -260,10 +260,9 @@ class UserController extends Controller
                         // );
                     }
                 }
-
             }
         }
-        
+
         // foreach($companies as $company) {
         //     DB::table('custom_roles')->insert(
         //         array(
@@ -274,7 +273,7 @@ class UserController extends Controller
         //     );
         // }
 
-        
+
 
 
         return redirect()->route('users.index')->with('success', 'User updated successfully');
@@ -320,16 +319,14 @@ class UserController extends Controller
             if ($request->session()->has('cart_hash')) {
                 $cart_hash = $request->session()->get('cart_hash');
                 $cart_items = Cart::where('cart_hash', $cart_hash)->where('is_active', 1)->where('user_id', 0)->get();
-                foreach($cart_items as $cart_item) {
+                foreach ($cart_items as $cart_item) {
                     $cart_item->user_id = $user_id;
                     $cart_item->save();
                 }
             }
-            
 
-           
             $active_qoutes = Cart::where('user_id', $user_id)->where('is_active', 1)->get();
-            foreach($active_qoutes as $active_qoute) {
+            foreach ($active_qoutes as $active_qoute) {
                 $cart[$active_qoute->qoute_id] = [
                     "product_id" => $active_qoute->product_id,
                     "name" => $active_qoute->name,
@@ -339,57 +336,50 @@ class UserController extends Controller
                     "image" => $active_qoute->image,
                     'option_id' => $active_qoute->option_id,
                     "slug" => $active_qoute->slug,
-                ]; 
+                ];
                 Session::put('cart', $cart);
-
             }
             if ($user->hasRole(['Admin'])) {
                 session()->flash('message', 'Successfully Logged in');
-
-
                 $companies = Contact::where('user_id', auth()->user()->id)->get();
-
-                    if ($companies->count() == 1) {
-                        if ($companies[0]->contact_id == null) {
-                            UserHelper::switch_company($companies[0]->secondary_id);
-                             dd($companies[0]->contact_id."ddd");
-                        }
-                        else {
-                            dd($companies[0]->contact_id."kkk");
-                            UserHelper::switch_company($companies[0]->contact_id);
-                        }
+                if ($companies->count() == 1) {
+                    if ($companies[0]->contact_id == null) {
+                        UserHelper::switch_company($companies[0]->secondary_id);
+                    } else {
+                        UserHelper::switch_company($companies[0]->contact_id);
                     }
+                }
                 Session::put('companies', $companies);
+                // if ($companies->count() == 1) {
+                //     UserHelper::switch_company($companies[0]->contact_id);
+                // }
+                // Session::put('companies', $companies);
                 return redirect()->route('admin.view');
-                } else {
-                    $companies = Contact::where('user_id', auth()->user()->id)->get();
-                     if ($companies->count() == 1) {
-                        if ($companies[0]->contact_id == null) {
-                            UserHelper::switch_company($companies[0]->secondary_id);
-                        }
-                        else {
-                            UserHelper::switch_company($companies[0]->contact_id);
-                        }
+            } else {
+                $companies = Contact::where('user_id', auth()->user()->id)->get();
+                if ($companies->count() == 1) {
+                    if ($companies[0]->contact_id == null) {
+                        UserHelper::switch_company($companies[0]->secondary_id);
+                    } else {
+                        UserHelper::switch_company($companies[0]->contact_id);
                     }
-                if (!empty(session()->get('cart'))) {
-                    
-                   
+                }
                 Session::put('companies', $companies);
-                return redirect()->route('cart');
+                if (!empty(session()->get('cart'))) {
+                    return redirect()->route('cart');
                 } else {
                     if ($user->is_updated == 1) {
                         $companies = Contact::where('user_id', auth()->user()->id)->get();
 
-                        // if ($companies->count() == 1) {
-                        //     UserHelper::switch_company($companies[0]->contact_id);
-                        // }
-
+                        if ($companies->count() == 1) {
+                            UserHelper::switch_company($companies[0]->contact_id);
+                        }
                         Session::put('companies', $companies);
                         return redirect()->route('my_account');
                     } else {
                         $companies = Contact::where('user_id', auth()->user()->id)->get();
                         Session::put('companies', $companies);
-                        
+
                         return view('reset-password', compact('user'));
                     }
                 }
@@ -636,38 +626,35 @@ class UserController extends Controller
                 ->first();
             if (!empty($custom_roles_with_company) && $custom_roles_with_company->company == $selected_company) {
                 $order_approver_for_company = true;
-            }
-            else {
+            } else {
                 $order_approver_for_company = false;
             }
 
             $all_ids = UserHelper::getAllMemberIds($user);
             $contact_ids = Contact::whereIn('id', $all_ids)
-               ->pluck('contact_id')
-               ->toArray();
+                ->pluck('contact_id')
+                ->toArray();
 
-                $user_orders = ApiOrder::whereIn('memberId', $contact_ids)
-                    ->with('contact')
-                    ->with('apiOrderItem')
-                    ->orderBy('id', 'desc')
-                    ->get();    
-                
+            $user_orders = ApiOrder::whereIn('memberId', $contact_ids)
+                ->with('contact')
+                ->with('apiOrderItem')
+                ->orderBy('id', 'desc')
+                ->get();
 
-                foreach ($user_orders as $user_order) {
-                    $createdDate = $user_order->created_at;
-                    $user_order->createdDate = $createdDate->format('F \  j, Y');
-                }
 
-                $response = [
-                    'can_approve_order' => $can_approve_order,
-                    'user_orders' => $user_orders,
-                    'order_approver_for_company' => $order_approver_for_company
-                ];
+            foreach ($user_orders as $user_order) {
+                $createdDate = $user_order->created_at;
+                $user_order->createdDate = $createdDate->format('F \  j, Y');
+            }
 
-                return $response;
-        }
-   
-        else {
+            $response = [
+                'can_approve_order' => $can_approve_order,
+                'user_orders' => $user_orders,
+                'order_approver_for_company' => $order_approver_for_company
+            ];
+
+            return $response;
+        } else {
             $user_id = auth()->id();
             if (!$user_id) {
                 return redirect('/user/');
@@ -812,18 +799,18 @@ class UserController extends Controller
 
         Auth::loginUsingId($id);
         $active_qoutes = Cart::where('user_id', $id)->where('is_active', 1)->get();
-        foreach($active_qoutes as $active_qoute) {
+        foreach ($active_qoutes as $active_qoute) {
             $cart[$active_qoute->qoute_id] = [
-                    "product_id" => $active_qoute->product_id,
-                    "name" => $active_qoute->name,
-                    "quantity" => $active_qoute->quantity,
-                    "price" => $active_qoute->price,
-                    "code" => $active_qoute->code,
-                    "image" => $active_qoute->image,
-                    'option_id' => $active_qoute->option_id,
-                    "slug" => $active_qoute->slug,
-            ]; 
-                Session::put('cart', $cart);
+                "product_id" => $active_qoute->product_id,
+                "name" => $active_qoute->name,
+                "quantity" => $active_qoute->quantity,
+                "price" => $active_qoute->price,
+                "code" => $active_qoute->code,
+                "image" => $active_qoute->image,
+                'option_id' => $active_qoute->option_id,
+                "slug" => $active_qoute->slug,
+            ];
+            Session::put('cart', $cart);
         }
         $contact_id = auth()->user()->id;
         $contact = Contact::where('user_id', $contact_id)->first();
@@ -916,7 +903,7 @@ class UserController extends Controller
             'content' => 'Customer Registration Invitation',
             'url' => $url
         ];
-       MailHelper::sendMailNotification('emails.invitaion-emails', $data);
+        MailHelper::sendMailNotification('emails.invitaion-emails', $data);
         SyncContacts::dispatch('update_contact', $contact)->onQueue(env('QUEUE_NAME'));
         return response()->json([
             'state' => 200,
@@ -940,7 +927,7 @@ class UserController extends Controller
         return UserHelper::switch_company($contact_id);
 
         $contact = Contact::where('contact_id', $contact_id)->first();
-        
+
         if (!empty($contact)) {
             $active_contact_id = $contact->contact_id;
             $active_company = $contact->company;
@@ -1051,7 +1038,8 @@ class UserController extends Controller
         return redirect('my-account');
     }
 
-    public function user_order_approve(Request $request) {
+    public function user_order_approve(Request $request)
+    {
         $order_id = $request->order_id;
         $currentOrder = ApiOrder::where('id', $order_id)->with('contact')->first();
 
@@ -1174,13 +1162,15 @@ class UserController extends Controller
         return response()->json(['success' => true]);
     }
 
-    public function verify_order(Request $request) {
+    public function verify_order(Request $request)
+    {
         $order_id = $request->order_id;
         $order = ApiOrder::where('id', $order_id)->first();
         return $data = $order;
     }
 
-    public function send_order_approval_email(Request $request) {
+    public function send_order_approval_email(Request $request)
+    {
         $order = ApiOrder::where('id', $request->order_id)->with('contact')->with('apiOrderItem')->first();
         $data['email'] = $order->contact->email;
         // $data['addresses'] = $addresses;
@@ -1189,15 +1179,16 @@ class UserController extends Controller
         $data['subject'] = 'Order Approved';
         $data['from'] = env('MAIL_FROM_ADDRESS');
         MailHelper::sendMailNotification('emails.order-approver-email', $data);
-       
     }
 
-    public function chooise_companie(Request $request) {
+    public function chooise_companie(Request $request)
+    {
         if ($request->ajax()) {
-              $companies = Contact::where('user_id', auth()->user()->id)->get();
-                return response()->json([
-                    'message' => 'success',
-                    'companies' => $companies
-                ]);
-     }      }
+            $companies = Contact::where('user_id', auth()->user()->id)->get();
+            return response()->json([
+                'message' => 'success',
+                'companies' => $companies
+            ]);
+        }
+    }
 }
