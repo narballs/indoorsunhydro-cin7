@@ -989,12 +989,11 @@ class ProductController extends Controller
     public function addToWishList(Request $request)
     {
         $user_id = Auth::id();
-
-
         //check if user have list already
         $contact_id = session()->get('contact_id');
         $contact =  Contact::where('contact_id', $contact_id)->orWhere('secondary_id', $contact_id)->first();
-        if (empty($contact_id || $user_id)) {
+
+        if (empty($contact_id) || empty($user_id)) {
             return response()->json([
                 'success' => false,
                 'msg' => 'Please make sure you are logged in and chosen the company !'
@@ -1053,9 +1052,6 @@ class ProductController extends Controller
             $product_buy_list->quantity = $request->quantity;
             $product_buy_list->save();
         }
-
-        
-
 
         return response()->json([
             'success' => true,
