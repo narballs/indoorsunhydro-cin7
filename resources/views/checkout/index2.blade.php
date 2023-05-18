@@ -353,16 +353,18 @@ $cart_price = 0;
                             </ul> --}}
                             <!-- fieldsets -->
                             <fieldset>
+                                <input type="button" value="Next" name="next" class="next action-button next-btn-mobile" style="background:#7bc533 !important;">
+                                <button class="text-white billing-div-mobile" style=""> 
+                                    Billing Details
+                                </button>
                                 <div class="form-card">
                                     <div class="card border-0">
                                         <div class="card-body p-0 m-0">
                                             <div class="form-signup-secondary">
                                                 <div class="user-info">
-                                                    
                                                     <div class="row">
-                                                        
                                                         <div class="col-md-6">
-                                                            <label class="label mt-5 fw-bold">First
+                                                            <label  class="label custom_label_style mt-5 text-uppercase fw-bold">First
                                                                 Name</label><span
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text" placeholder="Enter your first name"
@@ -371,7 +373,7 @@ $cart_price = 0;
                                                                 class="form-control mt-0fontAwesome">
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <label class="label ">last Name</label><span
+                                                            <label  class="label custom_label_style fw-bold text-uppercase ">last Name</label><span
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text" placeholder="Enter your last"
                                                                 id="company_website" name="lastName"
@@ -379,7 +381,7 @@ $cart_price = 0;
                                                                 class="form-control fontAwesome ">
                                                         </div>
                                                         <div class="col-md-12 ">
-                                                            <label class="label">company name
+                                                            <label  class="label custom_label_style fw-bold text-uppercase ">company name
                                                                 (optional)</label><span
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text"
@@ -389,7 +391,7 @@ $cart_price = 0;
                                                                 class="form-control  company-info fontAwesome ">
                                                         </div>
                                                         <div class="col-md-12">
-                                                            <label class="label ">street address</label><span
+                                                            <label  class="label custom_label_style fw-bold text-uppercase ">street address</label><span
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text"
                                                                 placeholder="House number and street name"
@@ -406,7 +408,7 @@ $cart_price = 0;
                                                         </div>
 
                                                         <div class="col-md-12">
-                                                            <label class="label ">town / city</label><span
+                                                            <label  class="label custom_label_style fw-bold text-uppercase ">town / city</label><span
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text" placeholder="Enter your town"
                                                                 id="postalCity" name="postalCity"
@@ -414,7 +416,7 @@ $cart_price = 0;
                                                                 class="form-control  company-info fontAwesome ">
                                                         </div>
                                                         <div class="col-md-12">
-                                                            <label class="label ">state</label><span
+                                                            <label  class="label custom_label_style fw-bold text-uppercase ">state</label><span
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text" placeholder="Enter your state"
                                                                 id="postalState" name="postalState"
@@ -422,7 +424,7 @@ $cart_price = 0;
                                                                 class="form-control  company-info fontAwesome ">
                                                         </div>
                                                         <div class="col-md-12">
-                                                            <label class="label ">zip</label><span
+                                                            <label  class="label custom_label_style fw-bold text-uppercase ">zip</label><span
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text" placeholder="Enter your zip"
                                                                 id="postalPostCode" name="postalPostCode"
@@ -430,7 +432,7 @@ $cart_price = 0;
                                                                 class="form-control  company-info fontAwesome ">
                                                         </div>
                                                         <div class="col-md-12">
-                                                            <label class="label ">phone</label><span
+                                                            <label  class="label custom_label_style fw-bold text-uppercase ">phone</label><span
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text" placeholder="Enter your phone"
                                                                 id="phone" name="phone"
@@ -439,7 +441,7 @@ $cart_price = 0;
                                                             <div class="text-danger" id="password_errors"></div>
                                                         </div>
                                                         <div class="col-md-12">
-                                                            <label class="label ">email address</label><span
+                                                            <label  class="label custom_label_style fw-bold text-uppercase ">email address</label><span
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text"
                                                                 placeholder="Enter your email adress"
@@ -453,7 +455,7 @@ $cart_price = 0;
                                         </div>
                                     </div>
                                 </div>
-                                <button class="next action-button btn btn-success w-100 text-white mt-4" style="height:50px;font-size: 14px; font-family:'Poppins'; font-weight:bold;background:#7bc533 !important;border: none !important;padding: 10px 5px; border-radius:0px "> NEXT STEP </button>
+                                <button class="next action-button btn btn-success w-100 text-white mt-4 mx-auto mob_next_btn_footer" style="background:#7bc533 !important;"> NEXT STEP </button>
                                 <div class="d-flex justify-content-center align-items-center">
                                     <div>
                                         <img class="img-fluid coupon-code-modal-btn"
@@ -685,6 +687,10 @@ $cart_price = 0;
                             </ul> --}}
                             <!-- fieldsets -->
                             <fieldset>
+                                <input type="button" value="Next" name="next" class="next action-button next-btn-mobile" style="background:#7bc533 !important;left:86% !important;">
+                                <button class="text-white billing-div-mobile" style="width: 104% !important;"> 
+                                    Billing Details
+                                </button>
                                 <div class="form-card">
                                     <div class="card border-0">
                                         <div class="card-body p-0 m-0">
@@ -692,7 +698,7 @@ $cart_price = 0;
                                                 <div class="user-info">
                                                     <div class="row">
                                                         <div class="col-md-12">
-                                                            <label class="label mt-5 fw-bold">First
+                                                            <label  class="label custom_label_style mt-5 fw-bold text-uppercase">First
                                                                 Name</label><span
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text" placeholder="Enter your first name"
@@ -701,7 +707,7 @@ $cart_price = 0;
                                                                 class="form-control mt-0fontAwesome">
                                                         </div>
                                                         <div class="col-md-12">
-                                                            <label class="label ">last Name</label><span
+                                                            <label  class="label custom_label_style fw-bold text-uppercase ">last Name</label><span
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text" placeholder="Enter your last"
                                                                 id="company_website" name="lastName"
@@ -709,7 +715,7 @@ $cart_price = 0;
                                                                 class="form-control fontAwesome ">
                                                         </div>
                                                         <div class="col-md-12 ">
-                                                            <label class="label">company name
+                                                            <label  class="label custom_label_style fw-bold text-uppercase">company name
                                                                 (optional)</label><span
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text"
@@ -719,7 +725,7 @@ $cart_price = 0;
                                                                 class="form-control  company-info fontAwesome ">
                                                         </div>
                                                         <div class="col-md-12">
-                                                            <label class="label ">street address</label><span
+                                                            <label  class="label custom_label_style fw-bold text-uppercase ">street address</label><span
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text"
                                                                 placeholder="House number and street name"
@@ -736,7 +742,7 @@ $cart_price = 0;
                                                         </div>
 
                                                         <div class="col-md-12">
-                                                            <label class="label ">town / city</label><span
+                                                            <label  class="label custom_label_style fw-bold text-uppercase ">town / city</label><span
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text" placeholder="Enter your town"
                                                                 id="postalCity" name="postalCity"
@@ -744,7 +750,7 @@ $cart_price = 0;
                                                                 class="form-control  company-info fontAwesome ">
                                                         </div>
                                                         <div class="col-md-12">
-                                                            <label class="label ">state</label><span
+                                                            <label  class="label custom_label_style fw-bold text-uppercase ">state</label><span
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text" placeholder="Enter your state"
                                                                 id="postalState" name="postalState"
@@ -752,7 +758,7 @@ $cart_price = 0;
                                                                 class="form-control  company-info fontAwesome ">
                                                         </div>
                                                         <div class="col-md-12">
-                                                            <label class="label ">zip</label><span
+                                                            <label  class="label custom_label_style fw-bold text-uppercase ">zip</label><span
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text" placeholder="Enter your zip"
                                                                 id="postalPostCode" name="postalPostCode"
@@ -760,7 +766,7 @@ $cart_price = 0;
                                                                 class="form-control  company-info fontAwesome ">
                                                         </div>
                                                         <div class="col-md-12">
-                                                            <label class="label ">phone</label><span
+                                                            <label  class="label custom_label_style fw-bold text-uppercase ">phone</label><span
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text" placeholder="Enter your phone"
                                                                 id="phone" name="phone"
@@ -769,17 +775,17 @@ $cart_price = 0;
                                                             <div class="text-danger" id="password_errors"></div>
                                                         </div>
                                                         <div class="col-md-12">
-                                                            <label class="label ">email address</label><span
+                                                            <label  class="label custom_label_style fw-bold text-uppercase ">email address</label><span
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text"
                                                                 placeholder="Enter your email adress"
                                                                 id="emailAddress" name="password"
                                                                 class="form-control  company-info fontAwesome ">
                                                         </div>
-                                                        <div class="d-flex justify-content-center align-items-center">
+                                                        {{-- <button type="button" class="btn btn-success next action-button text-white ipad_next_btn_footer mx-3" style="background:#7bc533 !important;"> NEXT STEP </button> --}}
+                                                        {{-- <div class="d-flex justify-content-center align-items-center">
                                                             <div>
-                                                                <img class="img-fluid coupon-code-modal-btn"
-                                                                    src="/theme/img/modal-icon1.png" alt="">
+                                                                <img class="img-fluid coupon-code-modal-btn" src="/theme/img/modal-icon1.png" alt="">
                                                             </div>
                                                             <button type="button"
                                                                 class="btn btn-primary fw-blod coupon-code-modal-btn ps-0"
@@ -787,14 +793,26 @@ $cart_price = 0;
                                                                 data-bs-target="#staticBackdrop">
                                                                 applay coupon
                                                             </button>
-                                                        </div>
+                                                        </div> --}}
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <input type="button" name="next" class="next action-button" value="Next Step" />
+                                <button class="btn btn-success next action-button text-white ipad_next_btn_footer" style="background:#7bc533 !important;"> NEXT STEP </button>
+                                <div class="d-flex justify-content-center align-items-center">
+                                    <div>
+                                        <img class="img-fluid coupon-code-modal-btn" src="/theme/img/modal-icon1.png" alt="">
+                                    </div>
+                                    <button type="button"
+                                        class="btn btn-primary fw-blod coupon-code-modal-btn ps-0"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#staticBackdrop">
+                                        applay coupon
+                                    </button>
+                                </div>
+                                {{-- <input type="button" name="next" class="next action-button" value="Next Step" /> --}}
                             </fieldset>
                             <fieldset>
                                 <div class="form-card">

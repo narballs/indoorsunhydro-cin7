@@ -85,21 +85,21 @@
                                                     <!-- Navbar dropdown -->
                                                     <div class="row">
                                                         <div class="col-lg-10  col-xl-10  d-flex align-items-center">
-                                                            <li class="nav-item dropdown position-static">
+                                                            <li class="nav-item dropdown position-static width_fix">
                                                                 @if (!empty($session_contact_company))
                                                                     <a class="select_company_hover nav-link dropdown-toggle select_company_top"
                                                                         href="#" id="navbarDropdown" role="button"
                                                                         data-mdb-toggle="dropdown" aria-expanded="false">
                                                                         <span class="top-header-items hover_it">
-                                                                            {{ $session_contact_company }}</span>
+                                                                            {!! \Illuminate\Support\Str::limit($session_contact_company, 14) !!}
+                                                                        </span>
                                                                     </a>
                                                                 @else
                                                                     <a class="select_company_hover nav-link dropdown-toggle select_company_top"
                                                                         href="#" id="navbarDropdown" role="button"
                                                                         data-mdb-toggle="dropdown" aria-expanded="false">
             
-                                                                        <span class="top-header-items hover_it">Select
-                                                                            Company</span>
+                                                                        <span class="top-header-items hover_it">Select Company</span>
                                                                     </a>
                                                                 @endif
                                                                 <!-- Dropdown menu -->
