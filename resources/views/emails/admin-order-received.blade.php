@@ -10,7 +10,9 @@
     <link rel="stylesheet" href="/theme/bootstrap5/css/bootstrap.css">
     <link rel="stylesheet" href="/theme/css/style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.33/sweetalert2.css">
-    {{-- <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'> --}}
+    <link rel="noopener" target="_blank" href="https://fonts.googleapis.com/css2?family=Poppins&display=swap"
+        rel="stylesheet">
+
     <link href="https://fonts.cdnfonts.com/css/poppins" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <link href="{{ asset('//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css') }}" rel="stylesheet"
@@ -22,7 +24,14 @@
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <style>
-    @import url('https://fonts.cdnfonts.com/css/poppins');
+    @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+    @font-face {
+        font-family: 'Poppins';
+        font-style: normal;
+        font-weight: 400;
+        src: url(https://fonts.gstatic.com/s/poppins/v20/pgitxiEyp8kv8JHgFVrJJbecmNE.woff2) format('woff2');
+    }
 </style>
 
 
@@ -268,6 +277,7 @@
                             text-transform: uppercase !important;
                             color: #8E8E8E !important;
                             margin-left: 39px !important;
+                            padding-bottom: 17px !important;
                            ">
                         Payment Info
                     </p>
