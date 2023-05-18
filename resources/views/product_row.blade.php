@@ -208,13 +208,23 @@
 				  list_id,
 				  status,
 			   },
-			   success: function(success){
-	  				$('.fav-' + option_id).toggleClass('text-muted');
-			   }
-		   });
 
+
+			    success: function(success) 
+				   {
+				   	    if(success.success == true) {
+		  			       $('.fav-' + option_id).toggleClass('text-muted');	
+		  			 } else {
+		  			 	 Swal.fire(
+			  			 	 	'Warning!',
+			  			 	 	'Please make sure you are logged in and selected company Thanks !',
+			  			 	 	'warning',
+		  			 	 	);
+		  			 }
+		  				
+				   }
+			   });
 			return false;
-
 		}
 
 </script>
