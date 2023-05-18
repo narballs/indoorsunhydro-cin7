@@ -1632,11 +1632,20 @@ input[type=number] {
 }
 
 
-.cart-counter-details {
+/* .cart-counter-details {
     margin-top: -3px !important;
     font-size: 15px;
     font-weight: 400;
     font-family: 'Poppins';
+} */
+.cart-counter-details {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 30px;
+    letter-spacing: -0.006em;
+    color: #7BC533;
 }
 
 .select-comapny-top-bar {
@@ -2562,11 +2571,42 @@ input[type=number] {
         display: block !important;
     }
 
-    .register-counter-details {
+    /* .register-counter-details {
         font-family: 'Poppins' !important;
         font-style: normal !important;
         font-weight: 600 !important;
         font-size: 18px !important;
+    } */
+
+    .ipad_second_row {
+        font-family: 'Poppins'; 
+        font-size:14px;     
+        padding-left: 300px;
+		height: 62px;
+		padding-top: 11px;
+    }
+
+    .ipad_nav_items {
+        display: flex;
+        align-items: 
+        center;justify-content: 
+        space-between;
+    }
+    .ipad_menu_btn {
+        background-color: #008BD3 !important;
+        font-size: 16px;
+        font-weight: 500;
+        margin-right: -10px !important;
+        padding:0.7rem !important;    
+    }
+    .cart-counter-details {
+        font-family: 'Poppins';
+        font-style: normal;
+        font-weight: 600;
+        font-size: 20px;
+        line-height: 30px;
+        letter-spacing: -0.006em;
+        color: #ffffff;
     }
 
     .top-img {
@@ -3095,6 +3135,16 @@ input[type=number] {
 }
 
 @media only screen and (max-width: 425px) and (min-width: 360px) {
+    .mobile_nav_items {
+        display: flex;
+        align-items:center;
+        justify-content: space-between;
+    }
+    .mobile_nav_btn {
+        background-color: #008BD3 !important;
+        font-size:16px !important;
+        font-weight:500 !important;
+    }
     .select-comapny-top-bar-mobile {
         font-size: 14px !important;
         font-family: 'Poppins' !important;
@@ -3103,6 +3153,17 @@ input[type=number] {
         padding-left: 7px !important;
     }
 
+    .cart-counter-details {
+        font-family: 'Poppins';
+        font-style: normal;
+        font-weight: 600;
+        font-size: 20px;
+        line-height: 30px;
+        letter-spacing: -0.006em;
+        color: #ffffff;
+    }
+
+    
     .mobile-view {
         display: block !important;
     }
@@ -3131,7 +3192,7 @@ input[type=number] {
     .top-bar-total-items {
         font-family: 'Poppins' !important;
         font-size: 14px !important;
-        padding-left: 123px !important;
+        padding-left: 95px !important;
         height: 64px !important;
         padding-top: 11px !important;
     }
@@ -5020,6 +5081,180 @@ select.list-dt:focus {
     margin: 0px !important;
 }
 
+/* top header  */
+.top-header-items {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 29px;
+    color: #242424;
+    text-transform:capitalize;
+    text-decoration: none;
+}
+
+.select_company_top > span :hover {
+    background-color: #7BC743;
+    color: #fff !important;
+    border-radius: 5px;
+
+}
+.top_select_menu_items {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 150%;
+    letter-spacing: 0.15px;
+    color: #242424;
+    background: none;
+}
+
+.select_company_hover:hover {
+    background: none !important;
+}
+.select_company_hover::after {
+    color: #242424 !important;
+}
+.select_company_hover:focus{
+    background:none !important;
+}
+
+.drop-menu-items {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 150%;
+    letter-spacing: 0.15px;
+    color: #242424;
+
+}
+.multiple_company_hover:hover {
+    border:none !important;
+    color: #242424 !important;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 150%;
+    letter-spacing: 0.15px;
+    background: #f3f3f3 !important;
+    padding: 0.5rem !important;
+}
+
+.multiple_company_hover::after {
+    color: #242424 !important;
+    background: none !important;
+    border:none !important;
+    color: #242424 !important;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 150%;
+    letter-spacing: 0.15px;
+}
+
+.multiple_company_hover {
+    border:none !important;
+    color: #242424 !important;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 150%;
+    letter-spacing: 0.15px;
+    padding: 0.5rem !important;
+}
+
+@media screen and (min-width : 1025px ) and (max-width:1440px) {
+    .d_menu_company {
+        padding-left:1.2rem !important;
+    }
+    .d-Menu {
+        padding-left:0px !important; 
+        margin-left:1rem !important;
+    }
+    .login_link {
+        padding-left: 11.5rem !important;
+    }
+    
+}
+
+@media screen and (min-width : 769px ) and (max-width:1024px) {
+    .d_menu_company {
+        padding-left:0.7rem !important;
+    }
+    .d-Menu {
+        padding-left:0px !important; 
+        margin-left:0.9rem !important;
+    }
+    .login_link {
+        padding-left: 10.5rem !important;
+    }
+}
+@media  screen and (min-width : 1441px ) and (max-width:1920px) {
+    .d_menu_company {
+        padding-left:  3rem !important;
+    }
+    .d-Menu {
+        padding-left:0px !important; 
+        margin-left:1rem !important;
+    }
+    .login_link {
+        padding-left: 15.2rem !important;
+    }
+}
+
+@media  screen and (min-width : 1921px ) and (max-width:2559px) {
+    .d_menu_company {
+        padding-left:  3.3rem !important;
+    }
+    .d-Menu {
+        padding-left:0px !important; 
+        margin-left:1.1rem !important;
+    }
+    .login_link {
+        padding-left: 16.1rem !important;
+    }
+    
+}
+
+@media  only screen and (min-width : 2560px ) {
+    .d_menu_company {
+        padding-left:  5.5rem !important;
+    }
+    .d-Menu {
+        padding-left:0px !important; 
+        margin-left:1.1rem !important;
+    }
+    .login_link {
+        padding-left: 20rem !important;
+    }
+    
+}
+
+.shopping_cart_text {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 30px;
+    display: flex;
+    align-items: center;
+    letter-spacing: -0.006em;
+    color: #212121;    
+}
+
+.font_style_menu {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    color: #373737;
+}
 /* order confirmation page end */
 
 

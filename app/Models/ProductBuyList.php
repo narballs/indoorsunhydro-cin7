@@ -12,6 +12,7 @@ class ProductBuyList extends Model
         'list_id',
         'product_id',
         'option_id',
+        'sub_total',
         'quantity'
     ];
 

@@ -1,6 +1,6 @@
 <header class="bg-white  text-dark top-bar-height w-100 header-top">
-    <div class="container-fluid my-1" style=" max-width: 1468px !important;">
-        <div class="row justify-content-end">
+    <div class="container-fluid my-1">
+        <div class="row justify-content-center">
             {{-- <div class="col-md-3 d-flex align-items-center justify-content-end">
                 <div class="mt-1">
                     @if (session('logged_in_as_another_user'))
@@ -44,20 +44,19 @@
                             </a>
                 </div>
             </div> --}}
-            <div class="col-md-4"></div>
+            <div class="col-md-6"></div>
             <div class="col-md-6">
                 <div class="col-md-12">
                     <div class="row mx-1">
-                        <div class="col-xl-5  col-lg-4 col-md-5 d-flex justify-content-end align-items-center">
-                            <div class="mt-1">
+                        <div class="col-xl-3 col-lg-3 d-flex justify-content-end">
+                            <div class="mt-2">
                                 @if (session('logged_in_as_another_user'))
-                                    <a href="{{ url('admin/go-back') }}" class="top-bar-logout mt-3 "
-                                        style=" font-size: 16px;font-family: 'Poppins';font-weight: 400; color:#242424;text-decoration:none;">Go Back</a>
+                                    <a href="{{ url('admin/go-back') }}" class="top-bar-logout mt-3 top-header-items">Go Back</a>
                                 @endif
                             </div>
                         </div>
-                        <div class="col-xl-7 col-lg-8 col-md-5 d-flex align-items-center justify-content-center">
-                            <a href="{{ '/user/' }}" class="text-white d-flex align-items-end mt-1">
+                        <div class="col-xl-9 col-lg-9 mx-auto">
+                            <a href="{{ '/user/' }}" class="text-white d-flex align-items-end">
                                 {{-- <div>
                                     <img src="/theme/img/users-icons-top-bar (2).png" class="img-fluid w-100">
                                 </div> --}}
@@ -80,27 +79,26 @@
                                                 <i class="fas fa-bars"></i>
                                             </button>
                                             <!-- Collapsible wrapper -->
-                                            <div class="collapse navbar-collapse" id="navbarExample1">
+                                            <div class="collapse navbar-collapse row" id="navbarExample1">
                                                 <!-- Left links -->
-                                                <ul class="navbar-nav me-auto ps-lg-0" style="">
+                                                <ul class="navbar-nav me-auto ps-lg-0 row" style="">
                                                     <!-- Navbar dropdown -->
                                                     <div class="row">
-                                                        <div class="col-md-9 col-lg-7 col-xl-9 pe-0">
+                                                        <div class="col-lg-10  col-xl-10  d-flex align-items-center">
                                                             <li class="nav-item dropdown position-static">
                                                                 @if (!empty($session_contact_company))
-                                                                    <a style="margin-left: 14px;" class="nav-link dropdown-toggle"
+                                                                    <a class="select_company_hover nav-link dropdown-toggle select_company_top"
                                                                         href="#" id="navbarDropdown" role="button"
                                                                         data-mdb-toggle="dropdown" aria-expanded="false">
-                                                                        <span
-                                                                            class="select-comapny-top-bar d-flex justify-content-lg-start">
-                                                                            ({{ $session_contact_company }})</span>
+                                                                        <span class="top-header-items hover_it">
+                                                                            {{ $session_contact_company }}</span>
                                                                     </a>
                                                                 @else
-                                                                    <a class="nav-link dropdown-toggle p-0 mt-1 select_company_toggle"
+                                                                    <a class="select_company_hover nav-link dropdown-toggle select_company_top"
                                                                         href="#" id="navbarDropdown" role="button"
                                                                         data-mdb-toggle="dropdown" aria-expanded="false">
             
-                                                                        <span class="p-1 d-flex justify-content-lg-start hover_color">Select
+                                                                        <span class="top-header-items hover_it">Select
                                                                             Company</span>
                                                                     </a>
                                                                 @endif
@@ -109,16 +107,11 @@
                                                                     $companies = Session::get('companies');
                                                                     
                                                                 @endphp
-                                                                <div class="dropdown-menu w-100 mt-0"
-                                                                    aria-labelledby="navbarDropdown"
-                                                                    style="border-top-left-radius: 0;
-                                                                    border-top-right-radius: 0;
-                                                                    margin-left: 15px !important;
-                                                                    margin-top: -12px !important;">
+                                                                <div class="dropdown-menu hover-menu d-Menu mt-0" aria-labelledby="navbarDropdown" style="border-top: 1px solid #7bc533;">
                                                                     <div class="container">
-                                                                        <div class="row my-4">
+                                                                        <div class="row">
                                                                             <div class="col-md-12">
-                                                                                <div class="list-group list-group-flush">
+                                                                                <div class="list-group list-group-flush top_select_menu_items top-header-items hover_it">
                                                                                     @if (Auth::user())
                                                                                         @if ($companies)
                                                                                             @foreach ($companies as $company)
@@ -142,7 +135,7 @@
                                                                                                     
                                                                                                 @endphp
                                                                                                 <a type="button"
-                                                                                                    class="list-group-item list-group-item-action p-0 {{ $disabled }} {{ $muted }}"
+                                                                                                    class="multiple_company_hover select_company_top list-group-item list-group-item-action {{ $disabled }} {{ $muted }}"
                                                                                                     onclick="switch_company_user({{ $contact_id }})">{{ $company->company }}
                                                                                                     <span
                                                                                                         style="font-size: 9px;font-family: 'Poppins';"
@@ -158,31 +151,45 @@
                                                                     </div>
                                                                 </div>
                                                             </li>
-            
-                                                        </div>
-                                                        <div class="col-md-3 col-xl-3 col-lg-4 ps-0">
-                                                            <li style="">
-                                                                <a style="color:#242424;" class="top-bar-logout" href="{{ route('logout') }}"
-                                                                    onclick="event.preventDefault(); document.getElementById('frm-logout').submit();">
-                                                                    <div class="d-flex align-items-center">
-                                                                        
-                                                                        <div class="col-md-12 p-0 ">
-                                                                            <p class="top-bar-logout" style="padding-top: 12px; color:#242424;">
-                                                                                &nbsp;&nbsp;Logout
-                                                                            </p>
-                                                                        </div>
-                                                                    </div>
+                                                            <li class="d_menu_company">
+                                                                <a href="{{ url('my-account') }}" class="login-in-register top-header-items">
+                                                                    <span>Account</span>
                                                                 </a>
                                                             </li>
+                                                            <li class="d_menu_company">
+                                                                <a class="login-in-register top-header-items" href="{{ route('logout') }}"
+                                                                            onclick="event.preventDefault(); document.getElementById('frm-logout').submit();">
+                                                                            <span>Logout</span>
+                                                                        </a>
+                                                            </li>
                                                         </div>
+                                                        {{-- <div class="col-md-6 d-flex align-items-center">
+                                                            <div class="col-md-12">
+                                                                <div class="row">
+                                                                    <div class="col-6">
+                                                                        <a href="{{ url('my-account') }}" class="login-in-register top-header-items">
+                                                                            <span>Account</span>
+                                                                        </a>
+                                                                    </div>
+                                                                   <div class="col-md-6">
+                                                                        <a class="login-in-register top-header-items" href="{{ route('logout') }}"
+                                                                            onclick="event.preventDefault(); document.getElementById('frm-logout').submit();">
+                                                                            <span>Logout</span>
+                                                                        </a>
+                                                                   </div>
+                                                                    
+                                                                </div>
+                                                            </div>
+                                                        </div> --}}
                                                     </div>
                                                 </ul>
                                             </div>
                                         </nav>
                                     </div>
                                 @else
-                                    <div class="register-counter-details ms-2">
-                                        <p class="mb-0 login-in-register" style="color: #242424;"> <i class="fa fa-user mx-2" style="color:#979797 !important;font-size:25px;"></i> Login or Register</p>
+                                    
+                                    <div class="register-counter-details login_link">
+                                        <p class="mb-0 p-2 login-in-register top-header-items ">Login or Register</p>
                                     </div>
                                 @endif
                             </a>

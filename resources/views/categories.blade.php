@@ -108,9 +108,9 @@
    </form>
    <div class="row" id="product_rows">
       @foreach ($products as $key => $product)
-      @foreach($product->options as $option)
-      @include('product_row')
-      @endforeach
+         @foreach($product->options as $option)
+            @include('product_row')
+         @endforeach
       @endforeach
    </div>
    <!--    {{$products->links('pagination::bootstrap-4')}} -->

@@ -94,7 +94,7 @@ class OrderController extends Controller
                 $currentOrder = ApiOrder::where('id', $order->id)->first();
                 $apiApproval = $currentOrder->apiApproval;
                 $currentOrder->reference = 'DEV4' . '-QCOM-' . $order_id;
-             
+
                 $currentOrder->save();
                 $currentOrder = ApiOrder::where('id', $order->id)->with('contact')->first();
 
@@ -114,7 +114,10 @@ class OrderController extends Controller
                     return redirect('/');
                 }
 
-                $order_items = ApiOrderItem::with('order', 'product.options')->where('order_id', $order_id)->get();
+                $order_items = ApiOrderItem::with('order.texClasses', 'product.options')
+                    ->where('order_id', $order_id)
+                    ->get();
+
                 $contact = Contact::where('user_id', auth()->id())->first();
                 $user_email = Auth::user();
                 $count = $order_items->count();
@@ -127,7 +130,9 @@ class OrderController extends Controller
                         'address2' => $contact->address2,
                         'city' => $contact->city,
                         'state' => $contact->state,
-                        'zip' => $contact->postCode
+                        'zip' => $contact->postCode,
+                        'mobile' => $contact->mobile,
+                        'phone' => $contact->phone,
                     ],
                     'shipping_address' => [
                         'postalAddress1' => $contact->postalAddress1,
@@ -149,13 +154,13 @@ class OrderController extends Controller
                 $reference  =  $currentOrder->reference;
                 $template = 'emails.admin-order-received';
                 $admin_users = DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
-             
+
                 $admin_users = $admin_users->toArray();
 
                 $users_with_role_admin = User::select("email")
                     ->whereIn('id', $admin_users)
                     ->get();
-               
+
                 $data = [
                     'name' =>  $name,
                     'email' => $email,
@@ -176,9 +181,7 @@ class OrderController extends Controller
                         $subject = 'New order received';
                         $adminTemplate = 'emails.admin-order-received';
                         $data['email'] = $role_admin->email;
-
                         MailHelper::sendMailNotification('emails.admin-order-received', $data);
-                        echo 'this is admin Email';
                     }
                 }
                 $credit_limit = $contact->credit_limit;
@@ -188,12 +191,10 @@ class OrderController extends Controller
                     if ($is_primary == null) {
                         $data['subject'] = 'Credit limit reached';
                         $data['email'] = $parent_email->email;
-              
+
                         MailHelper::sendMailNotification('emails.credit-limit-reached', $data);
-                        echo 'this is primary account Eamil';
                     }
-                }
-                else {
+                } else {
                     $data['subject'] = 'Your order has been received';
                     $data['email'] = $email;
                 }

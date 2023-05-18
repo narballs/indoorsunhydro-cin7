@@ -358,6 +358,7 @@ class UserController extends Controller
                 
                 //dd($active_qoute);
                 $companies = Contact::where('user_id', auth()->user()->id)->get();
+
                  if ($companies->count() == 1) {
                     UserHelper::switch_company($companies[0]->contact_id);
                 }
@@ -367,7 +368,12 @@ class UserController extends Controller
                 if (!empty(session()->get('cart'))) {
                     $companies = Contact::where('user_id', auth()->user()->id)->get();
                     if ($companies->count() == 1) {
-                        UserHelper::switch_company($companies[0]->contact_id);
+                        if ($companies[0]->contact_id == null) {
+                            UserHelper::switch_company($companies[0]->secondary_id);
+                        }
+                        else {
+                            UserHelper::switch_company($companies[0]->contact_id);
+                        }
                     }
                 Session::put('companies', $companies);
                     return redirect()->route('cart');
@@ -529,6 +535,7 @@ class UserController extends Controller
         Session::forget('companies');
         Session::forget('cart');
         Session::forget('logged_in_as_another_user');
+        Session::flush();
         return redirect()->route('user');
     }
 
@@ -692,7 +699,7 @@ class UserController extends Controller
                 }
                 return $user_orders;
             }
-
+            $wishlist = BuyList::with('list_products')->where('user_id', $user_id)->first();
             return view('my-account', compact(
                 'user',
                 'user_address',
@@ -803,7 +810,22 @@ class UserController extends Controller
         $switch_user = Auth::loginUsingId($id);
         $auth_user_email = $switch_user->email;
         session()->put('logged_in_as_another_user', $auth_user_email);
+
         Auth::loginUsingId($id);
+        $active_qoutes = Cart::where('user_id', $id)->where('is_active', 1)->get();
+        foreach($active_qoutes as $active_qoute) {
+            $cart[$active_qoute->qoute_id] = [
+                    "product_id" => $active_qoute->product_id,
+                    "name" => $active_qoute->name,
+                    "quantity" => $active_qoute->quantity,
+                    "price" => $active_qoute->price,
+                    "code" => $active_qoute->code,
+                    "image" => $active_qoute->image,
+                    'option_id' => $active_qoute->option_id,
+                    "slug" => $active_qoute->slug,
+            ]; 
+                Session::put('cart', $cart);
+        }
         $contact_id = auth()->user()->id;
         $contact = Contact::where('user_id', $contact_id)->first();
         $companies = Contact::where('user_id', auth()->user()->id)->get();

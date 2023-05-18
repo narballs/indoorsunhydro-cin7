@@ -114,7 +114,6 @@
                                                     letter-spacing: 0.545em;
                                                     color: #575757;
                                                     ">Thank you for your order</p>
-                                                    <h1>this is Secondary Primary Account  Email </h1>
                                                 </div>
                                                 {{-- <div class="col-md-5 pt-5" style="width: width: 50%;">
                                                     <div class="pt-5" style="padding-top: 35px!important;
@@ -284,7 +283,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                         <div class=" col-md-5 thnak-you-page-box-billing-address mt-5" style="    width: 31%;
                                             background: #fbfbfb;
                                             border-radius: 10px;
