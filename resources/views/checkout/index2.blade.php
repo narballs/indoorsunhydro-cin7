@@ -1147,7 +1147,7 @@ $cart_price = 0;
                             <div class="col-md-6 mb-3">
                                 <label for="zip">Zip</label>
                                 <input type="text" class="form-control bg-light" name="zip"
-                                    placeholder="Enter zip code" value="{{ $user_address->postalPostCode }}"
+                                    placeholder="Enter zip code" value="{{ $user_address->postCode }}"
                                     required>
                                 <div id="error_zip" class="text-danger">
                                 </div>

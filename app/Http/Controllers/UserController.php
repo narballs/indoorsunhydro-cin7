@@ -735,6 +735,7 @@ class UserController extends Controller
         $res = $client->put($url, $authHeaders);
         $api_response = $res->getBody()->getContents();
         $response = json_decode($api_response);
+      
         if ($response[0]->success == true) {
             $user_id = auth()->id();
             $contact = Contact::where('user_id', $user_id)->where('contact_id', $contact_id)->first();
