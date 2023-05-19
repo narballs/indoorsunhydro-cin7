@@ -61,8 +61,13 @@ class CheckoutController extends Controller
             $states = UsState::all();
             $payment_methods = PaymentMethod::with('options')->get();
             $contact_id = session()->get('contact_id');
-
-            $user_address = Contact::where('user_id', $user_id)->where('contact_id', $contact_id)->first();
+            if ($contact->secondary_id) {
+                $parent_id = Contact::where('secondary_id', $contact->secondary_id)->first()->parent_id;
+                $user_address = Contact::where('user_id', $user_id)->where('contact_id', $parent_id)->first();
+            }
+            else {
+                $user_address = Contact::where('user_id', $user_id)->where('contact_id', $contact_id)->first();
+            }
             return view('checkout/index2', compact('user_address', 'states', 'payment_methods', 'tax_class','contact_id'));
         } 
         else if (Auth::check() && (!empty($contact->contact_id) || !empty($contact->secondary_id))) {
