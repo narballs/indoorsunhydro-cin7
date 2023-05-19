@@ -702,8 +702,7 @@ class UserController extends Controller
             'address1' => 'required',
             'town_city' => 'required|alpha',
             'state' => 'required|alpha',
-            'zip' => 'required',
-            'phone' => 'required|min:10'
+            'zip' => 'required'
         ]);
         $authHeaders = [
             'headers' => ['Content-type' => 'application/json'],

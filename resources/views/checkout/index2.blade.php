@@ -1139,7 +1139,7 @@ $cart_price = 0;
                             <div class="col-md-6 mb-3">
                                 <label for="phone">Phone</label>
                                 <input type="text" class="form-control bg-light" name="phone"
-                                    placeholder="Enter your phone" value="{{ $user_address->phone }}" required>
+                                    placeholder="Enter your phone" value="{{ $user_address->phone }}">
                                 <div id="error_phone" class="text-danger"></div>
                             </div>
                         </div>
