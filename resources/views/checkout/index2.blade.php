@@ -1138,7 +1138,7 @@ $cart_price = 0;
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="phone">Phone</label>
-                                <input type="text" class="form-control bg-light" name="phone"
+                                <input type="text" class="form-control bg-light" name="phone" id="delivery_phone"
                                     placeholder="Enter your phone" value="{{ $user_address->phone}}">
                                 <div id="error_phone" class="text-danger"></div>
                             </div>
@@ -1384,7 +1384,8 @@ $cart_price = 0;
                     var last_name = $('#last_name').val();
                     // alert(first_name);
                     var company_name = $('#user_company').val();
-                    var phone = $('input[name=phone]').val();
+                    var phone = $('#delivery_phone').val();
+                    alert(phone);
                     var address1 = $('input[name=address]').val();
                     var address2 = $('input[name=address2]').val();
                     var town_city = $('input[name=town_city]').val();
