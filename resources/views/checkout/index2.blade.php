@@ -1139,7 +1139,7 @@ $cart_price = 0;
                             <div class="col-md-6 mb-3">
                                 <label for="phone">Phone</label>
                                 <input type="text" class="form-control bg-light" name="phone"
-                                    placeholder="Enter your phone" value="{{ $user_address->phone }}">
+                                    placeholder="Enter your phone" value="{{ $user_address->phone}}">
                                 <div id="error_phone" class="text-danger"></div>
                             </div>
                         </div>
@@ -1390,7 +1390,7 @@ $cart_price = 0;
                     var town_city = $('input[name=town_city]').val();
                     
                     var zip = $('input[name=zip]').val();
-                    var email = $('input[name=email]').val();
+                    //var email = $('input[name=email]').val();
 
                     jQuery.ajax({
                         method: 'GET',
@@ -1408,7 +1408,7 @@ $cart_price = 0;
                             "town_city": town_city,
                             "state": state,
                             "zip": zip,
-                            "email": email
+                            // "email": email
                         },
                         success: function(response) {
                             if (response.success == true) {
