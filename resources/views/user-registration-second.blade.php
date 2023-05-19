@@ -19,6 +19,7 @@
         height: 49px;
     }
 </style>
+
 <div class="container-fluid pl-0 pr-0">
     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 pl-0 pr-0">
         <div class="row">

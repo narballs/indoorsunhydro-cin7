@@ -51,10 +51,10 @@ class CheckoutController extends Controller
             $isApproved = $contact->contact_id;
         }
       
-        if ($contact->status == 0) {
-            Session::flash('message', "Your account is inactive can't proceed to checkout, however you can make carts , please contact support to activate the account");
-            return redirect('/cart/');
-        }
+        // if ($contact->status == 0) {
+        //     Session::flash('message', "Your account is inactive can't proceed to checkout, however you can make carts , please contact support to activate the account");
+        //     return redirect('/cart/');
+        // }
 
         if (Auth::check() && (!empty($contact->contact_id) || !empty($contact->secondary_id))) {
             $tax_class = TaxClass::where('is_default', 1)->first();
