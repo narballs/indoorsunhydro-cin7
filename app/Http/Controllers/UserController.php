@@ -714,17 +714,17 @@ class UserController extends Controller
         $contact = [
             [
                 'id' => $contact_id,
-                'firstName' => request('first_name'),
+                'firstName' => $request->first_name,
                 'type' => 'Customer',
-                'lastName' => request('last_name'),
-                'address1' => request('address1'),
-                'address2' => request('address2'),
-                'company' => request('company_name'),
-                'state' => request('state'),
-                'phone' => request('phone'),
-                'city' => request('town_city'),
-                'postCode' => request('zip'),
-                'email' => request('email')
+                'lastName' => $request->last_name,
+                'address1' => $request->address1,
+                'address2' => $request->address2,
+                'company' => $request->company_name,
+                'state' => $request->state,
+                'phone' => $request->phone,
+                'city' => $request->town_city,
+                'postCode' => $request->zip,
+                //'email' => request('email')
            
             ]
         ];
@@ -735,23 +735,23 @@ class UserController extends Controller
         $res = $client->put($url, $authHeaders);
         $api_response = $res->getBody()->getContents();
         $response = json_decode($api_response);
-      
+
         if ($response[0]->success == true) {
             $user_id = auth()->id();
             $contact = Contact::where('user_id', $user_id)->where('contact_id', $contact_id)->first();
             if ($contact) {
                 $contact->update(
                     [
-                        'firstName' => request('first_name'),
-                        'lastName' => request('last_name'),
-                        'address1' => request('address1'),
-                        'address2' => request('address2'),
-                        'company' => request('company_name'),
-                        'state' => request('state'),
-                        'phone' => request('phone'),
-                        'city' => request('town_city'),
-                        'postCode' => request('zip'),
-                        'email' => request('email')
+                        'firstName' => $request->first_name,
+                        'lastName' => $request->last_name,
+                        'address1' => $request->address1,
+                        'address2' => $request->address2,
+                        'company' => $request->company_name,
+                        'state' => $request->state,
+                        'phone' => $request->phone,
+                        'city' => $request->town_city,
+                        'postCode' =>$request->zip
+                        //'email' => request('email')
                     ]
                 );
             }
