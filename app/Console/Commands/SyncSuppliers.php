@@ -83,7 +83,8 @@ class SyncSuppliers extends Command
                     $contact->mobile = $api_contact->mobile;
                     $contact->phone = $api_contact->phone;
                     $contact->address1 = $api_contact->address1;
-                    $contact->address1 = $api_contact->address2;
+                    $contact->address2 = $api_contact->address2;
+                    $contact->city = $api_contact->city;
                     $contact->state = $api_contact->state;
                     $contact->postCode = $api_contact->postCode;
                     $contact->postalAddress1 = $api_contact->postalAddress1;
@@ -177,7 +178,7 @@ class SyncSuppliers extends Command
                         'mobile' => $api_contact->mobile,
                         'phone' => $api_contact->phone,
                         'address1' => $api_contact->address1,
-                        'address1' => $api_contact->address2,
+                        'address2' => $api_contact->address2,
                         'state' => $api_contact->state,
                         'postCode' => $api_contact->postCode,
                         'postalAddress1' => $api_contact->postalAddress1,

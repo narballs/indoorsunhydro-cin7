@@ -684,37 +684,73 @@ class UserController extends Controller
 
     public function user_addresses(Request $request)
     {
+        $user_id = auth()->id();
+        $contact_id = $request->contact_id;
         $request->validate([
-            'first_name' => 'required|regex:/^[a-zA-Z ]*$/',
-            'last_name' => 'required|regex:/^[a-zA-Z ]*$/',
-            'company_name' => 'required|regex:/^[a-zA-Z0-9\s]+$/',
-            'address' => 'required|regex:/^[a-zA-Z0-9\s]+$/',
-            'address2' => 'required|regex:/^[a-zA-Z0-9\s]+$/',
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'company_name' => 'required',
+            'address1' => 'required',
             'town_city' => 'required|alpha',
             'state' => 'required|alpha',
-            'zip' => 'required|regex:/^\d{5}(?:[- ]?\d{4})?$/s',
-            'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10'
+            'zip' => 'required',
+            'phone' => 'required|min:10'
         ]);
+        $authHeaders = [
+            'headers' => ['Content-type' => 'application/json'],
+            'auth' => [
+                env('API_USER'),
+                env('API_PASSWORD')
+            ]
+        ];
+        $contact = [
+            [
+                'id' => $contact_id,
+                'firstName' => request('first_name'),
+                'type' => 'Customer',
+                'lastName' => request('last_name'),
+                'address1' => request('address1'),
+                'address2' => request('address2'),
+                'company' => request('company_name'),
+                'state' => request('state'),
+                'phone' => request('phone'),
+                'city' => request('town_city'),
+                'postCode' => request('zip'),
+                'email' => request('email')
+           
+            ]
+        ];
+        $authHeaders['json'] = $contact;
+        $client = new \GuzzleHttp\Client();
+        $url = 'https://api.cin7.com/api/v1/Contacts/';
 
-        $user_id = auth()->id();
-        $contact = Contact::where('user_id', $user_id)->first();
-        if ($contact) {
-            $contact->update(
-                [
-                    'firstName' => request('first_name'),
-                    'lastName' => request('last_name'),
-                    'postalAddress1' => request('address'),
-                    'postalAddress2' => request('address2'),
-                    'company' => request('company_name'),
-                    'postalState' => request('state'),
-                    'phone' => request('phone'),
-                    'postalCity' => request('town_city'),
-                    'postalPostCode' => request('zip'),
-                    'email' => request('email')
-                ]
-            );
+        $res = $client->put($url, $authHeaders);
+        $api_response = $res->getBody()->getContents();
+        $response = json_decode($api_response);
+        if ($response[0]->success == true) {
+            $user_id = auth()->id();
+            $contact = Contact::where('user_id', $user_id)->where('contact_id', $contact_id)->first();
+            if ($contact) {
+                $contact->update(
+                    [
+                        'firstName' => request('first_name'),
+                        'lastName' => request('last_name'),
+                        'address1' => request('address1'),
+                        'address2' => request('address2'),
+                        'company' => request('company_name'),
+                        'state' => request('state'),
+                        'phone' => request('phone'),
+                        'city' => request('town_city'),
+                        'postCode' => request('zip'),
+                        'email' => request('email')
+                    ]
+                );
+            }
+            return response()->json(['success' => true, 'created' => true, 'msg' => 'Address updated Successfully']);
         }
-        return response()->json(['success' => true, 'created' => true, 'msg' => 'Address updated Successfully']);
+        else {
+            return response()->json(['success' => false, 'created' => false, 'msg' => 'Unable to update address please try again later']);
+        }
     }
 
     public function adminUsers(Request $request)
