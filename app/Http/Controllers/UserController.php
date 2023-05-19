@@ -740,20 +740,33 @@ class UserController extends Controller
             $user_id = auth()->id();
             $contact = Contact::where('user_id', $user_id)->where('contact_id', $contact_id)->first();
             if ($contact) {
-                $contact->update(
-                    [
-                        'firstName' => $request->first_name,
-                        'lastName' => $request->last_name,
-                        'address1' => $request->address1,
-                        'address2' => $request->address2,
-                        'company' => $request->company_name,
-                        'state' => $request->state,
-                        'phone' => $request->phone,
-                        'city' => $request->town_city,
-                        'postCode' =>$request->zip
-                        //'email' => request('email')
-                    ]
-                );
+
+                $contact->firstName = $request->first_name;
+                $contact->lastName = $request->last_name;
+                $contact->address1 = $request->address1;
+                $contact->address2 = $request->address2;
+                $contact->company = $request->company_name;
+                $contact->state = $request->state;
+                $contact->phone = $request->phone;
+                $contact->city = $request->town_city;
+                $contact->postCode = $request->zip;
+
+                $contact->save();
+
+                // $contact->update(
+                //     [
+                //         'firstName' => $request->first_name,
+                //         'lastName' => $request->last_name,
+                //         'address1' => $request->address1,
+                //         'address2' => $request->address2,
+                //         'company' => $request->company_name,
+                //         'state' => $request->state,
+                //         'phone' => $request->phone,
+                //         'city' => $request->town_city,
+                //         'postCode' =>$request->zip
+                //         //'email' => request('email')
+                //     ]
+                // );
             }
             return response()->json(['success' => true, 'created' => true, 'msg' => 'Address updated Successfully']);
         }
