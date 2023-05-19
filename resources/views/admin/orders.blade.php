@@ -133,6 +133,12 @@
 @section('css')
     <link rel="stylesheet" href="/css/admin_custom.css">
     <style type="text/css">
+        .input-group-btn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
         #custom-search-input {
             padding: 3px;
             border: solid 1px #E4E4E4;
@@ -143,6 +149,8 @@
         #custom-search-input input {
             border: 0;
             box-shadow: none;
+            padding-top: 22px !important;
+            width: 329px !important;
         }
 
         #custom-search-input button {
