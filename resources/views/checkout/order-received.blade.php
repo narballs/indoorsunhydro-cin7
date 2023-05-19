@@ -15,6 +15,49 @@
 		border-width: 0;
 		border-color: #8C8C8C;
 	}
+	.media-1440 {
+		display:none;
+	}
+	.small-media-view  {
+		display:none;
+	}
+	.prod-name-img {
+		margin-left: -48px !important;
+		margin-top:3px;
+	}
+	@media  screen and (min-width : 1406px ) and (max-width:2194px) {
+		.media-1440 {
+			display:flex;
+		}
+
+		.small-media-view  {
+			display:none;
+		}
+		.main-view {
+			display:none;
+		}
+		.prod-name-img {
+			margin-left: 0px !important;
+		}
+	}
+	@media  screen and (min-width : 768px ) and (max-width:1405px) {
+		.media-1440 {
+			display:none;
+		}
+
+		.main-view {
+			display:none;
+		}
+
+		.small-media-view  {
+			display:flex;
+		}
+		.prod-name-img {
+			margin-left: 0px !important;
+		}
+		
+	}
+	
 </style>
 {{session()->forget('cart');}}
 
@@ -35,8 +78,7 @@
 							</p>
 						</div>
 					</div>
-					<div class="row ms-5 p-4 me-5 order-confirmation-page-invoice-row"
-						style=" padding-top: 50px !important;">
+					<div class="row ms-5 p-4 me-5 order-confirmation-page-invoice-row main-view " style=" padding-top: 50px !important;">
 						<div class=" col-xl-1 col-lg-4 col-md-6 col-sm-12" style="margin-left: 32px;">
 							<p class="order-confirmation-page-order-number-title">Order Number</p>
 							<p class="order-confirmation-page-order-number-item">
@@ -86,6 +128,136 @@
 							</p>
 						</div>
 					</div>
+					{{-- for media screen 1440px --}}
+					<div class="row ms-5 p-4 me-5 order-confirmation-page-invoice-row media-1440" style="padding-top: 50px !important;">
+						<div class="col-md-12">
+							<div class="row">
+								<div class="col-md-3">
+									<p class="order-confirmation-page-order-number-title">Order Number</p>
+									<p class="order-confirmation-page-order-number-item">
+										{{$order->apiOrderItem[0]['order_id']}}
+									</p>
+								</div>
+								<div class="col-md-3">
+									<p class="order-confirmation-page-date-title">Date</p>
+									<p class="order-confirmation-page-date-item">
+										{{$order->apiOrderItem[0]['created_at']->format('F '.'d, Y, '.'g:i A')}}
+									</p>
+								</div>
+								<div class="col-md-3">
+									<p class="order-confirmation-page-mobile-title">
+										Mobile
+									</p>
+									<p class="order-confirmation-page-mobile-item">
+										{{$order_contact->phone}}
+									</p>
+								</div>
+								<div class="col-md-3">
+									<p class="order-confirmation-page-email-title">
+										Email
+									</p>
+									<p class="order-confirmation-page-email-item">
+										{{$order->user->email}}
+									</p>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-12">
+							<div class="row">
+								<div class="col-md-3">
+									<p class="order-confirmation-page-payment-method-title">Payment Method</p>
+									<p class="order-confirmation-page-payment-method-item">{{$order->paymentTerms}}</p>
+								</div>
+								<div class="col-md-3">
+									<p class="order-confirmation-page-shipping-title">Shipping</p>
+									<p class="order-confirmation-page-shipping-item">$</p>
+								</div>
+								<div class="col-md-3">
+									<p class="order-confirmation-page-tax-title">Tax</p>
+									<p class="order-confirmation-page-tax-item">
+										$
+									</p>
+								</div>
+								<div class="col-md-3">
+									<p class="order-confirmation-page-total-title">Total</p>
+									<p class="order-confirmation-page-total-item">
+										${{number_format($order->total, 2)}}
+									</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					{{-- for media screen 1440px end --}}
+
+					{{-- for media screen 768 1406 --}}
+					<div class="row ms-5 p-4 me-5 order-confirmation-page-invoice-row small-media-view " style="padding-top: 50px !important;">
+						<div class="col-md-12">
+							<div class="row">
+								<div class="col-md-4">
+									<p class="order-confirmation-page-order-number-title">Order Number</p>
+									<p class="order-confirmation-page-order-number-item">
+										{{$order->apiOrderItem[0]['order_id']}}
+									</p>
+								</div>
+								<div class="col-md-4">
+									<p class="order-confirmation-page-date-title">Date</p>
+									<p class="order-confirmation-page-date-item">
+										{{$order->apiOrderItem[0]['created_at']->format('F '.'d, Y, '.'g:i A')}}
+									</p>
+								</div>
+								<div class="col-md-4">
+									<p class="order-confirmation-page-mobile-title">
+										Mobile
+									</p>
+									<p class="order-confirmation-page-mobile-item">
+										{{$order_contact->phone}}
+									</p>
+								</div>
+								
+							</div>
+						</div>
+						<div class="col-md-12">
+							<div class="row">
+								<div class="col-md-4">
+									<p class="order-confirmation-page-email-title">
+										Email
+									</p>
+									<p class="order-confirmation-page-email-item">
+										{{$order->user->email}}
+									</p>
+								</div>
+
+								<div class="col-md-4">
+									<p class="order-confirmation-page-payment-method-title">Payment Method</p>
+									<p class="order-confirmation-page-payment-method-item">{{$order->paymentTerms}}</p>
+								</div>
+								<div class="col-md-4">
+									<p class="order-confirmation-page-shipping-title">Shipping</p>
+									<p class="order-confirmation-page-shipping-item">$</p>
+								</div>
+								
+								
+							</div>
+						</div>
+						<div class="col-md-12">
+							<div class="row">
+								
+								<div class="col-md-4">
+									<p class="order-confirmation-page-tax-title">Tax</p>
+									<p class="order-confirmation-page-tax-item">
+										$
+									</p>
+								</div>
+								<div class="col-md-4">
+									<p class="order-confirmation-page-total-title">Total</p>
+									<p class="order-confirmation-page-total-item">
+										${{number_format($order->total, 2)}}
+									</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					{{-- for media screen 1440px end --}}
 					<div class="row">
 						<div class="col-md-12">
 							<div class="row  ms-5 p-4 me-5 order-confirmation-page-second-row"
@@ -288,8 +460,7 @@
 													<img src="/theme/img/image_not_available.png" alt="" width="80px">
 													@endif
 												</div>
-												<div class="col-md-5 py-2 ps-0"
-													style="margin-left: -48px !important; margin-top:3px;">
+												<div class="col-md-5 py-2 ps-0 prod-name-img" style="">
 													<a class="order-confirmation-page-product-category-name pb-3"
 														href=" {{ url('product-detail/'. $item->product->id.'/'.$option->option_id.'/'.$item->product->slug) }}">
 														{{$item->product->name}}
