@@ -74,125 +74,130 @@
         </div>
         <div class="card card-body">
             <div id="admin-users"></div>
-            <table class="table table-striped table-hover table-bordered table-responsive" id="user-table">
-
+            <table class="table table-striped table-hover table-bordered" id="user-table">
                 <tr>
-                    <th>No <i class="fa fa-sort"></th>
-                    <th>Name <i class="fa fa-sort"></th>
-                    <th>Last Name <i class="fa fa-sort"></th>
-                    <th>Email <i class="fa fa-sort"></th>
-                    <th>Cin7 User-ID <i class="fa fa-sort"></th>
-                    <th>Company (Account aka Parent) <i class="fa fa-sort"></th>
-                    <th>Secondary Contact Company <i class="fa fa-sort"></th>
-                    <th>Type <i class="fa fa-sort"></th>
-                    <th>Roles <i class="fa fa-sort"></th>
-                    <th>Action <i class="fa fa-sort"></th>
+                    <thead>
+                        <th>No <i class="fa fa-sort"></th>
+                        <th>Name <i class="fa fa-sort"></th>
+                        <th>Last Name <i class="fa fa-sort"></th>
+                        <th>Email <i class="fa fa-sort"></th>
+                        <th>Cin7 User-ID <i class="fa fa-sort"></th>
+                        <th>Company (Account aka Parent) <i class="fa fa-sort"></th>
+                        <th>Secondary Contact Company <i class="fa fa-sort"></th>
+                        <th>Type <i class="fa fa-sort"></th>
+                        <th>Roles <i class="fa fa-sort"></th>
+                        <th>Action <i class="fa fa-sort"></th>
+                    </thead>
                 </tr>
-                @foreach ($data as $key => $user)
-                    @foreach ($user->contact as $contact)
-                        <tr>
-                            <td>{{ ++$i }}</td>
-                            <td>
-                                @if ($contact)
-                                    {{ $contact->firstName }}
-                                @elseif ($user->first_name)
-                                    {{ $user->first_name }}
-                                @else
-                                    <span class="badge bg-info">empty</span>
-                                @endif
-                            </td>
-                            <td>
-                                @if ($contact)
-                                    {{ $contact->lastName }}
-                                @elseif ($user->last_name)
-                                    {{ $user->last_name }}
-                                @else
-                                    <span class="badge bg-info">empty</span>
-                                @endif
-                            </td>
-                            <td>{{ $user->email }}</td>
-                            <td>
-                                @if ($contact)
-                                    @if ($contact->contact_id)
-                                        {{ $contact->contact_id }}
+                <tbody>
+                    @foreach ($data as $key => $user)
+                        @foreach ($user->contact as $contact)
+                            <tr>
+                                <td>{{ ++$i }}</td>
+                                <td>
+                                    @if ($contact)
+                                        {{ $contact->firstName }}
+                                    @elseif ($user->first_name)
+                                        {{ $user->first_name }}
                                     @else
-                                        {{ $contact->parent_id }}
+                                        <span class="badge bg-info">empty</span>
                                     @endif
-                                @else
-                                    <span class="badge bg-info">empty</span>
-                                @endif
-                            </td>
-                            <td>
-                                @if ($contact)
-                                    @if ($contact->is_parent == 1)
-                                        {{ $contact->company }}
+                                </td>
+                                <td>
+                                    @if ($contact)
+                                        {{ $contact->lastName }}
+                                    @elseif ($user->last_name)
+                                        {{ $user->last_name }}
                                     @else
-                                        <span class="badge bg-secondary">empty</span>
+                                        <span class="badge bg-info">empty</span>
                                     @endif
-                                @else
-                                    <span class="badge bg-secondary">empty</span>
-                                @endif
-                            </td>
-                            <td>
-                                @if ($contact)
-                                    @if ($contact->is_parent == 0)
-                                        {{ $contact->company }}
+                                </td>
+                                <td>{{ $user->email }}</td>
+                                <td>
+                                    @if ($contact)
+                                        @if ($contact->contact_id)
+                                            {{ $contact->contact_id }}
+                                        @else
+                                            {{ $contact->parent_id }}
+                                        @endif
+                                    @else
+                                        <span class="badge bg-info">empty</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if ($contact)
+                                        @if ($contact->is_parent == 1)
+                                            {{ $contact->company }}
+                                        @else
+                                            <span class="badge bg-secondary">empty</span>
+                                        @endif
                                     @else
                                         <span class="badge bg-secondary">empty</span>
                                     @endif
-                                @else
-                                    <span class="badge bg-secondary">empty</span>
-                                @endif
-                            </td>
-                            <td>
-                                @if ($contact)
-                                    @if (!empty($contact->contact_id))
-                                        <span class="badge bg-primary">primary</span>
+                                </td>
+                                <td>
+                                    @if ($contact)
+                                        @if ($contact->is_parent == 0)
+                                            {{ $contact->company }}
+                                        @else
+                                            <span class="badge bg-secondary">empty</span>
+                                        @endif
                                     @else
-                                        <span class="badge bg-secondary">secondary</span>
+                                        <span class="badge bg-secondary">empty</span>
                                     @endif
-                                @endif
-                            </td>
-                            <td>
-                                @if (!empty($user->getRoleNames()))
-                                    @foreach ($user->getRoleNames() as $role)
-                                        <label class="badge badge-success">{{ $role }}</label>
-                                    @endforeach
-                                @endif
-                            </td>
-                            <td>
-                                <a class="btn btn-info btn-sm" href="{{ route('users.show', $user->id) }}">Show</a>
-                                @can('user-edit')
-                                    <a class="btn btn-primary btn-sm" href="{{ route('users.edit', $user->id) }}">Edit</a>
-                                @endcan
-                                @can('user-delete')
-                                    {!! Form::open(['method' => 'DELETE', 'route' => ['users.destroy', $user->id], 'style' => 'display:inline']) !!}
-                                    {!! Form::submit('Delete', ['class' => 'btn btn-danger btn-sm']) !!}
-                                    {!! Form::close() !!}
-                                @endcan
-                                <a class="btn btn-success btn-sm" href="{{ url('admin/user-switch/' . $user->id) }}">Switch
-                                    User</a>
-                                @if ($contact)
-                                    @if ($contact->secondary_contact)
-                                        <button type="button" class="btn btn-primary btn-sm" data-id="{{ $user->id }}"
-                                            data-toggle="modal" onclick="assignParent('{{ $user->id }}')">Set
-                                            Parent</button>
-                                        <input type="hidden" value='{{ $user->id }}' id='{{ $user->id }}'>
+                                </td>
+                                <td>
+                                    @if ($contact)
+                                        @if (!empty($contact->contact_id))
+                                            <span class="badge bg-primary">primary</span>
+                                        @else
+                                            <span class="badge bg-secondary">secondary</span>
+                                        @endif
                                     @endif
-                                @endif
-                                @if ($user->is_updated == 0)
-                                    <a class="btn btn-warning btn-sm"
-                                        href="{{ url('admin/send-password/' . $user->id) }}">Send
-                                        password</a>
-                                @else
-                                    <a class="btn btn-danger btn-sm disabled"
-                                        href="{{ url('admin/send-password/' . $user->id) }}">Send
-                                        password</a>
-                                @endif
-                            </td>
-                        </tr>
+                                </td>
+                                <td>
+                                    @if (!empty($user->getRoleNames()))
+                                        @foreach ($user->getRoleNames() as $role)
+                                            <label class="badge badge-success">{{ $role }}</label>
+                                        @endforeach
+                                    @endif
+                                </td>
+                                <td>
+                                    <a class="btn btn-info btn-sm" href="{{ route('users.show', $user->id) }}">Show</a>
+                                    @can('user-edit')
+                                        <a class="btn btn-primary btn-sm" href="{{ route('users.edit', $user->id) }}">Edit</a>
+                                    @endcan
+                                    @can('user-delete')
+                                        {!! Form::open(['method' => 'DELETE', 'route' => ['users.destroy', $user->id], 'style' => 'display:inline']) !!}
+                                        {!! Form::submit('Delete', ['class' => 'btn btn-danger btn-sm']) !!}
+                                        {!! Form::close() !!}
+                                    @endcan
+                                    <a class="btn btn-success btn-sm"
+                                        href="{{ url('admin/user-switch/' . $user->id) }}">Switch
+                                        User</a>
+                                    @if ($contact)
+                                        @if ($contact->secondary_contact)
+                                            <button type="button" class="btn btn-primary btn-sm"
+                                                data-id="{{ $user->id }}" data-toggle="modal"
+                                                onclick="assignParent('{{ $user->id }}')">Set
+                                                Parent</button>
+                                            <input type="hidden" value='{{ $user->id }}' id='{{ $user->id }}'>
+                                        @endif
+                                    @endif
+                                    @if ($user->is_updated == 0)
+                                        <a class="btn btn-warning btn-sm"
+                                            href="{{ url('admin/send-password/' . $user->id) }}">Send
+                                            password</a>
+                                    @else
+                                        <a class="btn btn-danger btn-sm disabled"
+                                            href="{{ url('admin/send-password/' . $user->id) }}">Send
+                                            password</a>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
                     @endforeach
-                @endforeach
+                </tbody>
             </table>
             <!-- Modal -->
             <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -246,7 +251,7 @@
             #custom-search-input input {
                 border: 0;
                 box-shadow: none;
-                width: 590px;
+                width: 388px !important;
             }
 
             #custom-search-input button {
@@ -267,6 +272,68 @@
 
             #custom-search-input .glyphicon-search {
                 font-size: 23px;
+            }
+
+            @media screen and (max-width: 1440px) {
+                #custom-search-input {
+                    border: 0;
+                    box-shadow: none;
+
+                    margin-left: 0px !important;
+                    margin-top: 0 !important;
+                }
+
+                .table-responsive-stack tr {
+                    display: block;
+                    margin-bottom: 0.625em;
+                }
+
+                .table-responsive-stack td {
+                    display: block;
+                    text-align: right;
+                }
+
+                .table-responsive-stack td::before {
+                    content: attr(data-label);
+                    float: left;
+                    font-weight: bold;
+                    text-transform: uppercase;
+                }
+
+                .table-responsive-stack td:last-child {
+                    border-bottom: 0;
+                }
+            }
+
+            @media screen and (max-width: 1321px) {
+                #custom-search-input {
+                    /* padding: 3px !important;
+                        border: solid 1px #E4E4E4 !important;
+                        border-radius: 6px !important;
+                        background-color: #fff !important;
+                        height: 45px !important; */
+                }
+
+                .table-responsive-stack tr {
+                    display: block;
+                    margin-bottom: 0.625em;
+                }
+
+                .table-responsive-stack td {
+                    display: block;
+                    text-align: right;
+                }
+
+                .table-responsive-stack td::before {
+                    content: attr(data-label);
+                    float: left;
+                    font-weight: bold;
+                    text-transform: uppercase;
+                }
+
+                .table-responsive-stack td:last-child {
+                    border-bottom: 0;
+                }
             }
         </style>
     @stop
