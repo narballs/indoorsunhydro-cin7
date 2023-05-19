@@ -686,6 +686,15 @@ class UserController extends Controller
     {
         $user_id = auth()->id();
         $contact_id = $request->contact_id;
+        $contact = Contact::where('user_id', $user_id)->where('contact_id', $contact_id)->orWhere('secondary_id', $contact_id)->first();
+        
+        if ($contact->secondary_id) {
+            $parent_id = Contact::where('secondary_id', $contact->secondary_id)->first()->parent_id;
+            $contact_id = $parent_id;
+        }
+        else {
+            $user_address = Contact::where('user_id', $user_id)->where('contact_id', $contact_id)->first();
+        }
         $request->validate([
             'first_name' => 'required',
             'last_name' => 'required',
@@ -727,7 +736,6 @@ class UserController extends Controller
         $res = $client->put($url, $authHeaders);
         $api_response = $res->getBody()->getContents();
         $response = json_decode($api_response);
-        dd($response);
         if ($response[0]->success == true) {
             $user_id = auth()->id();
             $contact = Contact::where('user_id', $user_id)->where('contact_id', $contact_id)->first();

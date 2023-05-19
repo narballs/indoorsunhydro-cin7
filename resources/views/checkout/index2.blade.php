@@ -1052,7 +1052,7 @@ $cart_price = 0;
                             <div class="col-md-6 mb-3">
                                 <label for="firstName">Waqas</label>
                                 <input type="text" class="form-control bg-light" id="first_name" name="firstName"
-                                    placeholder="First name" value="{{ $user_address->firstName }}" required>
+                                    placeholder="First name" value="{{ $user_address->firstName }}" disabled>
                                 <div id="error_first_name" class="text-danger">
 
                                 </div>
@@ -1060,7 +1060,7 @@ $cart_price = 0;
                             <div class="col-md-6 mb-3">
                                 <label for="lastName">Last name</label>
                                 <input type="text" class="form-control bg-light" id="last_name" name="lastName" placeholder=""
-                                    value="{{ $user_address->lastName }}" required>
+                                    value="{{ $user_address->lastName }}" disabled>
                                 <div id="error_last_name" class="text-danger">
 
                                 </div>
@@ -1071,7 +1071,7 @@ $cart_price = 0;
                             <div class="input-group">
                                 <input type="text" class="form-control bg-light" name="user_company" id="user_company"
                                     placeholder="Enter you company name" value="{{ $user_address->company }}"
-                                    required>
+                                    disabled>
                             </div>
                             <div id="error_company" class="text-danger">
 
