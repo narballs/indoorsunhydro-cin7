@@ -73,6 +73,7 @@ $cart_price = 0;
     @endforeach
 @endif
 
+
 <div class="container-fluid w-75 desktop-view">
     <div class="row">
         <div class="col-md-12">
@@ -81,11 +82,11 @@ $cart_price = 0;
                     <div class="col-md-6">
                         <div class="row" style="border-bottom: 2px dashed #CDCDCD;">
                             <div class="col-md-6">
-                                <p class="billing-address-thank-you-page-heading mb-0">Billing Address</p>
+                                <p class="billing-address-thank-you-page-heading mb-0">Shipping Address</p>
                             </div>
                             <div class="col-md-6">
                                 <a data-bs-toggle="modal" href="#address_modal_id" role="button" class="float-end">
-                                    <img src="/theme/img/thank_you_page_edit_icon.png" alt="" class="d-none">
+                                    <img src="/theme/img/thank_you_page_edit_icon.png" alt="" >
                                 </a>
                             </div>
                         </div>
@@ -97,33 +98,34 @@ $cart_price = 0;
                             </div>
                             <div class="col-md-6">
                                 <p class="user-address-thank-you-page-title">Address line 1</p>
-                                <p class="user-address-thank-you-page-item">{{ $user_address->postalAddress1 }}</p>
+                                <p class="user-address-thank-you-page-item">{{ $user_address->address1 }}</p>
                                 <div class="row">
                                     <div class="col-md-4">
                                         <p class="user-address-thank-you-page-title">City</p>
-                                        <p class="user-address-thank-you-page-item">{{ $user_address->postalCity }}
+                                        <p class="user-address-thank-you-page-item">{{ $user_address->city }}
                                         </p>
                                     </div>
                                     <div class="col-md-4">
                                         <p class="user-address-thank-you-page-title">State</p>
-                                        <p class="user-address-thank-you-page-item">{{ $user_address->postalState }}
+                                        <p class="user-address-thank-you-page-item">{{ $user_address->state }}
                                         </p>
                                     </div>
                                     <div class="col-md-4">
                                         <p class="user-address-thank-you-page-title">Zip</p>
-                                        <p class="user-address-thank-you-page-item">{{ $user_address->postalPostCode }}
+                                        <p class="user-address-thank-you-page-item">{{ $user_address->postCode }}
                                         </p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <p class="user-address-thank-you-page-title">Address line 2</p>
-                                <p class="user-address-thank-you-page-item">{{ $user_address->postalAddress2 }}</p>
+                                <p class="user-address-thank-you-page-item">{{ $user_address->address2 }}</p>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <p class="billing-address-thank-you-page-heading billing-border">Shipping Address</p>
+
+                        <p class="billing-address-thank-you-page-heading billing-border">Billing Address</p>
                         <div class="row">
                             <div class="col-md-12">
                                 <p class="user-first-name-thank-you-page"> {{ $user_address->firstName }}
@@ -366,7 +368,7 @@ $cart_price = 0;
                                                                 Name</label><span
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text" placeholder="Enter your first name"
-                                                                id="company_website" name="firstName"
+                                                                id="firstName" name="firstName"
                                                                 value="{{ $user_address->firstName }}"
                                                                 class="form-control mt-0fontAwesome">
                                                         </div>
@@ -374,7 +376,7 @@ $cart_price = 0;
                                                             <label class="label ">last Name</label><span
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text" placeholder="Enter your last"
-                                                                id="company_website" name="lastName"
+                                                                id="lastName" name="lastName"
                                                                 value="{{ $user_address->lastName }}"
                                                                 class="form-control fontAwesome ">
                                                         </div>
@@ -1045,10 +1047,11 @@ $cart_price = 0;
                     <form class="needs-validation mt-4 novalidate" action="{{ url('order') }}" method="POST">
                         @csrf
                         <div class="alert alert-success mt-3 d-none" id="success_msg"></div>
+                        <div class="alert alert-danger mt-3 d-none" id="failure_msg"></div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="firstName">First name</label>
-                                <input type="text" class="form-control bg-light" name="firstName"
+                                <label for="firstName">Waqas</label>
+                                <input type="text" class="form-control bg-light" id="first_name" name="firstName"
                                     placeholder="First name" value="{{ $user_address->firstName }}" required>
                                 <div id="error_first_name" class="text-danger">
 
@@ -1056,7 +1059,7 @@ $cart_price = 0;
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="lastName">Last name</label>
-                                <input type="text" class="form-control bg-light" name="lastName" placeholder=""
+                                <input type="text" class="form-control bg-light" id="last_name" name="lastName" placeholder=""
                                     value="{{ $user_address->lastName }}" required>
                                 <div id="error_last_name" class="text-danger">
 
@@ -1066,7 +1069,7 @@ $cart_price = 0;
                         <div class="mb-3">
                             <label for="company">Company Name(optional)</label>
                             <div class="input-group">
-                                <input type="text" class="form-control bg-light" name="company"
+                                <input type="text" class="form-control bg-light" name="user_company" id="user_company"
                                     placeholder="Enter you company name" value="{{ $user_address->company }}"
                                     required>
                             </div>
@@ -1081,7 +1084,7 @@ $cart_price = 0;
                         <div class="mb-3">
                             <label for="address">Street Address</label>
                             <input type="text" class="form-control bg-light" name="address"
-                                value="{{ $user_address->postalAddress1 }}"
+                                value="{{ $user_address->address1}}"
                                 placeholder="House number and street name" required>
                         </div>
                         <div id="error_address1" class="text-danger">
@@ -1089,7 +1092,7 @@ $cart_price = 0;
                         <div class="mb-3">
                             <label for="address2">Address 2 <span class="text-muted">(Optional)</span></label>
                             <input type="text" class="form-control bg-light" name="address2"
-                                value="{{ $user_address->postalAddress2 }}"
+                                value="{{ $user_address->address2 }}"
                                 placeholder="Apartment, suite, unit etc (optional)">
                         </div>
                         <div id="error_address2" class="text-danger">
@@ -1097,7 +1100,7 @@ $cart_price = 0;
                         <div class="mb-3">
                             <label for="town">Town/City <span class="text-muted">(Optional)</span></label>
                             <input type="text" class="form-control bg-light" name="town_city"
-                                value="{{ $user_address->postalCity }}" placeholder="Enter your town">
+                                value="{{ $user_address->city }}" placeholder="Enter your town">
                         </div>
                         <div id="error_city" class="text-danger">
                         </div>
@@ -1108,13 +1111,13 @@ $cart_price = 0;
                                 <select class="form-control bg-light" name="state" id="state">
                                     @foreach ($states as $state)
                                         <?php
-                                        if ($user_address->postalState == $state->name) {
+                                        if ($user_address->state == $state->state_name) {
                                             $selected = 'selected';
                                         } else {
                                             $selected = '';
                                         }
                                         ?>
-                                        <option value="{{ $state->name }}" <?php echo $selected; ?>>{{ $state->name }}
+                                        <option value="{{ $state->state_name }}" <?php echo $selected; ?>>{{ $state->state_name }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -1145,7 +1148,7 @@ $cart_price = 0;
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn button-cards primary"
-                    onclick="updateContact('{{ auth()->user()->id }}')">Update</button>
+                    onclick="updateContact('{{ $contact_id }}')">Update</button>
             </div>
         </div>
     </div>
@@ -1375,15 +1378,17 @@ $cart_price = 0;
 
                 }
 
-                function updateContact(user_id) {
-                    var first_name = $('input[name=firstName]').val();
-                    var last_name = $('input[name=lastName]').val();
-                    var company_name = $('input[name=company]').val();
+                function updateContact(contact_id) {
+                    var state = document.getElementById("state").value;
+                    var first_name = $('#first_name').val();
+                    var last_name = $('#last_name').val();
+                    // alert(first_name);
+                    var company_name = $('#user_company').val();
                     var phone = $('input[name=phone]').val();
-                    var address = $('input[name=address]').val();
+                    var address1 = $('input[name=address]').val();
                     var address2 = $('input[name=address2]').val();
                     var town_city = $('input[name=town_city]').val();
-                    var state = document.getElementById("state").value;
+                    
                     var zip = $('input[name=zip]').val();
                     var email = $('input[name=email]').val();
 
@@ -1393,12 +1398,12 @@ $cart_price = 0;
 
                         data: {
                             "_token": "{{ csrf_token() }}",
-                            "user_id": user_id,
+                            "contact_id": contact_id,
                             "first_name": first_name,
                             "last_name": last_name,
                             "company_name": company_name,
                             "phone": phone,
-                            "address": address,
+                            "address1": address1,
                             "address2": address2,
                             "town_city": town_city,
                             "state": state,
@@ -1411,6 +1416,12 @@ $cart_price = 0;
                                 $('#success_msg').removeClass('d-none');
                                 $('#success_msg').html(response.msg);
                                 window.location.reload();
+                            }
+                            else {
+                                $('.modal-backdrop').remove()
+                                $('#failure_msg').removeClass('d-none');
+                                $('#failure_msg').html(response.msg);
+
                             }
                         },
                         error: function(response) {

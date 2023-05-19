@@ -27,10 +27,10 @@ class Contact extends Model
         'phone',
         'address1',
         'address2',
-        'city_id',
+        'city',
         'postCode',
         'delivery_city',
-        'state_id',
+        'state',
         'postalAddress1',
         'postalAddress2',
         'postalCity',
@@ -42,7 +42,8 @@ class Contact extends Model
         'notes',
         'hashKey',
         'hashUsed',
-        'credit_limit'
+        'credit_limit',
+        'balance_owing'
     ];
 
     public function orders()
