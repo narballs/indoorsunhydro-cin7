@@ -17,19 +17,19 @@
 
 
 .nav-item .active>i {
-    color: green !important;
+    color: #7CC633 !important;
 }
 
 .nav-item .active>p {
-    color: green !important;
+    color: #7CC633 !important;
 }
 
 .nav-item i {
-    color: white !important;
+    color: #868686 !important;
 }
 
 .nav-item p {
-    color: white !important;
+    color: #868686 !important;
 }
 
 /* order page start */
@@ -105,5 +105,18 @@
     vertical-align: top;
     border-top: none !important;
 }
+
+.main-sidebar { 
+    background-color: #2D2D2D !important ;
+}
+.brand-text {
+    color: #FFFFFF !important;
+    /* font-family: 'Poppins' !important; */
+    font-style: normal !important;
+    font-weight: 600 !important;
+    font-size: 24px !important;
+    line-height: 36px !important;
+    margin-left: 1.5rem !important;
+} 
 
 /* order page :end */
