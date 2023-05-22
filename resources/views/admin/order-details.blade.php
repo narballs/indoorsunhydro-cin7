@@ -280,8 +280,8 @@
                     <h3 class=" h6">Address</h3>
                     <address>
                         <strong>{{ $customer->firstName }} {{ $customer->lastName }}</strong><br>
-                        {{ $customer->postalAddress1 }}, {{ $customer->postalAddress2 }}<br>
-                        {{ $customer->postalCity }},
+                        {{ $customer->address1 }}, {{ $customer->address2 }}<br>
+                        {{ $customer->city }},
                         <p title="Phone" class="mb-0">P: ({{ $customer->mobile }})</p>
                         <p title="Phone">{{ $customer->email }}</p>
                     </address>
