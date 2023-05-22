@@ -7,8 +7,8 @@
     Welcome<h1>reset</h1>
     <p>Password Reset</p>
     <p>{{$plain}}</p>
-   
+    <p>{{$url}}</p>
     <p>Thank you</p>
-    <a href="{{url('user')}}" class="btn btn-sucess">set password</a>
+    <a href="{{url('index')}}" class="btn btn-sucess">set password</a>
 </body>
 </html>

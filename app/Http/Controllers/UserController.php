@@ -253,6 +253,9 @@ class UserController extends Controller
         ]);
         $credentials = $request->except(['_token']);
         $user = User::where('email', $request->email)->first();
+
+
+              $email_user = session::put('user', $user);
         $cart = [];
         if (auth()->attempt($credentials)) {
             $user_id = auth()->user()->id;
@@ -304,6 +307,7 @@ class UserController extends Controller
                     return redirect()->route('cart');
                 } else {
                     if ($user->is_updated == 1) {
+
                         $companies = Contact::where('user_id', auth()->user()->id)->get();
 
                         if ($companies[0]->contact_id == null) {
@@ -1001,8 +1005,13 @@ class UserController extends Controller
         $user->password = $encrypted_password;
         $user->hash = $hash;
         $user->save();
+        $base_url = url('/');
 
+        $url = $base_url.'/index?hash='.$hash;
         $data['email'] = $user->email;
+        $data['url'] = $url;
+
+
         $data['content'] = 'Password Reset';
         $data['subject'] = 'Password Reset';
         $data['from'] = env('MAIL_FROM_ADDRESS');
@@ -1177,4 +1186,13 @@ class UserController extends Controller
             ]);
         }
     }
+    public function index_email_view (Request $request)
+    {
+
+        $user = User::where('hash', $request->hash)->first();
+        Auth::login($user);
+
+       return view('reset-password', compact('user'));
+    }
 }
+
