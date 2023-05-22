@@ -21,6 +21,9 @@
 	.small-media-view  {
 		display:none;
 	}
+	.media_mobile  {
+		display:none;
+	}
 	.prod-name-img {
 		margin-left: -48px !important;
 		margin-top:3px;
@@ -34,6 +37,9 @@
 			display:none;
 		}
 		.main-view {
+			display:none;
+		}
+		.media_mobile  {
 			display:none;
 		}
 		.prod-name-img {
@@ -52,8 +58,65 @@
 		.small-media-view  {
 			display:flex;
 		}
+		.media_mobile  {
+			display:none;
+		}
 		.prod-name-img {
 			margin-left: 0px !important;
+		}
+	}
+	
+	/* mobile view  */
+
+	@media  screen and (min-width : 375px ) and (max-width:767px) {
+		.media-1440 {
+			display:none;
+		}
+
+		.main-view {
+			display:none;
+		}
+
+		.small-media-view  {
+			display:none;
+		}
+
+		.media_mobile  {
+			display:flex;
+		}
+		.prod-name-img {
+			margin-left: 0px !important;
+		}
+	}
+	@media  screen and (min-width : 375px ) and (max-width:700px) {
+		.div_increase_mobile  {
+			margin-left:0px !important;
+			margin-right:0px !important;
+			padding: 0px !important;
+			padding-left:0px !important;
+			padding-right:0px !important;
+		}
+
+		.add_border {
+			border:1px dashed #000 !important;
+ 		}
+		
+	}
+
+	@media  screen and (min-width : 375px ) and (max-width:650px) {
+		.mobile-font {
+			font-size:25px !important;
+		}
+		.mobile_class {
+			padding-left: 0px !important;
+		}
+
+		
+	}
+
+	@media  screen and (min-width : 375px ) and (max-width:500px) {
+		.mobile_text_class {
+			padding-left:1.8rem !important;
 		}
 		
 	}
@@ -66,15 +129,15 @@
 		<div class="col-md-12">
 			<div class="card mt-5 border-0">
 				<div class="card-body ps-5 mt-5 ">
-					<div class="row ps-5">
+					<div class="row ps-5 mobile_class">
 						<div class=" col-xl-12 col-lg-12 col-md-12 col-sm-12">
-							<p class="order-confirmation-page-top-heading">Order Confirmation</p>
+							<p class="order-confirmation-page-top-heading mobile-font">Order Confirmation</p>
 						</div>
 						<div class="col-md-12 mt-4">
 							<p class="order-confirmation-page-title">
 								{{$order_contact->firstName}}
 								{{$order_contact->lastName}}
-								<span class="order-confirmation-page-user-name">Your order has been received.</span>
+								<span class="order-confirmation-page-user-name mobile-font">Your order has been received.</span>
 							</p>
 						</div>
 					</div>
@@ -257,13 +320,85 @@
 							</div>
 						</div>
 					</div>
-					{{-- for media screen 1440px end --}}
+					{{-- for media screen 768 above end --}}
+
+					{{-- for media screen mobile --}}
+					<div class="row ms-5 p-4 me-5 order-confirmation-page-invoice-row media_mobile div_increase_mobile add_border" style="padding-top: 50px !important;">
+						<div class="col-sm-12">
+							<div class="row">
+								<div class="col-sm-6">
+									<p class="order-confirmation-page-order-number-title">Order Number</p>
+									<p class="order-confirmation-page-order-number-item">
+										{{$order->apiOrderItem[0]['order_id']}}
+									</p>
+								</div>
+								<div class="col-sm-6">
+									<p class="order-confirmation-page-date-title">Date</p>
+									<p class="order-confirmation-page-date-item">
+										{{$order->apiOrderItem[0]['created_at']->format('F '.'d, Y, '.'g:i A')}}
+									</p>
+								</div>
+								
+								
+							</div>
+						</div>
+						<div class="col-sm-12">
+							<div class="row">
+								<div class="col-sm-6">
+									<p class="order-confirmation-page-mobile-title">
+										Mobile
+									</p>
+									<p class="order-confirmation-page-mobile-item">
+										{{$order_contact->phone}}
+									</p>
+								</div>
+								<div class="col-sm-6">
+									<p class="order-confirmation-page-email-title">
+										Email
+									</p>
+									<p class="order-confirmation-page-email-item">
+										{{$order->user->email}}
+									</p>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-12">
+							<div class="row">
+								<div class="col-sm-6">
+									<p class="order-confirmation-page-payment-method-title">Payment Method</p>
+									<p class="order-confirmation-page-payment-method-item">{{$order->paymentTerms}}</p>
+								</div>
+								<div class="col-sm-6">
+									<p class="order-confirmation-page-shipping-title">Shipping</p>
+									<p class="order-confirmation-page-shipping-item">$</p>
+								</div>
+								
+							</div>
+						</div>
+						<div class="col-sm-12">
+							<div class="row">
+								<div class="col-sm-6">
+									<p class="order-confirmation-page-tax-title">Tax</p>
+									<p class="order-confirmation-page-tax-item">
+										$
+									</p>
+								</div>
+								<div class="col-sm-6">
+									<p class="order-confirmation-page-total-title">Total</p>
+									<p class="order-confirmation-page-total-item">
+										${{number_format($order->total, 2)}}
+									</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					{{-- for media mobile  end --}}
 					<div class="row">
 						<div class="col-md-12">
-							<div class="row  ms-5 p-4 me-5 order-confirmation-page-second-row"
+							<div class="row  ms-5 p-4 me-5 order-confirmation-page-second-row div_increase_mobile"
 								style="padding-top: 5rem!important;">
 								<div class="col-md-6">
-									<p class="order-confirmation-page-billing-address">
+									<p class="order-confirmation-page-billing-address mobile-font">
 										Billing Address
 									</p>
 									<div class="row">
@@ -346,7 +481,7 @@
 									</div>
 								</div>
 								<div class="col-md-6">
-									<p class="order-confirmation-page-shipping-address">
+									<p class="order-confirmation-page-shipping-address mobile-font">
 										Shipping Address
 									</p>
 									<div class="row">
@@ -432,9 +567,9 @@
 							</div>
 						</div>
 					</div>
-					<div class="row ps-5 mt-5 pe-5">
+					<div class="row ps-5 mt-5 pe-5 div_increase_mobile">
 						<div class="col-md-12 mt-5">
-							<p class="order-confirmation-page-item-purchased-title">Item Purchased </p>
+							<p class="order-confirmation-page-item-purchased-title mobile-font">Item Purchased </p>
 						</div>
 						<div class="col-md-12 mt-5">
 							<table class="table">
@@ -460,7 +595,7 @@
 													<img src="/theme/img/image_not_available.png" alt="" width="80px">
 													@endif
 												</div>
-												<div class="col-md-5 py-2 ps-0 prod-name-img" style="">
+												<div class="col-md-5 py-2 ps-0 prod-name-img mobile_text_class" style="">
 													<a class="order-confirmation-page-product-category-name pb-3"
 														href=" {{ url('product-detail/'. $item->product->id.'/'.$option->option_id.'/'.$item->product->slug) }}">
 														{{$item->product->name}}
