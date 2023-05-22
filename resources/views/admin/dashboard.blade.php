@@ -21,19 +21,61 @@
 
                         <div class="col-md-12 mt-4" id="div_message"></div>
                     </div>
-
-
                 </div>
             </div>
         </div>
-
     </div>
-
 @endsection
-
 @section('css')
-    <link rel="stylesheet" href="{{ asset('/css/admin_custom.css') }}">
+    <link rel="stylesheet" href="/css/admin_custom.css">
+    <link rel="stylesheet" href="{{ asset('admin/admin_lte.css') }}">
     <link href="https://fonts.cdnfonts.com/css/poppins" rel="stylesheet">
+
+    <style type="text/css">
+        .input-group-btn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #custom-search-input {
+            padding: 3px;
+            border: solid 1px #E4E4E4;
+            border-radius: 6px;
+            background-color: #fff;
+        }
+
+        #custom-search-input input {
+            border: 0;
+            box-shadow: none;
+            padding-top: 22px !important;
+            width: 329px !important;
+        }
+
+        #custom-search-input button {
+            margin: 2px 0 0 0;
+            background: none;
+            box-shadow: none;
+            border: 0;
+            color: #666666;
+            padding: 0 8px 0 10px;
+            border-right: solid 1px #ccc;
+        }
+
+        #custom-search-input button:hover {
+            border: 0;
+            box-shadow: none;
+            border-left: solid 1px #ccc;
+        }
+
+        #custom-search-input .glyphicon-search {
+            font-size: 23px;
+        }
+
+        .text-successs {
+            color: #7CC633 !important;
+        }
+    </style>
 @endsection
 @section('js')
     <script>

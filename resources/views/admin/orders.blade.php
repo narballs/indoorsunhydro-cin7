@@ -73,45 +73,8 @@
                                 </form>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="row align-items-center justify-content-end">
-                                <div class="col-md-3">
-                                    <select name="" class="form-control p-1" id="" style="border:none !important;">
-                                        <option value="">Sort by</option>
-                                        <option value="">Active</option>
-                                        <option value="">Disable</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
-                {{-- <div class="col-md-12">
-                    <h2>Orders</h2>
-                </div>
-                <div class="col-md-2">
-                    <div class="search-box">
-                        <a href="{{ 'order/create' }}"><input type="button" value="Create New Order"
-                                class="form-control btn btn-primary" placeholder="Create New">
-                        </a>
-                    </div>
-                </div>
-                <div class="col-md-6"></div>
-                <div class="col-md-4">
-                    <div id="custom-search-input">
-                        <div class="input-group col-md-12">
-                            <span class="input-group-btn">
-                                <button class="btn btn-info btn-lg" type="button">
-                                    <i class="fa fa-search"></i>
-                                </button>
-                            </span>
-                            <form method="get" action="/admin/orders">
-                                <input type="text" class="form-control input-lg" id="search" name="search"
-                                    placeholder="Search" value="{{ isset($search) ? $search : '' }}" />
-                            </form>
-                        </div>
-                    </div>
-                </div> --}}
             </div>
             <table class="table table-hover table-customer">
                 <thead>
@@ -139,15 +102,17 @@
                                 </td>
                             </tr>
                         @else
-                            <tr id="row-{{ $order->id }}">
+                            <tr id="row-{{ $order->id }}" class="order-row">
                                 <td>{{ $order->id }}</td>
                                 <td>{{ $order->created_at->format('F ' . 'd, Y, ' . 'g:i A') }}</td>
-                                <td class="created_by">
+                                <td class="created_by toggleClass">
                                     @if (!empty($order->primaryId) && !empty($order->primary_contact))
-                                        <span title="Secondary Contact">{{ $order->primary_contact->firstName }}
+                                        <span title="Secondary Contact"
+                                            class="created_by_order">{{ $order->primary_contact->firstName }}
                                             {{ $order->primary_contact->lastName }}</span>
                                     @elseif (!empty($order->secondaryId) && !empty($order->secondary_contact))
-                                        <span title="Secondary Contact">{{ $order->secondary_contact->firstName }}
+                                        <span title="Secondary Contact"
+                                            class="created_by_order">{{ $order->secondary_contact->firstName }}
                                             {{ $order->secondary_contact->lastName }}</span>
                                     @elseif (!empty($order->contact))
                                         {{ $order->contact->firstName }} {{ $order->contact->lastName }}
@@ -168,7 +133,7 @@
                                     @endif
                                 </td>
                                 <td>{{ $order->reference }}</td>
-                                <td>${{ $order->total }}</td>
+                                <td class="created_by_order_total">${{ number_format($order->total, 2) }}</td>
                                 <td>
                                     @if ($order->contact)
                                         @if ($order->contact->company)
@@ -176,31 +141,33 @@
                                         @endif
                                     @endif
                                 </td>
-                                <td>
+                                <td class="is-approved">
                                     @if ($order->isApproved == 0)
-                                        <span class="badge badge-warning">New</span>
+                                        <span class="badge badge-warning w-100 is_approded_0">New</span>
                                     @elseif ($order->isApproved == 1)
-                                        <span class="badge badge-success">Fullfilled</span>
+                                        <span class="badge badge-success w-100 is_approded_1">Fullfilled</span>
                                     @elseif ($order->isApproved == 2)
-                                        <span class="badge badge-danger">Cancelled</span>
+                                        <span class="badge badge-danger w-100 is_approded_2">Cancelled</span>
                                     @endif
                                 </td>
                                 <td>{{ $order->paymentTerms }}</td>
-                                <td>
-                                    <a href="{{ url('admin/order-detail/' . $order->id) }}" class="view" title=""
-                                        data-toggle="tooltip" data-original-title="View"><i class="icon-style fas fa-eye fa-border"></i></a>
-                                    <a href="#" class="edit" title="" data-toggle="tooltip"
-                                        data-original-title="Edit"><i class="icon-style fas fa-edit fa-border"></i></a>
-                                    <a href="#" class="delete deleteIcon" id="{{ $order->id }}" title=""
-                                        data-toggle="tooltip" data-original-title="Delete"><i
-                                            class="icon-style fas fa-trash-alt fa-border"></i></a>
+                                <td class="created_by toggleClass">
+                                    <a href="{{ url('admin/order-detail/' . $order->id) }}" class="view a_class"
+                                        title="" data-toggle="tooltip" data-original-title="View">
+                                        <i class="icon-style  fas fa-eye fa-border i_class"></i>
+                                    </a>
+                                    <a href="#" class="edit a_class" title="" data-toggle="tooltip"
+                                        data-original-title="Edit"><i class="icon-style fas fa-edit fa-border "></i></a>
+                                    <a href="#" class="delete deleteIcon a_class" id="{{ $order->id }}"
+                                        title="" data-toggle="tooltip" data-original-title="Delete"><i
+                                            class="icon-style fas fa-trash-alt fa-border "></i></a>
                                 </td>
                             </tr>
                         @endif
                     @endforeach
                 </tbody>
             </table>
-            <div class="col-md-12 mt-3">
+            <div class="col-md-12 mt-3 border-top">
                 {{ $orders->appends(Request::all())->links() }}
             </div>
         </div>
@@ -213,11 +180,6 @@
     <link href="https://fonts.cdnfonts.com/css/poppins" rel="stylesheet">
 
     <style type="text/css">
-        .icon-style {
-            /* border-color:  #242424 !important;
-            border-radius: 5px !important;
-            color:#242424 !important; */
-        }
         .input-group-btn {
             display: flex;
             justify-content: center;
@@ -258,32 +220,70 @@
             font-size: 23px;
         }
 
-        /* .nav-item .active {
-                                                                                                                                                                                                                                                                        background: none !important;
-                                                                                                                                                                                                                                                                        border-bottom: none !important;
-                                                                                                                                                                                                                                                                        box-shadow: none !important;
-                                                                                                                                                                                                                                                                    }
+        .text-successs {
+            color: #7CC633 !important;
+            font-family: 'Poppins', sans-serif !important;
+        }
 
-                                                                                                                                                                                                                                                                    .nav-item .active>i {
-                                                                                                                                                                                                                                                                        color: green !important;
-                                                                                                                                                                                                                                                                    }
+        .badge-success {
+            color: #fff;
+            /* background-color: #28a745; */
+            background: rgba(124, 198, 51, 0.2);
+            color: #7CC633;
+            padding: 7px !important;
+        }
 
-                                                                                                                                                                                                                                                                    .nav-item .active>p {
-                                                                                                                                                                                                                                                                        color: green !important;
-                                                                                                                                                                                                                                                                    }
+        .badge-warning {
+            color: #1f2d3d;
+            background-color: #fce9a9;
+            color: #ffc107 !important;
+            padding: 5px;
+        }
 
-                                                                                                                                                                                                                                                                    .nav-item i {
-                                                                                                                                                                                                                                                                        color: white !important;
-                                                                                                                                                                                                                                                                    }
-
-                                                                                                                                                                                                                                                                    .nav-item p {
-                                                                                                                                                                                                                                                                        color: white !important;
-                                                                                                                                                                                                                                                                    } */
+        .badge-danger {
+            color: #fff;
+            background-color: #f1abb2;
+            color: #f14f4f;
+            padding: 6px !important;
+        }
     </style>
 @stop
 
 @section('js')
     <script>
+        // toggle hover on rows in loop 
+
+        $('.order-row').hover(function() {
+            let id = $(this).attr('id');
+            children = $(this).children('.created_by').children('span').addClass('text-successs');
+            bg_success = $(this).children('.is-approved').children('.is_approded_1').addClass('background-success');
+            bg_success = $(this).children('.is-approved').children('.is_approded_0').addClass('background-warning');
+            bg_success = $(this).children('.is-approved').children('.is_approded_2').addClass('background-danger');
+            let tet = $(this).children('.created_by').children('a');
+            let get_class = tet.each(function(index, value) {
+                let test = tet[index].children[0];
+                test.classList.add('bg-icon');
+            });
+        });
+
+
+        $('.order-row').mouseleave(function() {
+            let id = $(this).attr('id');
+            children = $(this).children('.created_by').children('span').removeClass('text-successs');
+            bg_success = $(this).children('.is-approved').children('.is_approded_1').removeClass(
+                'background-success');
+            bg_success = $(this).children('.is-approved').children('.is_approded_0').removeClass(
+                'background-warning');
+            bg_success = $(this).children('.is-approved').children('.is_approded_2').removeClass(
+                'background-danger');
+            let tet = $(this).children('.created_by').children('a');
+            let get_class = tet.each(function(index, value) {
+                let test = tet[index].children[0];
+                test.classList.remove('bg-icon');
+            });
+        });
+
+
         function perPage() {
             var search = $('#search').val();
             var activeCustomer = $('#active_customer').val();

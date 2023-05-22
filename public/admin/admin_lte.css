@@ -17,19 +17,19 @@
 
 
 .nav-item .active>i {
-    color: #7CC633 !important;
+    color: green !important;
 }
 
 .nav-item .active>p {
-    color: #7CC633 !important;
+    color: green !important;
 }
 
 .nav-item i {
-    color: #868686 !important;
+    color: white !important;
 }
 
 .nav-item p {
-    color: #868686 !important;
+    color: white !important;
 }
 
 /* order page start */
@@ -94,10 +94,16 @@
 }
 
 .table-hover tbody tr:hover {
-    color: #212529;
+    color: #212529 !important;
     background: rgba(243, 243, 243, 0.53) !important;
     border-radius: 8.8914px !important;
 }
+
+.table-hover tbody tr {
+    background-color: none !important;
+    color: #A4A4A4 !important;
+}
+
 
 .table td,
 .table th {
@@ -106,9 +112,133 @@
     border-top: none !important;
 }
 
-.main-sidebar { 
-    background-color: #2D2D2D !important ;
+.pagination {
+    display: flex !important;
+    padding-left: 0 !important;
+    list-style: none !important;
+    border-radius: 0.25rem !important;
+    justify-content: end !important;
+    margin-top: 50px !important;
 }
+
+.bg-icon {
+    border: 1.41667px solid #242424 !important;
+    color: #242424 !important;
+}
+
+.page-link {
+    position: relative;
+    display: block;
+    padding: 0.5rem 0.75rem;
+    margin-left: -1px;
+    line-height: 1.25;
+    background-color: #fff;
+    border: 1px solid #B3B3B3 !important;
+    border-radius: 8.8914px !important;
+}
+
+.page-item.disabled .page-link {
+    pointer-events: none;
+    cursor: auto;
+    background-color: #fff !important;
+    border-color: #dee2e6;
+    border: 1.4152px solid #242424 !important;
+    border-radius: 8.8914px !important;
+    color: #242424 !important;
+}
+
+.page-link:hover {
+    z-index: 2;
+    color: #7CC633 !important;
+    text-decoration: none;
+    background-color: #fff !important;
+    border-color: #7CC633 !important;
+}
+
+.created_by_order {
+    font-family: 'Poppins', sans-serif !important;
+    font-style: normal !important;
+    font-weight: 500 !important;
+    font-size: 18px !important;
+    line-height: 27px !important;
+    display: flex !important;
+    align-items: center !important;
+    color: #242424 !important;
+}
+
+.created_by_order_total {
+    font-family: 'Poppins', sans-serif !important;
+    font-style: normal !important;
+    font-weight: 500 !important;
+    font-size: 18px !important;
+    line-height: 27px !important;
+    display: flex !important;
+    align-items: center !important;
+    color: #242424 !important;
+    margin-left: 15px !important;
+}
+
+.background-success {
+    border: 1px solid #7CC633 !important;
+}
+
+.background-warning {
+    border: 1px solid #FFC700 !important;
+}
+
+.background-danger {
+    border: 1px solid #FF0000 !important;
+}
+
+
+a {
+    color: #B3B3B3 !important;
+    text-decoration: none;
+    background-color: transparent;
+}
+
+.page-item.active .page-link {
+    z-index: 3;
+    background-color: white !important;
+    border-color: #7CC633 !important;
+    color: #7CC633 !important;
+    border-radius: 8.8914px;
+}
+
+
+.order-row {
+    font-family: 'Poppins', sans-serif;
+    font-style: normal !important;
+    font-weight: 500 !important;
+    font-size: 18px !important;
+    line-height: 27px !important;
+    /* display: flex; */
+    align-items: center !important;
+    text-align: center !important;
+    color: #A4A4A4 !important;
+}
+
+.total_order {
+    font-family: 'Poppins', sans-serif !important;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 27px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+
+    color: #242424;
+}
+
+.page-item {
+    margin-left: 8.49px !important;
+}
+
+.main-sidebar {
+    background-color: #2D2D2D !important;
+}
+
 .brand-text {
     color: #FFFFFF !important;
     /* font-family: 'Poppins' !important; */
@@ -117,6 +247,6 @@
     font-size: 24px !important;
     line-height: 36px !important;
     margin-left: 1.5rem !important;
-} 
+}
 
 /* order page :end */
