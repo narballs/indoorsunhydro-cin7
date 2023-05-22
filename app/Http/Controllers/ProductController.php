@@ -776,7 +776,6 @@ class ProductController extends Controller
     public function productSearch(Request $request)
     {
         if ($request->ajax()) {
-
             $brand = $request->input('brand');
             $price = $request->input('price');
             $stock = $request->input('instock');
@@ -930,22 +929,25 @@ class ProductController extends Controller
 
         $searchvalue = $request->value;
         $value = $searchvalue;
-        $products = Product::with(['options' => function ($q) {
-            $q->where('status', '!=', 'Disabled');
-        }])->where('status', '!=', 'Inactive')
-            ->where('name', 'LIKE', '%' . $value . '%')
-            ->orWhere('code', 'LIKE', '%' . $value . '%')->paginate($per_page);
-
-        // $searchvalue = preg_split('/\s+/', $searchvalue, -1, PREG_SPLIT_NO_EMPTY);
-        // if (!empty($is_search)) {
-        //     foreach ($searchvalue as $value) {
-        //         $products = Product::with(['options' => function ($q) {
-        //             $q->where('status', '!=', 'Disabled');
-        //         }])->where('status', '!=', 'Inactive')
-        //             ->where('name', 'LIKE', '%' . $value . '%')
-        //             ->orWhere('code', 'LIKE', '%' . $value . '%')->paginate($per_page);
-        //     };
-        // }
+        //dd($value);
+        // $products = Product::with(['options' => function ($q) {
+        //     $q->where('status', '!=', 'Disabled');
+        // }])->where('status', '!=', 'Inactive')
+        //     ->where('name', 'LIKE', '%' . $value . '%')
+        //     ->whereRaw('LOWER(`name`) like ?', ['%'.strtolower($value).'%'])
+        //     ->orWhere('code', 'LIKE', '%' . $value . '%')
+        //     ->paginate($per_page);
+            
+        $searchvalue = preg_split('/\s+/', $searchvalue, -1, PREG_SPLIT_NO_EMPTY);
+        if (!empty($is_search)) {
+            foreach ($searchvalue as $value) {
+                $products = Product::with(['options' => function ($q) {
+                    $q->where('status', '!=', 'Disabled');
+                }])->where('status', '!=', 'Inactive')
+                    ->where('name', 'LIKE', '%' . $value . '%')
+                    ->orWhere('code', 'LIKE', '%' . $value . '%')->paginate($per_page);
+            };
+        }
 
         $searched_value = $request->value;
 

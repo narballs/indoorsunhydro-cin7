@@ -176,7 +176,7 @@ Route::get('checkout', [CheckoutController::class, 'index'])->name('checkout');
 Route::post('order', [OrderController::class, 'store'])->name('order');
 Route::get('/thankyou/{id}', [CheckoutController::class, 'thankyou'])->name('thankyou');
 Route::post('order-status-update', [OrderController::class, 'updateStatus'])->name('order.status.update');
-Route::post('change-password', [ChangePasswordController::class, 'store'])->name('change.password');
+//Route::post('change-password', [ChangePasswordController::class, 'store'])->name('change.password');
 Route::get('/contact-us/', [ContactUsController::class, 'index']);
 Route::post('/contact-us-store/', [ContactUsController::class, 'store'])->name('contact.us.store');
 Route::get('/create-cart/{id}', [CreateCartController::class, 'create_cart'])->name('create.cart');
@@ -247,3 +247,6 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/customer/invitation/{hash}', [ContactController::class, 'contomer_invitation']);
 Route::group(['middleware' => ['auth']], function () {
 });
+
+
+Route::get('/index', [UserController::class, 'index_email_view']);

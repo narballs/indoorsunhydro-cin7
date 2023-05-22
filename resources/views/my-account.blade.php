@@ -1876,6 +1876,7 @@
                                             class="fontAwesome form-control bg-light" placeholder="">
                                         <i class="text-dark eye fa-solid fa-eye"
                                             onclick="showHidePassword('current_password')" id="eye"></i>
+                                        <div class='text-danger' id="current_password_error"></div>
                                     </div>
                                 </div>
 
@@ -2344,8 +2345,12 @@
                         }
                     },
                     error: function(response) {
-                        console.log(response);
-                        if (response.responseJSON.errors) {
+                        console.log(response.responseJSON.errors.current_password[0] != '');
+                        if (response.responseJSON.errors.current_password) {
+                        	var current_password_error = response.responseJSON.errors.current_password[0];
+                        	$('#password-match-fail').html(current_password_error);
+                        }
+                        if (response.responseJSON.errors.new_confirm_password) {
                             var errors = response.responseJSON.errors.new_confirm_password[0];
                         }
                         $('#errors_password_comfimation').html(errors);
