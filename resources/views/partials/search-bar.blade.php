@@ -53,8 +53,9 @@
             </div>
             <div class="d-flex align-items-center ml-2" style="flex-direction: column;">
                 <span class="mx-4 shopping_cart_text">Shopping Cart</span>
-                <a style="" class="p-0 cart-price btn btn-secondary mt-0" data-bs-container="body" data-bs-toggle="popover"
-                    data-bs-placement="right" data-bs-content="add <strong class='text-success'>$2500.00</strong> more to your cart and get <span class='text-danger'>5% off </span>">
+                {{-- <a style="" class="p-0 cart-price btn btn-secondary mt-0" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="right" data-bs-content="add <strong class='text-success'>$2500.00</strong> more to your cart and get <span class='text-danger'>5% off </span>"> --}}
+                    
+                <a>
                     <span id="top_cart_total"><a href="{{ '/cart/' }}"  class="d-flex align-items-center" style="color: #7bc533;margin-left:-2.3rem;">
                     <span id="topbar_cart_total" class="cart-counter-details"> ${{ number_format($grand_total, 2) }}</span>
                     {{-- <span id="cart_items_quantity" class="cart-counter-details">({{ $total_quantity }}</span>&nbsp;<span class="cart-counter-details">items)</span> --}}

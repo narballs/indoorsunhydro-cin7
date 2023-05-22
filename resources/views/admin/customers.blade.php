@@ -104,6 +104,7 @@
 
 @section('css')
     <link rel="stylesheet" href="/css/admin_custom.css">
+    <link rel="stylesheet" href="{{ asset('admin/admin_lte.css') }}">
     <style type="text/css">
         #custom-search-input {
             padding: 3px;

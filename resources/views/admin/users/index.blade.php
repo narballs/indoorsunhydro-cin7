@@ -239,6 +239,8 @@
 
     @section('css')
         <link rel="stylesheet" href="/css/admin_custom.css">
+        <link rel="stylesheet" href="{{ asset('admin/admin_lte.css') }}">
+
         <style type="text/css">
             #custom-search-input {
                 padding: 3px;
@@ -308,10 +310,10 @@
             @media screen and (max-width: 1321px) {
                 #custom-search-input {
                     /* padding: 3px !important;
-                        border: solid 1px #E4E4E4 !important;
-                        border-radius: 6px !important;
-                        background-color: #fff !important;
-                        height: 45px !important; */
+                            border: solid 1px #E4E4E4 !important;
+                            border-radius: 6px !important;
+                            background-color: #fff !important;
+                            height: 45px !important; */
                 }
 
                 .table-responsive-stack tr {

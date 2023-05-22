@@ -1,12 +1,92 @@
 @extends('adminlte::page')
 @section('title', 'Dashboard')
-@section('content_header')
-@stop
 @section('content')
     <div class="table-wrapper">
-        <div class="table-title">
+        {{-- <div class="table-title bg-white">
             <div class="row">
                 <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <p class="order_heading">
+                                Orders
+                            </p>
+                            <p class="order_description">
+                                In the order details section, you can review and manage all orders with their details. You
+                                can view and edit many information <br> such as IDs of all orders, ordered product, order
+                                date,
+                                price and order status. Access to this area is limited. Only administrators <br>and team
+                                leaders
+                                can reach. The changes you make will be approved after they are checked.
+                            </p>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn create-new-order-btn">
+                                + Create New Order
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-4 order-search">
+                        <div class="form-group has-search ">
+                            <span class="fa fa-search form-control-feedback"></span>
+                            <form method="get" action="/admin/orders">
+                                <input type="text" class="form-control border-0" id="search" name="search"
+                                    placeholder="Search for order ID, customer, order, status or something..."
+                                    value="{{ isset($search) ? $search : '' }}" />
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div> --}}
+        <div class="card-body mt-2">
+            <div class="row mb-3">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <p class="order_heading">
+                                Orders
+                            </p>
+                            <p class="order_description">
+                                In the order details section, you can review and manage all orders with their details. You
+                                can view and edit many information <br> such as IDs of all orders, ordered product, order
+                                date,
+                                price and order status. Access to this area is limited. Only administrators <br>and team
+                                leaders
+                                can reach. The changes you make will be approved after they are checked.
+                            </p>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn create-new-order-btn">
+                                + Create New Order
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row p-3" style="background: #F3F3F3; border-radius: 8.8914px;">
+                        <div class="col-md-8 order-search">
+                            <div class="form-group has-search ">
+                                <span class="fa fa-search form-control-feedback"></span>
+                                <form method="get" action="/admin/orders" class="mb-2">
+                                    <input type="text" class="form-control border-0" id="search" name="search"
+                                        placeholder="Search for order ID, customer, order, status or something..."
+                                        value="{{ isset($search) ? $search : '' }}" />
+                                </form>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="row align-items-center justify-content-end">
+                                <div class="col-md-3">
+                                    <select name="" class="form-control p-1" id="" style="border:none !important;">
+                                        <option value="">Sort by</option>
+                                        <option value="">Active</option>
+                                        <option value="">Disable</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{-- <div class="col-md-12">
                     <h2>Orders</h2>
                 </div>
                 <div class="col-md-2">
@@ -31,11 +111,9 @@
                             </form>
                         </div>
                     </div>
-                </div>
+                </div> --}}
             </div>
-        </div>
-        <div class="card card-body mt-4">
-            <table class="table table-striped table-hover table-bordered table-customer">
+            <table class="table table-hover table-customer">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -64,7 +142,7 @@
                             <tr id="row-{{ $order->id }}">
                                 <td>{{ $order->id }}</td>
                                 <td>{{ $order->created_at->format('F ' . 'd, Y, ' . 'g:i A') }}</td>
-                                <td>
+                                <td class="created_by">
                                     @if (!empty($order->primaryId) && !empty($order->primary_contact))
                                         <span title="Secondary Contact">{{ $order->primary_contact->firstName }}
                                             {{ $order->primary_contact->lastName }}</span>
@@ -110,12 +188,12 @@
                                 <td>{{ $order->paymentTerms }}</td>
                                 <td>
                                     <a href="{{ url('admin/order-detail/' . $order->id) }}" class="view" title=""
-                                        data-toggle="tooltip" data-original-title="View"><i class="fas fa-eye"></i></a>
+                                        data-toggle="tooltip" data-original-title="View"><i class="icon-style fas fa-eye fa-border"></i></a>
                                     <a href="#" class="edit" title="" data-toggle="tooltip"
-                                        data-original-title="Edit"><i class="fas fa-pen"></i></a>
+                                        data-original-title="Edit"><i class="icon-style fas fa-edit fa-border"></i></a>
                                     <a href="#" class="delete deleteIcon" id="{{ $order->id }}" title=""
                                         data-toggle="tooltip" data-original-title="Delete"><i
-                                            class="fas fa-trash-alt"></i></a>
+                                            class="icon-style fas fa-trash-alt fa-border"></i></a>
                                 </td>
                             </tr>
                         @endif
@@ -125,14 +203,21 @@
             <div class="col-md-12 mt-3">
                 {{ $orders->appends(Request::all())->links() }}
             </div>
-
         </div>
     </div>
 @stop
 
 @section('css')
     <link rel="stylesheet" href="/css/admin_custom.css">
+    <link rel="stylesheet" href="{{ asset('admin/admin_lte.css') }}">
+    <link href="https://fonts.cdnfonts.com/css/poppins" rel="stylesheet">
+
     <style type="text/css">
+        .icon-style {
+            /* border-color:  #242424 !important;
+            border-radius: 5px !important;
+            color:#242424 !important; */
+        }
         .input-group-btn {
             display: flex;
             justify-content: center;
@@ -172,6 +257,28 @@
         #custom-search-input .glyphicon-search {
             font-size: 23px;
         }
+
+        /* .nav-item .active {
+                                                                                                                                                                                                                                                                        background: none !important;
+                                                                                                                                                                                                                                                                        border-bottom: none !important;
+                                                                                                                                                                                                                                                                        box-shadow: none !important;
+                                                                                                                                                                                                                                                                    }
+
+                                                                                                                                                                                                                                                                    .nav-item .active>i {
+                                                                                                                                                                                                                                                                        color: green !important;
+                                                                                                                                                                                                                                                                    }
+
+                                                                                                                                                                                                                                                                    .nav-item .active>p {
+                                                                                                                                                                                                                                                                        color: green !important;
+                                                                                                                                                                                                                                                                    }
+
+                                                                                                                                                                                                                                                                    .nav-item i {
+                                                                                                                                                                                                                                                                        color: white !important;
+                                                                                                                                                                                                                                                                    }
+
+                                                                                                                                                                                                                                                                    .nav-item p {
+                                                                                                                                                                                                                                                                        color: white !important;
+                                                                                                                                                                                                                                                                    } */
     </style>
 @stop
 

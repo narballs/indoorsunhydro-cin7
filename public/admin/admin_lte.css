@@ -1,0 +1,122 @@
+@import url('https://fonts.cdnfonts.com/css/poppins');
+
+.nav-item .active {
+    background: none !important;
+    border-bottom: none !important;
+    box-shadow: none !important;
+}
+
+.nav-item .active {
+    font-family: 'Poppins', sans-serif;
+    font-style: normal !important;
+    font-weight: 500 !important;
+    font-size: 16px !important;
+    line-height: 24px !important;
+    color: #868686 !important;
+}
+
+
+.nav-item .active>i {
+    color: #7CC633 !important;
+}
+
+.nav-item .active>p {
+    color: #7CC633 !important;
+}
+
+.nav-item i {
+    color: #868686 !important;
+}
+
+.nav-item p {
+    color: #868686 !important;
+}
+
+/* order page start */
+.content-wrapper>.content {
+    padding: 0 0.5rem;
+    background-color: white !important;
+}
+
+.order_heading {
+    font-family: 'Poppins', sans-serif;
+    font-style: normal !important;
+    font-weight: 500 !important;
+    font-size: 24px !important;
+    line-height: 36px !important;
+    color: #242424 !important;
+}
+
+.order_description {
+    font-family: 'Poppins', sans-serif !important;
+    font-style: normal !important;
+    font-weight: 400 !important;
+    font-size: 18px !important;
+    line-height: 27px !important;
+    color: #3C3C3C !important;
+}
+
+.create-new-order-btn {
+    box-shadow: none;
+    background: rgba(243, 243, 243, 0.53);
+    font-family: 'Poppins', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: #868686;
+    border: 1.03706px solid rgba(208, 208, 208, 0.51);
+    border-radius: 7.25943px;
+}
+
+.has-search .form-control {
+    padding-left: 2.375rem;
+    padding-top: 25px;
+}
+
+.has-search .form-control-feedback {
+    position: absolute;
+    z-index: 2;
+    display: block;
+    width: 2.375rem;
+    height: 2.375rem;
+    line-height: 2.375rem;
+    text-align: center;
+    pointer-events: none;
+    color: #aaa;
+    padding-top: 10px;
+}
+
+.order-search {
+    background: #FFFFFF !important;
+    border: 1.03706px solid rgba(208, 208, 208, 0.51) !important;
+    border-radius: 7.25943px !important;
+}
+
+.table-hover tbody tr:hover {
+    color: #212529;
+    background: rgba(243, 243, 243, 0.53) !important;
+    border-radius: 8.8914px !important;
+}
+
+.table td,
+.table th {
+    padding: 0.75rem;
+    vertical-align: top;
+    border-top: none !important;
+}
+
+.main-sidebar { 
+    background-color: #2D2D2D !important ;
+}
+.brand-text {
+    color: #FFFFFF !important;
+    /* font-family: 'Poppins' !important; */
+    font-style: normal !important;
+    font-weight: 600 !important;
+    font-size: 24px !important;
+    line-height: 36px !important;
+    margin-left: 1.5rem !important;
+} 
+
+/* order page :end */
