@@ -1,6 +1,7 @@
 @include('partials.header')
 @include('partials.top-bar')
 @include('partials.search-bar')
+{{dd('kkk')}}
 <div class="mb-5">
 	<p style="line-height: 95px;" class="fw-bold fs-2 product-btn my-auto border-0 text-white text-center align-middle">
 		Checkout
