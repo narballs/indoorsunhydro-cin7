@@ -21,7 +21,7 @@ class AdminBuyListController extends Controller
 
     public function index(Request $request)
     {
-        $buylists = BuyList::all();
+        $buylists = BuyList::paginate(10);
         return view('admin/buy-lists', compact('buylists'));
     }
 
@@ -74,7 +74,7 @@ class AdminBuyListController extends Controller
     public function destroy($id)
     {
         BuyList::where('id', $id)->delete();
-        return Redirect::back()->withErrors(['msg' => 'The Message']);
+        return redirect()->back()->withErrors(['msg' => 'The Message']);
     }
 
     public function addToList(Request $request)
