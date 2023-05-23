@@ -5099,6 +5099,10 @@ select.list-dt:focus {
     border-radius: 5px;
 
 }
+
+.select_company_top::after {
+    display: none !important;
+}
 .top_select_menu_items {
     font-family: 'Poppins';
     font-style: normal;
@@ -5341,3 +5345,8 @@ select.list-dt:focus {
     padding: 10px 5px; 
     border-radius:0px !important; 
 } 
+
+
+.remove_shadow_search:focus {
+    box-shadow: none !important;
+}
