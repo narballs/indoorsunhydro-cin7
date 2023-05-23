@@ -55,38 +55,42 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php //dd($orders)
-                    ?>
                     @foreach ($shippingmethods as $key => $shippingmethod)
-                        <tr id="row-{{ $shippingmethod->id }}" class="shipping-method-row">
-                            <td>{{ $key + 1 }}</td>
-                            <td class="shipping_name">
-                                <span>{{ $shippingmethod->title }}</span>
-                            </td>
-                            <td>{{ $shippingmethod->cost }}</td>
-                            @if ($shippingmethod->status == 1)
-                                <td>
-                                    Enabled
+                        @if (!empty($shippingmethod))
+                            <tr id="row-{{ $shippingmethod->id }}" class="shipping-method-row">
+                                <td>{{ $key + 1 }}</td>
+                                <td class="shipping_name">
+                                    <span>{{ $shippingmethod->title }}</span>
                                 </td>
-                            @else
-                                <td>
-                                    Disabled
+                                <td>{{ $shippingmethod->cost }}</td>
+                                @if ($shippingmethod->status == 1)
+                                    <td>
+                                        Enabled
+                                    </td>
+                                @else
+                                    <td>
+                                        Disabled
+                                    </td>
+                                @endif
+                                <td class="shipping_action">
+                                    <a href="{{ url('admin/shipping-details/') }}" class="view a_class" title=""
+                                        data-toggle="tooltip" data-original-title="View"><i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="{{ url('admin/shipping-method/' . $shippingmethod->id) }}" class="edit a_class"
+                                        title="" data-toggle="tooltip" data-original-title="Edit"><i
+                                            class="fas fa-pen"></i>
+                                    </a>
+                                    <a href="{{ url('admin/shipping-method/delete/' . $shippingmethod->id) }}"
+                                        class="delete a_class" title="" data-toggle="tooltip"
+                                        data-original-title="Delete"><i class="fas fa-trash-alt"></i>
+                                    </a>
                                 </td>
-                            @endif
-                            <td class="shipping_action">
-                                <a href="{{ url('admin/shipping-details/') }}" class="view a_class" title=""
-                                    data-toggle="tooltip" data-original-title="View"><i class="fas fa-eye"></i>
-                                </a>
-                                <a href="{{ url('admin/shipping-method/' . $shippingmethod->id) }}" class="edit a_class"
-                                    title="" data-toggle="tooltip" data-original-title="Edit"><i
-                                        class="fas fa-pen"></i>
-                                </a>
-                                <a href="{{ url('admin/shipping-method/delete/' . $shippingmethod->id) }}"
-                                    class="delete a_class" title="" data-toggle="tooltip"
-                                    data-original-title="Delete"><i class="fas fa-trash-alt"></i>
-                                </a>
-                            </td>
-                        </tr>
+                            </tr>
+                        @else
+                            <tr>
+                                <td colspan="5" class="text-center">No Shipping Methods Found</td>
+                            </tr>
+                        @endif
                     @endforeach
                 </tbody>
             </table>
