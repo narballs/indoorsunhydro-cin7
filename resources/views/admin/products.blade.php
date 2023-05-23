@@ -46,7 +46,7 @@
                 <table class="table  table-hover table-product" id="table">
                     <thead>
                         <tr>
-                            <th># <i class="fa fa-sort"></i></th>
+                            <th>#</th>
                             <th>Name <i class="fa fa-sort"></i></th>
                             <th>Code <i class="fa fa-sort"></i></th>
                             <th>fulfillment<i class="fa fa-sort"></i></th>

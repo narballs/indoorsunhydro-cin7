@@ -49,9 +49,9 @@
                     <tr>
                         <th>#</th>
                         <th>Name <i class="fa fa-sort"></i></th>
-                        <th>Cost</th>
-                        <th>Status</th>
-                        <th>Action</th>
+                        <th>Cost <i class="fa fa-sort"></i></th>
+                        <th>Status <i class="fa fa-sort"></i></th>
+                        <th>Action <i class="fa fa-sort"></i></th>
                     </tr>
                 </thead>
                 <tbody>
