@@ -85,7 +85,7 @@
                                                     <!-- Navbar dropdown -->
                                                     <div class="row">
                                                         <div class="col-lg-10  col-xl-10  d-flex align-items-center">
-                                                            <li class="nav-item dropdown position-static width_fix">
+                                                            <li class="nav-item dropdown position-static width_fix adjust_arrow_color">
                                                                 @if (!empty($session_contact_company))
                                                                     <a class="select_company_hover nav-link dropdown-toggle select_company_top"
                                                                         href="#" id="navbarDropdown" role="button"
@@ -93,13 +93,14 @@
                                                                         <span class="top-header-items hover_it">
                                                                             {!! \Illuminate\Support\Str::limit($session_contact_company, 14) !!}
                                                                         </span>
+                                                                        <i class="fa fa-angle-down arrow_icon text-dark"></i>
                                                                     </a>
                                                                 @else
                                                                     <a class="select_company_hover nav-link dropdown-toggle select_company_top"
                                                                         href="#" id="navbarDropdown" role="button"
                                                                         data-mdb-toggle="dropdown" aria-expanded="false">
-            
                                                                         <span class="top-header-items hover_it">Select Company</span>
+                                                                        <i class="fa fa-angle-down arrow_icon text-dark"></i>
                                                                     </a>
                                                                 @endif
                                                                 <!-- Dropdown menu -->
