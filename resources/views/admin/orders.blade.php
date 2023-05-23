@@ -2,43 +2,6 @@
 @section('title', 'Dashboard')
 @section('content')
     <div class="table-wrapper">
-        {{-- <div class="table-title bg-white">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="row">
-                        <div class="col-md-10">
-                            <p class="order_heading">
-                                Orders
-                            </p>
-                            <p class="order_description">
-                                In the order details section, you can review and manage all orders with their details. You
-                                can view and edit many information <br> such as IDs of all orders, ordered product, order
-                                date,
-                                price and order status. Access to this area is limited. Only administrators <br>and team
-                                leaders
-                                can reach. The changes you make will be approved after they are checked.
-                            </p>
-                        </div>
-                        <div class="col-md-2">
-                            <button type="button" class="btn create-new-order-btn">
-                                + Create New Order
-                            </button>
-                        </div>
-                    </div>
-                    <div class="col-md-4 order-search">
-                        <div class="form-group has-search ">
-                            <span class="fa fa-search form-control-feedback"></span>
-                            <form method="get" action="/admin/orders">
-                                <input type="text" class="form-control border-0" id="search" name="search"
-                                    placeholder="Search for order ID, customer, order, status or something..."
-                                    value="{{ isset($search) ? $search : '' }}" />
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                
-            </div>
-        </div> --}}
         <div class="card-body mt-2">
             <div class="row mb-3">
                 <div class="col-md-12">
