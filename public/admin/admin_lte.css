@@ -17,19 +17,19 @@
 
 
 .nav-item .active>i {
-    color: green !important;
+    color: #7CC633 !important;
 }
 
 .nav-item .active>p {
-    color: green !important;
+    color: #7CC633 !important;
 }
 
 .nav-item i {
-    color: white !important;
+    color: #868686 !important;
 }
 
 .nav-item p {
-    color: white !important;
+    color: #868686 !important;
 }
 
 /* order page start */
@@ -161,8 +161,6 @@
     font-weight: 500 !important;
     font-size: 15px !important;
     line-height: 27px !important;
-    display: flex !important;
-    align-items: center !important;
     color: #242424 !important;
 }
 
@@ -172,10 +170,30 @@
     font-weight: 500 !important;
     font-size: 15px !important;
     line-height: 27px !important;
-    display: flex !important;
     align-items: center !important;
     color: #242424 !important;
     margin-left: 15px !important;
+}
+
+.product_name_slg {
+    font-family: 'Poppins', sans-serif !important;
+    font-style: normal !important;
+    font-weight: 500 !important;
+    font-size: 15px !important;
+    line-height: 27px !important;
+    align-items: center !important;
+    color: #242424 !important;
+}
+
+.product_retail_price {
+    font-family: 'Poppins', sans-serif !important;
+    font-style: normal !important;
+    font-weight: 500 !important;
+    font-size: 15px !important;
+    line-height: 27px !important;
+    align-items: center !important;
+    color: #242424 !important;
+
 }
 
 .background-success {
@@ -212,9 +230,6 @@ a {
     font-weight: 500 !important;
     font-size: 15px !important;
     line-height: 27px !important;
-    /* display: flex; */
-    align-items: center !important;
-    text-align: center !important;
     color: #A4A4A4 !important;
 }
 
