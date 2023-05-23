@@ -190,9 +190,8 @@
 
         .badge-success {
             color: #fff;
-            /* background-color: #28a745; */
             background: rgba(124, 198, 51, 0.2);
-            color: #7CC633;
+            color: #7CC633 !important;
             padding: 7px !important;
         }
 
