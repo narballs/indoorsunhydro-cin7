@@ -4,91 +4,95 @@
 @stop
 @section('content')
     <div class="table-wrapper">
-        <div class="row mb-3">
-            <div class="col-md-12 mt-3">
-                <div class="row">
-                    <div class="col-md-10">
-                        <p class="order_heading">
-                            Products
-                        </p>
-                        <p class="order_description">
-                            In the product details section, you can review and manage all products with their details. You
-                            can view and edit information <br> such as product IDs, product name, description, price, and
-                            availability. Access to this area is limited to administrators and <br> team leaders. Any
-                            changes you
-                            make will be subject to approval after being checked for accuracy.
-                        </p>
+        <div class="card-body mt-2">
+            <div class="row mb-3">
+                <div class="col-md-12 mt-3">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <p class="order_heading">
+                                Products
+                            </p>
+                            <p class="order_description">
+                                In the product details section, you can review and manage all products with their details.
+                                You
+                                can view and edit information <br> such as product IDs, product name, description, price,
+                                and
+                                availability. Access to this area is limited to administrators and <br> team leaders. Any
+                                changes you
+                                make will be subject to approval after being checked for accuracy.
+                            </p>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn create-new-order-btn">
+                                + Create new product
+                            </button>
+                        </div>
                     </div>
-                    <div class="col-md-2">
-                        <button type="button" class="btn create-new-order-btn">
-                            + Create new product
-                        </button>
-                    </div>
-                </div>
-                <div class="row p-3" style="background: #F3F3F3; border-radius: 8.8914px;">
-                    <div class="col-md-8 order-search">
-                        <div class="form-group has-search ">
-                            <span class="fa fa-search form-control-feedback"></span>
-                            <form method="get" action="/admin/products" class="mb-2">
-                                <input type="text" class="form-control border-0" id="search" name="search"
-                                    placeholder="Search for order ID, customer, order, status or something..."
-                                    value="{{ isset($search) ? $search : '' }}" />
-                            </form>
+                    <div class="row p-3 search_row_admin-interface">
+                        <div class="col-md-12 order-search">
+                            <div class="form-group has-search ">
+                                <span class="fa fa-search form-control-feedback"></span>
+                                <form method="get" action="/admin/products" class="mb-2">
+                                    <input type="text" class="form-control border-0" id="search" name="search"
+                                        placeholder="Search for order ID, customer, order, status or something..."
+                                        value="{{ isset($search) ? $search : '' }}" />
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="card card-body">
-            <table class="table  table-hover table-product" id="table">
-                <thead>
-                    <tr>
-                        <th># <i class="fa fa-sort"></i></th>
-                        <th>Name <i class="fa fa-sort"></i></th>
-                        <th>Code <i class="fa fa-sort"></i></th>
-                        <th>fulfillment<i class="fa fa-sort"></i></th>
-                        <th>Retail Price <i class="fa fa-sort"></i></th>
-                        <th>Actions <i class="fa fa-sort"></i></th>
-                    </tr>
-                </thead>
-                <tbody id="searched">
-                    <?php $count = 0; ?>
-                    @foreach ($products as $key => $product)
-                        <?php $count++; ?>
-                        <tr id="row-{{ $product->id }}" class="product-row">
-                            <td>{{ $count }}</td>
-                            <td class="product_name">
-                                <span class="product_name_slg">{{ $product->name }}</span>
-                            </td>
-                            <td>
-                                <span class="">{{ $product->code }}</span>
-                            </td>
-                            <td>
-                                {{ $product->status }}
-                            </td>
-
-                            <td>
-                                <span class="product_retail_price">
-                                    ${{ $product->retail_price }}
-                                </span>
-                            </td>
-                            <td class="product_action">
-                                <a href="{{ url('admin/products/' . $product->id) }}" class="view a_class" title=""
-                                    data-toggle="tooltip" data-original-title="View">
-                                    <i class="icon-style  fas fa-eye fa-border i_class"></i>
-                                    <a href="#" class="edit a_class" title="" data-toggle="tooltip"
-                                        data-original-title="Edit"><i class="icon-style fas fa-edit fa-border "></i></a>
-                                    <a href="#" class="delete deleteIcon a_class" id="{{ $product->id }}"
-                                        title="" data-toggle="tooltip" data-original-title="Delete"><i
-                                            class="icon-style fas fa-trash-alt fa-border "></i></a>
-                            </td>
+            <div class="card card-body">
+                <table class="table  table-hover table-product" id="table">
+                    <thead>
+                        <tr>
+                            <th># <i class="fa fa-sort"></i></th>
+                            <th>Name <i class="fa fa-sort"></i></th>
+                            <th>Code <i class="fa fa-sort"></i></th>
+                            <th>fulfillment<i class="fa fa-sort"></i></th>
+                            <th>Retail Price <i class="fa fa-sort"></i></th>
+                            <th>Actions <i class="fa fa-sort"></i></th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
-            <div class="row">
-                <div class="col-md-12 mt-3 border-top">
-                    {{ $products->appends(Request::all())->links() }}
+                    </thead>
+                    <tbody id="searched">
+                        <?php $count = 0; ?>
+                        @foreach ($products as $key => $product)
+                            <?php $count++; ?>
+                            <tr id="row-{{ $product->id }}" class="product-row">
+                                <td>{{ $count }}</td>
+                                <td class="product_name">
+                                    <span class="product_name_slg">{{ $product->name }}</span>
+                                </td>
+                                <td>
+                                    <span class="">{{ $product->code }}</span>
+                                </td>
+                                <td>
+                                    {{ $product->status }}
+                                </td>
+
+                                <td>
+                                    <span class="product_retail_price">
+                                        ${{ $product->retail_price }}
+                                    </span>
+                                </td>
+                                <td class="product_action">
+                                    <a href="{{ url('admin/products/' . $product->id) }}" class="view a_class"
+                                        title="" data-toggle="tooltip" data-original-title="View">
+                                        <i class="icon-style  fas fa-eye fa-border i_class"></i>
+                                        <a href="#" class="edit a_class" title="" data-toggle="tooltip"
+                                            data-original-title="Edit"><i class="icon-style fas fa-edit fa-border "></i></a>
+                                        <a href="#" class="delete deleteIcon a_class" id="{{ $product->id }}"
+                                            title="" data-toggle="tooltip" data-original-title="Delete"><i
+                                                class="icon-style fas fa-trash-alt fa-border "></i></a>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col-md-12 mt-3 border-top">
+                        {{ $products->appends(Request::all())->links() }}
+                    </div>
                 </div>
             </div>
         </div>

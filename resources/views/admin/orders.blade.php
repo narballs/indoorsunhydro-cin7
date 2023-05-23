@@ -25,11 +25,11 @@
                             </button>
                         </div>
                     </div>
-                    <div class="row p-3" style="background: #F3F3F3; border-radius: 8.8914px;">
-                        <div class="col-md-8 order-search">
+                    <div class="row p-3 search_row_admin-interface">
+                        <div class="col-md-12 order-search">
                             <div class="form-group has-search ">
                                 <span class="fa fa-search form-control-feedback"></span>
-                                <form method="get" action="/admin/orders" class="mb-2">
+                                <form method="get" action="/admin/order" class="mb-2">
                                     <input type="text" class="form-control border-0" id="search" name="search"
                                         placeholder="Search for order ID, customer, order, status or something..."
                                         value="{{ isset($search) ? $search : '' }}" />
