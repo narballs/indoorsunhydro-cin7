@@ -44,7 +44,7 @@ class SyncSuppliers extends Command
     {
         $client2 = new \GuzzleHttp\Client();
 
-        $total_contact_pages = 10;
+        $total_contact_pages = 150;
         $api_contact_ids = [];
 
         for ($i = 1; $i <= $total_contact_pages; $i++) {
