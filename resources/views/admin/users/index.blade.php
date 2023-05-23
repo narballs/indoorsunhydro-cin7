@@ -6,26 +6,50 @@
 
 @stop
 @section('content')
-
     @if ($message = Session::get('success'))
         <div class="alert alert-success">
             <p>{{ $message }}</p>
         </div>
     @endif
     <div class="table-wrapper">
-        <div class="table-title">
-            <span>
-                <h1>Users Management</h1>
-            </span>
-            <div class="row justify-content-between mb-2">
-                <div class="col-md-1">
-                    <div class="search-box">
-                        <a class="btn btn-primary btn-sm" href="{{ route('users.create') }}"> Create New User</a>
-                    </div>
-                </div>
-                <div class="col-md-5">
+        {{-- <div class="table-title">
+            
+        </div> --}}
+        <div class="card-body mt-2">
+            <div class="row mb-3">
+                <div class="col-md-12 mt-3">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-10">
+                            <p class="order_heading">
+                                Users Management
+                            </p>
+                            <p class="order_description">
+                                In the Users Management section, you can review and manage all users with their details. You
+                                can view and edit information <br> such as user IDs, usernames, email addresses, passwords,
+                                and
+                                permissions. Access to this area is restricted to administrators <br>and team leaders. Any
+                                changes you make will require approval after being verified for accuracy.
+                            </p>
+                        </div>
+                        <div class="col-md-2">
+                            <a href="{{ route('users.create') }}" class="btn create-new-order-btn">
+                                + Create new user
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row p-3 search_row_admin_user">
+                        <div class="col-md-6 order-search">
+                            <div class="form-group has-search ">
+                                <span class="fa fa-search form-control-feedback"></span>
+                                <form method="get" action="/admin/users" class="mb-2">
+                                    <input type="text" class="form-control border-0" id="search" name="search"
+                                        placeholder="Search for order ID, customer, order, status or something..."
+                                        value="{{ isset($search) ? $search : '' }}" />
+                                </form>
+                            </div>
+                        </div>
+                        <div class="col-md-3"></div>
+                        <div class="col-md-3 d-flex">
                             <select name="users" id="users" onchange="userFilter()" class="form-control"
                                 style="    height: 45px;">
                                 <option value="all" class="form-control">All</option>
@@ -39,8 +63,6 @@
                                     {{ isset($usersData) && $usersData == 'not-merged' ? 'selected="selected"' : '' }}>
                                     Not Merged</option>
                             </select>
-                        </div>
-                        <div class="col-md-6">
                             <select name="secondary_user" id="secondary-user" onchange="userFilter()" class="form-control"
                                 style="height: 45px;">
                                 <option value="all" class="form-control">Secndary/Primary</option>
@@ -55,31 +77,13 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-5">
-                    <div id="custom-search-input">
-                        <div class="input-group col-md-12">
-                            <span class="input-group-btn">
-                                <button class="btn btn-info btn-lg mt-2" type="button">
-                                    <i class="fa fa-search"></i>
-                                </button>
-                            </span>
-                            <form method="get" action="/admin/users">
-                                <input type="text" class="form-control input-lg" id="search" name="search"
-                                    placeholder="Search" value="{{ isset($search) ? $search : '' }}" />
-                            </form>
-                        </div>
-                    </div>
-                </div>
             </div>
-        </div>
-        <div class="card card-body">
             <div id="admin-users"></div>
-            <table class="table table-striped table-hover table-bordered" id="user-table">
+            <table class="table table-hover table-users" id="user-table">
                 <tr>
                     <thead>
-                        <th>No <i class="fa fa-sort"></th>
-                        <th>Name <i class="fa fa-sort"></th>
-                        <th>Last Name <i class="fa fa-sort"></th>
+                        <th>#</th>
+                        <th>Full Name <i class="fa fa-sort"></th>
                         <th>Email <i class="fa fa-sort"></th>
                         <th>Cin7 User-ID <i class="fa fa-sort"></th>
                         <th>Company (Account aka Parent) <i class="fa fa-sort"></th>
@@ -92,24 +96,15 @@
                 <tbody>
                     @foreach ($data as $key => $user)
                         @foreach ($user->contact as $contact)
-                            <tr>
+                            <tr id="row-{{ $user->id }}" class="user-row">
                                 <td>{{ ++$i }}</td>
-                                <td>
+                                <td class="user_name">
                                     @if ($contact)
-                                        {{ $contact->firstName }}
+                                        <span> {{ $contact->firstName }} {{ $contact->lastName }}</span>
                                     @elseif ($user->first_name)
-                                        {{ $user->first_name }}
+                                        <span> {{ $user->first_name }} {{ $user->last_name }} </span>
                                     @else
-                                        <span class="badge bg-info">empty</span>
-                                    @endif
-                                </td>
-                                <td>
-                                    @if ($contact)
-                                        {{ $contact->lastName }}
-                                    @elseif ($user->last_name)
-                                        {{ $user->last_name }}
-                                    @else
-                                        <span class="badge bg-info">empty</span>
+                                        <span class="badge badge-info w-100">empty</span>
                                     @endif
                                 </td>
                                 <td>{{ $user->email }}</td>
@@ -121,78 +116,91 @@
                                             {{ $contact->parent_id }}
                                         @endif
                                     @else
-                                        <span class="badge bg-info">empty</span>
+                                        <span class="badge badge-info w-100">empty</span>
                                     @endif
                                 </td>
-                                <td>
+                                <td class="is_parent">
                                     @if ($contact)
                                         @if ($contact->is_parent == 1)
-                                            {{ $contact->company }}
+                                            <span>{{ $contact->company }}</span>
                                         @else
-                                            <span class="badge bg-secondary">empty</span>
+                                            <span class="badge badge-secondary w-50 is_parent_1">empty</span>
                                         @endif
                                     @else
-                                        <span class="badge bg-secondary">empty</span>
+                                        <span class="badge badge-secondary w-50 is_parent_0">empty</span>
                                     @endif
                                 </td>
-                                <td>
+                                <td class="is_parent">
                                     @if ($contact)
                                         @if ($contact->is_parent == 0)
-                                            {{ $contact->company }}
+                                            <span> {{ $contact->company }}</span>
                                         @else
-                                            <span class="badge bg-secondary">empty</span>
+                                            <span class="badge badge-secondary w-50 is_parent_1">empty</span>
                                         @endif
                                     @else
-                                        <span class="badge bg-secondary">empty</span>
+                                        <span class="badge badge-secondary w-50 is_parent_0">empty</span>
                                     @endif
                                 </td>
-                                <td>
+                                <td class="background_contact_id">
                                     @if ($contact)
                                         @if (!empty($contact->contact_id))
-                                            <span class="badge bg-primary">primary</span>
+                                            <span class="badge badge-primary w-100 background_primary_1">primary</span>
                                         @else
-                                            <span class="badge bg-secondary">secondary</span>
+                                            <span
+                                                class="badge badge-secondary w-100 background_secondary_1">secondary</span>
                                         @endif
                                     @endif
                                 </td>
-                                <td>
+                                <td class="background_success">
                                     @if (!empty($user->getRoleNames()))
                                         @foreach ($user->getRoleNames() as $role)
-                                            <label class="badge badge-success">{{ $role }}</label>
+                                            <label
+                                                class="badge badge-success w-100 background_success_1">{{ $role }}</label>
                                         @endforeach
                                     @endif
                                 </td>
-                                <td>
-                                    <a class="btn btn-info btn-sm" href="{{ route('users.show', $user->id) }}">Show</a>
-                                    @can('user-edit')
-                                        <a class="btn btn-primary btn-sm" href="{{ route('users.edit', $user->id) }}">Edit</a>
-                                    @endcan
-                                    @can('user-delete')
-                                        {!! Form::open(['method' => 'DELETE', 'route' => ['users.destroy', $user->id], 'style' => 'display:inline']) !!}
-                                        {!! Form::submit('Delete', ['class' => 'btn btn-danger btn-sm']) !!}
-                                        {!! Form::close() !!}
-                                    @endcan
-                                    <a class="btn btn-success btn-sm"
-                                        href="{{ url('admin/user-switch/' . $user->id) }}">Switch
-                                        User</a>
-                                    @if ($contact)
-                                        @if ($contact->secondary_contact)
-                                            <button type="button" class="btn btn-primary btn-sm"
-                                                data-id="{{ $user->id }}" data-toggle="modal"
-                                                onclick="assignParent('{{ $user->id }}')">Set
-                                                Parent</button>
-                                            <input type="hidden" value='{{ $user->id }}' id='{{ $user->id }}'>
+                                <td class="user_action">
+                                    <a href="{{ route('users.show', $user->id) }}" class="view a_class" title=""
+                                        data-toggle="tooltip" data-original-title="View">
+                                        <i class="icon-style  fas fa-eye fa-border i_class"></i>
+                                        @can('user-edit')
+                                            <a href="{{ route('users.edit', $user->id) }}"class="edit a_class" title=""
+                                                data-toggle="tooltip" data-original-title="Edit"><i
+                                                    class="icon-style fas fa-edit fa-border "></i>
+                                            </a>
+                                        @endcan
+                                        @can('user-delete')
+                                            {{-- {!! Form::open(['method' => 'DELETE', 'route' => ['users.destroy', $user->id], 'style' => 'display:inline']) !!}
+                                                {!! Form::submit('Delete', ['class' => 'btn']) !!}
+                                                {!! Form::close() !!} --}}
+                                            <a href="{{ route('users.destroy', $user->id) }}"class="edit a_class"
+                                                title="" data-toggle="tooltip" data-original-title="Delete"><i
+                                                    class="icon-style fas fa-trash-alt fa-border "></i>
+                                            </a>
+                                        @endcan
+                                        <a href="{{ url('admin/user-switch/' . $user->id) }}"class="edit a_class"
+                                            title="" data-toggle="tooltip" data-original-title="Switch"><i
+                                                class="icon-style fas fa-toggle-on fa-border ">
+                                            </i>
+                                        </a>
+                                        @if ($contact)
+                                            @if ($contact->secondary_contact)
+                                                <button type="button" class="btn btn-primary btn-sm"
+                                                    data-id="{{ $user->id }}" data-toggle="modal"
+                                                    onclick="assignParent('{{ $user->id }}')">Set
+                                                    Parent</button>
+                                                <input type="hidden" value='{{ $user->id }}'
+                                                    id='{{ $user->id }}'>
+                                            @endif
                                         @endif
-                                    @endif
-                                    @if ($user->is_updated == 0)
-                                        <a class="btn btn-warning btn-sm"
-                                            href="{{ url('admin/send-password/' . $user->id) }}">Send
-                                            password</a>
-                                    @else
-                                        <a class="btn btn-danger btn-sm disabled"
-                                            href="{{ url('admin/send-password/' . $user->id) }}">Send
-                                            password</a>
-                                    @endif
+                                        @if ($user->is_updated == 0)
+                                            <a href="{{ url('admin/send-password/' . $user->id) }}"> <i
+                                                    class="icon-style fas fa-lock fa-border" aria-hidden="true"></i></a>
+                                        @else
+                                            <a class="disabled" href="{{ url('admin/send-password/' . $user->id) }}" <i
+                                                class="icon-style fas fa-lock fa-border" aria-hidden="true"></i>
+                                            </a>
+                                        @endif
                                 </td>
                             </tr>
                         @endforeach
@@ -231,8 +239,10 @@
                     </div>
                 </div>
             </div>
-            <div id="pageination">
-                {{ $data->appends(Request::all())->links() }}
+            <div class="row">
+                <div class="col-md-12 mt-2 border-top">
+                    {{ $data->appends(Request::all())->links() }}
+                </div>
             </div>
         </div>
     @endsection
@@ -240,188 +250,180 @@
     @section('css')
         <link rel="stylesheet" href="/css/admin_custom.css">
         <link rel="stylesheet" href="{{ asset('admin/admin_lte.css') }}">
+        <style>
+            .text-successs {
+                color: #7CC633 !important;
+                font-family: 'Poppins', sans-serif !important;
+            }
 
-        <style type="text/css">
-            #custom-search-input {
-                padding: 3px;
-                border: solid 1px #E4E4E4;
+            .badge-success {
+                background: rgba(124, 198, 51, 0.2);
+                color: #7CC633;
+                padding: 7px !important;
+            }
+
+            .badge-secondary {
+                color: #8e8b8b !important;
+                background-color: #d0dce6 !important;
+                padding: 7px !important;
                 border-radius: 6px;
-                background-color: #fff;
-                height: 45px;
             }
 
-            #custom-search-input input {
-                border: 0;
-                box-shadow: none;
-                width: 388px !important;
+            .badge-primary {
+                background-color: #c6e6f3 !important;
+                color: #339AC6 !important;
+                padding: 5px;
+                border-radius: 6px !important;
             }
 
-            #custom-search-input button {
-                margin: 2px 0 0 0;
-                background: none;
-                box-shadow: none;
-                border: 0;
-                color: #666666;
-                padding: 0 8px 0 10px;
-                border-right: solid 1px #ccc;
+            .badge-warning {
+                background-color: #fce9a9;
+                color: #ffc107 !important;
+                padding: 5px;
             }
 
-            #custom-search-input button:hover {
-                border: 0;
-                box-shadow: none;
-                border-left: solid 1px #ccc;
-            }
-
-            #custom-search-input .glyphicon-search {
-                font-size: 23px;
-            }
-
-            @media screen and (max-width: 1440px) {
-                #custom-search-input {
-                    border: 0;
-                    box-shadow: none;
-
-                    margin-left: 0px !important;
-                    margin-top: 0 !important;
-                }
-
-                .table-responsive-stack tr {
-                    display: block;
-                    margin-bottom: 0.625em;
-                }
-
-                .table-responsive-stack td {
-                    display: block;
-                    text-align: right;
-                }
-
-                .table-responsive-stack td::before {
-                    content: attr(data-label);
-                    float: left;
-                    font-weight: bold;
-                    text-transform: uppercase;
-                }
-
-                .table-responsive-stack td:last-child {
-                    border-bottom: 0;
-                }
-            }
-
-            @media screen and (max-width: 1321px) {
-                #custom-search-input {
-                    /* padding: 3px !important;
-                            border: solid 1px #E4E4E4 !important;
-                            border-radius: 6px !important;
-                            background-color: #fff !important;
-                            height: 45px !important; */
-                }
-
-                .table-responsive-stack tr {
-                    display: block;
-                    margin-bottom: 0.625em;
-                }
-
-                .table-responsive-stack td {
-                    display: block;
-                    text-align: right;
-                }
-
-                .table-responsive-stack td::before {
-                    content: attr(data-label);
-                    float: left;
-                    font-weight: bold;
-                    text-transform: uppercase;
-                }
-
-                .table-responsive-stack td:last-child {
-                    border-bottom: 0;
-                }
+            .badge-danger {
+                background-color: #f1abb2;
+                color: #f14f4f !important;
+                padding: 6px !important;
             }
         </style>
     @stop
-    <script>
-        function adminUsers() {
-            $('#user-table').addClass('d-none');
-            $('#pageination').addClass('d-none');
-            $.ajax({
-                url: "{{ url('admin/admin-users') }}",
-                method: 'GET',
-                success: function(response) {
-                    console.log(response);
-                    $('#admin-users').html(response);
-                }
+    @section('js')
+        <script>
+            $('.user-row').hover(function() {
+                let id = $(this).attr('id');
+                children = $(this).children('.user_name').children('span').addClass('text-successs');
+                bg_success = $(this).children('.background_success').children('.background_success_1').addClass(
+                    'background-success');
+                bg_success = $(this).children('.background_warning').children('.background_warning_1').addClass(
+                    'background-warning');
+                bg_success = $(this).children('.is_parent').children('.is_parent_1').addClass(
+                    'background-secondary');
+                bg_success = $(this).children('.is_parent').children('.is_parent_0').addClass(
+                    'background-secondary');
+
+                bg_success = $(this).children('.background_contact_id').children('.background_secondary_1').addClass(
+                    'background-secondary');
+                bg_success = $(this).children('.background_contact_id').children('.background_primary_1').addClass(
+                    'background-primary');
+
+                let tet = $(this).children('.user_action').children('a');
+                let get_class = tet.each(function(index, value) {
+                    let test = tet[index].children[0];
+                    test.classList.add('bg-icon');
+                });
             });
-        }
 
-        function userFilter() {
-            var usersData = $('#users').val();
-            var search = $('#search').val();
-            var secondaryUser = $('#secondary-user').val();
-            if (usersData != '') {
-                basic_url = `users?usersData=${usersData}`;
-            }
-            if (secondaryUser != '') {
-                basic_url = basic_url + `&secondaryUser=${secondaryUser}`;
-            }
 
-            window.location.href = basic_url;
-        }
+            $('.user-row').mouseleave(function() {
+                let id = $(this).attr('id');
+                children = $(this).children('.user_name').children('span').removeClass('text-successs');
 
-        function assignParent(userid) {
-            var user_id = userid;
-            $('#exampleModal').modal('show');
-            $('#child_id').val(user_id);
+                bg_success = $(this).children('.background_success').children('.background_success_1').removeClass(
+                    'background-success');
+                bg_success = $(this).children('.is-approved').children('.is_approded_0').removeClass(
+                    'background-warning');
 
-        }
+                bg_success = $(this).children('.is_parent').children('.is_parent_1').removeClass(
+                    'background-secondary');
+                bg_success = $(this).children('.is_parent').children('.is_parent_0').removeClass(
+                    'background-secondary');
+                bg_success = $(this).children('.background_contact_id').children('.background_secondary_1').removeClass(
+                    'background-secondary');
+                bg_success = $(this).children('.background_contact_id').children('.background_primary_1').removeClass(
+                    'background-primary');
 
-        function suggestion() {
-            var primary_contact = $('#primary_contact').val();
-            console.log(primary_contact);
-            var res = '';
-            $.ajax({
-                url: "{{ url('admin/get-parent') }}",
-                method: 'GET',
-                data: {
-                    term: primary_contact
-                },
-                success: function(response) {
-                    $.each(response, function(key, value) {
-                        console.log(value.firstName);
-                        res += '<option value=' + value.contact_id + '>' + value.firstName +
-                            '</option>';
-                        console.log(res);
-                    });
-                    $('#child').html(res);
-                },
+                let tet = $(this).children('.user_action').children('a');
+                let get_class = tet.each(function(index, value) {
+                    let test = tet[index].children[0];
+                    test.classList.remove('bg-icon');
+                });
             });
-        }
 
-        function assign() {
-            var primary_name = $('#primary_contact').val();
-            var user_id = $('#child_id').val();
-            var primary_id = $('#child').val();
-            jQuery.ajax({
-                url: "{{ url('admin/assign-parent-child') }}",
-                method: 'POST',
-                data: {
-                    "_token": "{{ csrf_token() }}",
-                    primary_name: primary_name,
-                    user_id: user_id,
-                    primary_id: primary_id,
-                },
-                success: function(response) {
-
-                    if (response.status == 200) {
-                        $('#spinner2').addClass('d-none');
-
-                        $('#exampleModal').modal('hide');
-                        $('#secondary_id').trigger("reset");
-                        window.location.reload();
-
+            function adminUsers() {
+                $('#user-table').addClass('d-none');
+                $('#pageination').addClass('d-none');
+                $.ajax({
+                    url: "{{ url('admin/admin-users') }}",
+                    method: 'GET',
+                    success: function(response) {
+                        console.log(response);
+                        $('#admin-users').html(response);
                     }
+                });
+            }
+
+            function userFilter() {
+                var usersData = $('#users').val();
+                var search = $('#search').val();
+                var secondaryUser = $('#secondary-user').val();
+                if (usersData != '') {
+                    basic_url = `users?usersData=${usersData}`;
+                }
+                if (secondaryUser != '') {
+                    basic_url = basic_url + `&secondaryUser=${secondaryUser}`;
                 }
 
-            });
+                window.location.href = basic_url;
+            }
 
-        }
-    </script>
+            function assignParent(userid) {
+                var user_id = userid;
+                $('#exampleModal').modal('show');
+                $('#child_id').val(user_id);
+
+            }
+
+            function suggestion() {
+                var primary_contact = $('#primary_contact').val();
+                console.log(primary_contact);
+                var res = '';
+                $.ajax({
+                    url: "{{ url('admin/get-parent') }}",
+                    method: 'GET',
+                    data: {
+                        term: primary_contact
+                    },
+                    success: function(response) {
+                        $.each(response, function(key, value) {
+                            console.log(value.firstName);
+                            res += '<option value=' + value.contact_id + '>' + value.firstName +
+                                '</option>';
+                            console.log(res);
+                        });
+                        $('#child').html(res);
+                    },
+                });
+            }
+
+            function assign() {
+                var primary_name = $('#primary_contact').val();
+                var user_id = $('#child_id').val();
+                var primary_id = $('#child').val();
+                jQuery.ajax({
+                    url: "{{ url('admin/assign-parent-child') }}",
+                    method: 'POST',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        primary_name: primary_name,
+                        user_id: user_id,
+                        primary_id: primary_id,
+                    },
+                    success: function(response) {
+
+                        if (response.status == 200) {
+                            $('#spinner2').addClass('d-none');
+
+                            $('#exampleModal').modal('hide');
+                            $('#secondary_id').trigger("reset");
+                            window.location.reload();
+
+                        }
+                    }
+
+                });
+
+            }
+        </script>
+    @stop
