@@ -242,8 +242,16 @@ a {
     display: flex;
     align-items: center;
     text-align: center;
-
     color: #242424;
+}
+
+.buy-list-title {
+    font-family: 'Poppins', sans-serif !important;
+    font-style: normal !important;
+    font-weight: 500 !important;
+    font-size: 16px !important;
+    line-height: 27px !important;
+    color: #242424 !important;
 }
 
 .page-item {

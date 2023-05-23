@@ -73,7 +73,7 @@
                                 </span>
                             </td>
                             <td class="product_action">
-                                <a href="{{ url('admin/products/' . $product->id) }}"class="view a_class" title=""
+                                <a href="{{ url('admin/products/' . $product->id) }}" class="view a_class" title=""
                                     data-toggle="tooltip" data-original-title="View">
                                     <i class="icon-style  fas fa-eye fa-border i_class"></i>
                                     <a href="#" class="edit a_class" title="" data-toggle="tooltip"
@@ -132,9 +132,6 @@
             $('.product-row').hover(function() {
                 let id = $(this).attr('id');
                 children = $(this).children('.product_name').children('span').addClass('text-successs');
-                bg_success = $(this).children('.is-approved').children('.is_approded_1').addClass('background-success');
-                bg_success = $(this).children('.is-approved').children('.is_approded_0').addClass('background-warning');
-                bg_success = $(this).children('.is-approved').children('.is_approded_2').addClass('background-danger');
                 let tet = $(this).children('.product_action').children('a');
                 let get_class = tet.each(function(index, value) {
                     let test = tet[index].children[0];
@@ -146,12 +143,6 @@
             $('.product-row').mouseleave(function() {
                 let id = $(this).attr('id');
                 children = $(this).children('.product_name').children('span').removeClass('text-successs');
-                bg_success = $(this).children('.is-approved').children('.is_approded_1').removeClass(
-                    'background-success');
-                bg_success = $(this).children('.is-approved').children('.is_approded_0').removeClass(
-                    'background-warning');
-                bg_success = $(this).children('.is-approved').children('.is_approded_2').removeClass(
-                    'background-danger');
                 let tet = $(this).children('.product_action').children('a');
                 let get_class = tet.each(function(index, value) {
                     let test = tet[index].children[0];
