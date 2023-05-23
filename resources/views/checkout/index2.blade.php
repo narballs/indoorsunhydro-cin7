@@ -324,9 +324,7 @@ $cart_price = 0;
             style="margin-top: 192px !important;margin:auto; !important; max-width:600px !important;">
             <button type="button" class="button-cards w-100" id="proceed_to_checkout" onclick="validate()"
                 style="background: #008BD3 ;
-            border-radius: 5px;">Proceed
-                to
-                checkout</button>
+            border-radius: 5px;">Place order</button>
         </div>
         </form>
     </div>
@@ -1245,6 +1243,8 @@ $cart_price = 0;
             </div>
             <script>
                 function validate() {
+                    $('#proceed_to_checkout').prop('disabled', true);
+                    $('#proceed_to_checkout').addClass('text-muted');
                     if (!$("input[name=method_option]").is(':checked')) {
                         const inputOptions = new Promise((resolve) => {
                             setTimeout(() => {

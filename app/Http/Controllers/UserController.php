@@ -233,11 +233,45 @@ class UserController extends Controller
         return redirect()->route('users.index')
             ->with('success', 'User deleted successfully');
     }
+
     public function userRegistration()
     {
         $data['states'] = UsState::get(["state_name", "id"]);
         return view('user-registration-second',  $data);
     }
+
+    public function lost_password() {
+        return view('lost-password');
+    }
+
+    public function recover_password(Request $request) {
+        $user = User::where('email', $request->email)->first();
+
+        $plain_password = Str::random(10) . date('YmdHis');
+        $encrypted_password = bcrypt($plain_password);
+        $hash = Str::random(10000) . $user->first_name . date('YmdHis');
+        $hash = md5($hash);
+
+        $user->password = $encrypted_password;
+        $user->hash = $hash;
+        $user->save();
+        $base_url = url('/');
+
+        $url = $base_url.'/index?hash='.$hash;
+        $data['email'] = $user->email;
+        $data['url'] = $url;
+
+
+        $data['content'] = 'Password Reset';
+        $data['subject'] = 'Password Reset';
+        $data['from'] = env('MAIL_FROM_ADDRESS');
+        $data['plain'] = $plain_password;
+        MailHelper::sendMailNotification('emails.reset-password', $data);
+
+        return redirect()->back()->with('success', 'Password reset link sent succssfully!');
+        
+    }
+
 
     public function fetchCity(Request $request)
     {

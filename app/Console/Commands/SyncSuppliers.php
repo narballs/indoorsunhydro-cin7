@@ -44,7 +44,8 @@ class SyncSuppliers extends Command
     {
         $client2 = new \GuzzleHttp\Client();
 
-        $total_contact_pages = 35;
+        $total_contact_pages = 10;
+        $api_contact_ids = [];
 
         for ($i = 1; $i <= $total_contact_pages; $i++) {
             $this->info('Processing page#' . $i);
@@ -62,10 +63,13 @@ class SyncSuppliers extends Command
 
             $api_contacts = $res->getBody()->getContents();
             $api_contacts = json_decode($api_contacts);
+            
             foreach($api_contacts as $api_contact) {
                 $this->info($api_contact->id);
                 $this->info('Processing contacts ' . $api_contact->firstName);
                 $contact = Contact::where('contact_id', $api_contact->id)->first();
+                array_push($api_contact_ids, $api_contact->id);
+                // dd($api_contact_ids);
                 if (!empty($contact)) {
                     $this->info($api_contact->id);
                     $this->info('---------------------------------------');
@@ -224,6 +228,21 @@ class SyncSuppliers extends Command
                     $UserLog->save();
                 }
             }
+            
+  
         }
+        $qcom_contact_id = Contact::where('is_parent', 1)->pluck('contact_id')->toArray();
+        // foreach($api_contact_ids as $api_contact_id) {
+        //     $this->info($api_contact_id);
+
+        // }
+
+        $this->info(count($qcom_contact_id));  
+        $this->info(count($api_contact_ids));
+        $differences = array_diff($qcom_contact_id, $api_contact_ids);
+        foreach($differences as $difference) {
+            Contact::where('contact_id', $difference)->delete();
+        }
+       
     }
 }
