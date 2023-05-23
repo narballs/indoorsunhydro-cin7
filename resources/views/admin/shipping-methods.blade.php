@@ -25,7 +25,7 @@
                             </div>
                             <div class="col-md-2">
                                 <a href="{{ 'shipping-methods/create' }}" class="btn create-new-order-btn">
-                                    + Create new product
+                                    + Create new method
                                 </a>
                             </div>
                         </div>

@@ -25,7 +25,7 @@
                         </div>
                         <div class="col-md-2">
                             <a href="{{ 'buy-list/create ' }}" type="button" class="btn create-new-order-btn">
-                                + Create new product
+                                + Create new buy list
                             </a>
                         </div>
                     </div>
