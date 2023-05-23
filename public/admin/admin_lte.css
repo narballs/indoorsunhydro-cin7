@@ -210,6 +210,14 @@
     border: 1px solid #7CC633 !important;
 }
 
+.background-primary {
+    border: 1px solid #339AC6 !important;
+}
+
+.background-secondary {
+    border: 1px solid #8e8b8b !important;
+}
+
 .background-warning {
     border: 1px solid #FFC700 !important;
 }
@@ -242,6 +250,18 @@ a {
     line-height: 27px !important;
     color: #A4A4A4 !important;
 }
+
+.user_name {
+    font-family: 'Poppins', sans-serif !important;
+    font-style: normal !important;
+    font-weight: 500 !important;
+    font-size: 15px !important;
+    line-height: 27px !important;
+    align-items: center !important;
+    color: #242424 !important;
+}
+
+
 
 .total_order {
     font-family: 'Poppins', sans-serif !important;
@@ -278,6 +298,12 @@ a {
     background: #F3F3F3;
     border-radius: 8.8914px;
     width: 48% !important;
+    height: 75px !important;
+}
+
+.search_row_admin_user {
+    background: #F3F3F3;
+    border-radius: 8.8914px;
     height: 75px !important;
 }
 

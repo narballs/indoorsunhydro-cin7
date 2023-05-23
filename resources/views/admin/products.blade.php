@@ -79,11 +79,14 @@
                                     <a href="{{ url('admin/products/' . $product->id) }}" class="view a_class"
                                         title="" data-toggle="tooltip" data-original-title="View">
                                         <i class="icon-style  fas fa-eye fa-border i_class"></i>
-                                        <a href="#" class="edit a_class" title="" data-toggle="tooltip"
-                                            data-original-title="Edit"><i class="icon-style fas fa-edit fa-border "></i></a>
-                                        <a href="#" class="delete deleteIcon a_class" id="{{ $product->id }}"
-                                            title="" data-toggle="tooltip" data-original-title="Delete"><i
-                                                class="icon-style fas fa-trash-alt fa-border "></i></a>
+                                    </a>
+                                    <a href="#" class="edit a_class" title="" data-toggle="tooltip"
+                                        data-original-title="Edit"><i class="icon-style fas fa-edit fa-border "></i>
+                                    </a>
+                                    <a href="#" class="delete deleteIcon a_class" id="{{ $product->id }}"
+                                        title="" data-toggle="tooltip" data-original-title="Delete"><i
+                                            class="icon-style fas fa-trash-alt fa-border "></i>
+                                    </a>
                                 </td>
                             </tr>
                         @endforeach
@@ -108,11 +111,22 @@
             }
 
             .badge-success {
-                color: #fff;
-                /* background-color: #28a745; */
                 background: rgba(124, 198, 51, 0.2);
                 color: #7CC633;
                 padding: 7px !important;
+            }
+
+            .badge-secondary {
+                color: #8e8b8b !important;
+                background-color: #d0dce6 !important;
+                padding: 7px !important;
+                border-radius: 6px;
+            }
+
+            .badge-primary {
+                background-color: #339AC6;
+                color: #339AC6 !important;
+                padding: 5px;
             }
 
             .badge-warning {
