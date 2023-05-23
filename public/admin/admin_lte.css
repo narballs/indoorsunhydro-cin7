@@ -91,6 +91,7 @@
     background: #FFFFFF !important;
     border: 1.03706px solid rgba(208, 208, 208, 0.51) !important;
     border-radius: 7.25943px !important;
+    margin-top: -7px;
 }
 
 .table-hover tbody tr:hover {
@@ -175,6 +176,12 @@
     margin-left: 15px !important;
 }
 
+/* order page end */
+
+
+
+/* product page start */
+
 .product_name_slg {
     font-family: 'Poppins', sans-serif !important;
     font-style: normal !important;
@@ -195,6 +202,9 @@
     color: #242424 !important;
 
 }
+
+/* product page end */
+
 
 .background-success {
     border: 1px solid #7CC633 !important;
@@ -252,6 +262,23 @@ a {
     font-size: 16px !important;
     line-height: 27px !important;
     color: #242424 !important;
+}
+
+.shipping_name {
+    font-family: 'Poppins', sans-serif !important;
+    font-style: normal !important;
+    font-weight: 500 !important;
+    font-size: 16px !important;
+    line-height: 27px !important;
+    color: #242424 !important;
+}
+
+
+.search_row_admin-interface {
+    background: #F3F3F3;
+    border-radius: 8.8914px;
+    width: 48% !important;
+    height: 75px !important;
 }
 
 .page-item {
