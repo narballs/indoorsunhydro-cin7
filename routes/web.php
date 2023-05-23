@@ -67,6 +67,8 @@ Route::post('/switch-company/', [UserController::class, 'switch_company'])->name
 Route::post('/switch-company-select/', [UserController::class, 'switch_company_select'])->name('switch-company-select');
 Route::post('/register/basic/invitation', [UserController::class, 'invitation_signup'])->name('invitation.signup');
 Route::post('/logout', [UserController::class, 'logout'])->name('logout');
+Route::get('/lost-password', [UserController::class, 'lost_password'])->name('lost.password');
+Route::post('/recover-password', [UserController::class, 'recover_password'])->name('recover.password');
 
 Route::get('/product-brand/{name}', [ProductController::class, 'showProductByBrands']);
 Route::post('add-to-cart/', [ProductController::class, 'addToCart'])->name('add.to.cart');

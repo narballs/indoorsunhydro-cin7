@@ -109,7 +109,7 @@
                                 </div>
                             </div>
                             <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12 mt-3">
-                                <a href="#" class="btn-lost-password d-flex">Lost your password?</a></p>
+                                <a href="{{ route('lost.password') }}" class="btn-lost-password d-flex">Lost your password?</a></p>
                             </div>
                         </div>
                         <hr>
