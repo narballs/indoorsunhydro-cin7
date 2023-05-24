@@ -1,7 +1,5 @@
 @extends('adminlte::page')
-
 @section('title', 'Dashboard')
-
 @section('content_header')
 
 @stop
@@ -15,87 +13,87 @@
         </div>
     @endif
     <div class="table-wrapper">
-        <div class="table-title">
-            <span>
-                <h1>Customer</h1>
-            </span>
-            <div class="row justify-content-between mb-2">
-                <div class="col-sm-2">
-                    <div class="search-box">
-                        <a href="{{ 'customer/create' }}"><input type="button" value="Create New Customer"
-                                class="form-control btn btn-primary" placeholder="Create New">
-                        </a>
+        <div class="card-body mt-2">
+            <div class="table-title">
+                <span>
+                    <h1>Customer</h1>
+                </span>
+                <div class="row justify-content-between mb-2">
+                    <div class="col-sm-2">
+                        <div class="search-box">
+                            <a href="{{ 'customer/create' }}"><input type="button" value="Create New Customer"
+                                    class="form-control btn btn-primary" placeholder="Create New">
+                            </a>
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-2">
-                    <select name="active_customer" id="active_customer" onchange="perPage()" class="form-control">
-                        <option value="" class="form-control">Active/Disabled </option>
-                        <option value="active-customer" class="form-control"
-                            {{ isset($activeCustomer) && $activeCustomer == 'active-customer' ? 'selected="selected"' : '' }}>
-                            Active </option>
-                        <option value="disable-customer" class="form-control"
-                            {{ isset($activeCustomer) && $activeCustomer == 'disable-customer' ? 'selected="selected"' : '' }}>
-                            Disabled </option>
-                    </select>
+                    <div class="col-md-2">
+                        <select name="active_customer" id="active_customer" onchange="perPage()" class="form-control">
+                            <option value="" class="form-control">Active/Disabled </option>
+                            <option value="active-customer" class="form-control"
+                                {{ isset($activeCustomer) && $activeCustomer == 'active-customer' ? 'selected="selected"' : '' }}>
+                                Active </option>
+                            <option value="disable-customer" class="form-control"
+                                {{ isset($activeCustomer) && $activeCustomer == 'disable-customer' ? 'selected="selected"' : '' }}>
+                                Disabled </option>
+                        </select>
 
-                </div>
-                <div class="col-md-4">
-                    <div id="custom-search-input">
-                        <div class="input-group col-md-12">
-                            <span class="input-group-btn">
-                                <button class="btn btn-info btn-lg" type="button">
-                                    <i class="fa fa-search"></i>
-                                </button>
-                            </span>
-                            <form method="get" action="/admin/customers">
-                                <input type="text" class="form-control input-lg" id="search" name="search"
-                                    placeholder="Search" value="{{ isset($search) ? $search : '' }}" />
-                            </form>
+                    </div>
+                    <div class="col-md-4">
+                        <div id="custom-search-input">
+                            <div class="input-group col-md-12">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-info btn-lg" type="button">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </span>
+                                <form method="get" action="/admin/customers">
+                                    <input type="text" class="form-control input-lg" id="search" name="search"
+                                        placeholder="Search" value="{{ isset($search) ? $search : '' }}" />
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="card card-body">
-            <table class="table table-striped table-hover table-bordered table-customer" id="table">
-                <thead>
-                    <tr>
-                        <th>QcomID <i class="fa fa-sort"></th>
-                        <th>Cin7ID <i class="fa fa-sort"></th>
-                        <th>Name <i class="fa fa-sort"></i></th>
-                        <th>Last Name <i class="fa fa-sort"></i></th>
-                        <th>Status <i class="fa fa-sort"></i></th>
-                        <th>Merged<i class="fa fa-sort"></i></th>
-                        <th>Price Tier<i class="fa fa-sort"></i></th>
-                        <th>Company<i class="fa fa-sort"></i></th>
-                        <th>Email<i class="fa fa-sort"></i></th>
-                        <th class="">Notes<i class="fa fa-sort"></i></th>
-                        <th class="">Actions <i class="fa fa-sort"></i></th>
-                    </tr>
-                </thead>
-                <tbody id="searched">
-                    <?php $count = 0; ?>
-                    @foreach ($contacts as $key => $contact)
-                        <?php $count++; ?>
-                        @include('admin.customer_row')
-                    @endforeach
-                </tbody>
-            </table>
-            <div class="row">
-                <div class="col-md-10">
-                    {{ $contacts->appends(Request::all())->links() }}
-                </div>
-                <div class="col-md-2">
-                    <select name="per_page" id="per_page" onchange="perPage()">
-                        <option value="10" {{ isset($perPage) && $perPage == 10 ? 'selected="selected"' : '' }}>10
-                        </option>
-                        <option value="20" {{ isset($perPage) && $perPage == 20 ? 'selected="selected"' : '' }}>20
-                        </option>
-                        <option value="30" {{ isset($perPage) && $perPage == 30 ? 'selected="selected"' : '' }}>30
-                        </option>
-                        <option value="30">30</option>
-                    </select>
-
+            <div class="card card-body">
+                <table class="table  table-hover table-customer" id="table">
+                    <thead>
+                        <tr>
+                            <th>QcomID <i class="fa fa-sort"></th>
+                            <th>Cin7ID <i class="fa fa-sort"></th>
+                            <th>Full Name <i class="fa fa-sort"></i></th>
+                            <th>Status <i class="fa fa-sort"></i></th>
+                            <th>Merged<i class="fa fa-sort"></i></th>
+                            <th>Price Tier<i class="fa fa-sort"></i></th>
+                            <th>Company<i class="fa fa-sort"></i></th>
+                            <th>Email<i class="fa fa-sort"></i></th>
+                            <th class="">Notes<i class="fa fa-sort"></i></th>
+                            <th class="">Actions <i class="fa fa-sort"></i></th>
+                        </tr>
+                    </thead>
+                    <tbody id="searched">
+                        <?php $count = 0; ?>
+                        @foreach ($contacts as $key => $contact)
+                            <?php $count++; ?>
+                            @include('admin.customer_row')
+                        @endforeach
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col-md-12 mt-3 border-top">
+                        {{ $contacts->appends(Request::all())->links() }}
+                    </div>
+                    {{-- <div class="col-md-2">
+                        <select name="per_page" id="per_page" onchange="perPage()">
+                            <option value="10" {{ isset($perPage) && $perPage == 10 ? 'selected="selected"' : '' }}>10
+                            </option>
+                            <option value="20" {{ isset($perPage) && $perPage == 20 ? 'selected="selected"' : '' }}>20
+                            </option>
+                            <option value="30" {{ isset($perPage) && $perPage == 30 ? 'selected="selected"' : '' }}>30
+                            </option>
+                            <option value="30">30</option>
+                        </select>
+                    </div> --}}
                 </div>
             </div>
         </div>
@@ -105,44 +103,70 @@
 @section('css')
     <link rel="stylesheet" href="/css/admin_custom.css">
     <link rel="stylesheet" href="{{ asset('admin/admin_lte.css') }}">
-    <style type="text/css">
-        #custom-search-input {
-            padding: 3px;
-            border: solid 1px #E4E4E4;
+    <link rel="stylesheet" href="{{ asset('admin/admin_lte.css') }}">
+    <style>
+        .text-successs {
+            color: #7CC633 !important;
+            font-family: 'Poppins', sans-serif !important;
+        }
+
+        .badge-success {
+            background: rgba(124, 198, 51, 0.2);
+            color: #7CC633;
+            padding: 7px !important;
+        }
+
+        .badge-secondary {
+            color: #8e8b8b !important;
+            background-color: #d0dce6 !important;
+            padding: 7px !important;
             border-radius: 6px;
-            background-color: #fff;
         }
 
-        #custom-search-input input {
-            border: 0;
-            box-shadow: none;
-            width: 464px;
+        .badge-primary {
+            background-color: #339AC6;
+            color: #339AC6 !important;
+            padding: 5px;
         }
 
-        #custom-search-input button {
-            margin: 2px 0 0 0;
-            background: none;
-            box-shadow: none;
-            border: 0;
-            color: #666666;
-            padding: 0 8px 0 10px;
-            border-right: solid 1px #ccc;
+        .badge-warning {
+            color: #1f2d3d;
+            background-color: #fce9a9;
+            color: #ffc107 !important;
+            padding: 5px;
         }
 
-        #custom-search-input button:hover {
-            border: 0;
-            box-shadow: none;
-            border-left: solid 1px #ccc;
-        }
-
-        #custom-search-input .glyphicon-search {
-            font-size: 23px;
+        .badge-danger {
+            color: #fff;
+            background-color: #f1abb2;
+            color: #f14f4f;
+            padding: 6px !important;
         }
     </style>
 @stop
 
 @section('js')
     <script>
+        $('.customer-row').hover(function() {
+            let id = $(this).attr('id');
+            children = $(this).children('.customer_name').children('a').addClass('text-successs');
+            let tet = $(this).children('.customer_action').children('a');
+            let get_class = tet.each(function(index, value) {
+                let test = tet[index].children[0];
+                test.classList.add('bg-icon');
+            });
+        });
+
+        $('.customer-row').mouseleave(function() {
+            let id = $(this).attr('id');
+            children = $(this).children('.customer_name').children('a').removeClass('text-successs');
+            let tet = $(this).children('.customer_action').children('a');
+            let get_class = tet.each(function(index, value) {
+                let test = tet[index].children[0];
+                test.classList.remove('bg-icon');
+            });
+        });
+
         function perPage() {
             var perPage = $('#per_page').val();
             var search = $('#search').val();

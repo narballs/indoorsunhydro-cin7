@@ -69,7 +69,6 @@
                                 <td>
                                     {{ $product->status }}
                                 </td>
-
                                 <td>
                                     <span class="product_retail_price">
                                         ${{ $product->retail_price }}
@@ -149,7 +148,9 @@
         <script>
             $('.product-row').hover(function() {
                 let id = $(this).attr('id');
-                children = $(this).children('.product_name').children('span').addClass('text-successs');
+                children = $(this).children('.product_name').childern('a').children('span').addClass(
+                    'text-successs');
+                console.log(children);
                 let tet = $(this).children('.product_action').children('a');
                 let get_class = tet.each(function(index, value) {
                     let test = tet[index].children[0];
