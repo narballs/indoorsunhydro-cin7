@@ -242,56 +242,46 @@ return [
         [
             'text'        => 'pages',
             'url'         => 'admin/pages',
-            'icon'        => 'far fa-fw fa-file',
             'label'       => 4,
             'label_color' => 'success',
         ],
-        ['header' => 'account_settings'],
+
         [
             'text' => 'profile',
             'url'  => 'admin/settings',
-            'icon' => 'fas fa-fw fa-user',
         ],
         [
             'text' => 'Orders',
             'url'  => 'admin/orders',
-            'icon' => 'fas fa-fw fa-user',
         ],
 
         [
             'text' => 'Products',
             'url'  => 'admin/products',
-            'icon' => 'fas fa-fw fa-user',
         ],
         [
             'text' => 'Buy Lists',
             'url'  => 'admin/buy-list',
-            'icon' => 'fas fa-fw fa-user',
         ],
         [
             'text' => 'Shipping Methods',
             'url'  => 'admin/shipping-methods',
-            'icon' => 'fas fa-fw fa-user',
         ],
         [
             'text' => 'Supplier',
             'url'  => 'admin/contacts',
-            'icon' => 'fas fa-fw fa-user',
         ],
         [
             'text' => 'Users',
             'url'  => 'admin/users',
-            'icon' => 'fas fa-fw fa-user',
         ],
         [
             'text' => 'Users Role',
             'url'  => 'admin/roles',
-            'icon' => 'fas fa-fw fa-user',
         ],
 
         [
             'text'    => 'multilevel',
-            'icon'    => 'fas fa-fw fa-share',
             'submenu' => [
                 [
                     'text' => 'level_one',
@@ -330,23 +320,6 @@ return [
         [
             'text'    => 'Contacts',
             'url'  => 'admin/customers',
-            'icon'    => 'fas fa-fw fa-users',
-        ],
-        ['header' => 'labels'],
-        [
-            'text'       => 'important',
-            'icon_color' => 'red',
-            'url'        => '#',
-        ],
-        [
-            'text'       => 'warning',
-            'icon_color' => 'yellow',
-            'url'        => '#',
-        ],
-        [
-            'text'       => 'information',
-            'icon_color' => 'cyan',
-            'url'        => '#',
         ],
 
         [
