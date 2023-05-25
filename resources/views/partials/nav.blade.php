@@ -140,22 +140,102 @@ $categories = NavHelper::getCategories();
             {{--
 			</div> --}}
         </div>
-        <div class="p-0">
+        <div class="bg-white d-flex" style="border-bottom:1px solid #E9E9E9;padding:0.7rem;">
+            {{-- @if (session('logged_in_as_another_user'))
+                <a href="{{ url('admin/go-back') }}" class="top-bar-logout mt-3 top-header-items">Go Back</a>
+            @endif --}}
+            @if (Auth::user())
+                <div class="col-sm-4">
+                    @php
+                        $session_contact_company = Session::get('company');
+                    @endphp
+                    <form style="display:none;" id="frm-logout" action="{{ route('logout') }}" method="POST">
+                        {{ csrf_field() }}
+                        <input class="btn btn-link text-white" type="submit" value="logout">
+                    </form>
+                    <div class="dropdown">
+                        @if (!empty($session_contact_company))
+                            <a class="btn btn-secondary dropdown-toggle mbl_cmp_drp p-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mbl_cmp_drp">{!! \Illuminate\Support\Str::limit($session_contact_company, 14) !!}</span>
+                                <i class="fa fa-angle-down" style="color:#242424;"></i>
+                            </a>
+                        @else
+                            <a class="btn btn-secondary dropdown-toggle mbl_cmp_drp p-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mbl_cmp_drp">Select Company</span>
+                                <i class="fa fa-angle-down" style="color:#242424;"></i>
+                            </a>
+                        @endif
+                        @php
+                            $companies = Session::get('companies');
+                        @endphp
+                        <div class="dropdown-menu mb_item_mnu" aria-labelledby="dropdownMenuButton">
+                            @if (Auth::user())
+                                @if ($companies)
+                                    @foreach ($companies as $company)
+                                        @php
+                                            if ($company->contact_id) {
+                                                $contact_id = $company->contact_id;
+                                                $primary = '(primary)';
+                                            } else {
+                                                $contact_id = $company->secondary_id;
+                                                $primary = '(secondary)';
+                                            }
+                                            if ($company->status == 0) {
+                                                $disabled = 'disabled';
+                                                $disable_text = '(Disabled)';
+                                                $muted = 'text-muted';
+                                            } else {
+                                                $disabled = '';
+                                                $disable_text = '';
+                                                $muted = '';
+                                            }
+                                        @endphp
+                                        <a class="mb_item" {{ $disabled }} {{ $muted }} type="button" onclick="switch_company_user({{ $contact_id }})">
+                                            {{ $company->company }}
+                                            <span
+                                                style="font-size: 9px;font-family: 'Poppins';"
+                                                class="{{ $muted }}">{{ $primary }}
+                                            </span>
+                                        </a>
+                                    @endforeach
+                                @endif
+                            @endif
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex col-sm-6" style="margin-left:2.4rem !important;">
+                    <div class="d-flex justify-content-between">
+                        <div class="col-sm-6">
+                            <a class="font-mobile-class" href="{{ url('my-account') }}">Account</a>
+                        </div>
+                        <div class="col-sm-6">
+                            <a class="font-mobile-class" href="{{ route('logout') }}"onclick="event.preventDefault(); document.getElementById('frm-logout').submit();">
+                                Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                @else
+                <div class="col-sm-6">
+                    <a class="font-mobile-class float-right" href="{{ '/user/' }}">Login or Register</a>
+                </div>
+            @endif
+        </div>
+        <div class="col-sm-12">
             <nav class="navbar navbar-expand-lg navbar-light p-0">
-                <div class="container-fluid mobile_nav_items" style="">
+                <div class="container-fluid mobile_nav_items">
                     <a class="navbar-brand" href="/">
                         <img class="top-img mx-0" src="/theme/img/indoor_sun.png" >
                     </a>
-                    <button style="" class="navbar-toggler p-2 mr-2 text-white text-uppercase mobile_nav_btn mt-1" type="button" data-bs-toggle="collapse"
+                    <button style="" class="navbar-toggler text-dark mobile_nav_btn mt-1 p-0" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
-                        {{-- <span class="navbar-toggler-icon"></span> --}}
-                        <i class="fa fa-bars" aria-hidden="true"></i> Menu
+                        <i class="fa fa-bars" aria-hidden="true"></i>
                     </button>
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav d-flex">
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle product-mega-menu ps-4" href="#"
+                                <a class="nav-link dropdown-toggle product-mega-menu ps-1" href="#"
                                     id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown"
                                     aria-expanded="false" style="width: 346px">
                                     Products
@@ -217,27 +297,32 @@ $categories = NavHelper::getCategories();
                     </ul>
                     </li>
                     <li class="nav-item me-3">
-                        <a class="nav-link text-uppercase nav-item-links ps-4" href="#">
+                        <a class="nav-link text-uppercase nav-item-links ps-1" href="#">
                             About
                         </a>
                     </li>
                     <li class="nav-item me-4">
-                        <a class="nav-link text-uppercase nav-item-links ps-4" href="{{ url('contact-us') }}">
+                        <a class="nav-link text-uppercase nav-item-links ps-1" href="{{ url('contact-us') }}">
                             Contact
                         </a>
                     </li>
-                    <li class="nav-item me-3">
+                    {{-- <li class="nav-item me-3">
                         <a class="nav-link text-uppercase nav-item-links ps-4" href="{{ url('my-account') }} ">My
                             account
                         </a>
-                    </li>
-                    @if (Auth::user())
+                    </li> --}}
+                    @if (session('logged_in_as_another_user'))
+                         <li class="nav-item me-3">
+                            <a class="nav-link text-uppercase nav-item-links ps-4" href="{{ url('admin/go-back') }} ">Go Back
+                            </a>
+                        </li>
+                    @endif
+                    {{-- @if (Auth::user())
                         @php
                             $session_contact_company = Session::get('company');
                         @endphp
                         <li class="nav-item">
                             <a class="nav-link text-uppercase nav-item-links p-0 ps-4" href="{{ '/user/' }}">
-                                {{-- <img src="/theme/img/User.png" width="35px" height="35px"> --}}
                                 <a class="nav-link text-uppercase nav-item-links ps-4" href="{{ route('logout') }}"
                                     onclick="event.preventDefault(); document.getElementById('frm-logout').submit();">
                                     <span class="menu-title">Logout</span>
@@ -265,7 +350,6 @@ $categories = NavHelper::getCategories();
                                         Company</span>
                                 </a>
                             @endif
-                            <!-- Dropdown menu -->
                             @php
                                 $companies = Session::get('companies');
                                 
@@ -323,20 +407,20 @@ $categories = NavHelper::getCategories();
                                 login or register
                             </a>
                         </li>
-                    @endif
+                    @endif --}}
                     </ul>
                 </div>
         </div>
         </nav>
     </div>
-    <div class="col-md-12 mb-4 p-1">
-        <form class="d-flex mt-3" method="get" action="{{ route('product_search') }}">
+    <div class="col-sm-11 mb-2">
+        <form class="" method="get" action="{{ route('product_search') }}">
             <input type="hidden" id="is_search" name="is_search" value="1">
             <div class="input-group top-search-group w-100">
                 <input type="text" class="form-control" placeholder="What are you searching for"
                     aria-label="Search" aria-describedby="basic-addon2" id="search" name="value"
-                    value="{{ isset($searched_value) ? $searched_value : '' }}">
-                <span class="input-group-text" id="search-addon">
+                    value="{{ isset($searched_value) ? $searched_value : '' }}" style="border:2px solid #7bc533;">
+                <span class="input-group-text" id="search-addon" style="border:2px solid #7bc533;">
                     <button class="btn-info" type="submit" id="search"
                         style="background: transparent;border:none">
                         <i class="text-white" data-feather="search"></i>

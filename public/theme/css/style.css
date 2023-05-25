@@ -682,6 +682,34 @@ a {
     color: #FFFFFF;
 }
 
+.footer_head_mbl {
+    font-family: 'Poppins' !important;
+    font-style: normal !important;
+    font-weight: 600 !important;
+    font-size: 14.392px !important;
+    line-height: 22px !important;
+    text-shadow: none;
+}
+.foooter-main-head-mbl {
+    font-family: 'Poppins' !important;
+    font-style: normal !important;
+    font-weight: 600 !important;
+    font-size: 18px !important;
+    line-height: 27px !important;
+    letter-spacing: 0.02em !important;
+    text-transform: uppercase !important;
+    color: #FFFFFF !important;
+}
+
+.p-footer-mbl {
+    font-family: 'Poppins' !important;
+    font-style: normal !important;
+    font-weight: 300 !important;
+    font-size: 14.392px !important;
+    line-height: 22px !important;
+    color: #FFFFFF !important;
+}
+
 .footer-container-product-footer {
     background-color: #212121 !important;
 }
@@ -3135,15 +3163,80 @@ input[type=number] {
 }
 
 @media only screen and (max-width: 425px) and (min-width: 360px) {
+    .font-mobile-class {
+        font-family: 'Poppins' !important;
+        font-style: normal !important;
+        font-weight: 500 !important;
+        font-size: 12px !important;
+        line-height: 29px !important;
+        color: #242424;
+    }
+
+    .mb_item_mnu {
+        color: #242424 !important;
+        font-family: 'Poppins' !important;
+        font-style: normal !important;
+        font-weight: 500 !important;
+        font-size: 12px !important;
+        line-height: 29px !important;
+        border-radius:0px !important;
+        min-width: 8rem !important;
+    }
+
+    .mb_item {
+        color: #242424 !important;
+        font-family: 'Poppins' !important;
+        font-style: normal !important;
+        font-weight: 500 !important;
+        font-size: 12px !important;
+        line-height: 29px !important;
+        text-decoration: none !important;
+        padding: 0.6rem !important;
+    }
+
+    .mbl_cmp_drp {
+        background: none !important;
+        border: none !important;
+        color: #242424 !important;
+        font-family: 'Poppins' !important;
+        font-style: normal !important;
+        font-weight: 500 !important;
+        font-size: 12px !important;
+        line-height: 29px !important;
+        width: 8rem !important;
+    }
+    .mbl_cmp_drp::after {
+        border-right: 0em !important;
+        border-left: 0em !important;
+    }
+    .mbl_cmp_drp:focus {
+        background: none !important;
+        border: none !important;
+    }
+
+    .mbl_cmp_drp:hover {
+        background: none !important;
+        border: none !important;
+        color: #242424;
+    }
+    
     .mobile_nav_items {
         display: flex;
         align-items:center;
         justify-content: space-between;
     }
     .mobile_nav_btn {
-        background-color: #008BD3 !important;
-        font-size:16px !important;
-        font-weight:500 !important;
+        background:none !important;
+        border:none !important;
+        /* font-size:16px !important;
+        font-weight:500 !important; */
+    }
+    .mobile_nav_btn:focus {
+        box-shadow: 0 0 0 0rem;
+        border:none !important;
+    }
+    .mobile_nav_btn > i {
+        font-size: 1.5rem;
     }
     .select-comapny-top-bar-mobile {
         font-size: 14px !important;
@@ -3339,9 +3432,13 @@ input[type=number] {
     }
 
     .ms-4-footer {
-        font-size: 16px !important;
+        /* font-size: 16px !important; */
         margin-top: 6px !important;
         margin-bottom: 9px !important;
+    }
+
+    .day-color-mbl {
+        color: #7CC633;
     }
 
     .logout-bnt {
@@ -5143,7 +5240,7 @@ select.list-dt:focus {
     font-size: 16px;
     line-height: 150%;
     letter-spacing: 0.15px;
-    background: #f3f3f3 !important;
+    background: none !important;
     padding: 0.5rem !important;
 }
 
@@ -5178,7 +5275,7 @@ select.list-dt:focus {
     }
     .d-Menu {
         padding-left:0px !important; 
-        margin-left:1rem !important;
+        margin-left:-1.5rem !important;
     }
     .login_link {
         padding-left: 11.5rem !important;
@@ -5189,6 +5286,10 @@ select.list-dt:focus {
         width: 12.1rem !important;
         padding-left: 1.5rem;
     }
+
+    .navbar-light .navbar-nav .dropdown-toggle:focus {
+        background: none !important;
+    }
     
 }
 
@@ -5198,7 +5299,7 @@ select.list-dt:focus {
     }
     .d-Menu {
         padding-left:0px !important; 
-        margin-left:0.9rem !important;
+        margin-left:-1rem !important;
     }
     .login_link {
         padding-left: 10.5rem !important;
@@ -5208,6 +5309,10 @@ select.list-dt:focus {
         
         width: auto;
     }
+
+    .navbar-light .navbar-nav .dropdown-toggle:focus {
+        background: none !important;
+    }
 }
 @media  screen and (min-width : 1441px ) and (max-width:1920px) {
     .d_menu_company {
@@ -5215,7 +5320,7 @@ select.list-dt:focus {
     }
     .d-Menu {
         padding-left:0px !important; 
-        margin-left:1rem !important;
+        margin-left:0.5rem !important;
     }
     .login_link {
         padding-left: 15.2rem !important;
@@ -5226,6 +5331,9 @@ select.list-dt:focus {
         width: 12rem !important;
         padding-left: 1.5rem;
     }
+    .navbar-light .navbar-nav .dropdown-toggle:focus {
+        background: none !important;
+    }
 }
 
 @media  screen and (min-width : 1921px ) and (max-width:2559px) {
@@ -5234,7 +5342,7 @@ select.list-dt:focus {
     }
     .d-Menu {
         padding-left:0px !important; 
-        margin-left:1.1rem !important;
+        margin-left:1rem !important;
     }
     .login_link {
         padding-left: 16.1rem !important;
@@ -5245,6 +5353,9 @@ select.list-dt:focus {
         width: 12.1rem !important;
         padding-left:2rem;
     }
+    .navbar-light .navbar-nav .dropdown-toggle:focus {
+        background: none !important;
+    }
     
 }
 
@@ -5254,7 +5365,7 @@ select.list-dt:focus {
     }
     .d-Menu {
         padding-left:0px !important; 
-        margin-left:1.1rem !important;
+        margin-left:0.9rem !important;
     }
     .login_link {
         padding-left: 20rem !important;
@@ -5264,6 +5375,9 @@ select.list-dt:focus {
         
         width: 12.35rem !important;
         padding-left: 2rem;
+    }
+    .navbar-light .navbar-nav .dropdown-toggle:focus {
+        background: none !important;
     }
     
 }
