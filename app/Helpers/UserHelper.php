@@ -61,7 +61,6 @@ class UserHelper
 
     public static function switch_company($contact_id) {
         $contact = Contact::where('contact_id', $contact_id)->first();
-        
         if (!empty($contact)) {
             $active_contact_id = $contact->contact_id;
             $active_company = $contact->company;

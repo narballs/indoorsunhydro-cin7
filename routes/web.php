@@ -22,6 +22,7 @@ use App\Http\Controllers\Admin\AdminShareListController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
+use App\Models\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,6 +37,9 @@ use Illuminate\Support\Facades\Session;
 
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
+
+    
+
 Route::get('send-password/fornt-end/{id}', [UserController::class, 'send_password_fornt_end'])->name('users.send_password_fornt');
 
 Route::get('send-mail', function () {

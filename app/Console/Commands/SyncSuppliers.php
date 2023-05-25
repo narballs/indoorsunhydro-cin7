@@ -44,7 +44,7 @@ class SyncSuppliers extends Command
     {
         $client2 = new \GuzzleHttp\Client();
 
-        $total_contact_pages = 150;
+        $total_contact_pages = 20;
         $api_contact_ids = [];
 
         for ($i = 1; $i <= $total_contact_pages; $i++) {
@@ -241,7 +241,16 @@ class SyncSuppliers extends Command
         $this->info(count($api_contact_ids));
         $differences = array_diff($qcom_contact_id, $api_contact_ids);
         foreach($differences as $difference) {
-            Contact::where('contact_id', $difference)->delete();
+            //Contact::where('contact_id', $difference)->delete();
+            $contact = Contact::where('contact_id', $difference)->first();
+            $contact->status = 0;
+               $UserLog = new UserLog([
+                        'contact_id' => $difference,
+                        'action' => 'Sync',
+                        'user_notes' => 'Disabled during Sync at '.Carbon::now()->toDateTimeString() .'Not found in cin7',        
+                    ]);
+                $UserLog->save();
+            $contact->save();
         }
        
     }
