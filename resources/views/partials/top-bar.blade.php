@@ -87,7 +87,7 @@
                                                         <div class="col-lg-10  col-xl-10  d-flex align-items-center">
                                                             <li class="nav-item dropdown position-static width_fix adjust_arrow_color">
                                                                 @if (!empty($session_contact_company))
-                                                                    <a class="select_company_hover nav-link dropdown-toggle select_company_top"
+                                                                    <a class="select_company_hover nav-link dropdown-toggle select_company_top remove_focus"
                                                                         href="#" id="navbarDropdown" role="button"
                                                                         data-mdb-toggle="dropdown" aria-expanded="false">
                                                                         <span class="top-header-items hover_it">
@@ -96,7 +96,7 @@
                                                                         <i class="fa fa-angle-down arrow_icon text-dark"></i>
                                                                     </a>
                                                                 @else
-                                                                    <a class="select_company_hover nav-link dropdown-toggle select_company_top"
+                                                                    <a class="select_company_hover nav-link dropdown-toggle select_company_top remove_focus"
                                                                         href="#" id="navbarDropdown" role="button"
                                                                         data-mdb-toggle="dropdown" aria-expanded="false">
                                                                         <span class="top-header-items hover_it">Select Company</span>
@@ -108,10 +108,10 @@
                                                                     $companies = Session::get('companies');
                                                                     
                                                                 @endphp
-                                                                <div class="dropdown-menu hover-menu d-Menu mt-0" aria-labelledby="navbarDropdown" style="border-top: 1px solid #7bc533;">
+                                                                <div class="dropdown-menu hover-menu d-Menu mt-0" aria-labelledby="navbarDropdown" style="border-top: 2px solid #7bc533;border-radius:0px 0px 5px 5px !important;">
                                                                     <div class="container">
                                                                         <div class="row">
-                                                                            <div class="col-md-12">
+                                                                            <div class="col-md-12" style="padding-left:0px !important;">
                                                                                 <div class="list-group list-group-flush top_select_menu_items top-header-items hover_it">
                                                                                     @if (Auth::user())
                                                                                         @if ($companies)
