@@ -188,9 +188,9 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-4 p-0">
-                                                <button class=" cart-updated" type="submit" id="update_cart"
+                                               <!--  <button class=" cart-updated" type="submit" id="update_cart"
                                                     onclick="update_cart()">Update
-                                                    Cart</button>
+                                                    Cart</button> -->
                                             </div>
                                         </div>
                                     </td>
