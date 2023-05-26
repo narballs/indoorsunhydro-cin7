@@ -510,3 +510,71 @@ a {
 }
 
 /* order page :end */
+
+
+
+
+/* pagination css */
+.previous_btn {
+    justify-content: flex-start !important;
+}
+.order_page_number {
+    display: flex ;
+    justify-content: center !important;
+
+}
+
+.prev_btn_css {
+    width: 109.87px;
+    height: 34.11px;
+    background: #FFFFFF;
+    border: 0.944079px solid #D7D7D7;
+    box-shadow: 0px 0.944079px 1.88816px rgba(16, 24, 40, 0.05) !important;
+    border-radius: 4px !important;
+    padding: 0.2rem !important;
+}
+
+.next_btn_css {
+    width: 109.87px;
+    height: 34.11px;
+    background: #FFFFFF;
+    border: 0.944079px solid #D7D7D7;
+    box-shadow: 0px 0.944079px 1.88816px rgba(16, 24, 40, 0.05) !important;
+    border-radius: 4px !important;
+    padding: 0.2rem !important;
+}
+
+.my-active >  span {
+    background: rgba(124, 198, 51, 0.17) !important;
+    border-radius: 7.55263px !important; 
+    padding: 0.6rem 1rem;
+    color: #7CC633;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 13.2171px;
+    line-height: 19px;
+}
+
+.non_active_page_number {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 13.2171px;
+    line-height: 19px;
+    color: #828282;
+}
+
+.prev_next_btn {
+    /* font-family: 'Poppins' !important; */
+    font-style: normal !important;
+    font-weight: 500 !important;
+    font-size: 13.2171px !important;
+    line-height: 19px !important;
+    color: #4B4B4B !important;
+}
+ul.pager > .main-row > .pagination > li {
+    padding: 5px;
+}
+
+.pd_nmber {
+    margin-right: 0.5rem !important;
+}
