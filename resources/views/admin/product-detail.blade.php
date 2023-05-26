@@ -152,28 +152,28 @@
                             </div>
                             <table class="table">
                                 <!--       	<tr>
-                     <td class="text-center">retailUSD</td>
-                     </tr>
-                     <tr>
-                     <td class="text-center">wholesaleUSD</td>
-                     </tr>
-                     <tr>
-                     <td class="text-center">sacramentoUSD</td>
-                     </tr>
-                     <tr>
-                     <td class="text-center">terraInternUSD</td>
-                     </tr>
-                     <tr>
-                     <td class="text-center">oklahomaUSD</td>
-                     </tr>
-                     <tr>
-                     <td class="text-center">calaverasUSD</td> -->
+                             <td class="text-center">retailUSD</td>
+                             </tr>
+                             <tr>
+                             <td class="text-center">wholesaleUSD</td>
+                             </tr>
+                             <tr>
+                             <td class="text-center">sacramentoUSD</td>
+                             </tr>
+                             <tr>
+                             <td class="text-center">terraInternUSD</td>
+                             </tr>
+                             <tr>
+                             <td class="text-center">oklahomaUSD</td>
+                             </tr>
+                             <tr>
+                             <td class="text-center">calaverasUSD</td> -->
                                 <!--        		<th class="text-center">tier1USD</th>
-                     <th class="text-center">tier2USD</th>
-                     <th class="text-center">tier3USD</th>
-                     <th class="text-center">commercialOKUSD</th>
-                     <th class="text-center">costUSD</th>
-                     <th class="text-center">specialPrice</th> -->
+                             <th class="text-center">tier2USD</th>
+                             <th class="text-center">tier3USD</th>
+                             <th class="text-center">commercialOKUSD</th>
+                             <th class="text-center">costUSD</th>
+                             <th class="text-center">specialPrice</th> -->
                                 <!--  	</tr> -->
                                 <?php
                                 // foreach($product->options as $option) {
@@ -245,4 +245,47 @@
             </div>
         </div>
     </div>
+@stop
+@section('css')
+    <link rel="stylesheet" href="{{ asset('css/admin_custom.css') }}">
+    <link rel="stylesheet" href="{{ asset('admin/admin_lte.css') }}">
+    <style>
+        .text-successs {
+            color: #7CC633 !important;
+            font-family: 'Poppins', sans-serif !important;
+        }
+
+        .badge-success {
+            background: rgba(124, 198, 51, 0.2);
+            color: #7CC633;
+            padding: 7px !important;
+        }
+
+        .badge-secondary {
+            color: #8e8b8b !important;
+            background-color: #d0dce6 !important;
+            padding: 7px !important;
+            border-radius: 6px;
+        }
+
+        .badge-primary {
+            background-color: #339AC6;
+            color: #339AC6 !important;
+            padding: 5px;
+        }
+
+        .badge-warning {
+            color: #1f2d3d;
+            background-color: #fce9a9;
+            color: #ffc107 !important;
+            padding: 5px;
+        }
+
+        .badge-danger {
+            color: #fff;
+            background-color: #f1abb2;
+            color: #f14f4f;
+            padding: 6px !important;
+        }
+    </style>
 @stop
