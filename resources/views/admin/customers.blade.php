@@ -56,7 +56,7 @@
                 </div>
             </div>
             <div class="card card-body">
-                <table class="table  table-hover table-customer" id="table">
+                <table class="table border table-customer" id="table">
                     <thead>
                         <tr>
                             <th>QcomID <i class="fa fa-sort"></th>
@@ -111,9 +111,33 @@
         }
 
         .badge-success {
-            background: rgba(124, 198, 51, 0.2);
-            color: #7CC633;
+            color: #fff;
+            /* background-color: #28a745; */
+            background: rgb(186 235 137 / 20%);
+            color: #319701;
             padding: 7px !important;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 11.3289px;
+
+        }
+
+        .badge-warning {
+            color: #1f2d3d;
+            background-color: #fce9a9;
+            color: #ffc107 !important;
+            padding: 5px;
+        }
+
+        .badge-danger {
+            color: #fff;
+            background-color: #f1eaea;
+            color: #B42318;
+            padding: 6px !important;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 11.3289px;
+
         }
 
         .badge-secondary {
@@ -134,13 +158,6 @@
             background-color: #fce9a9;
             color: #ffc107 !important;
             padding: 5px;
-        }
-
-        .badge-danger {
-            color: #fff;
-            background-color: #f1abb2;
-            color: #f14f4f;
-            padding: 6px !important;
         }
     </style>
 @stop

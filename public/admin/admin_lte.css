@@ -27,6 +27,16 @@
     margin-top: 1px !important;
 }
 
+.tabel-checkbox-user {
+    margin-top: -3px !important;
+}
+
+.table-row-heading-user {
+    padding-left: 11.46px !important;
+    margin-top: -8px !important;
+    color: #242424 !important;
+}
+
 .nav-item .active {
     /* background: none !important; */
     border-bottom: none !important;
@@ -126,7 +136,9 @@
     font-weight: 600;
     font-size: 24px;
     line-height: 48px;
+    margin-left: 35px !important;
     color: #242424 !important;
+    margin-bottom: 8px !important;
 }
 
 .order_description {
@@ -149,6 +161,7 @@
     color: #868686;
     border: 1.03706px solid rgba(208, 208, 208, 0.51);
     border-radius: 7.25943px;
+    margin-left: 122px !important;
 }
 
 .has-search .form-control {
@@ -191,6 +204,7 @@
     background: #FFFFFF !important;
     border-radius: 7.25943px !important;
     margin-top: -7px;
+    margin-left: 33px !important;
 }
 
 
@@ -270,7 +284,7 @@
     font-weight: 400;
     font-size: 13.2171px;
     line-height: 19px;
-    /* identical to box height, or 143% */
+
     color: #828282;
 }
 
@@ -284,7 +298,7 @@
 }
 
 .td_padding_row {
-    padding-top: 25px !important;
+    padding-top: 28px !important;
 }
 
 .checkbox>.checkbox-table {
@@ -314,7 +328,7 @@
     line-height: 48px;
     color: #242424 !important;
     margin-left: 35px !important;
-    margin-bottom: 16px !important;
+    margin-bottom: 8px !important;
 
 }
 
@@ -330,6 +344,7 @@
     border: 1.03706px solid rgba(208, 208, 208, 0.51);
     border-radius: 7.25943px;
     margin-left: 90px !important;
+    margin-left: 110px !important;
 }
 
 .product_search {
@@ -514,8 +529,8 @@ a {
 
 .search_row_admin-interface {
     border-radius: 8.8914px;
-    width: 48% !important;
-    height: 75px !important;
+    /* width: 48% !important; */
+    height: 49px !important;
 }
 
 .search_row_admin_user {
@@ -575,8 +590,9 @@ a {
 .previous_btn {
     justify-content: flex-start !important;
 }
+
 .order_page_number {
-    display: flex ;
+    display: flex;
     justify-content: center !important;
 
 }
@@ -601,9 +617,9 @@ a {
     padding: 0.2rem !important;
 }
 
-.my-active >  span {
+.my-active>span {
     background: rgba(124, 198, 51, 0.17) !important;
-    border-radius: 7.55263px !important; 
+    border-radius: 7.55263px !important;
     padding: 0.6rem 1rem;
     color: #7CC633;
     font-style: normal;
@@ -628,7 +644,8 @@ a {
     line-height: 19px !important;
     color: #4B4B4B !important;
 }
-ul.pager > .main-row > .pagination > li {
+
+ul.pager>.main-row>.pagination>li {
     padding: 5px;
 }
 

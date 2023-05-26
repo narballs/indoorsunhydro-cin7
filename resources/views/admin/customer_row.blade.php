@@ -1,4 +1,4 @@
-<tr id="row-{{ $contact->id }}" class="customer-row">
+<tr id="row-{{ $contact->id }}" class="customer-row border-bottom">
     <td>{{ $contact->id }}</td>
     @if (!$contact->contact_id)
         <td><span class="badge bg-info">empty</span></td>
@@ -14,16 +14,16 @@
         <?php //dd($contact->status);
         ?>
         @if ($contact->status == '1')
-            <span class="badge bg-success">Active</span>
+            <span class="badge badge-success">Active</span>
         @else
-            <span class="badge bg-warning">Inactive</span>
+            <span class="badge badge-warning">Inactive</span>
         @endif
     </td>
     <td>
         @if ($contact->user_id == '')
             <span class="badge bg-danger">Unmerged</span>
         @else
-            <span class="badge bg-success">Merged</span>
+            <span class="badge badge-success">Merged</span>
         @endif
     </td>
 

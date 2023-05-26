@@ -88,7 +88,7 @@
                         <tr>
                             <td colspan="10">
                                 <div class="col-md-12">
-                                    {{ $buylists->appends(Request::all())->links() }}
+                                    {{ $buylists->links('pagination.custom_pagination') }}
                                 </div>
                             </td>
                         </tr>
