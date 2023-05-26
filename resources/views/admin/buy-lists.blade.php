@@ -4,37 +4,27 @@
 @stop
 @section('content')
     <div class="table-wrapper">
-        <div class="card-body mt-2">
-            <div class="row mb-3">
-                <div class="col-md-12 mt-3">
+        <div class="card-body mt-2 product_secion_main_body">
+            <div class="row border-bottom product_section_header">
+                <div class="col-md-12">
                     <div class="row">
                         <div class="col-md-10">
-                            <p class="order_heading">
+                            <p class="product_heading">
                                 Buy Lists
                             </p>
-                            <p class="order_description">
-                                In the buy list section, you can review and manage all items with their details. You can
-                                view
-                                and edit information such as item <br> IDs, item name, description, price, and availability.
-                                Access
-                                to this area is restricted to administrators and team leaders. Any <br> changes you make
-                                will
-                                require
-                                approval after being verified for accuracy.
-                            </p>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-2 pt-3">
                             <a href="{{ 'buy-list/create ' }}" type="button" class="btn create-new-order-btn">
                                 + Create new buy list
                             </a>
                         </div>
                     </div>
-                    <div class="row p-3 search_row_admin-interface">
-                        <div class="col-md-12 order-search">
-                            <div class="form-group has-search ">
+                    <div class="row search_row_admin-interface">
+                        <div class="col-md-4 product_search">
+                            <div class="has-search ">
                                 <span class="fa fa-search form-control-feedback"></span>
-                                <form method="get" action="/admin/buylist" class="mb-2">
-                                    <input type="text" class="form-control border-0" id="search" name="search"
+                                <form method="get" action="/admin/products" class="mb-2">
+                                    <input type="text" class="form-control" id="search" name="search"
                                         placeholder="Search for order ID, customer, order, status or something..."
                                         value="{{ isset($search) ? $search : '' }}" />
                                 </form>
@@ -43,12 +33,14 @@
                     </div>
                 </div>
             </div>
-            <div class="card card-body">
-
-                <table class="table  table-hover table-buylist" id="table">
+            <div class="card-body product_table_body">
+                <table class="table border rounded-2 mb-5 mt-4table-buylist" id="table">
                     <thead>
-                        <tr>
-                            <th>#</th>
+                        <tr class="table-header-background">
+                            <th>
+                                <input type="checkbox" name="test" class="checkbox-table">
+                                #
+                            </th>
                             <th>Title<i class="fa fa-sort"></i></th>
                             <th>Status<i class="fa fa-sort"></i></th>
                             <th>Description<i class="fa fa-sort"></i></th>
@@ -57,26 +49,37 @@
                     </thead>
                     <tbody id="searched">
                         @foreach ($buylists as $buylist)
-                            <tr id="row-{{ $buylist->id }}" class="buylist-row">
-                                <td>{{ $buylist->id }}</td>
+                            <tr id="row-{{ $buylist->id }}" class="buylist_row">
+                                <td>
+                                    <input type="checkbox" name="test" class="checkbox-table">
+                                    {{ $buylist->id }}
+                                </td>
                                 <td class="buylist_title">
-                                    <span class="buy-list-title">{{ $buylist->title }}</span>
+                                    <span class="buy_list_title">{{ $buylist->title }}</span>
                                 </td>
                                 <td>{{ $buylist->status }}</td>
                                 <td>{{ $buylist->description }}</td>
                                 <td class="buylist_action">
-                                    <a href="buy-list/{{ $buylist->id }}"data-toggle="tooltip" data-original-title="View"
-                                        class="a_class">
-                                        <i class="icon-style fas fa-eye fa-border i_class"></i>
-                                    </a>
-                                    <a href="{{ route('buy-list.create', ['id' => $buylist->id]) }}"data-toggle="tooltip"
-                                        class="buylist" data-original-title="Edit"><i
-                                            class="icon-style fas fa-edit fa-border"></i>
-                                    </a>
-                                    <a href="#" class="delete" title="" data-toggle="tooltip"
-                                        data-original-title="Delete" class="buylist">
-                                        <i class="icon-style fas fa-trash-alt fa-border "></i>
-                                    </a>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-h" style="color: #CBCBCB !important;"></i>
+                                        </button>
+                                        <div class="dropdown-menu dropdonwn_menu">
+                                            <a class="dropdown-item" href="buy-list/{{ $buylist->id }}"
+                                                class="view a_class" title="" data-toggle="tooltip"
+                                                data-original-title="View">Previews
+                                            </a>
+                                            <a class="dropdown-item"href="{{ route('buy-list.create', ['id' => $buylist->id]) }}"
+                                                class="edit a_class" title="" data-toggle="tooltip"
+                                                data-original-title="Edit">Edit
+                                            </a>
+                                            <a class="dropdown-item delete deleteIcon a_class" href="#" class=""
+                                                id="{{ $buylist->id }}" title="" data-toggle="tooltip"
+                                                data-original-title="Delete">Delete
+                                            </a>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach
@@ -128,7 +131,7 @@
 
 @section('js')
     <script>
-        $('.buylist-row').hover(function() {
+        $('.buylist-row-none').hover(function() {
             let id = $(this).attr('id');
             children = $(this).children('.buylist_title').children('span').addClass('text-successs');
             let tet = $(this).children('.buylist_action').children('a');
@@ -139,7 +142,7 @@
         });
 
 
-        $('.buylist-row').mouseleave(function() {
+        $('.buylist-row-none').mouseleave(function() {
             let id = $(this).attr('id');
             children = $(this).children('.buylist_title').children('span').removeClass('text-successs');
             let tet = $(this).children('.buylist_action').children('a');

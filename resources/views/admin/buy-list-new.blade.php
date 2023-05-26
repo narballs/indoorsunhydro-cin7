@@ -210,6 +210,33 @@
 @section('css')
     <link rel="stylesheet" href="/css/admin_custom.css">
     <link rel="stylesheet" href="{{ asset('admin/admin_lte.css') }}">
+    <style>
+        .text-successs {
+            color: #7CC633 !important;
+            font-family: 'Poppins', sans-serif !important;
+        }
+
+        .badge-success {
+            color: #fff;
+            background: rgba(124, 198, 51, 0.2);
+            color: #7CC633;
+            padding: 7px !important;
+        }
+
+        .badge-warning {
+            color: #1f2d3d;
+            background-color: #fce9a9;
+            color: #ffc107 !important;
+            padding: 5px;
+        }
+
+        .badge-danger {
+            color: #fff;
+            background-color: #f1abb2;
+            color: #f14f4f;
+            padding: 6px !important;
+        }
+    </style>
 @stop
 
 @section('js')
