@@ -35,7 +35,7 @@
             <table class="table  table-customer mt-4 border rounded-2 mb-5">
                 <thead>
                     <tr class="table-header-background">
-                        <th> <input type="checkbox" name="test" class="checkbox-table"> #</th>
+                        <th> <input type="checkbox" name="select_all" class="selec_all" id="selectAll"> #</th>
                         <th>Created by </th>
                         <th>Reference </th>
                         <th>Date Created </th>
@@ -141,9 +141,10 @@
                 <tfoot>
                     <tr>
                         <td colspan="10">
-                            <div class="col-md-12">
-                                {{ $orders->appends(Request::all())->links() }}
-                            </div>
+                           
+                                {{-- {{ $orders->appends(Request::all())->links() }} --}}
+                                {{ $orders->links('pagination.custom_pagination') }}
+                            
                         </td>
                     </tr>
                 </tfoot>
@@ -158,10 +159,8 @@
     <link href="https://fonts.cdnfonts.com/css/poppins" rel="stylesheet">
 
     <style type="text/css">
-        input[name=test] {
-            color: red;
-        }
 
+        
         .text-successs {
             color: #7CC633 !important;
             font-family: 'Poppins', sans-serif !important;
@@ -277,6 +276,24 @@
                 }
             })
         });
+
+        // select all checkbox by click
+        $(document).on('click','#selectAll' , function(e){
+            var table = $(e.target).closest('table');
+            $('td input:checkbox',table).prop('checked',this.checked);
+
+            // if(this.checked) {
+            //     // Iterate each checkbox
+            //     $(':checkbox').each(function() {
+            //         this.checked = true;
+            //     });
+            // } else {
+            //     $(':checkbox').each(function() {
+            //         this.checked = false;
+            //     });
+            // }
+        });
+        
     </script>
 @stop
 @section('plugins.Sweetalert2', true)
