@@ -3,8 +3,8 @@
 
 @section('content')
     <div class="table-wrapper">
-        <div class="card-body p-0">
-            <div class="row border-bottom">
+        <div class="card-body product_secion_main_body">
+            <div class="row border-bottom product_section_header">
                 <div class="col-md-12">
                     <div class="row">
                         <div class="col-md-10">
@@ -12,143 +12,171 @@
                                 Orders
                             </p>
                         </div>
-                        <div class="col-md-2 pt-3">
+                        <div class="col-md-2">
                             <button type="button" class="btn create-new-order-btn">
                                 Create New Order +
                             </button>
                         </div>
                     </div>
                     <div class="row search_row_admin-interface">
-                        <div class="col-md-4 order-search">
+                        <div class="col-md-2 order-search">
                             <div class="has-search ">
                                 <span class="fa fa-search form-control-feedback"></span>
                                 <form method="get" action="/admin/orders" class="mb-2">
                                     <input type="text" class="form-control" id="search" name="search"
-                                        placeholder="Search for order ID, customer, order, status or something..."
-                                        value="{{ isset($search) ? $search : '' }}" />
+                                        placeholder="Search" value="{{ isset($search) ? $search : '' }}" />
                                 </form>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <table class="table  table-customer mt-4 border rounded-2 mb-5">
-                <thead>
-                    <tr class="table-header-background">
-                        <th> <input type="checkbox" name="select_all" class="selec_all" id="selectAll"> #</th>
-                        <th>Created by </th>
-                        <th>Reference </th>
-                        <th>Date Created </th>
-                        <th>Primary Account Email </th>
-                        <th>Order Total </th>
-                        <th>Company Name </th>
-                        {{-- <th>Status </th> --}}
-                        <th>Stage </th>
-                        <th>Payment Term </th>
-                        <th>Actions </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($orders as $order)
-                        @if (empty($order))
-                            <tr>
-                                <td>
-                                    <div class="alert alert-danger">No Orders Found</div>
-                                </td>
-                            </tr>
-                        @else
-                            <tr id="row-{{ $order->id }}" class="order-row border-bottom">
-                                <td class="created_by_order td_padding_row check">
-                                    <input type="checkbox" name="test" class="checkbox-table">
-                                    {{ $order->id }}
-                                </td>
-                                <td class="created_by toggleClass">
-                                    @if (!empty($order->primaryId) && !empty($order->primary_contact))
-                                        <span title="Secondary Contact"
-                                            class="created_by_order">{{ $order->primary_contact->firstName }}
-                                            {{ $order->primary_contact->lastName }}</span><br>
-                                    @elseif (!empty($order->secondaryId) && !empty($order->secondary_contact))
-                                        <span title="Secondary Contact"
-                                            class="created_by_order">{{ $order->secondary_contact->firstName }}
-                                            {{ $order->secondary_contact->lastName }}</span><br>
-                                    @elseif (!empty($order->contact))
-                                        {{ $order->contact->firstName }} {{ $order->contact->lastName }}
-                                    @endif
-                                    <span class="order_submited_email">
+            <div class="card-body product_table_body">
+                <table class="table border table-customer mb-5">
+                    <thead>
+                        <tr class="table-header-background">
+                            <td class="d-flex table-row-item">
+                                <span class="tabel-checkbox">
+                                    <input type="checkbox" name="test" class="checkbox-table" id="selectAll">
+                                </span>
+                                <span class="table-row-heading">
+                                    <i class="fas fa-arrow-up"></i>
+                                </span>
+                            </td>
+                            <td>
+                                <span class="d-flex table-row-item"> Created By</span>
+                            </td>
+                            <td>
+                                <span class="d-flex table-row-item"> Reference</span>
+                            </td>
+                            <td>
+                                <span class="d-flex table-row-item"> Date Created</span>
+                            </td>
+                            <td>
+                                <span class="d-flex table-row-item"> Primary Account Email</span>
+                            </td>
+                            <td>
+                                <span class="d-flex table-row-item"> Order Total </span>
+                            </td>
+                            <td>
+                                <span class="d-flex table-row-item"> Company Name </span>
+                            </td>
+                            <td>
+                                <span class="d-flex table-row-item"> Stage</span>
+                            </td>
+                            <td>
+                                <span class="d-flex table-row-item"> Payment Term</span>
+                            </td>
+                            <td>
+                                <span class="d-flex table-row-item"> Actions</span>
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($orders as $order)
+                            @if (empty($order))
+                                <tr>
+                                    <td>
+                                        <div class="alert alert-danger">No Orders Found</div>
+                                    </td>
+                                </tr>
+                            @else
+                                <tr id="row-{{ $order->id }}" class="order-row border-bottom">
+                                    <td class="d-flex table-items">
+                                        <span class="tabel-checkbox">
+                                            <input type="checkbox" name="test" class="checkbox-table">
+                                        </span>
+                                        <span class="table-row-heading">
+                                            {{ $order->id }}
+                                        </span>
+                                    </td>
+                                    <td class="created_by toggleClass pb-0 pt-3">
                                         @if (!empty($order->primaryId) && !empty($order->primary_contact))
-                                            <span title="Secondary Contact">{{ $order->primary_contact->email }}</span>
+                                            <span title="Secondary Contact" class="created_by_order">
+                                                {{ $order->primary_contact->firstName }}
+                                                {{ $order->primary_contact->lastName }}</span><br>
                                         @elseif (!empty($order->secondaryId) && !empty($order->secondary_contact))
-                                            <span title="Secondary Contact">{{ $order->secondary_contact->email }}</span>
+                                            <span title="Secondary Contact"
+                                                class="created_by_order">{{ $order->secondary_contact->firstName }}
+                                                {{ $order->secondary_contact->lastName }}</span><br>
                                         @elseif (!empty($order->contact))
-                                            {{ $order->contact->email }} {{ $order->contact->lastName }}
+                                            {{ $order->contact->firstName }} {{ $order->contact->lastName }}
                                         @endif
-                                    </span>
-                                </td>
-                                <td class="td_padding_row">{{ $order->reference }}</td>
-                                <td class="td_padding_row">
-                                    {{ $order->created_at->format('d/m/Y') }}
-                                </td>
-                                <td class="td_padding_row">
-                                    @if ($order->contact)
-                                        {{ $order->contact->email }}
-                                    @endif
-                                </td>
+                                        <span class="order_submited_email">
+                                            @if (!empty($order->primaryId) && !empty($order->primary_contact))
+                                                <span title="Secondary Contact">{{ $order->primary_contact->email }}</span>
+                                            @elseif (!empty($order->secondaryId) && !empty($order->secondary_contact))
+                                                <span
+                                                    title="Secondary Contact">{{ $order->secondary_contact->email }}</span>
+                                            @elseif (!empty($order->contact))
+                                                {{ $order->contact->email }} {{ $order->contact->lastName }}
+                                            @endif
+                                        </span>
+                                    </td>
+                                    <td class="td_padding_row">{{ $order->reference }}</td>
+                                    <td class="td_padding_row">
+                                        {{ $order->created_at->format('d/m/Y') }}
+                                    </td>
+                                    <td class="td_padding_row">
+                                        @if ($order->contact)
+                                            {{ $order->contact->email }}
+                                        @endif
+                                    </td>
 
-                                <td class="created_by_order_total td_padding_row">
-                                    ${{ number_format($order->total, 2) }}</td>
-                                <td class="td_padding_row">
-                                    @if ($order->contact)
-                                        @if ($order->contact->company)
-                                            {{ $order->contact->company }}
+                                    <td class="created_by_order_total td_padding_row">
+                                        ${{ number_format($order->total, 2) }}</td>
+                                    <td class="td_padding_row">
+                                        @if ($order->contact)
+                                            @if ($order->contact->company)
+                                                {{ $order->contact->company }}
+                                            @endif
                                         @endif
-                                    @endif
-                                </td>
-                                <td class="is-approved td_padding_row">
-                                    @if ($order->isApproved == 0)
-                                        <span class="badge badge-warning w-50 is_approded_0">New</span>
-                                    @elseif ($order->isApproved == 1)
-                                        <span class="badge badge-success is_approded_1">Fullfilled</span>
-                                    @elseif ($order->isApproved == 2)
-                                        <span class="badge badge-danger is_approded_2">Cancelled</span>
-                                    @endif
-                                </td>
-                                <td class="td_padding_row">{{ $order->paymentTerms }}</td>
-                                <td class="created_by toggleClass td_padding_row">
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown"
-                                            aria-haspopup="true" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-h" style="color: #CBCBCB !important;"></i>
-                                        </button>
-                                        <div class="dropdown-menu dropdonwn_menu">
-                                            <a class="dropdown-item" href="{{ url('admin/order-detail/' . $order->id) }}"
-                                                class="view a_class" title="" data-toggle="tooltip"
-                                                data-original-title="View">Previews
-                                            </a>
-                                            <a class="dropdown-item delete deleteIcon a_class" href="#" class=""
-                                                id="{{ $order->id }}" title="" data-toggle="tooltip"
-                                                data-original-title="Delete">Delete
-                                            </a>
-                                            <a class="dropdown-item"href="#" class="edit a_class" title=""
-                                                data-toggle="tooltip" data-original-title="Edit">Edit
-                                            </a>
+                                    </td>
+                                    <td class="is-approved td_padding_row">
+                                        @if ($order->isApproved == 0)
+                                            <span class="badge badge-warning w-50 is_approded_0">New</span>
+                                        @elseif ($order->isApproved == 1)
+                                            <span class="badge badge-success is_approded_1">Fullfilled</span>
+                                        @elseif ($order->isApproved == 2)
+                                            <span class="badge badge-danger is_approded_2">Cancelled</span>
+                                        @endif
+                                    </td>
+                                    <td class="td_padding_row">{{ $order->paymentTerms }}</td>
+                                    <td class="created_by toggleClass td_padding_row">
+                                        <div class="btn-group">
+                                            <button type="button" class="btn p-0 btn-white dropdown-toggle"
+                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fas fa-ellipsis-h" style="color: #CBCBCB !important;"></i>
+                                            </button>
+                                            <div class="dropdown-menu dropdonwn_menu">
+                                                <a class="dropdown-item"
+                                                    href="{{ url('admin/order-detail/' . $order->id) }}"
+                                                    class="view a_class" title="" data-toggle="tooltip"
+                                                    data-original-title="View">Previews
+                                                </a>
+                                                <a class="dropdown-item delete deleteIcon a_class" href="#"
+                                                    class="" id="{{ $order->id }}" title=""
+                                                    data-toggle="tooltip" data-original-title="Delete">Delete
+                                                </a>
+                                                <a class="dropdown-item"href="#" class="edit a_class" title=""
+                                                    data-toggle="tooltip" data-original-title="Edit">Edit
+                                                </a>
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        @endif
-                    @endforeach
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td colspan="10">
-                           
-                                {{-- {{ $orders->appends(Request::all())->links() }} --}}
+                                    </td>
+                                </tr>
+                            @endif
+                        @endforeach
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="10">
                                 {{ $orders->links('pagination.custom_pagination') }}
-                            
-                        </td>
-                    </tr>
-                </tfoot>
-            </table>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
         </div>
     </div>
 @stop
@@ -159,25 +187,28 @@
     <link href="https://fonts.cdnfonts.com/css/poppins" rel="stylesheet">
 
     <style type="text/css">
-
-        
         .text-successs {
             color: #7CC633 !important;
             font-family: 'Poppins', sans-serif !important;
         }
 
         .badge-success {
-            color: #fff;
-            background: rgba(124, 198, 51, 0.2);
-            color: #319701 !important;
-            padding: 7px !important;
+            background: rgb(186 235 137 / 20%);
+            color: #319701;
+            padding: 6px !important;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 11.3289px;
+
         }
 
         .badge-warning {
-            color: #1f2d3d;
-            background-color: #fce9a9;
-            color: #ffc107 !important;
-            padding: 5px;
+            background-color: #f1e8cb;
+            color: #523e00 !important;
+            padding: 6px !important;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 11.3289px;
         }
 
         .badge-danger {
@@ -278,22 +309,10 @@
         });
 
         // select all checkbox by click
-        $(document).on('click','#selectAll' , function(e){
+        $(document).on('click', '#selectAll', function(e) {
             var table = $(e.target).closest('table');
-            $('td input:checkbox',table).prop('checked',this.checked);
-
-            // if(this.checked) {
-            //     // Iterate each checkbox
-            //     $(':checkbox').each(function() {
-            //         this.checked = true;
-            //     });
-            // } else {
-            //     $(':checkbox').each(function() {
-            //         this.checked = false;
-            //     });
-            // }
+            $('td input:checkbox', table).prop('checked', this.checked);
         });
-        
     </script>
 @stop
 @section('plugins.Sweetalert2', true)

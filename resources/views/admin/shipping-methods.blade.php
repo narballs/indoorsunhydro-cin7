@@ -117,7 +117,7 @@
                         <tr>
                             <td colspan="10">
                                 <div class="col-md-12">
-                                    {{ $shippingmethods->appends(Request::all())->links() }}
+                                    {{ $shippingmethods->links('pagination.custom_pagination') }}
                                 </div>
                             </td>
                         </tr>

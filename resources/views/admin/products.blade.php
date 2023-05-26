@@ -4,7 +4,7 @@
 @stop
 @section('content')
     <div class="table-wrapper">
-        <div class="card-body mt-2 product_secion_main_body">
+        <div class="card-body product_secion_main_body">
             <div class="row border-bottom product_section_header">
                 <div class="col-md-12">
                     <div class="row">
@@ -13,20 +13,19 @@
                                 Products
                             </p>
                         </div>
-                        <div class="col-md-2 pt-3">
+                        <div class="col-md-2">
                             <button type="button" class="btn create_new_product_btn">
                                 Create New proudct +
                             </button>
                         </div>
                     </div>
                     <div class="row search_row_admin-interface">
-                        <div class="col-md-4 product_search">
+                        <div class="col-md-2 product_search">
                             <div class="has-search ">
                                 <span class="fa fa-search form-control-feedback"></span>
                                 <form method="get" action="/admin/products" class="mb-2">
                                     <input type="text" class="form-control" id="search" name="search"
-                                        placeholder="Search for order ID, customer, order, status or something..."
-                                        value="{{ isset($search) ? $search : '' }}" />
+                                        placeholder="Search" value="{{ isset($search) ? $search : '' }}" />
                                 </form>
                             </div>
                         </div>
@@ -34,19 +33,17 @@
                 </div>
             </div>
             <div class="card-body product_table_body">
-                <table class="table border rounded-2 mb-5 table-product" id="table">
+                <table class="table border mb-5 table-product" id="table">
                     <thead>
                         <tr class="table-header-background">
                             <td class="d-flex table-row-item">
                                 <span class="tabel-checkbox">
-                                    <input type="checkbox" name="test" class="checkbox-table">
+                                    <input type="checkbox" name="test" class="checkbox-table" id="selectAll">
                                 </span>
                                 <span class="table-row-heading">
                                     <i class="fas fa-arrow-up"></i>
                                 </span>
                             </td>
-
-
                             <td>
                                 <span class="d-flex table-row-item"> Name</span>
                             </td>
@@ -78,7 +75,9 @@
                                     </span>
                                 </td>
                                 <td class="product_name">
-                                    <span class="product_name_slg d-flex table-items-title">{{ $product->name }}</span>
+                                    <span class="product_name_slg d-flex table-items-title">
+                                        {{ $product->name }}
+                                    </span>
                                 </td>
                                 <td>
                                     <span class="product_name_slg d-flex table-items-title">{{ $product->code }}</span>
@@ -127,7 +126,7 @@
                         <tr>
                             <td colspan="10">
                                 <div class="col-md-12">
-                                    {{ $products->appends(Request::all())->links() }}
+                                    {{ $products->links('pagination.custom_pagination') }}
                                 </div>
                             </td>
                         </tr>
@@ -147,8 +146,6 @@
             }
 
             .badge-success {
-                color: #fff;
-                /* background-color: #28a745; */
                 background: rgb(186 235 137 / 20%);
                 color: #319701;
                 padding: 7px !important;
@@ -221,6 +218,11 @@
                     let test = tet[index].children[0];
                     test.classList.remove('bg-icon');
                 });
+            });
+
+            $(document).on('click', '#selectAll', function(e) {
+                var table = $(e.target).closest('table');
+                $('td input:checkbox', table).prop('checked', this.checked);
             });
         </script>
 
