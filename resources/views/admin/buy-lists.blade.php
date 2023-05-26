@@ -14,7 +14,7 @@
                             </p>
                         </div>
                         <div class="col-md-2 pt-3">
-                            <a href="{{ 'buy-list/create ' }}" type="button" class="btn create-new-order-btn">
+                            <a href="{{ 'buy-list/create ' }}" type="button" class="btn create_new_buylist_btn">
                                 Create new buy list +
                             </a>
                         </div>

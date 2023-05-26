@@ -24,7 +24,7 @@
                         </div>
                         <div class="col-md-2">
                             <a href="{{ route('users.create') }}" class="btn create-new-order-btn">
-                                + Create new user
+                                Create new user +
                             </a>
                         </div>
                     </div>

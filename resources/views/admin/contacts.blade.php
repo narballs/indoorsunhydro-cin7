@@ -42,7 +42,7 @@
                             </p>
                         </div>
                         <div class="col-md-2">
-                            <button type="button" class="btn create-new-order-btn">
+                            <button type="button" class="btn create_new_supplier_btn">
                                 + Create New Order
                             </button>
                         </div>
