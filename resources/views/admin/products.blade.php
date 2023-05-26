@@ -34,15 +34,34 @@
                 </div>
             </div>
             <div class="card-body product_table_body">
-                <table class="table border rounded-2 mb-5 mt-4 table-product" id="table">
+                <table class="table border rounded-2 mb-5 table-product" id="table">
                     <thead>
                         <tr class="table-header-background">
-                            <th> <input type="checkbox" name="test" class="checkbox-table"> #</th>
-                            <th>Name </th>
-                            <th>Code </th>
-                            <th>fulfillment</th>
-                            <th>Retail Price </th>
-                            <th>Actions </th>
+                            <td class="d-flex table-row-item">
+                                <span class="tabel-checkbox">
+                                    <input type="checkbox" name="test" class="checkbox-table">
+                                </span>
+                                <span class="table-row-heading">
+                                    <i class="fas fa-arrow-up"></i>
+                                </span>
+                            </td>
+
+
+                            <td>
+                                <span class="d-flex table-row-item"> Name</span>
+                            </td>
+                            <td>
+                                <span class="d-flex table-row-item"> Code</span>
+                            </td>
+                            <td>
+                                <span class="d-flex table-row-item"> Fulfillment</span>
+                            </td>
+                            <td>
+                                <span class="d-flex table-row-item"> Retail Price</span>
+                            </td>
+                            <td>
+                                <span class="d-flex table-row-item"> Action</span>
+                            </td>
                         </tr>
                     </thead>
                     <tbody id="searched">
@@ -50,37 +69,37 @@
                         @foreach ($products as $key => $product)
                             <?php $count++; ?>
                             <tr id="row-{{ $product->id }}" class="product-row border-bottom">
-                                <td>
-                                    <input type="checkbox" name="test" class="checkbox-table">
-                                    {{ $count }}
+                                <td class="d-flex table-items">
+                                    <span class="tabel-checkbox">
+                                        <input type="checkbox" name="test" class="checkbox-table">
+                                    </span>
+                                    <span class="table-row-heading">
+                                        {{ $key + 1 }}
+                                    </span>
                                 </td>
                                 <td class="product_name">
-                                    <span class="product_name_slg">{{ $product->name }}</span>
+                                    <span class="product_name_slg d-flex table-items-title">{{ $product->name }}</span>
                                 </td>
                                 <td>
-                                    <span class="">{{ $product->code }}</span>
+                                    <span class="product_name_slg d-flex table-items-title">{{ $product->code }}</span>
                                 </td>
                                 <td>
-                                    {{ $product->status }}
+                                    @if ($product->status == 'Public')
+                                        <span class="badge badge-success">
+                                            {{ $product->status }}
+                                        </span>
+                                    @else
+                                        <span class="badge badge-danger">
+                                            {{ $product->status }}
+                                        </span>
+                                    @endif
                                 </td>
                                 <td>
                                     <span class="product_retail_price">
-                                        ${{ $product->retail_price }}
+                                        <span class="d-flex table-items-title"> ${{ $product->retail_price }}</span>
                                     </span>
                                 </td>
                                 <td class="product_action">
-                                    {{-- <a href="" class="view a_class" title="" data-toggle="tooltip"
-                                        data-original-title="View">
-                                        <i class="icon-style  fas fa-eye fa-border i_class"></i>
-                                    </a>
-                                    <a href="#" class="edit a_class" title="" data-toggle="tooltip"
-                                        data-original-title="Edit"><i class="icon-style fas fa-edit fa-border "></i>
-                                    </a>
-                                    <a href="#" class="delete deleteIcon a_class" id="{{ $product->id }}"
-                                        title="" data-toggle="tooltip" data-original-title="Delete"><i
-                                            class="icon-style fas fa-trash-alt fa-border "></i>
-                                    </a> --}}
-
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown"
                                             aria-haspopup="true" aria-expanded="false">
@@ -128,9 +147,33 @@
             }
 
             .badge-success {
-                background: rgba(124, 198, 51, 0.2);
-                color: #7CC633;
+                color: #fff;
+                /* background-color: #28a745; */
+                background: rgb(186 235 137 / 20%);
+                color: #319701;
                 padding: 7px !important;
+                font-style: normal;
+                font-weight: 500;
+                font-size: 11.3289px;
+
+            }
+
+            .badge-warning {
+                color: #1f2d3d;
+                background-color: #fce9a9;
+                color: #ffc107 !important;
+                padding: 5px;
+            }
+
+            .badge-danger {
+                color: #fff;
+                background-color: #f1eaea;
+                color: #B42318;
+                padding: 6px !important;
+                font-style: normal;
+                font-weight: 500;
+                font-size: 11.3289px;
+
             }
 
             .badge-secondary {
@@ -151,13 +194,6 @@
                 background-color: #fce9a9;
                 color: #ffc107 !important;
                 padding: 5px;
-            }
-
-            .badge-danger {
-                color: #fff;
-                background-color: #f1abb2;
-                color: #f14f4f;
-                padding: 6px !important;
             }
         </style>
     @stop
