@@ -38,11 +38,11 @@
                     <thead>
                         <tr class="table-header-background">
                             <th> <input type="checkbox" name="test" class="checkbox-table"> #</th>
-                            <th>Name <i class="fa fa-sort"></i></th>
-                            <th>Code <i class="fa fa-sort"></i></th>
-                            <th>fulfillment<i class="fa fa-sort"></i></th>
-                            <th>Retail Price <i class="fa fa-sort"></i></th>
-                            <th>Actions <i class="fa fa-sort"></i></th>
+                            <th>Name </th>
+                            <th>Code </th>
+                            <th>fulfillment</th>
+                            <th>Retail Price </th>
+                            <th>Actions </th>
                         </tr>
                     </thead>
                     <tbody id="searched">
