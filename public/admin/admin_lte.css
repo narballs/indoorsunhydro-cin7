@@ -156,12 +156,14 @@
     font-family: 'Poppins', sans-serif;
     font-style: normal;
     font-weight: 400;
-    font-size: 16px;
-    line-height: 24px;
-    color: #868686;
+    font-size: 14px;
     border: 1.03706px solid rgba(208, 208, 208, 0.51);
     border-radius: 7.25943px;
-    margin-left: 122px !important;
+    margin-left: 108px !important;
+    line-height: 24px;
+    /* identical to box height, or 171% */
+    letter-spacing: -0.006em;
+    color: #525252;
 }
 
 .has-search .form-control {
