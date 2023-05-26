@@ -1,5 +1,32 @@
 @import url('https://fonts.cdnfonts.com/css/poppins');
 
+.table-row-heading {
+    padding-left: 11.46px !important;
+    margin-top: -1px !important;
+    color: #242424 !important;
+
+}
+
+.status-disabled {
+    margin-top: 10px !important;
+}
+
+.table-row-item {
+    margin-top: 6px;
+}
+
+.table-items {
+    padding-top: 24px !important;
+}
+
+.table-items-title {
+    padding-top: 12px !important;
+}
+
+.tabel-checkbox {
+    margin-top: 1px !important;
+}
+
 .nav-item .active {
     /* background: none !important; */
     border-bottom: none !important;
@@ -10,11 +37,12 @@
 .table-header-background {
     background-color: #F9F9F9 !important;
     font-family: 'Poppins', sans-serif !important;
-    font-style: normal !important;
-    font-weight: 500 !important;
-    font-size: 12.4108px !important;
-    line-height: 17px !important;
-    color: #525252 !important;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12.4108px;
+    line-height: 17px;
+    color: #525252;
+    border-bottom: 0.944079px solid #EAECF0 !important;
 }
 
 .nav-item .active {
@@ -275,7 +303,7 @@
 
 .product_section_header {
     margin-left: -35px !important;
-    margin-right: -35px !important;
+    margin-right: -16px !important;
 }
 
 .product_heading {
@@ -286,6 +314,8 @@
     line-height: 48px;
     color: #242424 !important;
     margin-left: 35px !important;
+    margin-bottom: 16px !important;
+
 }
 
 .create_new_product_btn {
@@ -445,14 +475,41 @@ a {
 }
 
 /*Buy List Page End */
+
+/* Shipping method page start */
 .shipping_name {
-    font-family: 'Poppins', sans-serif !important;
-    font-style: normal !important;
-    font-weight: 500 !important;
-    font-size: 16px !important;
-    line-height: 27px !important;
+    font-family: 'Poppins', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 13.2171px;
+    line-height: 19px;
     color: #242424 !important;
 }
+
+.create_new_shipping_btn {
+    box-shadow: none;
+    background: rgba(243, 243, 243, 0.53);
+    font-family: 'Poppins', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: #868686;
+    border: 1.03706px solid rgba(208, 208, 208, 0.51);
+    border-radius: 7.25943px;
+    margin-left: 105px !important;
+}
+
+.shipping-method-row {
+    font-family: 'Poppins', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 13.2171px;
+    line-height: 19px;
+    color: #828282;
+}
+
+/* Shipping method page end */
 
 
 .search_row_admin-interface {

@@ -15,7 +15,7 @@
                         </div>
                         <div class="col-md-2 pt-3">
                             <a href="{{ 'buy-list/create ' }}" type="button" class="btn create-new-order-btn">
-                                + Create new buy list
+                                Create new buy list +
                             </a>
                         </div>
                     </div>
@@ -34,7 +34,7 @@
                 </div>
             </div>
             <div class="card-body product_table_body">
-                <table class="table border rounded-2 mb-5 mt-4table-buylist" id="table">
+                <table class="table border rounded-2 mb-5 table-buylist" id="table">
                     <thead>
                         <tr class="table-header-background">
                             <th>
@@ -49,7 +49,7 @@
                     </thead>
                     <tbody id="searched">
                         @foreach ($buylists as $buylist)
-                            <tr id="row-{{ $buylist->id }}" class="buylist_row">
+                            <tr id="row-{{ $buylist->id }}" class="buylist_row border-bottom">
                                 <td>
                                     <input type="checkbox" name="test" class="checkbox-table">
                                     {{ $buylist->id }}
@@ -84,12 +84,16 @@
                             </tr>
                         @endforeach
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="10">
+                                <div class="col-md-12">
+                                    {{ $buylists->appends(Request::all())->links() }}
+                                </div>
+                            </td>
+                        </tr>
+                    </tfoot>
                 </table>
-                <div class="row">
-                    <div class="col-md-12 mt-3 border-top">
-                        {{ $buylists->appends(Request::all())->links() }}
-                    </div>
-                </div>
             </div>
         </div>
     </div>
