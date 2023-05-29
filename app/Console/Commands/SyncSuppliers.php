@@ -51,7 +51,9 @@ class SyncSuppliers extends Command
         $date = $sync_log->last_synced;
 
         $rawDate = Carbon::parse($date);
-        $formattedDateSting = $rawDate->toDateTimeString().'T'.'00:00:00'.'Z';  
+        $getdate = $rawDate->format('Y-m-d');
+        $getTime = $rawDate->format('H:i:s');
+        $formattedDateSting = $getdate.'T'. $getTime .'Z';  
         $client2 = new \GuzzleHttp\Client();
         $total_contact_pages = 150;
         $api_contact_ids = [];
@@ -75,6 +77,7 @@ class SyncSuppliers extends Command
                 );
 
                 $api_contacts = $res->getBody()->getContents();
+                dd($api_contacts);
                 $api_contacts = json_decode($api_contacts);
                 $record_count = count($api_contacts);
                 $this->info('Record Count => '. $record_count);
