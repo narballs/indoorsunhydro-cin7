@@ -33,103 +33,105 @@
                 </div>
             </div>
             <div class="card-body product_table_body">
-                <table class="table border mb-5 table-product" id="table">
-                    <thead>
-                        <tr class="table-header-background">
-                            <td class="d-flex table-row-item">
-                                <span class="tabel-checkbox">
-                                    <input type="checkbox" name="test" class="checkbox-table" id="selectAll">
-                                </span>
-                                <span class="table-row-heading">
-                                    <i class="fas fa-arrow-up"></i>
-                                </span>
-                            </td>
-                            <td>
-                                <span class="d-flex table-row-item"> Name</span>
-                            </td>
-                            <td>
-                                <span class="d-flex table-row-item"> Code</span>
-                            </td>
-                            <td>
-                                <span class="d-flex table-row-item"> Fulfillment</span>
-                            </td>
-                            <td>
-                                <span class="d-flex table-row-item"> Retail Price</span>
-                            </td>
-                            <td>
-                                <span class="d-flex table-row-item"> Action</span>
-                            </td>
-                        </tr>
-                    </thead>
-                    <tbody id="searched">
-                        <?php $count = 0; ?>
-                        @foreach ($products as $key => $product)
-                            <?php $count++; ?>
-                            <tr id="row-{{ $product->id }}" class="product-row border-bottom">
-                                <td class="d-flex table-items">
+                <div class="col-md-12 p-0">
+                    <table class="table border mb-5 table-product" id="table">
+                        <thead>
+                            <tr class="table-header-background">
+                                <td class="d-flex table-row-item">
                                     <span class="tabel-checkbox">
-                                        <input type="checkbox" name="test" class="checkbox-table">
+                                        <input type="checkbox" name="test" class="checkbox-table" id="selectAll">
                                     </span>
                                     <span class="table-row-heading">
-                                        {{ $key + 1 }}
-                                    </span>
-                                </td>
-                                <td class="product_name">
-                                    <span class="product_name_slg d-flex table-items-title">
-                                        {{ $product->name }}
+                                        <i class="fas fa-arrow-up"></i>
                                     </span>
                                 </td>
                                 <td>
-                                    <span class="product_name_slg d-flex table-items-title">{{ $product->code }}</span>
+                                    <span class="d-flex table-row-item"> Name</span>
                                 </td>
                                 <td>
-                                    @if ($product->status == 'Public')
-                                        <span class="badge badge-success">
-                                            {{ $product->status }}
-                                        </span>
-                                    @else
-                                        <span class="badge badge-danger">
-                                            {{ $product->status }}
-                                        </span>
-                                    @endif
+                                    <span class="d-flex table-row-item"> Code</span>
                                 </td>
                                 <td>
-                                    <span class="product_retail_price">
-                                        <span class="d-flex table-items-title"> ${{ $product->retail_price }}</span>
-                                    </span>
+                                    <span class="d-flex table-row-item"> Fulfillment</span>
                                 </td>
-                                <td class="product_action">
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown"
-                                            aria-haspopup="true" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-h" style="color: #CBCBCB !important;"></i>
-                                        </button>
-                                        <div class="dropdown-menu dropdonwn_menu">
-                                            <a class="dropdown-item" href="{{ url('admin/products/' . $product->id) }}"
-                                                class="view a_class" title="" data-toggle="tooltip"
-                                                data-original-title="View">Previews
-                                            </a>
-                                            <a class="dropdown-item delete deleteIcon a_class" href="#" class=""
-                                                id="{{ $product->id }}" title="" data-toggle="tooltip"
-                                                data-original-title="Delete">Delete
-                                            </a>
-                                            <a class="dropdown-item"href="#" class="edit a_class" title=""
-                                                data-toggle="tooltip" data-original-title="Edit">Edit
-                                            </a>
-                                        </div>
-                                    </div>
+                                <td>
+                                    <span class="d-flex table-row-item"> Retail Price</span>
+                                </td>
+                                <td>
+                                    <span class="d-flex table-row-item"> Action</span>
                                 </td>
                             </tr>
-                        @endforeach
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td colspan="10">
-                                {{ $products->links('pagination.custom_pagination') }}
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
+                        </thead>
+                        <tbody id="searched">
+                            <?php $count = 0; ?>
+                            @foreach ($products as $key => $product)
+                                <?php $count++; ?>
+                                <tr id="row-{{ $product->id }}" class="product-row border-bottom">
+                                    <td class="d-flex table-items">
+                                        <span class="tabel-checkbox">
+                                            <input type="checkbox" name="test" class="checkbox-table">
+                                        </span>
+                                        <span class="table-row-heading">
+                                            {{ $key + 1 }}
+                                        </span>
+                                    </td>
+                                    <td class="product_name">
+                                        <span class="product_name_slg d-flex table-items-title">
+                                            {{ $product->name }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="product_name_slg d-flex table-items-title">{{ $product->code }}</span>
+                                    </td>
+                                    <td>
+                                        @if ($product->status == 'Public')
+                                            <span class="badge badge-success">
+                                                {{ $product->status }}
+                                            </span>
+                                        @else
+                                            <span class="badge badge-danger">
+                                                {{ $product->status }}
+                                            </span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <span class="product_retail_price">
+                                            <span class="d-flex table-items-title"> ${{ $product->retail_price }}</span>
+                                        </span>
+                                    </td>
+                                    <td class="product_action">
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-white dropdown-toggle"
+                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fas fa-ellipsis-h" style="color: #CBCBCB !important;"></i>
+                                            </button>
+                                            <div class="dropdown-menu dropdonwn_menu">
+                                                <a class="dropdown-item" href="{{ url('admin/products/' . $product->id) }}"
+                                                    class="view a_class" title="" data-toggle="tooltip"
+                                                    data-original-title="View">Previews
+                                                </a>
+                                                <a class="dropdown-item delete deleteIcon a_class" href="#"
+                                                    class="" id="{{ $product->id }}" title=""
+                                                    data-toggle="tooltip" data-original-title="Delete">Delete
+                                                </a>
+                                                <a class="dropdown-item"href="#" class="edit a_class" title=""
+                                                    data-toggle="tooltip" data-original-title="Edit">Edit
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="10">
+                                    {{ $products->links('pagination.custom_pagination') }}
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
             </div>
         @stop
 
