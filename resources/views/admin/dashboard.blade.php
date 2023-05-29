@@ -9,11 +9,11 @@
 @section('content')
     <div class="row">
         <div class="col-md-12">
-            <div class="card card-primary card-outline">
+            <div class="card card-primary">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-12">
-                            <button class="btn btn-import-contacts btn-success">Import Contacts</button>
+                            <button class="btn btn-import-contacts badge-success">Import Contacts</button>
                             <div id="div_import_contacts" class="spinner-border hide ml-4" role="status">
                                 <span class="sr-only">Loading...</span>
                             </div>

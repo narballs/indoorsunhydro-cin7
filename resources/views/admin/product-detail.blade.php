@@ -26,9 +26,9 @@
                             </div>
                             <div class="col-md-1">
                                 @if ($product->status == 'Active' || $product->status == 'Public')
-                                    <span class="badge bg-success">{{ $product->status }}</span>
+                                    <span class="badge badge-success">{{ $product->status }}</span>
                                 @elseif($product->status == 'Inactive')
-                                    <span class="badge bg-danger">{{ $product->status }}</span>
+                                    <span class="badge badge-danger">{{ $product->status }}</span>
                                 @endif
                             </div>
                             @if ($product->categories)
@@ -82,11 +82,11 @@
                                         </td>
                                         @if ($option->status == 'Active' || $option->status == 'Primary')
                                             <td class="ms-2 text-center">
-                                                <span class="badge bg-success">{{ $option->status }}</span>
+                                                <span class="badge badge-success">{{ $option->status }}</span>
                                             </td>
                                         @else
                                             <td class="ms-2 text-center">
-                                                <span class="badge bg-danger">{{ $option->status }}</span>
+                                                <span class="badge badge-danger">{{ $option->status }}</span>
                                             </td>
                                         @endif
                                         <td class="text-center">
@@ -152,28 +152,28 @@
                             </div>
                             <table class="table">
                                 <!--       	<tr>
-                             <td class="text-center">retailUSD</td>
-                             </tr>
-                             <tr>
-                             <td class="text-center">wholesaleUSD</td>
-                             </tr>
-                             <tr>
-                             <td class="text-center">sacramentoUSD</td>
-                             </tr>
-                             <tr>
-                             <td class="text-center">terraInternUSD</td>
-                             </tr>
-                             <tr>
-                             <td class="text-center">oklahomaUSD</td>
-                             </tr>
-                             <tr>
-                             <td class="text-center">calaverasUSD</td> -->
+                                         <td class="text-center">retailUSD</td>
+                                         </tr>
+                                         <tr>
+                                         <td class="text-center">wholesaleUSD</td>
+                                         </tr>
+                                         <tr>
+                                         <td class="text-center">sacramentoUSD</td>
+                                         </tr>
+                                         <tr>
+                                         <td class="text-center">terraInternUSD</td>
+                                         </tr>
+                                         <tr>
+                                         <td class="text-center">oklahomaUSD</td>
+                                         </tr>
+                                         <tr>
+                                         <td class="text-center">calaverasUSD</td> -->
                                 <!--        		<th class="text-center">tier1USD</th>
-                             <th class="text-center">tier2USD</th>
-                             <th class="text-center">tier3USD</th>
-                             <th class="text-center">commercialOKUSD</th>
-                             <th class="text-center">costUSD</th>
-                             <th class="text-center">specialPrice</th> -->
+                                         <th class="text-center">tier2USD</th>
+                                         <th class="text-center">tier3USD</th>
+                                         <th class="text-center">commercialOKUSD</th>
+                                         <th class="text-center">costUSD</th>
+                                         <th class="text-center">specialPrice</th> -->
                                 <!--  	</tr> -->
                                 <?php
                                 // foreach($product->options as $option) {
