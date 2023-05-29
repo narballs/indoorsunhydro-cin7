@@ -164,13 +164,6 @@
 
                 .badge-danger {
                     color: #fff;
-                    background-color: rgba(220, 78, 65, 0.12);
-                    color: #DC4E41;
-                    padding: 6px !important;
-                }
-
-                .badge-danger {
-                    color: #fff;
                     background-color: #f1eaea;
                     color: #B42318;
                     padding: 6px !important;
@@ -183,21 +176,19 @@
                 .badge-secondary {
                     color: #8e8b8b !important;
                     background-color: #d0dce6 !important;
-                    padding: 7px !important;
-                    border-radius: 6px;
+                    padding: 6px !important;
+                    font-style: normal;
+                    font-weight: 500;
+                    font-size: 11.3289px;
                 }
 
                 .badge-primary {
                     background-color: #339AC6;
                     color: #339AC6 !important;
-                    padding: 5px;
-                }
-
-                .badge-warning {
-                    color: #1f2d3d;
-                    background-color: #fce9a9;
-                    color: #ffc107 !important;
-                    padding: 5px;
+                    padding: 6px !important;
+                    font-style: normal;
+                    font-weight: 500;
+                    font-size: 11.3289px;
                 }
             </style>
         @stop
