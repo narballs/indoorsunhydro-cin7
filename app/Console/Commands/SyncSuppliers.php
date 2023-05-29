@@ -7,6 +7,9 @@ use App\Models\Contact;
 use App\Models\SecondaryContact;
 use App\Models\UserLog;
 use Carbon\Carbon;
+use App\Models\ApiErrorLog;
+use App\Models\ApiSyncLog;
+use Illuminate\Http\Request;
 
 
 class SyncSuppliers extends Command
@@ -42,34 +45,61 @@ class SyncSuppliers extends Command
      */
     public function handle()
     {
-        $client2 = new \GuzzleHttp\Client();
+        $sync_time  = Carbon::now()->toIso8601String();
+        $sync_log = ApiSyncLog::where('end_point', 'https://api.cin7.com/api/v1/Contacts')->first();
 
+        $date = $sync_log->last_synced;
+
+        $rawDate = Carbon::parse($date);
+        $formattedDateSting = $rawDate->toDateTimeString().'T'.'00:00:00'.'Z';  
+        $client2 = new \GuzzleHttp\Client();
         $total_contact_pages = 150;
         $api_contact_ids = [];
+        
+
 
         for ($i = 1; $i <= $total_contact_pages; $i++) {
-            $this->info('Processing page#' . $i);
-            sleep(5);
-            $res = $client2->request(
-                'GET', 
-                'https://api.cin7.com/api/v1/Contacts/?page=' . $i,
-                [
-                    'auth' => [
-                        env('API_USER'),
-                        env('API_PASSWORD')
-                    ]
-                ]
-            );
 
-            $api_contacts = $res->getBody()->getContents();
-            $api_contacts = json_decode($api_contacts);
+            $this->info('Processing page#--------------------------' . $i);
+            sleep(5);
+            try {
+                $res = $client2->request(
+                    'GET', 
+                    'https://api.cin7.com/api/v1/Contacts?where=modifieddate>='. $formattedDateSting .'&page='.$i,
+                    [
+                        'auth' => [
+                            env('API_USER'),
+                            env('API_PASSWORD')
+                        ]
+                    ]
+                );
+
+                $api_contacts = $res->getBody()->getContents();
+                $api_contacts = json_decode($api_contacts);
+                $record_count = count($api_contacts);
+                $this->info('Record Count => '. $record_count);
+                if ($record_count < 1 || empty($record_count)) {
+                    $this->info('----------------break-----------------');
+                    break;
+                }
+            }
+            catch (\Exception $e) {
+                $msg = $e->getMessage();
+                $errorlog = new ApiErrorLog();
+                $errorlog->payload = $e->getMessage();
+                $errorlog->exception = $e->getCode();
+                $errorlog->save();
+
+            }
+
             
+
+           
             foreach($api_contacts as $api_contact) {
                 $this->info($api_contact->id);
                 $this->info('Processing contacts ' . $api_contact->firstName);
                 $contact = Contact::where('contact_id', $api_contact->id)->first();
                 array_push($api_contact_ids, $api_contact->id);
-                // dd($api_contact_ids);
                 if (!empty($contact)) {
                     $this->info($api_contact->id);
                     $this->info('---------------------------------------');
@@ -163,7 +193,6 @@ class SyncSuppliers extends Command
                             $UserLog->save();
                         }
                     }
-                    
                 }
                 else {
                     foreach($api_contact->secondaryContacts as $secondaryContact) {
@@ -228,20 +257,21 @@ class SyncSuppliers extends Command
                     $UserLog->save();
                 }
             }
-            
-  
         }
+        $current_date = Carbon::now()->toDateString().'T'.'00:00:00'.'Z';
+       
+        if ($record_count > 0) {
+            $sync_log->last_synced = $current_date;
+            $sync_log->save();
+        }
+       
         $qcom_contact_id = Contact::where('is_parent', 1)->pluck('contact_id')->toArray();
-        // foreach($api_contact_ids as $api_contact_id) {
-        //     $this->info($api_contact_id);
-
-        // }
+  
 
         $this->info(count($qcom_contact_id));  
         $this->info(count($api_contact_ids));
         $differences = array_diff($qcom_contact_id, $api_contact_ids);
         foreach($differences as $difference) {
-            //Contact::where('contact_id', $difference)->delete();
             $contact = Contact::where('contact_id', $difference)->first();
             $contact->status = 0;
                $UserLog = new UserLog([
@@ -252,6 +282,5 @@ class SyncSuppliers extends Command
                 $UserLog->save();
             $contact->save();
         }
-       
     }
 }
