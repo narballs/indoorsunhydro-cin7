@@ -36,7 +36,7 @@
                         <tr class="table-header-background">
                             <td class="d-flex table-row-item">
                                 <span class="tabel-checkbox">
-                                    <input type="checkbox" name="test" class="checkbox-table">
+                                    <input type="checkbox" name="test" class="checkbox-table" id="selectAll">
                                 </span>
                                 <span class="table-row-heading">
                                     <i class="fas fa-arrow-up"></i>
@@ -189,6 +189,12 @@
                 let test = tet[index].children[0];
                 test.classList.remove('bg-icon');
             });
+        });
+
+
+        $(document).on('click', '#selectAll', function(e) {
+            var table = $(e.target).closest('table');
+            $('td input:checkbox', table).prop('checked', this.checked);
         });
     </script>
 @stop

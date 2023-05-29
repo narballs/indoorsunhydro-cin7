@@ -29,51 +29,54 @@
 @section('css')
     <link rel="stylesheet" href="/css/admin_custom.css">
     <link rel="stylesheet" href="{{ asset('admin/admin_lte.css') }}">
-    <link href="https://fonts.cdnfonts.com/css/poppins" rel="stylesheet">
-
-    <style type="text/css">
-        .input-group-btn {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        #custom-search-input {
-            padding: 3px;
-            border: solid 1px #E4E4E4;
-            border-radius: 6px;
-            background-color: #fff;
-        }
-
-        #custom-search-input input {
-            border: 0;
-            box-shadow: none;
-            padding-top: 22px !important;
-            width: 329px !important;
-        }
-
-        #custom-search-input button {
-            margin: 2px 0 0 0;
-            background: none;
-            box-shadow: none;
-            border: 0;
-            color: #666666;
-            padding: 0 8px 0 10px;
-            border-right: solid 1px #ccc;
-        }
-
-        #custom-search-input button:hover {
-            border: 0;
-            box-shadow: none;
-            border-left: solid 1px #ccc;
-        }
-
-        #custom-search-input .glyphicon-search {
-            font-size: 23px;
-        }
-
+    <style>
         .text-successs {
             color: #7CC633 !important;
+            font-family: 'Poppins', sans-serif !important;
+        }
+
+        .badge-success {
+            color: #fff;
+            background: rgb(186 235 137 / 20%);
+            color: #319701;
+            padding: 6px !important;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 11.3289px;
+
+        }
+
+        .badge-warning {
+            background-color: #f1e8cb;
+            color: #b58903 !important;
+            padding: 6px !important;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 11.3289px;
+        }
+
+        .badge-danger {
+            color: #fff;
+            background-color: #f1eaea;
+            color: #B42318;
+            padding: 6px !important;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 11.3289px;
+
+        }
+
+        .badge-secondary {
+            color: #8e8b8b !important;
+            background-color: #d0dce6 !important;
+            padding: 7px !important;
+            border-radius: 6px;
+        }
+
+        .badge-primary {
+            background-color: #339AC6;
+            color: #339AC6 !important;
+            padding: 5px;
         }
     </style>
 @endsection

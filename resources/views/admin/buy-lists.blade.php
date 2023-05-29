@@ -184,5 +184,10 @@
                 test.classList.remove('bg-icon');
             });
         });
+
+        $(document).on('click', '#selectAll', function(e) {
+            var table = $(e.target).closest('table');
+            $('td input:checkbox', table).prop('checked', this.checked);
+        });
     </script>
 @stop
