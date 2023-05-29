@@ -488,6 +488,19 @@ a {
     padding-top: 18px !important;
 }
 
+.supplier-table-items {
+    padding-top: 18px !important;
+}
+
+.supplier-row {
+    font-family: 'Poppins', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 13.2171px;
+    line-height: 19px;
+    color: #828282;
+}
+
 .product-row {
     font-family: 'Poppins', sans-serif;
     font-style: normal;
