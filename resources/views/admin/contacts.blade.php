@@ -112,9 +112,7 @@
                 <tfoot>
                     <tr>
                         <td colspan="7">
-                            <div class="d-flex justify-content-center">
-                                {{ $contacts->links('pagination.custom_pagination') }}
-                            </div>
+                            {{ $contacts->links('pagination.custom_pagination') }}
                         </td>
                     </tr>
                 </tfoot>

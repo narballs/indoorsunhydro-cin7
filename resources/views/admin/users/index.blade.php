@@ -222,9 +222,7 @@
                     <tfoot>
                         <tr>
                             <td colspan="10">
-                                <div class="col-md-12">
-                                    {{ $data->links('pagination.custom_pagination') }}
-                                </div>
+                                {{ $data->links('pagination.custom_pagination') }}
                             </td>
                         </tr>
                     </tfoot>

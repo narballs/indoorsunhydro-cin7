@@ -79,166 +79,157 @@
                         @endforeach
                     </tbody>
                 </table>
-                <div class="row">
-                    <div class="col-md-12 mt-3 border-top">
-                        {{ $contacts->appends(Request::all())->links() }}
-                    </div>
-                    {{-- <div class="col-md-2">
-                        <select name="per_page" id="per_page" onchange="perPage()">
-                            <option value="10" {{ isset($perPage) && $perPage == 10 ? 'selected="selected"' : '' }}>10
-                            </option>
-                            <option value="20" {{ isset($perPage) && $perPage == 20 ? 'selected="selected"' : '' }}>20
-                            </option>
-                            <option value="30" {{ isset($perPage) && $perPage == 30 ? 'selected="selected"' : '' }}>30
-                            </option>
-                            <option value="30">30</option>
-                        </select>
-                    </div> --}}
-                </div>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="10">
+                            {{ $contacts->links('pagination.custom_pagination') }}
+                        </td>
+                    </tr>
+                </tfoot>
             </div>
         </div>
-    </div>
-@stop
+    @stop
 
-@section('css')
-    <link rel="stylesheet" href="/css/admin_custom.css">
-    <link rel="stylesheet" href="{{ asset('admin/admin_lte.css') }}">
-    <link rel="stylesheet" href="{{ asset('admin/admin_lte.css') }}">
-    <style>
-        .text-successs {
-            color: #7CC633 !important;
-            font-family: 'Poppins', sans-serif !important;
-        }
-
-        .badge-success {
-            color: #fff;
-            /* background-color: #28a745; */
-            background: rgb(186 235 137 / 20%);
-            color: #319701;
-            padding: 7px !important;
-            font-style: normal;
-            font-weight: 500;
-            font-size: 11.3289px;
-
-        }
-
-        .badge-warning {
-            color: #1f2d3d;
-            background-color: #fce9a9;
-            color: #ffc107 !important;
-            padding: 5px;
-        }
-
-        .badge-danger {
-            color: #fff;
-            background-color: #f1eaea;
-            color: #B42318;
-            padding: 6px !important;
-            font-style: normal;
-            font-weight: 500;
-            font-size: 11.3289px;
-
-        }
-
-        .badge-secondary {
-            color: #8e8b8b !important;
-            background-color: #d0dce6 !important;
-            padding: 7px !important;
-            border-radius: 6px;
-        }
-
-        .badge-primary {
-            background-color: #339AC6;
-            color: #339AC6 !important;
-            padding: 5px;
-        }
-
-        .badge-warning {
-            color: #1f2d3d;
-            background-color: #fce9a9;
-            color: #ffc107 !important;
-            padding: 5px;
-        }
-    </style>
-@stop
-
-@section('js')
-    <script>
-        $('.customer-row').hover(function() {
-            let id = $(this).attr('id');
-            children = $(this).children('.customer_name').children('a').addClass('text-successs');
-            let tet = $(this).children('.customer_action').children('a');
-            let get_class = tet.each(function(index, value) {
-                let test = tet[index].children[0];
-                test.classList.add('bg-icon');
-            });
-        });
-
-        $('.customer-row').mouseleave(function() {
-            let id = $(this).attr('id');
-            children = $(this).children('.customer_name').children('a').removeClass('text-successs');
-            let tet = $(this).children('.customer_action').children('a');
-            let get_class = tet.each(function(index, value) {
-                let test = tet[index].children[0];
-                test.classList.remove('bg-icon');
-            });
-        });
-
-        function perPage() {
-            var perPage = $('#per_page').val();
-            var search = $('#search').val();
-            var activeCustomer = $('#active_customer').val();
-
-            if (perPage != '') {
-                var basic_url = 'customers?perPage=' + perPage + '&search=' + search;
+    @section('css')
+        <link rel="stylesheet" href="/css/admin_custom.css">
+        <link rel="stylesheet" href="{{ asset('admin/admin_lte.css') }}">
+        <link rel="stylesheet" href="{{ asset('admin/admin_lte.css') }}">
+        <style>
+            .text-successs {
+                color: #7CC633 !important;
+                font-family: 'Poppins', sans-serif !important;
             }
 
-            if (activeCustomer != '') {
-                basic_url = basic_url + `&active-customer=${activeCustomer}`;
+            .badge-success {
+                color: #fff;
+                /* background-color: #28a745; */
+                background: rgb(186 235 137 / 20%);
+                color: #319701;
+                padding: 7px !important;
+                font-style: normal;
+                font-weight: 500;
+                font-size: 11.3289px;
+
             }
 
-            window.location.href = basic_url;
-        }
+            .badge-warning {
+                color: #1f2d3d;
+                background-color: #fce9a9;
+                color: #ffc107 !important;
+                padding: 5px;
+            }
 
-        function search() {
-            var $rows = $('#table tr');
-            $('#search').keyup(function() {
-                var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
+            .badge-danger {
+                color: #fff;
+                background-color: #f1eaea;
+                color: #B42318;
+                padding: 6px !important;
+                font-style: normal;
+                font-weight: 500;
+                font-size: 11.3289px;
 
-                $rows.show().filter(function() {
-                    var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
-                    return !~text.indexOf(val);
-                }).hide();
+            }
+
+            .badge-secondary {
+                color: #8e8b8b !important;
+                background-color: #d0dce6 !important;
+                padding: 7px !important;
+                border-radius: 6px;
+            }
+
+            .badge-primary {
+                background-color: #339AC6;
+                color: #339AC6 !important;
+                padding: 5px;
+            }
+
+            .badge-warning {
+                color: #1f2d3d;
+                background-color: #fce9a9;
+                color: #ffc107 !important;
+                padding: 5px;
+            }
+        </style>
+    @stop
+
+    @section('js')
+        <script>
+            $('.customer-row').hover(function() {
+                let id = $(this).attr('id');
+                children = $(this).children('.customer_name').children('a').addClass('text-successs');
+                let tet = $(this).children('.customer_action').children('a');
+                let get_class = tet.each(function(index, value) {
+                    let test = tet[index].children[0];
+                    test.classList.add('bg-icon');
+                });
             });
-        }
 
-        function customer_search() {
-            var typingTimer;
-            var doneTypingInterval = 1000;
-            var $input = $('#search');
-            $input.on('keyup', function() {
-                clearTimeout(typingTimer);
-                typingTimer = setTimeout(doneTyping, doneTypingInterval);
+            $('.customer-row').mouseleave(function() {
+                let id = $(this).attr('id');
+                children = $(this).children('.customer_name').children('a').removeClass('text-successs');
+                let tet = $(this).children('.customer_action').children('a');
+                let get_class = tet.each(function(index, value) {
+                    let test = tet[index].children[0];
+                    test.classList.remove('bg-icon');
+                });
             });
 
-            $input.on('keydown', function() {
-                clearTimeout(typingTimer);
-            });
+            function perPage() {
+                var perPage = $('#per_page').val();
+                var search = $('#search').val();
+                var activeCustomer = $('#active_customer').val();
 
-            function doneTyping() {
-                var val = $('#search').val();
-                jQuery.ajax({
-                    url: "{{ url('admin/customersearch') }}",
-                    method: 'GET',
-                    data: {
-                        "value": val,
-                    },
-                    cache: false,
-                    success: function(response) {
-                        $('.table-customer tbody').html(response);
-                    }
+                if (perPage != '') {
+                    var basic_url = 'customers?perPage=' + perPage + '&search=' + search;
+                }
+
+                if (activeCustomer != '') {
+                    basic_url = basic_url + `&active-customer=${activeCustomer}`;
+                }
+
+                window.location.href = basic_url;
+            }
+
+            function search() {
+                var $rows = $('#table tr');
+                $('#search').keyup(function() {
+                    var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
+
+                    $rows.show().filter(function() {
+                        var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
+                        return !~text.indexOf(val);
+                    }).hide();
                 });
             }
-        }
-    </script>
-@stop
+
+            function customer_search() {
+                var typingTimer;
+                var doneTypingInterval = 1000;
+                var $input = $('#search');
+                $input.on('keyup', function() {
+                    clearTimeout(typingTimer);
+                    typingTimer = setTimeout(doneTyping, doneTypingInterval);
+                });
+
+                $input.on('keydown', function() {
+                    clearTimeout(typingTimer);
+                });
+
+                function doneTyping() {
+                    var val = $('#search').val();
+                    jQuery.ajax({
+                        url: "{{ url('admin/customersearch') }}",
+                        method: 'GET',
+                        data: {
+                            "value": val,
+                        },
+                        cache: false,
+                        success: function(response) {
+                            $('.table-customer tbody').html(response);
+                        }
+                    });
+                }
+            }
+        </script>
+    @stop
