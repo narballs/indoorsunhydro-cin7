@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\APiSyncLog;
+use App\Models\ApiSyncLog;
 use Carbon\Carbon;
 
 class ApiUserSyncSeeder extends Seeder
@@ -29,12 +29,12 @@ class ApiUserSyncSeeder extends Seeder
             [
                 [
                     'end_point' => 'https://api.cin7.com/api/v1/Contacts', 
-                    'Desription' => 'Contacts Sync', 
+                    'desription' => 'Contacts Sync', 
                     'last_synced' => $formattedDateSting
                 ],
                 [
                     'end_point' => 'https://api.cin7.com/api/v1/Products', 
-                    'Desription' => 'Products Sync', 
+                    'desription' => 'Products Sync', 
                     'last_synced' => $formattedDateSting
                 ],
        
