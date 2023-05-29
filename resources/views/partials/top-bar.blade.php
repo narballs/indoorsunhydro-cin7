@@ -108,7 +108,7 @@
                                                                     $companies = Session::get('companies');
                                                                     
                                                                 @endphp
-                                                                <div class="dropdown-menu hover-menu d-Menu mt-0" aria-labelledby="navbarDropdown" style="border-top: 3px solid #7bc533;border-radius:0px 0px 5px 5px !important;">
+                                                                <div class="dropdown-menu hover-menu d-Menu mt-0" aria-labelledby="navbarDropdown" style="box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);border-bottom: 0px !important;border-left: 0px;border-right: 0px;border-top: 2px solid #7bc533;border-radius:0px 0px 5px 5px !important;">
                                                                     <div class="container">
                                                                         <div class="row">
                                                                             <div class="col-md-12" style="padding-left:0px !important;">
