@@ -35,112 +35,34 @@
 </style>
 
 
-<body>
+{{-- <body>
     <table bgcolor="#000000" style="width:100% !important;">
-        <div class="container-fluid"
-            style="background-color: #000!important; 
-                width:100% !important;
-                padding-top: 36px !important;
-                padding-bottom: 36px !important;">
-            <table bgcolor="#ffffff" style="width: 586px !important;
-            margin:auto !important; 
-            background-color:#ffffff !important;
-            margin-bottom: 12px !important;
-            padding-bottom: 20px !important;
-            border-radius: 10px !important;">
-                <div class="container"
-                style="width: 586px !important;
-                    margin:auto !important; 
-                    background-color:#ffffff !important;
-                    margin-bottom: 12px !important;
-                    padding-bottom: 20px !important;
-                    border-radius: 10px !important;">
-                <p style="
-                    text-align: center;
-                    margin-top:1rem;">
-                    <img class="img-fluid "
-                        src="{{ asset('https://stage.indoorsunhydro.com/theme/img/email/template_icon.png') }}"
-                        alt="" style="margin-top: 33px !important;">
+        <div class="container-fluid" style="background-color: #000!important; width:100% !important; padding-top: 36px !important; padding-bottom: 36px !important;">
+           
+                <div class="container" style="width: 586px !important; margin:auto !important; background-color:#ffffff !important; margin-bottom: 12px !important; padding-bottom: 20px !important; border-radius: 10px !important;">
+                <p style=" text-align: center; margin-top:1rem;">
+                    <img class="img-fluid" src="{{ asset('https://stage.indoorsunhydro.com/theme/img/email/template_icon.png') }}" alt="" style="margin-top: 33px !important;">
                 </p>
-                <p
-                    style="text-align: center;
-                            font-family: 'Poppins'!important;
-                            font-style: normal!important;
-                            font-weight: 600!important;
-                            font-size: 18px!important;
-                            line-height: 27px!important;
-                            color: #282828!important;
-                            margin-top: 0px !important;
-                            margin-bottom: 0px !important;">
+                <p style="text-align: center; font-family: 'Poppins'!important; font-style: normal!important; font-weight: 600!important; font-size: 18px!important; line-height: 27px!important; color: #282828!important;margin-top: 0px !important; margin-bottom: 0px !important;">
                     We received your order!
                 </p>
-                <p
-                    style="
-                font-family: 'Poppins' !important;
-                font-style: normal !important;
-                font-weight: 400 !important;
-                font-size: 11px !important;
-                line-height: 16px !important;
-                text-align: center;
-                color: #6C6C6C !important;
-                padding-bottom: 27px !important;
-                border-bottom: 1px solid #EBEBEB !important;
-                margin-left: 51px!important;
-                margin-right: 31px!important;
-                margin-top: 0px !important;
-                ">
+                <p style="font-family: 'Poppins' !important;font-style: normal !important;font-weight: 400 !important;font-size: 11px !important;line-height: 16px !important;text-align: center;color: #6C6C6C !important;padding-bottom: 27px !important;border-bottom: 1px solid #EBEBEB !important;margin-left: 51px!important;margin-right: 31px!important;margin-top: 0px !important;">
                     Your order #{{ $addresses['order_id'] }} is completed and ready to ship
                 </p>
-                <div style="display: flex !important;border-bottom: 1px solid #EBEBEB !important;padding-bottom: 37px !important;margin-left: 53px!important; margin-right: 26px !important;">
+                <div style="display: flex !important;border-bottom: 1px solid #EBEBEB !important;padding-bottom: 37px !important;margin-left: 53px!important; margin-right: 26px !important; background-color:#ffffff !important;">
                     
-                   
-                
-                    <table cellpadding="0" cellspacing="0" border="0" style="width: 100%;">
-                        <tr>
-                            <td style="width: 50%; float: left;">
                                 <div style=" width: 50% !important;">
-                                    <p
-                                        style="font-family: 'Poppins' !important;
-                                    font-style: normal !important;
-                                    font-weight: 500 !important;
-                                    font-size: 10px !important;
-                                    line-height: 15px !important;
-                                    letter-spacing: 0.09em !important;
-                                    text-transform: uppercase !important;
-                                    color: #8E8E8E !important;
-                                    margin-bottom: 0px !important;
-                                    ;
-                                    ">
+                                    <p style="font-family: 'Poppins' !important;font-style: normal !important;font-weight: 500 !important;font-size: 10px !important;line-height: 15px !important;letter-spacing: 0.09em !important;text-transform: uppercase !important;color:#E8E8E !important;margin-bottom: 0px !important;">
                                         Shipping Address
-                                    </p><br>
-                                    <p
-                                        style="font-family: 'Poppins' !important;
-                                            font-style: normal !important;
-                                            font-weight: 500 !important;
-                                            font-size: 11px !important;
-                                            line-height: 16px !important;
-                                            color: #282828 !important;
-                                            ">
+                                    </p>
+                                    <br>
+                                    <p style="font-family: 'Poppins' !important;font-style: normal !important;font-weight: 500 !important;font-size: 11px !important;line-height: 16px !important;color: #282828 !important;">
                                         {{ $addresses['billing_address']['firstName'] }}
                                         &nbsp;&nbsp;&nbsp;{{ $addresses['billing_address']['lastName'] }}
                                     </p>
-                                    <p
-                                        style="font-family: 'Poppins' !important;
-                                            font-style: normal !important;
-                                            font-weight: 500 !important;
-                                            font-size: 11px !important;
-                                            line-height: 16px !important;
-                                            color: #282828 !important;
-                                            
-                                            margin-bottom: 0px !important;
-                                            ">
+                                    <p style="font-family: 'Poppins' !important;font-style: normal !important;font-weight: 500 !important;font-size: 11px !important;line-height: 16px !important;color: #282828 !important;">
                                         @if ($addresses['billing_address']['address1'] == null)
-                                            <span
-                                                style=";
-                                                color:skyblue !important; 
-                                                padding: 5px !important;
-                                                border-radius: 5px !important;
-                                                margin-bottom: 12px !important;">
+                                            <span style="color:skyblue !important; padding: 5px !important;border-radius: 5px !important;margin-bottom: 12px !important;">
                                                 empty
                                             </span>
                                         @else
@@ -148,86 +70,38 @@
                                         @endif
             
                                     </p>
-                                    <p
-                                        style="font-family: 'Poppins' !important;
-                                        font-style: normal !important;
-                                        font-weight: 500 !important;
-                                        font-size: 11px !important;
-                                        line-height: 16px !important;
-                                        color: #282828 !important;
-                                        
-                                        margin-bottom: 0px !important;">
+                                    <p style="font-family: 'Poppins' !important;font-style: normal !important;font-weight: 500 !important;font-size: 11px !important;line-height: 16px !important;color: #282828 !important;margin-bottom: 0px !important;">
                                         @if ($addresses['billing_address']['address2'] == null)
-                                            <span
-                                                style=";
-                                                color:skyblue !important; 
-                                                padding: 5px !important;
-                                                border-radius: 5px !important;
-                                                ">
-                                                empty</span>
+                                            <span style="color:skyblue !important; padding: 5px !important;border-radius: 5px !important;margin-bottom: 12px !important;">
+                                                empty
+                                            </span>
                                         @else
                                             {{ $addresses['billing_address']['address2'] }}
                                         @endif
                                     </p>
-                                    <p
-                                        style="font-family: 'Poppins' !important;
-                                        font-style: normal !important;
-                                        font-weight: 500 !important;
-                                        font-size: 11px !important;
-                                        line-height: 16px !important;
-                                        color: #282828 !important;
-                                        
-                                        margin-bottom: 0px !important;">
+                                    <p style="font-family: 'Poppins' !important;font-style: normal !important;font-weight: 500 !important;font-size: 11px !important;line-height: 16px !important;color: #282828 !important;margin-bottom: 0px !important;">
                                         @if ($addresses['billing_address']['city'] == null)
-                                            <span
-                                                style=";
-                                                color:skyblue !important; 
-                                                padding: 5px !important;
-                                                border-radius: 5px !important;
-                                                ">
-                                                empty</span>
+                                            <span style="color:skyblue !important; padding: 5px !important;border-radius: 5px !important;margin-bottom: 12px !important;">
+                                                empty
+                                            </span>
                                         @else
                                             {{ $addresses['billing_address']['city'] }}
                                         @endif
                                     </p>
-                                    <p
-                                        style="font-family: 'Poppins' !important;
-                                        font-style: normal !important;
-                                        font-weight: 500 !important;
-                                        font-size: 11px !important;
-                                        line-height: 16px !important;
-                                        color: #282828 !important;
-                                        
-                                        margin-bottom: 0px !important;">
+                                    <p style="font-family: 'Poppins' !important;font-style: normal !important;font-weight: 500 !important;font-size: 11px !important;line-height: 16px !important;color: #282828 !important;margin-bottom: 0px !important;">
                                         @if ($addresses['billing_address']['state'] == null)
-                                            <span
-                                                style=";
-                                                color:skyblue !important; 
-                                                padding: 5px !important;
-                                                border-radius: 5px !important;
-                                                ">
-                                                empty</span>
+                                            <span style="color:skyblue !important; padding: 5px !important;border-radius: 5px !important;margin-bottom: 12px !important;">
+                                                empty
+                                            </span>
                                         @else
                                             {{ $addresses['billing_address']['state'] }}
                                         @endif
                                     </p>
-                                    <p
-                                        style="font-family: 'Poppins' !important;
-                                        font-style: normal !important;
-                                        font-weight: 500 !important;
-                                        font-size: 11px !important;
-                                        line-height: 16px !important;
-                                        color: #282828 !important;
-                                        
-                                        margin-bottom: 0px !important;">
+                                    <p style="font-family: 'Poppins' !important;font-style: normal !important;font-weight: 500 !important;font-size: 11px !important;line-height: 16px !important;color: #282828 !important;margin-bottom: 0px !important;">
                                         @if ($addresses['billing_address']['zip'] == null)
-                                            <span
-                                                style=";
-                                                color:skyblue !important; 
-                                                padding: 5px !important;
-                                                border-radius: 5px !important;
-                                                ">
-                                                empty</span>
+                                            <span style="color:skyblue !important; padding: 5px !important;border-radius: 5px !important;margin-bottom: 12px !important;">
+                                                empty
+                                            </span>
                                         @else
                                             {{ $addresses['billing_address']['zip'] }}
                                         @endif
@@ -273,8 +147,7 @@
                                         @endif
                                     </p>
                                 </div>
-                            </td>
-                            <td style="width: 50%; float: left;">
+                           
                                 <div style="width: 50% !important;">
                                     <p
                                         style="font-family: 'Poppins' !important;
@@ -302,9 +175,7 @@
                                         {{ $addresses['currentOrder']['paymentTerms'] }}
                                     </span>
                                 </div>
-                            </td>
-                        </tr>
-                    </table>
+                            
                 </div>
                 <div style="margin-left: 27px !important;">
                     <div>
@@ -331,12 +202,11 @@
                                     padding-bottom: 16px !important;
                                     margin-top:12px !important;
                     ">
-                                <span
-                                    style=" width: 13% !important;
+                                <span style=" width: 13% !important;
                                         height: 62px !important;
                                         background: #D9D9D9 !important;
                                         border-radius: 5px !important;">
-                                    <img src="{{ asset($option->image) }}" alt=""
+                                    <img src="{{ asset($option->image) }}" width="55" height="49" alt=""
                                         style=" 
                                     margin-left: 6px !important;
                                         margin-top: 6px !important;
@@ -502,8 +372,246 @@
                     </div>
                 </div>
             </div>
-            </table>
         </div>
+    </table>
+</body> --}}
+
+<body padding="2" bgcolor="#000000" style="background-color: #000000;padding-top:2rem;padding:2rem;">
+    <table padding="2" bgcolor="#FFFFFF" style="background-color:#FFFFFF;border-radius:5px;" width="60%" border="0" align="center" cellpadding="7">
+        <tr>
+            <td>
+                <table width="100%" border="0" align="center">
+                    <tr>
+                        <td align="" style="text-align: center;">
+                            <img class="img-fluid "
+                                src="{{ asset('https://stage.indoorsunhydro.com/theme/img/email/template_icon.png') }}">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="" style="text-align: center;color:#000000;font-color:#000000;font-size: 18px;font-weight:bold;">
+                            We received your order!
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="" style="text-align: center;color:#000000;font-color:#000000;font-size: 11px;font-weight:400;">
+                            Your order #{{ $addresses['order_id'] }} is completed and ready to ship
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        
+        <tr>
+            <td>
+                <table width="100%" align="left" border="0">
+                    <tr>
+                        <td width="60%">
+                            <table border="0" width="100%">
+                                <thead>
+                                    <tr>
+                                        <td style="color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
+                                            SHIPPING ADDRESS
+                                        </td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
+                                            {{ $addresses['billing_address']['firstName'] .' ' . ' '.$addresses['billing_address']['lastName'] }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
+                                            @if ($addresses['billing_address']['address1'] == null)
+                                            Empty
+                                            @else
+                                            {{$addresses['billing_address']['address1']}}
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
+                                            @if ($addresses['billing_address']['address2'] == null)
+                                            Empty
+                                            @else
+                                            {{$addresses['billing_address']['address2']}}
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
+                                            @if ($addresses['billing_address']['city'] == null)
+                                            Empty
+                                            @else
+                                            {{$addresses['billing_address']['city']}}
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
+                                            @if ($addresses['billing_address']['state'] == null)
+                                            Empty
+                                            @else
+                                            {{$addresses['billing_address']['state']}}
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    <tr style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
+                                        <td>
+                                            @if ($addresses['billing_address']['zip'] == null)
+                                            Empty
+                                            @else
+                                            {{$addresses['billing_address']['zip']}}
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    <tr style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
+                                        <td>
+                                            @if ($addresses['billing_address']['mobile'] == null)
+                                            Empty
+                                            @else
+                                            {{$addresses['billing_address']['mobile']}}
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    <tr style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
+                                        <td>
+                                            @if ($addresses['billing_address']['phone'] == null)
+                                            Empty
+                                            @else
+                                            {{$addresses['billing_address']['phone']}}
+                                            @endif
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                        <td align="right" width="20" style="vertical-align:top;">
+                            <table border="0" width="100%">
+                                <thead>
+                                    <tr>
+                                        <td style="color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
+                                            PAYMENT INFO
+                                        </td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
+                                            {{ $addresses['currentOrder']['paymentTerms'] }}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        
+        <tr>
+            <td style="color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
+                Order Items
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <table width="100%" align="left" border="0">
+                    @foreach ($order_items as $item)
+                        @foreach ($item['product']->options as $option)
+                            <tr>
+                                <td width="20%">
+                                    <img src="{{ asset($option->image) }}" width="55" height="49" alt="" style="border:5px solid #d9d9d9;border-radius:2px;">
+                                </td>
+                                <td>
+                                    <table width="100%" align="left" border="0">
+                                        <tr>
+                                            <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">{{ $item['product']->name }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">SKU: {{ $item['product']->code }}</span></td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td width="20%" style="text-align: right;vertical-align:top;color:#000000;font-color:#000000;font-size: 12px; font-weight:400; ">{{ number_format($item->price, 2) }}</td>
+                            </tr>
+                            
+                        @endforeach
+                    @endforeach
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <table width="100%" border="0">
+                    <tr>
+                        <td width="50%" style="color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
+                            Sub Total
+                        </td>
+                        <td align="right" style="text-align: right;color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
+                            @php
+                                $sub_total = 0;
+                                foreach ($order_items as $item) {
+                                    $sub_total += $item->price;
+                                }
+                            @endphp
+                            {{ number_format($sub_total, 2) }}
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <table width="100%" border="0">
+                    <tr>
+                        <td width="50%" style="color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
+                            @php
+                                $taxt_rate = 0;
+                                foreach ($order_items as $order_item) {
+                                    $taxt_rate = $order_item->order->texClasses->name;
+                                }
+                            @endphp
+                            Tax ({{ $taxt_rate }})
+                        </td>
+                        <td align="right" style="text-align: right;color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
+                            @php
+                                $tax = 0;
+                                foreach ($order_items as $item) {
+                                    $tax += ($item->price * $item->order->texClasses->rate) / 100;
+                                }
+                            @endphp
+                            {{ number_format($tax, 2) }}
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <table width="100%" border="0">
+                    <tr>
+                        <td width="50%" style="color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
+                            Total
+                        </td>
+                        <td align="right" style="text-align: right;color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
+                            @php
+                                $total = 0;
+                                foreach ($order_items as $item) {
+                                    $total = $item['order']->total_including_tax;
+                                }
+                            @endphp
+                            {{ number_format($total, 2) }}
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td align="center">
+                <img src="{{ asset('https://stage.indoorsunhydro.com/theme/img/email/email_template.png') }}" alt="">
+            </td>
+        </tr>
     </table>
 </body>
 
