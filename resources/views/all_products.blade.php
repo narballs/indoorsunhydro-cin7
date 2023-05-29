@@ -1,8 +1,8 @@
 @include('partials.header')
 @include('partials.top-bar')
 @include('partials.search-bar')
-<div class="mb-5">
-   <p style="line-height: 95px;" class="fw-bold fs-2 product-btn my-auto border-0 text-white text-center align-middle">
+<div class="mb-4 mt-2">
+   <p style="line-height: 95px;" class="fw-bold fs-2 product-btn my-auto border-0 text-white text-center align-middle pbtn_mbl">
       PRODUCTS
    </p>
 </div>
@@ -102,22 +102,24 @@
 
 {{-- moible view --}}
 <div class="container mobile-view">
-   <div class="pt-3" style="border: 1px solid lightgray;">
-      <p class="d-flex justify-content-center align-items-center">
-         <button class="filler-and-sort btn btn-primary w-75 filler-and-sort" type="button" data-bs-toggle="collapse"
-            data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-            Filter and Sort <span><img src="/theme/img/filler-icon.png" alt=""></span>
+   <div class="">
+      <p class="d-flex justify-content-start align-items-center mb-0">
+         <button class="filler-and-sort btn  filler-and-sort p-0 filterMblbtn" type="button" data-bs-toggle="collapse"
+            data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" style="border: none !important;">
+            <i class="fa fa-sliders filterIco_mbl"></i> 
+            <span class="search_filter_text">Search Filter </span>
+               {{-- <img src="/theme/img/filler-icon.png" alt=""></span> --}}
          </button>
       </p>
    </div>
-   <div class="collapse mt-5" id="collapseExample">
+   <div class="collapse mt-3" id="collapseExample">
       <div class="card card-body p-0">
          <form id="form-filter">
             <div class="col-md-12">
                <div class="row pb-4 pt-3 border-0" style="border: 1px solid rgba(0,0,0,.125);padding-bottom: 10px">
                   <div class="col-md-12">
-                     <label>Sort by</label>
-                     <select class="form-select" id="search_price" onchange="handleSelectChange()">
+                     <label class="filter_heading_mbl">Sort by</label>
+                     <select class="form-select form-select-mbl" id="search_price" onchange="handleSelectChange()">
                         <option value="0">Select Option</option>
                         <option class="form-group" value="best-selling" {{ $price_creteria }} {{ isset($price_creteria)
                            && $price_creteria=='best-selling' ? 'selected="selected"' : '' }}>Best Selling</option>
@@ -136,7 +138,7 @@
                   <div class="col-md-12">
                      <?php //dd($category_id);?>
                      <label>Categories</label>
-                     <select class="form-select" id="selected_cat" name="selected_cat"
+                     <select class="form-select form-select-mbl" id="selected_cat" name="selected_cat"
                         onchange="handleSelectChange('category')">
                         <option value="0">Select Category</option>
                         @foreach($categories as $category)
@@ -149,7 +151,7 @@
          
                   <div class="col-md-12">
                      <label>Brand</label>
-                     <select class="form-select" id="brand" name="brands[]" onchange="handleSelectChange()">
+                     <select class="form-select form-select-mbl" id="brand" name="brands[]" onchange="handleSelectChange()">
                         <option value="0">Select Brand</option>
                         @foreach($brands as $_brand_id => $brand_name)
                         <option value="{{ $_brand_id }}" {{ isset($brand_id) && $brand_id==$_brand_id
@@ -159,7 +161,7 @@
                   </div>
                   <div class="col-md-12">
                      <label>Result per page</label>
-                     <select id="per_page" class="form-select" onchange="handleSelectChange()">
+                     <select id="per_page" class="form-select form-select-mbl" onchange="handleSelectChange()">
                         <option value="20" {{ $per_page }} {{ isset($per_page) && $per_page==20 ? 'selected="selected"'
                            : '' }}>20</option>
                         <option value="40" {{ $per_page }} {{ isset($per_page) && $per_page==40 ? 'selected="selected"'
@@ -203,17 +205,17 @@
       @endforeach
       @endforeach
    </div>
-   <div class="row desktop-view">
+   {{-- <div class="row desktop-view">
       <div class="container">
          <div class="col-md-6 m-auto">
             {{$products->appends(Request::all())->links()}}
          </div>
       </div>
-   </div>
+   </div> --}}
    <div class="row mobile-view">
       <div class="container">
          <div class="col-sm-6 m-auto">
-            {{$products->appends(Request::all())->links()}}
+            {{$products->appends(Request::all())->onEachSide(1)->links()}}
          </div>
       </div>
    </div>
@@ -306,14 +308,14 @@
       @endforeach
       @endforeach
    </div>
-   <div class="row desktop-view">
+   {{-- <div class="row desktop-view">
       <div class="container">
          <div class="col-md-6 m-auto">
             {{$products->appends(Request::all())->links()}}
          </div>
       </div>
-   </div>
-   <div class="row mobile-view">
+   </div> --}}
+   <div class="row ipad-view">
       <div class="container">
          <div class="col-sm-6 m-auto">
             {{$products->appends(Request::all())->links()}}
@@ -331,6 +333,7 @@
 </script>
 
 <script>
+   
    function showdetails(id, option_id, slug) {
 				window.location.href = '/product-detail/'+ id +'/'+option_id+'/'+slug;
 			}
@@ -469,7 +472,14 @@
                         // window.location.reload();
                   }});
                });
+               
             });
 </script>
 @include('partials.product-footer')
 @include('partials.footer')
+
+<script>
+   $(document).ready(function() {
+      $('.pagination').addClass('pagination-sm');
+   });
+</script>

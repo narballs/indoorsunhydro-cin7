@@ -3163,6 +3163,75 @@ input[type=number] {
 }
 
 @media only screen and (max-width: 425px) and (min-width: 360px) {
+    .filter_heading_mbl {
+        font-family: 'Poppins' !important;
+        font-style: normal !important;
+        font-weight: 500 !important;
+        font-size: 14px !important;
+        line-height: 21px !important;
+        color: #131313 !important;
+    }
+    .form-select-mbl {
+        background-color: #F5F5F5 !important;
+        border: 1px solid #DDDDDD !important;
+        border-radius: 4px !important;
+        /* font-family: 'Poppins';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 21px; */
+        color: #8A8A8A;
+    }
+    .filterMblbtn:focus {
+        border: none !important;
+        box-shadow: 0 0 0 0rem !important;
+    }
+    .filterIco_mbl {
+        font-size: 12px;
+    }
+    .pbtn_mbl {
+        line-height: 55px !important;
+    }
+    .product-btn {
+        height:55px;
+    }
+    .search_filter_text {
+        font-family: 'Poppins';
+        font-style: normal !important;
+        font-weight: 500 !important;
+        font-size: 14px !important;
+        line-height: 21px !important;
+        color: #242424 !important;
+        
+    }
+    .mbl_drop_cmpny {
+        width: 35%;
+    }
+    .mbl_drop_othr {
+        width: 65%;
+        display: flex;
+        align-items: center;
+        justify-content: end;
+    }
+    .mobile_menu_bar_togle {
+        width: 15%;
+    } 
+    .mobile_menu_bar_logo {
+        width: 65%;
+    } 
+    .mobile_menu_bar_cart {
+        width: 20%;
+        display: flex;
+        align-items: center;
+        justify-content: end;
+    }
+    .cart-counter { 
+        width: 18px;
+        height: 18px;
+        margin:0px;
+        top: 30%;
+        left: 95.5%;
+    }  
     .font-mobile-class {
         font-family: 'Poppins' !important;
         font-style: normal !important;
@@ -3221,9 +3290,9 @@ input[type=number] {
     }
     
     .mobile_nav_items {
-        display: flex;
+        display: flex !important;
         align-items:center;
-        justify-content: space-between;
+        justify-content: normal !important;
     }
     .mobile_nav_btn {
         background:none !important;
