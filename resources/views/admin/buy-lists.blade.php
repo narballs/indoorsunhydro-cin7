@@ -87,9 +87,7 @@
                     <tfoot>
                         <tr>
                             <td colspan="10">
-                                <div class="col-md-12">
-                                    {{ $buylists->links('pagination.custom_pagination') }}
-                                </div>
+                                {{ $buylists->links('pagination.custom_pagination') }}
                             </td>
                         </tr>
                     </tfoot>

@@ -125,9 +125,7 @@
                     <tfoot>
                         <tr>
                             <td colspan="10">
-                                <div class="col-md-12">
-                                    {{ $products->links('pagination.custom_pagination') }}
-                                </div>
+                                {{ $products->links('pagination.custom_pagination') }}
                             </td>
                         </tr>
                     </tfoot>
