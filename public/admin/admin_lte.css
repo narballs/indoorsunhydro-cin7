@@ -743,3 +743,20 @@ ul.pager>.main-row>.pagination>li {
 .pd_nmber {
     margin-right: 0.5rem !important;
 }
+
+.logout_sidebar {
+    margin-top: 204px !important;
+    background: rgba(220, 78, 65, 0.12) !important;
+    border-radius: 4px !important;
+    margin-left: 25px !important;
+    width: 190px !important;
+}
+
+.logout_sidebar .logout_icon {
+    color: #DC4E41 !important;
+    padding-left: 51px !important;
+}
+
+.nav-item .logout_sidebar p {
+    color: #DC4E41 !important;
+}
