@@ -94,8 +94,8 @@
                                 </div>
 
                                 <!-- <div class=" spinner-border d-none" role="status" id="spinner">
-                                                                                <span class="sr-only" style="margin-left: 227px">Activating...</span>
-                                                                            </div> -->
+                                                                                                    <span class="sr-only" style="margin-left: 227px">Activating...</span>
+                                                                                                </div> -->
                         </form>
                         @endif
                         <form>
@@ -295,6 +295,43 @@
 
 @section('css')
     <link rel="stylesheet" href="/css/admin_custom.css">
+    <link rel="stylesheet" href="{{ asset('admin/admin_lte.css') }}">
+
+    <style type="text/css">
+        .text-successs {
+            color: #7CC633 !important;
+            font-family: 'Poppins', sans-serif !important;
+        }
+
+        .badge-success {
+            background: rgb(186 235 137 / 20%);
+            color: #319701;
+            padding: 6px !important;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 11.3289px;
+
+        }
+
+        .badge-warning {
+            background-color: #f1e8cb;
+            color: #b58903 !important;
+            padding: 6px !important;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 11.3289px;
+        }
+
+        .badge-danger {
+            color: #fff;
+            background-color: rgba(220, 78, 65, 0.12);
+            color: #DC4E41;
+            padding: 6px !important;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 11.3289px;
+        }
+    </style>
 @stop
 
 @section('js')
