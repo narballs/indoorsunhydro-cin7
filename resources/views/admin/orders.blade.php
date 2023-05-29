@@ -12,7 +12,7 @@
                                 Orders
                             </p>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-2 d-flex justify-content-end create_bnt">
                             <button type="button" class="btn create-new-order-btn">
                                 Create New Order +
                             </button>

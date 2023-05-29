@@ -130,6 +130,11 @@
     background-color: white !important;
 }
 
+.order_section_header {
+    margin-left: -35px !important;
+    margin-right: -13px !important;
+}
+
 .content-wrapper {
     background-color: #fff !important;
 }
@@ -163,9 +168,7 @@
     font-size: 14px;
     border: 1.03706px solid rgba(208, 208, 208, 0.51);
     border-radius: 7.25943px;
-    margin-left: 108px !important;
     line-height: 24px;
-    /* identical to box height, or 171% */
     letter-spacing: -0.006em;
     color: #525252;
 }
