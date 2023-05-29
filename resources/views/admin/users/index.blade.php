@@ -22,13 +22,14 @@
                                 Users Management
                             </p>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-2 d-flex justify-content-end create_bnt">
                             <a href="{{ route('users.create') }}" class="btn create-new-order-btn">
                                 Create new user +
                             </a>
                         </div>
                     </div>
-                    <div class="row search_row_admin-interface justify-content-between">
+                    <div class="row search_row_admin-interface justify-content-between"
+                        style="margin-top: 12px !important;">
                         <div class="col-md-2 product_search">
                             <div class="has-search">
                                 <span class="fa fa-search form-control-feedback"></span>
@@ -55,7 +56,7 @@
                         </div>
                         <div class="col-md-2">
                             <select name="secondary_user" id="secondary-user" onchange="userFilter()" class="form-control"
-                                style="height: 39px; margin-top: -7px">
+                                style="height: 39px; margin-top: -7px; margin-left: -7px;">
                                 <option value="all" class="form-control">Secndary/Primary</option>
                                 <option value="secondary-user" class="form-control"
                                     {{ isset($secondaryUser) && $secondaryUser == 'secondary-user' ? 'selected="selected"' : '' }}>
@@ -83,21 +84,37 @@
                                         <i class="fas fa-arrow-up"></i>
                                     </span>
                                 </td>
-                                <th>Full Name <i class="fa fa-sort"></th>
-                                <th>Email <i class="fa fa-sort"></th>
-                                <th>Cin7 User-ID <i class="fa fa-sort"></th>
-                                <th>Company (Account aka Parent) <i class="fa fa-sort"></th>
-                                <th>Secondary Contact Company <i class="fa fa-sort"></th>
-                                <th>Type <i class="fa fa-sort"></th>
-                                <th>Roles <i class="fa fa-sort"></th>
-                                <th>Action <i class="fa fa-sort"></th>
+                                <td>
+                                    <span class="d-flex table-row-item"> Full Name</span>
+                                </td>
+                                <td>
+                                    <span class="d-flex table-row-item"> Email</span>
+                                </td>
+                                <td>
+                                    <span class="d-flex table-row-item"> Cin7 User-ID </span>
+                                </td>
+                                <td>
+                                    <span class="d-flex table-row-item"> Company (Account aka Parent) </span>
+                                </td>
+                                <td>
+                                    <span class="d-flex table-row-item"> Secondary Contact Company</span>
+                                </td>
+                                <td>
+                                    <span class="d-flex table-row-item"> Type</span>
+                                </td>
+                                <td>
+                                    <span class="d-flex table-row-item"> Roles</span>
+                                </td>
+                                <td>
+                                    <span class="d-flex table-row-item"> Action</span>
+                                </td>
                         </thead>
                     </tr>
                     <tbody>
                         @foreach ($data as $key => $user)
                             @foreach ($user->contact as $contact)
                                 <tr id="row-{{ $user->id }}" class="user-row border-bottom">
-                                    <td class="d-flex table-items">
+                                    <td class="d-flex user-table-items">
                                         <span class="tabel-checkbox-user">
                                             <input type="checkbox" name="test" class="checkbox-table">
                                         </span>
@@ -114,8 +131,9 @@
                                             <span class="badge badge-info w-100">empty</span>
                                         @endif
                                     </td>
-                                    <td>{{ $user->email }}</td>
-                                    <td>
+                                    <td class="user_table_items">
+                                        {{ $user->email }}</td>
+                                    <td class="user_table_items">
                                         @if ($contact)
                                             @if ($contact->contact_id)
                                                 {{ $contact->contact_id }}
@@ -126,7 +144,7 @@
                                             <span class="badge badge-info w-100">empty</span>
                                         @endif
                                     </td>
-                                    <td class="is_parent">
+                                    <td class="is_parent user_table_items">
                                         @if ($contact)
                                             @if ($contact->is_parent == 1)
                                                 <span>{{ $contact->company }}</span>
@@ -137,7 +155,7 @@
                                             <span class="badge badge-secondary  is_parent_0">empty</span>
                                         @endif
                                     </td>
-                                    <td class="is_parent">
+                                    <td class="is_parent user_table_items">
                                         @if ($contact)
                                             @if ($contact->is_parent == 0)
                                                 <span> {{ $contact->company }}</span>
@@ -148,7 +166,7 @@
                                             <span class="badge badge-secondary  is_parent_0">empty</span>
                                         @endif
                                     </td>
-                                    <td class="background_contact_id">
+                                    <td class="background_contact_id user_table_items">
                                         @if ($contact)
                                             @if (!empty($contact->contact_id))
                                                 <span class="badge badge-primary  background_primary_1">primary</span>
@@ -157,7 +175,7 @@
                                             @endif
                                         @endif
                                     </td>
-                                    <td class="background_success">
+                                    <td class="background_success user_table_items">
                                         @if (!empty($user->getRoleNames()))
                                             @foreach ($user->getRoleNames() as $role)
                                                 <label
@@ -165,9 +183,7 @@
                                             @endforeach
                                         @endif
                                     </td>
-                                    <td class="user_action">
-
-
+                                    <td class="user_action ">
                                         <div class="btn-group">
                                             <button type="button" class="btn btn-white dropdown-toggle"
                                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -226,45 +242,40 @@
                             </td>
                         </tr>
                     </tfoot>
-
-                    <!-- Modal -->
-                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
-                        aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Search Parent</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <form id="secondary_id">
-                                        <input type="select" name="primary_contact" id="primary_contact"
-                                            class="form-control" value="" onkeyup="suggestion()">
-                                        <select id="child" class="form-control">
-
-                                        </select>
-                                        <input type="text" name="child_id" value="" id="child_id">
-                                        <div class="spinner-border d-none" role="status"
-                                            style="left: 50% !important; margin-left: -16em !important;" id="spinner2">
-                                            <span class="sr-only">Activating...</span>
-                                        </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-primary" onclick="assign()">Save
-                                        changes</button>
-                                </div>
-                                </form>
+                </table>
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Search Parent</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
                             </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12 mt-2">
+                            <div class="modal-body">
+                                <form id="secondary_id">
+                                    <input type="select" name="primary_contact" id="primary_contact"
+                                        class="form-control" value="" onkeyup="suggestion()">
+                                    <select id="child" class="form-control">
 
+                                    </select>
+                                    <input type="text" name="child_id" value="" id="child_id">
+                                    <div class="spinner-border d-none" role="status"
+                                        style="left: 50% !important; margin-left: -16em !important;" id="spinner2">
+                                        <span class="sr-only">Activating...</span>
+                                    </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" onclick="assign()">Save
+                                    changes</button>
+                            </div>
+                            </form>
                         </div>
                     </div>
+                </div>
             </div>
         </div>
     @endsection
@@ -281,14 +292,37 @@
         }
 
         .badge-success {
-            background: rgba(124, 198, 51, 0.2);
-            color: #7CC633;
+            background: rgb(186 235 137 / 20%);
+            color: #319701;
             padding: 6px !important;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 11.3289px;
+
+        }
+
+        .badge-warning {
+            background-color: #f1e8cb;
+            color: #b58903 !important padding: 6px !important;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 11.3289px;
+        }
+
+        .badge-danger {
+            color: #fff;
+            background-color: #f1eaea;
+            color: #B42318;
+            padding: 6px !important;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 11.3289px;
+
         }
 
         .badge-secondary {
-            color: #392828 !important;
-            background-color: #eef0f3 !important;
+            color: #8e8b8b !important;
+            background-color: #d0dce6 !important;
             padding: 6px !important;
             font-style: normal;
             font-weight: 500;
@@ -296,26 +330,8 @@
         }
 
         .badge-primary {
-            background-color: #cbf0ff !important;
-            color: #0360fe !important;
-            padding: 6px !important;
-            font-style: normal;
-            font-weight: 500;
-            font-size: 11.3289px;
-        }
-
-        .badge-warning {
-            background-color: #fce9a9;
-            color: #ffc107 !important;
-            padding: 6px !important;
-            font-style: normal;
-            font-weight: 500;
-            font-size: 11.3289px;
-        }
-
-        .badge-danger {
-            background-color: #f1abb2;
-            color: #f14f4f !important;
+            background-color: #d9eff8;
+            color: #339AC6 !important;
             padding: 6px !important;
             font-style: normal;
             font-weight: 500;

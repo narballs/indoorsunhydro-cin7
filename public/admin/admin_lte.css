@@ -37,8 +37,12 @@
 
 .table-row-heading-user {
     padding-left: 11.46px !important;
-    margin-top: -8px !important;
+    margin-top: -5px !important;
     color: #242424 !important;
+}
+
+.user-table-items {
+    padding-top: 28px !important;
 }
 
 .nav-item .active {
@@ -449,6 +453,14 @@ a {
     border-radius: 8.8914px;
 }
 
+.user-row {
+    font-family: 'Poppins', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 13.2171px;
+    line-height: 19px;
+    color: #828282;
+}
 
 .order-row {
     font-family: 'Poppins', sans-serif;
@@ -469,13 +481,20 @@ a {
 }
 
 .user_name {
-    font-family: 'Poppins', sans-serif !important;
-    font-style: normal !important;
-    font-weight: 500 !important;
-    font-size: 15px !important;
-    line-height: 27px !important;
-    align-items: center !important;
+    font-family: 'Poppins', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 13.2171px;
+    line-height: 19px;
     color: #242424 !important;
+    padding-bottom: 0px !important;
+    padding-top: 21px !important;
+}
+
+.user_table_items {
+    padding-bottom: 0px !important;
+    padding-top: 21px !important;
+
 }
 
 
