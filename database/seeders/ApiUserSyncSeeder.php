@@ -15,14 +15,14 @@ class ApiUserSyncSeeder extends Seeder
      */
     public function run()
     {
-        $date = '2023-29-31 00:00:00';
+        //$date = '2023-29-31 00:00:00';
         $dt = Carbon::now();
-        $dt->year   = 2023;
-        $dt->month  = 05;
-        $dt->day    = 29;
-        $dt->hour   = 00;
-        $dt->minute = 00;
-        $dt->second = 00;
+        // $dt->year   = 2023;
+        // $dt->month  = 05;
+        // $dt->day    = 29;
+        // $dt->hour   = 00;
+        // $dt->minute = 00;
+        // $dt->second = 00;
         $formattedDateSting = $dt->toDateTimeString();
         
         $sync_logs =  

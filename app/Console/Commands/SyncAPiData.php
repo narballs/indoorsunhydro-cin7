@@ -53,8 +53,9 @@ class SyncAPiData extends Command
         $date = $sync_log->last_synced;
 
         $rawDate = Carbon::parse($date);
-        $formattedDateSting = $rawDate->toDateString().'T'.'00:00:00'.'Z';  
-        //dd($formattedDateSting);
+        $getdate = $rawDate->format('Y-m-d');
+        $getTime = $rawDate->format('H:i:s');
+        $formattedDateSting = $getdate.'T'. $getTime .'Z'; 
 
         $client = new \GuzzleHttp\Client();
 
