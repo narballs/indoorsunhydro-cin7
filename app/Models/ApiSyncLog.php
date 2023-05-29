@@ -9,7 +9,7 @@ class ApiSyncLog extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'endpoint',
+        'end_point',
         'desription',
         'last_synced'
     ];
