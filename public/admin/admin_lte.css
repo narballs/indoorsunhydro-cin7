@@ -8,7 +8,12 @@
     padding-left: 11.46px !important;
     margin-top: -1px !important;
     color: #242424 !important;
+}
 
+.customer-table-row-heading {
+    padding-left: 11.46px !important;
+    margin-top: -3px !important;
+    color: #242424 !important;
 }
 
 .status-disabled {
@@ -407,12 +412,11 @@
 }
 
 .customer_full_name {
-    font-family: 'Poppins', sans-serif !important;
-    font-style: normal !important;
-    font-weight: 500 !important;
-    font-size: 15px !important;
-    line-height: 27px !important;
-    align-items: center !important;
+    font-family: 'Poppins', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 13.2171px;
+    line-height: 19px;
     color: #242424 !important;
 }
 
@@ -469,6 +473,19 @@ a {
     font-size: 13.2171px;
     line-height: 19px;
     color: #828282;
+}
+
+.customer-row {
+    font-family: 'Poppins', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 13.2171px;
+    line-height: 19px;
+    color: #828282;
+}
+
+.customer-table-items {
+    padding-top: 18px !important;
 }
 
 .product-row {
