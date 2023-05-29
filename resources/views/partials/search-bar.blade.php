@@ -28,39 +28,40 @@
             </div>
         </div>
         <div class="col-md-3 d-flex align-items-center">
-            <div style="font-family: 'Poppins';">
-                <img class="basket-icon mt-2" src="{{asset('/theme/img/icons/Cart-icon.svg')}}">
-                <span
-                    class="cart-basket d-flex align-items-center justify-content-center float-sm-end cart-counter rounded-circle ml-3"
-                    id="top_cart_quantity">
-                    <?php
-                    $total_quantity = 0;
-                    $grand_total = 0;
-                    
-                    ?>
-                    @if (Session::get('cart'))
-                        @foreach (Session::get('cart') as $cart)
-                            <?php
-                            $total_q[] = $cart['quantity'];
-                            $total_quantity = array_sum($total_q);
-                            $total_price[] = $cart['price'] * $cart['quantity'];
-                            $grand_total = array_sum($total_price);
-                            ?>
-                        @endforeach
-                    @endif
-                    {{ $total_quantity }}
-                </span>
-            </div>
-            <div class="d-flex align-items-center ml-1" style="flex-direction: column;">
-                <span class="mx-3 shopping_cart_text" style="margin-bottom:-7px;">Shopping Cart</span>
-                {{-- <a style="" class="p-0 cart-price btn btn-secondary mt-0" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="right" data-bs-content="add <strong class='text-success'>$2500.00</strong> more to your cart and get <span class='text-danger'>5% off </span>"> --}}
-                    
-                <a>
-                    <span id="top_cart_total"><a href="{{ '/cart/' }}"  class="d-flex align-items-center" style="color: #7bc533;margin-left:-3.6rem;">
-                    <span id="topbar_cart_total" class="cart-counter-details" style="margin-top-5px;"> ${{ number_format($grand_total, 2) }}</span>
-                    {{-- <span id="cart_items_quantity" class="cart-counter-details">({{ $total_quantity }}</span>&nbsp;<span class="cart-counter-details">items)</span> --}}
-                </a>
-            </div>
+            <a href="{{ '/cart/' }}" style="color:#7BC533; !important;text-decoration:none !important;">
+                <div style="font-family: 'Poppins';">
+                    <img class="basket-icon mt-2" src="{{asset('/theme/img/icons/Cart-icon.svg')}}">
+                    <span
+                        class="cart-basket d-flex align-items-center justify-content-center float-sm-end cart-counter rounded-circle ml-3"
+                        id="top_cart_quantity">
+                        <?php
+                        $total_quantity = 0;
+                        $grand_total = 0;
+                        
+                        ?>
+                        @if (Session::get('cart'))
+                            @foreach (Session::get('cart') as $cart)
+                                <?php
+                                $total_q[] = $cart['quantity'];
+                                $total_quantity = array_sum($total_q);
+                                $total_price[] = $cart['price'] * $cart['quantity'];
+                                $grand_total = array_sum($total_price);
+                                ?>
+                            @endforeach
+                        @endif
+                        {{ $total_quantity }}
+                    </span>
+                </div>
+                <div class="d-flex align-items-center ml-1" style="flex-direction: column;">
+                    <span class="mx-3 shopping_cart_text" style="margin-bottom:-7px;color:#212121 !important;">Shopping Cart</span>
+                    {{-- <a style="" class="p-0 cart-price btn btn-secondary mt-0" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="right" data-bs-content="add <strong class='text-success'>$2500.00</strong> more to your cart and get <span class='text-danger'>5% off </span>"> --}}
+                        
+                    <a>
+                        <span id="top_cart_total"><a href="{{ '/cart/' }}"  class="d-flex align-items-center" style="color: #7bc533;margin-left:-3.6rem;">
+                        <span id="topbar_cart_total" class="cart-counter-details" style="margin-top-5px;"> ${{ number_format($grand_total, 2) }}</span>
+                    </a>
+                </div>
+            </a>
         </div>
     </div>
     <div class="row justify-content-center">
