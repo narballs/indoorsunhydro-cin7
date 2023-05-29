@@ -37,28 +37,52 @@
                 <table class="table border rounded-2 mb-5 table-buylist" id="table">
                     <thead>
                         <tr class="table-header-background">
-                            <th>
-                                <input type="checkbox" name="test" class="checkbox-table">
-                                #
-                            </th>
-                            <th>Title<i class="fa fa-sort"></i></th>
-                            <th>Status<i class="fa fa-sort"></i></th>
-                            <th>Description<i class="fa fa-sort"></i></th>
-                            <th>Action<i class="fa fa-sort"></i></th>
+                            <td class="d-flex table-row-item">
+                                <span class="tabel-checkbox">
+                                    <input type="checkbox" name="test" class="checkbox-table" id="selectAll">
+                                </span>
+                                <span class="table-row-heading">
+                                    <i class="fas fa-arrow-up"></i>
+                                </span>
+                            </td>
+                            <td>
+                                <span class="d-flex table-row-item"> Title</span>
+                            </td>
+                            <td>
+                                <span class="d-flex table-row-item"> Status</span>
+                            </td>
+                            <td>
+                                <span class="d-flex table-row-item"> Description</span>
+                            </td>
+                            <td>
+                                <span class="d-flex table-row-item"> Action</span>
+                            </td>
                         </tr>
                     </thead>
                     <tbody id="searched">
-                        @foreach ($buylists as $buylist)
+                        @foreach ($buylists as $key => $buylist)
                             <tr id="row-{{ $buylist->id }}" class="buylist_row border-bottom">
-                                <td>
-                                    <input type="checkbox" name="test" class="checkbox-table">
-                                    {{ $buylist->id }}
+                                <td class="d-flex table-items">
+                                    <span class="tabel-checkbox">
+                                        <input type="checkbox" name="test" class="checkbox-table">
+                                    </span>
+                                    <span class="table-row-heading">
+                                        {{ $key + 1 }}
+                                    </span>
                                 </td>
-                                <td class="buylist_title">
+                                <td class="buylist_title pb-0 pt-4">
                                     <span class="buy_list_title">{{ $buylist->title }}</span>
                                 </td>
-                                <td>{{ $buylist->status }}</td>
-                                <td>{{ $buylist->description }}</td>
+                                <td class="pb-0 pt-4">
+                                    @if ($buylist->status == 'Public')
+                                        <span class="badge badge-success">{{ $buylist->status }}</span>
+                                    @else
+                                        <span class="badge badge-warning">{{ $buylist->status }}</span>
+                                    @endif
+                                </td>
+                                <td class="pb-0 pt-4">
+                                    {{ $buylist->description }}
+                                </td>
                                 <td class="buylist_action">
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown"
@@ -108,25 +132,32 @@
         }
 
         .badge-success {
-            color: #fff;
-            /* background-color: #28a745; */
-            background: rgba(124, 198, 51, 0.2);
-            color: #7CC633;
-            padding: 7px !important;
+            background: rgb(186 235 137 / 20%);
+            color: #319701;
+            padding: 6px !important;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 11.3289px;
+
         }
 
         .badge-warning {
-            color: #1f2d3d;
-            background-color: #fce9a9;
-            color: #ffc107 !important;
-            padding: 5px;
+            background-color: #f1e8cb;
+            color: #b58903 !important;
+            padding: 6px !important;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 11.3289px;
         }
 
         .badge-danger {
             color: #fff;
-            background-color: #f1abb2;
-            color: #f14f4f;
+            background-color: rgba(220, 78, 65, 0.12);
+            color: #DC4E41;
             padding: 6px !important;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 11.3289px;
         }
     </style>
 @stop

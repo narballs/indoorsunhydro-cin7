@@ -146,7 +146,7 @@
             .badge-success {
                 background: rgb(186 235 137 / 20%);
                 color: #319701;
-                padding: 7px !important;
+                padding: 6px !important;
                 font-style: normal;
                 font-weight: 500;
                 font-size: 11.3289px;
@@ -154,10 +154,18 @@
             }
 
             .badge-warning {
-                color: #1f2d3d;
-                background-color: #fce9a9;
-                color: #ffc107 !important;
-                padding: 5px;
+                background-color: #f1e8cb;
+                color: #b58903 !important padding: 6px !important;
+                font-style: normal;
+                font-weight: 500;
+                font-size: 11.3289px;
+            }
+
+            .badge-danger {
+                color: #fff;
+                background-color: rgba(220, 78, 65, 0.12);
+                color: #DC4E41;
+                padding: 6px !important;
             }
 
             .badge-danger {

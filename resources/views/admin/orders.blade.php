@@ -204,7 +204,7 @@
 
         .badge-warning {
             background-color: #f1e8cb;
-            color: #523e00 !important;
+            color: #b58903 !important;
             padding: 6px !important;
             font-style: normal;
             font-weight: 500;
@@ -216,6 +216,9 @@
             background-color: rgba(220, 78, 65, 0.12);
             color: #DC4E41;
             padding: 6px !important;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 11.3289px;
         }
     </style>
 @stop
