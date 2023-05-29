@@ -324,8 +324,10 @@ return [
 
         [
             'text'       => 'Logout',
-            'icon' => ' fas fa-power-off',
+            // 'icon' => 'fa fa-bracket',
+            'icon' => 'fa fa-sign-out-alt logout_icon',
             'url'        => 'admin/logout',
+            'classes' => 'logout_sidebar',
         ],
     ],
 
