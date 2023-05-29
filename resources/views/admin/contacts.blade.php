@@ -6,26 +6,6 @@
 @section('content')
     <div class="table-wrapper">
         <div class="card-body mt-2">
-            {{-- <div class="table-title">
-                <div class="row">
-                    <div class="col-sm-8">
-                        <h2>Suppliers</h2>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="search-box">
-                            <i class="material-icons"></i>
-                            <input type="text" class="form-control" placeholder="Search…">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-2 mb-5">
-                <div class="search-box">
-                    <a href="{{ 'order/create' }}"><input type="button" value="Create New Supplier"
-                            class="form-control btn btn-primary" placeholder="Create New">
-                    </a>
-                </div>
-            </div> --}}
             <div class="row mb-3">
                 <div class="col-md-12">
                     <div class="row">
@@ -65,11 +45,11 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Name <i class="fa fa-sort"></i></th>
-                        <th>Status <i class="fa fa-sort"></i></th>
-                        <th>Price Tier<i class="fa fa-sort"></i></th>
-                        <th>Company <i class="fa fa-sort"></i></th>
-                        <th>Notes<i class="fa fa-sort"></i></th>
+                        <th>Name </th>
+                        <th>Status </th>
+                        <th>Price Tier</th>
+                        <th>Company </th>
+                        <th>Notes</th>
                         <th>Actions</th>
                     </tr>
                 </thead>

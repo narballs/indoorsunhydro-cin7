@@ -1,5 +1,9 @@
 @import url('https://fonts.cdnfonts.com/css/poppins');
 
+.create_bnt {
+    padding: 9px 19px !important;
+}
+
 .table-row-heading {
     padding-left: 11.46px !important;
     margin-top: -1px !important;
@@ -319,7 +323,8 @@
 
 .product_section_header {
     margin-left: -35px !important;
-    margin-right: -16px !important;
+    margin-right: -11px !important;
+
 }
 
 .product_heading {
@@ -345,7 +350,6 @@
     color: #868686;
     border: 1.03706px solid rgba(208, 208, 208, 0.51);
     border-radius: 7.25943px;
-    margin-left: 90px !important;
 }
 
 .create_new_buylist_btn {
