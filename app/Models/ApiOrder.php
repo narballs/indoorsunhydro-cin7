@@ -33,7 +33,8 @@ class ApiOrder extends Model
         'date',
         'po_number',
         'memo',
-        'tax_class_id'
+        'tax_class_id',
+        'user_switch'
     ];
     public function contact()
     {

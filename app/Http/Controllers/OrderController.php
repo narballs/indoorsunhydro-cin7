@@ -41,8 +41,17 @@ class OrderController extends Controller
                 $active_contact_id = $contact->parent_id;
             }
             if ($active_contact_id) {
+
                 $order = new ApiOrder;
                 $cart_items = session()->get('cart');
+
+                $user_switch = "";
+                if (!empty(session()->get('logged_in_as_another_user'))) {
+                    $user_switch = "order placed by user switch ";
+                } else {
+                    $user_switch = "";
+                }
+
                 $cart_total = 0;
                 $cart_price = 0;
                 if ($cart_items) {
@@ -84,6 +93,7 @@ class OrderController extends Controller
                 $order->stage = "New";
                 $order->paymentTerms = $paymentMethod;
                 $order->tax_class_id = $request->tax_class_id;
+                $order->user_switch = $user_switch;
                 $order->total_including_tax = $request->incl_tax;
                 $order->po_number = $request->po_number;
                 $order->memo = $request->memo;
@@ -207,8 +217,6 @@ class OrderController extends Controller
                 $all_members = Contact::whereIn('id', $all_ids)->get();
                 foreach ($all_members as $member) {
                     $member_user = User::find($member->user_id);
-
-
                     if (!empty($member_user) && $member_user->hasRole(['Order Approver'])) {
                         if (isset($email_sent_to_users[$member_user->id])) {
                             continue;
@@ -218,15 +226,8 @@ class OrderController extends Controller
                         $data['name'] = $member_user->firstName;
                         $data['subject'] = 'New order awaiting approval';
                         $data['email'] = $member_user->email;
-
-
-                        // echo $member_user->email  . $member_user->id . ' => This user can approve order<br />';
                         MailHelper::sendMailNotification('emails.user-order-received', $data);
                     }
-                    // else {
-                    //     echo $member_user->email  . $member_user->id . ' => Can not approve user<br />';
-                    // }
-
                 }
 
                 $lineItems = [];
