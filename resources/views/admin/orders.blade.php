@@ -381,8 +381,9 @@
                                 )
                             } else {
                                 // $('#fullfill_failed').html(response.status);
+                                Swal.fire('Order fullfilled failed')
                             }
-                            Swal.fire('Order fullfilled failed')
+
                             // $('#progress-bar').addClass('d-none');
                             setInterval('location.reload()', 7000);
                         }
