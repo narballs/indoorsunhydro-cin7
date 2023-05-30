@@ -374,11 +374,17 @@
                             console.log(response.status);
                             if (response.status === 'Order fullfilled successfully') {
                                 $('#fullfill_success').html(response.status);
+                                Swal.fire(
+                                    'Good job!',
+                                    'Order fullfilled successfully',
+                                    'success'
+                                )
                             } else {
-                                $('#fullfill_failed').html(response.status);
+                                // $('#fullfill_failed').html(response.status);
+                                Swal.fire('Order fullfilled failed')
                             }
 
-                            $('#progress-bar').addClass('d-none');
+                            // $('#progress-bar').addClass('d-none');
                             setInterval('location.reload()', 7000);
                         }
                     });
