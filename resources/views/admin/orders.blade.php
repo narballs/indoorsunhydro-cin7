@@ -11,6 +11,12 @@
                             <p class="order_heading">
                                 Orders
                             </p>
+                            <div class="progress border d-none w-50 mx-auto" id="progress-bar">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-info"
+                                    role="progressbar" aria-valuenow="100" aria-valuemin="" aria-valuemax="100"></div>
+                            </div>
+                            <div class="bg-success text-white text-center" id="fullfill_success"></div>
+                            <div class="bg-warning text-white text-center" id="fullfill_failed"></div>
                         </div>
                         <div class="col-md-2 d-flex justify-content-end create_bnt">
                             <button type="button" class="btn create-new-order-btn">
@@ -161,8 +167,14 @@
                                                         data-toggle="tooltip" data-original-title="Delete">Delete
                                                     </a>
                                                     <a class="dropdown-item"href="#" class="edit a_class"
-                                                        title="" data-toggle="tooltip" data-original-title="Edit">Edit
+                                                        title="" data-toggle="tooltip"
+                                                        data-original-title="Edit">Edit
                                                     </a>
+                                                    <a class="dropdown-item" type="button" class="edit a_class"
+                                                        title="" data-toggle="tooltip" data-original-title="Edit"
+                                                        onclick="fullFillOrder()">Fulfill Order
+                                                    </a>
+                                                    <input type="hidden" value="{{ $order->id }}" id="order_id">
                                                 </div>
                                             </div>
                                         </td>
@@ -319,6 +331,60 @@
             var table = $(e.target).closest('table');
             $('td input:checkbox', table).prop('checked', this.checked);
         });
+
+        function fullFillOrder() {
+            var status = $("#status").val();
+            var order_id = $("#order_id").val();
+            alert(order_id);
+            var delay = 7000;
+            $('#progress-bar').removeClass('d-none');
+            jQuery(".progress-bar").each(function(i) {
+                jQuery(this).delay(delay * i).animate({
+                    width: $(this).attr('aria-valuenow') + '%'
+                }, delay);
+
+                jQuery(this).prop('Counter', 1).animate({
+                    Counter: $(this).text()
+                }, {
+                    duration: delay,
+                    step: function(now) {
+                        jQuery(this).text(Math.ceil(100) + '%');
+
+                    }
+                });
+            });
+
+            jQuery.ajax({
+                url: "{{ url('admin/order-full-fill') }}",
+                method: 'post',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "order_id": order_id
+                },
+                success: function(response) {
+                    console.log(response);
+                    jQuery.ajax({
+                        url: "{{ url('admin/check-status') }}",
+                        method: 'post',
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                            "order_id": order_id
+                        },
+                        success: function(response) {
+                            console.log(response.status);
+                            if (response.status === 'Order fullfilled successfully') {
+                                $('#fullfill_success').html(response.status);
+                            } else {
+                                $('#fullfill_failed').html(response.status);
+                            }
+
+                            $('#progress-bar').addClass('d-none');
+                            setInterval('location.reload()', 7000);
+                        }
+                    });
+                }
+            });
+        }
     </script>
 @stop
 @section('plugins.Sweetalert2', true)

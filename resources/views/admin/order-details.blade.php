@@ -92,10 +92,6 @@
                                     <input class="btn btn-danger btn-sm" type="button" value="Cancel Order"
                                         onclick=" cancelOrder(); addComment(0);">
                                 </div>
-
-                                <!-- <div class=" spinner-border d-none" role="status" id="spinner">
-                                                                                                    <span class="sr-only" style="margin-left: 227px">Activating...</span>
-                                                                                                </div> -->
                         </form>
                         @endif
                         <form>
@@ -423,9 +419,6 @@
                 },
                 success: function(response) {
                     console.log(response);
-
-                    //setInterval('location.reload()', 7000);
-                    //$('#success').removeClass('d-none');
                     jQuery.ajax({
                         url: "{{ url('admin/check-status') }}",
                         method: 'post',
@@ -445,7 +438,6 @@
                             setInterval('location.reload()', 7000);
                         }
                     });
-
                 }
             });
         }
