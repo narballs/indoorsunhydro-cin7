@@ -240,11 +240,13 @@ class UserController extends Controller
         return view('user-registration-second',  $data);
     }
 
-    public function lost_password() {
+    public function lost_password()
+    {
         return view('lost-password');
     }
 
-    public function recover_password(Request $request) {
+    public function recover_password(Request $request)
+    {
         $user = User::where('email', $request->email)->first();
 
         $plain_password = Str::random(10) . date('YmdHis');
@@ -257,7 +259,7 @@ class UserController extends Controller
         $user->save();
         $base_url = url('/');
 
-        $url = $base_url.'/index?hash='.$hash;
+        $url = $base_url . '/index?hash=' . $hash;
         $data['email'] = $user->email;
         $data['url'] = $url;
 
@@ -269,7 +271,6 @@ class UserController extends Controller
         MailHelper::sendMailNotification('emails.reset-password', $data);
 
         return redirect()->back()->with('success', 'Password reset link sent succssfully!');
-        
     }
 
 
@@ -289,7 +290,7 @@ class UserController extends Controller
         $user = User::where('email', $request->email)->first();
 
 
-              $email_user = session::put('user', $user);
+        $email_user = session::put('user', $user);
         $cart = [];
         if (auth()->attempt($credentials)) {
             $user_id = auth()->user()->id;
@@ -332,7 +333,7 @@ class UserController extends Controller
                 $companies = Contact::where('user_id', auth()->user()->id)->get();
 
                 if ($companies->count() == 1) {
-                   if ($companies[0]->contact_id == null) {
+                    if ($companies[0]->contact_id == null) {
                         UserHelper::switch_company($companies[0]->secondary_id);
                     } else {
                         UserHelper::switch_company($companies[0]->contact_id);
@@ -340,13 +341,13 @@ class UserController extends Controller
                 }
                 if ($companies->count() == 2) {
                     foreach ($companies as $company) {
-                        if($company->status == 1){
+                        if ($company->status == 1) {
                             if ($company->contact_id == null) {
                                 UserHelper::switch_company($company->secondary_id);
                             } else {
                                 UserHelper::switch_company($company->contact_id);
                             }
-                       }
+                        }
                     }
                 }
                 Session::put('companies', $companies);
@@ -738,12 +739,11 @@ class UserController extends Controller
         $user_id = auth()->id();
         $contact_id = $request->contact_id;
         $contact = Contact::where('user_id', $user_id)->where('contact_id', $contact_id)->orWhere('secondary_id', $contact_id)->first();
-        
+
         if ($contact->secondary_id) {
             $parent_id = Contact::where('secondary_id', $contact->secondary_id)->first()->parent_id;
             $contact_id = $parent_id;
-        }
-        else {
+        } else {
             $user_address = Contact::where('user_id', $user_id)->where('contact_id', $contact_id)->first();
         }
         $request->validate([
@@ -777,7 +777,7 @@ class UserController extends Controller
                 'city' => $request->town_city,
                 'postCode' => $request->zip,
                 //'email' => request('email')
-           
+
             ]
         ];
         $authHeaders['json'] = $contact;
@@ -821,8 +821,7 @@ class UserController extends Controller
                 // );
             }
             return response()->json(['success' => true, 'created' => true, 'msg' => 'Address updated Successfully']);
-        }
-        else {
+        } else {
             return response()->json(['success' => false, 'created' => false, 'msg' => 'Unable to update address please try again later']);
         }
     }
@@ -863,7 +862,11 @@ class UserController extends Controller
         $contact = Contact::where('user_id', $contact_id)->first();
         $companies = Contact::where('user_id', auth()->user()->id)->get();
         if (!empty($contact)) {
-            $active_contact_id = $contact->contact_id;
+            if ($contact->contact_id == null) {
+                $active_contact_id = $contact->secondary_id;
+            } else {
+                $active_contact_id = $contact->contact_id;
+            }
             $active_company = $contact->company;
             Session::put([
                 'contact_id' => $active_contact_id,
@@ -895,7 +898,6 @@ class UserController extends Controller
 
     public function create_secondary_user(Request $request)
     {
-
         $url = '';
         $user_id = auth()->user()->id;
         $contact = Contact::where('user_id', $user_id)->first();
@@ -1054,7 +1056,7 @@ class UserController extends Controller
         $user->save();
         $base_url = url('/');
 
-        $url = $base_url.'/index?hash='.$hash;
+        $url = $base_url . '/index?hash=' . $hash;
         $data['email'] = $user->email;
         $data['url'] = $url;
 
@@ -1233,13 +1235,12 @@ class UserController extends Controller
             ]);
         }
     }
-    public function index_email_view (Request $request)
+    public function index_email_view(Request $request)
     {
 
         $user = User::where('hash', $request->hash)->first();
         Auth::login($user);
 
-       return view('reset-password', compact('user'));
+        return view('reset-password', compact('user'));
     }
 }
-
