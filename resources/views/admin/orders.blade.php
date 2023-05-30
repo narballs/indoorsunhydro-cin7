@@ -194,6 +194,24 @@
                                                             <input type="hidden" value="{{ $order->id }}"
                                                                 id="order_id">
                                                         @endif
+                                                        @if ($order->isApproved == 2)
+                                                            <a class="dropdown-item disabled bg_danger" type="button"
+                                                                class="edit a_class" title="" data-toggle="tooltip"
+                                                                data-original-title="Edit">Cancel
+                                                                Order
+                                                            </a>
+                                                        @elseif($order->isApproved == 1)
+                                                            <a class="dropdown-item disabled bg_success" type="button"
+                                                                class="edit a_class" title="" data-toggle="tooltip"
+                                                                data-original-title="Edit">Cancel Order
+                                                            </a>
+                                                        @else
+                                                            <a class="dropdown-item" type="button" class="edit a_class"
+                                                                title="" data-toggle="tooltip"
+                                                                data-original-title="Edit" onclick="cancelOrder()">Cancel
+                                                                Order
+                                                            </a>
+                                                        @endif
                                                     </form>
                                                 </div>
                                             </div>
@@ -238,7 +256,7 @@
         }
 
         .bg_success {
-            background: rgb(186 235 137 / 20%) !important;
+            /* background: rgb(186 235 137 / 20%) !important; */
             color: #319701 !important;
             padding: 6px !important;
             font-style: normal;
@@ -266,8 +284,6 @@
         }
 
         .bg_danger {
-            color: #fff;
-            background-color: rgba(220, 78, 65, 0.12) !important;
             color: #DC4E41 !important;
             padding: 6px !important;
             font-style: normal;
@@ -371,10 +387,31 @@
             $('td input:checkbox', table).prop('checked', this.checked);
         });
 
+        function cancelOrder() {
+            var order_id = $("#order_id").val();
+            alert(order_id);
+            $.ajax({
+                url: "{{ url('admin/order-cancel') }}",
+                method: 'post',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "order_id": order_id
+                },
+                success: function(response) {
+                    Swal.fire(
+                        'Good job!',
+                        'Order Cancel successfully',
+                        'success'
+                    )
+                    setInterval('location.reload()', 3000);
+                }
+            })
+        }
+
         function fullFillOrder() {
             var status = $("#status").val();
             var order_id = $("#order_id").val();
-            alert(order_id);
+            // alert(order_id);
             var delay = 7000;
             $('#progress-bar').removeClass('d-none');
             jQuery(".progress-bar").each(function(i) {
