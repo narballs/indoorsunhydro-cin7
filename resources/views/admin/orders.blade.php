@@ -7,16 +7,16 @@
             <div class="row border-bottom product_section_header">
                 <div class="col-md-12">
                     <div class="row">
-                        <div class="col-md-10">
+                        <div class="col-md-2">
                             <p class="order_heading">
                                 Orders
                             </p>
+                        </div>
+                        <div class="col-md-8">
                             <div class="progress border d-none w-50 mx-auto" id="progress-bar">
                                 <div class="progress-bar progress-bar-striped progress-bar-animated bg-info"
                                     role="progressbar" aria-valuenow="100" aria-valuemin="" aria-valuemax="100"></div>
                             </div>
-                            <div class="bg-success text-white text-center" id="fullfill_success"></div>
-                            <div class="bg-warning text-white text-center" id="fullfill_failed"></div>
                         </div>
                         <div class="col-md-2 d-flex justify-content-end create_bnt">
                             <button type="button" class="btn create-new-order-btn">
@@ -170,11 +170,31 @@
                                                         title="" data-toggle="tooltip"
                                                         data-original-title="Edit">Edit
                                                     </a>
-                                                    <a class="dropdown-item" type="button" class="edit a_class"
-                                                        title="" data-toggle="tooltip" data-original-title="Edit"
-                                                        onclick="fullFillOrder()">Fulfill Order
-                                                    </a>
-                                                    <input type="hidden" value="{{ $order->id }}" id="order_id">
+                                                    <form>
+                                                        @csrf
+                                                        @if ($order->isApproved == 1)
+                                                            <a class="dropdown-item disabled bg_success" type="button"
+                                                                class="edit a_class" title="" data-toggle="tooltip"
+                                                                data-original-title="Edit">Fulfill
+                                                                Order
+                                                            </a>
+                                                        @elseif ($order->isApproved == 2)
+                                                            <a class="dropdown-item disabled bg_danger" type="button"
+                                                                class="edit a_class" title="" data-toggle="tooltip"
+                                                                data-original-title="Edit">Fulfill
+                                                                Order
+                                                            </a>
+                                                        @else
+                                                            <a class="dropdown-item" type="button" class="edit a_class"
+                                                                title="" data-toggle="tooltip"
+                                                                data-original-title="Edit"
+                                                                onclick="fullFillOrder()">Fulfill
+                                                                Order
+                                                            </a>
+                                                            <input type="hidden" value="{{ $order->id }}"
+                                                                id="order_id">
+                                                        @endif
+                                                    </form>
                                                 </div>
                                             </div>
                                         </td>
@@ -217,6 +237,15 @@
 
         }
 
+        .bg_success {
+            background: rgb(186 235 137 / 20%) !important;
+            color: #319701 !important;
+            padding: 6px !important;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 11.3289px;
+        }
+
         .badge-warning {
             background-color: #f1e8cb;
             color: #b58903 !important;
@@ -230,6 +259,16 @@
             color: #fff;
             background-color: rgba(220, 78, 65, 0.12);
             color: #DC4E41;
+            padding: 6px !important;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 11.3289px;
+        }
+
+        .bg_danger {
+            color: #fff;
+            background-color: rgba(220, 78, 65, 0.12) !important;
+            color: #DC4E41 !important;
             padding: 6px !important;
             font-style: normal;
             font-weight: 500;
@@ -385,7 +424,7 @@
                             }
 
                             // $('#progress-bar').addClass('d-none');
-                            setInterval('location.reload()', 7000);
+                            setInterval('location.reload()', 3000);
                         }
                     });
                 }
