@@ -29,7 +29,7 @@
     </td>
     <td>
         @if ($contact->user_id == '')
-            <span class="badge bg-danger">Unmerged</span>
+            <span class="badge badge-danger">Unmerged</span>
         @else
             <span class="badge badge-success">Merged</span>
         @endif
