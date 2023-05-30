@@ -67,15 +67,15 @@ return [
     'usermenu_profile_url' => false,
 
     /*
-    |--------------------------------------------------------------------------
-    | Layout
-    |--------------------------------------------------------------------------
-    |
-    | Here we change the layout of your admin panel.
-    |
-    | For detailed instructions you can look the layout section here:
-    | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Layout-and-Styling-Configuration
-    |
+        |--------------------------------------------------------------------------
+        | Layout
+        |--------------------------------------------------------------------------
+        |
+        | Here we change the layout of your admin panel.
+        |
+        | For detailed instructions you can look the layout section here:
+        | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Layout-and-Styling-Configuration
+        |
     */
     'layout_topnav' => null,
     'layout_boxed' => null,
@@ -324,7 +324,6 @@ return [
 
         [
             'text'       => 'Logout',
-            // 'icon' => 'fa fa-bracket',
             'icon' => 'fa fa-sign-out-alt logout_icon',
             'url'        => 'admin/logout',
             'classes' => 'logout_sidebar',
