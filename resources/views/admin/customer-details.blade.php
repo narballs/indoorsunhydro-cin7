@@ -110,8 +110,8 @@
                                     ?>
                                     @if ($customer->status != 1)
                                         <!-- <div class="col-md-2"><button class="btn btn-primary" type="button"
-              onclick="updateContact()">Activate</button>
-            </div> -->
+                  onclick="updateContact()">Activate</button>
+                </div> -->
                                         <div>
                                             <span class="badge bg-warning">{{ $status }}</span>
                                         </div>
@@ -123,8 +123,8 @@
 
                                     @if ($customer->user == '' && $customer->hashKey == '')
                                         <!-- 		<div class="col-md-1"><button class="btn btn-primary btn-sm" type="button"
-              onclick="mergeContact()">Invite</button>
-             </div> -->
+                  onclick="mergeContact()">Invite</button>
+                 </div> -->
                                         @if ($customer->contact_id)
                                             <div class="col-md-2"><button class="btn btn-primary btn-sm" type="button"
                                                     onclick="refreshContact({{ $customer->contact_id }}, 'primary')">Refresh
@@ -153,13 +153,13 @@
                                     </div>
                                     <!-- 		@if ($invitation_url != '')
     <div class="col-md-12">
-             <a href="{{ $invitation_url }}" class="text-dark">
-              <b>Invitation URL :</b><span id="copyText1"
-               class="d-none">{{ $invitation_url }}</span>
-             </a>
-             <button type="button" class="btn btn-info btn-sm" onclick="withJquery();">Copy
-              Link</button>
-            </div>
+                 <a href="{{ $invitation_url }}" class="text-dark">
+                  <b>Invitation URL :</b><span id="copyText1"
+                   class="d-none">{{ $invitation_url }}</span>
+                 </a>
+                 <button type="button" class="btn btn-info btn-sm" onclick="withJquery();">Copy
+                  Link</button>
+                </div>
     @endif -->
                                     <div class="col-md-12">
                                         <div class="row">
