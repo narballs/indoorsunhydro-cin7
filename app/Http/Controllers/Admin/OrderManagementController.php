@@ -250,10 +250,6 @@ class OrderManagementController extends Controller
             $order
         ])->onQueue(env('QUEUE_NAME'));
         exit;
-        //  $order_encoded = json_encode($order);
-
-        // echo '<pre>';var_dump($order);echo '<pre>';
-        // exit();
 
         $client = new \GuzzleHttp\Client();
         $url = "https://api.cin7.com/api/v1/SalesOrders/";
@@ -276,17 +272,30 @@ class OrderManagementController extends Controller
         $statuses = OrderStatus::all();
         $customer = Contact::where('contact_id', $order->memberId)->first();
         $orderitems = ApiOrderItem::where('order_id', $id)->with('product')->get();
-
         return view('admin/api-order-details', compact('order', 'statuses', 'orderitems', 'customer'));
     }
 
 
     public function order_full_fill(Request $request)
     {
-
         $order_id = $request->input('order_id');
-        $currentOrder = ApiOrder::where('id', $order_id)->first();
+        $currentOrder = ApiOrder::where('id', $order_id)->with('user.contact')->first();
 
+        if (!empty($currentOrder->user['contact'])) {
+            foreach ($currentOrder->user['contact'] as $contact) {
+                $userSubmiter  =   $contact->email . ',' . $contact->firstName . ',' . $contact->lastName;
+            }
+        }
+
+        $userSwitchUser = [];
+        if (!empty($currentOrder->user_switch)) {
+            $userSwitchUser = $currentOrder->user_switch;
+        } else {
+            $userSwitchUser = "";
+        }
+        $orderSubmiterDetail = $userSubmiter . ',' . $userSwitchUser;
+
+        $userSwitchUser = $currentOrder->user_switch;
         $memberId = $currentOrder->memberId;
         $order_items = ApiOrderItem::with('product.options')->where('order_id', $order_id)->get();
         $dateCreated = Carbon::now();
@@ -299,7 +308,7 @@ class OrderManagementController extends Controller
                 "parentId" => 1,
                 "productId" => $order_item->product->product_id,
                 "productOptionId" => null,
-                "integrationRef" => "sample string 15",
+                "integrationRef" => $orderSubmiterDetail,
                 "sort" => 16,
                 "code" => $order_item->product->code,
                 "name" => $order_item->product->name,
@@ -341,9 +350,6 @@ class OrderManagementController extends Controller
             ];
         }
         $order = [];
-        // unset($currentOrder['total_including_tax']);
-        // unset($currentOrder['tax_class_id']);
-        // unset parimyId  and unset member id
         unset($currentOrder['primaryId']);
         unset($currentOrder['memberId']);
         $order = [
@@ -360,7 +366,7 @@ class OrderManagementController extends Controller
                 "branchEmail" => "wqszeeshan@gmail.com",
                 "projectName" => "",
                 "trackingCode" => "",
-                "internalComments" => "sample string 51",
+                "internalComments" => $orderSubmiterDetail,
                 "productTotal" => 100,
                 "freightTotal" => null,
                 "freightDescription" => null,
@@ -452,7 +458,6 @@ class OrderManagementController extends Controller
     {
         sleep(10);
         $order = ApiOrder::where('id', $request->order_id)->first();
-        //dd($order->order_id);
         if ($order->order_id != null) {
             $msg = 'Order fullfilled successfully';
         } else {
