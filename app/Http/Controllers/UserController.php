@@ -233,11 +233,45 @@ class UserController extends Controller
         return redirect()->route('users.index')
             ->with('success', 'User deleted successfully');
     }
+
     public function userRegistration()
     {
         $data['states'] = UsState::get(["state_name", "id"]);
         return view('user-registration-second',  $data);
     }
+
+    public function lost_password() {
+        return view('lost-password');
+    }
+
+    public function recover_password(Request $request) {
+        $user = User::where('email', $request->email)->first();
+
+        $plain_password = Str::random(10) . date('YmdHis');
+        $encrypted_password = bcrypt($plain_password);
+        $hash = Str::random(10000) . $user->first_name . date('YmdHis');
+        $hash = md5($hash);
+
+        $user->password = $encrypted_password;
+        $user->hash = $hash;
+        $user->save();
+        $base_url = url('/');
+
+        $url = $base_url.'/index?hash='.$hash;
+        $data['email'] = $user->email;
+        $data['url'] = $url;
+
+
+        $data['content'] = 'Password Reset';
+        $data['subject'] = 'Password Reset';
+        $data['from'] = env('MAIL_FROM_ADDRESS');
+        $data['plain'] = $plain_password;
+        MailHelper::sendMailNotification('emails.reset-password', $data);
+
+        return redirect()->back()->with('success', 'Password reset link sent succssfully!');
+        
+    }
+
 
     public function fetchCity(Request $request)
     {
@@ -253,6 +287,9 @@ class UserController extends Controller
         ]);
         $credentials = $request->except(['_token']);
         $user = User::where('email', $request->email)->first();
+
+
+              $email_user = session::put('user', $user);
         $cart = [];
         if (auth()->attempt($credentials)) {
             $user_id = auth()->user()->id;
@@ -289,14 +326,27 @@ class UserController extends Controller
                     }
                 }
                 Session::put('companies', $companies);
+
                 return redirect()->route('admin.view');
             } else {
                 $companies = Contact::where('user_id', auth()->user()->id)->get();
+
                 if ($companies->count() == 1) {
-                    if ($companies[0]->contact_id == null) {
+                   if ($companies[0]->contact_id == null) {
                         UserHelper::switch_company($companies[0]->secondary_id);
                     } else {
                         UserHelper::switch_company($companies[0]->contact_id);
+                    }
+                }
+                if ($companies->count() == 2) {
+                    foreach ($companies as $company) {
+                        if($company->status == 1){
+                            if ($company->contact_id == null) {
+                                UserHelper::switch_company($company->secondary_id);
+                            } else {
+                                UserHelper::switch_company($company->contact_id);
+                            }
+                       }
                     }
                 }
                 Session::put('companies', $companies);
@@ -304,6 +354,7 @@ class UserController extends Controller
                     return redirect()->route('cart');
                 } else {
                     if ($user->is_updated == 1) {
+
                         $companies = Contact::where('user_id', auth()->user()->id)->get();
 
                         if ($companies[0]->contact_id == null) {
@@ -684,37 +735,96 @@ class UserController extends Controller
 
     public function user_addresses(Request $request)
     {
+        $user_id = auth()->id();
+        $contact_id = $request->contact_id;
+        $contact = Contact::where('user_id', $user_id)->where('contact_id', $contact_id)->orWhere('secondary_id', $contact_id)->first();
+        
+        if ($contact->secondary_id) {
+            $parent_id = Contact::where('secondary_id', $contact->secondary_id)->first()->parent_id;
+            $contact_id = $parent_id;
+        }
+        else {
+            $user_address = Contact::where('user_id', $user_id)->where('contact_id', $contact_id)->first();
+        }
         $request->validate([
-            'first_name' => 'required|regex:/^[a-zA-Z ]*$/',
-            'last_name' => 'required|regex:/^[a-zA-Z ]*$/',
-            'company_name' => 'required|regex:/^[a-zA-Z0-9\s]+$/',
-            'address' => 'required|regex:/^[a-zA-Z0-9\s]+$/',
-            'address2' => 'required|regex:/^[a-zA-Z0-9\s]+$/',
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'company_name' => 'required',
+            'address1' => 'required',
             'town_city' => 'required|alpha',
             'state' => 'required|alpha',
-            'zip' => 'required|regex:/^\d{5}(?:[- ]?\d{4})?$/s',
-            'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10'
+            'phone' => 'required',
+            'zip' => 'required'
         ]);
+        $authHeaders = [
+            'headers' => ['Content-type' => 'application/json'],
+            'auth' => [
+                env('API_USER'),
+                env('API_PASSWORD')
+            ]
+        ];
+        $contact = [
+            [
+                'id' => $contact_id,
+                'firstName' => $request->first_name,
+                'type' => 'Customer',
+                'lastName' => $request->last_name,
+                'address1' => $request->address1,
+                'address2' => $request->address2,
+                'company' => $request->company_name,
+                'state' => $request->state,
+                'phone' => $request->phone,
+                'city' => $request->town_city,
+                'postCode' => $request->zip,
+                //'email' => request('email')
+           
+            ]
+        ];
+        $authHeaders['json'] = $contact;
+        $client = new \GuzzleHttp\Client();
+        $url = 'https://api.cin7.com/api/v1/Contacts/';
 
-        $user_id = auth()->id();
-        $contact = Contact::where('user_id', $user_id)->first();
-        if ($contact) {
-            $contact->update(
-                [
-                    'firstName' => request('first_name'),
-                    'lastName' => request('last_name'),
-                    'postalAddress1' => request('address'),
-                    'postalAddress2' => request('address2'),
-                    'company' => request('company_name'),
-                    'postalState' => request('state'),
-                    'phone' => request('phone'),
-                    'postalCity' => request('town_city'),
-                    'postalPostCode' => request('zip'),
-                    'email' => request('email')
-                ]
-            );
+        $res = $client->put($url, $authHeaders);
+        $api_response = $res->getBody()->getContents();
+        $response = json_decode($api_response);
+
+        if ($response[0]->success == true) {
+            $user_id = auth()->id();
+            $contact = Contact::where('user_id', $user_id)->where('contact_id', $contact_id)->first();
+            if ($contact) {
+
+                $contact->firstName = $request->first_name;
+                $contact->lastName = $request->last_name;
+                $contact->address1 = $request->address1;
+                $contact->address2 = $request->address2;
+                $contact->company = $request->company_name;
+                $contact->state = $request->state;
+                $contact->phone = $request->phone;
+                $contact->city = $request->town_city;
+                $contact->postCode = $request->zip;
+
+                $contact->save();
+
+                // $contact->update(
+                //     [
+                //         'firstName' => $request->first_name,
+                //         'lastName' => $request->last_name,
+                //         'address1' => $request->address1,
+                //         'address2' => $request->address2,
+                //         'company' => $request->company_name,
+                //         'state' => $request->state,
+                //         'phone' => $request->phone,
+                //         'city' => $request->town_city,
+                //         'postCode' =>$request->zip
+                //         //'email' => request('email')
+                //     ]
+                // );
+            }
+            return response()->json(['success' => true, 'created' => true, 'msg' => 'Address updated Successfully']);
         }
-        return response()->json(['success' => true, 'created' => true, 'msg' => 'Address updated Successfully']);
+        else {
+            return response()->json(['success' => false, 'created' => false, 'msg' => 'Unable to update address please try again later']);
+        }
     }
 
     public function adminUsers(Request $request)
@@ -942,8 +1052,13 @@ class UserController extends Controller
         $user->password = $encrypted_password;
         $user->hash = $hash;
         $user->save();
+        $base_url = url('/');
 
+        $url = $base_url.'/index?hash='.$hash;
         $data['email'] = $user->email;
+        $data['url'] = $url;
+
+
         $data['content'] = 'Password Reset';
         $data['subject'] = 'Password Reset';
         $data['from'] = env('MAIL_FROM_ADDRESS');
@@ -1118,4 +1233,13 @@ class UserController extends Controller
             ]);
         }
     }
+    public function index_email_view (Request $request)
+    {
+
+        $user = User::where('hash', $request->hash)->first();
+        Auth::login($user);
+
+       return view('reset-password', compact('user'));
+    }
 }
+

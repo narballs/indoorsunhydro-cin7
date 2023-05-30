@@ -23,11 +23,11 @@
                         @if ($errors->has('email'))
                           <span class="text-danger">{{ $errors->first('email') }}</span>
                         @endif
-<!-- 
+
 						@if(!empty($secondary))
 					     <input type="hidden" placeholder="&#xf007;  email" id="is_secondary"
 						name="is_secondary" class="form-control mt-3 fontAwesome disable" value="{{$secondary}}">
-						@endif -->
+						@endif
 				</div>
 				<div class="col-md-12">
 					<input type="password" placeholder="&#xf023;  Password" id="company_name"

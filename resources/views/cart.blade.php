@@ -188,9 +188,9 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-4 p-0">
-                                                <button class=" cart-updated" type="submit" id="update_cart"
+                                               <!--  <button class=" cart-updated" type="submit" id="update_cart"
                                                     onclick="update_cart()">Update
-                                                    Cart</button>
+                                                    Cart</button> -->
                                             </div>
                                         </div>
                                     </td>
@@ -227,7 +227,7 @@
                         </td>
                         <td class="pe-0">
                             <span id="cart_grand_total">
-                                <strong class=" d-flex justify-content-end cart-page-items">
+                                <strong class=" d-flex justify-content-end cart-page-items ">
                                     ${{ number_format($cart_total, 2) }}
                                 </strong>
                             </span>
@@ -236,12 +236,12 @@
                     <tr>
                         <td class="ps-0">
                             <img class=" img-fluid" src="/theme/img/text-rate-icon.png">
-                            <span> <strong class="cart-total">Rate({{ $tax_class->rate }}%)</strong> </span>
+                            <span> <strong class="cart-total" id="tax_rate">Rate({{ $tax_class->rate }}%)</strong> </span>
                             <div>
                         </td>
                         <td class="pe-0">
-                            <span id="cart_grand_total">
-                                <strong class=" d-flex justify-content-end cart-page-items">
+                            <span id="cart_grand_total" class="tax_cart">
+                                <strong class=" d-flex justify-content-end cart-page-items" id="tax_amount">
                                     ${{ number_format($tax, 2) }}
                                 </strong>
                             </span>
@@ -253,8 +253,8 @@
                             <strong class="cart-total">SubTotal</strong>
                         </td>
                         <td class="pe-0">
-                            <span id="cart_grand_total">
-                                <strong class=" d-flex justify-content-end cart-page-items text-danger">
+                            <span id="cart_grand_total" class="grandTotal">
+                                <strong class=" d-flex justify-content-end cart-page-items text-danger g_total">
                                     ${{ number_format($total_including_tax, 2) }}
                                 </strong>
                             </span>
@@ -863,6 +863,7 @@
         )
         .insertAfter('.quantity input');
     jQuery('.quantity').each(function() {
+
         var spinner = jQuery(this),
             input = spinner.find('input[type="number"]'),
             btnUp = spinner.find('.quantity-up'),
@@ -871,14 +872,83 @@
             max = input.attr('max');
 
         btnUp.click(function() {
+
             var oldValue = parseFloat(input.val());
             if (oldValue >= max) {
                 var newVal = oldValue;
             } else {
                 var newVal = oldValue + 1;
+                
             }
+            // $('#cart_table > tbody  > tr.quantities').each(function(tr) {
+            //     var product_id = this.id.replace('row_', '');
+            //     alert(product_id);
+            //     var quantity = $('#row_quantity_' + product_id).val();
+            //     var qtyIpad = $('#itm_qty_ipad' + product_id).val();
+            //     var qtymob = $('#itm_qty' + product_id).val();
+            //     items_quantity.push({
+            //         id: product_id,
+            //         quantity: quantity,
+            //         // quantity: qtyIpad
+            //     });
+            //     items_quantity.push({
+            //         id: product_id,
+            //         quantity: qtyIpad
+            //     });
+            //     items_quantity.push({
+            //         id: product_id,
+            //         quantity: qtymob
+            //     });
+            // });
+            // console.log(spinner.find("input").attr('id'));
+            var product_id = spinner.find("input").attr('id').replace('row_quantity_', '');
+            // console.log(product_id);
+
             spinner.find("input").val(newVal);
             spinner.find("input").trigger("change");
+
+            jQuery.ajax({
+                url: "{{ url('update-cart') }}",
+                method: 'post',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "items_quantity": newVal,
+                    "product_id" : product_id
+                },
+                success: function(response ) {
+                    // console.log(product_id , 'pid');
+                 
+                    var row_price = response.cart_items[product_id].price;
+                    // console.log(row_price.toFixed(2), 'p')
+                    var new_quantity = response.cart_items[product_id].quantity;
+                    var new_row_price = parseFloat(row_price) *  parseInt(new_quantity);
+                    new_row_price = parseFloat(new_row_price).toFixed(2);
+                    
+                    $('#row_quantity_'+product_id).val(new_quantity);
+                    $('#subtotal_'+product_id).html('$' + new_row_price);
+                    var grand_total = 0;
+                    var total_cart_quantity = 0;
+                    Object.keys(response.cart_items).forEach(function(key) {
+                        row_total = parseFloat(response.cart_items[key].price) * response.cart_items[key].quantity;
+                        grand_total += parseFloat(row_total);
+                        total_cart_quantity += parseInt(response.cart_items[key].quantity);
+
+                    });
+                    //console.log(total_cart_quantity);
+                    $('#cart_grand_total').children().html('$' + grand_total.toFixed(2));
+                    $('#topbar_cart_total').html('$' + grand_total.toFixed(2));
+                    $('#top_cart_quantity').html(total_cart_quantity);
+                    var tax = 0;
+                    var tax = grand_total.toFixed(2) * (8.75 / 100);
+                    $('.tax_cart').children().html('$' + tax.toFixed(2));
+                    $('.grandTotal').children().html('$' + (tax + grand_total).toFixed(2))
+                    
+                    
+
+                    
+                    
+                }
+            });
         });
 
         btnDown.click(function() {
@@ -888,8 +958,44 @@
             } else {
                 var newVal = oldValue - 1;
             }
+            var product_id = spinner.find("input").attr('id').replace('row_quantity_', '');
+
             spinner.find("input").val(newVal);
             spinner.find("input").trigger("change");
+              jQuery.ajax({
+                url: "{{ url('update-cart') }}",
+                method: 'post',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "items_quantity": newVal,
+                    "product_id" : product_id
+                },
+                success: function(response ) {
+                    // console.log(product_id , 'pid');
+                 
+                    var row_price = response.cart_items[product_id].price;
+                    // console.log(row_price.toFixed(2), 'p')
+                    var new_quantity = response.cart_items[product_id].quantity;
+                    var new_row_price = parseFloat(row_price) *  parseInt(new_quantity);
+                    new_row_price = parseFloat(new_row_price).toFixed(2);
+                    
+                    $('#row_quantity_'+product_id).val(new_quantity);
+                    $('#subtotal_'+product_id).html('$' + new_row_price);
+                    var grand_total = 0;
+                    var total_cart_quantity = 0;
+                    Object.keys(response.cart_items).forEach(function(key) {
+                        row_total = parseFloat(response.cart_items[key].price) * response.cart_items[key].quantity;
+                        grand_total += parseFloat(row_total);
+                        total_cart_quantity += parseInt(response.cart_items[key].quantity);
+                    });
+                    console.log(total_cart_quantity);
+                    $('#cart_grand_total').children().html('$' + grand_total.toFixed(2));
+                    $('#topbar_cart_total').html('$' + grand_total.toFixed(2));
+                    $('#top_cart_quantity').html(total_cart_quantity);
+                    
+                    
+                }
+            });
         });
 
     });
@@ -1018,6 +1124,8 @@
         var opacity;
 
         $(".next").click(function() {
+
+            alert('hi');
 
             current_fs = $(this).parent();
             next_fs = $(this).parent().next();

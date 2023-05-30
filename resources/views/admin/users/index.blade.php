@@ -6,28 +6,42 @@
 
 @stop
 @section('content')
-
     @if ($message = Session::get('success'))
         <div class="alert alert-success">
             <p>{{ $message }}</p>
         </div>
     @endif
+
     <div class="table-wrapper">
-        <div class="table-title">
-            <span>
-                <h1>Users Management</h1>
-            </span>
-            <div class="row justify-content-between mb-2">
-                <div class="col-md-1">
-                    <div class="search-box">
-                        <a class="btn btn-primary btn-sm" href="{{ route('users.create') }}"> Create New User</a>
-                    </div>
-                </div>
-                <div class="col-md-5">
+        <div class="card-body product_secion_main_body">
+            <div class="row border-bottom product_section_header">
+                <div class="col-md-12">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-10">
+                            <p class="product_heading">
+                                Users Management
+                            </p>
+                        </div>
+                        <div class="col-md-2 d-flex justify-content-end create_bnt">
+                            <a href="{{ route('users.create') }}" class="btn create-new-order-btn">
+                                Create new user +
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row search_row_admin-interface justify-content-between"
+                        style="margin-top: 12px !important;">
+                        <div class="col-md-2 product_search">
+                            <div class="has-search">
+                                <span class="fa fa-search form-control-feedback"></span>
+                                <form method="get" action="/admin/users" class="mb-2">
+                                    <input type="text" class="form-control border-0" id="search" name="search"
+                                        placeholder="Search" value="{{ isset($search) ? $search : '' }}" />
+                                </form>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
                             <select name="users" id="users" onchange="userFilter()" class="form-control"
-                                style="    height: 45px;">
+                                style="height: 39px;margin-top: -7px;">
                                 <option value="all" class="form-control">All</option>
                                 <option value="admin-user" class="form-control"
                                     {{ isset($usersData) && $usersData == 'admin-user' ? 'selected="selected"' : '' }}>
@@ -40,9 +54,9 @@
                                     Not Merged</option>
                             </select>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-2">
                             <select name="secondary_user" id="secondary-user" onchange="userFilter()" class="form-control"
-                                style="height: 45px;">
+                                style="height: 39px; margin-top: -7px; margin-left: -7px;">
                                 <option value="all" class="form-control">Secndary/Primary</option>
                                 <option value="secondary-user" class="form-control"
                                     {{ isset($secondaryUser) && $secondaryUser == 'secondary-user' ? 'selected="selected"' : '' }}>
@@ -55,222 +69,329 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-5">
-                    <div id="custom-search-input">
-                        <div class="input-group col-md-12">
-                            <span class="input-group-btn">
-                                <button class="btn btn-info btn-lg mt-2" type="button">
-                                    <i class="fa fa-search"></i>
+            </div>
+            <div class="card-body product_table_body">
+                <div id="admin-users"></div>
+                <table class="table border table-users" id="user-table">
+                    <tr>
+                        <thead>
+                            <tr class="table-header-background">
+                                <td class="d-flex table-row-item">
+                                    <span class="tabel-checkbox-user">
+                                        <input type="checkbox" name="test" class="checkbox-table" id="selectAll">
+                                    </span>
+                                    <span class="table-row-heading">
+                                        <i class="fas fa-arrow-up"></i>
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="d-flex table-row-item"> Full Name</span>
+                                </td>
+                                <td>
+                                    <span class="d-flex table-row-item"> Email</span>
+                                </td>
+                                <td>
+                                    <span class="d-flex table-row-item"> Cin7 User-ID </span>
+                                </td>
+                                <td>
+                                    <span class="d-flex table-row-item"> Company (Account aka Parent) </span>
+                                </td>
+                                <td>
+                                    <span class="d-flex table-row-item"> Secondary Contact Company</span>
+                                </td>
+                                <td>
+                                    <span class="d-flex table-row-item"> Type</span>
+                                </td>
+                                <td>
+                                    <span class="d-flex table-row-item"> Roles</span>
+                                </td>
+                                <td>
+                                    <span class="d-flex table-row-item"> Action</span>
+                                </td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($data as $key => $user)
+                                @foreach ($user->contact as $contact)
+                                    <tr id="row-{{ $user->id }}" class="user-row border-bottom">
+                                        <td class="d-flex user-table-items">
+                                            <span class="tabel-checkbox-user">
+                                                <input type="checkbox" name="test" class="checkbox-table" id="selectAll">
+                                            </span>
+                                            <span class="table-row-heading-user">
+                                                {{ $key + 1 }}
+                                            </span>
+                                        </td>
+                                        <td class="user_name">
+                                            @if ($contact)
+                                                <span> {{ $contact->firstName }} {{ $contact->lastName }}</span>
+                                            @elseif ($user->first_name)
+                                                <span> {{ $user->first_name }} {{ $user->last_name }} </span>
+                                            @else
+                                                <span class="badge badge-info w-100">empty</span>
+                                            @endif
+                                        </td>
+                                        <td class="user_table_items">
+                                            {{ $user->email }}</td>
+                                        <td class="user_table_items">
+                                            @if ($contact)
+                                                @if ($contact->contact_id)
+                                                    {{ $contact->contact_id }}
+                                                @else
+                                                    {{ $contact->parent_id }}
+                                                @endif
+                                            @else
+                                                <span class="badge badge-info w-100">empty</span>
+                                            @endif
+                                        </td>
+                                        <td class="is_parent user_table_items">
+                                            @if ($contact)
+                                                @if ($contact->is_parent == 1)
+                                                    <span>{{ $contact->company }}</span>
+                                                @else
+                                                    <span class="badge badge-secondary is_parent_1">empty</span>
+                                                @endif
+                                            @else
+                                                <span class="badge badge-secondary  is_parent_0">empty</span>
+                                            @endif
+                                        </td>
+                                        <td class="is_parent user_table_items">
+                                            @if ($contact)
+                                                @if ($contact->is_parent == 0)
+                                                    <span> {{ $contact->company }}</span>
+                                                @else
+                                                    <span class="badge badge-secondary  is_parent_1">empty</span>
+                                                @endif
+                                            @else
+                                                <span class="badge badge-secondary  is_parent_0">empty</span>
+                                            @endif
+                                        </td>
+                                        <td class="background_contact_id user_table_items">
+                                            @if ($contact)
+                                                @if (!empty($contact->contact_id))
+                                                    <span class="badge badge-primary  background_primary_1">primary</span>
+                                                @else
+                                                    <span
+                                                        class="badge badge-secondary  background_secondary_1">secondary</span>
+                                                @endif
+                                            @endif
+                                        </td>
+                                        <td class="background_success user_table_items">
+                                            @if (!empty($user->getRoleNames()))
+                                                @foreach ($user->getRoleNames() as $role)
+                                                    <label
+                                                        class="badge badge-success  background_success_1">{{ $role }}</label>
+                                                @endforeach
+                                            @endif
+                                        </td>
+                                        <td class="user_action ">
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-white dropdown-toggle"
+                                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="fas fa-ellipsis-h" style="color: #CBCBCB !important;"></i>
+                                                </button>
+                                                <div class="dropdown-menu dropdonwn_menu">
+                                                    <a class="dropdown-item" href="{{ route('users.show', $user->id) }}"
+                                                        class="view a_class" title="" data-toggle="tooltip"
+                                                        data-original-title="View">Previews
+                                                    </a>
+                                                    <a class="dropdown-item delete deleteIcon a_class"
+                                                        href="{{ route('users.destroy', $user->id) }}" class=""
+                                                        id="{{ $user->id }}" title="" data-toggle="tooltip"
+                                                        data-original-title="Delete">Delete
+                                                    </a>
+                                                    <a class="dropdown-item"href="{{ route('users.edit', $user->id) }}"
+                                                        class="edit a_class" title="" data-toggle="tooltip"
+                                                        data-original-title="Edit">Edit
+                                                    </a>
+                                                    <a class="dropdown-item"href="{{ url('admin/user-switch/' . $user->id) }}"
+                                                        class="edit a_class" title="" data-toggle="tooltip"
+                                                        data-original-title="Edit">Switch User
+                                                    </a>
+                                                    @if ($contact)
+                                                        @if ($contact->secondary_contact)
+                                                            <button type="button" class="btn"
+                                                                data-id="{{ $user->id }}" data-toggle="modal"
+                                                                onclick="assignParent('{{ $user->id }}')">Set
+                                                                Parent</button>
+                                                            <input type="hidden" value='{{ $user->id }}'
+                                                                id='{{ $user->id }}'>
+                                                        @endif
+                                                    @endif
+                                                    @if ($user->is_updated == 0)
+                                                        <a class="dropdown-item"href="{{ url('admin/send-password/' . $user->id) }}"
+                                                            class="edit a_class" title="" data-toggle="tooltip"
+                                                            data-original-title="Edit">Send Password
+                                                        </a>
+                                                    @else
+                                                        <a class="dropdown-item disabled"href="{{ url('admin/send-password/' . $user->id) }}"
+                                                            class="edit a_class" title="" data-toggle="tooltip"
+                                                            data-original-title="Edit">Send Password
+                                                        </a>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @endforeach
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="10">
+                                    {{ $data->links('pagination.custom_pagination') }}
+                                </td>
+                            </tr>
+                        </tfoot>
+                </table>
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Search Parent</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
                                 </button>
-                            </span>
-                            <form method="get" action="/admin/users">
-                                <input type="text" class="form-control input-lg" id="search" name="search"
-                                    placeholder="Search" value="{{ isset($search) ? $search : '' }}" />
+                            </div>
+                            <div class="modal-body">
+                                <form id="secondary_id">
+                                    <input type="select" name="primary_contact" id="primary_contact"
+                                        class="form-control" value="" onkeyup="suggestion()">
+                                    <select id="child" class="form-control">
+
+                                    </select>
+                                    <input type="text" name="child_id" value="" id="child_id">
+                                    <div class="spinner-border d-none" role="status"
+                                        style="left: 50% !important; margin-left: -16em !important;" id="spinner2">
+                                        <span class="sr-only">Activating...</span>
+                                    </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" onclick="assign()">Save
+                                    changes</button>
+                            </div>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="card card-body">
-            <div id="admin-users"></div>
-            <table class="table table-striped table-hover table-bordered table-responsive" id="user-table">
-
-                <tr>
-                    <th>No <i class="fa fa-sort"></th>
-                    <th>Name <i class="fa fa-sort"></th>
-                    <th>Last Name <i class="fa fa-sort"></th>
-                    <th>Email <i class="fa fa-sort"></th>
-                    <th>Cin7 User-ID <i class="fa fa-sort"></th>
-                    <th>Company (Account aka Parent) <i class="fa fa-sort"></th>
-                    <th>Secondary Contact Company <i class="fa fa-sort"></th>
-                    <th>Type <i class="fa fa-sort"></th>
-                    <th>Roles <i class="fa fa-sort"></th>
-                    <th>Action <i class="fa fa-sort"></th>
-                </tr>
-                @foreach ($data as $key => $user)
-                    @foreach ($user->contact as $contact)
-                        <tr>
-                            <td>{{ ++$i }}</td>
-                            <td>
-                                @if ($contact)
-                                    {{ $contact->firstName }}
-                                @elseif ($user->first_name)
-                                    {{ $user->first_name }}
-                                @else
-                                    <span class="badge bg-info">empty</span>
-                                @endif
-                            </td>
-                            <td>
-                                @if ($contact)
-                                    {{ $contact->lastName }}
-                                @elseif ($user->last_name)
-                                    {{ $user->last_name }}
-                                @else
-                                    <span class="badge bg-info">empty</span>
-                                @endif
-                            </td>
-                            <td>{{ $user->email }}</td>
-                            <td>
-                                @if ($contact)
-                                    @if ($contact->contact_id)
-                                        {{ $contact->contact_id }}
-                                    @else
-                                        {{ $contact->parent_id }}
-                                    @endif
-                                @else
-                                    <span class="badge bg-info">empty</span>
-                                @endif
-                            </td>
-                            <td>
-                                @if ($contact)
-                                    @if ($contact->is_parent == 1)
-                                        {{ $contact->company }}
-                                    @else
-                                        <span class="badge bg-secondary">empty</span>
-                                    @endif
-                                @else
-                                    <span class="badge bg-secondary">empty</span>
-                                @endif
-                            </td>
-                            <td>
-                                @if ($contact)
-                                    @if ($contact->is_parent == 0)
-                                        {{ $contact->company }}
-                                    @else
-                                        <span class="badge bg-secondary">empty</span>
-                                    @endif
-                                @else
-                                    <span class="badge bg-secondary">empty</span>
-                                @endif
-                            </td>
-                            <td>
-                                @if ($contact)
-                                    @if (!empty($contact->contact_id))
-                                        <span class="badge bg-primary">primary</span>
-                                    @else
-                                        <span class="badge bg-secondary">secondary</span>
-                                    @endif
-                                @endif
-                            </td>
-                            <td>
-                                @if (!empty($user->getRoleNames()))
-                                    @foreach ($user->getRoleNames() as $role)
-                                        <label class="badge badge-success">{{ $role }}</label>
-                                    @endforeach
-                                @endif
-                            </td>
-                            <td>
-                                <a class="btn btn-info btn-sm" href="{{ route('users.show', $user->id) }}">Show</a>
-                                @can('user-edit')
-                                    <a class="btn btn-primary btn-sm" href="{{ route('users.edit', $user->id) }}">Edit</a>
-                                @endcan
-                                @can('user-delete')
-                                    {!! Form::open(['method' => 'DELETE', 'route' => ['users.destroy', $user->id], 'style' => 'display:inline']) !!}
-                                    {!! Form::submit('Delete', ['class' => 'btn btn-danger btn-sm']) !!}
-                                    {!! Form::close() !!}
-                                @endcan
-                                <a class="btn btn-success btn-sm" href="{{ url('admin/user-switch/' . $user->id) }}">Switch
-                                    User</a>
-                                @if ($contact)
-                                    @if ($contact->secondary_contact)
-                                        <button type="button" class="btn btn-primary btn-sm" data-id="{{ $user->id }}"
-                                            data-toggle="modal" onclick="assignParent('{{ $user->id }}')">Set
-                                            Parent</button>
-                                        <input type="hidden" value='{{ $user->id }}' id='{{ $user->id }}'>
-                                    @endif
-                                @endif
-                                @if ($user->is_updated == 0)
-                                    <a class="btn btn-warning btn-sm"
-                                        href="{{ url('admin/send-password/' . $user->id) }}">Send
-                                        password</a>
-                                @else
-                                    <a class="btn btn-danger btn-sm disabled"
-                                        href="{{ url('admin/send-password/' . $user->id) }}">Send
-                                        password</a>
-                                @endif
-                            </td>
-                        </tr>
-                    @endforeach
-                @endforeach
-            </table>
-            <!-- Modal -->
-            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-                aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Search Parent</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <form id="secondary_id">
-                                <input type="select" name="primary_contact" id="primary_contact" class="form-control"
-                                    value="" onkeyup="suggestion()">
-                                <select id="child" class="form-control">
-
-                                </select>
-                                <input type="text" name="child_id" value="" id="child_id">
-                                <div class="spinner-border d-none" role="status"
-                                    style="left: 50% !important; margin-left: -16em !important;" id="spinner2">
-                                    <span class="sr-only">Activating...</span>
-                                </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary" onclick="assign()">Save changes</button>
-                        </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <div id="pageination">
-                {{ $data->appends(Request::all())->links() }}
-            </div>
-        </div>
     @endsection
+</div>
+</div>
 
-    @section('css')
-        <link rel="stylesheet" href="/css/admin_custom.css">
-        <style type="text/css">
-            #custom-search-input {
-                padding: 3px;
-                border: solid 1px #E4E4E4;
-                border-radius: 6px;
-                background-color: #fff;
-                height: 45px;
-            }
+@section('css')
+    <link rel="stylesheet" href="/css/admin_custom.css">
+    <link rel="stylesheet" href="{{ asset('admin/admin_lte.css') }}">
+    <style>
+        .text-successs {
+            color: #7CC633 !important;
+            font-family: 'Poppins', sans-serif !important;
+        }
 
-            #custom-search-input input {
-                border: 0;
-                box-shadow: none;
-                width: 590px;
-            }
+        .badge-success {
+            background: rgb(186 235 137 / 20%);
+            color: #319701;
+            padding: 6px !important;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 11.3289px;
 
-            #custom-search-input button {
-                margin: 2px 0 0 0;
-                background: none;
-                box-shadow: none;
-                border: 0;
-                color: #666666;
-                padding: 0 8px 0 10px;
-                border-right: solid 1px #ccc;
-            }
+        }
 
-            #custom-search-input button:hover {
-                border: 0;
-                box-shadow: none;
-                border-left: solid 1px #ccc;
-            }
+        .badge-warning {
+            background-color: #f1e8cb;
+            color: #b58903 !important padding: 6px !important;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 11.3289px;
+        }
 
-            #custom-search-input .glyphicon-search {
-                font-size: 23px;
-            }
-        </style>
-    @stop
+        .badge-danger {
+            color: #fff;
+            background-color: #f1eaea;
+            color: #B42318;
+            padding: 6px !important;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 11.3289px;
+
+        }
+
+        .badge-secondary {
+            color: #8e8b8b !important;
+            background-color: #d0dce6 !important;
+            padding: 6px !important;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 11.3289px;
+        }
+
+        .badge-primary {
+            background-color: #d9eff8;
+            color: #339AC6 !important;
+            padding: 6px !important;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 11.3289px;
+        }
+    </style>
+@stop
+@section('js')
     <script>
+        $('.user-row-none').hover(function() {
+            let id = $(this).attr('id');
+            children = $(this).children('.user_name').children('span').addClass('text-successs');
+            bg_success = $(this).children('.background_success').children('.background_success_1').addClass(
+                'background-success');
+            bg_success = $(this).children('.background_warning').children('.background_warning_1').addClass(
+                'background-warning');
+            bg_success = $(this).children('.is_parent').children('.is_parent_1').addClass(
+                'background-secondary');
+            bg_success = $(this).children('.is_parent').children('.is_parent_0').addClass(
+                'background-secondary');
+
+            bg_success = $(this).children('.background_contact_id').children('.background_secondary_1').addClass(
+                'background-secondary');
+            bg_success = $(this).children('.background_contact_id').children('.background_primary_1').addClass(
+                'background-primary');
+
+            let tet = $(this).children('.user_action').children('a');
+            let get_class = tet.each(function(index, value) {
+                let test = tet[index].children[0];
+                test.classList.add('bg-icon');
+            });
+        });
+
+
+        $('.user-row-none').mouseleave(function() {
+            let id = $(this).attr('id');
+            children = $(this).children('.user_name').children('span').removeClass('text-successs');
+
+            bg_success = $(this).children('.background_success').children('.background_success_1').removeClass(
+                'background-success');
+            bg_success = $(this).children('.is-approved').children('.is_approded_0').removeClass(
+                'background-warning');
+
+            bg_success = $(this).children('.is_parent').children('.is_parent_1').removeClass(
+                'background-secondary');
+            bg_success = $(this).children('.is_parent').children('.is_parent_0').removeClass(
+                'background-secondary');
+            bg_success = $(this).children('.background_contact_id').children('.background_secondary_1').removeClass(
+                'background-secondary');
+            bg_success = $(this).children('.background_contact_id').children('.background_primary_1').removeClass(
+                'background-primary');
+
+            let tet = $(this).children('.user_action').children('a');
+            let get_class = tet.each(function(index, value) {
+                let test = tet[index].children[0];
+                test.classList.remove('bg-icon');
+            });
+        });
+
         function adminUsers() {
             $('#user-table').addClass('d-none');
             $('#pageination').addClass('d-none');
@@ -353,6 +474,11 @@
                 }
 
             });
-
         }
+
+        $(document).on('click', '#selectAll', function(e) {
+            var table = $(e.target).closest('table');
+            $('td input:checkbox', table).prop('checked', this.checked);
+        });
     </script>
+@stop

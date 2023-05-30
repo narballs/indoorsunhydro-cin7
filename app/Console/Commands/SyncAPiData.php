@@ -10,6 +10,9 @@ use App\Models\ProductOption;
 use App\Models\Brand;
 use App\Models\Pricingnew;
 use Illuminate\Support\Str;
+use App\Models\ApiErrorLog;
+use App\Models\ApiSyncLog;
+use Carbon\Carbon;
 
 class SyncAPiData extends Command
 {
@@ -44,6 +47,15 @@ class SyncAPiData extends Command
      */
     public function handle()
     {
+        $sync_time  = Carbon::now()->toIso8601String();
+        $sync_log = ApiSyncLog::where('end_point', 'https://api.cin7.com/api/v1/Products')->first();
+
+        $date = $sync_log->last_synced;
+
+        $rawDate = Carbon::parse($date);
+        $getdate = $rawDate->format('Y-m-d');
+        $getTime = $rawDate->format('H:i:s');
+        $formattedDateSting = $getdate.'T'. $getTime .'Z'; 
 
         $client = new \GuzzleHttp\Client();
 
@@ -53,20 +65,32 @@ class SyncAPiData extends Command
 
         for ($i = 1; $i <= $total_category_pages; $i++) {
             $this->info('Processing page#' . $i);
-
-            $res = $client->request(
-                'GET', 
-                'https://api.cin7.com/api/v1/ProductCategories?page=' . $i, 
-                [
-                     'auth' => [
-                        env('API_USER'),
-                        env('API_PASSWORD')
+            // try {
+                $res = $client->request(
+                    'GET', 
+                    'https://api.cin7.com/api/v1/ProductCategories?page'.$i, 
+                    [
+                         'auth' => [
+                                env('API_USER'),
+                                env('API_PASSWORD')
+                            //env('API_USER'),
+                            //env('API_PASSWORD')
+                        ]
+                     
                     ]
-                 
-                ]
-            );
+                );
+            //}
+            // catch (\Exception $e) {
+                // $msg = $e->getMessage();
+                // $errorlog = new ApiErrorLog();
+                // $errorlog->payload = $e->getMessage();
+                // $errorlog->exception = $e->getCode();
+                // $errorlog->save();
+
+            //}
 
             $api_categories = $res->getBody()->getContents();
+            //dd($api_categories);
             $api_categories = json_decode($api_categories);
 
             $this->info('Found ' . count($api_categories) . ' from API');
@@ -114,7 +138,7 @@ class SyncAPiData extends Command
             }
         }
 
-
+          
 
             $client2 = new \GuzzleHttp\Client();
 
@@ -125,21 +149,37 @@ class SyncAPiData extends Command
 
             for ($i = 1; $i <= $total_products_pages; $i++) {
                 $this->info('Processing page#' . $i);
+                try {
 
-                $res = $client2->request(
-                    'GET', 
-                    'https://api.cin7.com/api/v1/Products/?page=' . $i, 
-                    [
-                        'auth' => [
-                            env('API_USER'),
-                            env('API_PASSWORD')
+                    $res = $client2->request(
+                        'GET', 
+                        'https://api.cin7.com/api/v1/Products?where=modifieddate>='. $formattedDateSting .'&page='.$i, 
+                        [
+                            'auth' => [
+                                env('API_USER'),
+                                env('API_PASSWORD')
+                            ]
+                         
                         ]
-                     
-                    ]
-                );
+                    );
+                }
+                catch (\Exception $e) {
+                    $msg = $e->getMessage();
+                    $errorlog = new ApiErrorLog();
+                    $errorlog->payload = $e->getMessage();
+                    $errorlog->exception = $e->getCode();
+                    $errorlog->save();
+                }
 
                 $api_products = $res->getBody()->getContents();
+              
                 $api_products = json_decode($api_products);
+                $record_count = count($api_products);
+                $this->info('Record Count => '. $record_count);
+                if ($record_count < 1 || empty($record_count)) {
+                    $this->info('----------------break-----------------');
+                    break;
+                }
                 $brands = [];
                 foreach($api_products as $api_product) {
                     $this->info($api_product->id);
@@ -218,7 +258,7 @@ class SyncAPiData extends Command
                                         'option_id' => $api_productOption->id,
                                         'retailUSD' => $api_productOption->priceColumns->retailUSD,
                                         'terraInternUSD' => $api_productOption->priceColumns->terraInternUSD,
-                                        'sacramentoUSD' => $api_productOption->priceColumns->terraInternUSD,
+                                        'sacramentoUSD' => $api_productOption->priceColumns->sacramentoUSD,
                                         'wholesaleUSD' => $api_productOption->priceColumns->wholesaleUSD,
                                         'oklahomaUSD' => $api_productOption->priceColumns->oklahomaUSD,
                                         'tier1USD' => $api_productOption->priceColumns->tier1USD,
@@ -350,7 +390,11 @@ class SyncAPiData extends Command
 
                     }
                 }
-                
+            }
+            $current_date = Carbon::now()->toDateString().'T'.'00:00:00'.'Z';
+            if ($record_count > 0) {
+                $sync_log->last_synced = $current_date;
+                $sync_log->save();
             }
         }
         $this->info('------------------------------');

@@ -7,6 +7,9 @@ use App\Models\Contact;
 use App\Models\SecondaryContact;
 use App\Models\UserLog;
 use Carbon\Carbon;
+use App\Models\ApiErrorLog;
+use App\Models\ApiSyncLog;
+use Illuminate\Http\Request;
 
 
 class SyncSuppliers extends Command
@@ -42,30 +45,64 @@ class SyncSuppliers extends Command
      */
     public function handle()
     {
-        $client2 = new \GuzzleHttp\Client();
+        $sync_time  = Carbon::now()->toIso8601String();
+        $sync_log = ApiSyncLog::where('end_point', 'https://api.cin7.com/api/v1/Contacts')->first();
 
-        $total_contact_pages = 35;
+        $date = $sync_log->last_synced;
+
+        $rawDate = Carbon::parse($date);
+        $getdate = $rawDate->format('Y-m-d');
+        $getTime = $rawDate->format('H:i:s');
+        $formattedDateSting = $getdate.'T'. $getTime .'Z';  
+        $client2 = new \GuzzleHttp\Client();
+        $total_contact_pages = 150;
+        $api_contact_ids = [];
+        
+
 
         for ($i = 1; $i <= $total_contact_pages; $i++) {
-            $this->info('Processing page#' . $i);
-            sleep(5);
-            $res = $client2->request(
-                'GET', 
-                'https://api.cin7.com/api/v1/Contacts/?page=' . $i,
-                [
-                    'auth' => [
-                        env('API_USER'),
-                        env('API_PASSWORD')
-                    ]
-                ]
-            );
 
-            $api_contacts = $res->getBody()->getContents();
-            $api_contacts = json_decode($api_contacts);
+            $this->info('Processing page#--------------------------' . $i);
+            sleep(5);
+            try {
+                $res = $client2->request(
+                    'GET', 
+                    'https://api.cin7.com/api/v1/Contacts?where=modifieddate>='. $formattedDateSting .'&page='.$i,
+                    [
+                        'auth' => [
+                            env('API_USER'),
+                            env('API_PASSWORD')
+                        ]
+                    ]
+                );
+
+                $api_contacts = $res->getBody()->getContents();
+                dd($api_contacts);
+                $api_contacts = json_decode($api_contacts);
+                $record_count = count($api_contacts);
+                $this->info('Record Count => '. $record_count);
+                if ($record_count < 1 || empty($record_count)) {
+                    $this->info('----------------break-----------------');
+                    break;
+                }
+            }
+            catch (\Exception $e) {
+                $msg = $e->getMessage();
+                $errorlog = new ApiErrorLog();
+                $errorlog->payload = $e->getMessage();
+                $errorlog->exception = $e->getCode();
+                $errorlog->save();
+
+            }
+
+            
+
+           
             foreach($api_contacts as $api_contact) {
                 $this->info($api_contact->id);
                 $this->info('Processing contacts ' . $api_contact->firstName);
                 $contact = Contact::where('contact_id', $api_contact->id)->first();
+                array_push($api_contact_ids, $api_contact->id);
                 if (!empty($contact)) {
                     $this->info($api_contact->id);
                     $this->info('---------------------------------------');
@@ -83,7 +120,8 @@ class SyncSuppliers extends Command
                     $contact->mobile = $api_contact->mobile;
                     $contact->phone = $api_contact->phone;
                     $contact->address1 = $api_contact->address1;
-                    $contact->address1 = $api_contact->address2;
+                    $contact->address2 = $api_contact->address2;
+                    $contact->city = $api_contact->city;
                     $contact->state = $api_contact->state;
                     $contact->postCode = $api_contact->postCode;
                     $contact->postalAddress1 = $api_contact->postalAddress1;
@@ -158,7 +196,6 @@ class SyncSuppliers extends Command
                             $UserLog->save();
                         }
                     }
-                    
                 }
                 else {
                     foreach($api_contact->secondaryContacts as $secondaryContact) {
@@ -177,7 +214,7 @@ class SyncSuppliers extends Command
                         'mobile' => $api_contact->mobile,
                         'phone' => $api_contact->phone,
                         'address1' => $api_contact->address1,
-                        'address1' => $api_contact->address2,
+                        'address2' => $api_contact->address2,
                         'state' => $api_contact->state,
                         'postCode' => $api_contact->postCode,
                         'postalAddress1' => $api_contact->postalAddress1,
@@ -223,6 +260,30 @@ class SyncSuppliers extends Command
                     $UserLog->save();
                 }
             }
+        }
+        $current_date = Carbon::now()->toDateString().'T'.'00:00:00'.'Z';
+       
+        if ($record_count > 0) {
+            $sync_log->last_synced = $current_date;
+            $sync_log->save();
+        }
+       
+        $qcom_contact_id = Contact::where('is_parent', 1)->pluck('contact_id')->toArray();
+  
+
+        $this->info(count($qcom_contact_id));  
+        $this->info(count($api_contact_ids));
+        $differences = array_diff($qcom_contact_id, $api_contact_ids);
+        foreach($differences as $difference) {
+            $contact = Contact::where('contact_id', $difference)->first();
+            $contact->status = 0;
+               $UserLog = new UserLog([
+                        'contact_id' => $difference,
+                        'action' => 'Sync',
+                        'user_notes' => 'Disabled during Sync at '.Carbon::now()->toDateTimeString() .'Not found in cin7',        
+                    ]);
+                $UserLog->save();
+            $contact->save();
         }
     }
 }

@@ -67,34 +67,53 @@
     </div>
 </footer>
 
-<footer class="text-white text-lg-start bg-dark h-90 mt-5 mobile-view">
+<footer class="text-white text-lg-start h-90 mobile-view" style="background: #212121">
     <div class="container mt-5">
         <div class="row">
             <div class="col-md-12">
-                <div class="main-page-footer-section footer-section-product">
-                    <h5 class="contact-us-footer mt-3 ps-3">CONTACT US</h5>
+                <div class="main-page-footer-section footer-section-product mb-5">
+                    <h5 class="foooter-main-head-mbl contact-us-footer mt-5 mb-4 text-uppercase">CONTACT US</h5>
                     <span>
-                        <img src="/theme/img/map-pin.png" class="img-fluid ps-3">
+                        <img src="/theme/img/map-pin.png" class="img-fluid">
                     </span>
-                    <span class="ms-2 pra-footer">5671 Warehouse Way
-                        Sacramento CA 95826
-                    </span>
-                    <p class="ms-4 ms-4-footer">&nbsp;
-                        13310 S. Figueroa St. Los Angeles, CA 90061
-                    </p>
+                    <span class="footer_head_mbl pra-footer">Los Angeles Warehouse (HQ)</span>
+                    <p class="p-footer-mbl ms-4-footer mx-1 ps-4">13310 S. Figueroa St. Los Angeles, CA 90061</p>
                     <span>
-                        <img src="/theme/img/phone-call.png" class="img-fluid ps-3">
+                        <img src="/theme/img/map-pin.png" class="img-fluid">
                     </span>
-                    <span class="ms-2 pra-footer">(916)
-                        281-3090
+                    <span class="footer_head_mbl  pra-footer">
+                        San Fernando Valley Warehouse
                     </span>
-                    <p class="ms-4 ms-4-footer">&nbsp;
-                        <span class="text-success sm-4-footer">
-                            MONDAY-SUNDAY
-                        </span> 9AM-5pm
-                    </p>
+                    <p class="p-footer-mbl ms-4-footer mx-1 ps-4">9019 Oso Ave, Chatsworth, CA 91311</p>
+                    <p class="p-footer-mbl ms-4-footer mx-1 ps-4"><span class="day-color-mbl">M-F</span> 10AM-6PM | <span class="day-color-mbl">Sat</span> 12PM-6PM | <span class="day-color-mbl">Sun</span> 12PM-5PM</p>
+                    <span >
+                        <img src="/theme/img/phone-call.png" class="img-fluid">
+                    </span>
+                    <span class="footer_head_mbl pra-footer">(213) 410-5912</span>
+                    <p class="p-footer-mbl ms-4-footer mx-1 ps-4"><span class="day-color-mbl">M-F</span> 10AM-6PM | <span class="day-color-mbl">Sat-Sun</span> 10AM-5PM</p>
+
+                    <h5 class="foooter-main-head-mbl contact-us-footer mt-5 mb-4 text-uppercase">Customer Service</h5>
+                    <p class="p-footer-mbl ms-4-footer mx-1">Returns</p>
+                    <p class="p-footer-mbl ms-4-footer mx-1">Customer Support</p>
+                    <p class="p-footer-mbl ms-4-footer mx-1">Hydro Guide and Tips</p>
+
+                    <h5 class="foooter-main-head-mbl contact-us-footer mt-5 mb-4 text-uppercase">MY ACCOUNT</h5>
+                    <p class="p-footer-mbl ms-4-footer mx-1">My orders</p>
+                    
+                    <h5 class="foooter-main-head-mbl contact-us-footer mt-5 mb-4 text-uppercase">PAYMENT METHOD</h5>
+                    <div class="d-flex">
+                        <img class="img-fluid" style="margin-right:0.5rem !important;" src="/theme/paymentsImg/paypal.png">
+                        <img class="img-fluid" style="margin-right:0.5rem !important;" src="/theme/paymentsImg/discover.png">
+                        <img class="img-fluid" style="margin-right:0.5rem !important;" src="/theme/paymentsImg/cm.png">
+                        <img class="img-fluid" style="margin-right:0.5rem !important;" src="/theme/paymentsImg/visa.png">
+                        
+                    </div>
+
+                    <div class="d-flex mt-5 ">
+                        <img class="img-fluid" src="/theme/paymentsImg/free-shipping.png" alt="">
+                    </div>
                 </div>
-                <div class="col-md-12 mt-3 main-page-footer-section footer-section-product">
+                {{-- <div class="col-md-12 mt-3 main-page-footer-section footer-section-product">
                     <div class="d-flex">
                         <div class="justify-content-center aling-items-center">
                             <h5 class="text-uppercase contact-us-footer mt-3">Customer Service</h5>
@@ -105,14 +124,14 @@
                             <p class="card-text justify-content-end sm-4-footer">My orders</p>
                         </div>
                     </div>
-                </div>
-                <div class="col-lg-3 col-md-3 mb-4 mb-md-0 main-page-footer-section footer-section-product mt-5">
+                </div> --}}
+                {{-- <div class="col-lg-3 col-md-3 mb-4 mb-md-0 main-page-footer-section footer-section-product mt-5">
                     <h5 class=" text-uppercase mb-4 contact-us-footer"> PAYMENT METHOD</h5>
                     <img class="img-fluid" src="/theme/img/paypal.png">&nbsp; &nbsp;&nbsp; &nbsp;
                     <img class="img-fluid" src="/theme/img/discover.png">&nbsp; &nbsp;&nbsp; &nbsp;
                     <img class="img-fluid" src="/theme/img/curus.png">&nbsp; &nbsp;&nbsp; &nbsp;
                     <img class="img-fluid" src="/theme/img/visa.png">&nbsp; &nbsp;&nbsp; &nbsp;
-                </div>
+                </div> --}}
             </div>
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 footer-end ">
                 <p class="mt-4">

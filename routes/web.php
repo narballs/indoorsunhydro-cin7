@@ -22,6 +22,7 @@ use App\Http\Controllers\Admin\AdminShareListController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
+use App\Models\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,6 +37,9 @@ use Illuminate\Support\Facades\Session;
 
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
+
+    
+
 Route::get('send-password/fornt-end/{id}', [UserController::class, 'send_password_fornt_end'])->name('users.send_password_fornt');
 
 Route::get('send-mail', function () {
@@ -67,6 +71,8 @@ Route::post('/switch-company/', [UserController::class, 'switch_company'])->name
 Route::post('/switch-company-select/', [UserController::class, 'switch_company_select'])->name('switch-company-select');
 Route::post('/register/basic/invitation', [UserController::class, 'invitation_signup'])->name('invitation.signup');
 Route::post('/logout', [UserController::class, 'logout'])->name('logout');
+Route::get('/lost-password', [UserController::class, 'lost_password'])->name('lost.password');
+Route::post('/recover-password', [UserController::class, 'recover_password'])->name('recover.password');
 
 Route::get('/product-brand/{name}', [ProductController::class, 'showProductByBrands']);
 Route::post('add-to-cart/', [ProductController::class, 'addToCart'])->name('add.to.cart');
@@ -176,7 +182,7 @@ Route::get('checkout', [CheckoutController::class, 'index'])->name('checkout');
 Route::post('order', [OrderController::class, 'store'])->name('order');
 Route::get('/thankyou/{id}', [CheckoutController::class, 'thankyou'])->name('thankyou');
 Route::post('order-status-update', [OrderController::class, 'updateStatus'])->name('order.status.update');
-Route::post('change-password', [ChangePasswordController::class, 'store'])->name('change.password');
+//Route::post('change-password', [ChangePasswordController::class, 'store'])->name('change.password');
 Route::get('/contact-us/', [ContactUsController::class, 'index']);
 Route::post('/contact-us-store/', [ContactUsController::class, 'store'])->name('contact.us.store');
 Route::get('/create-cart/{id}', [CreateCartController::class, 'create_cart'])->name('create.cart');
@@ -247,3 +253,6 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/customer/invitation/{hash}', [ContactController::class, 'contomer_invitation']);
 Route::group(['middleware' => ['auth']], function () {
 });
+
+
+Route::get('/index', [UserController::class, 'index_email_view']);

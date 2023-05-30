@@ -1,174 +1,268 @@
 @extends('adminlte::page')
 @section('title', 'Dashboard')
-@section('content_header')
-@stop
+
 @section('content')
     <div class="table-wrapper">
-        <div class="table-title">
-            <div class="row">
+        <div class="card-body product_secion_main_body">
+            <div class="row border-bottom product_section_header">
                 <div class="col-md-12">
-                    <h2>Orders</h2>
-                </div>
-                <div class="col-md-2">
-                    <div class="search-box">
-                        <a href="{{ 'order/create' }}"><input type="button" value="Create New Order"
-                                class="form-control btn btn-primary" placeholder="Create New">
-                        </a>
+                    <div class="row">
+                        <div class="col-md-10">
+                            <p class="order_heading">
+                                Orders
+                            </p>
+                        </div>
+                        <div class="col-md-2 d-flex justify-content-end create_bnt">
+                            <button type="button" class="btn create-new-order-btn">
+                                Create New Order +
+                            </button>
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-6"></div>
-                <div class="col-md-4">
-                    <div id="custom-search-input">
-                        <div class="input-group col-md-12">
-                            <span class="input-group-btn">
-                                <button class="btn btn-info btn-lg" type="button">
-                                    <i class="fa fa-search"></i>
-                                </button>
-                            </span>
-                            <form method="get" action="/admin/orders">
-                                <input type="text" class="form-control input-lg" id="search" name="search"
-                                    placeholder="Search" value="{{ isset($search) ? $search : '' }}" />
-                            </form>
+                    <div class="row search_row_admin-interface">
+                        <div class="col-md-2 order-search">
+                            <div class="has-search ">
+                                <span class="fa fa-search form-control-feedback"></span>
+                                <form method="get" action="/admin/orders" class="mb-2">
+                                    <input type="text" class="form-control" id="search" name="search"
+                                        placeholder="Search" value="{{ isset($search) ? $search : '' }}" />
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="card card-body mt-4">
-            <table class="table table-striped table-hover table-bordered table-customer">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Date Created <i class="fa fa-sort"></i></th>
-                        <th>Created by <i class="fa fa-sort"></i></th>
-                        <th>Order Submitter Email <i class="fa fa-sort"></i></th>
-                        <th>Primary Account Email <i class="fa fa-sort"></i></th>
-                        <th>Reference <i class="fa fa-sort"></i></th>
-                        <th>Order Total <i class="fa fa-sort"></i></th>
-                        <th>Company Name <i class="fa fa-sort"></i> </th>
-                        {{-- <th>Status <i class="fa fa-sort"></i></th> --}}
-                        <th>Stage <i class="fa fa-sort"></i></th>
-                        <th>Payment Term <i class="fa fa-sort"></i></th>
-                        <th>Actions <i class="fa fa-sort"></i></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($orders as $order)
-                        @if (empty($order))
-                            <tr>
+            <div class="card-body product_table_body">
+                <div class="col-md-12 p-0">
+                    <table class="table border table-customer mb-5">
+                        <thead>
+                            <tr class="table-header-background">
+                                <td class="d-flex table-row-item">
+                                    <span class="tabel-checkbox">
+                                        <input type="checkbox" name="test" class="checkbox-table" id="selectAll">
+                                    </span>
+                                    <span class="table-row-heading">
+                                        <i class="fas fa-arrow-up"></i>
+                                    </span>
+                                </td>
                                 <td>
-                                    <div class="alert alert-danger">No Orders Found</div>
+                                    <span class="d-flex table-row-item"> Created By</span>
+                                </td>
+                                <td>
+                                    <span class="d-flex table-row-item"> Reference</span>
+                                </td>
+                                <td>
+                                    <span class="d-flex table-row-item"> Date Created</span>
+                                </td>
+                                <td>
+                                    <span class="d-flex table-row-item"> Primary Account Email</span>
+                                </td>
+                                <td>
+                                    <span class="d-flex table-row-item"> Order Total </span>
+                                </td>
+                                <td>
+                                    <span class="d-flex table-row-item"> Company Name </span>
+                                </td>
+                                <td>
+                                    <span class="d-flex table-row-item"> Stage</span>
+                                </td>
+                                <td>
+                                    <span class="d-flex table-row-item"> Payment Term</span>
+                                </td>
+                                <td>
+                                    <span class="d-flex table-row-item"> Actions</span>
                                 </td>
                             </tr>
-                        @else
-                            <tr id="row-{{ $order->id }}">
-                                <td>{{ $order->id }}</td>
-                                <td>{{ $order->created_at->format('F ' . 'd, Y, ' . 'g:i A') }}</td>
-                                <td>
-                                    @if (!empty($order->primaryId) && !empty($order->primary_contact))
-                                        <span title="Secondary Contact">{{ $order->primary_contact->firstName }}
-                                            {{ $order->primary_contact->lastName }}</span>
-                                    @elseif (!empty($order->secondaryId) && !empty($order->secondary_contact))
-                                        <span title="Secondary Contact">{{ $order->secondary_contact->firstName }}
-                                            {{ $order->secondary_contact->lastName }}</span>
-                                    @elseif (!empty($order->contact))
-                                        {{ $order->contact->firstName }} {{ $order->contact->lastName }}
-                                    @endif
-                                </td>
-                                <td>
-                                    @if (!empty($order->primaryId) && !empty($order->primary_contact))
-                                        <span title="Secondary Contact">{{ $order->primary_contact->email }}</span>
-                                    @elseif (!empty($order->secondaryId) && !empty($order->secondary_contact))
-                                        <span title="Secondary Contact">{{ $order->secondary_contact->email }}</span>
-                                    @elseif (!empty($order->contact))
-                                        {{ $order->contact->email }} {{ $order->contact->lastName }}
-                                    @endif
-                                </td>
-                                <td>
-                                    @if ($order->contact)
-                                        {{ $order->contact->email }}
-                                    @endif
-                                </td>
-                                <td>{{ $order->reference }}</td>
-                                <td>${{ $order->total }}</td>
-                                <td>
-                                    @if ($order->contact)
-                                        @if ($order->contact->company)
-                                            {{ $order->contact->company }}
-                                        @endif
-                                    @endif
-                                </td>
-                                <td>
-                                    @if ($order->isApproved == 0)
-                                        <span class="badge badge-warning">New</span>
-                                    @elseif ($order->isApproved == 1)
-                                        <span class="badge badge-success">Fullfilled</span>
-                                    @elseif ($order->isApproved == 2)
-                                        <span class="badge badge-danger">Cancelled</span>
-                                    @endif
-                                </td>
-                                <td>{{ $order->paymentTerms }}</td>
-                                <td>
-                                    <a href="{{ url('admin/order-detail/' . $order->id) }}" class="view" title=""
-                                        data-toggle="tooltip" data-original-title="View"><i class="fas fa-eye"></i></a>
-                                    <a href="#" class="edit" title="" data-toggle="tooltip"
-                                        data-original-title="Edit"><i class="fas fa-pen"></i></a>
-                                    <a href="#" class="delete deleteIcon" id="{{ $order->id }}" title=""
-                                        data-toggle="tooltip" data-original-title="Delete"><i
-                                            class="fas fa-trash-alt"></i></a>
-                                </td>
-                            </tr>
-                        @endif
-                    @endforeach
-                </tbody>
-            </table>
-            <div class="col-md-12 mt-3">
-                {{ $orders->appends(Request::all())->links() }}
-            </div>
+                        </thead>
+                        <tbody>
+                            @foreach ($orders as $order)
+                                @if (empty($order))
+                                    <tr>
+                                        <td>
+                                            <div class="alert alert-danger">No Orders Found</div>
+                                        </td>
+                                    </tr>
+                                @else
+                                    <tr id="row-{{ $order->id }}" class="order-row border-bottom">
+                                        <td class="d-flex table-items">
+                                            <span class="tabel-checkbox">
+                                                <input type="checkbox" name="test" class="checkbox-table">
+                                            </span>
+                                            <span class="table-row-heading">
+                                                {{ $order->id }}
+                                            </span>
+                                        </td>
+                                        <td class="created_by toggleClass pb-0 pt-3">
+                                            @if (!empty($order->primaryId) && !empty($order->primary_contact))
+                                                <span title="Secondary Contact" class="created_by_order">
+                                                    {{ $order->primary_contact->firstName }}
+                                                    {{ $order->primary_contact->lastName }}</span><br>
+                                            @elseif (!empty($order->secondaryId) && !empty($order->secondary_contact))
+                                                <span title="Secondary Contact"
+                                                    class="created_by_order">{{ $order->secondary_contact->firstName }}
+                                                    {{ $order->secondary_contact->lastName }}</span><br>
+                                            @elseif (!empty($order->contact))
+                                                {{ $order->contact->firstName }} {{ $order->contact->lastName }}
+                                            @endif
+                                            <span class="order_submited_email">
+                                                @if (!empty($order->primaryId) && !empty($order->primary_contact))
+                                                    <span
+                                                        title="Secondary Contact">{{ $order->primary_contact->email }}</span>
+                                                @elseif (!empty($order->secondaryId) && !empty($order->secondary_contact))
+                                                    <span
+                                                        title="Secondary Contact">{{ $order->secondary_contact->email }}</span>
+                                                @elseif (!empty($order->contact))
+                                                    {{ $order->contact->email }} {{ $order->contact->lastName }}
+                                                @endif
+                                            </span>
+                                        </td>
+                                        <td class="td_padding_row">{{ $order->reference }}</td>
+                                        <td class="td_padding_row">
+                                            {{ $order->created_at->format('d/m/Y') }}
+                                        </td>
+                                        <td class="td_padding_row">
+                                            @if ($order->contact)
+                                                {{ $order->contact->email }}
+                                            @endif
+                                        </td>
 
+                                        <td class="created_by_order_total td_padding_row">
+                                            ${{ number_format($order->total, 2) }}</td>
+                                        <td class="td_padding_row">
+                                            @if ($order->contact)
+                                                @if ($order->contact->company)
+                                                    {{ $order->contact->company }}
+                                                @endif
+                                            @endif
+                                        </td>
+                                        <td class="is-approved td_padding_row">
+                                            @if ($order->isApproved == 0)
+                                                <span class="badge badge-warning w-50 is_approded_0">New</span>
+                                            @elseif ($order->isApproved == 1)
+                                                <span class="badge badge-success is_approded_1">Fullfilled</span>
+                                            @elseif ($order->isApproved == 2)
+                                                <span class="badge badge-danger is_approded_2">Cancelled</span>
+                                            @endif
+                                        </td>
+                                        <td class="td_padding_row">{{ $order->paymentTerms }}</td>
+                                        <td class="created_by toggleClass td_padding_row">
+                                            <div class="btn-group">
+                                                <button type="button" class="btn p-0 btn-white dropdown-toggle"
+                                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="fas fa-ellipsis-h" style="color: #CBCBCB !important;"></i>
+                                                </button>
+                                                <div class="dropdown-menu dropdonwn_menu">
+                                                    <a class="dropdown-item"
+                                                        href="{{ url('admin/order-detail/' . $order->id) }}"
+                                                        class="view a_class" title="" data-toggle="tooltip"
+                                                        data-original-title="View">Previews
+                                                    </a>
+                                                    <a class="dropdown-item delete deleteIcon a_class" href="#"
+                                                        class="" id="{{ $order->id }}" title=""
+                                                        data-toggle="tooltip" data-original-title="Delete">Delete
+                                                    </a>
+                                                    <a class="dropdown-item"href="#" class="edit a_class"
+                                                        title="" data-toggle="tooltip" data-original-title="Edit">Edit
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endif
+                            @endforeach
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="10">
+                                    {{ $orders->links('pagination.custom_pagination') }}
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 @stop
 
 @section('css')
     <link rel="stylesheet" href="/css/admin_custom.css">
+    <link rel="stylesheet" href="{{ asset('admin/admin_lte.css') }}">
+    <link href="https://fonts.cdnfonts.com/css/poppins" rel="stylesheet">
+
     <style type="text/css">
-        #custom-search-input {
-            padding: 3px;
-            border: solid 1px #E4E4E4;
-            border-radius: 6px;
-            background-color: #fff;
+        .text-successs {
+            color: #7CC633 !important;
+            font-family: 'Poppins', sans-serif !important;
         }
 
-        #custom-search-input input {
-            border: 0;
-            box-shadow: none;
+        .badge-success {
+            background: rgb(186 235 137 / 20%);
+            color: #319701;
+            padding: 6px !important;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 11.3289px;
+
         }
 
-        #custom-search-input button {
-            margin: 2px 0 0 0;
-            background: none;
-            box-shadow: none;
-            border: 0;
-            color: #666666;
-            padding: 0 8px 0 10px;
-            border-right: solid 1px #ccc;
+        .badge-warning {
+            background-color: #f1e8cb;
+            color: #b58903 !important;
+            padding: 6px !important;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 11.3289px;
         }
 
-        #custom-search-input button:hover {
-            border: 0;
-            box-shadow: none;
-            border-left: solid 1px #ccc;
-        }
-
-        #custom-search-input .glyphicon-search {
-            font-size: 23px;
+        .badge-danger {
+            color: #fff;
+            background-color: rgba(220, 78, 65, 0.12);
+            color: #DC4E41;
+            padding: 6px !important;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 11.3289px;
         }
     </style>
 @stop
 
 @section('js')
     <script>
+        // toggle hover on rows in loop 
+        $('.order-row-none').hover(function() {
+            let id = $(this).attr('id');
+            children = $(this).children('.created_by').children('span').addClass('text-successs');
+            bg_success = $(this).children('.is-approved').children('.is_approded_1').addClass(
+                'background-success');
+            bg_success = $(this).children('.is-approved').children('.is_approded_0').addClass(
+                'background-warning');
+            bg_success = $(this).children('.is-approved').children('.is_approded_2').addClass(
+                'background-danger');
+            let tet = $(this).children('.created_by').children('a');
+            let get_class = tet.each(function(index, value) {
+                let test = tet[index].children[0];
+                test.classList.add('bg-icon');
+            });
+        });
+
+
+        $('.order-row-none').mouseleave(function() {
+            let id = $(this).attr('id');
+            children = $(this).children('.created_by').children('span').removeClass('text-successs');
+            bg_success = $(this).children('.is-approved').children('.is_approded_1').removeClass(
+                'background-success');
+            bg_success = $(this).children('.is-approved').children('.is_approded_0').removeClass(
+                'background-warning');
+            bg_success = $(this).children('.is-approved').children('.is_approded_2').removeClass(
+                'background-danger');
+            let tet = $(this).children('.created_by').children('a');
+            let get_class = tet.each(function(index, value) {
+                let test = tet[index].children[0];
+                test.classList.remove('bg-icon');
+            });
+        });
+
+
         function perPage() {
             var search = $('#search').val();
             var activeCustomer = $('#active_customer').val();
@@ -219,6 +313,12 @@
                 }
             })
         });
+
+        // select all checkbox by click
+        $(document).on('click', '#selectAll', function(e) {
+            var table = $(e.target).closest('table');
+            $('td input:checkbox', table).prop('checked', this.checked);
+        });
     </script>
 @stop
-@section('plugins.Sweetalert2', true);
+@section('plugins.Sweetalert2', true)

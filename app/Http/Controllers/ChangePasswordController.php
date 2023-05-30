@@ -50,12 +50,12 @@ class ChangePasswordController extends Controller
         /*
         * Validate all input fields
         */
-        if ($request->input('current_password')) {
+        //dd($request->input('current_password'));
+        if ($request->input('current_password') == null) {
             $this->validate($request, [
                 'current_password' => 'required',
                 'new_password' => 'required',
                 'new_confirm_password' => 'same:new_password',
-                
             ]);
         }
         else {
@@ -72,7 +72,6 @@ class ChangePasswordController extends Controller
                $user->fill([
                 'password' => Hash::make($request->new_password)
                 ])->save();
-               // dd('Password change successfully.');
                return response()->json(['success' => true, 'created'=> true, 'msg' => 'Password change successfully.']);
             } else {
                 $request->session()->flash('error', 'Password does not match');
@@ -82,7 +81,6 @@ class ChangePasswordController extends Controller
         else {
             $user->first_name = $request->first_name;
             $user->last_name  = $request->last_name;
-            //return $request->last_name;
             $user->update([
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,

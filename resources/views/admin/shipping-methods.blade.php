@@ -1,88 +1,199 @@
 @extends('adminlte::page')
 @section('title', 'Dashboard')
 @section('content')
-<div class="table-wrapper">
-    <div class="table-title">
-        <div class="row">
-            <div class="col-sm-8">
-                <h2>Shipping Methods</h2>
+    <div class="table-wrapper">
+        <div class="card-body mt-2 product_secion_main_body">
+            <div class="row border-bottom product_section_header">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <p class="product_heading">
+                                Shipping Methods
+                            </p>
+                        </div>
+                        <div class="col-md-2 pt-3">
+                            <a href="{{ 'shipping-methods/create' }}" class="btn create_new_shipping_btn">
+                                Create new method +
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row search_row_admin-interface">
+                        <div class="col-md-4 product_search">
+                            <div class="has-search ">
+                                <span class="fa fa-search form-control-feedback"></span>
+                                <form method="get" action="admin/shipping-methods" class="mb-2">
+                                    <input type="text" class="form-control" id="search" name="search"
+                                        placeholder="Search" value="{{ isset($search) ? $search : '' }}" />
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+            <div class="card-body product_table_body">
+                <table class="table border mb-5 table-shipping-method">
+                    <thead>
+                        <tr class="table-header-background">
+                            <td class="d-flex table-row-item">
+                                <span class="tabel-checkbox">
+                                    <input type="checkbox" name="test" class="checkbox-table" id="selectAll">
+                                </span>
+                                <span class="table-row-heading">
+                                    <i class="fas fa-arrow-up"></i>
+                                </span>
+                            </td>
+                            <td>
+                                <span class="d-flex table-row-item"> Name</span>
+                            </td>
+                            <td>
+                                <span class="d-flex table-row-item"> Cost</span>
+                            </td>
+                            <td>
+                                <span class="d-flex table-row-item"> Status</span>
+                            </td>
+                            <td>
+                                <span class="d-flex table-row-item"> Action</span>
+                            </td>
 
-            <div class="col-sm-4 mt-2">
-                <div class="search-box">
-                    <i class="material-icons"></i>
-                    <input type="text" class="form-control" placeholder="Search…">
-                </div>
-            </div>
-            <div class="col-sm-2 mb-5">
-                <div class="search-box">
-                    <a href="{{'shipping-methods/create'}}"><input type="button" value="Add New"
-                            class="form-control btn btn-primary" placeholder="Add New">
-                    </a>
-                </div>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($shippingmethods as $key => $shippingmethod)
+                            @if (!empty($shippingmethod))
+                                <tr id="row-{{ $shippingmethod->id }}" class="shipping-method-row border-bottom">
+                                    <td class="d-flex table-items">
+                                        <span class="tabel-checkbox">
+                                            <input type="checkbox" name="test" class="checkbox-table">
+                                        </span>
+                                        <span class="table-row-heading">
+                                            {{ $key + 1 }}
+                                        </span>
+                                    </td>
+                                    <td class="shipping_name">
+                                        <span class="d-flex table-items-title">{{ $shippingmethod->title }}</span>
+                                    </td>
+                                    <td class="d-flex table-items">{{ $shippingmethod->cost }}</td>
+                                    @if ($shippingmethod->status == 1)
+                                        <td>
+                                            <span class="badge badge-success status-disabled"> Enabled</span>
+                                        </td>
+                                    @else
+                                        <td>
+                                            <span class="badge badge-danger status-disabled"> Disabled</span>
+                                        </td>
+                                    @endif
+                                    <td class="shipping_action">
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-white dropdown-toggle"
+                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fas fa-ellipsis-h" style="color: #CBCBCB !important;"></i>
+                                            </button>
+                                            <div class="dropdown-menu dropdonwn_menu">
+                                                <a class="dropdown-item"
+                                                    href="{{ url('admin/shipping-details/' . $shippingmethod->id) }}"
+                                                    class="view a_class" title="" data-toggle="tooltip"
+                                                    data-original-title="View">Previews
+                                                </a>
+                                                <a class="dropdown-item"href="{{ url('admin/shipping-method/' . $shippingmethod->id) }}"
+                                                    class="edit a_class" title="" data-toggle="tooltip"
+                                                    data-original-title="Edit">Edit
+                                                </a>
+                                                <a class="dropdown-item delete deleteIcon a_class" href="#"
+                                                    class="" id="{{ $shippingmethod->id }}" title=""
+                                                    data-toggle="tooltip" data-original-title="Delete">Delete
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @else
+                                <tr>
+                                    <td colspan="5" class="text-center">No Shipping Methods Found</td>
+                                </tr>
+                            @endif
+                        @endforeach
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="10">
+                                {{ $shippingmethods->links('pagination.custom_pagination') }}
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
             </div>
         </div>
     </div>
-    <table class="table table-striped table-hover table-bordered">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Name <i class="fa fa-sort"></i></th>
-                <th>Cost</th>
-                <th>Status</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php //dd($orders) ?>
-            @foreach($shippingmethods as $key=>$shippingmethod)
-            <tr>
-                <td>{{$key+1}}</td>
-                <td>{{$shippingmethod->title}}</td>
-                <td>{{$shippingmethod->cost}}</td>
-                @if($shippingmethod->status == 1)
-                <td>
-                    Enabled
-                </td>
-                @else
-                <td>
-                    Disabled
-                </td>
-                @endif
-                <td>
-                    <a href="{{ url('admin/shipping-details/') }}" class="view" title="" data-toggle="tooltip"
-                        data-original-title="View"><i class="fas fa-eye"></i></a>
-                    <a href="{{ url('admin/shipping-method/'.$shippingmethod->id) }}" class="edit" title=""
-                        data-toggle="tooltip" data-original-title="Edit"><i class="fas fa-pen"></i></a>
-                    <a href="{{ url('admin/shipping-method/delete/'.$shippingmethod->id) }}" class="delete" title=""
-                        data-toggle="tooltip" data-original-title="Delete"><i class="fas fa-trash-alt"></i></a>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
-    <div class="clearfix">
-        <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
-        <ul class="pagination">
-            <li class="page-item disabled"><a href="#"><i class="fa fa-angle-double-left"></i></a></li>
-            <li class="page-item"><a href="#" class="page-link">1</a></li>
-            <li class="page-item"><a href="#" class="page-link">2</a></li>
-            <li class="page-item active"><a href="#" class="page-link">3</a></li>
-            <li class="page-item"><a href="#" class="page-link">4</a></li>
-            <li class="page-item"><a href="#" class="page-link">5</a></li>
-            <li class="page-item"><a href="#" class="page-link"><i class="fa fa-angle-double-right"></i></a></li>
-        </ul>
-    </div>
-</div>
-
 @stop
 
 @section('css')
-<link rel="stylesheet" href="/css/admin_custom.css">
+    <link rel="stylesheet" href="/css/admin_custom.css">
+    <link rel="stylesheet" href="{{ asset('admin/admin_lte.css') }}">
+    <style>
+        .text-successs {
+            color: #7CC633 !important;
+            font-family: 'Poppins', sans-serif !important;
+        }
+
+        .badge-success {
+            color: #fff;
+            /* background-color: #28a745; */
+            background: rgb(186 235 137 / 20%);
+            color: #319701;
+            padding: 7px !important;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 11.3289px;
+
+        }
+
+        .badge-warning {
+            color: #1f2d3d;
+            background-color: #fce9a9;
+            color: #ffc107 !important;
+            padding: 5px;
+        }
+
+        .badge-danger {
+            color: #fff;
+            background-color: #f1eaea;
+            color: #B42318;
+            padding: 6px !important;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 11.3289px;
+
+        }
+    </style>
 @stop
 
 @section('js')
-<script>
-    console.log('Hi!'); 
-</script>
+    <script>
+        $('.shipping-method-row-none').hover(function() {
+            let id = $(this).attr('id');
+            children = $(this).children('.shipping_name').children('span').addClass('text-successs');
+            let tet = $(this).children('.shipping_action').children('a');
+            let get_class = tet.each(function(index, value) {
+                let test = tet[index].children[0];
+                test.classList.add('bg-icon');
+            });
+        });
+
+
+        $('.shipping-method-row-none').mouseleave(function() {
+            let id = $(this).attr('id');
+            children = $(this).children('.shipping_name').children('span').removeClass('text-successs');
+            let tet = $(this).children('.shipping_action').children('a');
+            let get_class = tet.each(function(index, value) {
+                let test = tet[index].children[0];
+                test.classList.remove('bg-icon');
+            });
+        });
+
+
+        $(document).on('click', '#selectAll', function(e) {
+            var table = $(e.target).closest('table');
+            $('td input:checkbox', table).prop('checked', this.checked);
+        });
+    </script>
 @stop

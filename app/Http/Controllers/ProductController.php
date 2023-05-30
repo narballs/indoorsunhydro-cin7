@@ -747,25 +747,44 @@ class ProductController extends Controller
     public function updateCart(Request $request)
     {
 
-        $items = $request->post('items_quantity');
+        // $items = $request->post('items_quantity');
+
+        // $cart_items = session()->get('cart');
+        // if (!empty($items)) {
+        //     foreach ($items as $item) {
+        //         $product_id = $item['id'];
+                
+
+        //         $cart_item = isset($cart_items[$product_id]) ? $cart_items[$product_id] : array();
+
+        //         if (!empty($cart_item) && $cart_item['quantity'] != $item['quantity']) {
+        //             Session::put('cart.' . $product_id . '.quantity', $item['quantity']);
+        //             $qoute = Cart::where('qoute_id', $product_id)->first();
+        //             $qoute->quantity = $item['quantity'];
+        //             $qoute->save();
+        //         }
+        //     }
+        // }
+        $item = $request->post('items_quantity');
+        // dd($request->all());
 
         $cart_items = session()->get('cart');
-        if (!empty($items)) {
-            foreach ($items as $item) {
-                $product_id = $item['id'];
+        if (!empty($item)) {
+       
+                $product_id = $request->post('product_id');
                 
 
                 $cart_item = isset($cart_items[$product_id]) ? $cart_items[$product_id] : array();
 
-                if (!empty($cart_item) && $cart_item['quantity'] != $item['quantity']) {
-                    Session::put('cart.' . $product_id . '.quantity', $item['quantity']);
+                if (!empty($cart_item) && $cart_item['quantity'] != $item) {
+                    Session::put('cart.' . $product_id . '.quantity', $item);
+                    $cart_items = session()->get('cart');
                     $qoute = Cart::where('qoute_id', $product_id)->first();
-                    $qoute->quantity = $item['quantity'];
+                    $qoute->quantity = $item;
                     $qoute->save();
                 }
-            }
         }
-        $cart_items = session()->get('cart');
+        $cart_item = session()->get('cart');
 
         return response()->json([
             'status' => 'success',
@@ -776,7 +795,6 @@ class ProductController extends Controller
     public function productSearch(Request $request)
     {
         if ($request->ajax()) {
-
             $brand = $request->input('brand');
             $price = $request->input('price');
             $stock = $request->input('instock');
@@ -930,22 +948,25 @@ class ProductController extends Controller
 
         $searchvalue = $request->value;
         $value = $searchvalue;
-        $products = Product::with(['options' => function ($q) {
-            $q->where('status', '!=', 'Disabled');
-        }])->where('status', '!=', 'Inactive')
-            ->where('name', 'LIKE', '%' . $value . '%')
-            ->orWhere('code', 'LIKE', '%' . $value . '%')->paginate($per_page);
-
-        // $searchvalue = preg_split('/\s+/', $searchvalue, -1, PREG_SPLIT_NO_EMPTY);
-        // if (!empty($is_search)) {
-        //     foreach ($searchvalue as $value) {
-        //         $products = Product::with(['options' => function ($q) {
-        //             $q->where('status', '!=', 'Disabled');
-        //         }])->where('status', '!=', 'Inactive')
-        //             ->where('name', 'LIKE', '%' . $value . '%')
-        //             ->orWhere('code', 'LIKE', '%' . $value . '%')->paginate($per_page);
-        //     };
-        // }
+        // dd($value);
+        // $products = Product::with(['options' => function ($q) {
+        //     $q->where('status', '!=', 'Disabled');
+        // }])->where('status', '!=', 'Inactive')
+        //     ->where('name', 'LIKE', '%' . $value . '%')
+        //     ->whereRaw('LOWER(`name`) like ?', ['%'.strtolower($value).'%'])
+        //     ->orWhere('code', 'LIKE', '%' . $value . '%')
+        //     ->paginate($per_page);
+            
+        $searchvalue = preg_split('/\s+/', $searchvalue, -1, PREG_SPLIT_NO_EMPTY);
+        if (!empty($is_search)) {
+            foreach ($searchvalue as $value) {
+                $products = Product::with(['options' => function ($q) {
+                    $q->where('status', '!=', 'Disabled');
+                }])->where('status', '!=', 'Inactive')
+                    ->where('name', 'LIKE', '%' . $value . '%')
+                    ->orWhere('code', 'LIKE', '%' . $value . '%')->paginate($per_page);
+            };
+        }
 
         $searched_value = $request->value;
 

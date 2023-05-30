@@ -9,11 +9,12 @@
 @section('content')
     <div class="row">
         <div class="col-md-12">
-            <div class="card card-primary card-outline">
+            <div class="card card-primary">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-12">
-                            <button class="btn btn-import-contacts btn-success">Import Contacts</button>
+                            <button class="btn btn-import-contacts badge-success" style="    border: 1px solid;">Import
+                                Contacts</button>
                             <div id="div_import_contacts" class="spinner-border hide ml-4" role="status">
                                 <span class="sr-only">Loading...</span>
                             </div>
@@ -21,19 +22,64 @@
 
                         <div class="col-md-12 mt-4" id="div_message"></div>
                     </div>
-
-
                 </div>
             </div>
         </div>
-
     </div>
-
 @endsection
-
 @section('css')
-    <link rel="stylesheet" href="{{ asset('/css/admin_custom.css') }}">
-    <link href="https://fonts.cdnfonts.com/css/poppins" rel="stylesheet">
+    <link rel="stylesheet" href="/css/admin_custom.css">
+    <link rel="stylesheet" href="{{ asset('admin/admin_lte.css') }}">
+    <style>
+        .text-successs {
+            color: #7CC633 !important;
+            font-family: 'Poppins', sans-serif !important;
+        }
+
+        .badge-success {
+            color: #fff;
+            background: rgb(186 235 137 / 20%);
+            color: #319701;
+            padding: 6px !important;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 11.3289px;
+
+        }
+
+        .badge-warning {
+            background-color: #f1e8cb;
+            color: #b58903 !important;
+            padding: 6px !important;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 11.3289px;
+        }
+
+        .badge-danger {
+            color: #fff;
+            background-color: #f1eaea;
+            color: #B42318;
+            padding: 6px !important;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 11.3289px;
+
+        }
+
+        .badge-secondary {
+            color: #8e8b8b !important;
+            background-color: #d0dce6 !important;
+            padding: 7px !important;
+            border-radius: 6px;
+        }
+
+        .badge-primary {
+            background-color: #339AC6;
+            color: #339AC6 !important;
+            padding: 5px;
+        }
+    </style>
 @endsection
 @section('js')
     <script>
