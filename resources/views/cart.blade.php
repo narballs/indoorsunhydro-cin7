@@ -992,6 +992,10 @@
                     $('#cart_grand_total').children().html('$' + grand_total.toFixed(2));
                     $('#topbar_cart_total').html('$' + grand_total.toFixed(2));
                     $('#top_cart_quantity').html(total_cart_quantity);
+                    var tax = 0;
+                    var tax = grand_total.toFixed(2) * (8.75 / 100);
+                    $('.tax_cart').children().html('$' + tax.toFixed(2));
+                    $('.grandTotal').children().html('$' + (tax + grand_total).toFixed(2))
                     
                     
                 }

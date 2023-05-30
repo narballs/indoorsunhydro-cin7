@@ -17,6 +17,7 @@ class ApiUserSyncSeeder extends Seeder
     {
         //$date = '2023-29-31 00:00:00';
         $dt = Carbon::now();
+
         // $dt->year   = 2023;
         // $dt->month  = 05;
         // $dt->day    = 29;
@@ -24,7 +25,7 @@ class ApiUserSyncSeeder extends Seeder
         // $dt->minute = 00;
         // $dt->second = 00;
         $formattedDateSting = $dt->toDateTimeString();
-        
+        //dd($formattedDateSting);
         $sync_logs =  
             [
                 [
