@@ -80,8 +80,7 @@
                             @if ($order->isApproved == 2)
                                 <button type="button" class="btn btn-danger btn-sm" disabled>Cancel Order</button>
                             @elseif($order->isApproved == 1)
-                                <div class="col-md-12" style=";
-							">
+                                <div class="col-md-12">
                                     <button type="button" class="btn btn-secondary btn-sm" disabled>
                                         Cancel Order
                                     </button>
