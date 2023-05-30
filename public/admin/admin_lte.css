@@ -55,6 +55,7 @@
     border-bottom: none !important;
     box-shadow: none !important;
     background: rgba(124, 198, 51, 0.15) !important;
+
 }
 
 .table-header-background {
@@ -71,7 +72,7 @@
 .nav-item .active {
     font-family: 'Poppins', sans-serif;
     font-style: normal !important;
-    font-weight: 600 !important;
+    font-weight: 500 !important;
     font-size: 16px !important;
     line-height: 24px !important;
     color: #868686 !important;
@@ -123,6 +124,7 @@
 
 .nav-item .active>p {
     color: #7CC633 !important;
+    font-weight: 600 !important;
 }
 
 .nav-item i {
