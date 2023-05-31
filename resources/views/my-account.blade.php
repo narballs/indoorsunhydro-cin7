@@ -27,7 +27,7 @@
     <div class="mb-5">
         <p style="line-height: 95px;"
             class="fw-bold fs-2 product-btn my-auto border-0 text-white text-center align-middle">
-            MY ACCOUNTsdsds
+            MY ACCOUNT
         </p>
     </div>
     <div class="container-fluid" style="width:1621px  !important;">
