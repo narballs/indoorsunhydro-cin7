@@ -38,7 +38,7 @@ use App\Models\User;
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
 
-    
+
 
 Route::get('send-password/fornt-end/{id}', [UserController::class, 'send_password_fornt_end'])->name('users.send_password_fornt');
 
@@ -91,6 +91,7 @@ Route::post('/add-to-wish-list/', [ProductController::class, 'addToWishList']);
 Route::get('/get-wish-lists/', [ProductController::class, 'getWishLists']);
 Route::get('/get-lists-names/', [ProductController::class, 'getListNames']);
 Route::post('/create-list/', [ProductController::class, 'createList']);
+Route::post('/delete/favorite/product', [ProductController::class, 'delete_favorite_product']);
 
 Route::group(['middleware' => ['auth']], function () {
     Route::resource('admin/roles', RoleController::class);
