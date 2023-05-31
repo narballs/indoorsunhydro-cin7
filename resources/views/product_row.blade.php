@@ -194,7 +194,7 @@
 			}
 
 		function addToList(product_id, option_id, status) {
-		
+			alert(status);
 			var list_id = $("input[name='list_id']:checked").val();
 			var option_id = option_id;
 			$.ajax({

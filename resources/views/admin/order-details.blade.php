@@ -77,37 +77,33 @@
                         </form>
                         <form>
                             @csrf
-                            <input type="hidden" value="{{$timeSpanToCancel}}" id="timeSpanToCancel">
+                            <input type="hidden" value="{{$orderCreationDate}}" id="timeSpanToCancel">
                             @if ($order->isApproved == 2)
                                 <button type="button" class="btn btn-danger btn-sm" disabled>Cancel Order</button>
-<<<<<<< HEAD
+
                                 <div class="countdown"></div>
                             @elseif($order->isApproved == 1 || $order_cancelation == 1)
-                                <div class="col-md-12" style=";
-							">
-=======
-                            @elseif($order->isApproved == 1)
                                 <div class="col-md-12">
->>>>>>> ffc4485234883184405f159c6f516859f9c1301c
-                                    <button type="button" class="btn btn-secondary btn-sm" disabled>
+                                     <button type="button" class="btn btn-secondary btn-sm" disabled>
                                         Cancel Order
                                     </button>
                                 </div>
+
                             @else
                                 <div class="col-md-12">
                                     <input type="hidden" value="{{ $orderitems[0]['order_id'] }}" id="order_id">
                                     <input class="btn btn-danger btn-sm" type="button" value="Cancel Order" id="cancel_order"
                                         onclick=" cancelOrder(); addComment(0);">
-<<<<<<< HEAD
+
 
                                 </div>
                                 <div class="countdown"></div>
                                 <!-- <div class=" spinner-border d-none" role="status" id="spinner">
                                                                                                     <span class="sr-only" style="margin-left: 227px">Activating...</span>
                                                                                                 </div> -->
-=======
+
                                 </div>
->>>>>>> ffc4485234883184405f159c6f516859f9c1301c
+
                         </form>
                         @endif
                         <form>
@@ -350,7 +346,9 @@
     <script>
         $(document).ready(function () {
             var timeSpanToCancel = $("#timeSpanToCancel").val();
+            //alert()
             var timeSpanToCancel =  new Date(timeSpanToCancel);
+            alert(timeSpanToCancel);
             var currentTime = new Date();
             var currentTimeStamp = new Date();
             var day = currentTimeStamp.getDate();
@@ -363,9 +361,13 @@
            // alert(t.getMinutes);
            //long diff = d2.getTime() - d1.getTime();
     
-    
-           
-            var timer2 = "15:01";
+            var time_diff =  currentTime  - timeSpanToCancel;
+            var minutes = new Date(time_diff).getMinutes(); 
+            var seconds = new Date(time_diff).getSeconds(); 
+            console.log(minutes);
+            console.log(seconds);
+            var timer2 = minutes +":"+ seconds;
+            console.log(timer2);
             var interval = setInterval(function() {
 
 

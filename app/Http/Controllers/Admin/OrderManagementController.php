@@ -58,12 +58,15 @@ class OrderManagementController extends Controller
         $createdDate = $order->created_at;
         $formatedDate = $createdDate->format('jS \of F Y h:i:s A');
 
-        $timeSpanToCancel =  new DateTime();
-        $timeSpanToCancel  = $order->created_at;
+        //$timeSpanToCancel =  new DateTime();
+        //$timeSpanToCancel  = $order->created_at;
+
         $timeSpanToCancel  = $createdDate->addMinutes(15);
+        $diff = new DateTime($timeSpanToCancel)->diffInMinutes(new DateTime($createdDate) ;
+        dd($diff);
         $orderCreationDate = new DateTime();
         $orderCreationDate = $order->created_at;
-
+        
         if ($orderCreationDate < $timeSpanToCancel) {
             $order_cancelation = 0;
         }
@@ -80,7 +83,7 @@ class OrderManagementController extends Controller
 
 
         $orderComment = OrderComment::where('order_id', $id)->with('comment')->get();
-        return view('admin/order-details', compact('order', 'tax_class', 'orderitems', 'orderComment', 'statuses', 'customer', 'formatedDate', 'timeSpanToCancel', 'order_cancelation'));
+        return view('admin/order-details', compact('order', 'tax_class', 'orderitems', 'orderComment', 'statuses', 'customer', 'formatedDate', 'orderCreationDate', 'order_cancelation', 'timeSpanToCancel' ));
     }
 
     public function addComments(Request $request)
