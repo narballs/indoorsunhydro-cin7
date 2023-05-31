@@ -7,8 +7,8 @@
 @stop
 
 @section('content')
-
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+<!-- sdfkjlsdkfjsdlkfk -->
+<meta name="csrf-token" content="{{ csrf_token() }}">
 
   <div class="container-fluid">
     <div class="row">
