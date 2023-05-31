@@ -58,7 +58,7 @@ class OrderManagementController extends Controller
         $createdDate = $order->created_at;
         $formatedDate = $createdDate->format('jS \of F Y h:i:s A');
         $orderCreatedDate = Carbon::now($createdDate.'Z');
-        dd($orderCreatedDate);
+        //dd($orderCreatedDate);
 
         //$timeSpanToCancel =  new DateTime();
         //$timeSpanToCancel  = $order->created_at;
