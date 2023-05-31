@@ -9,18 +9,17 @@
 @section('content')
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <div class="container-fluid">
-        <!-- Title -->
-        <div class="d-flex justify-content-between align-items-center py-3">
+
+  <div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center py-3">
             <h2 class="h5 mb-0"><a href="#" class="text-muted"></a> Order #{{ $order->id }}</h2>
         </div>
-        <!-- Main content -->
-        <div class="row">
-            <div class="col-lg-8">
-                <!-- Details -->
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <div class="mb-3 d-flex justify-content-between">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card">
+                          <div class="mb-3 d-flex justify-content-between">
                             <div>
                                 <span class="me-3">{{ $formatedDate }}</span>
                             </div>
@@ -42,38 +41,7 @@
                                 </div>
                             </div>
                         </div>
-                        <form method="POST" id="order_status" name="order_status">
-                            {{-- <div>
-                                    <span class="me-3">Order Status</span>
-                                </div>
-                                @if (!empty($order->order_id))
-                                    <select onchange="updateStatus()" id="status">
-                                        <option value='0'
-                                            {{ isset($status) && $status == '0' ? 'selected="selected"' : '' }}>
-                                            DRAFT</option>
-                                        <option value='1'
-                                            {{ isset($status) && $status == '1' ? 'selected="selected"' : '' }}>
-                                            APPROVED</option>
-                                        <option value='2'
-                                            {{ isset($status) && $status == '2' ? 'selected="selected"' : '' }}>
-                                            VOID</option>
-                                    </select>
-                                @else
-                                    <select disabled="" onchange="updateStatus()" id="status">
-                                        <option value='0'
-                                            {{ isset($status) && $status == '0' ? 'selected="selected"' : '' }}>
-                                            DRAFT</option>
-                                        <option value='1'
-                                            {{ isset($status) && $status == '1' ? 'selected="selected"' : '' }}>
-                                            APPROVED</option>
-                                        <option value='2'
-                                            {{ isset($status) && $status == '2' ? 'selected="selected"' : '' }}>
-                                            VOID</option>
-                                    </select>
-                                @endif --}}
-                            <input type="hidden" value="{{ $order->id }}" id="order_id_status">
-                            </form>
-                            <div class="row mb-5">
+                        <div class="row mb-5">
                                 <div class="col-md-2">
                                     <form>
                                         @csrf
@@ -91,7 +59,7 @@
                                         </div>
                                         
                                         @else
-                                        <div class="col-md-12">
+                                        <div class="col-md-10">
                                             <input type="hidden" value="{{ $orderitems[0]['order_id'] }}" id="order_id">
                                             <input class="btn btn-danger btn-sm" type="button" value="Cancel Order"
                                                 id="cancel_order" onclick=" cancelOrder(); addComment(0);">
@@ -132,7 +100,7 @@
                                     </form>
                                 </div>
                             </div>
-                    <div class="progress border d-none w-50 mx-auto" id="progress-bar">
+                            <div class="progress border d-none w-50 mx-auto" id="progress-bar">
                         <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar"
                             aria-valuenow="100" aria-valuemin="" aria-valuemax="100"></div>
                     </div>
@@ -187,8 +155,8 @@
                             </tr>
                         </tfoot>
                     </table>
-                </div>
-                <div class="card mb-4">
+                    </div>
+                    <div class="card mb-4">
                     <div class="card-body">
                         <div class="row">
                             <div class="col-lg-6">
@@ -210,9 +178,9 @@
                         </div>
                     </div>
                 </div>
+                </div>
 
-            </div>
-            <div class="col-lg-4">
+                 <div class="col-md-4">
                 <!-- Customer Notes -->
                 <div class="card mb-4">
                     <div class="card-body">
@@ -273,7 +241,10 @@
                     </div>
                 </div>
             </div>
+            </div>
         </div>
+    </div>
+  </div>
     @stop
 
     @section('css')
@@ -322,7 +293,7 @@
             $(document).ready(function() {
             
                 var time_left = $('#timeSpanToCancel').val();
-                time_left  =  15 - time_left;
+                time_left  =  15 - 14;
                 var timer2 = time_left + ":01";
                 var interval = setInterval(function() {
                 var timer = timer2.split(':');
@@ -338,8 +309,8 @@
                     $('#cancel_order').val('Cancel Order in ' + minutes + ':' + seconds);
                     timer2 = minutes + ':' + seconds;
                     if (minutes == 0  && seconds == '00') {
-                        $('#cancel_order').val('Cancel Order');
                         $('#cancel_order').addClass('disabled');
+                        $('#cancel_order').val('Cancel Order');
                      console.log('finsih');
                      return; 
 
