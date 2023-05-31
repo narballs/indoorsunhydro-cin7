@@ -20,13 +20,7 @@
             <span>{{ $contact->firstName }} {{ $contact->lastName }}</span>
         </a>
     </td>
-    <td>
-        @if ($contact->status == '1')
-            <span class="badge badge-success">Active</span>
-        @else
-            <span class="badge badge-warning">Inactive</span>
-        @endif
-    </td>
+
     <td>
         @if ($contact->user_id == '')
             <span class="badge badge-danger">Unmerged</span>
@@ -55,6 +49,32 @@
             {{ Illuminate\Support\Str::limit($contact->notes, 30) }}
         </span>
     </td>
+    @if ($contact && $contact->status == 1)
+        <td>
+            <span class="d-flex">
+                <span class="badge badge-success">Active</span>
+                <label class="custom-control custom-checkbox ">
+                    <input type="checkbox" id="{{ $contact->id }}" value="{{ $contact->status }}"
+                        class="custom-control-input general_switch" onchange="disableSecondary({{ $contact->id }})"
+                        {{ isset($contact->status) && $contact->status == 1 ? 'checked="checked"' : '' }}>
+                    <span class="custom-control-indicator"></span>
+                </label>
+            </span>
+        </td>
+    @else
+        <td>
+            <span class="d-flex">
+                <span class="badge badge-warning">Inactive</span>
+                <label class="custom-control custom-checkbox ">
+                    <input type="checkbox" id="{{ $contact->id }}" value="{{ $contact->status }}"
+                        class="custom-control-input general_switch" onchange="disableSecondary({{ $contact->id }})"
+                        {{ isset($contact->status) && $contact->status == 1 ? 'checked="checked"' : '' }}>
+                    <span class="custom-control-indicator"></span>
+                </label>
+            </span>
+        </td>
+    @endif
+
     <td class="created_by toggleClass">
         <div class="btn-group">
             <button type="button" class="btn p-0 btn-white dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"

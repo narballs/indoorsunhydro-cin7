@@ -109,8 +109,8 @@
                                     ?>
                                     @if ($customer->status != 1)
                                         <!-- <div class="col-md-2"><button class="btn btn-primary" type="button"
-                              onclick="updateContact()">Activate</button>
-                            </div> -->
+                                                  onclick="updateContact()">Activate</button>
+                                                </div> -->
                                         <div>
                                             <span class="badge bg-warning">{{ $status }}</span>
                                         </div>
@@ -122,8 +122,8 @@
 
                                     @if ($customer->user == '' && $customer->hashKey == '')
                                         <!-- 		<div class="col-md-1"><button class="btn btn-primary btn-sm" type="button"
-                              onclick="mergeContact()">Invite</button>
-                             </div> -->
+                                                  onclick="mergeContact()">Invite</button>
+                                                 </div> -->
                                         @if ($customer->contact_id)
                                             <div class="col-md-2"><button class="btn btn-primary btn-sm" type="button"
                                                     onclick="refreshContact({{ $customer->contact_id }}, 'primary')">Refresh
@@ -150,16 +150,6 @@
                                         style="left: 50% !important;margin-left: -25em !important;" id="spinner">
                                         <span class="sr-only">Activating...</span>
                                     </div>
-                                    <!-- 		@if ($invitation_url != '')
-    <div class="col-md-12">
-                             <a href="{{ $invitation_url }}" class="text-dark">
-                              <b>Invitation URL :</b><span id="copyText1"
-                               class="d-none">{{ $invitation_url }}</span>
-                             </a>
-                             <button type="button" class="btn btn-info btn-sm" onclick="withJquery();">Copy
-                              Link</button>
-                            </div>
-    @endif -->
                                     <div class="col-md-12">
                                         <div class="row">
                                             <div class="col-md-3">
@@ -309,6 +299,7 @@
                                                             <span class="badge bg-info">empty</span>
                                                         </td>
                                                     @endif
+
                                                     @if ($contact && $contact->status == 1)
                                                         <td>
                                                             <span class="badge bg-success">Active</span>
@@ -336,7 +327,6 @@
                                                                     {{ isset($contact->status) && $contact->status == 1 ? 'checked="checked"' : '' }}>
                                                                 <span class="custom-control-indicator"></span>
                                                             </label>
-
                                                         </td>
                                                     @endif
                                                 </tr>
