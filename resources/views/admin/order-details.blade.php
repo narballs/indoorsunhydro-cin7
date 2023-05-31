@@ -72,70 +72,66 @@
                                     </select>
                                 @endif --}}
                             <input type="hidden" value="{{ $order->id }}" id="order_id_status">
+                            </form>
                             <div class="row mb-5">
-                        </form>
-                        <form>
-                            @csrf
-                            <input type="hidden" value="" id="timeSpanToCancel">
-                            @if ($order->isApproved == 2)
-                                <button type="button" class="btn btn-danger btn-sm" disabled>Cancel Order</button>
-                                <div class="countdown">
-                                </div>
-                            @elseif($order->isApproved == 1)
-                                <div class="col-md-12" style=";
-                            ">
-                                @elseif($order->isApproved == 1)
-                                    <div class="col-md-12">
-                                        <button type="button" class="btn btn-secondary btn-sm" disabled>
-                                            Cancel Order
-                                        </button>
-                                    </div>
-                                @else
-                                    <div class="col-md-12">
-                                        <input type="hidden" value="{{ $orderitems[0]['order_id'] }}" id="order_id">
-                                        <input class="btn btn-danger btn-sm" type="button" value="Cancel Order"
-                                            id="cancel_order" onclick=" cancelOrder(); addComment(0);">
+                                <div class="col-md-2">
+                                    <form>
+                                        @csrf
+                                        <input type="hidden" value="{{$time_diff}}" id="timeSpanToCancel">
+                                        @if ($order->isApproved == 2)
+                                        <button type="button" class="btn btn-danger btn-sm" disabled>Cancel Order</button>
+                                        <div class="countdown">
+                                        </div>
+                                        @elseif($order->isApproved == 1 || $time_diff > 15)
+                                        
+                                        <div class="col-md-12">
+                                            <button type="button" class="btn btn-secondary btn-sm" disabled>
+                                                Cancel Order
+                                            </button>
+                                        </div>
+                                        
+                                        @else
+                                        <div class="col-md-12">
+                                            <input type="hidden" value="{{ $orderitems[0]['order_id'] }}" id="order_id">
+                                            <input class="btn btn-danger btn-sm" type="button" value="Cancel Order"
+                                                id="cancel_order" onclick=" cancelOrder(); addComment(0);">
 
-                                    </div>
-                                    <div class="countdown"></div>
-                                    <!-- <div class=" spinner-border d-none" role="status" id="spinner">
-                                                                                                                                                        <span class="sr-only" style="margin-left: 227px">Activating...</span>
-                                                                                                                                                    </div> -->
-
+                                        </div>
+                                        <div class="countdown"></div>
+                                        @endif
+                                    </form>
                                 </div>
-
-                        </form>
-                        @endif
-                        <form>
-                            @csrf
-                            @if ($order->isApproved == 1)
-                                <div class="col-md-12"
-                                    style="margin-top: -31px;
-                             margin-left: 122px;">
-                                    <button type="button" class="btn btn-secondary btn-sm" disabled>
-                                        Fullfilled
-                                    </button>
+                                <div class="col-md-6">
+                                    <form>
+                                        @csrf
+                                        @if ($order->isApproved == 1)
+                                            <div class="col-md-12"
+                                                style="margin-top: -31px;
+                                         margin-left: 122px;">
+                                                <button type="button" class="btn btn-secondary btn-sm" disabled>
+                                                    Fullfilled
+                                                </button>
+                                            </div>
+                                        @elseif ($order->isApproved == 2)
+                                            <div class="col-md-12"
+                                                style="margin-left: 122px;
+                                        margin-top: -29px;">
+                                                <button type="button" class="btn btn-danger btn-sm" disabled>
+                                                    Fullfilled
+                                                </button>
+                                            </div>
+                                        @else
+                                            <div class="col-md-12" style="margin-left: 50px;">
+                                                <input class="btn btn-primary btn-sm" type="button" value="Fullfill Order"
+                                                    onclick="fullFillOrder()">
+                                            </div>
+                                            <div class="spinner-border d-none" role="status" id="spinner">
+                                                <span class="sr-only" style="margin-left: 227px">Activating...</span>
+                                            </div>
+                                        @endif
+                                    </form>
                                 </div>
-                            @elseif ($order->isApproved == 2)
-                                <div class="col-md-12"
-                                    style="margin-left: 122px;
-                            margin-top: -29px;">
-                                    <button type="button" class="btn btn-danger btn-sm" disabled>
-                                        Fullfilled
-                                    </button>
-                                </div>
-                            @else
-                                <div class="col-md-12" style="margin-left: 50px;">
-                                    <input class="btn btn-primary btn-sm" type="button" value="Fullfill Order"
-                                        onclick="fullFillOrder()">
-                                </div>
-                                <div class="spinner-border d-none" role="status" id="spinner">
-                                    <span class="sr-only" style="margin-left: 227px">Activating...</span>
-                                </div>
-                            @endif
-                        </form>
-
-                    </div>
+                            </div>
                     <div class="progress border d-none w-50 mx-auto" id="progress-bar">
                         <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar"
                             aria-valuenow="100" aria-valuemin="" aria-valuemax="100"></div>
@@ -324,41 +320,33 @@
     @section('js')
         <script>
             $(document).ready(function() {
-                var timeSpanToCancel = $("#timeSpanToCancel").val();
-                var timeSpanToCancel = new Date(timeSpanToCancel);
-                var currentTime = new Date();
-                var currentTimeStamp = new Date();
-                var day = currentTimeStamp.getDate();
-                var month = currentTimeStamp.getMonth() + 1;
-                var year = currentTimeStamp.getFullYear();
-                var time = year + "-" + month + "-" + day + " " + currentTimeStamp.getMonth() + ":" + currentTimeStamp
-                    .getHours() + ":" + currentTimeStamp.getMinutes() + ":" + currentTimeStamp.getSeconds();
-                //var canceltime = new Date(timeSpanToCancel);
-                //var time_diff = new Date(canceltime) - new Date(currentTimeStamp);
-                //var t = new Date(time_diff);
-                // alert(t.getMinutes);
-                //long diff = d2.getTime() - d1.getTime();
-
-
-
-                var timer2 = "15:01";
+            
+                var time_left = $('#timeSpanToCancel').val();
+                time_left  =  15 - time_left;
+                var timer2 = time_left + ":01";
                 var interval = setInterval(function() {
-
-
-                    var timer = timer2.split(':');
-                    //by parsing integer, I avoid all extra string processing
-                    var minutes = parseInt(timer[0], 10);
-                    var seconds = parseInt(timer[1], 10);
-                    --seconds;
-                    minutes = (seconds < 0) ? --minutes : minutes;
-                    if (minutes < 0) clearInterval(interval);
+                var timer = timer2.split(':');
+                //by parsing integer, I avoid all extra string processing
+                var minutes = parseInt(timer[0], 10);
+                var seconds = parseInt(timer[1], 10);
+                --seconds;
+                minutes = (seconds < 0) ? --minutes : minutes;
+                if (minutes < 0) clearInterval(interval);
                     seconds = (seconds < 0) ? 59 : seconds;
                     seconds = (seconds < 10) ? '0' + seconds : seconds;
                     //minutes = (minutes < 10) ?  minutes : minutes;
                     $('#cancel_order').val('Cancel Order in ' + minutes + ':' + seconds);
                     timer2 = minutes + ':' + seconds;
-                    //console.log(minutes);
-                    //console.log(seconds);
+                    if (minutes == 0  && seconds == '00') {
+                        $('#cancel_order').val('Cancel Order');
+                        $('#cancel_order').addClass('disabled');
+                     console.log('finsih');
+                     return; 
+
+                    }
+                    console.log(minutes);
+                    console.log(seconds);
+                  
                 }, 1000);
 
             });
