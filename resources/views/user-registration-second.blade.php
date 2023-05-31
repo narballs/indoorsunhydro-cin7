@@ -281,13 +281,13 @@
                                             <option value="" class="form-control mt-2 company-info fontAwesome"
                                                 placeholder=" &#xf276;   State"> &#xf276; State</option>
                                             @if (!empty($states))
-                                                {
                                                 @foreach ($states as $data)
                                                     <option value="{{ $data->id }}">
                                                         {{ $data->state_name }}
                                                     </option>
                                                 @endforeach
-                                                }
+                                            @else
+                                                <option value="">No State Found</option>
                                             @endif
                                         </select>
                                         {{-- <input type="text" placeholder="&#xf5a0;  Town/City" name="town_city"
