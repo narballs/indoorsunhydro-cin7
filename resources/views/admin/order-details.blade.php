@@ -80,10 +80,15 @@
                             <input type="hidden" value="{{$timeSpanToCancel}}" id="timeSpanToCancel">
                             @if ($order->isApproved == 2)
                                 <button type="button" class="btn btn-danger btn-sm" disabled>Cancel Order</button>
+<<<<<<< HEAD
                                 <div class="countdown"></div>
                             @elseif($order->isApproved == 1 || $order_cancelation == 1)
                                 <div class="col-md-12" style=";
 							">
+=======
+                            @elseif($order->isApproved == 1)
+                                <div class="col-md-12">
+>>>>>>> ffc4485234883184405f159c6f516859f9c1301c
                                     <button type="button" class="btn btn-secondary btn-sm" disabled>
                                         Cancel Order
                                     </button>
@@ -93,12 +98,16 @@
                                     <input type="hidden" value="{{ $orderitems[0]['order_id'] }}" id="order_id">
                                     <input class="btn btn-danger btn-sm" type="button" value="Cancel Order" id="cancel_order"
                                         onclick=" cancelOrder(); addComment(0);">
+<<<<<<< HEAD
 
                                 </div>
                                 <div class="countdown"></div>
                                 <!-- <div class=" spinner-border d-none" role="status" id="spinner">
                                                                                                     <span class="sr-only" style="margin-left: 227px">Activating...</span>
                                                                                                 </div> -->
+=======
+                                </div>
+>>>>>>> ffc4485234883184405f159c6f516859f9c1301c
                         </form>
                         @endif
                         <form>
@@ -467,9 +476,6 @@
                 },
                 success: function(response) {
                     console.log(response);
-
-                    //setInterval('location.reload()', 7000);
-                    //$('#success').removeClass('d-none');
                     jQuery.ajax({
                         url: "{{ url('admin/check-status') }}",
                         method: 'post',
@@ -489,7 +495,6 @@
                             setInterval('location.reload()', 7000);
                         }
                     });
-
                 }
             });
         }

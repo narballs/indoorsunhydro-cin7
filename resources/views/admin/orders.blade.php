@@ -7,10 +7,16 @@
             <div class="row border-bottom product_section_header">
                 <div class="col-md-12">
                     <div class="row">
-                        <div class="col-md-10">
+                        <div class="col-md-2">
                             <p class="order_heading">
                                 Orders
                             </p>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="progress border d-none w-50 mx-auto" id="progress-bar">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-info"
+                                    role="progressbar" aria-valuenow="100" aria-valuemin="" aria-valuemax="100"></div>
+                            </div>
                         </div>
                         <div class="col-md-2 d-flex justify-content-end create_bnt">
                             <button type="button" class="btn create-new-order-btn">
@@ -161,8 +167,52 @@
                                                         data-toggle="tooltip" data-original-title="Delete">Delete
                                                     </a>
                                                     <a class="dropdown-item"href="#" class="edit a_class"
-                                                        title="" data-toggle="tooltip" data-original-title="Edit">Edit
+                                                        title="" data-toggle="tooltip"
+                                                        data-original-title="Edit">Edit
                                                     </a>
+                                                    <form>
+                                                        @csrf
+                                                        @if ($order->isApproved == 1)
+                                                            <a class="dropdown-item disabled bg_success" type="button"
+                                                                class="edit a_class" title="" data-toggle="tooltip"
+                                                                data-original-title="Edit">Fulfill
+                                                                Order
+                                                            </a>
+                                                        @elseif ($order->isApproved == 2)
+                                                            <a class="dropdown-item disabled bg_danger" type="button"
+                                                                class="edit a_class" title="" data-toggle="tooltip"
+                                                                data-original-title="Edit">Fulfill
+                                                                Order
+                                                            </a>
+                                                        @else
+                                                            <a class="dropdown-item" type="button" class="edit a_class"
+                                                                title="" data-toggle="tooltip"
+                                                                data-original-title="Edit"
+                                                                onclick="fullFillOrder()">Fulfill
+                                                                Order
+                                                            </a>
+                                                            <input type="hidden" value="{{ $order->id }}"
+                                                                id="order_id">
+                                                        @endif
+                                                        @if ($order->isApproved == 2)
+                                                            <a class="dropdown-item disabled bg_danger" type="button"
+                                                                class="edit a_class" title="" data-toggle="tooltip"
+                                                                data-original-title="Edit">Cancel
+                                                                Order
+                                                            </a>
+                                                        @elseif($order->isApproved == 1)
+                                                            <a class="dropdown-item disabled bg_success" type="button"
+                                                                class="edit a_class" title="" data-toggle="tooltip"
+                                                                data-original-title="Edit">Cancel Order
+                                                            </a>
+                                                        @else
+                                                            <a class="dropdown-item" type="button" class="edit a_class"
+                                                                title="" data-toggle="tooltip"
+                                                                data-original-title="Edit" onclick="cancelOrder()">Cancel
+                                                                Order
+                                                            </a>
+                                                        @endif
+                                                    </form>
                                                 </div>
                                             </div>
                                         </td>
@@ -205,6 +255,15 @@
 
         }
 
+        .bg_success {
+            /* background: rgb(186 235 137 / 20%) !important; */
+            color: #319701 !important;
+            padding: 6px !important;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 11.3289px;
+        }
+
         .badge-warning {
             background-color: #f1e8cb;
             color: #b58903 !important;
@@ -218,6 +277,14 @@
             color: #fff;
             background-color: rgba(220, 78, 65, 0.12);
             color: #DC4E41;
+            padding: 6px !important;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 11.3289px;
+        }
+
+        .bg_danger {
+            color: #DC4E41 !important;
             padding: 6px !important;
             font-style: normal;
             font-weight: 500;
@@ -319,6 +386,87 @@
             var table = $(e.target).closest('table');
             $('td input:checkbox', table).prop('checked', this.checked);
         });
+
+        function cancelOrder() {
+            var order_id = $("#order_id").val();
+            alert(order_id);
+            $.ajax({
+                url: "{{ url('admin/order-cancel') }}",
+                method: 'post',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "order_id": order_id
+                },
+                success: function(response) {
+                    Swal.fire(
+                        'Good job!',
+                        'Order Cancel successfully',
+                        'success'
+                    )
+                    setInterval('location.reload()', 3000);
+                }
+            })
+        }
+
+        function fullFillOrder() {
+            var status = $("#status").val();
+            var order_id = $("#order_id").val();
+            // alert(order_id);
+            var delay = 7000;
+            $('#progress-bar').removeClass('d-none');
+            jQuery(".progress-bar").each(function(i) {
+                jQuery(this).delay(delay * i).animate({
+                    width: $(this).attr('aria-valuenow') + '%'
+                }, delay);
+
+                jQuery(this).prop('Counter', 1).animate({
+                    Counter: $(this).text()
+                }, {
+                    duration: delay,
+                    step: function(now) {
+                        jQuery(this).text(Math.ceil(100) + '%');
+
+                    }
+                });
+            });
+
+            jQuery.ajax({
+                url: "{{ url('admin/order-full-fill') }}",
+                method: 'post',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "order_id": order_id
+                },
+                success: function(response) {
+                    console.log(response);
+                    jQuery.ajax({
+                        url: "{{ url('admin/check-status') }}",
+                        method: 'post',
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                            "order_id": order_id
+                        },
+                        success: function(response) {
+                            console.log(response.status);
+                            if (response.status === 'Order fullfilled successfully') {
+                                $('#fullfill_success').html(response.status);
+                                Swal.fire(
+                                    'Good job!',
+                                    'Order fullfilled successfully',
+                                    'success'
+                                )
+                            } else {
+                                // $('#fullfill_failed').html(response.status);
+                                Swal.fire('Order fullfilled failed')
+                            }
+
+                            // $('#progress-bar').addClass('d-none');
+                            setInterval('location.reload()', 3000);
+                        }
+                    });
+                }
+            });
+        }
     </script>
 @stop
 @section('plugins.Sweetalert2', true)

@@ -15,7 +15,7 @@
                         </div>
                         <div class="col-md-2 d-flex justify-content-end create_bnt">
                             <button type="button" class="btn create_new_product_btn">
-                                Create New proudct +
+                                Create New Product +
                             </button>
                         </div>
                     </div>

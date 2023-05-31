@@ -149,7 +149,7 @@ class ContactController extends Controller
     public function show_customer($id)
     {
         $primary_contact = '';
-        $secondary_contact = '';
+        $secondary_contacts = '';
         $contact_is_parent = '';
         $customer = Contact::where('id', $id)->first();
         $pricing = $customer->priceColumn;
@@ -168,7 +168,6 @@ class ContactController extends Controller
         } else {
             $invitation_url = '';
         }
-        //echo $customer->pricing;exit;
         return view('admin/customer-details', compact(
             'customer',
             'secondary_contacts',
@@ -176,7 +175,8 @@ class ContactController extends Controller
             'customer_orders',
             'invitation_url',
             'customer',
-            'secondary_contact',
+            'secondary_contacts',
+            'primary_contact',
             'statuses',
             'customer_orders',
             'invitation_url',
