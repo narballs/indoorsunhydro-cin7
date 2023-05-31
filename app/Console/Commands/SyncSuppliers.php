@@ -67,7 +67,8 @@ class SyncSuppliers extends Command
             try {
                 $res = $client2->request(
                     'GET', 
-                    'https://api.cin7.com/api/v1/Contacts?where=modifieddate>='. $formattedDateSting .'&page='.$i,
+                    //'https://api.cin7.com/api/v1/Contacts?where=modifieddate>='. $formattedDateSting .'&page='.$i,
+                    'https://api.cin7.com/api/v1/Contacts?page='.$i,
                     [
                         'auth' => [
                             env('API_USER'),
@@ -267,22 +268,22 @@ class SyncSuppliers extends Command
             $sync_log->save();
         }
        
-        $qcom_contact_id = Contact::where('is_parent', 1)->pluck('contact_id')->toArray();
+        //$qcom_contact_id = Contact::where('is_parent', 1)->pluck('contact_id')->toArray();
   
 
-        $this->info(count($qcom_contact_id));  
-        $this->info(count($api_contact_ids));
-        $differences = array_diff($qcom_contact_id, $api_contact_ids);
-        foreach($differences as $difference) {
-            $contact = Contact::where('contact_id', $difference)->first();
-            $contact->status = 0;
-               $UserLog = new UserLog([
-                        'contact_id' => $difference,
-                        'action' => 'Sync',
-                        'user_notes' => 'Disabled during Sync at '.Carbon::now()->toDateTimeString() .'Not found in cin7',        
-                    ]);
-                $UserLog->save();
-            $contact->save();
-        }
+        //$this->info(count($qcom_contact_id));  
+        //$this->info(count($api_contact_ids));
+        //$differences = array_diff($qcom_contact_id, $api_contact_ids);
+        //foreach($differences as $difference) {
+            //$contact = Contact::where('contact_id', $difference)->first();
+            //$contact->status = 0;
+               //$UserLog = new UserLog([
+                        //'contact_id' => $difference,
+                        //'action' => 'Sync',
+                        //'user_notes' => 'Disabled during Sync at '.Carbon::now()->toDateTimeString() .'Not found in cin7',        
+                    //]);
+                //$UserLog->save();
+            //$contact->save();
+        //}
     }
 }
