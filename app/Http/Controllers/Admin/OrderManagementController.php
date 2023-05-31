@@ -57,6 +57,8 @@ class OrderManagementController extends Controller
         $tax_class = TaxClass::where('is_default', 1)->first();
         $createdDate = $order->created_at;
         $formatedDate = $createdDate->format('jS \of F Y h:i:s A');
+        $orderCreatedDate = Carbon::now($createdDate.'Z');
+        dd($orderCreatedDate);
 
         //$timeSpanToCancel =  new DateTime();
         //$timeSpanToCancel  = $order->created_at;
