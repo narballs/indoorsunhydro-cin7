@@ -57,20 +57,11 @@ class OrderManagementController extends Controller
         $tax_class = TaxClass::where('is_default', 1)->first();
         $createdDate = $order->created_at;
         $formatedDate = $createdDate->format('jS \of F Y h:i:s A');
-        $orderCreatedDate = Carbon::now($createdDate.'Z');
-        //dd($orderCreatedDate);
-
-        //$timeSpanToCancel =  new DateTime();
-        //$timeSpanToCancel  = $order->created_at;
-       // $orderCreationDate = new DateTime();
-        //$orderCreationDate = $order->created_at;
-        
-        //if ($orderCreationDate < $timeSpanToCancel) {
-          //  $order_cancelation = 0;
-        //}
-        //else {
-        //    $order_cancelation = 1;
-        //}
+        $orderCreatedDate = Carbon::createFromFormat('Y-m-d H:i:s', $createdDate, 'America/Los_Angeles');
+        $currentTime = Carbon::now();
+        $time_diff = $orderCreatedDate->diffInMinutes($currentTime);
+       // dd($time_diff);
+       
         
         $customer = Contact::where('user_id', $order->user_id)->first();
         $option_ids = ApiOrderItem::where('order_id', $id)->pluck('option_id')->toArray();
@@ -88,7 +79,9 @@ class OrderManagementController extends Controller
             'orderComment',
             'statuses',
             'customer',
-            'formatedDate'));
+            'formatedDate',
+            'time_diff'
+        ));
     }
 
     public function addComments(Request $request)
