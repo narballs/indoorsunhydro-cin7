@@ -67,7 +67,7 @@ class SyncSuppliers extends Command
             try {
                 $res = $client2->request(
                     'GET',
-                    'https://api.cin7.com/api/v1/Contacts&page=' . $i,
+                    'https://api.cin7.com/api/v1/Contacts?page=' . $i,
 
                     [
                         'auth' => [
@@ -78,6 +78,7 @@ class SyncSuppliers extends Command
                 );
 
                 $api_contacts = $res->getBody()->getContents();
+                dd($api_contacts);
                 $api_contacts = json_decode($api_contacts);
                 $record_count = count($api_contacts);
                 $this->info('Record Count => ' . $record_count);
