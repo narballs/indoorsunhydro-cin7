@@ -158,7 +158,7 @@
                                             <span
                                                 class="ms-1 d-none d-sm-inline  fs-5 ms-3 mt-1 ml-0 pl-0 nav-items-link"
                                                 onclick="wishLists()">
-                                                Wishlists
+                                                My Favourites
                                             </span>
                                         </div>
                                     </div>
@@ -387,7 +387,7 @@
                         <div class="col-md-8 border-bottom border-4 d-flex pb-4 p-0 bg-white">
                             <img src="/theme/img/heartfilled.png" style="margin: 5px 3px 0px 9px;" width="28px"
                                 height="28px">
-                            <span class="pt-1 my-account-content-heading">Wishlists</span>
+                            <span class="pt-1 my-account-content-heading">My Favourites</span>
                         </div>
                         <div class="col-md-4 border-bottom" style="    padding-left: 151px;">
                             <button class="btn btn-outline-success" data-bs-toggle="modal"
