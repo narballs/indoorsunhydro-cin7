@@ -110,19 +110,19 @@ class ProductController extends Controller
             $pricing = 'RetailUSD';
         }
 
-      $contact_id = session()->get('contact_id');
-      $user_list = BuyList::where('user_id', $user_id)
+        $contact_id = session()->get('contact_id');
+        $user_list = BuyList::where('user_id', $user_id)
             ->where('contact_id', $contact_id)
             ->first();
 
 
-      $user_buy_list_options = [];
+        $user_buy_list_options = [];
 
         if (!empty($user_list)) {
             $user_buy_list_options = ProductBuyList::where('list_id', $user_list->id)->pluck('option_id', 'option_id')->toArray();
-        }      
+        }
 
-      $lists = BuyList::where('user_id', $user_id)
+        $lists = BuyList::where('user_id', $user_id)
             ->where('contact_id', $contact_id)
             ->with('list_products')
             ->get();
@@ -304,6 +304,17 @@ class ProductController extends Controller
             $pricing = 'Retail';
         }
         $category_id = $selected_category_id;
+        $contact_id = session()->get('contact_id');
+        $user_list = BuyList::where('user_id', $user_id)
+            ->where('contact_id', $contact_id)
+            ->first();
+
+
+        $user_buy_list_options = [];
+
+        if (!empty($user_list)) {
+            $user_buy_list_options = ProductBuyList::where('list_id', $user_list->id)->pluck('option_id', 'option_id')->toArray();
+        }
 
         return view('all_products', compact(
             'products',
@@ -318,7 +329,8 @@ class ProductController extends Controller
             'lists',
             'pricing',
             'childerens',
-            'childeren_id'
+            'childeren_id',
+            'user_buy_list_options'
             // 'db_price_column'
         ));
     }
@@ -344,7 +356,6 @@ class ProductController extends Controller
             );
             $inventory = $res->getBody()->getContents();
             $location_inventories = json_decode($inventory);
-            
         } catch (Exception $ex) {
         }
 
@@ -584,10 +595,9 @@ class ProductController extends Controller
 
         $productOption = ProductOption::where('option_id', $option_id)->with('products.options.price')->first();
         $cart = session()->get('cart');
-        if(Auth::id() !== null){
+        if (Auth::id() !== null) {
             $user_id = Auth::id();
-        }
-        else {
+        } else {
             $user_id = '';
         }
 
@@ -603,52 +613,50 @@ class ProductController extends Controller
         if ($contact_id || $secondary_id) {
             $pricing = $contact->priceColumn;
         }
-        if (!empty($user_id) && !empty($contact_id || $secondary_id) ) {
+        if (!empty($user_id) && !empty($contact_id || $secondary_id)) {
             foreach ($productOption->products->options as $option) {
                 foreach ($option->price as $price) {
 
                     if ($pricing == 'RetailUSD') {
 
                         $price = $price['retailUSD'];
-
-                    } 
+                    }
                     if ($pricing == 'WholesaleUSD') {
                         $price = $price['wholesaleUSD'];
-                    } 
+                    }
                     if ($pricing == 'TerraInternUSD') {
                         $price = $price['terraInternUSD'];
-                    } 
+                    }
                     if ($pricing == 'SacramentoUSD') {
                         $price = $price['sacramentoUSD'];
-                    } 
+                    }
                     if ($pricing == 'OklahomaUSD') {
                         $price = $price['oklahomaUSD'];
-                    } 
+                    }
                     if ($pricing == 'CalaverasUSD') {
                         $price = $price['calaverasUSD'];
-                    } 
+                    }
                     if ($pricing == 'Tier1USD') {
                         $price = $price['tier1USD'];
-                    } 
+                    }
                     if ($pricing == 'Tier2USD') {
                         $price = $price['tier2USD'];
-                    } 
+                    }
                     if ($pricing == 'Tier3USD') {
                         $price = $price['tier3USD'];
-                    } 
+                    }
                     if ($pricing == 'ComercialOkUSD') {
                         $price = $price['commercialOKUSD'];
-                    } 
+                    }
                     if ($pricing == 'CostUSD') {
                         $price = $price['costUSD'];
-                    } 
+                    }
                     // else {
                     //     $price = $price['retailUSD'];
                     // }
                 }
             }
-        } 
-        else {
+        } else {
             foreach ($productOption->products->options as $option) {
                 foreach ($option->price as $price) {
                     $price = $price['retailUSD'];
@@ -665,7 +673,6 @@ class ProductController extends Controller
                 $product_in_active_cart->save();
             }
             $cart[$id]['quantity'] += $request->quantity;
-
         } else {
 
             $hash_cart = $request->session()->get('cart_hash');
@@ -690,7 +697,7 @@ class ProductController extends Controller
             $cart[$id]['user_id'] = $user_id;
             $cart[$id]['is_active'] = 1;
             $cart[$id]['qoute_id'] = $id;
-            
+
             $qoute = Cart::create($cart[$id]);
         }
 
@@ -709,7 +716,7 @@ class ProductController extends Controller
             $cart = session()->get('cart');
             //dd($request->id);
             if (isset($cart[$request->id])) {
-               $qoute = Cart::where('qoute_id', $request->id)->delete();
+                $qoute = Cart::where('qoute_id', $request->id)->delete();
                 unset($cart[$request->id]);
             }
 
@@ -753,7 +760,7 @@ class ProductController extends Controller
         // if (!empty($items)) {
         //     foreach ($items as $item) {
         //         $product_id = $item['id'];
-                
+
 
         //         $cart_item = isset($cart_items[$product_id]) ? $cart_items[$product_id] : array();
 
@@ -770,19 +777,19 @@ class ProductController extends Controller
 
         $cart_items = session()->get('cart');
         if (!empty($item)) {
-       
-                $product_id = $request->post('product_id');
-                
 
-                $cart_item = isset($cart_items[$product_id]) ? $cart_items[$product_id] : array();
+            $product_id = $request->post('product_id');
 
-                if (!empty($cart_item) && $cart_item['quantity'] != $item) {
-                    Session::put('cart.' . $product_id . '.quantity', $item);
-                    $cart_items = session()->get('cart');
-                    $qoute = Cart::where('qoute_id', $product_id)->first();
-                    $qoute->quantity = $item;
-                    $qoute->save();
-                }
+
+            $cart_item = isset($cart_items[$product_id]) ? $cart_items[$product_id] : array();
+
+            if (!empty($cart_item) && $cart_item['quantity'] != $item) {
+                Session::put('cart.' . $product_id . '.quantity', $item);
+                $cart_items = session()->get('cart');
+                $qoute = Cart::where('qoute_id', $product_id)->first();
+                $qoute->quantity = $item;
+                $qoute->save();
+            }
         }
         $cart_item = session()->get('cart');
 
@@ -956,7 +963,7 @@ class ProductController extends Controller
         //     ->whereRaw('LOWER(`name`) like ?', ['%'.strtolower($value).'%'])
         //     ->orWhere('code', 'LIKE', '%' . $value . '%')
         //     ->paginate($per_page);
-            
+
         $searchvalue = preg_split('/\s+/', $searchvalue, -1, PREG_SPLIT_NO_EMPTY);
         if (!empty($is_search)) {
             foreach ($searchvalue as $value) {
@@ -1021,22 +1028,21 @@ class ProductController extends Controller
             ]);
         }
 
-      
+
         if ($contact->secondary_id) {
             $contact =  Contact::where('secondary_id', $contact->secondary_id)->first();
             $parent_id = $contact->parent_id;
             $contact_pricing =  Contact::where('contact_id', $parent_id)->first();
             $contact_pricing = $contact->priceColumn;
-
         } else {
             $contact_pricing = $contact->priceColumn;
         }
         $prices = Pricingnew::where('option_id', $request->option_id)->pluck($contact_pricing);
-        foreach($prices as $price) {
+        foreach ($prices as $price) {
             $active_price = $price;
         }
-      
-        
+
+
         $user_lists = BuyList::where('user_id', $user_id)->where('contact_id', $contact_id)->where('title', 'My Favourites')->exists();
         if ($user_lists == false) {
             $wishlist = new BuyList();
@@ -1061,10 +1067,8 @@ class ProductController extends Controller
 
             if (!empty($product_buy_list)) {
                 $product_buy_list->delete();
-            }    
-
-        }
-        else {
+            }
+        } else {
             $product_buy_list = new ProductBuyList();
             $product_buy_list->list_id = $list_id;
             $product_buy_list->product_id = $request->product_id;
@@ -1084,8 +1088,8 @@ class ProductController extends Controller
     {
         $user_id = Auth::id();
         $contact_id = session()->get('contact_id');
-        $lists = BuyList::where('user_id', $user_id)->where('contact_id', $contact_id )->with('list_products.product.options.price')->where('title', 'My Favourites')->get();
-        
+        $lists = BuyList::where('user_id', $user_id)->where('contact_id', $contact_id)->with('list_products.product.options.price')->where('title', 'My Favourites')->get();
+
         // dd($lists);
         //$list_title = $list->title;
         $images = [];
@@ -1137,5 +1141,20 @@ class ProductController extends Controller
             'status' => 'success',
             'msg' => 'List created Successully'
         ]);
+    }
+
+    public function delete_favorite_product(Request $request)
+    {
+        $user_id = Auth::id();
+        $contact_id = session()->get('contact_id');
+        $lists = BuyList::where('user_id', $user_id)->where('contact_id', $contact_id)->with('list_products.product.options.price')->where('title', 'My Favourites')->get();
+
+        $product_buy_list_id = $request->product_buy_list_id;
+        $delete_favorite = ProductBuyList::find($product_buy_list_id)->delete();
+        return response()->json([
+            'status' => 'success',
+            'lists' => $lists,
+            'message' => 'product removed successfully!'
+        ], 200);
     }
 }
