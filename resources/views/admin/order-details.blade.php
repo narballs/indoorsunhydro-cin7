@@ -17,7 +17,6 @@
         <!-- Main content -->
         <div class="row">
             <div class="col-lg-8">
-
                 <!-- Details -->
                 <div class="card mb-4">
                     <div class="card-body">
@@ -77,228 +76,207 @@
                         </form>
                         <form>
                             @csrf
-                            <input type="hidden" value="{{$orderCreationDate}}" id="timeSpanToCancel">
+                            <input type="hidden" value="" id="timeSpanToCancel">
                             @if ($order->isApproved == 2)
                                 <button type="button" class="btn btn-danger btn-sm" disabled>Cancel Order</button>
+                        <div class="countdown">
+                    </div>
+                      @elseif($order->isApproved == 1 )
+                    <div class="col-md-12" style=";
+                            ">
+                    @elseif($order->isApproved == 1)
+                        <div class="col-md-12">
+                            >>>>>>> ffc4485234883184405f159c6f516859f9c1301c
+                            <button type="button" class="btn btn-secondary btn-sm" disabled>
+                                Cancel Order
+                            </button>
+                        </div>
+                    @else
+                        <div class="col-md-12">
+                            <input type="hidden" value="{{ $orderitems[0]['order_id'] }}" id="order_id">
+                            <input class="btn btn-danger btn-sm" type="button" value="Cancel Order" id="cancel_order"
+                                onclick=" cancelOrder(); addComment(0);">
 
-                                <div class="countdown"></div>
-                            @elseif($order->isApproved == 1 || $order_cancelation == 1)
-                                <div class="col-md-12">
-                                     <button type="button" class="btn btn-secondary btn-sm" disabled>
-                                        Cancel Order
-                                    </button>
-                                </div>
+                        </div>
+                        <div class="countdown"></div>
+                        <!-- <div class=" spinner-border d-none" role="status" id="spinner">
+                                                                                                            <span class="sr-only" style="margin-left: 227px">Activating...</span>
+                                                                                                        </div> -->
 
-                            @else
-                                <div class="col-md-12">
-                                    <input type="hidden" value="{{ $orderitems[0]['order_id'] }}" id="order_id">
-                                    <input class="btn btn-danger btn-sm" type="button" value="Cancel Order" id="cancel_order"
-                                        onclick=" cancelOrder(); addComment(0);">
+                    </div>
 
-
-                                </div>
-                                <div class="countdown"></div>
-                                <!-- <div class=" spinner-border d-none" role="status" id="spinner">
-                                                                                                    <span class="sr-only" style="margin-left: 227px">Activating...</span>
-                                                                                                </div> -->
-
-                                </div>
-
-                        </form>
+                    </form>
+                    @endif
+                    <form>
+                        @csrf
+                        @if ($order->isApproved == 1)
+                            <div class="col-md-12" style="margin-top: -31px;
+                             margin-left: 122px;">
+                                <button type="button" class="btn btn-secondary btn-sm" disabled>
+                                    Fullfilled
+                                </button>
+                            </div>
+                        @elseif ($order->isApproved == 2)
+                            <div class="col-md-12" style="margin-left: 122px;
+                            margin-top: -29px;">
+                                <button type="button" class="btn btn-danger btn-sm" disabled>
+                                    Fullfilled
+                                </button>
+                            </div>
+                        @else
+                            <div class="col-md-12" style="margin-left: 50px;">
+                                <input class="btn btn-primary btn-sm" type="button" value="Fullfill Order"
+                                    onclick="fullFillOrder()">
+                            </div>
+                            <div class="spinner-border d-none" role="status" id="spinner">
+                                <span class="sr-only" style="margin-left: 227px">Activating...</span>
+                            </div>
                         @endif
-                        <form>
-                            @csrf
-                            @if ($order->isApproved == 1)
-                                <div class="col-md-12" style="margin-top: -31px;
-							 margin-left: 122px;">
-                                    <button type="button" class="btn btn-secondary btn-sm" disabled>
-                                        Fullfilled
-                                    </button>
-                                </div>
-                            @elseif ($order->isApproved == 2)
-                                <div class="col-md-12" style="margin-left: 122px;
-							margin-top: -29px;">
-                                    <button type="button" class="btn btn-danger btn-sm" disabled>
-                                        Fullfilled
-                                    </button>
-                                </div>
-                            @else
-                                <div class="col-md-12" style="margin-left: 50px;">
-                                    <input class="btn btn-primary btn-sm" type="button" value="Fullfill Order"
-                                        onclick="fullFillOrder()">
-                                </div>
-                                <div class="spinner-border d-none" role="status" id="spinner">
-                                    <span class="sr-only" style="margin-left: 227px">Activating...</span>
-                                </div>
-                            @endif
-                        </form>
+                    </form>
 
-                    </div>
-                    <div class="progress border d-none w-50 mx-auto" id="progress-bar">
-                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar"
-                            aria-valuenow="100" aria-valuemin="" aria-valuemax="100"></div>
-                    </div>
-                    <div class="bg-success text-white text-center" id="fullfill_success"></div>
-                    <div class="bg-warning text-white text-center" id="fullfill_failed"></div>
-                    <table class="table mt-3">
-                        <tr>
-                            <th>Line Items</th>
-                            <th>Quantity</th>
-                            <th>Totals</th>
-                        </tr>
-                        <tbody>
-                            @php
-                                $tax = $order->total * ($tax_class->rate / 100);
-                                $total_including_tax = $tax + $order->total;
-                            @endphp
-                            @foreach ($orderitems as $item)
-                                <tr>
-                                    <td>
-                                        <div class="d-flex mb-2">
-                                            <div class="flex-shrink-0 mx-4">
-                                                <img src="{{ $item->product->images }}" alt="" width="35"
-                                                    class="img-fluid">
-                                            </div>
-                                            <div class="flex-lg-grow-1 ms-3">
-                                                <h6 class="small mb-0"><a href="#"
-                                                        class="text-reset">{{ $item->Product->name }}</a></h6>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="ms-2">{{ $item->quantity }}</td>
-                                    <td class="text-end">${{ $item->price }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td colspan="2">Subtotal</td>
-                                <td class="text-end">${{ $order->total }}</td>
-                            </tr>
-                            <tr>
-                                <td colspan="2">Shipping</td>
-                                <td class="text-end">$0.00</td>
-                            </tr>
-                            <tr>
-                                <td colspan="2">Add Tax</td>
-                                <td class="text-end">${{ number_format($tax, 2) }}</td>
-                            </tr>
-                            <tr class="fw-bold">
-                                <td colspan="2"><strong>GRAND TOTAL</strong></td>
-                                <td class="text-end">${{ number_format($total_including_tax, 2) }}</td>
-                            </tr>
-                        </tfoot>
-                    </table>
                 </div>
-            </div>
-            <!-- Payment -->
-            {{-- <div class="card mb-4">
-				<div class="card-body">
-					<div class="row">
-						<div class="col-lg-6">
-							<h3>Add Text</h3>
-						</div>
-						<div class="col-lg-6">
-							<p class="d-flex justify-content-end">{{$tax}}</p>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-6">
-							<td colspan="2"><strong>GRAND TOTAL</strong></td>
-						</div>
-						<div class="col-md-6">
-							<p class="d-flex justify-content-end">{{$total_including_tax}}</p>
-						</div>
-					</div>
-				</div>
-			</div> --}}
-            <div class="card mb-4">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <h3 class="h6">Payment Method</h3>
-                            <span>{{ $order->paymentTerms }}</span></p>
-                        </div>
-                        <div class="col-lg-6">
-                            <h3 class="h6">Billing address</h3>
-                            <address>
-                                @if (!empty($customer->firstName && $customer->lastName))
-                                    <strong>{{ $customer->firstName }}&nbsp;{{ $customer->lastName }}</strong><br>
-                                @endif
-                                {{ $customer->postalAddress1 }}<br>
-                                {{ $customer->postalAddress2 }}
-                                {{ $customer->postalCity }}, {{ $customer->state }}
-                                <p title="Phone" class="m-0">P:({{ $customer->mobile }})</p>
-                            </address>
-                        </div>
-                    </div>
+                <div class="progress border d-none w-50 mx-auto" id="progress-bar">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar"
+                        aria-valuenow="100" aria-valuemin="" aria-valuemax="100"></div>
                 </div>
-            </div>
-        </div>
-        <div class="col-lg-4">
-            <!-- Customer Notes -->
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h3 class="h6" style="margin-bottom: 0px;"><strong>Order Notes</strong></h3>
-                    @foreach ($orderComment as $comment)
+                <div class="bg-success text-white text-center" id="fullfill_success"></div>
+                <div class="bg-warning text-white text-center" id="fullfill_failed"></div>
+                <table class="table mt-3">
+                    <tr>
+                        <th>Line Items</th>
+                        <th>Quantity</th>
+                        <th>Totals</th>
+                    </tr>
+                    <tbody>
                         @php
-                            $user = auth()->user();
+                            $tax = $order->total * ($tax_class->rate / 100);
+                            $total_including_tax = $tax + $order->total;
                         @endphp
-                        <p>{{ $user->first_name }} {{ $user->last_name }} {{ $comment->comment }}</p>
-                        <p style="margin-bottom: 0px;">Date</p>
-                        <p>
-                            <i>
-                                {{ $comment->created_at }}
-                            </i>
-                        </p>
-                    @endforeach
-
-                </div>
+                        @foreach ($orderitems as $item)
+                            <tr>
+                                <td>
+                                    <div class="d-flex mb-2">
+                                        <div class="flex-shrink-0 mx-4">
+                                            <img src="{{ $item->product->images }}" alt="" width="35"
+                                                class="img-fluid">
+                                        </div>
+                                        <div class="flex-lg-grow-1 ms-3">
+                                            <h6 class="small mb-0"><a href="#"
+                                                    class="text-reset">{{ $item->Product->name }}</a></h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="ms-2">{{ $item->quantity }}</td>
+                                <td class="text-end">${{ $item->price }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="2">Subtotal</td>
+                            <td class="text-end">${{ $order->total }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Shipping</td>
+                            <td class="text-end">$0.00</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Add Tax</td>
+                            <td class="text-end">${{ number_format($tax, 2) }}</td>
+                        </tr>
+                        <tr class="fw-bold">
+                            <td colspan="2"><strong>GRAND TOTAL</strong></td>
+                            <td class="text-end">${{ number_format($total_including_tax, 2) }}</td>
+                        </tr>
+                    </tfoot>
+                </table>
             </div>
-            <div class="col-lg-12">
-                <form method="POST" id="order_notes" name="order_notes">
-                    <div class="form-group">
-                        <label for="exampleFormControlTextarea1" class="ms-2">Add Order Notes</label>
-                        <textarea class="form-control" id="comment" rows="3">
-	    			</textarea>
-                        <input class="btn btn-primary" type="button" value="Add Notes" onclick="addComment(1)">
-                        <input type="hidden" value="{!! $order->id !!}" id="order_id">
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <h3 class="h6">Payment Method</h3>
+                        <span>{{ $order->paymentTerms }}</span></p>
                     </div>
-
-                </form>
-            </div>
-            <div class="col-lg-12">
-                <form method="POST" id="order_notes" name="order_notes">
-                    <div class="form-group">
-                        <label for="exampleFormControlTextarea1" class="ms-2">Fullfil</label>
-                        <textarea class="form-control" id="comment" rows="3">
-	    			</textarea>
-                        <input class="btn btn-primary" type="button" value="Add Notes" onclick="fullFillOrder()">
-                        <input type="hidden" value="{!! $order->id !!}" id="order_id">
+                    <div class="col-lg-6">
+                        <h3 class="h6">Billing address</h3>
+                        <address>
+                            @if (!empty($customer->firstName && $customer->lastName))
+                                <strong>{{ $customer->firstName }}&nbsp;{{ $customer->lastName }}</strong><br>
+                            @endif
+                            {{ $customer->postalAddress1 }}<br>
+                            {{ $customer->postalAddress2 }}
+                            {{ $customer->postalCity }}, {{ $customer->state }}
+                            <p title="Phone" class="m-0">P:({{ $customer->mobile }})</p>
+                        </address>
                     </div>
-
-                </form>
-            </div>
-            <div class="card mb-4">
-                <!-- Shipping information -->
-                <div class="card-body">
-                    <h3 class="h6">Shipping Information</h3>
-
-                    <hr>
-                    <h3 class=" h6">Address</h3>
-                    <address>
-                        <strong>{{ $customer->firstName }} {{ $customer->lastName }}</strong><br>
-                        {{ $customer->address1 }}, {{ $customer->address2 }}<br>
-                        {{ $customer->city }},
-                        <p title="Phone" class="mb-0">P: ({{ $customer->mobile }})</p>
-                        <p title="Phone">{{ $customer->email }}</p>
-                    </address>
                 </div>
             </div>
         </div>
 
+        </div>
+     <div class="col-lg-4">
+        <!-- Customer Notes -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h3 class="h6" style="margin-bottom: 0px;"><strong>Order Notes</strong></h3>
+                @foreach ($orderComment as $comment)
+                    @php
+                        $user = auth()->user();
+                    @endphp
+                    <p>{{ $user->first_name }} {{ $user->last_name }} {{ $comment->comment }}</p>
+                    <p style="margin-bottom: 0px;">Date</p>
+                    <p>
+                        <i>
+                            {{ $comment->created_at }}
+                        </i>
+                    </p>
+                @endforeach
+
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <form method="POST" id="order_notes" name="order_notes">
+                <div class="form-group">
+                    <label for="exampleFormControlTextarea1" class="ms-2">Add Order Notes</label>
+                    <textarea class="form-control" id="comment" rows="3">
+                    </textarea>
+                    <input class="btn btn-primary" type="button" value="Add Notes" onclick="addComment(1)">
+                    <input type="hidden" value="{!! $order->id !!}" id="order_id">
+                </div>
+
+            </form>
+        </div>
+        <div class="col-lg-12">
+            <form method="POST" id="order_notes" name="order_notes">
+                <div class="form-group">
+                    <label for="exampleFormControlTextarea1" class="ms-2">Fullfil</label>
+                    <textarea class="form-control" id="comment" rows="3">
+                    </textarea>
+                    <input class="btn btn-primary" type="button" value="Add Notes" onclick="fullFillOrder()">
+                    <input type="hidden" value="{!! $order->id !!}" id="order_id">
+                </div>
+
+            </form>
+        </div>
+        <div class="card mb-4">
+            <!-- Shipping information -->
+            <div class="card-body">
+                <h3 class="h6">Shipping Information</h3>
+
+                <hr>
+                <h3 class=" h6">Address</h3>
+                <address>
+                    <strong>{{ $customer->firstName }} {{ $customer->lastName }}</strong><br>
+                    {{ $customer->address1 }}, {{ $customer->address2 }}<br>
+                    {{ $customer->city }},
+                    <p title="Phone" class="mb-0">P: ({{ $customer->mobile }})</p>
+                    <p title="Phone">{{ $customer->email }}</p>
+                </address>
+            </div>
+        </div>
     </div>
-    </div>
+</div>
 @stop
 
 @section('css')
@@ -344,47 +322,42 @@
 
 @section('js')
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             var timeSpanToCancel = $("#timeSpanToCancel").val();
-            //alert()
-            var timeSpanToCancel =  new Date(timeSpanToCancel);
-            alert(timeSpanToCancel);
+            var timeSpanToCancel = new Date(timeSpanToCancel);
             var currentTime = new Date();
             var currentTimeStamp = new Date();
             var day = currentTimeStamp.getDate();
             var month = currentTimeStamp.getMonth() + 1;
             var year = currentTimeStamp.getFullYear();
-            var time = year + "-" + month + "-"+ day +" "+currentTimeStamp.getMonth() +":"+currentTimeStamp.getHours() + ":" + currentTimeStamp.getMinutes() + ":" + currentTimeStamp.getSeconds();
-           //var canceltime = new Date(timeSpanToCancel);
+            var time = year + "-" + month + "-" + day + " " + currentTimeStamp.getMonth() + ":" + currentTimeStamp
+                .getHours() + ":" + currentTimeStamp.getMinutes() + ":" + currentTimeStamp.getSeconds();
+            //var canceltime = new Date(timeSpanToCancel);
             //var time_diff = new Date(canceltime) - new Date(currentTimeStamp);
             //var t = new Date(time_diff);
-           // alert(t.getMinutes);
-           //long diff = d2.getTime() - d1.getTime();
-    
-            var time_diff =  currentTime  - timeSpanToCancel;
-            var minutes = new Date(time_diff).getMinutes(); 
-            var seconds = new Date(time_diff).getSeconds(); 
-            console.log(minutes);
-            console.log(seconds);
-            var timer2 = minutes +":"+ seconds;
-            console.log(timer2);
+            // alert(t.getMinutes);
+            //long diff = d2.getTime() - d1.getTime();
+
+
+
+            var timer2 = "15:01";
             var interval = setInterval(function() {
 
 
-            var timer = timer2.split(':');
-            //by parsing integer, I avoid all extra string processing
-            var minutes = parseInt(timer[0], 10);
-            var seconds = parseInt(timer[1], 10);
-            --seconds;
-            minutes = (seconds < 0) ? --minutes : minutes;
-            if (minutes < 0) clearInterval(interval);
-            seconds = (seconds < 0) ? 59 : seconds;
-            seconds = (seconds < 10) ? '0' + seconds : seconds;
-            //minutes = (minutes < 10) ?  minutes : minutes;
-            $('#cancel_order').val('Cancel Order in '+ minutes + ':' + seconds);
-            timer2 = minutes + ':' + seconds;
-               //console.log(minutes);
-            //console.log(seconds);
+                var timer = timer2.split(':');
+                //by parsing integer, I avoid all extra string processing
+                var minutes = parseInt(timer[0], 10);
+                var seconds = parseInt(timer[1], 10);
+                --seconds;
+                minutes = (seconds < 0) ? --minutes : minutes;
+                if (minutes < 0) clearInterval(interval);
+                seconds = (seconds < 0) ? 59 : seconds;
+                seconds = (seconds < 10) ? '0' + seconds : seconds;
+                //minutes = (minutes < 10) ?  minutes : minutes;
+                $('#cancel_order').val('Cancel Order in ' + minutes + ':' + seconds);
+                timer2 = minutes + ':' + seconds;
+                //console.log(minutes);
+                //console.log(seconds);
             }, 1000);
 
         });
@@ -431,8 +404,8 @@
         }
 
         function cancelOrder() {
-            
-            
+
+
             var order_id = $("#order_id").val();
             $.ajax({
                 url: "{{ url('admin/order-cancel') }}",

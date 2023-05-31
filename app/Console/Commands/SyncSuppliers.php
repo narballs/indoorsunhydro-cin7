@@ -53,11 +53,11 @@ class SyncSuppliers extends Command
         $rawDate = Carbon::parse($date);
         $getdate = $rawDate->format('Y-m-d');
         $getTime = $rawDate->format('H:i:s');
-        $formattedDateSting = $getdate.'T'. $getTime .'Z';  
+        $formattedDateSting = $getdate . 'T' . $getTime . 'Z';
         $client2 = new \GuzzleHttp\Client();
         $total_contact_pages = 150;
         $api_contact_ids = [];
-        
+
 
 
         for ($i = 1; $i <= $total_contact_pages; $i++) {
@@ -66,9 +66,9 @@ class SyncSuppliers extends Command
             sleep(5);
             try {
                 $res = $client2->request(
-                    'GET', 
-                    //'https://api.cin7.com/api/v1/Contacts?where=modifieddate>='. $formattedDateSting .'&page='.$i,
-                    'https://api.cin7.com/api/v1/Contacts?page='.$i,
+                    'GET',
+                    'https://api.cin7.com/api/v1/Contacts?where=modifieddate>=' . $formattedDateSting . '&page=' . $i,
+
                     [
                         'auth' => [
                             env('API_USER'),
@@ -80,25 +80,23 @@ class SyncSuppliers extends Command
                 $api_contacts = $res->getBody()->getContents();
                 $api_contacts = json_decode($api_contacts);
                 $record_count = count($api_contacts);
-                $this->info('Record Count => '. $record_count);
+                $this->info('Record Count => ' . $record_count);
                 if ($record_count < 1 || empty($record_count)) {
                     $this->info('----------------break-----------------');
                     break;
                 }
-            }
-            catch (\Exception $e) {
+            } catch (\Exception $e) {
                 $msg = $e->getMessage();
                 $errorlog = new ApiErrorLog();
                 $errorlog->payload = $e->getMessage();
                 $errorlog->exception = $e->getCode();
                 $errorlog->save();
-
             }
 
-            
 
-           
-            foreach($api_contacts as $api_contact) {
+
+
+            foreach ($api_contacts as $api_contact) {
                 $this->info($api_contact->id);
                 $this->info('Processing contacts ' . $api_contact->firstName);
                 $contact = Contact::where('contact_id', $api_contact->id)->first();
@@ -137,9 +135,8 @@ class SyncSuppliers extends Command
                     $contact->notes = $api_contact->notes;
                     $contact->save();
 
-                    if ($api_contact->secondaryContacts) 
-                    {
-                        foreach($api_contact->secondaryContacts as $apiSecondaryContact) {
+                    if ($api_contact->secondaryContacts) {
+                        foreach ($api_contact->secondaryContacts as $apiSecondaryContact) {
                             $secondary_contact = Contact::where('secondary_id', $apiSecondaryContact->id)
                                 ->where('parent_id', $contact->contact_id)
                                 ->first();
@@ -159,13 +156,11 @@ class SyncSuppliers extends Command
                                 $secondary_contact->balance_owing = $api_contact->balanceOwing;
                                 if ($secondary_contact->status == 0) {
                                     $secondary_contact->status = 0;
-                                }
-                                else {
+                                } else {
                                     $secondary_contact->status = 1;
                                 }
                                 $secondary_contact->save();
-                            }
-                            else {
+                            } else {
                                 $secondary_contact = new Contact();
 
                                 // parent_id
@@ -181,25 +176,24 @@ class SyncSuppliers extends Command
                                 $secondary_contact->mobile = $apiSecondaryContact->mobile;
                                 $secondary_contact->phone = $apiSecondaryContact->phone;
                                 $secondary_contact->priceColumn = $api_contact->priceColumn;
-                                $secondary->contact->credit_limit = $api_contact->creditLimit;
-                                $secondary->contact->balance_owing = $api_contact->balanceOwing;
+                                $secondary_contact->credit_limit = $api_contact->creditLimit;
+                                $secondary_contact->balance_owing = $api_contact->balanceOwing;
                                 $secondary_contact->status = 1;
                                 $secondary_contact->save();
                             }
 
-                            
+
 
                             $UserLog = new UserLog([
-                               'action' => 'Sync',
-                               'user_notes' => 'Sync from Cin7 at '.Carbon::now()->toDateTimeString(). 'is Secondary Contacts '.'and primary account is '.$api_contact->email, 
-                            ]);       
+                                'action' => 'Sync',
+                                'user_notes' => 'Sync from Cin7 at ' . Carbon::now()->toDateTimeString() . 'is Secondary Contacts ' . 'and primary account is ' . $api_contact->email,
+                            ]);
                             $UserLog->save();
                         }
                     }
-                }
-                else {
-                    foreach($api_contact->secondaryContacts as $secondaryContact) {
-                        echo $secondaryContact->id.'---'.$secondaryContact->firstName;
+                } else {
+                    foreach ($api_contact->secondaryContacts as $secondaryContact) {
+                        echo $secondaryContact->id . '---' . $secondaryContact->firstName;
                     }
                     $contact = new Contact([
                         'contact_id' => $api_contact->id,
@@ -226,12 +220,12 @@ class SyncSuppliers extends Command
                         'website' => $api_contact->website,
                         'email' => $api_contact->email,
                         'credit_limit' => $api_contact->creditLimit,
-                        'balance_owing' =>$api_contact->balanceOwing,
-                        'notes' => $api_contact->notes 
+                        'balance_owing' => $api_contact->balanceOwing,
+                        'notes' => $api_contact->notes
                     ]);
                     if ($api_contact->secondaryContacts) {
-                        foreach($api_contact->secondaryContacts as $secondaryContact) {
-                            $secondaryContact = new Contact ([
+                        foreach ($api_contact->secondaryContacts as $secondaryContact) {
+                            $secondaryContact = new Contact([
                                 'secondary_id' => $secondaryContact->id,
                                 'parent_id'  => $api_contact->id,
                                 'is_parent' => 0,
@@ -255,35 +249,36 @@ class SyncSuppliers extends Command
                     $UserLog = new UserLog([
                         'contact_id' => $api_contact->id,
                         'action' => 'Sync',
-                        'user_notes' => 'Sync from Cin7 at '.Carbon::now()->toDateTimeString(),        
+                        'user_notes' => 'Sync from Cin7 at ' . Carbon::now()->toDateTimeString(),
                     ]);
                     $UserLog->save();
                 }
             }
         }
-        $current_date = Carbon::now()->toDateString().'T'.'00:00:00'.'Z';
-       
+        $current_date = Carbon::now()->toDateString() . 'T' . '00:00:00' . 'Z';
+
         if ($record_count > 0) {
             $sync_log->last_synced = $current_date;
             $sync_log->save();
         }
-       
-        //$qcom_contact_id = Contact::where('is_parent', 1)->pluck('contact_id')->toArray();
-  
 
-        //$this->info(count($qcom_contact_id));  
-        //$this->info(count($api_contact_ids));
-        //$differences = array_diff($qcom_contact_id, $api_contact_ids);
-        //foreach($differences as $difference) {
-            //$contact = Contact::where('contact_id', $difference)->first();
-            //$contact->status = 0;
-               //$UserLog = new UserLog([
-                        //'contact_id' => $difference,
-                        //'action' => 'Sync',
-                        //'user_notes' => 'Disabled during Sync at '.Carbon::now()->toDateTimeString() .'Not found in cin7',        
-                    //]);
-                //$UserLog->save();
-            //$contact->save();
-        //}
+
+        $qcom_contact_id = Contact::where('is_parent', 1)->pluck('contact_id')->toArray();
+
+
+        $this->info(count($qcom_contact_id));
+        $this->info(count($api_contact_ids));
+        $differences = array_diff($qcom_contact_id, $api_contact_ids);
+        foreach ($differences as $difference) {
+            $contact = Contact::where('contact_id', $difference)->first();
+            $contact->status = 0;
+            $UserLog = new UserLog([
+                'contact_id' => $difference,
+                'action' => 'Sync',
+                'user_notes' => 'Disabled during Sync at ' . Carbon::now()->toDateTimeString() . 'Not found in cin7',
+            ]);
+            $UserLog->save();
+            $contact->save();
+        }
     }
 }

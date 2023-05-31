@@ -34,7 +34,8 @@ class ApiOrder extends Model
         'po_number',
         'memo',
         'tax_class_id',
-        'user_switch'
+        'user_switch',
+        'isVoid'
     ];
     public function contact()
     {

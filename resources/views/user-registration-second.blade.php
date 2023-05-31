@@ -109,7 +109,8 @@
                                 </div>
                             </div>
                             <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12 mt-3">
-                                <a href="{{ route('lost.password') }}" class="btn-lost-password d-flex">Lost your password?</a></p>
+                                <a href="{{ route('lost.password') }}" class="btn-lost-password d-flex">Lost your
+                                    password?</a></p>
                             </div>
                         </div>
                         <hr>
@@ -279,11 +280,15 @@
                                             class="form-control mt-1 fontAwesome">
                                             <option value="" class="form-control mt-2 company-info fontAwesome"
                                                 placeholder=" &#xf276;   State"> &#xf276; State</option>
-                                            @foreach ($states as $data)
-                                                <option value="{{ $data->id }}">
-                                                    {{ $data->state_name }}
-                                                </option>
-                                            @endforeach
+                                            @if (!empty($states))
+                                                @foreach ($states as $data)
+                                                    <option value="{{ $data->id }}">
+                                                        {{ $data->state_name }}
+                                                    </option>
+                                                @endforeach
+                                            @else
+                                                <option value="">No State Found</option>
+                                            @endif
                                         </select>
                                         {{-- <input type="text" placeholder="&#xf5a0;  Town/City" name="town_city"
 											class="form-control mt-2 company-info fontAwesome" required>
