@@ -24,6 +24,7 @@ use App\Models\TaxClass;
 use GuzzleHttp\Promise\Create;
 use Illuminate\Support\Carbon as SupportCarbon;
 use Illuminate\Support\Facades\Auth;
+use DateTime;
 
 class OrderManagementController extends Controller
 {
@@ -56,6 +57,20 @@ class OrderManagementController extends Controller
         $tax_class = TaxClass::where('is_default', 1)->first();
         $createdDate = $order->created_at;
         $formatedDate = $createdDate->format('jS \of F Y h:i:s A');
+
+        $timeSpanToCancel =  new DateTime();
+        $timeSpanToCancel  = $order->created_at;
+        $timeSpanToCancel  = $createdDate->addMinutes(15);
+        $orderCreationDate = new DateTime();
+        $orderCreationDate = $order->created_at;
+
+        if ($orderCreationDate < $timeSpanToCancel) {
+            $order_cancelation = 0;
+        }
+        else {
+            $order_cancelation = 1;
+        }
+        
         $customer = Contact::where('user_id', $order->user_id)->first();
         $option_ids = ApiOrderItem::where('order_id', $id)->pluck('option_id')->toArray();
         $orderitems = $this->option_ids = $option_ids;
@@ -63,8 +78,9 @@ class OrderManagementController extends Controller
             $q->whereIn('option_id', $this->option_ids);
         }])->where('order_id', $id)->get();
 
+
         $orderComment = OrderComment::where('order_id', $id)->with('comment')->get();
-        return view('admin/order-details', compact('order', 'tax_class', 'orderitems', 'orderComment', 'statuses', 'customer', 'formatedDate'));
+        return view('admin/order-details', compact('order', 'tax_class', 'orderitems', 'orderComment', 'statuses', 'customer', 'formatedDate', 'timeSpanToCancel', 'order_cancelation'));
     }
 
     public function addComments(Request $request)

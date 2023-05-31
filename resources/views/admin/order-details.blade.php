@@ -77,9 +77,11 @@
                         </form>
                         <form>
                             @csrf
+                            <input type="hidden" value="{{$timeSpanToCancel}}" id="timeSpanToCancel">
                             @if ($order->isApproved == 2)
                                 <button type="button" class="btn btn-danger btn-sm" disabled>Cancel Order</button>
-                            @elseif($order->isApproved == 1)
+                                <div class="countdown"></div>
+                            @elseif($order->isApproved == 1 || $order_cancelation == 1)
                                 <div class="col-md-12" style=";
 							">
                                     <button type="button" class="btn btn-secondary btn-sm" disabled>
@@ -89,10 +91,11 @@
                             @else
                                 <div class="col-md-12">
                                     <input type="hidden" value="{{ $orderitems[0]['order_id'] }}" id="order_id">
-                                    <input class="btn btn-danger btn-sm" type="button" value="Cancel Order"
+                                    <input class="btn btn-danger btn-sm" type="button" value="Cancel Order" id="cancel_order"
                                         onclick=" cancelOrder(); addComment(0);">
-                                </div>
 
+                                </div>
+                                <div class="countdown"></div>
                                 <!-- <div class=" spinner-border d-none" role="status" id="spinner">
                                                                                                     <span class="sr-only" style="margin-left: 227px">Activating...</span>
                                                                                                 </div> -->
@@ -336,6 +339,45 @@
 
 @section('js')
     <script>
+        $(document).ready(function () {
+            var timeSpanToCancel = $("#timeSpanToCancel").val();
+            var timeSpanToCancel =  new Date(timeSpanToCancel);
+            var currentTime = new Date();
+            var currentTimeStamp = new Date();
+            var day = currentTimeStamp.getDate();
+            var month = currentTimeStamp.getMonth() + 1;
+            var year = currentTimeStamp.getFullYear();
+            var time = year + "-" + month + "-"+ day +" "+currentTimeStamp.getMonth() +":"+currentTimeStamp.getHours() + ":" + currentTimeStamp.getMinutes() + ":" + currentTimeStamp.getSeconds();
+           //var canceltime = new Date(timeSpanToCancel);
+            //var time_diff = new Date(canceltime) - new Date(currentTimeStamp);
+            //var t = new Date(time_diff);
+           // alert(t.getMinutes);
+           //long diff = d2.getTime() - d1.getTime();
+    
+    
+           
+            var timer2 = "15:01";
+            var interval = setInterval(function() {
+
+
+            var timer = timer2.split(':');
+            //by parsing integer, I avoid all extra string processing
+            var minutes = parseInt(timer[0], 10);
+            var seconds = parseInt(timer[1], 10);
+            --seconds;
+            minutes = (seconds < 0) ? --minutes : minutes;
+            if (minutes < 0) clearInterval(interval);
+            seconds = (seconds < 0) ? 59 : seconds;
+            seconds = (seconds < 10) ? '0' + seconds : seconds;
+            //minutes = (minutes < 10) ?  minutes : minutes;
+            $('#cancel_order').val('Cancel Order in '+ minutes + ':' + seconds);
+            timer2 = minutes + ':' + seconds;
+               //console.log(minutes);
+            //console.log(seconds);
+            }, 1000);
+
+        });
+
         function addComment(isUserAdded) {
             if (isUserAdded == 1) {
                 var comment = $("#comment").val();
@@ -378,6 +420,8 @@
         }
 
         function cancelOrder() {
+            
+            
             var order_id = $("#order_id").val();
             $.ajax({
                 url: "{{ url('admin/order-cancel') }}",
