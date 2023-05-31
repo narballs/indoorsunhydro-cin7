@@ -73,9 +73,7 @@
                                     <form>
                                         @csrf
                                         @if ($order->isApproved == 1)
-                                            <div class="col-md-12"
-                                                style="margin-top: -31px;
-                                         margin-left: 122px;">
+                                            <div class="col-md-12">
                                                 <button type="button" class="btn btn-secondary btn-sm" disabled>
                                                     Fullfilled
                                                 </button>
@@ -293,7 +291,7 @@
             $(document).ready(function() {
             
                 var time_left = $('#timeSpanToCancel').val();
-                time_left  =  15 - 14;
+                time_left  =  15 - time_left;
                 var timer2 = time_left + ":01";
                 var interval = setInterval(function() {
                 var timer = timer2.split(':');
