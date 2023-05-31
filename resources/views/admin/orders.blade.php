@@ -140,9 +140,12 @@
                                                 @endif
                                             @endif
                                         </td>
+
                                         <td class="is-approved td_padding_row">
-                                            @if ($order->isApproved == 0)
-                                                <span class="badge badge-warning w-50 is_approded_0">New</span>
+                                            @if ($order->isApproved == 0 && $order->isVoid == 1)
+                                                <span class="badge badge-secondary  is_approded_0">Void</span>
+                                            @elseif ($order->isApproved == 0 && $order->isVoid == 0)
+                                                <span class="badge badge-warning  is_approded_0">New</span>
                                             @elseif ($order->isApproved == 1)
                                                 <span class="badge badge-success is_approded_1">Fullfilled</span>
                                             @elseif ($order->isApproved == 2)
@@ -253,6 +256,13 @@
             font-weight: 500;
             font-size: 11.3289px;
 
+        }
+
+        .badge-secondary {
+            padding: 6px !important;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 11.3289px;
         }
 
         .bg_success {
