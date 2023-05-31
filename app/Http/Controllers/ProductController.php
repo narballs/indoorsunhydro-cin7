@@ -948,7 +948,7 @@ class ProductController extends Controller
 
         $searchvalue = $request->value;
         $value = $searchvalue;
-        // dd($value);
+        //dd($value);
         // $products = Product::with(['options' => function ($q) {
         //     $q->where('status', '!=', 'Disabled');
         // }])->where('status', '!=', 'Inactive')

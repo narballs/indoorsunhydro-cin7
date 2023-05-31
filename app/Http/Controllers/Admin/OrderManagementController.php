@@ -58,18 +58,17 @@ class OrderManagementController extends Controller
         $createdDate = $order->created_at;
         $formatedDate = $createdDate->format('jS \of F Y h:i:s A');
 
-        $timeSpanToCancel =  new DateTime();
-        $timeSpanToCancel  = $order->created_at;
-        $timeSpanToCancel  = $createdDate->addMinutes(15);
-        $orderCreationDate = new DateTime();
-        $orderCreationDate = $order->created_at;
-
-        if ($orderCreationDate < $timeSpanToCancel) {
-            $order_cancelation = 0;
-        }
-        else {
-            $order_cancelation = 1;
-        }
+        //$timeSpanToCancel =  new DateTime();
+        //$timeSpanToCancel  = $order->created_at;
+       // $orderCreationDate = new DateTime();
+        //$orderCreationDate = $order->created_at;
+        
+        //if ($orderCreationDate < $timeSpanToCancel) {
+          //  $order_cancelation = 0;
+        //}
+        //else {
+        //    $order_cancelation = 1;
+        //}
         
         $customer = Contact::where('user_id', $order->user_id)->first();
         $option_ids = ApiOrderItem::where('order_id', $id)->pluck('option_id')->toArray();
@@ -80,7 +79,14 @@ class OrderManagementController extends Controller
 
 
         $orderComment = OrderComment::where('order_id', $id)->with('comment')->get();
-        return view('admin/order-details', compact('order', 'tax_class', 'orderitems', 'orderComment', 'statuses', 'customer', 'formatedDate', 'timeSpanToCancel', 'order_cancelation'));
+        return view('admin/order-details', compact(
+            'order',
+            'tax_class',
+            'orderitems',
+            'orderComment',
+            'statuses',
+            'customer',
+            'formatedDate'));
     }
 
     public function addComments(Request $request)

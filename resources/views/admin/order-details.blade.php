@@ -17,7 +17,6 @@
         <!-- Main content -->
         <div class="row">
             <div class="col-lg-8">
-
                 <!-- Details -->
                 <div class="card mb-4">
                     <div class="card-body">
@@ -77,15 +76,14 @@
                         </form>
                         <form>
                             @csrf
-                            <input type="hidden" value="{{ $timeSpanToCancel }}" id="timeSpanToCancel">
+                            <input type="hidden" value="" id="timeSpanToCancel">
                             @if ($order->isApproved == 2)
                                 <button type="button" class="btn btn-danger btn-sm" disabled>Cancel Order</button>
-                                <<<<<<< HEAD <div class="countdown">
+                        <div class="countdown">
                     </div>
-                @elseif($order->isApproved == 1 || $order_cancelation == 1)
+                      @elseif($order->isApproved == 1 )
                     <div class="col-md-12" style=";
-							">
-                        =======
+                            ">
                     @elseif($order->isApproved == 1)
                         <div class="col-md-12">
                             >>>>>>> ffc4485234883184405f159c6f516859f9c1301c
@@ -113,14 +111,14 @@
                         @csrf
                         @if ($order->isApproved == 1)
                             <div class="col-md-12" style="margin-top: -31px;
-							 margin-left: 122px;">
+                             margin-left: 122px;">
                                 <button type="button" class="btn btn-secondary btn-sm" disabled>
                                     Fullfilled
                                 </button>
                             </div>
                         @elseif ($order->isApproved == 2)
                             <div class="col-md-12" style="margin-left: 122px;
-							margin-top: -29px;">
+                            margin-top: -29px;">
                                 <button type="button" class="btn btn-danger btn-sm" disabled>
                                     Fullfilled
                                 </button>
@@ -193,28 +191,6 @@
                     </tfoot>
                 </table>
             </div>
-        </div>
-        <!-- Payment -->
-        {{-- <div class="card mb-4">
-				<div class="card-body">
-					<div class="row">
-						<div class="col-lg-6">
-							<h3>Add Text</h3>
-						</div>
-						<div class="col-lg-6">
-							<p class="d-flex justify-content-end">{{$tax}}</p>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-6">
-							<td colspan="2"><strong>GRAND TOTAL</strong></td>
-						</div>
-						<div class="col-md-6">
-							<p class="d-flex justify-content-end">{{$total_including_tax}}</p>
-						</div>
-					</div>
-				</div>
-			</div> --}}
         <div class="card mb-4">
             <div class="card-body">
                 <div class="row">
@@ -237,8 +213,9 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col-lg-4">
+
+        </div>
+     <div class="col-lg-4">
         <!-- Customer Notes -->
         <div class="card mb-4">
             <div class="card-body">
@@ -263,7 +240,7 @@
                 <div class="form-group">
                     <label for="exampleFormControlTextarea1" class="ms-2">Add Order Notes</label>
                     <textarea class="form-control" id="comment" rows="3">
-	    			</textarea>
+                    </textarea>
                     <input class="btn btn-primary" type="button" value="Add Notes" onclick="addComment(1)">
                     <input type="hidden" value="{!! $order->id !!}" id="order_id">
                 </div>
@@ -275,7 +252,7 @@
                 <div class="form-group">
                     <label for="exampleFormControlTextarea1" class="ms-2">Fullfil</label>
                     <textarea class="form-control" id="comment" rows="3">
-	    			</textarea>
+                    </textarea>
                     <input class="btn btn-primary" type="button" value="Add Notes" onclick="fullFillOrder()">
                     <input type="hidden" value="{!! $order->id !!}" id="order_id">
                 </div>
@@ -299,9 +276,7 @@
             </div>
         </div>
     </div>
-
-    </div>
-    </div>
+</div>
 @stop
 
 @section('css')
