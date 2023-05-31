@@ -68,6 +68,7 @@ class SyncSuppliers extends Command
                 $res = $client2->request(
                     'GET',
                     'https://api.cin7.com/api/v1/Contacts?where=modifieddate>=' . $formattedDateSting . '&page=' . $i,
+
                     [
                         'auth' => [
                             env('API_USER'),
@@ -260,6 +261,7 @@ class SyncSuppliers extends Command
             $sync_log->last_synced = $current_date;
             $sync_log->save();
         }
+
 
         $qcom_contact_id = Contact::where('is_parent', 1)->pluck('contact_id')->toArray();
 
