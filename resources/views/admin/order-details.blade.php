@@ -7,8 +7,8 @@
 @stop
 
 @section('content')
-
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+<!-- sdfkjlsdkfjsdlkfk -->
+<meta name="csrf-token" content="{{ csrf_token() }}">
 
   <div class="container-fluid">
     <div class="row">
@@ -319,7 +319,6 @@
                 }, 1000);
 
             });
-
             function addComment(isUserAdded) {
                 if (isUserAdded == 1) {
                     var comment = $("#comment").val();
@@ -328,7 +327,6 @@
                     var comment = 'order cancel';
                     var order_id = $("#order_id").val();
                 }
-
                 jQuery.ajax({
                     url: "{{ url('admin/order-comments') }}",
                     method: 'post',
@@ -342,7 +340,6 @@
                     }
                 });
             }
-
             function updateStatus() {
 
                 var status = $("#status").val();
@@ -423,7 +420,6 @@
                                 } else {
                                     $('#fullfill_failed').html(response.status);
                                 }
-
                                 $('#progress-bar').addClass('d-none');
                                 setInterval('location.reload()', 7000);
                             }
