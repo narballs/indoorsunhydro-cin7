@@ -175,17 +175,22 @@
                                                     </a>
                                                     <form>
                                                         @csrf
-                                                        @if ($order->isApproved == 1)
+                                                        @if ($order->isApproved == 1 && $order->isVoid == 0)
                                                             <a class="dropdown-item disabled bg_success" type="button"
                                                                 class="edit a_class" title="" data-toggle="tooltip"
                                                                 data-original-title="Edit">Fulfill
                                                                 Order
                                                             </a>
-                                                        @elseif ($order->isApproved == 2)
+                                                        @elseif ($order->isApproved == 2 && $order->isVoid == 0)
                                                             <a class="dropdown-item disabled bg_danger" type="button"
                                                                 class="edit a_class" title="" data-toggle="tooltip"
                                                                 data-original-title="Edit">Fulfill
                                                                 Order
+                                                            </a>
+                                                        @elseif ($order->isApproved == 0 && $order->isVoid == 1)
+                                                            <a class="dropdown-item disabled bg_secondary" type="button"
+                                                                class="edit a_class" title="" data-toggle="tooltip"
+                                                                data-original-title="Edit">Void
                                                             </a>
                                                         @else
                                                             <a class="dropdown-item" type="button" class="edit a_class"
@@ -197,18 +202,18 @@
                                                             <input type="hidden" value="{{ $order->id }}"
                                                                 id="order_id">
                                                         @endif
-                                                        @if ($order->isApproved == 2)
+                                                        @if ($order->isApproved == 2 && $order->isVoid == 0)
                                                             <a class="dropdown-item disabled bg_danger" type="button"
                                                                 class="edit a_class" title="" data-toggle="tooltip"
                                                                 data-original-title="Edit">Cancel
                                                                 Order
                                                             </a>
-                                                        @elseif($order->isApproved == 1)
+                                                        @elseif($order->isApproved == 1 && $order->isVoid == 0)
                                                             <a class="dropdown-item disabled bg_success" type="button"
                                                                 class="edit a_class" title="" data-toggle="tooltip"
                                                                 data-original-title="Edit">Cancel Order
                                                             </a>
-                                                        @else
+                                                        @elseif($order->isApproved == 0 && $order->isVoid == 0)
                                                             <a class="dropdown-item" type="button" class="edit a_class"
                                                                 title="" data-toggle="tooltip"
                                                                 data-original-title="Edit" onclick="cancelOrder()">Cancel
@@ -269,9 +274,18 @@
             /* background: rgb(186 235 137 / 20%) !important; */
             color: #319701 !important;
             padding: 6px !important;
-            font-style: normal;
-            font-weight: 500;
-            font-size: 11.3289px;
+            font-style: normal !important;
+            font-weight: 500 !important;
+            font-size: 11.3289px !important;
+        }
+
+        .bg_secondary {
+            color: #383231 !important;
+            padding: 6px !important;
+            font-style: normal !important;
+            font-weight: 500 !important;
+            font-size: 11.3289px !important;
+            padding-left: 16px !important;
         }
 
         .badge-warning {
@@ -296,9 +310,9 @@
         .bg_danger {
             color: #DC4E41 !important;
             padding: 6px !important;
-            font-style: normal;
-            font-weight: 500;
-            font-size: 11.3289px;
+            font-style: normal !important;
+            font-weight: 500 !important;
+            font-size: 11.3289px !important;
         }
     </style>
 @stop
@@ -399,7 +413,6 @@
 
         function cancelOrder() {
             var order_id = $("#order_id").val();
-            alert(order_id);
             $.ajax({
                 url: "{{ url('admin/order-cancel') }}",
                 method: 'post',
