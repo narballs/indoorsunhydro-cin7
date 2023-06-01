@@ -650,10 +650,9 @@ class ProductController extends Controller
                     }
                     if ($pricing == 'CostUSD') {
                         $price = $price['costUSD'];
+                    } else {
+                        $price = $price['retailUSD'];
                     }
-                    // else {
-                    //     $price = $price['retailUSD'];
-                    // }
                 }
             }
         } else {
