@@ -50,13 +50,15 @@
                     <table class="table">
                         <tbody>
                             <input type="hidden" value="{{ $product->id }}" id="prd_{{ $product->id }}">
+                            <input type="hidden" value="{{ $product->product->name  }}" id="prd_name_{{ $product->id }}">
                             <tr style="border-bottom :1px solid lightgray;" id="p_{{ $product->id }}">
                                 <td style="border:none;vertical-align: middle;">
                                     {{ $i++ }}
                                 </td>
                                 <td style="width:400px; border:none;vertical-align: middle;">
                                     <a
-                                        href="{{ url('product-detail/' . $product->id . '/' . $product->option_id . '/' . $product->product->slug) }}">{{ $product->product->name }}</a>
+                                        href="{{ url('product-detail/' . $product->id . '/' . $product->option_id . '/' . $product->product->slug) }}">{{ $product->product->name }}
+                                    </a>
                                 </td>
                                 <td style="border:none;">
                                     @if ($product->product->images)
@@ -68,6 +70,12 @@
                                 </td>
                                 <td style="border:none; vertical-align: middle;">
                                     ${{ $product->sub_total }}
+                                </td>
+
+                                <td style="border:none; vertical-align: middle;">
+                                    <button type="submit" style="border:none; background:none;" onclick="add_favorite_to_cart('{{$product->id}}', '{{$product->option_id}}')">
+                                        <i class="fa fa-cart-plus"></i>
+                                    </button>
                                 </td>
 
                                 <td style="border:none; vertical-align: middle;">
@@ -115,5 +123,53 @@
                 }
             }
         });
+    }
+
+    function add_favorite_to_cart(id, option_id) {
+        jQuery.ajax({
+        url: "{{ url('/add-to-cart/') }}",
+            method: 'post',
+            data: {
+                "_token": "{{ csrf_token() }}",
+                p_id: id,
+                option_id: option_id,
+                quantity: 1
+            },
+        success: function(response) {
+                if (response.status == 'success') {
+                var cart_items = response.cart_items;
+                var cart_total = 0;
+                var total_cart_quantity = 0;
+
+                for (var key in cart_items) {
+                    var item = cart_items[key];
+
+                    var product_id = item.prd_id;
+                    var price = parseFloat(item.price);
+                    var quantity = parseFloat(item.quantity);
+
+                    var subtotal = parseFloat(price * quantity);
+                    var cart_total = cart_total + subtotal;
+                    var total_cart_quantity = total_cart_quantity + quantity;
+                    $('#subtotal_' + product_id).html('$'+subtotal);
+                    var product_name = document.getElementById('prd_name_'+ id).value;
+                }
+                
+                Swal.fire({
+                    toast: true,
+                    icon: 'success',
+                    title: quantity + ' X ' + document.getElementById('prd_name_'+ id).value + ' added to your cart',
+                    timer: 3000,
+                    showConfirmButton: false,
+                    position: 'top',
+                    timerProgressBar: true
+                });
+            }
+            $('#top_cart_quantity').html(total_cart_quantity);
+            
+            $('#cart_items_quantity').html(total_cart_quantity);
+            $('#topbar_cart_total').html('$'+parseFloat(cart_total).toFixed(2));
+            var total = document.getElementById('#top_cart_quantity');
+        }});
     }
 </script>
