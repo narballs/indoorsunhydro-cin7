@@ -109,8 +109,8 @@
                                     ?>
                                     @if ($customer->status != 1)
                                         <!-- <div class="col-md-2"><button class="btn btn-primary" type="button"
-                                                  onclick="updateContact()">Activate</button>
-                                                </div> -->
+                                                                                      onclick="updateContact()">Activate</button>
+                                                                                    </div> -->
                                         <div>
                                             <span class="badge bg-warning">{{ $status }}</span>
                                         </div>
@@ -122,8 +122,8 @@
 
                                     @if ($customer->user == '' && $customer->hashKey == '')
                                         <!-- 		<div class="col-md-1"><button class="btn btn-primary btn-sm" type="button"
-                                                  onclick="mergeContact()">Invite</button>
-                                                 </div> -->
+                                                                                      onclick="mergeContact()">Invite</button>
+                                                                                     </div> -->
                                         @if ($customer->contact_id)
                                             <div class="col-md-2"><button class="btn btn-primary btn-sm" type="button"
                                                     onclick="refreshContact({{ $customer->contact_id }}, 'primary')">Refresh
@@ -379,9 +379,7 @@
                                             </tr>
                                         @endforeach
                                     </table>
-
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -395,8 +393,6 @@
 
                         </div>
                     </div>
-
-
                     <!-- Customer Notes -->
                     <div class="card mb-4">
                         <div class="card-body">
@@ -406,7 +402,6 @@
                             @endforeach
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>

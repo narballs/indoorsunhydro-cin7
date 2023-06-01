@@ -10,6 +10,7 @@ use App\Models\OrderStatus;
 use App\Models\ApiOrder;
 use App\Jobs\SyncContacts;
 use App\Helpers\MailHelper;
+use App\Helpers\UserHelper;
 use App\Models\User;
 use Carbon\Carbon;
 use App\Models\SecondaryContact;
@@ -160,7 +161,20 @@ class ContactController extends Controller
         } else {
             $secondary_contacts = '';
         }
-        $customer_orders =  ApiOrder::where('user_id', $customer->user_id)->with(['createdby', 'processedby'])->get();
+
+
+        $user = Contact::where('id', $id)->first();
+        $all_ids = UserHelper::getAllMemberIds($user);
+        $contact_ids = Contact::whereIn('id', $all_ids)
+            ->pluck('contact_id')
+            ->toArray();
+
+        $customer_orders = ApiOrder::whereIn('memberId', $contact_ids)
+            ->with('contact')
+            ->with('apiOrderItem')
+            ->orderBy('id', 'desc')
+            ->get();
+
         $statuses = OrderStatus::all();
         if ($customer->hashKey && $customer->hashUsed == false) {
             $invitation_url = URL::to("/");
@@ -175,7 +189,6 @@ class ContactController extends Controller
             'customer_orders',
             'invitation_url',
             'customer',
-            'secondary_contacts',
             'primary_contact',
             'statuses',
             'customer_orders',
