@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\AdminProductController;
 use App\Http\Controllers\Users\RoleController;
 use App\Http\Controllers\Admin\AdminBuyListController;
 use App\Http\Controllers\Admin\AdminShareListController;
+use App\Http\Controllers\Admin\LogsController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
@@ -138,6 +139,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('admin/user-switch/{id}', [UserController::class, 'switch_user'])->name('users.switch');
     Route::get('admin/send-password/{id}', [UserController::class, 'send_password'])->name('users.send_password');
     Route::get('admin/go-back', [UserController::class, 'switch_user_back'])->name('users.switch_user_back');
+    Route::get('admin/api-sync-logs', [LogsController::class, 'index']);
     Route::get('admin/logout', function () {
         Auth::logout();
         Session::forget('logged_in_as_another_user');

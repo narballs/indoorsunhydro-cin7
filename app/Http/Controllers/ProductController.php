@@ -613,6 +613,7 @@ class ProductController extends Controller
         if ($contact_id || $secondary_id) {
             $pricing = $contact->priceColumn;
         }
+
         if (!empty($user_id) && !empty($contact_id || $secondary_id)) {
             foreach ($productOption->products->options as $option) {
                 foreach ($option->price as $price) {
@@ -620,35 +621,25 @@ class ProductController extends Controller
                     if ($pricing == 'RetailUSD') {
 
                         $price = $price['retailUSD'];
-                    }
-                    if ($pricing == 'WholesaleUSD') {
+                    } elseif ($pricing == 'WholesaleUSD') {
                         $price = $price['wholesaleUSD'];
-                    }
-                    if ($pricing == 'TerraInternUSD') {
+                    } elseif ($pricing == 'TerraInternUSD') {
                         $price = $price['terraInternUSD'];
-                    }
-                    if ($pricing == 'SacramentoUSD') {
+                    } elseif ($pricing == 'SacramentoUSD') {
                         $price = $price['sacramentoUSD'];
-                    }
-                    if ($pricing == 'OklahomaUSD') {
+                    } elseif ($pricing == 'OklahomaUSD') {
                         $price = $price['oklahomaUSD'];
-                    }
-                    if ($pricing == 'CalaverasUSD') {
+                    } elseif ($pricing == 'CalaverasUSD') {
                         $price = $price['calaverasUSD'];
-                    }
-                    if ($pricing == 'Tier1USD') {
+                    } elseif ($pricing == 'Tier1USD') {
                         $price = $price['tier1USD'];
-                    }
-                    if ($pricing == 'Tier2USD') {
+                    } elseif ($pricing == 'Tier2USD') {
                         $price = $price['tier2USD'];
-                    }
-                    if ($pricing == 'Tier3USD') {
+                    } elseif ($pricing == 'Tier3USD') {
                         $price = $price['tier3USD'];
-                    }
-                    if ($pricing == 'ComercialOkUSD') {
+                    } elseif ($pricing == 'ComercialOkUSD') {
                         $price = $price['commercialOKUSD'];
-                    }
-                    if ($pricing == 'CostUSD') {
+                    } elseif ($pricing == 'CostUSD') {
                         $price = $price['costUSD'];
                     } else {
                         $price = $price['retailUSD'];

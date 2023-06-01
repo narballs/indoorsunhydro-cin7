@@ -221,49 +221,40 @@
 {{-- mobile view start --}}
 <div class="row bg-light mobile-view">
     <div class="container">
-        <div class="row">
-            <div class="w-100">
-                <div class="images ps-2">
-                    @if($productOption->image)
-                    <div class="text-center">
-                        <img id="main-image" src="{{$productOption->image}}" class="img-fluid" style="width: 50%;" />
-                    </div>
-                    @else
-                    <div class="text-center">
-                        <img id="main-image" src="/theme/img/image_not_available.png" class="img-fluid"
-                            style="width: 50%;" />
-                    </div>
-                    @endif
-                </div>
+        <div class="row bg-white justify-content-center">
+            <div class="d-flex align-items-center justify-content-center mx-1 ml-4" style="width:30%;background-color:#F7F7F7;">
+                @if($productOption->image)
+                <img id="" style="width: 85%; height:80%;" src="{{$productOption->image}}" class=""/>
+                @else
+                <img id="" style="width: 85%; height:80%;" src="/theme/img/image_not_available.png" class=""/>
+                @endif
             </div>
-            <div class="w-100 ps-5 mt-5">
+            <div class=""  style="width:60%;">
                 <div class="product  product-detail-content1">
-                    <div class="d-flex row">
+                    <div class="d-flex">
                         <?php $retail_prices = $productOption->retailPrice;?>
-                        <div class="product-detail-heading col-xl-12 col-lg-12 col-md-12 col-xs-12" id="product_name">
+                        <div class="product-detail-heading w-75" id="product_name">
                             <h3 class="product-detail-heading">{{$productOption->products->name}}</h3>
                         </div>
 
-                        <div class="col-md-12 d-flex">
-                            <span class="text-danger product-detail-price mt-4" id="product_price">
+                        <div class="w-25">
+                            <span class="text-danger product-detail-price" id="product_price">
                                 ${{number_format($retail_prices,2)}}</span>
                         </div>
                     </div>
-                    <div class=""> <span class="text-uppercase text-muted brand"></span>
+                    <div class="row"> <span class="text-uppercase text-muted brand"></span>
 
-                        <div class="price d-flex flex-row align-items-center mt-4">
+                        <div class="price d-flex flex-row align-items-center">
                             @if ($productOption->stockAvailable > 0)
-                            <span
-                                class="rounded-pill product-detail-quantity d-flex justify-content-center align-items-center"><span
-                                    class="">{{$productOption->stockAvailable}}</span></span>
-                            <div>
-                                <small class="dis-price">&nbsp;</small> <span class="instock-label">IN
-                                    STOCK</span>
+                            <span class="rounded-pill product-detail-quantity d-flex justify-content-center align-items-center">
+                                <span class="stock_number">{{$productOption->stockAvailable}}</span>
+                            </span>
+                            <div class="ml-2">
+                                <span class="instock-label">IN STOCK</span>
                             </div>
                             @else
-                            <div>
-                                <small class="dis-price">&nbsp;</small><span class="text-danger">OUT OF
-                                    STOCK</span>
+                            <div class="ml-2">
+                                <span class="text-danger instock-label">OUT OF STOCK</span>
                             </div>
                             @endif
                         </div>
@@ -271,59 +262,61 @@
                     </div>
                     <form id="cart">
                         @csrf
-                        <div class="cart row  align-items-center">
-                            <div class="w-50">
-                                <div class="quantity" style="margin-top: 24px !important;">
+                        <div class="cart row  justify-content-between align-items-center">
+                            <div class="mt-3" style="width:25%;">
+                                <div class="quantity" style="width: 40.5px;height: 31.09px;">
                                     <input type="number" name="quantity" id="quantity" min="1"
                                         max="{{$productOption->stockAvailable}}" step="1" value="1">
                                     <input type="hidden" name="p_id" id="p_id" value="{{$productOption->products->id}}">
                                     <input type="hidden" name="option_id" id="option_id"
                                         value="{{$productOption->option_id}}">
-                                    <div class="quantity-nav">
-                                        <div class="quantity-div quantity-up"></div>
-                                        <div class="quantity-div quantity-down"></div>
+                                    <div class="angle-up-qty">
+                                        <i class="fa fa-angle-up text-dark"></i>
+                                    </div>
+                                    <div class="angle-down-qty">
+                                        <i class="fa fa-angle-down text-dark"></i>
                                     </div>
                                 </div>
                             </div>
-                            <div class="w-50" style="">
-                                @if($productOption->stockAvailable > 0)
-                                <button class=" button-cards product-detail-button-cards text-uppercase" style="    font-size: 11px !important;
-                                    width: 130px  !important;" type="button" id="ajaxSubmit"><a class="text-white">Add
-                                        to
-                                        cart</a></button>
-                                @else
-                                <button class="button-cards product-detail-button-cards opacity-50 text-uppercase"
-                                    type="submit" style="font-size: 11px !important;
-                                    width: 130px  !important;"><a class="text-white">Add to
-                                        cart</a></button>
-                                @endif
+                            <div class="mt-3" style="width:60%;">
+                                <div style="">
+                                    @if($productOption->stockAvailable > 0)
+                                    <button class=" button-cards product-detail-button-cards text-uppercase" style="" type="button" id="ajaxSubmit">
+                                        <a class="text-white">Add to cart</a>
+                                    </button>
+                                    @else
+                                    <button class="button-cards product-detail-button-cards opacity-50 text-uppercase" type="submit">
+                                        <a class="text-white">Add to cart</a>
+                                    </button>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                         <span class="text-uppercase text-muted brand"></span>
                     </form>
-                    <div class="price">
-                        <div class="row">
-                            <div class="w-100">
+                    <div class="row price mt-2">
+                        <div class="d-flex">
+                            <div class="w-50">
                                 <span class="category-title-heading">Category :</span>
                                 @if($pname)
-                                <span class="category-title mt-4 ps-2">{{$pname}}</span>
+                                <span class="category-title">{{$pname}}</span>
                                 @endif
                             </div>
-                            <div class="w-100 mt-2">
+                            <div class="w-50 text-center">
                                 <span class="category-title-heading">SKU :</span>
                                 <span class="category-title">{{$productOption->code}}
                                 </span>
-                            </div>
+                            </div> 
                         </div>
                     </div>
-                    <div class="product-detail-content-dec">
-                        <div class="category-description"><span>Description</span></div>
-                        <span
-                            class="about product-details-description category-pra d-flex justify-content-center aling-items-center">
-                            {{ strip_tags( $productOption->products->description ) }}
-                        </span>
-                    </div>
+                    
                 </div>
+            </div>
+            <div class="row ml-2 mt-2">
+                <h5 class="category-description">Description</h5>
+                <p class="about product-details-description category-pra d-flex justify-content-center aling-items-center">
+                    {{ strip_tags( $productOption->products->description ) }}
+                </p>
             </div>
         </div>
     </div>

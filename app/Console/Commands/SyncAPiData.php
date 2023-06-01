@@ -50,12 +50,18 @@ class SyncAPiData extends Command
         $sync_time  = Carbon::now()->toIso8601String();
         $sync_log = ApiSyncLog::where('end_point', 'https://api.cin7.com/api/v1/Products')->first();
 
-        $date = $sync_log->last_synced;
-
-        $rawDate = Carbon::parse($date);
+        $last_synced_date = $sync_log->last_synced;
+        $current_date = Carbon::now()->toDateString();
+        $current_date = Carbon::now();
+        $current_date = $current_date->toDateString(). ' '. $current_date->format('H:i:s');
+        $this->info('Last updated time#--------------------------' .$last_synced_date);
+        $this->info('Current time#--------------------------' .$current_date);
+        $rawDate = Carbon::parse($last_synced_date);
         $getdate = $rawDate->format('Y-m-d');
         $getTime = $rawDate->format('H:i:s');
-        $formattedDateSting = $getdate.'T'. $getTime .'Z'; 
+        $formattedDateSting = $getdate . 'T' . $getTime . 'Z';
+        $client2 = new \GuzzleHttp\Client();
+        $total_record_count = 0;
 
         $client = new \GuzzleHttp\Client();
 
@@ -63,80 +69,80 @@ class SyncAPiData extends Command
         // Find total category pages
         $total_category_pages = 9;
 
-        for ($i = 1; $i <= $total_category_pages; $i++) {
-            $this->info('Processing page#' . $i);
-            // try {
-                $res = $client->request(
-                    'GET', 
-                    'https://api.cin7.com/api/v1/ProductCategories?page'.$i, 
-                    [
-                         'auth' => [
-                                env('API_USER'),
-                                env('API_PASSWORD')
-                            //env('API_USER'),
-                            //env('API_PASSWORD')
-                        ]
+        // for ($i = 1; $i <= $total_category_pages; $i++) {
+        //     $this->info('Processing page#' . $i);
+        //     // try {
+        //         $res = $client->request(
+        //             'GET', 
+        //             'https://api.cin7.com/api/v1/ProductCategories?page'.$i, 
+        //             [
+        //                  'auth' => [
+        //                         'IndoorSunHydroUS',
+        //                         'faada8a7a5ef4f90abaabb63e078b5c1'
+        //                     //env('API_USER'),
+        //                     //env('API_PASSWORD')
+        //                 ]
                      
-                    ]
-                );
-            //}
-            // catch (\Exception $e) {
-                // $msg = $e->getMessage();
-                // $errorlog = new ApiErrorLog();
-                // $errorlog->payload = $e->getMessage();
-                // $errorlog->exception = $e->getCode();
-                // $errorlog->save();
+        //             ]
+        //         );
+        //     //}
+        //     // catch (\Exception $e) {
+        //         // $msg = $e->getMessage();
+        //         // $errorlog = new ApiErrorLog();
+        //         // $errorlog->payload = $e->getMessage();
+        //         // $errorlog->exception = $e->getCode();
+        //         // $errorlog->save();
 
-            //}
+        //     //}
 
-            $api_categories = $res->getBody()->getContents();
-            //dd($api_categories);
-            $api_categories = json_decode($api_categories);
+        //     $api_categories = $res->getBody()->getContents();
+        //     //dd($api_categories);
+        //     $api_categories = json_decode($api_categories);
 
-            $this->info('Found ' . count($api_categories) . ' from API');
+        //     $this->info('Found ' . count($api_categories) . ' from API');
 
-            foreach($api_categories as $api_category) {
-                $this->info($api_category->id);
-                $category = Category::where('category_id', $api_category->id)->first();
-                if (!empty($category)) {
-                    $this->info('---------------------------------------');
-                    $this->info('Processing Category ' . $api_category->name);
-                    $this->info('---------------------------------------');
-                        //old one 
-                        // $category_data = [
-                        //     'id' => $api_category->id,
-                        //     'name' => $api_category->name,
-                        //     'category_id' => $api_category->id,
-                        //     'parent_id' => $api_category->parentId,
-                        //     'is_active' => $api_category->isActive,
-                        //     'sort' => $api_category->sort,
-                        // ];
+        //     foreach($api_categories as $api_category) {
+        //         $this->info($api_category->id);
+        //         $category = Category::where('category_id', $api_category->id)->first();
+        //         if (!empty($category)) {
+        //             $this->info('---------------------------------------');
+        //             $this->info('Processing Category ' . $api_category->name);
+        //             $this->info('---------------------------------------');
+        //                 //old one 
+        //                 // $category_data = [
+        //                 //     'id' => $api_category->id,
+        //                 //     'name' => $api_category->name,
+        //                 //     'category_id' => $api_category->id,
+        //                 //     'parent_id' => $api_category->parentId,
+        //                 //     'is_active' => $api_category->isActive,
+        //                 //     'sort' => $api_category->sort,
+        //                 // ];
 
-                        // $category = Category::firstOrCreate(
-                        //     ['id' => $api_category->id],
-                        //     $category_data
-                        // );
+        //                 // $category = Category::firstOrCreate(
+        //                 //     ['id' => $api_category->id],
+        //                 //     $category_data
+        //                 // );
 
-                    $category->name = $api_category->name;
-                    $category->slug = Str::slug($api_category->name);
-                    $category->is_active = $api_category->isActive;
-                    $category->parent_id = $api_category->parentId;
-                    $category->save();
-                }
-                else {
-                    $category = new Category([
-                        'id' => $api_category->id,
-                        'name' => $api_category->name,
-                        'slug' => Str::slug($api_category->name),
-                        'category_id' => $api_category->id,
-                        'parent_id' => $api_category->parentId,
-                        'is_active' => $api_category->isActive,
-                        'sort' => $api_category->sort
-                    ]);
-                    $category->save();
-                }
-            }
-        }
+        //             $category->name = $api_category->name;
+        //             $category->slug = Str::slug($api_category->name);
+        //             $category->is_active = $api_category->isActive;
+        //             $category->parent_id = $api_category->parentId;
+        //             $category->save();
+        //         }
+        //         else {
+        //             $category = new Category([
+        //                 'id' => $api_category->id,
+        //                 'name' => $api_category->name,
+        //                 'slug' => Str::slug($api_category->name),
+        //                 'category_id' => $api_category->id,
+        //                 'parent_id' => $api_category->parentId,
+        //                 'is_active' => $api_category->isActive,
+        //                 'sort' => $api_category->sort
+        //             ]);
+        //             $category->save();
+        //         }
+        //     }
+        // }
 
           
 
@@ -156,12 +162,29 @@ class SyncAPiData extends Command
                         'https://api.cin7.com/api/v1/Products?where=modifieddate>='. $formattedDateSting .'&page='.$i, 
                         [
                             'auth' => [
-                                env('API_USER'),
-                                env('API_PASSWORD')
+                               'IndoorSunHydroUS',
+                                'faada8a7a5ef4f90abaabb63e078b5c1'
                             ]
                          
                         ]
                     );
+                    $api_products = $res->getBody()->getContents();
+              
+                    $api_products = json_decode($api_products);
+                    $record_count = count($api_products);
+                    $total_record_count += $record_count; 
+                    $this->info('Record Count per page #--------------------------' .$record_count);
+
+
+                    $this->info('Record Count => ' . $record_count);
+                    if ($record_count < 1 || empty($record_count)) {
+                        $sync_log->last_synced = $current_date;
+                        $sync_log->record_count = $total_record_count;
+                        $sync_log->save();
+                        $this->info('Total Record Count#--------------------------' .$total_record_count);
+                        $this->info('----------------break-----------------');
+                    break;
+                    }
                 }
                 catch (\Exception $e) {
                     $msg = $e->getMessage();
@@ -170,19 +193,22 @@ class SyncAPiData extends Command
                     $errorlog->exception = $e->getCode();
                     $errorlog->save();
                 }
-
-                $api_products = $res->getBody()->getContents();
-              
-                $api_products = json_decode($api_products);
-                $record_count = count($api_products);
-                $this->info('Record Count => '. $record_count);
-                if ($record_count < 1 || empty($record_count)) {
-                    $this->info('----------------break-----------------');
-                    break;
-                }
+                // $record_count = count($api_products);
+                // $total_record_count += $record_count; 
+                // dd($total_record_count);
+          
                 $brands = [];
                 foreach($api_products as $api_product) {
                     $this->info($api_product->id);
+                    $this->info('Record Count per page #--------------------------' .$record_count);
+                    $this->info('Record Count => '. $record_count);
+                    if ($record_count < 1 || empty($record_count)) {
+                        $sync_log->last_synced = $current_date;
+                        $sync_log->save();
+                        $this->info('Total Record Count#--------------------------' .$total_record_count);
+                        $this->info('----------------break-----------------');
+                        break;
+                    }
                     $brands[] = $api_product->brand;
                     $this->info('---------------------------------------');
                     $this->info('Processing Products ' . $api_product->name);
