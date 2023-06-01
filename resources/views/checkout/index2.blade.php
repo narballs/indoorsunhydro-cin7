@@ -329,9 +329,6 @@ $cart_price = 0;
     </div>
 </div>
 
-
-
-
 <!--Mobile View -->
 <!-- MultiStep Form  -->
 <div class="container-fluid mobile-view">
