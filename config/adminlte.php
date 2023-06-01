@@ -281,6 +281,11 @@ return [
         ],
 
         [
+            'text' => 'Api Sync Logs',
+            'url'  => 'admin/api-sync-logs',
+        ],
+
+        [
             'text'    => 'multilevel',
             'submenu' => [
                 [

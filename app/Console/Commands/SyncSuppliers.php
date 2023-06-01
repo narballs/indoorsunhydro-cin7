@@ -48,15 +48,20 @@ class SyncSuppliers extends Command
         $sync_time  = Carbon::now()->toIso8601String();
         $sync_log = ApiSyncLog::where('end_point', 'https://api.cin7.com/api/v1/Contacts')->first();
 
-        $date = $sync_log->last_synced;
-
-        $rawDate = Carbon::parse($date);
+        $last_synced_date = $sync_log->last_synced;
+        $current_date = Carbon::now()->toDateString();
+        $current_date = Carbon::now();
+        $current_date = $current_date->toDateString(). ' '. $current_date->format('H:i:s');
+        $this->info('Last updated time#--------------------------' .$last_synced_date);
+        $this->info('Current time#--------------------------' .$current_date);
+        $rawDate = Carbon::parse($last_synced_date);
         $getdate = $rawDate->format('Y-m-d');
         $getTime = $rawDate->format('H:i:s');
         $formattedDateSting = $getdate . 'T' . $getTime . 'Z';
         $client2 = new \GuzzleHttp\Client();
-        $total_contact_pages = 150;
         $api_contact_ids = [];
+        $total_record_count = 0;
+        $total_contact_pages = 150;
 
 
 
@@ -67,7 +72,7 @@ class SyncSuppliers extends Command
             try {
                 $res = $client2->request(
                     'GET',
-                    'https://api.cin7.com/api/v1/Contacts?page=' . $i,
+                    'https://api.cin7.com/api/v1/Contacts?where=modifieddate>='.$formattedDateSting.'&page='.$i,
 
                     [
                         'auth' => [
@@ -80,8 +85,16 @@ class SyncSuppliers extends Command
                 $api_contacts = $res->getBody()->getContents();
                 $api_contacts = json_decode($api_contacts);
                 $record_count = count($api_contacts);
+                $total_record_count += $record_count; 
+                $this->info('Record Count per page #--------------------------' .$record_count);
+
+
                 $this->info('Record Count => ' . $record_count);
                 if ($record_count < 1 || empty($record_count)) {
+                    $sync_log->last_synced = $current_date;
+                    $sync_log->record_count = $total_record_count;
+                    $sync_log->save();
+                    $this->info('Total Record Count#--------------------------' .$total_record_count);
                     $this->info('----------------break-----------------');
                     break;
                 }
@@ -255,12 +268,11 @@ class SyncSuppliers extends Command
                 }
             }
         }
-        $current_date = Carbon::now()->toDateString() . 'T' . '00:00:00' . 'Z';
+        
 
-        if ($record_count > 0) {
-            $sync_log->last_synced = $current_date;
-            $sync_log->save();
-        }
+        // if ($record_count > 0) {
+          
+        // }
 
 
         //com_contact_id = Contact::where('is_parent', 1)->pluck('contact_id')->toArray();
