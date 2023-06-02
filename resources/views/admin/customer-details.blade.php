@@ -42,16 +42,12 @@
                                     @if ($customer)
                                         <?php
                                         $pricing = $customer->priceColumn;
-                                        // $pricing = Str::replace('/r', ' ', $pricing);
-                                        // dd($pricing);
                                         ?>
                                         <div class="col-md-4"><b>Pricing:</b>
                                             <select onchange="updatePriceColumn(4)" class="pricingColumn"
                                                 id="pricingColumn">
                                                 <?php
                                                 $pricing = $customer->priceColumn;
-                                                // echo $pricing;exit;
-                                                //$pricing = 'WholesaleUSD'
                                                 ?>
                                                 <option class="form-group" value="RetailUSD" {{ $pricing }}
                                                     {{ isset($pricing) && $pricing == 'RetailUSD' ? 'selected="selected"' : '' }}>
@@ -88,42 +84,16 @@
                                                 </option>
                                                 <option class="form-group" value="CostUSD" {{ $pricing }}
                                                     {{ isset($pricing) && $pricing == 'CostUSD' ? 'selected="selected"' : '' }}>
-                                                    Cost</option>
-
-
+                                                    Cost
+                                                </option>
                                             </select>
-
                                             <div class="spinner-border d-none" role="status"
                                                 style="left: 50% !important;margin-left: -25em !important;" id="spinner2">
                                                 <span class="sr-only">Activating...</span>
                                             </div>
                                         </div>
                                     @endif
-
-                                    <?php
-                                    if ($customer->status == 1) {
-                                        $status = 'Active';
-                                    } else {
-                                        $status = 'Inactive';
-                                    }
-                                    ?>
-                                    @if ($customer->status != 1)
-                                        <!-- <div class="col-md-2"><button class="btn btn-primary" type="button"
-                                                                                      onclick="updateContact()">Activate</button>
-                                                                                    </div> -->
-                                        <div>
-                                            <span class="badge bg-warning">{{ $status }}</span>
-                                        </div>
-                                    @else
-                                        <div>
-                                            <span class="badge bg-success">{{ $status }}</span>
-                                        </div>
-                                    @endif
-
                                     @if ($customer->user == '' && $customer->hashKey == '')
-                                        <!-- 		<div class="col-md-1"><button class="btn btn-primary btn-sm" type="button"
-                                                                                      onclick="mergeContact()">Invite</button>
-                                                                                     </div> -->
                                         @if ($customer->contact_id)
                                             <div class="col-md-2"><button class="btn btn-primary btn-sm" type="button"
                                                     onclick="refreshContact({{ $customer->contact_id }}, 'primary')">Refresh
@@ -146,6 +116,29 @@
                                                 style="margin-left: 12px!important;">Merged</span>
                                         </div>
                                     @endif
+                                    <div class="col-md-2 d-flex justify-content-center align-items-center">
+                                        @if ($customer && $customer->status == 1)
+                                            <span class="badge bg-success">Active</span>
+                                            <label class="custom-control custom-checkbox ">
+                                                <input type="checkbox" id="{{ $customer->id }}"
+                                                    value="{{ $customer->status }}"
+                                                    class="custom-control-input general_switch"
+                                                    onchange="disableSecondary({{ $customer->id }})"
+                                                    {{ isset($customer->status) && $customer->status == 1 ? 'checked="checked"' : '' }}>
+                                                <span class="custom-control-indicator"></span>
+                                            </label>
+                                        @else
+                                            <span class="badge bg-warning">Inactive</span>
+                                            <label class="custom-control custom-checkbox ">
+                                                <input type="checkbox" id="{{ $customer->id }}"
+                                                    value="{{ $customer->status }}"
+                                                    class="custom-control-input general_switch"
+                                                    onchange="disableSecondary({{ $customer->id }})"
+                                                    {{ isset($customer->status) && $customer->status == 1 ? 'checked="checked"' : '' }}>
+                                                <span class="custom-control-indicator"></span>
+                                            </label>
+                                        @endif
+                                    </div>
                                     <div class="spinner-border d-none" role="status"
                                         style="left: 50% !important;margin-left: -25em !important;" id="spinner">
                                         <span class="sr-only">Activating...</span>
