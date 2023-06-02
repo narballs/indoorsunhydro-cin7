@@ -13,7 +13,7 @@
 <div class="row bg-light desktop-view">
     <div class="container mt-5 mb-5">
         <div class="row d-flex justify-content-center">
-            <div class="col-md-12">
+            <div class="col-md-12 col-sm-12 col-xl-12 col-xxl-12 col-lg-12 col-xs-12">
                 <div class="card py-3">
                     <div class="row ms-0">
                         <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 col-xs-12">
@@ -35,49 +35,47 @@
                                 <div class="d-flex row">
 
                                     <?php 
-                                    // $retail_price = !empty($productOption->defaultPrice->$db_price_column) ? $productOption->defaultPrice->$db_price_column : 0;
-
-                foreach($productOption->price as $price)
-                    {
-                    switch ($pricing) {
-                        case "RetailUSD":
-                            $retail_price = $price->retailUSD;
-                            break;
-                        case "WholesaleUSD":
-                            $retail_price = $price->wholesaleUSD;
-                            break;
-                        case "TerraInternUSD":
-                            $retail_price = $price->terraInternUSD;
-                            break;
-                        case "SacramentoUSD":
-                            $retail_price = $price->sacramentoUSD;
-                            break;
-                        case "OklahomaUSD":
-                            $retail_price = $price->oklahomaUSD;
-                            break;
-                        case "CalaverasUSD":
-                            $retail_price = $price->calaverasUSD;
-                        break;
-                        case "Tier1USD":
-                            $retail_price = $price->tier1USD;
-                        break;
-                        case "Tier2USD":
-                            $retail_price = $price->tier2USD;
-                        break;
-                        case "Tier3USD":
-                            $retail_price = $price->tier3USD;
-                        break;
-                        case "ComercialOkUSD":
-                            $retail_price = $price->commercialOKUSD;
-                        break;
-                        case "CostUSD":
-                            $retail_price = $price->costUSD;
-                            default:
-                            $retail_price = $price->retailUSD;
-                        break;
-                        }
-                }
-                ?>
+                                        foreach($productOption->price as $price)
+                                            {
+                                            switch ($pricing) {
+                                                case "RetailUSD":
+                                                    $retail_price = $price->retailUSD;
+                                                    break;
+                                                case "WholesaleUSD":
+                                                    $retail_price = $price->wholesaleUSD;
+                                                    break;
+                                                case "TerraInternUSD":
+                                                    $retail_price = $price->terraInternUSD;
+                                                    break;
+                                                case "SacramentoUSD":
+                                                    $retail_price = $price->sacramentoUSD;
+                                                    break;
+                                                case "OklahomaUSD":
+                                                    $retail_price = $price->oklahomaUSD;
+                                                    break;
+                                                case "CalaverasUSD":
+                                                    $retail_price = $price->calaverasUSD;
+                                                break;
+                                                case "Tier1USD":
+                                                    $retail_price = $price->tier1USD;
+                                                break;
+                                                case "Tier2USD":
+                                                    $retail_price = $price->tier2USD;
+                                                break;
+                                                case "Tier3USD":
+                                                    $retail_price = $price->tier3USD;
+                                                break;
+                                                case "ComercialOkUSD":
+                                                    $retail_price = $price->commercialOKUSD;
+                                                break;
+                                                case "CostUSD":
+                                                    $retail_price = $price->costUSD;
+                                                    default:
+                                                    $retail_price = $price->retailUSD;
+                                                break;
+                                            }
+                                        }
+                                    ?>
                                     <div class="product-detail-heading col-xl-12 col-lg-12 col-md-12 col-xs-12"
                                         id="product_name">
                                         <h3 class="product-detail-heading">{{$productOption->products->name}}</h3>
@@ -222,14 +220,14 @@
 <div class="row bg-light mobile-view">
     <div class="container">
         <div class="row bg-white justify-content-center">
-            <div class="d-flex align-items-center justify-content-center mx-1 ml-4" style="width:30%;background-color:#F7F7F7;">
+            <div class="d-flex align-items-center justify-content-center mx-1 ml-4 p_detail_image_row">
                 @if($productOption->image)
-                <img id="" style="width: 85%; height:80%;" src="{{$productOption->image}}" class=""/>
+                <img id="" class="p_detail_img" src="{{$productOption->image}}" class=""/>
                 @else
-                <img id="" style="width: 85%; height:80%;" src="/theme/img/image_not_available.png" class=""/>
+                <img id="" class="p_detail_img" src="/theme/img/image_not_available.png" class=""/>
                 @endif
             </div>
-            <div class=""  style="width:60%;">
+            <div class="p_detail_content">
                 <div class="product  product-detail-content1">
                     <div class="d-flex">
                         <?php $retail_prices = $productOption->retailPrice;?>
@@ -263,25 +261,27 @@
                     <form id="cart">
                         @csrf
                         <div class="cart row  justify-content-between align-items-center">
-                            <div class="mt-3" style="width:25%;">
-                                <div class="quantity" style="width: 40.5px;height: 31.09px;">
+                            <div class="mt-3 p_detail_stock_row">
+                                <div class="quantity p_detail_stock_qty">
                                     <input type="number" name="quantity" id="quantity" min="1"
                                         max="{{$productOption->stockAvailable}}" step="1" value="1">
                                     <input type="hidden" name="p_id" id="p_id" value="{{$productOption->products->id}}">
                                     <input type="hidden" name="option_id" id="option_id"
                                         value="{{$productOption->option_id}}">
-                                    <div class="angle-up-qty">
-                                        <i class="fa fa-angle-up text-dark"></i>
-                                    </div>
-                                    <div class="angle-down-qty">
-                                        <i class="fa fa-angle-down text-dark"></i>
+                                    <div class="quantity-nav">
+                                        <div class="quantity-div quantity-up">
+                                            <i class="fa fa-angle-up text-dark u_btn"></i>
+                                        </div>
+                                        <div class="quantity-div quantity-down">
+                                            <i class="fa fa-angle-down text-dark d_btn"></i>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="mt-3" style="width:60%;">
+                            <div class="mt-3 p_detail_cart_row">
                                 <div style="">
                                     @if($productOption->stockAvailable > 0)
-                                    <button class=" button-cards product-detail-button-cards text-uppercase" style="" type="button" id="ajaxSubmit">
+                                    <button class=" button-cards product-detail-button-cards text-uppercase" type="button" id="ajaxSubmit">
                                         <a class="text-white">Add to cart</a>
                                     </button>
                                     @else
@@ -314,7 +314,7 @@
             </div>
             <div class="row ml-2 mt-2">
                 <h5 class="category-description">Description</h5>
-                <p class="about product-details-description category-pra d-flex justify-content-center aling-items-center">
+                <p class="about product-details-description category-pra d-flex justify-content-center align-items-center">
                     {{ strip_tags( $productOption->products->description ) }}
                 </p>
             </div>
@@ -493,7 +493,7 @@
                   }});
 
                });
-              jQuery('<div class="quantity-nav"><div class="quantity-div quantity-up">&#xf106;</div><div class="quantity-div quantity-down">&#xf107</div></div>').insertAfter('.quantity input');
+            //   jQuery('<div class="quantity-nav"><div class="quantity-div quantity-up">&#xf106;</div><div class="quantity-div quantity-down">&#xf107</div></div>').insertAfter('.quantity input');
               jQuery('.quantity').each(function () {
                 var spinner = jQuery(this),
                     input = spinner.find('input[type="number"]'),
@@ -510,18 +510,19 @@
                     var newVal = oldValue + 1;
                   }
                   spinner.find("input[id=quantity]").val(newVal);
-                  spinner.find("input[id=quantity").trigger("change");
+                //   spinner.find("input[id=quantity").trigger("change");
                 });
 
                 btnDown.click(function () {
+                    // alert('hi');
                   var oldValue = parseFloat(input.val());
                   if (oldValue <= min) {
                     var newVal = oldValue;
                   } else {
                     var newVal = oldValue - 1;
                   }
-                  spinner.find("input").val(newVal);
-                  spinner.find("input").trigger("change");
+                  spinner.find("input[id=quantity]").val(newVal);
+                //   spinner.find("input").trigger("change");
                 });
 
               });
