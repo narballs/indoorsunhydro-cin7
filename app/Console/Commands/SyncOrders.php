@@ -41,13 +41,13 @@ class SyncOrders extends Command
     {
         $total_order_pages = 3;
         $client = new \GuzzleHttp\Client();
-        for ($i = 1; $i <= $total_order_pages; $i++) {
-            $this->info('Processing page#' . $i);
+        // for ($i = 1; $i <= $total_order_pages; $i++) {
+            //$this->info('Processing page#' . $i);
 
             $res = $client->request(
                 'GET',
                 //'https://api.cin7.com/api/v1/SalesOrders/?page=' . $i,
-                'https://api.cin7.com/api/v1/SalesOrders/',
+                "https://api.cin7.com/api/v1/SalesOrders?where=status='Void'",
                 [
                     'auth' => [
                         env('API_USER'),
@@ -58,71 +58,21 @@ class SyncOrders extends Command
             $api_orders = $res->getBody()->getContents();
             //dd($api_orders);
             $api_orders = json_decode($api_orders);
+            
 
             if (!empty($api_orders)) {
                 foreach ($api_orders as $api_order) {
-                    //dd($api_order->lineItems);
-                    $this->info($api_order->id);
-                    $this->info('---------------------------------------');
-                    $this->info('Processing orders ' . $api_order->firstName);
-                    $this->info('---------------------------------------');
-                    $this->info('Processing orders ' . $api_order->isVoid . '--id--' . $api_order->id);
-                    $this->info('---------------------------------------');
+                    $qcom_order = ApiOrder::where('order_id', $api_order->id)->first();
+                    //dd($qcom_order);
+                    if ($qcom_order) {
 
-                    if ($api_order->isVoid == 1) {
-                        $isVoid = 1;
-                    } else {
-                        $isVoid = 0;
+                        $this->info('Api order ids' . $qcom_order->reference);
+                        $qcom_order->isVoid = 1;
+                        $qcom_order->save();
                     }
-
-                    $order_data = [
-                        'order_id' => $api_order->id,
-                        'createdDate' => '2022-07-30T16:41:09',
-                        'modifiedDate' => '2022-07-30T16:41:09',
-                        'createdBy' => $api_order->createdBy,
-                        'processedBy' => $api_order->processedBy,
-                        'isApproved' => $api_order->isApproved,
-                        'reference'  => $api_order->reference,
-                        'memberId' => $api_order->memberId,
-                        'branchId' => $api_order->branchId,
-                        'branchEmail' => $api_order->branchEmail,
-                        'productTotal' => $api_order->productTotal,
-                        'total' => $api_order->total,
-                        'currencyCode' => $api_order->currencyCode,
-                        'currencyRate' => $api_order->currencyRate,
-                        'currencySymbol' => $api_order->currencySymbol,
-                        'status' => $api_order->status,
-                        'stage' => $api_order->stage,
-                        'isVoid' =>  $isVoid,
-                        'paymentTerms' => $api_order->paymentTerms
-                    ];
-
-
-                    foreach ($api_order->lineItems as $lineItem) {
-                        $this->info($lineItem->code);
-                        $item_data = [
-                            'order_id' => $api_order->id,
-                            'product_id' => $lineItem->productId,
-                            'quantity' => $lineItem->qty,
-                            'price' => $lineItem->unitPrice,
-
-                        ];
-                        $items = ApiOrderItem::firstOrCreate(
-                            [
-                                'id' => $lineItem->id,
-                            ],
-                            $item_data
-                        );
-                    }
-                    $order = ApiOrder::firstOrCreate(
-                        [
-                            'id' => $api_order->id,
-                        ],
-
-                        $order_data
-                    );
+          
                 }
             }
-        }
+        // }
     }
 }
