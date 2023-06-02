@@ -396,7 +396,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-md-12 mt-2">
+                            {{-- <div class="col-md-12 mt-2">
                                 <label class="filter_heading_mbl">Sub Category</label>
                                 <select class="form-select form-select-mbl" id="childeren_mbl" name="childeren[]">
                                     <option class="filter_drop_down_mbl" value="">Sub Category</option>
@@ -404,7 +404,7 @@
                                         <option class="filter_drop_down_mbl" value="{{ $childeren->id }}">{{ $childeren->name }}</option>
                                     @endforeach
                                 </select>
-                            </div>
+                            </div> --}}
                             <div class="col-md-12 mt-2">
                                 <label class="filter_heading_mbl">Brand</label>
                                 <select class="form-select form-select-mbl" id="brand_mbl" name="brands[]">
@@ -437,7 +437,7 @@
                                 <label class="filter_heading_mbl">Show Only</label>
                                 <select id="in_stk" class="form-select form-select-mbl">
                                     <option class="filter_drop_down_mbl" value="0">Show Only</option>
-                                    <option class="filter_drop_down_mbl" value="in-stock" {{ isset($stock) && $stock == 'in-stock' ? 'selected' : '' }}>In stock</option>
+                                    <option class="filter_drop_down_mbl" value="in-stock" {{ isset($stock) && $stock == 'in-stock' ? 'selected' : '' }}>In Stock</option>
                                     <option class="filter_drop_down_mbl" value="out-of-stock" {{ isset($stock) && $stock == 'out-of-stock' ? 'selected' : '' }}>Out of Stock</option>
                                 </select>
                             </div>
@@ -535,7 +535,7 @@
         var per_page = jQuery('#per_page_mbl').val();
         var search_price = jQuery('#search_price_mbl').val();
         var childeren = jQuery('#childeren_mbl').val();
-        var stock = jQuery('#stock').val();
+        var stock = jQuery('#in_stk').val();
         var emptyCategory = 0;
         var emptychildCategory = 0;
 
