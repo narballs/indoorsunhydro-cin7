@@ -547,12 +547,12 @@
             basic_url = `&selected_category=${emptyCategory}`;
         }
 
-        if (childeren != '') {
-            basic_url = basic_url + `&childeren_id=${childeren}`;
-        }
-        else {
-            basic_url = basic_url + `&childeren_id=${emptychildCategory}`;
-        }
+        // if (childeren != '') {
+        //     basic_url = basic_url + `&childeren_id=${childeren}`;
+        // }
+        // else {
+        //     basic_url = basic_url + `&childeren_id=${emptychildCategory}`;
+        // }
 
         if (brand != '') {
             basic_url = basic_url + `&brand_id=${brand}`;
