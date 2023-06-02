@@ -4940,14 +4940,10 @@ select.list-dt:focus {
     }
 
     .quantity-div.quantity-up {
-        position: absolute !important;
-        height: 36% !important;
-        top: 0 !important;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
-        font-family: "FontAwesome" !important;
-        /* border-radius: 0 4px 0 0; */
-        line-height: 26px !important;
-        width: 23px !important;
+        height: 12px !important;
+        top: 0.2rem;
+        left: 0.5rem;
+        width: 0.5rem;
     }
 
     .quantity-div {
@@ -4955,12 +4951,17 @@ select.list-dt:focus {
     }
 
     .quantity-div.quantity-down {
-        position: absolute;
+        /* position: absolute;
         bottom: 0;
         height: 65%;
         font-family: "FontAwesome";
         width: 23px !important;
-        line-height: 26px !important;
+        line-height: 26px !important; */
+        position: absolute;
+        left: 0.5rem;
+        top: 1.2rem;
+        height: 8px !important;
+        width: 0.5rem;
     }
 
     .category-title-heading {
@@ -5581,7 +5582,15 @@ select.list-dt:focus {
     }
 
     .quantity-nav {
-        display: none;
+        width: 10px !important;
+        height: 31px !important;
+        position: relative;
+        top: -131.5%;
+        left: 2.8rem;
+        float: none;
+        background: #FFFFFF;
+        border: 1px solid #EBEBEB;
+        text-align: center;
     }
 
     .angle-up-qty {
@@ -5590,15 +5599,12 @@ select.list-dt:focus {
         left: 111%;
         width: 15.97px;
         height: 15.97px;
-        background: #FFFFFF;
-        border: 1px solid #EBEBEB;
-        text-align: center;
+        
     }
 
-    .angle-up-qty > i {
-       font-size: 10px !important;
+    .u_btn {
+       font-size: 8px !important;
        color: #131313 !important;
-       margin-top: 2px;
     }
 
 
@@ -5615,10 +5621,9 @@ select.list-dt:focus {
     
     }
 
-    .angle-down-qty > i {
-        font-size: 10px !important;
+    .d_btn {
+        font-size: 8px !important;
         color: #131313 !important;
-        margin-top: 2px;
     }
 
     .product-detail-button-cards {
@@ -5636,6 +5641,32 @@ select.list-dt:focus {
         text-transform: uppercase !important;
         color: #FFFFFF !important;
 
+    }
+
+
+    .p_detail_image_row {
+        width:30% !important;
+        background-color:#F7F7F7 !important;
+    }
+    .p_detail_img {
+        width: 85% !important; 
+        height:80% !important;
+    }
+    .p_detail_content {
+        width:60%;
+    }
+
+    .p_detail_stock_row {
+        width:25%;
+    }
+
+    .p_detail_stock_qty {
+        width: 40.5px;
+        height: 31.09px;
+    }
+
+    .p_detail_cart_row {
+        width:60%;
     }
  
 }
