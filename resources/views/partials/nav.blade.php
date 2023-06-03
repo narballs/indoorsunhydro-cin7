@@ -100,44 +100,6 @@ $categories = NavHelper::getCategories();
 {{-- mobile view start --}}
 <div class="container-fluid mobile-view p-0">
     <div class="row">
-        {{-- <div class="bg-dark top-bar-total-items">
-            
-            <img class="basket-icon" src="/theme/img/Bascket.png">
-            <span
-                class="cart-basket d-flex align-items-center justify-content-center float-sm-end cart-counter rounded-circle"
-                id="top_cart_quantity">
-                <?php
-                $total_quantity = 0;
-                $grand_total = 0;
-                ?>
-                @if (Session::get('cart'))
-                    @foreach (Session::get('cart') as $cart)
-                        <?php
-                        $total_q[] = $cart['quantity'];
-                        $total_quantity = array_sum($total_q);
-                        $total_price[] = $cart['price'] * $cart['quantity'];
-                        $grand_total = array_sum($total_price);
-                        ?>
-                    @endforeach
-                @endif
-                {{ $total_quantity }}
-            </span>
-            <a class="p-0 cart-price btn btn-secondary" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="right"
-                data-bs-content="add <strong class='text-success'>$2500.00</strong> more to your cart and get <span class='text-danger'>5% off </span>">
-                <span
-                    id="top_cart_total">
-                    <a href="{{ '/cart/' }}" class="text-white mt-2">
-                        <span id="topbar_cart_total" class="ms-2 cart-counter-details">
-                            {{ number_format($grand_total, 2) }}
-                        </span>&nbsp;
-                        (<span id="cart_items_quantity"
-                            class="cart-counter-details">{{ $total_quantity }}</span>&nbsp;<span
-                            class="cart-counter-details">items
-                        </span>)
-                    </a>
-                </span>
-            </a>
-        </div> --}}
         <div class="bg-white d-flex" style="border-bottom:1px solid #E9E9E9;padding:0.1rem;">
             @if (Auth::user())
                 <div class="mbl_drop_cmpny mx-3">
@@ -236,22 +198,8 @@ $categories = NavHelper::getCategories();
                     <div class="mobile_menu_bar_cart">
                         <a href="{{ '/cart/' }}">
                             <img class="basket-icon mt-2" src="{{asset('/theme/img/icons/Cart-icon.svg')}}">
-                            <span class="cart-basket d-flex align-items-center justify-content-center float-sm-end cart-counter rounded-circle " id="top_cart_quantity">
-                                <?php
-                                $total_quantity = 0;
-                                $grand_total = 0;
-                                ?>
-                                @if (Session::get('cart'))
-                                    @foreach (Session::get('cart') as $cart)
-                                        <?php
-                                        $total_q[] = $cart['quantity'];
-                                        $total_quantity = array_sum($total_q);
-                                        $total_price[] = $cart['price'] * $cart['quantity'];
-                                        $grand_total = array_sum($total_price);
-                                        ?>
-                                    @endforeach
-                                @endif
-                                {{ $total_quantity }}
+                            <span class="cartQtymbl cart-basket d-flex align-items-center justify-content-center float-sm-end cart-counter rounded-circle " id="top_cart_quantity">
+                               {{ $total_quantity }}
                             </span>
                         </a>
                     </div>
@@ -459,22 +407,8 @@ $categories = NavHelper::getCategories();
         <div class="bg-dark ipad_second_row" style="">
             <img class="basket-icon" src="/theme/img/Bascket.png">
             <span
-                class="cart-basket d-flex align-items-center justify-content-center float-sm-end cart-counter rounded-circle"
+                class="cart-basket d-flex align-items-center justify-content-center float-sm-end cart-counter rounded-circle cartQtyipad"
                 id="top_cart_quantity">
-                <?php
-                $total_quantity = 0;
-                $grand_total = 0;
-                ?>
-                @if (Session::get('cart'))
-                    @foreach (Session::get('cart') as $cart)
-                        <?php
-                        $total_q[] = $cart['quantity'];
-                        $total_quantity = array_sum($total_q);
-                        $total_price[] = $cart['price'] * $cart['quantity'];
-                        $grand_total = array_sum($total_price);
-                        ?>
-                    @endforeach
-                @endif
                 {{ $total_quantity }}
             </span>
             <a class="p-0 cart-price btn btn-secondary" data-bs-container="body" data-bs-toggle="popover"

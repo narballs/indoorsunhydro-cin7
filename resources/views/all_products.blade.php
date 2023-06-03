@@ -388,7 +388,7 @@
                                 <?php //dd($category_id);
                                 ?>
                                 <label class="filter_heading_mbl">Categories</label>
-                                <select class="form-select form-select-mbl" id="selected_cat_mbl"
+                                <select class="form-select form-select-mbl" onchange="get_child_categories()" id="selected_cat_mbl"
                                     name="selected_cat">
                                     <option class="filter_drop_down_mbl" value="">Select Category</option>
                                     @foreach ($categories as $category)
@@ -396,15 +396,12 @@
                                     @endforeach
                                 </select>
                             </div>
-                            {{-- <div class="col-md-12 mt-2">
+                            <div class="col-md-12 mt-2">
                                 <label class="filter_heading_mbl">Sub Category</label>
-                                <select class="form-select form-select-mbl" id="childeren_mbl" name="childeren[]">
-                                    <option class="filter_drop_down_mbl" value="">Sub Category</option>
-                                    @foreach ($childerens as $key => $childeren)
-                                        <option class="filter_drop_down_mbl" value="{{ $childeren->id }}">{{ $childeren->name }}</option>
-                                    @endforeach
+                                <select class="form-select form-select-mbl" id="childeren_mbl" name="childeren_category">
+                                    <option class="filter_drop_down_mbl" value="0">Sub Category</option>
                                 </select>
-                            </div> --}}
+                            </div>
                             <div class="col-md-12 mt-2">
                                 <label class="filter_heading_mbl">Brand</label>
                                 <select class="form-select form-select-mbl" id="brand_mbl" name="brands[]">
@@ -455,13 +452,7 @@
 </div>
 
 {{-- pop up filter mobile end --}}
-<script>
-    jQuery('#brand').select2({
-        width: '100%',
-        placeholder: "Select an Option",
-        allowClear: true
-    });
-</script>
+
 
 <script>
     function showdetails(id, option_id, slug) {
@@ -526,6 +517,22 @@
         window.location.href = basic_url
 
     }
+    //mobile filter get child category
+    function get_child_categories() {
+        var parent_id = jQuery('#selected_cat_mbl').val();
+        jQuery.ajax({
+            url: '/child/categories/' + parent_id,
+            method: 'get',
+            success: function(response) {
+                console.log(response);
+                if(response.status == 'success') {
+                    $.each(response.child_categories, function(index, option) {
+                        $('#childeren_mbl').append('<option value="' + option.id + '">' + option.name + '</option>');
+                    });
+                }
+            }
+        });
+    } 
 
     //mobile filter
     function handleSelectChangeMbl(searchedOption = '') {
@@ -547,12 +554,12 @@
             basic_url = `&selected_category=${emptyCategory}`;
         }
 
-        // if (childeren != '') {
-        //     basic_url = basic_url + `&childeren_id=${childeren}`;
-        // }
-        // else {
-        //     basic_url = basic_url + `&childeren_id=${emptychildCategory}`;
-        // }
+        if (childeren != '') {
+            basic_url = basic_url + `&childeren_id=${childeren}`;
+        }
+        else {
+            basic_url = basic_url + `&childeren_id=${emptychildCategory}`;
+        }
 
         if (brand != '') {
             basic_url = basic_url + `&brand_id=${brand}`;
@@ -617,8 +624,9 @@
                     });
                 }
                 $('#top_cart_quantity').html(total_cart_quantity);
-
                 $('#cart_items_quantity').html(total_cart_quantity);
+                $('.cartQtyipad').html(total_cart_quantity);
+                $('.cartQtymbl').html(total_cart_quantity);
                 $('#topbar_cart_total').html('$' + parseFloat(cart_total).toFixed(2));
                 var total = document.getElementById('#top_cart_quantity');
             }
@@ -628,33 +636,41 @@
     }
 </script>
 <script>
-    jQuery(document).ready(function() {
-        jQuery('.ajaxSubmit11').click(function(e) {
-            alert('xxxxxxxxxx')
-            e.preventDefault();
-            //alert('here');
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-                }
-            });
-            jQuery.ajax({
-                url: "{{ url('/add-to-cart/') }}",
-                method: 'post',
-                data: {
-                    "_token": "{{ csrf_token() }}",
-                    p_id: jQuery('#p_id').val(),
-                    quantity: jQuery('#quantity').val(),
-                },
-                success: function(result) {
-                    console.log(result);
-                    jQuery('.alert').html(result.success);
-                    // window.location.reload();
-                }
-            });
-        });
+    // jQuery(document).ready(function() {
+    //     jQuery('.ajaxSubmit11').click(function(e) {
+    //         alert('xxxxxxxxxx')
+    //         e.preventDefault();
+    //         //alert('here');
+    //         $.ajaxSetup({
+    //             headers: {
+    //                 'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+    //             }
+    //         });
+    //         jQuery.ajax({
+    //             url: "{{ url('/add-to-cart/') }}",
+    //             method: 'post',
+    //             data: {
+    //                 "_token": "{{ csrf_token() }}",
+    //                 p_id: jQuery('#p_id').val(),
+    //                 quantity: jQuery('#quantity').val(),
+    //             },
+    //             success: function(result) {
+    //                 console.log(result);
+    //                 jQuery('.alert').html(result.success);
+    //                 // window.location.reload();
+    //             }
+    //         });
+    //     });
 
+    // });
+</script>
+<script>
+    jQuery('#brand').select2({
+        width: '100%',
+        placeholder: "Select an Option",
+        allowClear: true
     });
+    
 </script>
 @include('partials.product-footer')
 
