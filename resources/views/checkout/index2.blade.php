@@ -524,27 +524,37 @@ $cart_price = 0;
                                                 <tr>
                                                     <th style="border-top:none !important" scope="col">Cart Total
                                                     </th>
-                                                    <th style="border-top:none !important" scope="col"></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr>
                                                     <td>
-                                                        <div class="d-flex">
-                                                            <span class="">
+                                                        <div class="d-flex justify-content-between">
+                                                            <span>
                                                                 <img src="theme/img/pricing_tag.png" width=" 22px">
+                                                                <span class="cart-total-checkout-page">Sub Total</span>
+                                                            </span>
+                                                            <span class="d-flex justify-content-end aling-items-end">
+                                                                <p class="sub-total-checkout-page"> ${{ number_format($cart_total, 2) }} </p>
+                                                            </span>
+                                                        </div>
+                                                        <div class="d-flex justify-content-between">
+                                                            <span>
+                                                                <img src="/theme/img/text-rate-icon.png" alt="" width=" 22px">
+                                                                <span id="mbl_tax_rate">Rate({{ $tax_class->rate }}%)</span>
+                                                            </span>
+                                                            <p id="mbl_tax_price">${{ number_format($tax, 2) }}</p>
+                                                        </div>
+                                                        <div class="d-flex justify-content-between">
+                                                            <span>
+                                                                <img src="/theme/img/pricing_tag.png" alt="" width=" 22px">
+                                                                <span class="cart-total-checkout-page">Total</span>
                                                             </span>
                                                             <span>
-                                                                <p class="cart-total-checkout-page ps-3">Total</p>
+                                                                <p id="mbl_total_p" class="sub-total-checkout-page">${{ number_format($total_including_tax, 2) }}</p>
                                                             </span>
-                                                            <div
-                                                                class="d-flex justify-content-end aling-items-end ps-5 ml-2">
-                                                                <p class="sub-total-checkout-page">
-                                                                    ${{ number_format($cart_total, 2) }} </p>
-                                                            </div>
                                                         </div>
                                                     </td>
-                                                    <td></td>
                                                 </tr>
                                             </tbody>
                                             <tfoot class="border-0">
@@ -815,7 +825,7 @@ $cart_price = 0;
                                 </div>
                                 <button class="btn btn-success next action-button text-white ipad_next_btn_footer"
                                     style="background:#7bc533 !important;"> NEXT STEP </button>
-                                <div class="d-flex justify-content-center align-items-center">
+                                {{-- <div class="d-flex justify-content-center align-items-center">
                                     <div>
                                         <img class="img-fluid coupon-code-modal-btn" src="/theme/img/modal-icon1.png"
                                             alt="">
@@ -824,7 +834,7 @@ $cart_price = 0;
                                         data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                                         applay coupon
                                     </button>
-                                </div>
+                                </div> --}}
                                 {{-- <input type="button" name="next" class="next action-button" value="Next Step" /> --}}
                             </fieldset>
                             <fieldset>
@@ -889,18 +899,30 @@ $cart_price = 0;
                                             <tbody>
                                                 <tr>
                                                     <td>
-                                                        <div class="d-flex">
-                                                            <span class="">
+                                                        <div class="d-flex justify-content-between">
+                                                            <span>
                                                                 <img src="theme/img/pricing_tag.png" width=" 22px">
+                                                                <span class="cart-total-checkout-page">Sub Total</span>
+                                                            </span>
+                                                            <span class="d-flex justify-content-end aling-items-end">
+                                                                <p class="sub-total-checkout-page"> ${{ number_format($cart_total, 2) }} </p>
+                                                            </span>
+                                                        </div>
+                                                        <div class="d-flex justify-content-between">
+                                                            <span>
+                                                                <img src="/theme/img/text-rate-icon.png" alt="" width=" 22px">
+                                                                <span id="ipad_tax_rate">Rate({{ $tax_class->rate }}%)</span>
+                                                            </span>
+                                                            <p id="ipad_tax_price">${{ number_format($tax, 2) }}</p>
+                                                        </div>
+                                                        <div class="d-flex justify-content-between">
+                                                            <span>
+                                                                <img src="/theme/img/pricing_tag.png" alt="" width=" 22px">
+                                                                <span class="cart-total-checkout-page">Total</span>
                                                             </span>
                                                             <span>
-                                                                <p class="cart-total-checkout-page ps-3">Total</p>
+                                                                <p id="ipad_total_p" class="sub-total-checkout-page">${{ number_format($total_including_tax, 2) }}</p>
                                                             </span>
-                                                            <div
-                                                                class="d-flex justify-content-end aling-items-end ps-5">
-                                                                <p class="sub-total-checkout-page">
-                                                                    ${{ number_format($cart_total, 2) }} </p>
-                                                            </div>
                                                         </div>
                                                     </td>
                                                     <td></td>
@@ -949,15 +971,15 @@ $cart_price = 0;
                                         <button type="button"
                                             class="btn btn-primary fw-blod coupon-code-modal-btn ps-0"
                                             data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                                            applay coupon
+                                            Apply Coupon
                                         </button>
                                     </div>
                                 </div>
                                 <input type="button" name="previous" class="previous action-button-previous"
                                     value="Previous" />
-                                <input type="button" name="next" class="next action-button" value="Next Step" />
+                                {{-- <input type="button" name="next" class="next action-button" value="Next Step" /> --}}
                             </fieldset>
-                            <fieldset>
+                            {{-- <fieldset>
                                 <div class="form-card form-signup-secondary">
                                     <div class="d-flex justify-content-center aling-items-center">
                                         <img class="img-fluid" src="/theme/img/payment-img.png" alt=""
@@ -999,10 +1021,10 @@ $cart_price = 0;
                                     </div>
                                 </div>
                                 <input type="button" name="previous" class="previous action-button-previous"
-                                    value="Previous" />
+                                    value="Previous" /> --}}
                                 {{-- <input type="button" name="make_payment" class="next action-button"
                                     value="Confirm" /> --}}
-                            </fieldset>
+                            {{-- </fieldset> --}}
                             <fieldset>
                                 <div class="form-card">
                                     <h2 class="fs-title text-center">Success !</h2>
