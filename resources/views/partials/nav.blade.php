@@ -407,7 +407,7 @@ $categories = NavHelper::getCategories();
         <div class="bg-dark ipad_second_row" style="">
             <img class="basket-icon" src="/theme/img/Bascket.png">
             <span
-                class="cart-basket d-flex align-items-center justify-content-center float-sm-end cart-counter rounded-circle cartQtyipad"
+                class="cartQtyipad cart-basket d-flex align-items-center justify-content-center float-sm-end cart-counter rounded-circle"
                 id="top_cart_quantity">
                 {{ $total_quantity }}
             </span>

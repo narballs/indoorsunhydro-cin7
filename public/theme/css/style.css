@@ -5,6 +5,17 @@
 @import url('https://fonts.googleapis.com/css?family=Mukta');
 @import url('https://fonts.cdnfonts.com/css/regular');
 
+#tax_rate {
+    color: #5D5DF8 !important;
+}
+.tax-calculater {
+    font-size: 11px;
+    font-family: 'Poppins' !important;
+    color: #5D5DF8 !important;
+    font-weight: 500 !important;
+    text-align: center;
+}
+
 .mobile-view {
     display: none !important;
 }
