@@ -584,7 +584,7 @@ $cart_price = 0;
                                                         <div class="w-100 text-center">
                                                             <button type="button" class="ml-2 mt-4 button-cards w-75"
                                                                 id="proceed_to_checkout" onclick="validate()">
-                                                                Proceed to checkout</button>
+                                                                Place Order</button>
                                                         </div>
                                                         </form>
                                                     </td>
@@ -952,10 +952,8 @@ $cart_price = 0;
                                                                     </div>
                                                                 @endforeach
                                                         @endforeach
-                                                        <div>
-                                                            <button type="button" class="button-cards w-100"
-                                                                id="proceed_to_checkout" onclick="validate()">
-                                                                Proceed to checkout</button>
+                                                        <div class="d-flex justify-content-center">
+                                                            <button type="button" class="button-cards w-50" id="proceed_to_checkout" onclick="validate()"> Place Order</button>
                                                         </div>
                                                         </form>
                                                     </td>
