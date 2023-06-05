@@ -411,19 +411,20 @@ $categories = NavHelper::getCategories();
                 id="top_cart_quantity">
                 {{ $total_quantity }}
             </span>
-            <a class="p-0 cart-price btn btn-secondary" data-bs-container="body" data-bs-toggle="popover"
+            {{-- <a class="p-0 cart-price btn btn-secondary" data-bs-container="body" data-bs-toggle="popover"
                 data-bs-placement="right"
                 data-bs-content="add <strong class='text-success'>$2500.00</strong> more to your cart and get <span class='text-danger'>5% off </span>"><span
                     id="top_cart_total">
-                    <a href="{{ '/cart/' }}" class="text-white">
+                    <a href="{{ '/cart/' }}" class="text-white ml-2">
                         <span id="topbar_cart_total" class="ms-2 cart-counter-details">
                             {{ number_format($grand_total, 2) }}
-                        </span>&nbsp;
-                        (<span id="cart_items_quantity"
-                            class="cart-counter-details">{{ $total_quantity }}</span>&nbsp;<span
-                            class="cart-counter-details">items
-                        </span>)
+                        </span>
                     </a>
+                </span>
+            </a> --}}
+            <a href="{{ '/cart/' }}" class="text-white ml-2">
+                <span id="topbar_cart_total" class="ms-2 cart-counter-details topbar_cart_total_ipad">
+                    {{ number_format($grand_total, 2) }}
                 </span>
             </a>
         </div>
