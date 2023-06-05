@@ -390,9 +390,13 @@
                     <div class="card mb-4">
                         <div class="card-body">
                             <h3 class="h6"><strong>User Logs</strong></h3>
-                            @foreach ($logs as $log)
-                                <div>{{ $log->user_notes }}</div>
-                            @endforeach
+                            @if (!empty($logs))
+                                @foreach ($logs as $log)
+                                    <div>{{ $log->user_notes }}</div>
+                                @endforeach
+                            @else
+                                <div>No Logs Found</div>
+                            @endif
                         </div>
                     </div>
                 </div>
