@@ -521,6 +521,7 @@
                      $('.cartQtyipad').html(total_cart_quantity);
                      $('.cartQtymbl').html(total_cart_quantity);
                      $('#topbar_cart_total').html('$'+parseFloat(cart_total).toFixed(2));
+                     $('.topbar_cart_total_ipad').html('$'+parseFloat(cart_total).toFixed(2));
                     var total = document.getElementById('#top_cart_quantity');
                }});
 
