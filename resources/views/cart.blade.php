@@ -393,19 +393,16 @@
                                                         @endif
                                                     </tbody>
                                                 </table>
-<<<<<<< HEAD
                                                 <div class="w-100">
                                                     <div class="w-100 mb-3" style="border-bottom:1px solid #dee2e6;">
                                                         <span class=" mb-2 cart-total-checkout-page text-dark mb-2">
                                                             Cart Total
-=======
                                                 <div class="total-cart-button">
                                                     <button
                                                         class="total-cart-button border-0 d-flex justify-content-center align-content-center w-100"
                                                         onclick="update_cart()">
                                                         <span class="m-auto">
                                                             your cart: ${{ number_format($cart_total, 2) }}
->>>>>>> 5a70c2dd8b6eb9491ff8068f8aace0804d8f3772
                                                         </span>
                                                     </div>
                                                     <div class="d-flex" style="border-bottom:1px solid #dee2e6;">
