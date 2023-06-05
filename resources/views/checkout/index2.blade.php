@@ -573,7 +573,7 @@ $cart_price = 0;
                                                                                 name="method_name">
                                                                             <input type="radio"
                                                                                 id="local_delivery_{{ $payment_option->id }}"
-                                                                                name="method_option"
+                                                                                name="method_option"  {{ $payment_option->option_name == 'C.O.D' ? 'checked' : '' }}
                                                                                 value="{{ $payment_option->option_name }}">
                                                                             <label
                                                                                 for="local_delivery payment-option-label">{{ $payment_option->option_name }}</label>
@@ -944,7 +944,7 @@ $cart_price = 0;
                                                                                 name="method_name">
                                                                             <input type="radio"
                                                                                 id="local_delivery_{{ $payment_option->id }}"
-                                                                                name="method_option"
+                                                                                name="method_option"  {{ $payment_option->option_name == 'C.O.D' ? 'checked' : '' }}
                                                                                 value="{{ $payment_option->option_name }}">
                                                                             <label
                                                                                 for="local_delivery payment-option-label">{{ $payment_option->option_name }}</label>
