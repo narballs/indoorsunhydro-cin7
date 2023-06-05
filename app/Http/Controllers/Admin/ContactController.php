@@ -154,14 +154,16 @@ class ContactController extends Controller
         $contact_is_parent = '';
         $customer = Contact::where('id', $id)->first();
         $pricing = $customer->priceColumn;
-        $logs = UserLog::where('contact_id', $customer->contact_id)->get();
+        $logs = UserLog::where('contact_id', $customer->contact_id)
+            ->orderBy('id', 'desc')
+            ->limit(8)
+            ->get();
         $user_id = $customer->user_id;
         if (!empty($customer->contact_id)) {
             $secondary_contacts = Contact::where('parent_id', $customer->contact_id)->get();
         } else {
             $secondary_contacts = '';
         }
-
 
         $user = Contact::where('id', $id)->first();
         $all_ids = UserHelper::getAllMemberIds($user);
