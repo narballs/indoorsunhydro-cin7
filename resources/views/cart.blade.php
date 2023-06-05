@@ -85,22 +85,19 @@
                                                         <span class="mb-0" style="font-weight: 500;">
                                                             <a class="cart-page-items"
                                                                 href="{{ url('product-detail/' . $cart['product_id'] . '/' . $cart['option_id'] . '/' . $cart['slug']) }}" ">{{ $cart['code'] }}
-             </a>
-             </span>
-            </td>
-            <td scope=" row">
-             <div class="d-flex align-items-center">
-                                                                                        
-                                                                                  @if (!empty($cart['image']))
+                                                            </a>
+                                                            </span>
+                                                            </td>
+                                                            <td scope=" row">
+                                                            <div class="d-flex align-items-center">
+                                                              @if (!empty($cart['image']))
                                                                 <img src="{{ $cart['image'] }}"
                                                                     class="img-fluid rounded-3" style="width: 120px;"
                                                                     alt="Book">
                                                             @else
                                                                 <img src="/theme/img/image_not_available.png"
                                                                     class="img-fluid rounded-3"
-                                                                    style="width: 78px;
-											height: 83px;"
-                                                                    alt="Book">
+                                                                    style="width: 78px;height: 83px;" alt="Book">
                                             @endif
                                             <div class="flex-column ms-4">
                                                 <span class="mb-2">
@@ -111,7 +108,6 @@
                                             </div>
                             </div>
                             </td>
-
                             <td class=" align-middle">
                                 <p class="mb-0 ps-2  cart-page-items">
                                     ${{ number_format($cart['price'], 2) }}
@@ -145,13 +141,13 @@
                                 </span>
                                 <p class="text-center remove-item-cart">
                                     <a style="font-family: 'Poppins';
-														font-style: normal;
-														font-weight: 400;
-														margin-right: 4px;
-														font-size: 12px;
-														line-height: 18px;
-														text-decoration-line: underline;
-														color: #9A9A9A;"
+                                                                        font-style: normal;
+                                                                        font-weight: 400;
+                                                                        margin-right: 4px;
+                                                                        font-size: 12px;
+                                                                        line-height: 18px;
+                                                                        text-decoration-line: underline;
+                                                                        color: #9A9A9A;"
                                         href="{{ url('remove/' . $pk_product_id) }}" id="remove">Remove</a>
                                 </p>
                             </td>
@@ -188,9 +184,9 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-4 p-0">
-                                               <!--  <button class=" cart-updated" type="submit" id="update_cart"
-                                                    onclick="update_cart()">Update
-                                                    Cart</button> -->
+                                                <!--  <button class=" cart-updated" type="submit" id="update_cart"
+                                                                                onclick="update_cart()">Update
+                                                                                Cart</button> -->
                                             </div>
                                         </div>
                                     </td>
@@ -236,7 +232,8 @@
                     <tr>
                         <td class="ps-0">
                             <img class=" img-fluid" src="/theme/img/text-rate-icon.png">
-                            <span> <strong class="cart-total" id="tax_rate">Rate({{ $tax_class->rate }}%)</strong> </span>
+                            <span> <strong class="cart-total" id="tax_rate">Rate({{ $tax_class->rate }}%)</strong>
+                            </span>
                             <div>
                         </td>
                         <td class="pe-0">
@@ -346,7 +343,12 @@
                                                                             <div class="d-flex mt-2">
                                                                                 <div class="quantity-bg">
                                                                                     {{-- <p class="ps-1"> {{ $cart['quantity'] }}</p> --}}
-                                                                                    <input type="number" min="0" class="itm_qty" id="itm_qty{{$pk_product_id}}" data-type="{{$pk_product_id}}" value="{{ $cart['quantity'] }}" style="width: 20px;
+                                                                                    <input type="number"
+                                                                                        min="0" class="itm_qty"
+                                                                                        id="itm_qty{{ $pk_product_id }}"
+                                                                                        data-type="{{ $pk_product_id }}"
+                                                                                        value="{{ $cart['quantity'] }}"
+                                                                                        style="width: 20px;
                                                                                 text-align: center;background: #7bc533 !important;color:#fff;">
                                                                                 </div>
                                                                                 <div class="cart-page-price ps-3">
@@ -373,12 +375,14 @@
                                                                                 id="option_id"
                                                                                 value="{{ $cart['option_id'] }}">
                                                                             <span class="pe-1">
-                                                                                <button class="border-0 p-0" onclick="minusq({{$pk_product_id}})">
+                                                                                <button class="border-0 p-0"
+                                                                                    onclick="minusq({{ $pk_product_id }})">
                                                                                     <i class="fa-solid fa-minus"></i>
                                                                                 </button>
                                                                             </span>
                                                                             <span class="ps-1">
-                                                                                <button class="border-0 p-0" onclick="plusq({{$pk_product_id}})">
+                                                                                <button class="border-0 p-0"
+                                                                                    onclick="plusq({{ $pk_product_id }})">
                                                                                     <i class="fa-solid fa-plus"></i>
                                                                                 </button>
                                                                             </span>
@@ -389,96 +393,58 @@
                                                         @endif
                                                     </tbody>
                                                 </table>
+                                                <div class="w-100">
+                                                    <div class="w-100 mb-3" style="border-bottom:1px solid #dee2e6;">
+                                                        <span class=" mb-2 cart-total-checkout-page text-dark mb-2">
+                                                            Cart Total
                                                 <div class="total-cart-button">
                                                     <button
-                                                        class="total-cart-button border-0 d-flex justify-content-center align-content-center w-100" onclick="update_cart()">
+                                                        class="total-cart-button border-0 d-flex justify-content-center align-content-center w-100"
+                                                        onclick="update_cart()">
                                                         <span class="m-auto">
                                                             your cart: ${{ number_format($cart_total, 2) }}
                                                         </span>
-                                                    </button>
-                                                </div>
-                                                <div class="d-flex justify-content-center align-items-center mt-5">
-                                                    <div>
-                                                        <img class="img-fluid coupon-code-modal-btn"
-                                                            src="/theme/img/modal-icon1.png" alt="">
                                                     </div>
-                                                    <button type="button"
-                                                        class="btn btn-primary coupon-code-modal-btn ps-0"
-                                                        data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                                                        apply coupon
-                                                    </button>
+                                                    <div class="d-flex" style="border-bottom:1px solid #dee2e6;">
+                                                        <div class="w-50 mb-3">
+                                                            <span class="">
+                                                                <img src="/theme/img/pricing_tag.png" width="22px">
+                                                            </span>
+                                                            <span class="ml-1 cart-total-checkout-page text-dark">
+                                                                Total
+                                                            </span>
+                                                        </div>
+                                                        <div class="w-50 mb-3">
+                                                            <p class="sub-total-checkout-page m-0 mb-0 text-right">
+                                                                ${{ number_format($cart_total, 2) }} 
+                                                            </p>
+                                                        </div>
+                                                    </div>
                                                 </div>
+                                                
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <input type="button" name="next" class="next action-button mb-5"
-                                    value="Next Step" />
-                            </fieldset>
-                            <fieldset>
-                                <div class="form-card">
-                                    <div>
-                                        <table class="table mt-5">
-                                            <thead>
-                                                <tr>
-                                                    <th style="border-top:none !important" scope="col">Cart Totals
-                                                    </th>
-                                                    <th style="border-top:none !important" scope="col"></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>
-                                                        <div class="d-flex">
-                                                            <span class="">
-                                                                <img src="/theme/img/pricing_tag.png" width=" 22px">
-                                                            </span>
-                                                            <span>
-                                                                <p class="cart-total-checkout-page ps-3">Total</p>
-                                                            </span>
-                                                            <div
-                                                                class="d-flex justify-content-end aling-items-end ps-5">
-                                                                <p class="sub-total-checkout-page">
-                                                                    ${{ number_format($cart_total, 2) }} </p>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td></td>
-                                                </tr>
-                                            </tbody>
-                                            <tfoot class="border-0">
-                                                <tr>
-                                                    <td style="border-bottom: none">
-                                                        @if (Auth::check() == true && !empty($contact->contact_id))
-                                                            <a href="{{ url('/checkout') }}">
-                                                                <button class="procedd-to-checkout mt-2 ps-3">
-                                                                    PROCEED TO CHECKOUT
-                                                                </button>
-                                                            </a>
-                                                        @elseif(Auth::check() == true && empty($contact->contact_id))
-                                                            <a href="{{ url('/checkout/') }}">
-                                                                <button class="procedd-to-checkout mt-2 ps-3">
-                                                                    PROCEED TO CHECKOUT
-                                                                </button>
-                                                            </a>
-                                                        @elseif (Auth::check() != true)
-                                                            <a href="{{ url('/user/') }}">
-                                                                <button class="procedd-to-checkout mt-2 ps-">
-                                                                    Login or Register
-                                                                </button>
-                                                            </a>
-                                                        @endif
-
-                                                    </td>
-                                                </tr>
-                                            </tfoot>
-                                        </table>
-                                    </div>
-                                </div>
-                                <input type="button" name="previous" class="previous action-button-previous"
-                                    value="Previous" />
-                                {{-- <input type="button" name="next" class="next action-button" value="Next Step" />
-								--}}
+                                @if (Auth::check() == true && !empty($contact->contact_id))
+                                    <a href="{{ url('/checkout') }}">
+                                        <button class="procedd-to-checkout mt-3 ps-3">
+                                            PROCEED TO CHECKOUT
+                                        </button>
+                                    </a>
+                                @elseif(Auth::check() == true && empty($contact->contact_id))
+                                    <a href="{{ url('/checkout/') }}">
+                                        <button class="procedd-to-checkout mt-3 ps-3">
+                                            PROCEED TO CHECKOUT
+                                        </button>
+                                    </a>
+                                @elseif (Auth::check() != true)
+                                    <a href="{{ url('/user/') }}">
+                                        <button class="procedd-to-checkout mt-3 ps-3">
+                                            Login or Register
+                                        </button>
+                                    </a>
+                                @endif
                             </fieldset>
                             <fieldset>
                                 <div class="form-card">
@@ -544,9 +510,9 @@
                                                 </thead>
                                                 <tbody style="border-top: none !important">
                                                     @if ($cart_items)
-                                                    @php
-                                                        $i=1;
-                                                    @endphp
+                                                        @php
+                                                            $i = 1;
+                                                        @endphp
                                                         @foreach ($cart_items as $pk_product_id => $cart)
                                                             <tr class="quantities">
                                                                 <td>
@@ -570,7 +536,12 @@
                                                                                 <p class="ps-1">{{ $cart['quantity'] }}</p>
                                                                             </div> --}}
                                                                             <div class="quantity-bg">
-                                                                                <input type="number" class="itm_qty_ipad" id="itm_qty_ipad{{$pk_product_id}}" data-type="{{$pk_product_id}}" value="{{ $cart['quantity'] }}" style="width: 20px;
+                                                                                <input type="number"
+                                                                                    class="itm_qty_ipad"
+                                                                                    id="itm_qty_ipad{{ $pk_product_id }}"
+                                                                                    data-type="{{ $pk_product_id }}"
+                                                                                    value="{{ $cart['quantity'] }}"
+                                                                                    style="width: 20px;
                                                                                 text-align: center;background: #7bc533 !important;color:#fff;">
                                                                             </div>
                                                                             <div class="cart-page-price ps-3">
@@ -597,12 +568,15 @@
                                                                             id="option_id"
                                                                             value="{{ $cart['option_id'] }}">
                                                                         <span class="pe-1">
-                                                                            <button class="border-0 p-0" onclick="ipadminusq({{$pk_product_id}})">
+                                                                            <button class="border-0 p-0"
+                                                                                onclick="ipadminusq({{ $pk_product_id }})">
                                                                                 <i class="fa-solid fa-minus"></i>
                                                                             </button>
                                                                         </span>
                                                                         <span class="ps-1">
-                                                                            <button class="border-0 p-0" type="button" onclick="ipadplusq({{$pk_product_id}})">
+                                                                            <button class="border-0 p-0"
+                                                                                type="button"
+                                                                                onclick="ipadplusq({{ $pk_product_id }})">
                                                                                 <i class="fa-solid fa-plus"></i>
                                                                             </button>
                                                                         </span>
@@ -615,7 +589,8 @@
                                             </table>
                                             <div class="total-cart-button">
                                                 <button
-                                                    class="total-cart-button border-0 d-flex justify-content-center align-content-center w-100" onclick="update_cart()">
+                                                    class="total-cart-button border-0 d-flex justify-content-center align-content-center w-100"
+                                                    onclick="update_cart()">
                                                     <span class="m-auto">
                                                         your cart: ${{ number_format($cart_total, 2) }}
                                                     </span>
@@ -772,35 +747,36 @@
 <script>
     function plusq(pk_product_id) {
         var plus = parseInt($('#itm_qty' + pk_product_id).val());
-        var result = plus + 1  ; 
+        var result = plus + 1;
         $('#itm_qty' + pk_product_id).val(result);
     }
 
     function minusq(pk_product_id) {
-        
+
         var minus = parseInt($('#itm_qty' + pk_product_id).val());
-        if(minus > 0) {
-            var result = minus - 1  ; 
-        $('#itm_qty' + pk_product_id).val(result);
+        if (minus > 0) {
+            var result = minus - 1;
+            $('#itm_qty' + pk_product_id).val(result);
         }
-        
+
     }
 
     function ipadplusq(pk_product_id) {
         var plus = parseInt($('#itm_qty_ipad' + pk_product_id).val());
-        var result = plus + 1  ; 
+        var result = plus + 1;
         $('#itm_qty_ipad' + pk_product_id).val(result);
     }
 
     function ipadminusq(pk_product_id) {
-        
+
         var minus = parseInt($('#itm_qty_ipad' + pk_product_id).val());
-        if(minus > 0) {
-            var result = minus - 1  ; 
-        $('#itm_qty_ipad' + pk_product_id).val(result);
+        if (minus > 0) {
+            var result = minus - 1;
+            $('#itm_qty_ipad' + pk_product_id).val(result);
         }
-        
+
     }
+
     function update_cart() {
         var items_quantity = [];
         $('#cart_table > tbody  > tr.quantities').each(function(tr) {
@@ -878,7 +854,7 @@
                 var newVal = oldValue;
             } else {
                 var newVal = oldValue + 1;
-                
+
             }
             // $('#cart_table > tbody  > tr.quantities').each(function(tr) {
             //     var product_id = this.id.replace('row_', '');
@@ -913,25 +889,27 @@
                 data: {
                     "_token": "{{ csrf_token() }}",
                     "items_quantity": newVal,
-                    "product_id" : product_id
+                    "product_id": product_id
                 },
-                success: function(response ) {
+                success: function(response) {
                     // console.log(product_id , 'pid');
-                 
+
                     var row_price = response.cart_items[product_id].price;
                     // console.log(row_price.toFixed(2), 'p')
                     var new_quantity = response.cart_items[product_id].quantity;
-                    var new_row_price = parseFloat(row_price) *  parseInt(new_quantity);
+                    var new_row_price = parseFloat(row_price) * parseInt(new_quantity);
                     new_row_price = parseFloat(new_row_price).toFixed(2);
-                    
-                    $('#row_quantity_'+product_id).val(new_quantity);
-                    $('#subtotal_'+product_id).html('$' + new_row_price);
+
+                    $('#row_quantity_' + product_id).val(new_quantity);
+                    $('#subtotal_' + product_id).html('$' + new_row_price);
                     var grand_total = 0;
                     var total_cart_quantity = 0;
                     Object.keys(response.cart_items).forEach(function(key) {
-                        row_total = parseFloat(response.cart_items[key].price) * response.cart_items[key].quantity;
+                        row_total = parseFloat(response.cart_items[key].price) *
+                            response.cart_items[key].quantity;
                         grand_total += parseFloat(row_total);
-                        total_cart_quantity += parseInt(response.cart_items[key].quantity);
+                        total_cart_quantity += parseInt(response.cart_items[key]
+                            .quantity);
 
                     });
                     //console.log(total_cart_quantity);
@@ -942,11 +920,11 @@
                     var tax = grand_total.toFixed(2) * (8.75 / 100);
                     $('.tax_cart').children().html('$' + tax.toFixed(2));
                     $('.grandTotal').children().html('$' + (tax + grand_total).toFixed(2))
-                    
-                    
 
-                    
-                    
+
+
+
+
                 }
             });
         });
@@ -962,31 +940,33 @@
 
             spinner.find("input").val(newVal);
             spinner.find("input").trigger("change");
-              jQuery.ajax({
+            jQuery.ajax({
                 url: "{{ url('update-cart') }}",
                 method: 'post',
                 data: {
                     "_token": "{{ csrf_token() }}",
                     "items_quantity": newVal,
-                    "product_id" : product_id
+                    "product_id": product_id
                 },
-                success: function(response ) {
+                success: function(response) {
                     // console.log(product_id , 'pid');
-                 
+
                     var row_price = response.cart_items[product_id].price;
                     // console.log(row_price.toFixed(2), 'p')
                     var new_quantity = response.cart_items[product_id].quantity;
-                    var new_row_price = parseFloat(row_price) *  parseInt(new_quantity);
+                    var new_row_price = parseFloat(row_price) * parseInt(new_quantity);
                     new_row_price = parseFloat(new_row_price).toFixed(2);
-                    
-                    $('#row_quantity_'+product_id).val(new_quantity);
-                    $('#subtotal_'+product_id).html('$' + new_row_price);
+
+                    $('#row_quantity_' + product_id).val(new_quantity);
+                    $('#subtotal_' + product_id).html('$' + new_row_price);
                     var grand_total = 0;
                     var total_cart_quantity = 0;
                     Object.keys(response.cart_items).forEach(function(key) {
-                        row_total = parseFloat(response.cart_items[key].price) * response.cart_items[key].quantity;
+                        row_total = parseFloat(response.cart_items[key].price) *
+                            response.cart_items[key].quantity;
                         grand_total += parseFloat(row_total);
-                        total_cart_quantity += parseInt(response.cart_items[key].quantity);
+                        total_cart_quantity += parseInt(response.cart_items[key]
+                            .quantity);
                     });
                     console.log(total_cart_quantity);
                     $('#cart_grand_total').children().html('$' + grand_total.toFixed(2));
@@ -996,8 +976,8 @@
                     var tax = grand_total.toFixed(2) * (8.75 / 100);
                     $('.tax_cart').children().html('$' + tax.toFixed(2));
                     $('.grandTotal').children().html('$' + (tax + grand_total).toFixed(2))
-                    
-                    
+
+
                 }
             });
         });
@@ -1128,9 +1108,7 @@
         var opacity;
 
         $(".next").click(function() {
-
-            alert('hi');
-
+            
             current_fs = $(this).parent();
             next_fs = $(this).parent().next();
 

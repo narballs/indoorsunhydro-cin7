@@ -468,25 +468,14 @@ $cart_price = 0;
                                 <button
                                     class="next action-button btn btn-success w-100 text-white mt-4 mx-auto mob_next_btn_footer"
                                     style="background:#7bc533 !important;"> NEXT STEP </button>
-                                <div class="d-flex justify-content-center align-items-center">
-                                    <div>
-                                        <img class="img-fluid coupon-code-modal-btn" src="/theme/img/modal-icon1.png"
-                                            alt="">
-                                    </div>
-                                    <button type="button" class="btn btn-primary fw-blod coupon-code-modal-btn ps-0"
-                                        data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                                        applay coupon
-                                    </button>
-                                </div>
-                                {{-- <input type="button" name="next" class="next action-button" value="Next Step" /> --}}
                             </fieldset>
                             <fieldset>
                                 <div class="form-card">
                                     <table>
                                         <thead>
                                             <tr>
-                                                <th class="ps-3">
-                                                    <span>
+                                                <th class="ps-2">
+                                                    <span class="ps-1">
                                                         <img class="img-fluid" src="/theme/img/product-iccon.png">
                                                     </span>
                                                     <span class="product-title">Product</span>
@@ -509,7 +498,7 @@ $cart_price = 0;
                                                     $cart_total = $cart_total + $total_price;
                                                     ?>
                                                     <tr>
-                                                        <td class="ps-4">
+                                                        <td class="ps-3">
                                                             <div class="mt-3">
                                                                 <a class="product-name"
                                                                     href="
@@ -549,7 +538,7 @@ $cart_price = 0;
                                                                 <p class="cart-total-checkout-page ps-3">Total</p>
                                                             </span>
                                                             <div
-                                                                class="d-flex justify-content-end aling-items-end ps-5">
+                                                                class="d-flex justify-content-end aling-items-end ps-5 ml-2">
                                                                 <p class="sub-total-checkout-page">
                                                                     ${{ number_format($cart_total, 2) }} </p>
                                                             </div>
@@ -582,8 +571,8 @@ $cart_price = 0;
                                                                     </div>
                                                                 @endforeach
                                                         @endforeach
-                                                        <div>
-                                                            <button type="button" class="button-cards w-100"
+                                                        <div class="w-100 text-center">
+                                                            <button type="button" class="ml-2 mt-4 button-cards w-75"
                                                                 id="proceed_to_checkout" onclick="validate()">
                                                                 Proceed to checkout</button>
                                                         </div>
@@ -601,15 +590,15 @@ $cart_price = 0;
                                         <button type="button"
                                             class="btn btn-primary fw-blod coupon-code-modal-btn ps-0"
                                             data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                                            applay coupon
+                                            Apply Coupon
                                         </button>
                                     </div>
                                 </div>
                                 <input type="button" name="previous" class="previous action-button-previous"
                                     value="Previous" />
-                                <input type="button" name="next" class="next action-button" value="Next Step" />
+                                {{-- <input type="button" name="next" class="next action-button" value="Next Step" /> --}}
                             </fieldset>
-                            <fieldset>
+                            {{-- <fieldset>
                                 <div class="form-card form-signup-secondary">
                                     <div class="d-flex justify-content-center aling-items-center">
                                         <img class="img-fluid" src="/theme/img/payment-img.png" alt="">
@@ -649,9 +638,7 @@ $cart_price = 0;
                                 </div>
                                 <input type="button" name="previous" class="previous action-button-previous"
                                     value="Previous" />
-                                {{-- <input type="button" name="make_payment" class="next action-button"
-                                    value="Confirm" /> --}}
-                            </fieldset>
+                            </fieldset> --}}
                             <fieldset>
                                 <div class="form-card">
                                     <h2 class="fs-title text-center">Success !</h2>

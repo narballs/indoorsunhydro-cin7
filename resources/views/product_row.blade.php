@@ -2,7 +2,7 @@
 	<div class="card shadow-sm mb-4 w-100 h-100">
 		@if($product->images != '')
 
-			     <a style="width:20px !important;" href="javascript:void(0);" class="subscribe">
+			     <a style="width:20px !important;" href="javascript:void(0);" class="ml-2 mt-2 subscribe">
 					<i class="fa-solid fav-{{$option->option_id}} fa-heart {{ isset($user_buy_list_options[$option->option_id]) ? '' : 'text-muted' }} " 
 						id="{{$option->option_id}}" data-toggle="popover"
 						onclick="addToList('{{$product->product_id}}', '{{$option->option_id}}', '{{ isset($user_buy_list_options[$option->option_id])}}')">

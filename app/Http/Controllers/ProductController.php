@@ -1147,4 +1147,13 @@ class ProductController extends Controller
             'message' => 'product removed successfully!'
         ], 200);
     }
+
+    public function get_child_categories($parent_id)
+    {
+        $child_categories = Category::where('parent_id', $parent_id)->get();
+        return response()->json([
+            'status' => 'success',
+            'child_categories' => $child_categories
+        ], 200);
+    }
 }

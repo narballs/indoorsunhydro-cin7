@@ -4691,6 +4691,9 @@ select.list-dt:focus {
         line-height: 21px; */
         color: #8A8A8A;
     }
+    .form-select-mbl:focus {
+        box-shadow: 0 0 0 0rem !important;
+    }
     .filterMblbtn:focus {
         border: none !important;
         box-shadow: 0 0 0 0rem !important;
@@ -5668,6 +5671,73 @@ select.list-dt:focus {
     .p_detail_cart_row {
         width:60%;
     }
+
+
+    /* ****************   Mobile Filter   ************************** */
+    .mobile_filter_title {
+        font-family: 'Poppins' !important;
+        font-style: normal !important;
+        font-weight: 600 !important;
+        font-size: 18px !important;
+        line-height: 27px !important;
+        color: #131313 !important;
+    }
+    #filter_model {
+        border-radius: 8px !important;
+        border: none !important;
+        width: 358px !important;
+        /* height: 477px !important; */
+    }
+    .mobile_filter_header {
+        border-bottom:none !important;
+    }
+    .mbl_filter_btn {
+        border: 0px !important;
+        background: none !important;
+    }
+    .mbl_filter_close {
+        color: #323233 !important;
+        font-size: 22px !important;
+    }
+    .filter-mlb-radio-btn {
+        font-family: 'Poppins' !important;
+        font-style: normal !important;
+        font-weight: 500 !important;
+        font-size: 14px !important;
+        line-height: 21px !important;
+        color: #090A0A !important;
+    }
+    .filter-done-btn {
+        background: #7BC533 !important;
+        border-radius: 5px !important;
+        border-color: #7BC533 !important;
+        width: 102px !important;
+        height: 35px !important;
+    }
+    .filter-done-btn-text {
+        font-family: 'Poppins' !important;
+        font-style: normal !important;
+        font-weight: 600 !important;
+        font-size: 14px !important;
+        line-height: 21px !important;
+        text-align: center !important;
+        text-transform: uppercase !important;
+        color: #FFFFFF !important;
+    }
+
+    .filter_drop_down_mbl {
+        font-family: 'Poppins' !important;
+        font-style: normal !important;
+        font-weight: 400 !important;
+        font-size: 14px !important;
+        line-height: 21px !important;
+        color: #8A8A8A !important;
+    }
+
+    
+
+    /* ****************   Mobile Filter end   ********************** */
  
 }
+
 
