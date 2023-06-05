@@ -12,14 +12,15 @@
             <div class="card card-primary">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-12">
-                            <button class="btn btn-import-contacts badge-success" style="    border: 1px solid;">Import
-                                Contacts</button>
+                        <div class="col-md-12 d-flex justify-content-end align-items-center">
+
+                            <button type="button" class="btn btn-import-contacts create-new-order-btn">
+                                Import Contacts
+                            </button>
                             <div id="div_import_contacts" class="spinner-border hide ml-4" role="status">
                                 <span class="sr-only">Loading...</span>
                             </div>
                         </div>
-
                         <div class="col-md-12 mt-4" id="div_message"></div>
                     </div>
                 </div>
@@ -64,7 +65,6 @@
             font-style: normal;
             font-weight: 500;
             font-size: 11.3289px;
-
         }
 
         .badge-secondary {
@@ -91,7 +91,6 @@
                 btn.prop('disabled', true);
                 $('#div_import_contacts').show();
                 $('#div_message').html('Importing Contacts... Please do not close this window.');
-
 
                 $.ajax({
                     url: "{{ url('admin/commands/import_contacts') }}",
