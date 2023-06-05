@@ -655,6 +655,9 @@ a {
 .btn-sidebar {
     background-color: #fff !important;
     border-color: #DDE2E4 !important;
+    border-left: 0px !important;
+    border-radius: 0 5px 5px 0px !important;
+    margin-left: -9px !important;
 }
 
 [class*=sidebar-dark] .list-group-item {
