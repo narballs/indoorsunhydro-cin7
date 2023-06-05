@@ -1097,6 +1097,7 @@
                 $('#cart_grand_total').children().html('$' + grand_total.toFixed(2));
                 $('#topbar_cart_total').html('$' + grand_total.toFixed(2));
                 $('#top_cart_quantity').html(total_cart_quantity);
+                $('.topbar_cart_total_ipad').html('$' + grand_total.toFixed(2));
 
 
                 $('.cartQtymbl').html(total_cart_quantity);
@@ -1163,6 +1164,7 @@
                 $('#cart_grand_total').children().html('$' + grand_total.toFixed(2));
                 $('#topbar_cart_total').html('$' + grand_total.toFixed(2));
                 $('#top_cart_quantity').html(total_cart_quantity);
+                $('.topbar_cart_total_ipad').html('$' + grand_total.toFixed(2));
 
                 $('.cartQtymbl').html(total_cart_quantity);
                 $('.mbl_cart_subtotal').html('$' + grand_total.toFixed(2));
