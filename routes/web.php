@@ -93,6 +93,7 @@ Route::get('/get-wish-lists/', [ProductController::class, 'getWishLists']);
 Route::get('/get-lists-names/', [ProductController::class, 'getListNames']);
 Route::post('/create-list/', [ProductController::class, 'createList']);
 Route::post('/delete/favorite/product', [ProductController::class, 'delete_favorite_product']);
+Route::get('/child/categories/{parent_id}', [ProductController::class, 'get_child_categories']);
 
 Route::group(['middleware' => ['auth']], function () {
     Route::resource('admin/roles', RoleController::class);
