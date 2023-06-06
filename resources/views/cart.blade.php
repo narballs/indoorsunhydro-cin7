@@ -98,7 +98,7 @@
                                                         <div class="d-flex align-items-center">
                                                                                       @if (!empty($cart['image']))
                                                                 <img src="{{ $cart['image'] }}"
-                                                                    class="img-fluid rounded-3" style="width: 120px;"
+                                                                    class="img-fluid rounded-3" style="width: 80px; height:100px;"
                                                                     alt="Book">
                                                             @else
                                                                 <img src="/theme/img/image_not_available.png"
@@ -199,7 +199,7 @@
         </section>
     </div>
     <div class="col-md-3 p-0  mt-5">
-        <div class="table-responsive">
+        <div class="table-responsive" style="padding-top:3px !important;">
             <?php
             $tax = $cart_total * ($tax_class->rate / 100);
             $total_including_tax = $tax + $cart_total;
