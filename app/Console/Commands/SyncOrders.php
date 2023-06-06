@@ -62,12 +62,13 @@ class SyncOrders extends Command
 
             if (!empty($api_orders)) {
                 foreach ($api_orders as $api_order) {
-                    $qcom_order = ApiOrder::where('order_id', $api_order->id)->first();
+                    $qcom_order = ApiOrder::where('reference', $api_order->reference)->first();
                     //dd($qcom_order);
                     if ($qcom_order) {
 
                         $this->info('Api order ids' . $qcom_order->reference);
                         $qcom_order->isVoid = 1;
+                        $qcom_order->isApproved = 0;
                         $qcom_order->save();
                     }
           
