@@ -16,15 +16,21 @@
 	width: 1280px;
 	margin: auto !important;
 	">
-    @if (Session::has('message'))
-        <p class="alert {{ Session::get('alert-class', 'alert-danger') }}">{{ Session::get('message') }}</p>
-    @endif
     <div class="row">
         <div class="col-md-9">
             <section class=" h-100">
                 <div class="h-100 py-5">
                     <div class="row">
                         <div class="col-md-12">
+                            <div class="col-md-12">
+                                @if (Session::has('message'))
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        {{ Session::get('message') }}
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                            aria-label="Close"></button>
+                                    </div>
+                                @endif
+                            </div>
                             <div class="table-responsive">
                                 <table class="table mt-4" id="cart_table">
                                     <thead class="table-head-items">
@@ -85,23 +91,19 @@
                                                         <span class="mb-0" style="font-weight: 500;">
                                                             <a class="cart-page-items"
                                                                 href="{{ url('product-detail/' . $cart['product_id'] . '/' . $cart['option_id'] . '/' . $cart['slug']) }}" ">{{ $cart['code'] }}
-             </a>
-             </span>
-            </td>
-            <td scope=" row">
-             <div class="d-flex align-items-center">
-                                                                                        
-                                                                                        
-                                                                                  @if (!empty($cart['image']))
+                                                            </a>
+                                                        </span>
+                                                    </td>
+                                                    <td scope=" row">
+                                                        <div class="d-flex align-items-center">
+                                                                                      @if (!empty($cart['image']))
                                                                 <img src="{{ $cart['image'] }}"
                                                                     class="img-fluid rounded-3" style="width: 120px;"
                                                                     alt="Book">
                                                             @else
                                                                 <img src="/theme/img/image_not_available.png"
                                                                     class="img-fluid rounded-3"
-                                                                    style="width: 78px;
-											height: 83px;"
-                                                                    alt="Book">
+                                                                    style="width: 78px;height: 83px;" alt="Book">
                                             @endif
                                             <div class="flex-column ms-4">
                                                 <span class="mb-2">
@@ -112,7 +114,6 @@
                                             </div>
                             </div>
                             </td>
-
                             <td class=" align-middle">
                                 <p class="mb-0 ps-2  cart-page-items">
                                     ${{ number_format($cart['price'], 2) }}
@@ -278,10 +279,18 @@
                         <td colspan="2">
                             <li
                                 class="list-group-item d-flex justify-content-center align-items-center border-0 px-0 mb-3">
-                                @if (Auth::check() == true && !empty($contact->contact_id))
+                                @if (Auth::check() == true && $contact->status == 1 && !empty($contact->contact_id))
                                     <a href="{{ url('/checkout') }}">
                                         <button class="procedd-to-checkout mt-3">
                                             PROCEED TO CHECKOUT
+                                        </button>
+                                    </a>
+                                @elseif (Auth::check() == true && $contact->status == 0)
+                                    <a href="javascript:void(0)">
+                                        <button class="procedd-to-checkout-disable mt-3">
+
+                                            Your company is disabled
+
                                         </button>
                                     </a>
                                 @elseif(Auth::check() == true && empty($contact->contact_id))
@@ -290,7 +299,7 @@
                                             PROCEED TO CHECKOUT
                                         </button>
                                     </a>
-                                @elseif (Auth::check() != true)
+                                @else
                                     <a href="{{ url('/user/') }}">
                                         <button class="procedd-to-checkout mt-3">
                                             Login or Register
