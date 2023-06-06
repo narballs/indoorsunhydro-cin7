@@ -380,7 +380,7 @@
 				window.location.href = '/product-detail/'+ id +'/'+option_id+'/'+slug;
 			}
          function categoryChange() {
-            alert('kflsdflkdsflsdk');
+            // alert('kflsdflkdsflsdk');
             var categories = jQuery('#categories').val();
             window.location.href =  window.location.origin+'/products/'+category_id;
          } 
@@ -489,7 +489,6 @@
                                  var cart_total = cart_total + subtotal;
                                  var total_cart_quantity = total_cart_quantity + quantity;
                                  $('#subtotal_' + product_id).html('$'+subtotal);
-                                 console.log(item.name);
                                  var product_name = document.getElementById("product_name_"+jQuery('#p_'+id).val()).innerHTML;
                               }
                               
@@ -504,9 +503,11 @@
                               });
                         }
                            $('#top_cart_quantity').html(total_cart_quantity);
-                           
+                           $('.cartQtyipad').html(total_cart_quantity);
+                           $('.cartQtymbl').html(total_cart_quantity);
                            $('#cart_items_quantity').html(total_cart_quantity);
                            $('#topbar_cart_total').html('$'+parseFloat(cart_total).toFixed(2));
+                           $('.topbar_cart_total_ipad').html('$'+parseFloat(cart_total).toFixed(2));
                            var total = document.getElementById('#top_cart_quantity');
                      }});
 

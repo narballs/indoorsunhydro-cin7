@@ -16,15 +16,21 @@
 	width: 1280px;
 	margin: auto !important;
 	">
-    @if (Session::has('message'))
-        <p class="alert {{ Session::get('alert-class', 'alert-danger') }}">{{ Session::get('message') }}</p>
-    @endif
     <div class="row">
         <div class="col-md-9">
             <section class=" h-100">
                 <div class="h-100 py-5">
                     <div class="row">
                         <div class="col-md-12">
+                            <div class="col-md-12">
+                                @if (Session::has('message'))
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        {{ Session::get('message') }}
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                            aria-label="Close"></button>
+                                    </div>
+                                @endif
+                            </div>
                             <div class="table-responsive">
                                 <table class="table mt-4" id="cart_table">
                                     <thead class="table-head-items">
@@ -86,11 +92,11 @@
                                                             <a class="cart-page-items"
                                                                 href="{{ url('product-detail/' . $cart['product_id'] . '/' . $cart['option_id'] . '/' . $cart['slug']) }}" ">{{ $cart['code'] }}
                                                             </a>
-                                                            </span>
-                                                            </td>
-                                                            <td scope=" row">
-                                                            <div class="d-flex align-items-center">
-                                                              @if (!empty($cart['image']))
+                                                        </span>
+                                                    </td>
+                                                    <td scope=" row">
+                                                        <div class="d-flex align-items-center">
+                                                                                      @if (!empty($cart['image']))
                                                                 <img src="{{ $cart['image'] }}"
                                                                     class="img-fluid rounded-3" style="width: 120px;"
                                                                     alt="Book">
@@ -125,11 +131,13 @@
                                             value="{{ $cart['option_id'] }}">
                                         <div class="quantity-nav">
                                             <div class="quantity-div quantity-up"
-                                                onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
-                                                </div>
+                                                onclick="increase_qty({{ $pk_product_id }})">
+                                                
+                                            </div>
                                             <div class="quantity-div quantity-down"
-                                                onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
-                                                </div>
+                                                onclick="decrease_qty({{ $pk_product_id }})">
+                                                
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -140,15 +148,8 @@
                                         id="subtotal_{{ $pk_product_id }}">${{ number_format($cart['price'] * $cart['quantity'], 2) }}</span>
                                 </span>
                                 <p class="text-center remove-item-cart">
-                                    <a style="font-family: 'Poppins';
-                                                                        font-style: normal;
-                                                                        font-weight: 400;
-                                                                        margin-right: 4px;
-                                                                        font-size: 12px;
-                                                                        line-height: 18px;
-                                                                        text-decoration-line: underline;
-                                                                        color: #9A9A9A;"
-                                        href="{{ url('remove/' . $pk_product_id) }}" id="remove">Remove</a>
+                                    <a href="{{ url('remove/' . $pk_product_id) }}" id="remove"
+                                        class="remove-cart-page-button">Remove</a>
                                 </p>
                             </td>
                             </tr>
@@ -184,9 +185,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-4 p-0">
-                                                <!--  <button class=" cart-updated" type="submit" id="update_cart"
-                                                                                onclick="update_cart()">Update
-                                                                                Cart</button> -->
+
                                             </div>
                                         </div>
                                     </td>
@@ -217,44 +216,61 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td class="ps-0">
-                            <img class=" img-fluid" src="/theme/img/sub-totals-icon.png">
-                            <strong class=" cart-total">Subtotal</strong>
-                        </td>
-                        <td class="pe-0">
-                            <span id="cart_grand_total">
-                                <strong class=" d-flex justify-content-end cart-page-items ">
-                                    ${{ number_format($cart_total, 2) }}
-                                </strong>
-                            </span>
+                        <td class="ps-0" colspan="2">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <span>
+                                    <img class=" img-fluid" src="/theme/img/sub-totals-icon.png">
+                                    <strong class=" cart-total">Subtotal</strong>
+                                </span>
+                                <span id="cart_grand_total">
+                                    <strong class=" d-flex justify-content-end cart-page-items ">
+                                        ${{ number_format($cart_total, 2) }}
+                                    </strong>
+                                </span>
+                            </div>
                         </td>
                     </tr>
                     <tr>
-                        <td class="ps-0">
-                            <img class=" img-fluid" src="/theme/img/text-rate-icon.png">
-                            <span> <strong class="cart-total" id="tax_rate">Rate({{ $tax_class->rate }}%)</strong>
-                            </span>
+                        <td class="ps-0" colspan="2">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <span>
+                                    <img class=" img-fluid" src="/theme/img/text-rate-icon.png">
+                                    <span> <strong class="cart-total" id="tax_rate">Tax
+                                            {{ $tax_class->rate }}%</strong>
+                                    </span>
+                                </span>
+                                <span id="cart_grand_total" class="tax_cart">
+                                    <strong class=" d-flex justify-content-end cart-page-items" id="tax_amount">
+                                        ${{ number_format($tax, 2) }}
+                                    </strong>
+                                </span>
+                            </div>
                             <div>
-                        </td>
-                        <td class="pe-0">
-                            <span id="cart_grand_total" class="tax_cart">
-                                <strong class=" d-flex justify-content-end cart-page-items" id="tax_amount">
-                                    ${{ number_format($tax, 2) }}
-                                </strong>
-                            </span>
+                                <span class="tax-calculater">
+                                    (Tax is calculated when order is invoiced, could be 0% based
+                                    on your account setup)
+                                </span>
+                            </div>
                         </td>
                     </tr>
                     <tr>
-                        <td class="ps-0">
-                            <img class=" img-fluid" src="/theme/img/total-icon.png">
-                            <strong class="cart-total">SubTotal</strong>
-                        </td>
-                        <td class="pe-0">
-                            <span id="cart_grand_total" class="grandTotal">
-                                <strong class=" d-flex justify-content-end cart-page-items text-danger g_total">
-                                    ${{ number_format($total_including_tax, 2) }}
-                                </strong>
-                            </span>
+                        <td class="ps-0" colspan="2">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <span>
+                                    <img class="img-fluid subtotal-img-cart-page" src="/theme/img/total-icon.png">
+                                    <strong class="cart-total">SubTotal</strong>
+                                </span>
+                                <span id="cart_grand_total" class="grandTotal">
+                                    <strong class=" d-flex justify-content-end cart-page-items text-danger g_total">
+                                        ${{ number_format($total_including_tax, 2) }}
+                                    </strong>
+                                </span>
+                            </div>
+                            <div>
+                                <span class="tax-calculater">
+                                    (No payment is collected during this process)
+                                </span>
+                            </div>
                         </td>
                     </tr>
                 </tbody>
@@ -263,10 +279,18 @@
                         <td colspan="2">
                             <li
                                 class="list-group-item d-flex justify-content-center align-items-center border-0 px-0 mb-3">
-                                @if (Auth::check() == true && !empty($contact->contact_id))
+                                @if (Auth::check() == true && $contact->status == 1 && !empty($contact->contact_id))
                                     <a href="{{ url('/checkout') }}">
                                         <button class="procedd-to-checkout mt-3">
                                             PROCEED TO CHECKOUT
+                                        </button>
+                                    </a>
+                                @elseif (Auth::check() == true && $contact->status == 0)
+                                    <a href="javascript:void(0)">
+                                        <button class="procedd-to-checkout-disable mt-3">
+
+                                            Your company is disabled
+
                                         </button>
                                     </a>
                                 @elseif(Auth::check() == true && empty($contact->contact_id))
@@ -275,7 +299,7 @@
                                             PROCEED TO CHECKOUT
                                         </button>
                                     </a>
-                                @elseif (Auth::check() != true)
+                                @else
                                     <a href="{{ url('/user/') }}">
                                         <button class="procedd-to-checkout mt-3">
                                             Login or Register
@@ -351,7 +375,8 @@
                                                                                         style="width: 20px;
                                                                                 text-align: center;background: #7bc533 !important;color:#fff;">
                                                                                 </div>
-                                                                                <div class="cart-page-price ps-3">
+                                                                                <div class="cart-page-price ps-3"
+                                                                                    id="m_p_price_{{ $pk_product_id }}">
                                                                                     ${{ number_format($cart['price'], 2) }}
                                                                                 </div>
                                                                             </div>
@@ -397,12 +422,6 @@
                                                     <div class="w-100 mb-3" style="border-bottom:1px solid #dee2e6;">
                                                         <span class=" mb-2 cart-total-checkout-page text-dark mb-2">
                                                             Cart Total
-                                                <div class="total-cart-button">
-                                                    <button
-                                                        class="total-cart-button border-0 d-flex justify-content-center align-content-center w-100"
-                                                        onclick="update_cart()">
-                                                        <span class="m-auto">
-                                                            your cart: ${{ number_format($cart_total, 2) }}
                                                         </span>
                                                     </div>
                                                     <div class="d-flex" style="border-bottom:1px solid #dee2e6;">
@@ -411,39 +430,45 @@
                                                                 <img src="/theme/img/pricing_tag.png" width="22px">
                                                             </span>
                                                             <span class="ml-1 cart-total-checkout-page text-dark">
-                                                                Total
+                                                                Sub Total
                                                             </span>
                                                         </div>
                                                         <div class="w-50 mb-3">
-                                                            <p class="sub-total-checkout-page m-0 mb-0 text-right">
-                                                                ${{ number_format($cart_total, 2) }} 
+                                                            <p
+                                                                class="sub-total-checkout-page mbl_cart_subtotal m-0 mb-0 text-right">
+                                                                ${{ number_format($cart_total, 2) }}
                                                             </p>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 @if (Auth::check() == true && !empty($contact->contact_id))
-                                    <a href="{{ url('/checkout') }}">
-                                        <button class="procedd-to-checkout mt-3 ps-3">
-                                            PROCEED TO CHECKOUT
-                                        </button>
-                                    </a>
+                                    <div class="row">
+                                        <a href="{{ url('/checkout') }}">
+                                            <button class="procedd-to-checkout mt-3 ps-3">
+                                                PROCEED TO CHECKOUT
+                                            </button>
+                                        </a>
+                                    </div>
                                 @elseif(Auth::check() == true && empty($contact->contact_id))
-                                    <a href="{{ url('/checkout/') }}">
-                                        <button class="procedd-to-checkout mt-3 ps-3">
-                                            PROCEED TO CHECKOUT
-                                        </button>
-                                    </a>
+                                    <div class="row">
+                                        <a href="{{ url('/checkout/') }}">
+                                            <button class="procedd-to-checkout mt-3 ps-3">
+                                                PROCEED TO CHECKOUT
+                                            </button>
+                                        </a>
+                                    </div>
                                 @elseif (Auth::check() != true)
-                                    <a href="{{ url('/user/') }}">
-                                        <button class="procedd-to-checkout mt-3 ps-3">
-                                            Login or Register
-                                        </button>
-                                    </a>
+                                    <div>
+                                        <a href="{{ url('/user/') }}">
+                                            <button class="procedd-to-checkout mt-3 ps-3">
+                                                Login or Register
+                                            </button>
+                                        </a>
+                                    </div>
                                 @endif
                             </fieldset>
                             <fieldset>
@@ -587,16 +612,38 @@
                                                     @endif
                                                 </tbody>
                                             </table>
-                                            <div class="total-cart-button">
+                                            <div class="w-100">
+                                                <div class="w-100 mb-3" style="border-bottom:1px solid #dee2e6;">
+                                                    <span class=" mb-2 cart-total-checkout-page text-dark mb-2">
+                                                        Cart Total
+                                                    </span>
+                                                </div>
+                                                <div class="d-flex" style="border-bottom:1px solid #dee2e6;">
+                                                    <div class="w-50 mb-3">
+                                                        <span class="">
+                                                            <img src="/theme/img/pricing_tag.png" width="22px">
+                                                        </span>
+                                                        <span class="ml-1 cart-total-checkout-page text-dark">
+                                                            Sub Total
+                                                        </span>
+                                                    </div>
+                                                    <div class="w-50 mb-3">
+                                                        <p
+                                                            class="sub-total-checkout-page ipad_cart_subtotal m-0 mb-0 text-right">
+                                                            ${{ number_format($cart_total, 2) }}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {{-- <div class="total-cart-button">
                                                 <button
-                                                    class="total-cart-button border-0 d-flex justify-content-center align-content-center w-100"
-                                                    onclick="update_cart()">
+                                                    class="total-cart-button border-0 d-flex justify-content-center align-content-center w-100" onclick="update_cart()">
                                                     <span class="m-auto">
                                                         your cart: ${{ number_format($cart_total, 2) }}
                                                     </span>
                                                 </button>
-                                            </div>
-                                            <div class="d-flex justify-content-center align-items-center mt-5">
+                                            </div> --}}
+                                            {{-- <div class="d-flex justify-content-center align-items-center mt-5">
                                                 <div>
                                                     <img class="img-fluid coupon-code-modal-btn"
                                                         src="/theme/img/modal-icon1.png" alt="">
@@ -606,12 +653,36 @@
                                                     data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                                                     apply coupon
                                                 </button>
-                                            </div>
+                                            </div> --}}
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <input type="button" name="next" class="next action-button" value="Next Step" />
+                            @if (Auth::check() == true && !empty($contact->contact_id))
+                                <div class="row">
+                                    <a href="{{ url('/checkout') }}">
+                                        <button class="procedd-to-checkout w-50">
+                                            PROCEED TO CHECKOUT
+                                        </button>
+                                    </a>
+                                </div>
+                            @elseif(Auth::check() == true && empty($contact->contact_id))
+                                <div class="row">
+                                    <a href="{{ url('/checkout/') }}">
+                                        <button class="procedd-to-checkout w-50">
+                                            PROCEED TO CHECKOUT
+                                        </button>
+                                    </a>
+                                </div>
+                            @elseif (Auth::check() != true)
+                                <div class="row">
+                                    <a href="{{ url('/user/') }}">
+                                        <button class="procedd-to-checkout w-50">
+                                            Login or Register
+                                        </button>
+                                    </a>
+                                </div>
+                            @endif
 
                         </fieldset>
                         <fieldset>
@@ -635,7 +706,7 @@
                                                             <p class="cart-total-checkout-page ps-3">Total</p>
                                                         </span>
                                                         <div class="d-flex justify-content-end aling-items-end ps-5">
-                                                            <p class="sub-total-checkout-page">
+                                                            <p class="sub-total-checkout-page ">
                                                                 ${{ number_format($cart_total, 2) }} </p>
                                                         </div>
                                                     </div>
@@ -679,7 +750,7 @@
                         </fieldset>
                         <fieldset>
                             <div class="form-card">
-                                gdfgdfgfdgfdgfdgdfgfgfgdfgdfgdfg
+
                             </div>
                             <input type="button" name="previous" class="previous action-button-previous"
                                 value="Previous" />
@@ -748,7 +819,8 @@
     function plusq(pk_product_id) {
         var plus = parseInt($('#itm_qty' + pk_product_id).val());
         var result = plus + 1;
-        $('#itm_qty' + pk_product_id).val(result);
+        var new_qty = $('#itm_qty' + pk_product_id).val(result);
+        increase_qty(pk_product_id)
     }
 
     function minusq(pk_product_id) {
@@ -757,6 +829,7 @@
         if (minus > 0) {
             var result = minus - 1;
             $('#itm_qty' + pk_product_id).val(result);
+            decrease_qty(pk_product_id);
         }
 
     }
@@ -765,6 +838,7 @@
         var plus = parseInt($('#itm_qty_ipad' + pk_product_id).val());
         var result = plus + 1;
         $('#itm_qty_ipad' + pk_product_id).val(result);
+        increase_qty(pk_product_id)
     }
 
     function ipadminusq(pk_product_id) {
@@ -773,216 +847,316 @@
         if (minus > 0) {
             var result = minus - 1;
             $('#itm_qty_ipad' + pk_product_id).val(result);
+            decrease_qty(pk_product_id);
         }
 
     }
+    // function update_cart() {
+    //     var items_quantity = [];
+    //     $('#cart_table > tbody  > tr.quantities').each(function(tr) {
+    //         var product_id = this.id.replace('row_', '');
+    //         var quantity = $('#row_quantity_' + product_id).val();
+    //         var qtyIpad = $('#itm_qty_ipad' + product_id).val();
+    //         var qtymob = $('#itm_qty' + product_id).val();
+    //         items_quantity.push({
+    //             id: product_id,
+    //             quantity: quantity,
+    //             // quantity: qtyIpad
+    //         });
+    //         items_quantity.push({
+    //             id: product_id,
+    //             quantity: qtyIpad
+    //         });
+    //         items_quantity.push({
+    //             id: product_id,
+    //             quantity: qtymob
+    //         });
+    //     });
+    //     jQuery.ajax({
+    //         url: "{{ url('update-cart') }}",
+    //         method: 'post',
+    //         data: {
+    //             "_token": "{{ csrf_token() }}",
+    //             "items_quantity": items_quantity
+    //         },
+    //         success: function(response) {
+    //             console.log(response);
+    //             var cart_items = response.cart_items;
+    //             var cart_total = 0;
+    //             var total_cart_quantity = 0;
 
-    function update_cart() {
-        var items_quantity = [];
-        $('#cart_table > tbody  > tr.quantities').each(function(tr) {
-            var product_id = this.id.replace('row_', '');
-            var quantity = $('#row_quantity_' + product_id).val();
-            var qtyIpad = $('#itm_qty_ipad' + product_id).val();
-            var qtymob = $('#itm_qty' + product_id).val();
-            items_quantity.push({
-                id: product_id,
-                quantity: quantity,
-                // quantity: qtyIpad
-            });
-            items_quantity.push({
-                id: product_id,
-                quantity: qtyIpad
-            });
-            items_quantity.push({
-                id: product_id,
-                quantity: qtymob
-            });
-        });
+    //             for (var key in cart_items) {
+    //                 var item = cart_items[key];
+
+    //                 var product_id = item.product_id;
+    //                 var price = parseFloat(item.price);
+    //                 var quantity = parseInt(item.quantity);
+
+    //                 var subtotal = parseFloat(price * quantity);
+    //                 cart_total += subtotal;
+    //                 var total_cart_quantity = total_cart_quantity + quantity;
+
+    //                 $('#subtotal_' + key).html('$' + subtotal.toFixed(2));
+    //             }
+
+    //             $('#cart_subtotal').html('$' + cart_total.toFixed(2));
+    //             $('#cart_grand_total').html('<strong>$' + cart_total.toFixed(2) + '<strong>');
+    //             $('#top_cart_quantity').html(total_cart_quantity);
+    //             $('.cartQtyipad').html(total_cart_quantity);
+    //             $('.cartQtymbl').html(total_cart_quantity);
+    //             //$('#topbar_cart_total').html('$' + parseFloat(cart_total));
+    //             jQuery('.alert').html(response.success);
+    //             location.reload();
+    //         }
+    //     });
+    // }
+
+    // jQuery(
+    //         '<div class="quantity-nav"><div class="quantity-div quantity-up">&#xf106;</div><div class="quantity-div quantity-down">&#xf107</div></div>'
+    //     )
+    //     .insertAfter('.quantity input');
+    // jQuery('.quantity').each(function() {
+
+    //     var spinner = jQuery(this),
+    //         input = spinner.find('input[type="number"]'),
+    //         btnUp = spinner.find('.quantity-up'),
+    //         btnDown = spinner.find('.quantity-down'),
+    //         min = input.attr('min'),
+    //         max = input.attr('max');
+
+    //     btnUp.click(function() {
+    //         var oldValue = parseFloat(input.val());
+    //         if (oldValue >= max) {
+    //             var newVal = oldValue;
+    //         } else {
+    //             var newVal = oldValue + 1;
+
+    //         }
+
+    //         var product_id = spinner.find("input").attr('id').replace('row_quantity_', '');
+    //         spinner.find("input").val(newVal);
+    //         spinner.find("input").trigger("change");
+
+    //         jQuery.ajax({
+    //             url: "{{ url('update-cart') }}",
+    //             method: 'post',
+    //             data: {
+    //                 "_token": "{{ csrf_token() }}",
+    //                 "items_quantity": newVal,
+    //                 "product_id" : product_id
+    //             },
+    //             success: function(response ) {
+    //                 // console.log(product_id , 'pid');
+
+    //                 var row_price = response.cart_items[product_id].price;
+    //                 // console.log(row_price.toFixed(2), 'p')
+    //                 var new_quantity = response.cart_items[product_id].quantity;
+    //                 var new_row_price = parseFloat(row_price) *  parseInt(new_quantity);
+    //                 new_row_price = parseFloat(new_row_price).toFixed(2);
+
+    //                 $('#row_quantity_'+product_id).val(new_quantity);
+    //                 $('#subtotal_'+product_id).html('$' + new_row_price);
+    //                 var grand_total = 0;
+    //                 var total_cart_quantity = 0;
+    //                 Object.keys(response.cart_items).forEach(function(key) {
+    //                     row_total = parseFloat(response.cart_items[key].price) * response.cart_items[key].quantity;
+    //                     grand_total += parseFloat(row_total);
+    //                     total_cart_quantity += parseInt(response.cart_items[key].quantity);
+
+    //                 });
+    //                 //console.log(total_cart_quantity);
+    //                 $('#cart_grand_total').children().html('$' + grand_total.toFixed(2));
+    //                 $('#topbar_cart_total').html('$' + grand_total.toFixed(2));
+    //                 $('#top_cart_quantity').html(total_cart_quantity);
+    //                 var tax = 0;
+    //                 var tax = grand_total.toFixed(2) * (8.75 / 100);
+    //                 $('.tax_cart').children().html('$' + tax.toFixed(2));
+    //                 $('.grandTotal').children().html('$' + (tax + grand_total).toFixed(2))
+    //             }
+    //         });
+    //     });
+
+    //     btnDown.click(function() {
+    //         var oldValue = parseFloat(input.val());
+    //         if (oldValue <= min) {
+    //             var newVal = oldValue;
+    //         } else {
+    //             var newVal = oldValue - 1;
+    //         }
+    //         var product_id = spinner.find("input").attr('id').replace('row_quantity_', '');
+    //         var m_qty = $('#itm_qty' + product_id).val(newVal)
+
+    //         spinner.find("input").val(newVal);
+    //         spinner.find("input").trigger("change");
+    //           jQuery.ajax({
+    //             url: "{{ url('update-cart') }}",
+    //             method: 'post',
+    //             data: {
+    //                 "_token": "{{ csrf_token() }}",
+    //                 "items_quantity": newVal,
+    //                 "product_id" : product_id
+    //             },
+    //             success: function(response ) {
+    //                 // console.log(product_id , 'pid');
+
+    //                 var row_price = response.cart_items[product_id].price;
+    //                 // console.log(row_price.toFixed(2), 'p')
+    //                 var new_quantity = response.cart_items[product_id].quantity;
+    //                 var new_row_price = parseFloat(row_price) *  parseInt(new_quantity);
+    //                 new_row_price = parseFloat(new_row_price).toFixed(2);
+
+    //                 $('#row_quantity_'+product_id).val(new_quantity);
+    //                 $('#subtotal_'+product_id).html('$' + new_row_price);
+    //                 var grand_total = 0;
+    //                 var total_cart_quantity = 0;
+    //                 Object.keys(response.cart_items).forEach(function(key) {
+    //                     row_total = parseFloat(response.cart_items[key].price) * response.cart_items[key].quantity;
+    //                     grand_total += parseFloat(row_total);
+    //                     total_cart_quantity += parseInt(response.cart_items[key].quantity);
+    //                 });
+    //                 console.log(total_cart_quantity);
+    //                 $('#cart_grand_total').children().html('$' + grand_total.toFixed(2));
+    //                 $('#topbar_cart_total').html('$' + grand_total.toFixed(2));
+    //                 $('#top_cart_quantity').html(total_cart_quantity);
+    //                 var tax = 0;
+    //                 var tax = grand_total.toFixed(2) * (8.75 / 100);
+    //                 $('.tax_cart').children().html('$' + tax.toFixed(2));
+    //                 $('.grandTotal').children().html('$' + (tax + grand_total).toFixed(2))
+
+
+    //             }
+    //         });
+    //     });
+
+    // });
+
+    /* *****   INCREASE QTY   ****  */
+    function increase_qty(pk_product_id) {
+        var qty_input = parseFloat($('#row_quantity_' + pk_product_id).val());
+        var new_qty = parseFloat(qty_input + 1);
+        var new_qty_value = $('#row_quantity_' + pk_product_id).val(new_qty);
+        var product_id = pk_product_id;
+
         jQuery.ajax({
             url: "{{ url('update-cart') }}",
             method: 'post',
             data: {
                 "_token": "{{ csrf_token() }}",
-                "items_quantity": items_quantity
+                "items_quantity": new_qty,
+                "product_id": product_id
             },
             success: function(response) {
-                var cart_items = response.cart_items;
-                var cart_total = 0;
+                var row_price = response.cart_items[product_id].price;
+                var new_quantity = response.cart_items[product_id].quantity;
+                var new_row_price = parseFloat(row_price) * parseInt(new_quantity);
+                new_row_price = parseFloat(new_row_price).toFixed(2);
+                $('#row_quantity_' + product_id).val(new_quantity);
+                $('#subtotal_' + product_id).html('$' + new_row_price);
+
+                $('#itm_qty' + product_id).val(new_quantity);
+                $('#itm_qty_ipad' + product_id).val(new_quantity);
+
+                var grand_total = 0;
                 var total_cart_quantity = 0;
+                Object.keys(response.cart_items).forEach(function(key) {
+                    row_total = parseFloat(response.cart_items[key].price) * response.cart_items[
+                        key].quantity;
+                    grand_total += parseFloat(row_total);
+                    total_cart_quantity += parseInt(response.cart_items[key].quantity);
 
-                for (var key in cart_items) {
-                    var item = cart_items[key];
-
-                    var product_id = item.product_id;
-                    var price = parseFloat(item.price);
-                    var quantity = parseInt(item.quantity);
-
-                    var subtotal = parseFloat(price * quantity);
-                    cart_total += subtotal;
-                    var total_cart_quantity = total_cart_quantity + quantity;
-
-                    $('#subtotal_' + key).html('$' + subtotal.toFixed(2));
-                }
-
-                $('#cart_subtotal').html('$' + cart_total.toFixed(2));
-                $('#cart_grand_total').html('<strong>$' + cart_total.toFixed(2) + '<strong>');
+                });
+                $('#cart_grand_total').children().html('$' + grand_total.toFixed(2));
+                $('#topbar_cart_total').html('$' + grand_total.toFixed(2));
                 $('#top_cart_quantity').html(total_cart_quantity);
-                //$('#topbar_cart_total').html('$' + parseFloat(cart_total));
-                jQuery('.alert').html(response.success);
-                location.reload();
+                $('.topbar_cart_total_ipad').html('$' + grand_total.toFixed(2));
+
+
+                $('.cartQtymbl').html(total_cart_quantity);
+                $('.mbl_cart_subtotal').html('$' + grand_total.toFixed(2));
+
+                $('.cartQtyipad').html(total_cart_quantity);
+                $('.ipad_cart_subtotal').html('$' + grand_total.toFixed(2));
+
+
+
+                var tax = 0;
+                var tax = grand_total.toFixed(2) * (8.75 / 100);
+                $('.tax_cart').children().html('$' + tax.toFixed(2));
+                $('.grandTotal').children().html('$' + (tax + grand_total).toFixed(2));
+
+
+                $('#mbl_tax_price').html('$' + tax.toFixed(2));
+                $('#mbl_total_p').html('$' + (tax + grand_total).toFixed(2));
+
+                $('#ipad_tax_price').html('$' + tax.toFixed(2));
+                $('#ipad_total_p').html('$' + (tax + grand_total).toFixed(2));
             }
         });
     }
 
-    jQuery(
-            '<div class="quantity-nav"><div class="quantity-div quantity-up">&#xf106;</div><div class="quantity-div quantity-down">&#xf107</div></div>'
-        )
-        .insertAfter('.quantity input');
-    jQuery('.quantity').each(function() {
+    /* *****   DECREASE QTY   ****  */
+    function decrease_qty(pk_product_id) {
+        var qty_input = parseFloat($('#row_quantity_' + pk_product_id).val());
+        if (qty_input > 1) {
+            var new_qty = parseFloat(qty_input - 1);
+            var new_qty_value = $('#row_quantity_' + pk_product_id).val(new_qty);
+        } else {
+            var new_qty = parseFloat(1);
+            var new_qty_value = $('#row_quantity_' + pk_product_id).val(1);
+        }
+        var product_id = pk_product_id;
+        jQuery.ajax({
+            url: "{{ url('update-cart') }}",
+            method: 'post',
+            data: {
+                "_token": "{{ csrf_token() }}",
+                "items_quantity": new_qty,
+                "product_id": product_id
+            },
+            success: function(response) {
+                var row_price = response.cart_items[product_id].price;
+                var new_quantity = response.cart_items[product_id].quantity;
+                var new_row_price = parseFloat(row_price) * parseInt(new_quantity);
+                new_row_price = parseFloat(new_row_price).toFixed(2);
+                $('#row_quantity_' + product_id).val(new_quantity);
+                $('#subtotal_' + product_id).html('$' + new_row_price);
 
-        var spinner = jQuery(this),
-            input = spinner.find('input[type="number"]'),
-            btnUp = spinner.find('.quantity-up'),
-            btnDown = spinner.find('.quantity-down'),
-            min = input.attr('min'),
-            max = input.attr('max');
+                $('#itm_qty' + product_id).val(new_quantity);
+                $('#itm_qty_ipad' + product_id).val(new_quantity);
 
-        btnUp.click(function() {
+                var grand_total = 0;
+                var total_cart_quantity = 0;
+                Object.keys(response.cart_items).forEach(function(key) {
+                    row_total = parseFloat(response.cart_items[key].price) * response.cart_items[
+                        key].quantity;
+                    grand_total += parseFloat(row_total);
+                    total_cart_quantity += parseInt(response.cart_items[key].quantity);
 
-            var oldValue = parseFloat(input.val());
-            if (oldValue >= max) {
-                var newVal = oldValue;
-            } else {
-                var newVal = oldValue + 1;
+                });
+                $('#cart_grand_total').children().html('$' + grand_total.toFixed(2));
+                $('#topbar_cart_total').html('$' + grand_total.toFixed(2));
+                $('#top_cart_quantity').html(total_cart_quantity);
+                $('.topbar_cart_total_ipad').html('$' + grand_total.toFixed(2));
 
+                $('.cartQtymbl').html(total_cart_quantity);
+                $('.mbl_cart_subtotal').html('$' + grand_total.toFixed(2));
+
+                $('.cartQtyipad').html(total_cart_quantity);
+                $('.ipad_cart_subtotal').html('$' + grand_total.toFixed(2));
+
+                var tax = 0;
+                var tax = grand_total.toFixed(2) * (8.75 / 100);
+                $('.tax_cart').children().html('$' + tax.toFixed(2));
+                $('.grandTotal').children().html('$' + (tax + grand_total).toFixed(2));
+
+                $('#mbl_tax_price').html('$' + tax.toFixed(2));
+                $('#mbl_total_p').html('$' + (tax + grand_total).toFixed(2));
+
+                $('#ipad_tax_price').html('$' + tax.toFixed(2));
+                $('#ipad_total_p').html('$' + (tax + grand_total).toFixed(2));
             }
-            // $('#cart_table > tbody  > tr.quantities').each(function(tr) {
-            //     var product_id = this.id.replace('row_', '');
-            //     alert(product_id);
-            //     var quantity = $('#row_quantity_' + product_id).val();
-            //     var qtyIpad = $('#itm_qty_ipad' + product_id).val();
-            //     var qtymob = $('#itm_qty' + product_id).val();
-            //     items_quantity.push({
-            //         id: product_id,
-            //         quantity: quantity,
-            //         // quantity: qtyIpad
-            //     });
-            //     items_quantity.push({
-            //         id: product_id,
-            //         quantity: qtyIpad
-            //     });
-            //     items_quantity.push({
-            //         id: product_id,
-            //         quantity: qtymob
-            //     });
-            // });
-            // console.log(spinner.find("input").attr('id'));
-            var product_id = spinner.find("input").attr('id').replace('row_quantity_', '');
-            // console.log(product_id);
-
-            spinner.find("input").val(newVal);
-            spinner.find("input").trigger("change");
-
-            jQuery.ajax({
-                url: "{{ url('update-cart') }}",
-                method: 'post',
-                data: {
-                    "_token": "{{ csrf_token() }}",
-                    "items_quantity": newVal,
-                    "product_id": product_id
-                },
-                success: function(response) {
-                    // console.log(product_id , 'pid');
-
-                    var row_price = response.cart_items[product_id].price;
-                    // console.log(row_price.toFixed(2), 'p')
-                    var new_quantity = response.cart_items[product_id].quantity;
-                    var new_row_price = parseFloat(row_price) * parseInt(new_quantity);
-                    new_row_price = parseFloat(new_row_price).toFixed(2);
-
-                    $('#row_quantity_' + product_id).val(new_quantity);
-                    $('#subtotal_' + product_id).html('$' + new_row_price);
-                    var grand_total = 0;
-                    var total_cart_quantity = 0;
-                    Object.keys(response.cart_items).forEach(function(key) {
-                        row_total = parseFloat(response.cart_items[key].price) *
-                            response.cart_items[key].quantity;
-                        grand_total += parseFloat(row_total);
-                        total_cart_quantity += parseInt(response.cart_items[key]
-                            .quantity);
-
-                    });
-                    //console.log(total_cart_quantity);
-                    $('#cart_grand_total').children().html('$' + grand_total.toFixed(2));
-                    $('#topbar_cart_total').html('$' + grand_total.toFixed(2));
-                    $('#top_cart_quantity').html(total_cart_quantity);
-                    var tax = 0;
-                    var tax = grand_total.toFixed(2) * (8.75 / 100);
-                    $('.tax_cart').children().html('$' + tax.toFixed(2));
-                    $('.grandTotal').children().html('$' + (tax + grand_total).toFixed(2))
-
-
-
-
-
-                }
-            });
         });
-
-        btnDown.click(function() {
-            var oldValue = parseFloat(input.val());
-            if (oldValue <= min) {
-                var newVal = oldValue;
-            } else {
-                var newVal = oldValue - 1;
-            }
-            var product_id = spinner.find("input").attr('id').replace('row_quantity_', '');
-
-            spinner.find("input").val(newVal);
-            spinner.find("input").trigger("change");
-            jQuery.ajax({
-                url: "{{ url('update-cart') }}",
-                method: 'post',
-                data: {
-                    "_token": "{{ csrf_token() }}",
-                    "items_quantity": newVal,
-                    "product_id": product_id
-                },
-                success: function(response) {
-                    // console.log(product_id , 'pid');
-
-                    var row_price = response.cart_items[product_id].price;
-                    // console.log(row_price.toFixed(2), 'p')
-                    var new_quantity = response.cart_items[product_id].quantity;
-                    var new_row_price = parseFloat(row_price) * parseInt(new_quantity);
-                    new_row_price = parseFloat(new_row_price).toFixed(2);
-
-                    $('#row_quantity_' + product_id).val(new_quantity);
-                    $('#subtotal_' + product_id).html('$' + new_row_price);
-                    var grand_total = 0;
-                    var total_cart_quantity = 0;
-                    Object.keys(response.cart_items).forEach(function(key) {
-                        row_total = parseFloat(response.cart_items[key].price) *
-                            response.cart_items[key].quantity;
-                        grand_total += parseFloat(row_total);
-                        total_cart_quantity += parseInt(response.cart_items[key]
-                            .quantity);
-                    });
-                    console.log(total_cart_quantity);
-                    $('#cart_grand_total').children().html('$' + grand_total.toFixed(2));
-                    $('#topbar_cart_total').html('$' + grand_total.toFixed(2));
-                    $('#top_cart_quantity').html(total_cart_quantity);
-                    var tax = 0;
-                    var tax = grand_total.toFixed(2) * (8.75 / 100);
-                    $('.tax_cart').children().html('$' + tax.toFixed(2));
-                    $('.grandTotal').children().html('$' + (tax + grand_total).toFixed(2))
-
-
-                }
-            });
-        });
-
-    });
+    }
 </script>
 <style>
     .table-responsive {
@@ -1108,7 +1282,7 @@
         var opacity;
 
         $(".next").click(function() {
-            
+
             current_fs = $(this).parent();
             next_fs = $(this).parent().next();
 

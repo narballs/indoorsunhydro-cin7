@@ -26,7 +26,7 @@ class CheckoutController extends Controller
         $user_id = auth()->id();
         $selected_company = Session::get('company');
         if (!$selected_company) {
-            Session::flash('message', "Please Seclect a company for which you want to make an order for");
+            Session::flash('message', "Please select a company for which you want to make an order for");
             return redirect('/cart/');
         }
         $contact = Contact::where('user_id', $user_id)
@@ -45,7 +45,7 @@ class CheckoutController extends Controller
         if ($contact) {
             $isApproved = $contact->contact_id;
         }
-        if (Auth::check() && (!empty($contact->contact_id) || !empty($contact->secondary_id))) {
+        if (Auth::check() && (!empty($contact->contact_id) || !empty($contact->secondary_id)) && $contact->status == 1) {
             $tax_class = TaxClass::where('is_default', 1)->first();
             $states = UsState::all();
             $payment_methods = PaymentMethod::with('options')->get();
@@ -64,14 +64,12 @@ class CheckoutController extends Controller
                 'tax_class',
                 'contact_id'
             ));
-        } else if (Auth::check() && (!empty($contact->contact_id) || !empty($contact->secondary_id))) {
-            Session::flash('message', "Your account is being reviewed you can't proceed to checkout, however you can make carts");
-            return redirect('/cart/');
         } else {
-            Session::flash('message', "You need to login or register to complete checkout");
-            return view('user-registration-second');
+            return redirect()->back()->with('message', 'Your account is disabled. You can not proceed with checkout. Please contact us.');
         }
     }
+
+
     public function thankyou($id)
     {
 
