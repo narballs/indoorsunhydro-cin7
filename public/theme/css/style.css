@@ -6,8 +6,25 @@
 @import url('https://fonts.cdnfonts.com/css/regular');
 
 #tax_rate {
-    color: #5D5DF8 !important;
+    /* color: #5D5DF8 !important; */
 }
+
+.remove-cart-page-button {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    margin-right: 4px;
+    font-size: 12px;
+    line-height: 18px;
+    text-decoration-line: underline;
+    color: #9A9A9A;
+}
+
+.subtotal-img-cart-page {
+    margin-top: -11px !important;
+    width: 38px !important;
+}
+
 .tax-calculater {
     font-size: 11px;
     font-family: 'Poppins' !important;
@@ -701,6 +718,7 @@ a {
     line-height: 22px !important;
     text-shadow: none;
 }
+
 .foooter-main-head-mbl {
     font-family: 'Poppins' !important;
     font-style: normal !important;
@@ -882,7 +900,7 @@ a {
     color: #FFFFFF;
 }
 
-.hover_color  {
+.hover_color {
     font-family: 'Poppins';
     font-style: normal;
     font-weight: 500;
@@ -2618,26 +2636,29 @@ input[type=number] {
     } */
 
     .ipad_second_row {
-        font-family: 'Poppins'; 
-        font-size:14px;     
+        font-family: 'Poppins';
+        font-size: 14px;
         padding-left: 300px;
-		height: 62px;
-		padding-top: 11px;
+        height: 62px;
+        padding-top: 11px;
     }
 
     .ipad_nav_items {
         display: flex;
-        align-items: 
-        center;justify-content: 
-        space-between;
+        align-items:
+            center;
+        justify-content:
+            space-between;
     }
+
     .ipad_menu_btn {
         background-color: #008BD3 !important;
         font-size: 16px;
         font-weight: 500;
         margin-right: -10px !important;
-        padding:0.7rem !important;    
+        padding: 0.7rem !important;
     }
+
     .cart-counter-details {
         font-family: 'Poppins';
         font-style: normal;
@@ -4395,11 +4416,11 @@ select.list-dt:focus {
     font-size: 16px;
     line-height: 29px;
     color: #242424;
-    text-transform:capitalize;
+    text-transform: capitalize;
     text-decoration: none;
 }
 
-.select_company_top > span :hover {
+.select_company_top>span :hover {
     background-color: #7BC743;
     color: #fff !important;
     border-radius: 5px;
@@ -4409,6 +4430,7 @@ select.list-dt:focus {
 .select_company_top::after {
     display: none !important;
 }
+
 .top_select_menu_items {
     font-family: 'Poppins';
     font-style: normal;
@@ -4423,11 +4445,13 @@ select.list-dt:focus {
 .select_company_hover:hover {
     background: none !important;
 }
+
 .select_company_hover::after {
     color: #242424 !important;
 }
-.select_company_hover:focus{
-    background:none !important;
+
+.select_company_hover:focus {
+    background: none !important;
 }
 
 .drop-menu-items {
@@ -4440,8 +4464,9 @@ select.list-dt:focus {
     color: #242424;
 
 }
+
 .multiple_company_hover:hover {
-    border:none !important;
+    border: none !important;
     color: #242424 !important;
     font-family: 'Poppins';
     font-style: normal;
@@ -4456,7 +4481,7 @@ select.list-dt:focus {
 .multiple_company_hover::after {
     color: #242424 !important;
     background: none !important;
-    border:none !important;
+    border: none !important;
     color: #242424 !important;
     font-family: 'Poppins';
     font-style: normal;
@@ -4467,7 +4492,7 @@ select.list-dt:focus {
 }
 
 .multiple_company_hover {
-    border:none !important;
+    border: none !important;
     color: #242424 !important;
     font-family: 'Poppins';
     font-style: normal;
@@ -4478,20 +4503,22 @@ select.list-dt:focus {
     padding: 0.5rem !important;
 }
 
-@media screen and (min-width : 1025px ) and (max-width:1440px) {
+@media screen and (min-width : 1025px) and (max-width:1440px) {
     .d_menu_company {
-        padding-left:1.2rem !important;
+        padding-left: 1.2rem !important;
     }
+
     .d-Menu {
-        padding-left:0px !important; 
+        padding-left: 0px !important;
         /* margin-left:-1.5rem !important; */
     }
+
     .login_link {
         padding-left: 11.5rem !important;
     }
 
     .width_fix {
-        
+
         width: 12.1rem !important;
         padding-left: 1.5rem;
     }
@@ -4499,23 +4526,25 @@ select.list-dt:focus {
     .navbar-light .navbar-nav .dropdown-toggle:focus {
         background: none !important;
     }
-    
+
 }
 
-@media screen and (min-width : 769px ) and (max-width:1024px) {
+@media screen and (min-width : 769px) and (max-width:1024px) {
     .d_menu_company {
-        padding-left:0.7rem !important;
+        padding-left: 0.7rem !important;
     }
+
     .d-Menu {
-        padding-left:0px !important; 
-        margin-left:-1rem !important;
+        padding-left: 0px !important;
+        margin-left: -1rem !important;
     }
+
     .login_link {
         padding-left: 10.5rem !important;
     }
 
     .width_fix {
-        
+
         width: auto;
     }
 
@@ -4523,72 +4552,82 @@ select.list-dt:focus {
         background: none !important;
     }
 }
-@media  screen and (min-width : 1441px ) and (max-width:1920px) {
+
+@media screen and (min-width : 1441px) and (max-width:1920px) {
     .d_menu_company {
-        padding-left:  3rem !important;
+        padding-left: 3rem !important;
     }
+
     .d-Menu {
-        padding-left:0px !important; 
-        margin-left:0.5rem !important;
+        padding-left: 0px !important;
+        margin-left: 0.5rem !important;
     }
+
     .login_link {
         padding-left: 15.2rem !important;
     }
 
     .width_fix {
-        
+
         width: 12rem !important;
         padding-left: 1.5rem;
     }
+
     .navbar-light .navbar-nav .dropdown-toggle:focus {
         background: none !important;
     }
 }
 
-@media  screen and (min-width : 1921px ) and (max-width:2559px) {
+@media screen and (min-width : 1921px) and (max-width:2559px) {
     .d_menu_company {
-        padding-left:  3.3rem !important;
+        padding-left: 3.3rem !important;
     }
+
     .d-Menu {
-        padding-left:0px !important; 
-        margin-left:1rem !important;
+        padding-left: 0px !important;
+        margin-left: 1rem !important;
     }
+
     .login_link {
         padding-left: 16.1rem !important;
     }
 
     .width_fix {
-        
+
         width: 12.1rem !important;
-        padding-left:2rem;
+        padding-left: 2rem;
     }
+
     .navbar-light .navbar-nav .dropdown-toggle:focus {
         background: none !important;
     }
-    
+
 }
 
-@media  only screen and (min-width : 2560px ) {
+@media only screen and (min-width : 2560px) {
     .d_menu_company {
-        padding-left:  5.5rem !important;
+        padding-left: 5.5rem !important;
     }
+
     .d-Menu {
-        padding-left:0px !important; 
-        margin-left:0.9rem !important;
+        padding-left: 0px !important;
+        margin-left: 0.9rem !important;
     }
+
     .login_link {
         padding-left: 20rem !important;
     }
 
     .width_fix {
-        
+
         width: 12.35rem !important;
         padding-left: 2rem;
     }
+
     .navbar-light .navbar-nav .dropdown-toggle:focus {
         background: none !important;
     }
-    
+
 }
 
 .shopping_cart_text {
@@ -4610,6 +4649,7 @@ select.list-dt:focus {
     line-height: 24px;
     color: #373737;
 }
+
 /* order confirmation page end */
 
 
@@ -4619,55 +4659,58 @@ select.list-dt:focus {
 
 /* mobile css checkout  */
 .custom_label_style {
-    color:#131313 !important;
-    font-family:'poppins' !important;
+    color: #131313 !important;
+    font-family: 'poppins' !important;
     font-weight: bold !important;
-    font-size:15px !important;
+    font-size: 15px !important;
 }
+
 .next-btn-mobile {
     width: auto !important;
     position: absolute;
     left: 88%;
     top: 0.5%;
-    font-weight:400 !important;
-    font-size:14px !important;
+    font-weight: 400 !important;
+    font-size: 14px !important;
     padding: 0px !important;
-    color:white !important;
+    color: white !important;
 }
+
 .billing-div-mobile {
-    margin-left:-1rem; 
-    width:110%;
-    height:50px;
-    font-size: 16px; 
-    font-family:'Poppins';
-    font-weight:500;
-    background:#7bc533 !important;
+    margin-left: -1rem;
+    width: 110%;
+    height: 50px;
+    font-size: 16px;
+    font-family: 'Poppins';
+    font-weight: 500;
+    background: #7bc533 !important;
     border: none !important;
-    border-radius:0px !important; 
+    border-radius: 0px !important;
 }
 
 .ipad_next_btn_footer {
-    height:50px;
-    font-size: 14px; 
-    font-family:'Poppins'; 
-    font-weight:bold !important;
+    height: 50px;
+    font-size: 14px;
+    font-family: 'Poppins';
+    font-weight: bold !important;
     border: none !important;
     padding: 10px 5px;
     margin: 20px 0px !important;
-    border-radius:0px !important;
+    border-radius: 0px !important;
     background: #7bc533 !important;
     width: 83% !important;
 }
+
 .mob_next_btn_footer {
-    height:50px;
-    font-size: 14px; 
-    font-family:'Poppins'; 
-    font-weight:bold;
-    background:#7bc533 !important;
+    height: 50px;
+    font-size: 14px;
+    font-family: 'Poppins';
+    font-weight: bold;
+    background: #7bc533 !important;
     border: none !important;
-    padding: 10px 5px; 
-    border-radius:0px !important; 
-} 
+    padding: 10px 5px;
+    border-radius: 0px !important;
+}
 
 
 .remove_shadow_search:focus {
@@ -4691,6 +4734,7 @@ select.list-dt:focus {
         line-height: 21px !important;
         color: #131313 !important;
     }
+
     .form-select-mbl {
         background-color: #F5F5F5 !important;
         border: 1px solid #DDDDDD !important;
@@ -4702,22 +4746,28 @@ select.list-dt:focus {
         line-height: 21px; */
         color: #8A8A8A;
     }
+
     .form-select-mbl:focus {
         box-shadow: 0 0 0 0rem !important;
     }
+
     .filterMblbtn:focus {
         border: none !important;
         box-shadow: 0 0 0 0rem !important;
     }
+
     .filterIco_mbl {
         font-size: 12px;
     }
+
     .pbtn_mbl {
         line-height: 55px !important;
     }
+
     .product-btn {
-        height:55px;
+        height: 55px;
     }
+
     .search_filter_text {
         font-family: 'Poppins';
         font-style: normal !important;
@@ -4725,36 +4775,43 @@ select.list-dt:focus {
         font-size: 14px !important;
         line-height: 21px !important;
         color: #242424 !important;
-        
+
     }
+
     .mbl_drop_cmpny {
         width: 35%;
     }
+
     .mbl_drop_othr {
         width: 65%;
         display: flex;
         align-items: center;
         justify-content: end;
     }
+
     .mobile_menu_bar_togle {
         width: 15%;
-    } 
+    }
+
     .mobile_menu_bar_logo {
         width: 65%;
-    } 
+    }
+
     .mobile_menu_bar_cart {
         width: 20%;
         display: flex;
         align-items: center;
         justify-content: end;
     }
-    .cart-counter { 
+
+    .cart-counter {
         width: 18px;
         height: 18px;
-        margin:0px;
+        margin: 0px;
         margin-top: -2rem !important;
         margin-left: 0.8rem !important;
-    }  
+    }
+
     .font-mobile-class {
         font-family: 'Poppins' !important;
         font-style: normal !important;
@@ -4771,7 +4828,7 @@ select.list-dt:focus {
         font-weight: 500 !important;
         font-size: 12px !important;
         line-height: 29px !important;
-        border-radius:0px !important;
+        border-radius: 0px !important;
         min-width: 8rem !important;
     }
 
@@ -4797,10 +4854,12 @@ select.list-dt:focus {
         line-height: 29px !important;
         width: 8rem !important;
     }
+
     .mbl_cmp_drp::after {
         border-right: 0em !important;
         border-left: 0em !important;
     }
+
     .mbl_cmp_drp:focus {
         background: none !important;
         border: none !important;
@@ -4811,25 +4870,29 @@ select.list-dt:focus {
         border: none !important;
         color: #242424;
     }
-    
+
     .mobile_nav_items {
         display: flex !important;
-        align-items:center;
+        align-items: center;
         justify-content: normal !important;
     }
+
     .mobile_nav_btn {
-        background:none !important;
-        border:none !important;
+        background: none !important;
+        border: none !important;
         /* font-size:16px !important;
         font-weight:500 !important; */
     }
+
     .mobile_nav_btn:focus {
         box-shadow: 0 0 0 0rem;
-        border:none !important;
+        border: none !important;
     }
-    .mobile_nav_btn > i {
+
+    .mobile_nav_btn>i {
         font-size: 1.5rem;
     }
+
     .select-comapny-top-bar-mobile {
         font-size: 14px !important;
         font-family: 'Poppins' !important;
@@ -4848,7 +4911,7 @@ select.list-dt:focus {
         color: #ffffff;
     }
 
-    
+
     .mobile-view {
         display: block !important;
     }
@@ -4949,7 +5012,7 @@ select.list-dt:focus {
         box-shadow: none;
         float: none;
         border: 1px solid #EBEBEB;
-        padding-left:0px;
+        padding-left: 0px;
         text-align: center;
     }
 
@@ -5613,17 +5676,17 @@ select.list-dt:focus {
         left: 111%;
         width: 15.97px;
         height: 15.97px;
-        
+
     }
 
     .u_btn {
-       font-size: 8px !important;
-       color: #131313 !important;
+        font-size: 8px !important;
+        color: #131313 !important;
     }
 
 
     .angle-down-qty {
-        
+
         background: #FFFFFF;
         border: 1px solid #EBEBEB;
         position: absolute;
@@ -5632,7 +5695,7 @@ select.list-dt:focus {
         width: 15.97px !important;
         height: 15.97px !important;
         text-align: center;
-    
+
     }
 
     .d_btn {
@@ -5659,19 +5722,21 @@ select.list-dt:focus {
 
 
     .p_detail_image_row {
-        width:30% !important;
-        background-color:#F7F7F7 !important;
+        width: 30% !important;
+        background-color: #F7F7F7 !important;
     }
+
     .p_detail_img {
-        width: 85% !important; 
-        height:80% !important;
+        width: 85% !important;
+        height: 80% !important;
     }
+
     .p_detail_content {
-        width:60%;
+        width: 60%;
     }
 
     .p_detail_stock_row {
-        width:25%;
+        width: 25%;
     }
 
     .p_detail_stock_qty {
@@ -5680,7 +5745,7 @@ select.list-dt:focus {
     }
 
     .p_detail_cart_row {
-        width:60%;
+        width: 60%;
     }
 
 
@@ -5693,23 +5758,28 @@ select.list-dt:focus {
         line-height: 27px !important;
         color: #131313 !important;
     }
+
     #filter_model {
         border-radius: 8px !important;
         border: none !important;
         width: 358px !important;
         /* height: 477px !important; */
     }
+
     .mobile_filter_header {
-        border-bottom:none !important;
+        border-bottom: none !important;
     }
+
     .mbl_filter_btn {
         border: 0px !important;
         background: none !important;
     }
+
     .mbl_filter_close {
         color: #323233 !important;
         font-size: 22px !important;
     }
+
     .filter-mlb-radio-btn {
         font-family: 'Poppins' !important;
         font-style: normal !important;
@@ -5718,6 +5788,7 @@ select.list-dt:focus {
         line-height: 21px !important;
         color: #090A0A !important;
     }
+
     .filter-done-btn {
         background: #7BC533 !important;
         border-radius: 5px !important;
@@ -5725,6 +5796,7 @@ select.list-dt:focus {
         width: 102px !important;
         height: 35px !important;
     }
+
     .filter-done-btn-text {
         font-family: 'Poppins' !important;
         font-style: normal !important;
@@ -5745,10 +5817,8 @@ select.list-dt:focus {
         color: #8A8A8A !important;
     }
 
-    
+
 
     /* ****************   Mobile Filter end   ********************** */
- 
+
 }
-
-

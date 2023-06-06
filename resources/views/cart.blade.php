@@ -91,7 +91,8 @@
             <td scope=" row">
              <div class="d-flex align-items-center">
                                                                                         
-                                                                                        @if (!empty($cart['image']))
+                                                                                        
+                                                                                  @if (!empty($cart['image']))
                                                                 <img src="{{ $cart['image'] }}"
                                                                     class="img-fluid rounded-3" style="width: 120px;"
                                                                     alt="Book">
@@ -128,20 +129,14 @@
                                         <input type="hidden" name="p_id" id="option_id"
                                             value="{{ $cart['option_id'] }}">
                                         <div class="quantity-nav">
-                                            <!-- <div class="quantity-div quantity-up"
-                                                onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
-                                                </div>
-                                            <div class="quantity-div quantity-down"
-                                                onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
-                                                </div> -->
-
                                             <div class="quantity-div quantity-up"
                                                 onclick="increase_qty({{ $pk_product_id }})">
-                                                </div>
+                                                
+                                            </div>
                                             <div class="quantity-div quantity-down"
                                                 onclick="decrease_qty({{ $pk_product_id }})">
-                                                </div>
-
+                                                
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -152,15 +147,8 @@
                                         id="subtotal_{{ $pk_product_id }}">${{ number_format($cart['price'] * $cart['quantity'], 2) }}</span>
                                 </span>
                                 <p class="text-center remove-item-cart">
-                                    <a style="font-family: 'Poppins';
-														font-style: normal;
-														font-weight: 400;
-														margin-right: 4px;
-														font-size: 12px;
-														line-height: 18px;
-														text-decoration-line: underline;
-														color: #9A9A9A;"
-                                        href="{{ url('remove/' . $pk_product_id) }}" id="remove">Remove</a>
+                                    <a href="{{ url('remove/' . $pk_product_id) }}" id="remove"
+                                        class="remove-cart-page-button">Remove</a>
                                 </p>
                             </td>
                             </tr>
@@ -196,9 +184,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-4 p-0">
-                                                <!--  <button class=" cart-updated" type="submit" id="update_cart"
-                                                    onclick="update_cart()">Update
-                                                    Cart</button> -->
+
                                             </div>
                                         </div>
                                     </td>
@@ -227,49 +213,6 @@
                         </th>
                     </tr>
                 </thead>
-                {{-- <tbody>
-                    <tr>
-                        <td class="ps-0">
-                            <img class=" img-fluid" src="/theme/img/sub-totals-icon.png">
-                            <strong class=" cart-total">Subtotal</strong>
-                        </td>
-                        <td class="pe-0">
-                            <span id="cart_grand_total">
-                                <strong class=" d-flex justify-content-end cart-page-items ">
-                                    ${{ number_format($cart_total, 2) }}
-                                </strong>
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="ps-0">
-                            <img class=" img-fluid" src="/theme/img/text-rate-icon.png">
-                            <span> <strong class="cart-total" id="tax_rate">Rate({{ $tax_class->rate }}%)</strong> </span>
-                            <div>
-                        </td>
-                        <td class="pe-0">
-                            <span id="cart_grand_total" class="tax_cart">
-                                <strong class=" d-flex justify-content-end cart-page-items" id="tax_amount">
-                                    ${{ number_format($tax, 2) }}
-                                </strong>
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="ps-0">
-                            <img class=" img-fluid" src="/theme/img/total-icon.png">
-                            <strong class="cart-total">SubTotal</strong>
-                        </td>
-                        <td class="pe-0">
-                            <span id="cart_grand_total" class="grandTotal">
-                                <strong class=" d-flex justify-content-end cart-page-items text-danger g_total">
-                                    ${{ number_format($total_including_tax, 2) }}
-                                </strong>
-                            </span>
-                        </td>
-                    </tr>
-                </tbody> --}}
-
                 <tbody>
                     <tr>
                         <td class="ps-0" colspan="2">
@@ -303,7 +246,7 @@
                             </div>
                             <div>
                                 <span class="tax-calculater">
-                                    (Tax calculated when order is invoiced, could be 0% based
+                                    (Tax is calculated when order is invoiced, could be 0% based
                                     on your account setup)
                                 </span>
                             </div>
@@ -313,7 +256,7 @@
                         <td class="ps-0" colspan="2">
                             <div class="d-flex align-items-center justify-content-between">
                                 <span>
-                                    <img class=" img-fluid" src="/theme/img/total-icon.png">
+                                    <img class="img-fluid subtotal-img-cart-page" src="/theme/img/total-icon.png">
                                     <strong class="cart-total">SubTotal</strong>
                                 </span>
                                 <span id="cart_grand_total" class="grandTotal">
@@ -324,7 +267,7 @@
                             </div>
                             <div>
                                 <span class="tax-calculater">
-                                    (No payment is collected during this checkout process)
+                                    (No payment is collected during this process)
                                 </span>
                             </div>
                         </td>
