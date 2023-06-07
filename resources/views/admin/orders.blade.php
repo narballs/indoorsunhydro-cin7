@@ -42,8 +42,8 @@
                     <div class="col-md-12 btn-row my-3">
                         <div class="row">
                             <div class="col-md-3 d-flex justify-content-between align-content-center py-2">
-                                <span class="border-right pe-5 select-row-items">
-                                    10 selected
+                                <span class="border-right pe-5 select-row-items" id="items_selected">
+                                    0 Selected
                                 </span>
                                 <span>
                                     <a class=" delete_all btn btn-sm fulfill-row-items-order-page "
@@ -63,21 +63,14 @@
                     <table class="table border table-customer mb-5">
                         <thead>
                             <tr class="table-header-background">
-                                <td class="d-flex table-row-item">
-                                    <div class="custom-control custom-checkbox">
-                                        <input
-                                            class="checkbox-table tabel-checkbox custom-control-input custom-control-input-danger"
-                                            type="checkbox" id="" checked="">
-                                        <label for="customCheckbox4" class="custom-control-label">Custom Checkbox
-                                            with
-                                            custom color</label>
+                                <td class="d-flex table-row-item mt-0">
+                                    <div class="custom-control custom-checkbox tabel-checkbox">
+                                        <input class="custom-control-input custom-control-input-success checkbox-table" type="checkbox" id="selectAll" value="">
+                                        <label for="selectAll" class="custom-control-label"></label>
+                                        <span class="table-row-heading">
+                                            <i class="fas fa-arrow-up mt-1" style="font-size:14.5px ;"></i>
+                                        </span>
                                     </div>
-                                    {{-- <span class="tabel-checkbox">
-                                        <input type="checkbox" name="test" class="checkbox-table" id="selectAll">
-                                    </span> --}}
-                                    <span class="table-row-heading">
-                                        <i class="fas fa-arrow-up"></i>
-                                    </span>
                                 </td>
                                 <td>
                                     <span class="d-flex table-row-item"> Created By</span>
@@ -119,10 +112,10 @@
                                 @else
                                     <tr id="tr_{{ $order->id }}" class="order-row border-bottom">
                                         <td class="d-flex table-items">
-                                            <span class="tabel-checkbox">
-                                                {{-- <input type="checkbox" name="test" class="checkbox-table"> --}}
-                                                <input type="checkbox" class="sub_chk" data-id="{{ $order->id }}">
-                                            </span>
+                                            <div class="custom-control custom-checkbox tabel-checkbox">
+                                                <input class="custom-control-input custom-control-input-success sub_chk"  data-id="{{ $order->id }}" type="checkbox" id="separate_check_{{$order->id}}">
+                                                <label for="separate_check_{{$order->id}}" class="custom-control-label"></label>
+                                            </div>
                                             <span class="table-row-heading">
                                                 {{ $order->id }}
                                             </span>
@@ -520,11 +513,29 @@
         $(document).ready(function() {
             $('#selectAll').on('click', function(e) {
                 if ($(this).is(':checked', true)) {
-                    $(".sub_chk").prop('checked', true);
+                    let count_checked = $(".sub_chk").prop('checked', true);
+                    $('#items_selected').html('');
+                    $('#items_selected').html(count_checked.length + ' Selected');
+                    
                 } else {
-                    $(".sub_chk").prop('checked', false);
+                    let count_unchecked =  $(".sub_chk").prop('checked', false);
+                    $('#items_selected').html('');
+                    $('#items_selected').html('0' + ' Selected');
                 }
             });
+
+            $('.sub_chk').on('click', function(e) {
+                count_checked = $(".sub_chk:checked").length < 1 ? $('#selectAll').prop('checked', false) : '';
+                if ($(this).is(':checked', true)) {
+                    let count_checked = $(".sub_chk:checked").length;
+                    $('#items_selected').html('');
+                    $('#items_selected').html(count_checked + ' Selected');
+                } else {
+                    let count_unchecked = $(".sub_chk:checked").length;
+                    $('#items_selected').html('');
+                    $('#items_selected').html(count_unchecked + ' Selected');
+                }
+            })
             $('.delete_all').on('click', function(e) {
                 var allVals = [];
                 $(".sub_chk:checked").each(function() {
