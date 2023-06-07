@@ -16,15 +16,21 @@
 	width: 1280px;
 	margin: auto !important;
 	">
-    @if (Session::has('message'))
-        <p class="alert {{ Session::get('alert-class', 'alert-danger') }}">{{ Session::get('message') }}</p>
-    @endif
     <div class="row">
         <div class="col-md-9">
             <section class=" h-100">
                 <div class="h-100 py-5">
                     <div class="row">
                         <div class="col-md-12">
+                            <div class="col-md-12">
+                                @if (Session::has('message'))
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        {{ Session::get('message') }}
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                            aria-label="Close"></button>
+                                    </div>
+                                @endif
+                            </div>
                             <div class="table-responsive">
                                 <table class="table mt-4" id="cart_table">
                                     <thead class="table-head-items">
@@ -85,22 +91,19 @@
                                                         <span class="mb-0" style="font-weight: 500;">
                                                             <a class="cart-page-items"
                                                                 href="{{ url('product-detail/' . $cart['product_id'] . '/' . $cart['option_id'] . '/' . $cart['slug']) }}" ">{{ $cart['code'] }}
-             </a>
-             </span>
-            </td>
-            <td scope=" row">
-             <div class="d-flex align-items-center">
-                                                                                        
-                                                                                        @if (!empty($cart['image']))
+                                                            </a>
+                                                        </span>
+                                                    </td>
+                                                    <td scope=" row">
+                                                        <div class="d-flex align-items-center">
+                                                                                      @if (!empty($cart['image']))
                                                                 <img src="{{ $cart['image'] }}"
-                                                                    class="img-fluid rounded-3" style="width: 120px;"
+                                                                    class="img-fluid rounded-3" style="width: 80px; height:100px;"
                                                                     alt="Book">
                                                             @else
                                                                 <img src="/theme/img/image_not_available.png"
                                                                     class="img-fluid rounded-3"
-                                                                    style="width: 78px;
-											height: 83px;"
-                                                                    alt="Book">
+                                                                    style="width: 78px;height: 83px;" alt="Book">
                                             @endif
                                             <div class="flex-column ms-4">
                                                 <span class="mb-2">
@@ -111,7 +114,6 @@
                                             </div>
                             </div>
                             </td>
-
                             <td class=" align-middle">
                                 <p class="mb-0 ps-2  cart-page-items">
                                     ${{ number_format($cart['price'], 2) }}
@@ -128,20 +130,14 @@
                                         <input type="hidden" name="p_id" id="option_id"
                                             value="{{ $cart['option_id'] }}">
                                         <div class="quantity-nav">
-                                            <!-- <div class="quantity-div quantity-up"
-                                                onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
-                                                </div>
-                                            <div class="quantity-div quantity-down"
-                                                onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
-                                                </div> -->
-
                                             <div class="quantity-div quantity-up"
                                                 onclick="increase_qty({{ $pk_product_id }})">
-                                                </div>
+                                                
+                                            </div>
                                             <div class="quantity-div quantity-down"
                                                 onclick="decrease_qty({{ $pk_product_id }})">
-                                                </div>
-
+                                                
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -152,15 +148,8 @@
                                         id="subtotal_{{ $pk_product_id }}">${{ number_format($cart['price'] * $cart['quantity'], 2) }}</span>
                                 </span>
                                 <p class="text-center remove-item-cart">
-                                    <a style="font-family: 'Poppins';
-														font-style: normal;
-														font-weight: 400;
-														margin-right: 4px;
-														font-size: 12px;
-														line-height: 18px;
-														text-decoration-line: underline;
-														color: #9A9A9A;"
-                                        href="{{ url('remove/' . $pk_product_id) }}" id="remove">Remove</a>
+                                    <a href="{{ url('remove/' . $pk_product_id) }}" id="remove"
+                                        class="remove-cart-page-button">Remove</a>
                                 </p>
                             </td>
                             </tr>
@@ -196,9 +185,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-4 p-0">
-                                                <!--  <button class=" cart-updated" type="submit" id="update_cart"
-                                                    onclick="update_cart()">Update
-                                                    Cart</button> -->
+
                                             </div>
                                         </div>
                                     </td>
@@ -212,7 +199,7 @@
         </section>
     </div>
     <div class="col-md-3 p-0  mt-5">
-        <div class="table-responsive">
+        <div class="table-responsive" style="padding-top:3px !important;">
             <?php
             $tax = $cart_total * ($tax_class->rate / 100);
             $total_including_tax = $tax + $cart_total;
@@ -227,49 +214,6 @@
                         </th>
                     </tr>
                 </thead>
-                {{-- <tbody>
-                    <tr>
-                        <td class="ps-0">
-                            <img class=" img-fluid" src="/theme/img/sub-totals-icon.png">
-                            <strong class=" cart-total">Subtotal</strong>
-                        </td>
-                        <td class="pe-0">
-                            <span id="cart_grand_total">
-                                <strong class=" d-flex justify-content-end cart-page-items ">
-                                    ${{ number_format($cart_total, 2) }}
-                                </strong>
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="ps-0">
-                            <img class=" img-fluid" src="/theme/img/text-rate-icon.png">
-                            <span> <strong class="cart-total" id="tax_rate">Rate({{ $tax_class->rate }}%)</strong> </span>
-                            <div>
-                        </td>
-                        <td class="pe-0">
-                            <span id="cart_grand_total" class="tax_cart">
-                                <strong class=" d-flex justify-content-end cart-page-items" id="tax_amount">
-                                    ${{ number_format($tax, 2) }}
-                                </strong>
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="ps-0">
-                            <img class=" img-fluid" src="/theme/img/total-icon.png">
-                            <strong class="cart-total">SubTotal</strong>
-                        </td>
-                        <td class="pe-0">
-                            <span id="cart_grand_total" class="grandTotal">
-                                <strong class=" d-flex justify-content-end cart-page-items text-danger g_total">
-                                    ${{ number_format($total_including_tax, 2) }}
-                                </strong>
-                            </span>
-                        </td>
-                    </tr>
-                </tbody> --}}
-
                 <tbody>
                     <tr>
                         <td class="ps-0" colspan="2">
@@ -303,7 +247,7 @@
                             </div>
                             <div>
                                 <span class="tax-calculater">
-                                    (Tax calculated when order is invoiced, could be 0% based
+                                    (Tax is calculated when order is invoiced, could be 0% based
                                     on your account setup)
                                 </span>
                             </div>
@@ -313,7 +257,7 @@
                         <td class="ps-0" colspan="2">
                             <div class="d-flex align-items-center justify-content-between">
                                 <span>
-                                    <img class=" img-fluid" src="/theme/img/total-icon.png">
+                                    <img class="img-fluid subtotal-img-cart-page" src="/theme/img/total-icon.png">
                                     <strong class="cart-total">SubTotal</strong>
                                 </span>
                                 <span id="cart_grand_total" class="grandTotal">
@@ -324,7 +268,7 @@
                             </div>
                             <div>
                                 <span class="tax-calculater">
-                                    (No payment is collected during this checkout process)
+                                    (No payment is collected during this process)
                                 </span>
                             </div>
                         </td>
@@ -335,10 +279,18 @@
                         <td colspan="2">
                             <li
                                 class="list-group-item d-flex justify-content-center align-items-center border-0 px-0 mb-3">
-                                @if (Auth::check() == true && !empty($contact->contact_id))
+                                @if (Auth::check() == true && $contact->status == 1 && !empty($contact->contact_id))
                                     <a href="{{ url('/checkout') }}">
                                         <button class="procedd-to-checkout mt-3">
                                             PROCEED TO CHECKOUT
+                                        </button>
+                                    </a>
+                                @elseif (Auth::check() == true && $contact->status == 0)
+                                    <a href="javascript:void(0)">
+                                        <button class="procedd-to-checkout-disable mt-3">
+
+                                            Your company is disabled
+
                                         </button>
                                     </a>
                                 @elseif(Auth::check() == true && empty($contact->contact_id))
@@ -347,7 +299,7 @@
                                             PROCEED TO CHECKOUT
                                         </button>
                                     </a>
-                                @elseif (Auth::check() != true)
+                                @else
                                     <a href="{{ url('/user/') }}">
                                         <button class="procedd-to-checkout mt-3">
                                             Login or Register
