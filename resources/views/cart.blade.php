@@ -29,18 +29,26 @@
 
                                 </div>
                             @endif
-
                             <div class="table-responsive">
                                 <table class="table mt-4" id="cart_table">
                                     <thead class="table-head-items">
                                         <tr>
-                                            <th scope="col" class="th-lg" class="table-head-items">
+                                            {{-- <th scope="col" class="th-lg" class="table-head-items">
                                                 <span>
                                                     <img class="img-fluid" src="/theme/img/barcode.png"
                                                         style="width: 29px;
 													">
                                                 </span>
                                                 <span class=" cart-total">SKU</span>
+                                            </th> --}}
+                                            <th>
+                                                <div
+                                                    class="d-flex aling-items-center justify-content-between sku-img-cart-page-table-header">
+                                                    <span>
+                                                        <img class="img-fluid w-75" src="/theme/img/barcode.png">
+                                                    </span>
+                                                    <span class=" cart-total">SKU</span>
+                                                </div>
                                             </th>
                                             <th scope="col" class="th-lg" class="table-head-items">
                                                 <span>
@@ -95,16 +103,14 @@
                                                     </td>
                                                     <td scope=" row">
                                                         <div class="d-flex align-items-center">
-                                                                                        
-                                                                                        
-                                                                            @if (!empty($cart['image']))
+                                                                      @if (!empty($cart['image']))
                                                                 <img src="{{ $cart['image'] }}"
-                                                                    class="img-fluid rounded-3" style="width: 80px; height:100px;"
+                                                                    class="img-fluid rounded-3" style="width: 80px;"
                                                                     alt="Book">
                                                             @else
                                                                 <img src="/theme/img/image_not_available.png"
-                                                                    class="img-fluid rounded-3"
-                                                                    style="width: 78px;height: 83px;" alt="Book">
+                                                                    class="img-fluid rounded-3" style="width: 78px;"
+                                                                    alt="Book">
                                             @endif
                                             <div class="flex-column ms-4">
                                                 <span class="mb-2">

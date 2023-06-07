@@ -4,9 +4,11 @@
 
 @import url('https://fonts.googleapis.com/css?family=Mukta');
 @import url('https://fonts.cdnfonts.com/css/regular');
+
 .top_placeholder_style {
-    top:-10px !important;
+    top: -10px !important;
 }
+
 #tax_rate {
     /* color: #5D5DF8 !important; */
 }
@@ -2159,6 +2161,10 @@ input[type=number] {
     border: none;
 }
 
+.sku-img-cart-page-table-header {
+    width: 72px !important;
+}
+
 .alert-dismissible {
     padding-right: 0.75rem !important;
 }
@@ -2230,6 +2236,7 @@ input[type=number] {
     .lost_pas_div {
         text-align: right !important;
     }
+
     .top-img {
         margin-bottom: 12px;
         width: 100% !important;
@@ -2316,6 +2323,7 @@ input[type=number] {
     .lost_pas_div {
         text-align: right !important;
     }
+
     .top-img {
         margin-bottom: 12px;
         width: 100% !important;
@@ -2403,8 +2411,9 @@ input[type=number] {
 
 @media only screen and (max-width: 1440px) and (min-width: 1025) {
     .login-info-box {
-        left:5% !important;
+        left: 5% !important;
     }
+
     .top-header-navigation {
         width: 100% !important;
         font-size: 10px;
@@ -2444,7 +2453,7 @@ input[type=number] {
     }
 
     .btn-lost-password {
-        display: contents ;
+        display: contents;
         font-family: 'Poppins';
         color: #7BC533;
         text-decoration: none;
@@ -2626,7 +2635,7 @@ input[type=number] {
     }
 
     .btn-lost-password {
-        display: contents ;
+        display: contents;
         font-family: 'Poppins';
         color: #7BC533;
         font-size: 10px;
@@ -5632,7 +5641,7 @@ select.list-dt:focus {
     }
 
     .btn-lost-password {
-        display: contents ;
+        display: contents;
         font-family: 'Poppins';
         color: #7BC533;
         font-size: 10px !important;
