@@ -391,7 +391,8 @@ $categories = NavHelper::getCategories();
                     <span class="input-group-text" id="search-addon" style="border:2px solid #7bc533;">
                         <button class="btn-info" type="submit" id="search"
                             style="background: transparent;border:none">
-                            <i class="text-white" data-feather="search"></i>
+                            {{-- <i class="text-white" data-feather="search"></i> --}}
+                            <i class="fa fa-search" style="font-size:16px;"></i>
                         </button>
                     </span>
                 </div>
@@ -618,7 +619,8 @@ $categories = NavHelper::getCategories();
                 <span class="input-group-text" id="search-addon">
                     <button class="btn-info" type="submit" id="search"
                         style="background: transparent;border:none">
-                        <i class="text-white" data-feather="search"></i>
+                        {{-- <i class="text-white" data-feather="search"></i> --}}
+                        <i class="fa fa-search" style="font-size:16px;"></i>
                     </button>
                 </span>
             </div>
