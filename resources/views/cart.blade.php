@@ -25,7 +25,7 @@
 
                             @if (Auth::check() == true && $contact->status == 0)
                                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    Checkout has been disabled
+                                    Checkout has been disabled.
 
                                 </div>
                             @endif
@@ -97,7 +97,7 @@
                                                         <div class="d-flex align-items-center">
                                                                                         
                                                                                         
-                                                                           @if (!empty($cart['image']))
+                                                                            @if (!empty($cart['image']))
                                                                 <img src="{{ $cart['image'] }}"
                                                                     class="img-fluid rounded-3" style="width: 120px;"
                                                                     alt="Book">
@@ -287,9 +287,9 @@
                                         </button>
                                     </a>
                                 @elseif (Auth::check() == true && $contact->status == 0)
-                                    <div class="alert alert-danger alert-dismissible fade show py-4" role="alert">
+                                    <div class="alert alert-danger alert-dismissible fade show py-2" role="alert">
                                         <span class="d-flex justify-content-center align-items-center">
-                                            Checkout has been disabled for this Email address, please contact your
+                                            Checkout has been disabled for this email address, please contact your
                                             account
                                             manager to re-enable checkout.
                                         </span>
