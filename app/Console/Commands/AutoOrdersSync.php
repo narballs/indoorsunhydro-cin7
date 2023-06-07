@@ -17,7 +17,7 @@ class AutoOrdersSync extends Command
      *
      * @var string
      */
-    protected $signature = 'AutoOrder:Sync {--minutes=5}';
+    protected $signature = 'AutoOrder:Sync {--minutes=3}';
 
     /**
      * The console command description.

@@ -292,7 +292,7 @@
                 console.log(time_left);
                 var time_left = $('#timeSpanToCancel').val();
                
-                time_left  =  5 - time_left;
+                time_left  =  3 - time_left;
                 var timer2 = time_left + ":01";
                 var interval = setInterval(function() {
                 var timer = timer2.split(':');
