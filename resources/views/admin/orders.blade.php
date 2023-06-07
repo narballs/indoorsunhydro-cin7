@@ -99,7 +99,7 @@
                                     <div class="custom-control custom-checkbox tabel-checkbox">
                                         <input class="custom-control-input custom-control-input-success checkbox-table"
                                             type="checkbox" id="selectAll" value="">
-                                        <label for="selectAll" class="custom-control-label"></label>
+                                        <label for="selectAll" class="custom-control-label ml-3"></label>
                                         <span class="table-row-heading">
                                             <i class="fas fa-arrow-up mt-1" style="font-size:14.5px ;"></i>
                                         </span>
@@ -150,7 +150,7 @@
                                                     data-id="{{ $order->id }}" type="checkbox"
                                                     id="separate_check_{{ $order->id }}">
                                                 <label for="separate_check_{{ $order->id }}"
-                                                    class="custom-control-label"></label>
+                                                    class="custom-control-label ml-3"></label>
                                             </div>
                                             <span class="table-row-heading">
                                                 {{ $order->id }}
