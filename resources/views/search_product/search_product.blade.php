@@ -1,8 +1,13 @@
 @include('partials.header')
 @include('partials.top-bar')
 @include('partials.search-bar')
-<div class="mb-5">
+{{-- <div class="mb-5">
    <p style="line-height: 95px;" class="fw-bold fs-2 product-btn my-auto border-0 text-white text-center align-middle">
+      SEARCHED PRODUCTS
+   </p>
+</div> --}}
+<div class="row justify-content-center align-items-center" style="background-color: #008BD3;height:70px;">
+   <p class="fw-bold fs-2 my-auto border-0 text-white text-center align-middle">
       SEARCHED PRODUCTS
    </p>
 </div>
@@ -121,32 +126,84 @@
 
                 return false;
             }
-         jQuery(document).ready(function(){
-            jQuery('.ajaxSubmit11').click(function(e){ alert('xxxxxxxxxx')
-               e.preventDefault();
+         // jQuery(document).ready(function(){
+         //    jQuery('.ajaxSubmit11').click(function(e){ alert('xxxxxxxxxx')
+         //       e.preventDefault();
                 
-               $.ajaxSetup({
-                  headers: {
-                      'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-                  }
-              });
+         //       $.ajaxSetup({
+         //          headers: {
+         //              'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+         //          }
+         //      });
 
-               jQuery.ajax({
-                  url: "{{ url('/add-to-cart/') }}",
-                  method: 'post',
-                  data: {
-                    "_token": "{{ csrf_token() }}",
-                     p_id: jQuery('#p_id').val(),
-                     quantity: jQuery('#quantity').val(),
-                  },
-                  success: function(result){
-                     console.log(result);
-                      jQuery('.alert').html(result.success);
-                        // window.location.reload();
-                  }});
-               });
-            });
+         //       jQuery.ajax({
+         //          url: "{{ url('/add-to-cart/') }}",
+         //          method: 'post',
+         //          data: {
+         //            "_token": "{{ csrf_token() }}",
+         //             p_id: jQuery('#p_id').val(),
+         //             quantity: jQuery('#quantity').val(),
+         //          },
+         //          success: function(result){
+         //             console.log(result);
+         //              jQuery('.alert').html(result.success);
+                        
+         //          }});
+         //       });
+         //    });
+
+
+         // mobile filter
+         function handleSelectChangeMbl(searchedOption = '') {
+            var basic_url = '/product/search';
+            var selected_category = jQuery('#selected_cat_mbl').val();
+            var brand = jQuery('#brand_mbl').val();
+            var brand1 = jQuery('#brand_mbl option:selected').text();
+            var per_page = jQuery('#per_page_mbl').val();
+            var search_price = jQuery('#search_price_mbl').val();
+            var childeren = jQuery('#childeren_mbl').val();
+            var stock = jQuery('#in_stk').val();
+            var category_id = jQuery('#category_id').val();
+            var parent_category_slug = jQuery('#parent_category_slug').val();
+            var emptyCategory = 0;
+            var emptychildCategory = 0;
+            
+            
+            if (selected_category != '') {
+                  basic_url = `&selected_category=${selected_category}`;
+            }
+            else {
+                  basic_url = `&selected_category=${emptyCategory}`;
+            }
+
+            if (brand != '') {
+                  basic_url = basic_url + `&brand_id=${brand}`;
+            }
+
+            if (per_page != '') {
+                  basic_url = basic_url + `&per_page=${per_page}`;
+            }
+            if (search_price != '') {
+                  basic_url = basic_url + `&search_price=${search_price}`;
+            }
+            if (stock != '') {
+                  basic_url = basic_url + `&stock=${stock }`;
+
+            }
+            
+            basic_url = "?" + basic_url.slice(1);
+            window.location.href = basic_url
+      
+         }
 </script>
+
 @include('partials.product-footer')
 <!-- End of .container -->
 @include('partials.footer')
+
+
+<script>
+   $(document).ready(function() {
+      $('.pagination').addClass('pagination-sm');
+   });
+</script>
