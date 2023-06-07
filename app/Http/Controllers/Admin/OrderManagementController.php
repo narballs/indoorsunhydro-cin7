@@ -64,8 +64,7 @@ class OrderManagementController extends Controller
 
         $time_diff = $orderCreatedDate->diffInMinutes($currentTime);
         $time_difference_seconds = date('s');
-        // $seconds_now = date('s');
-            
+                 
 
         
         $customer = Contact::where('user_id', $order->user_id)->first();

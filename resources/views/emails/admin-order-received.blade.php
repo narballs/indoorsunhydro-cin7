@@ -422,63 +422,49 @@
                                     </tr>
                                     <tr>
                                         <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
-                                            @if ($addresses['billing_address']['address1'] == null)
-                                            Empty
-                                            @else
+                                            @if ($addresses['billing_address']['address1'] != null)
                                             {{$addresses['billing_address']['address1']}}
                                             @endif
                                         </td>
                                     </tr>
                                     <tr>
                                         <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
-                                            @if ($addresses['billing_address']['address2'] == null)
-                                            Empty
-                                            @else
+                                            @if ($addresses['billing_address']['address2'] != null)
                                             {{$addresses['billing_address']['address2']}}
                                             @endif
                                         </td>
                                     </tr>
                                     <tr>
                                         <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
-                                            @if ($addresses['billing_address']['city'] == null)
-                                            Empty
-                                            @else
+                                            @if ($addresses['billing_address']['city'] != null)
                                             {{$addresses['billing_address']['city']}}
                                             @endif
                                         </td>
                                     </tr>
                                     <tr>
                                         <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
-                                            @if ($addresses['billing_address']['state'] == null)
-                                            Empty
-                                            @else
+                                            @if ($addresses['billing_address']['state'] != null)
                                             {{$addresses['billing_address']['state']}}
                                             @endif
                                         </td>
                                     </tr>
                                     <tr style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
                                         <td>
-                                            @if ($addresses['billing_address']['zip'] == null)
-                                            Empty
-                                            @else
+                                            @if ($addresses['billing_address']['zip'] != null)
                                             {{$addresses['billing_address']['zip']}}
                                             @endif
                                         </td>
                                     </tr>
                                     <tr style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
                                         <td>
-                                            @if ($addresses['billing_address']['mobile'] == null)
-                                            Empty
-                                            @else
+                                            @if ($addresses['billing_address']['mobile'] != null)
                                             {{$addresses['billing_address']['mobile']}}
                                             @endif
                                         </td>
                                     </tr>
                                     <tr style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
                                         <td>
-                                            @if ($addresses['billing_address']['phone'] == null)
-                                            Empty
-                                            @else
+                                            @if ($addresses['billing_address']['phone'] != null)
                                             {{$addresses['billing_address']['phone']}}
                                             @endif
                                         </td>
