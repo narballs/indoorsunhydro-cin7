@@ -100,6 +100,7 @@
                                         <input class="custom-control-input custom-control-input-success checkbox-table"
                                             type="checkbox" id="selectAll" value="">
                                         <label for="selectAll" class="custom-control-label ml-3"></label>
+                                        
                                         <span class="table-row-heading">
                                             <i class="fas fa-arrow-up mt-1" style="font-size:14.5px ;"></i>
                                         </span>
