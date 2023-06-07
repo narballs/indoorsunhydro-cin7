@@ -51,7 +51,7 @@
                                         <button type="button" class="btn btn-danger btn-sm" disabled>Cancel Order</button>
                                         <div class="countdown">
                                         </div>
-                                        @elseif($order->isApproved == 1 || $time_diff > 15)
+                                        @elseif($order->isApproved == 1 || $time_diff > 3)
                                         
                                         <div class="col-md-12">
                                             <button type="button" class="btn btn-secondary btn-sm" disabled>

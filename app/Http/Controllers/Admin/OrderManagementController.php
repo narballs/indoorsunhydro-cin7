@@ -12,6 +12,7 @@ use App\Models\OrderStatus;
 use GuzzleHttp\Client;
 use App\Models\ApiOrder;
 use App\Models\ApiOrderItem;
+use App\Models\AdminSetting;
 use App\Models\Contact;
 use App\Jobs\SalesOrders;
 use Carbon\Carbon;
@@ -37,7 +38,8 @@ class OrderManagementController extends Controller
     {
         $search = $request->get('search');
         $orders_query = ApiOrder::with(['createdby', 'processedby', 'contact'])->orderBy('id', 'DESC');
-
+        $option = AdminSetting::where('option_name', 'auto_full_fill')->first();
+        $auto_fulfill = $option->option_value;
         if (!empty($search)) {
             $orders_query = $orders_query->where('order_id', 'LIKE', '%' . $search . '%')
                 ->orWhere('createdDate', 'like', '%' . $search . '%')
@@ -47,7 +49,7 @@ class OrderManagementController extends Controller
                 ->orWhere('stage', 'like', '%' . $search . '%');
         }
         $orders =  $orders_query->paginate(10);
-        return view('admin/orders', compact('orders', 'search'));
+        return view('admin/orders', compact('orders', 'search', 'auto_fulfill'));
     }
 
     public function show($id)
