@@ -499,8 +499,8 @@
 
 {{-- pop up filter mobile --}}
 
-<div class="modal fade" id="filter_model" tabindex="-1" aria-labelledby="filter_content" aria-hidden="true"
-   data-bs-backdrop="static">
+<div class="modal fade" id="filter_model" tabindex="-1" aria-labelledby="filter_content" aria-hidden="true" data-bs-backdrop="static">
+   
    <div class="modal-dialog">
       <div class="modal-content">
          <div class="modal-header  mobile_filter_header">
@@ -534,7 +534,7 @@
                            id="selected_cat_mbl" name="selected_cat">
                            <option class="filter_drop_down_mbl" value="">Select Category</option>
                            @foreach ($categories as $category)
-                           <option class="filter_drop_down_mbl" value="{{$category->id}}/{{$category->slug}}">{{ $category->name }}
+                           <option class="filter_drop_down_mbl" value="{{$category->id}}">{{ $category->name }}
                            </option>
                            @endforeach
                         </select>
@@ -620,7 +620,7 @@
       });
    } 
 
-   //mobile filter
+   // mobile filter
    function handleSelectChangeMbl(searchedOption = '') {
       var basic_url = '';
       var selected_category = jQuery('#selected_cat_mbl').val();
@@ -635,21 +635,16 @@
       var emptyCategory = 0;
       var emptychildCategory = 0;
       
-      if (selected_category != ''){ 
-			var slug = selected_category;
-			var basic_url = '/products/'+selected_category ;
-		}
-		else {
-		
-			var slug = `${category_id}/${parent_category_slug}`
-		}
-
-      if(brand1 != '') {
-         basic_url = '/product-brand/' + brand1;
+      
+      if (selected_category != '') {
+            basic_url = `&selected_category=${selected_category}`;
+      }
+      else {
+            basic_url = `&selected_category=${emptyCategory}`;
       }
 
       if (brand != '') {
-            basic_url = basic_url + `?brand_id=${brand}`;
+            basic_url = basic_url + `&brand_id=${brand}`;
       }
 
       if (per_page != '') {
@@ -659,12 +654,14 @@
             basic_url = basic_url + `&search_price=${search_price}`;
       }
       if (stock != '') {
-         basic_url = basic_url + `&stock=${stock }`;
+            basic_url = basic_url + `&stock=${stock }`;
 
       }
       
-      // basic_url = "?" + basic_url.slice(1);
-      window.location.href = basic_url
+      basic_url = "?" + basic_url.slice(1);
+      var main_url  = window.location.origin + '/product/search' +  basic_url;
+      window.location.href = main_url;
+
    }
    function updateCart(id, option_id) {
 
