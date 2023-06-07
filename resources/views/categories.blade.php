@@ -381,8 +381,7 @@
 
 {{-- pop up filter mobile --}}
 
-<div class="modal fade" id="filter_model" tabindex="-1" aria-labelledby="filter_content" aria-hidden="true"
-   data-bs-backdrop="static">
+<div class="modal fade" id="filter_model" tabindex="-1" aria-labelledby="filter_content" aria-hidden="true" data-bs-backdrop="static" style="left:2rem;">
    <div class="modal-dialog">
       <div class="modal-content">
          <div class="modal-header  mobile_filter_header">

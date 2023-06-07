@@ -5872,6 +5872,18 @@ select.list-dt:focus {
     }
 
 
+    @media only screen and (max-width: 399px) and (min-width: 360px) {
+        #filter_model {
+            left: 0.5rem !important;
+        }
+    }
+
+    @media only screen and (min-width: 400px) and (max-width: 425px) {
+        #filter_model {
+            left: 2rem !important;
+        }
+    }
+
 
     /* ****************   Mobile Filter end   ********************** */
 

@@ -1,9 +1,11 @@
 <div class="container mobile-view">
-   <div class="pt-3" style="border: 1px solid lightgray;">
-      <p class="d-flex justify-content-center align-items-center">
-         <button class="filler-and-sort btn btn-primary w-75 filler-and-sort" type="button" data-bs-toggle="collapse"
-            data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-            Filter and Sort <span><img src="/theme/img/filler-icon.png" alt=""></span>
+   <div class="mt-2">
+      <p class="d-flex justify-content-start align-items-center mb-0">
+         <button class="filler-and-sort btn  filler-and-sort p-0 filterMblbtn" type="button" data-bs-toggle="modal"
+            data-bs-target="#filter_model" aria-expanded="false" aria-controls="" style="border: none !important;">
+            <i class="fa fa-sliders filterIco_mbl"></i>
+            <span class="search_filter_text">Search Filter </span>
+            {{-- <img src="/theme/img/filler-icon.png" alt=""></span> --}}
          </button>
       </p>
    </div>
@@ -88,6 +90,11 @@
       </div>
    </div>
    <div class="row">
+      @if(count($products) == 0)
+         <div class="col-md-12 mt-3">
+               <div class="alert alert-danger">No Product Found</div>
+         </div>
+      @endif
       @foreach ($products as $key => $product)
       @foreach($product->options as $option)
       <?php $count ++; ?>
@@ -95,11 +102,111 @@
       @endforeach
       @endforeach
    </div>
-   <div class="row">
+   <div class="row mobile-view">
       <div class="container">
-         <div class="col-md-6 m-auto">
-            {{$products->appends(Request::all())->links()}}
+         <div class="col-md-6">
+            {{ $products->appends(Request::all())->onEachSide(1)->links() }}
          </div>
       </div>
    </div>
 </div>
+
+
+
+{{-- pop up filter mobile --}}
+
+<div class="modal fade" id="filter_model" tabindex="-1" aria-labelledby="filter_content" aria-hidden="true" data-bs-backdrop="static" style="left:2rem;">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header  mobile_filter_header">
+            <h5 class="modal-title mobile_filter_title" id="filter_content">Search Filter</h5>
+            <button type="button" class="bg-none mbl_filter_btn" data-bs-dismiss="modal" aria-label="Close">
+               <i class="fa fa-times mbl_filter_close"></i>
+            </button>
+         </div>
+         <div class="modal-body">
+            <div class="card card-body p-0 border-0">
+               <form id="form-filter-pop">
+                  <input type="hidden" id="category_id" value="{{ $category_id }}">
+                  <input type="hidden" id="parent_category_slug" value="{{ $parent_category_slug }}">
+                  <div class="row pb-4 pt-2 border-0">
+                     <div class="col-md-12">
+                        <label class="filter_heading_mbl">Sort by</label>
+                        <select class="form-select form-select-mbl" id="search_price_mbl">
+                           <option class="filter_drop_down_mbl " value="0">Select Option</option>
+                           <option class="filter_drop_down_mbl form-group" value="best-selling">Best Selling</option>
+                           <option class="filter_drop_down_mbl form-group" value="price-low-to-high">Price Low to High
+                           </option>
+                           <option class="filter_drop_down_mbl form-group" value="price-high-to-low">Price High to Low
+                           </option>
+                           <option class="filter_drop_down_mbl form-group" value="brand-a-to-z">Brand A to Z</option>
+                           <option class="filter_drop_down_mbl form-group" value="brand-z-to-a">Brand Z to A</option>
+                        </select>
+                     </div>
+                     <div class="col-md-12 mt-2">
+                        <?php //dd($category_id);
+                                ?>
+                        <label class="filter_heading_mbl">Categories</label>
+                        <select class="form-select form-select-mbl" id="selected_cat_mbl" name="selected_cat">
+                           <option class="filter_drop_down_mbl" value="">Select Category</option>
+                           @foreach ($categories as $category)
+                           <option class="filter_drop_down_mbl" value="{{$category->id}}" {{ isset($category_id) &&
+                              $category_id==$category->id ? 'selected="selected"' : '' }}>{{ $category->name }}
+                              
+                           </option>
+                           @endforeach
+                        </select>
+                     </div>
+                     <div class="col-md-12 mt-2">
+                        <label class="filter_heading_mbl">Brand</label>
+                        <select class="form-select form-select-mbl" id="brand_mbl" name="brands[]">
+                           <option class="filter_drop_down_mbl" value="0">Select Brand</option>
+                           @foreach ($brands as $_brand_id => $brand_name)
+                           <option class="filter_drop_down_mbl" value="{{ $_brand_id }}">{{ $brand_name }}</option>
+                           @endforeach
+                        </select>
+                     </div>
+                     <div class="col-md-12 mt-2">
+                        <label class="filter_heading_mbl">Result per page</label>
+                        <select id="per_page_mbl" class="form-select form-select-mbl">
+                           <option class="filter_drop_down_mbl" value="20">20</option>
+                           <option class="filter_drop_down_mbl" value="40">40</option>
+                           <option class="filter_drop_down_mbl" value="60">60</option>
+                        </select>
+                     </div>
+
+                     <div class="col-md-12 mt-2">
+                        <?php if (empty($stock) || $stock == 'in-stock') {
+                                    $text = 'In stock';
+                                    $danger = '';
+                                    $stock = 'in-stock';
+                                } else {
+                                    $text = 'Out of Stock';
+                                    $danger = 'bg-danger';
+                                    $stock = 'out-of-stock';
+                                }
+                                ?>
+                        <label class="filter_heading_mbl">Show Only</label>
+                        <select id="in_stk" class="form-select form-select-mbl">
+                           <option class="filter_drop_down_mbl" value="0">Show Only</option>
+                           <option class="filter_drop_down_mbl" value="in-stock" {{ isset($stock) && $stock=='in-stock'
+                              ? 'selected' : '' }}>In Stock</option>
+                           <option class="filter_drop_down_mbl" value="out-of-stock" {{ isset($stock) &&
+                              $stock=='out-of-stock' ? 'selected' : '' }}>Out of Stock</option>
+                        </select>
+                     </div>
+                  </div>
+                  <div class="row justify-content-center">
+                     <button type="button" onclick="handleSelectChangeMbl()" class="btn btn-success filter-done-btn">
+                        <span class="filter-done-btn-text">Done</span>
+                     </button>
+                  </div>
+               </form>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+
+{{-- pop up filter mobile end --}}
+
