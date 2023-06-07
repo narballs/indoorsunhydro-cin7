@@ -2163,6 +2163,13 @@ input[type=number] {
     padding-right: 0.75rem !important;
 }
 
+.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    line-height: 26px !important;
+}
+
 .procedd-to-checkout-disable {
     width: 268px;
     height: 50px;
