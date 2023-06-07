@@ -6,7 +6,7 @@
 
 .table-row-heading {
     padding-left: 11.46px !important;
-    margin-top: -1px !important;
+    margin-top: 4px !important;
     color: #242424 !important;
 }
 
@@ -796,5 +796,18 @@ ul.pager>.main-row>.pagination>li {
 
 .select-row-items {
     width: 112px !important;
+    padding-left: 12px !important;
+    display: flex;
+    justify-content: start;
+    align-items: center !important;
+    color: #222222 !important;
+    font-style: normal !important;
+    font-weight: 500 !important;
+    font-size: 12.4108px !important;
 
+}
+
+.custom-control-input-success:checked~.custom-control-label::before {
+    border-color: #7BC533 !important;
+    background-color: #7BC533 !important;
 }

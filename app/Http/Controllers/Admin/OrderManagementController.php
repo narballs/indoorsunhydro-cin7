@@ -59,8 +59,13 @@ class OrderManagementController extends Controller
         $formatedDate = $createdDate->format('jS \of F Y h:i:s A');
         $orderCreatedDate = Carbon::createFromFormat('Y-m-d H:i:s', $createdDate, 'America/Los_Angeles');
         $currentTime = Carbon::now();
+     
+
+
         $time_diff = $orderCreatedDate->diffInMinutes($currentTime);
-      
+        $time_difference_seconds = date('s');
+                 
+
         
         $customer = Contact::where('user_id', $order->user_id)->first();
         $option_ids = ApiOrderItem::where('order_id', $id)->pluck('option_id')->toArray();
@@ -79,7 +84,8 @@ class OrderManagementController extends Controller
             'statuses',
             'customer',
             'formatedDate',
-            'time_diff'
+            'time_diff',
+            'time_difference_seconds'
         ));
     }
 
