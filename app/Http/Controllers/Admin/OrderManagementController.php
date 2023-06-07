@@ -25,7 +25,6 @@ use GuzzleHttp\Promise\Create;
 use Illuminate\Support\Carbon as SupportCarbon;
 use Illuminate\Support\Facades\Auth;
 use DateTime;
-use Illuminate\Support\Facades\Redis;
 
 class OrderManagementController extends Controller
 {
@@ -60,7 +59,14 @@ class OrderManagementController extends Controller
         $formatedDate = $createdDate->format('jS \of F Y h:i:s A');
         $orderCreatedDate = Carbon::createFromFormat('Y-m-d H:i:s', $createdDate, 'America/Los_Angeles');
         $currentTime = Carbon::now();
+     
+
+
         $time_diff = $orderCreatedDate->diffInMinutes($currentTime);
+        $time_difference_seconds = date('s');
+                 
+
+        
         $customer = Contact::where('user_id', $order->user_id)->first();
         $option_ids = ApiOrderItem::where('order_id', $id)->pluck('option_id')->toArray();
         $orderitems = $this->option_ids = $option_ids;
@@ -78,7 +84,8 @@ class OrderManagementController extends Controller
             'statuses',
             'customer',
             'formatedDate',
-            'time_diff'
+            'time_diff',
+            'time_difference_seconds'
         ));
     }
 
@@ -308,7 +315,6 @@ class OrderManagementController extends Controller
         } else {
             $userSwitchUser = "";
         }
-
         $orderSubmiterDetail = $userSubmiter . ',' . $userSwitchUser;
 
         $userSwitchUser = $currentOrder->user_switch;
@@ -497,22 +503,6 @@ class OrderManagementController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Order deleted successfully ! ',
-        ]);
-    }
-
-    public function deleteAllOrders(Request $request)
-    {
-        $ids = $request->ids;
-        $orders = ApiOrder::whereIn('id', explode(",", $ids))->get();
-        foreach ($orders as $order) {
-            $order_items = ApiOrderItem::where('order_id', $order->id)->get();
-            foreach ($order_items as $item) {
-                $item->delete();
-            }
-            $order->delete();
-        }
-        return response()->json([
-            'success' => 'Order deleted successfully ! ',
         ]);
     }
 }
