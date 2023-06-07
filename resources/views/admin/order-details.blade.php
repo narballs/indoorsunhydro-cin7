@@ -46,6 +46,7 @@
                                     <form>
                                         @csrf
                                         <input type="hidden" value="{{$time_diff}}" id="timeSpanToCancel">
+                                        <input type="hidden" value="{{$time_difference_seconds}}" id="seconds">
                                         @if ($order->isApproved == 2)
                                         <button type="button" class="btn btn-danger btn-sm" disabled>Cancel Order</button>
                                         <div class="countdown">
@@ -88,7 +89,7 @@
                                             </div>
                                         @else
                                             <div class="col-md-12" style="margin-left: 50px;">
-                                                <input class="btn btn-primary btn-sm" type="button" value="Fullfill Order"
+                                                <input id="full_fill" class="btn btn-primary btn-sm" type="button" value="Fullfill Order"
                                                     onclick="fullFillOrder()">
                                             </div>
                                             <div class="spinner-border d-none" role="status" id="spinner">
@@ -291,9 +292,9 @@
             $(document).ready(function() {
                 console.log(time_left);
                 var time_left = $('#timeSpanToCancel').val();
-               
+                var sec = $('#seconds').val();
                 time_left  =  3 - time_left;
-                var timer2 = time_left + ":01";
+                var timer2 = time_left + ":" + sec;
                 var interval = setInterval(function() {
                 var timer = timer2.split(':');
                 //by parsing integer, I avoid all extra string processing
@@ -308,8 +309,9 @@
                     $('#cancel_order').val('Cancel Order in ' + minutes + ':' + seconds);
                     if (minutes == 0  && seconds == '00' || time_left < 1) {
                         $('#cancel_order').addClass('disabled');
+                        //$('#full_fill').addClass('disabled');
                         $('#cancel_order').val('Cancel Order');
-                        //window.location.reload();
+                        
                         minutes = 0;
                         seconds = 0;
                         timer.lap();
@@ -328,7 +330,7 @@
                     // console.log(seconds);
                   
                 }, 1000);
-                 //window.location.reload();
+             
 
             });
             function addComment(isUserAdded) {
