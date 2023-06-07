@@ -289,9 +289,10 @@
     @section('js')
         <script>
             $(document).ready(function() {
-            
+                console.log(time_left);
                 var time_left = $('#timeSpanToCancel').val();
-                time_left  =  15 - time_left;
+               
+                time_left  =  3 - time_left;
                 var timer2 = time_left + ":01";
                 var interval = setInterval(function() {
                 var timer = timer2.split(':');
@@ -303,20 +304,31 @@
                 if (minutes < 0) clearInterval(interval);
                     seconds = (seconds < 0) ? 59 : seconds;
                     seconds = (seconds < 10) ? '0' + seconds : seconds;
-                    //minutes = (minutes < 10) ?  minutes : minutes;
+                    minutes = (minutes < 10) ?  minutes : minutes;
                     $('#cancel_order').val('Cancel Order in ' + minutes + ':' + seconds);
-                    timer2 = minutes + ':' + seconds;
-                    if (minutes == 0  && seconds == '00') {
+                    if (minutes == 0  && seconds == '00' || time_left < 1) {
                         $('#cancel_order').addClass('disabled');
                         $('#cancel_order').val('Cancel Order');
-                     console.log('finsih');
-                     return; 
+                        //window.location.reload();
+                        minutes = 0;
+                        seconds = 0;
+                        timer.lap();
+                        console.log('finsih');
+                        // fullFillOrder();
+
+                     //return; 
 
                     }
-                    console.log(minutes);
-                    console.log(seconds);
+
+                    timer2 = minutes + ':' + seconds;
+                   
+
+                  
+                    // console.log(minutes);
+                    // console.log(seconds);
                   
                 }, 1000);
+                 //window.location.reload();
 
             });
             function addComment(isUserAdded) {

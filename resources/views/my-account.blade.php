@@ -100,7 +100,7 @@
                         <ul class="nav nav-pills flex-column w-100 mb-sm-auto mb-0 align-items-center align-items-sm-start"
                             id="menu">
                             <li class="nav-item w-100 text-dark active mb-3" id="dashboard">
-                                <a href="#" class="nav-link align-middle px-0 ms-3">
+                                <a href="javascript:void(0);" class="nav-link align-middle px-0 ms-3">
                                     <i class="fs-4 bi-house"></i>
                                     <div class="row">
                                         <div class="col-md-2">
@@ -122,7 +122,7 @@
                                 </a>
                             </li>
                             <li class="nav-item w-100 mb-3" id="recent_orders">
-                                <a href="#" class="nav-link px-0 align-middle  px-0 ms-3">
+                                <a href="javascript:void(0);" class="nav-link px-0 align-middle  px-0 ms-3">
                                     <i class="fs-4 bi-table"></i>
                                     <div class="row">
                                         <div class="col-md-2">
@@ -143,7 +143,7 @@
                                 </a>
                             </li>
                             <li class="nav-item w-100 mb-3" id="wish_lists">
-                                <a href="#" class="nav-link px-0 align-middle  px-0 ms-3">
+                                <a href="javascript:void(0);" class="nav-link px-0 align-middle  px-0 ms-3">
                                     <i class="fs-4 bi-table"></i>
                                     <div class="row">
                                         <div class="col-md-2">
@@ -165,7 +165,7 @@
 
                                 </a>
                             </li>
-                            <li class="nav-item w-100 mb-3" id="qoutes">
+                            <li class="nav-item w-100 mb-3 d-none" id="qoutes">
                                 <a href="#" class="nav-link px-0 align-middle  px-0 ms-3">
                                     <i class="fs-4 bi-table"></i>
                                     <div class="row">
@@ -189,7 +189,7 @@
                                 </a>
                             </li>
                             <li class="nav-item w-100 mb-3" id="current_address">
-                                <a href="#" class="nav-link px-0 align-middle  px-0 ms-3">
+                                <a href="javascript:void(0);" class="nav-link px-0 align-middle  px-0 ms-3">
                                     <i class="fs-4 bi-bootstrap"></i>
                                     <!-- <span class="ms-1 d-none d-sm-inline text-dark fs-5" onclick="edit_address()">Addresses</span> -->
                                     <div class="row">

@@ -69,51 +69,51 @@
                         throughout
                         this website, to
                         manage access to your account, and for other purposes described in our privacy policy.</p>
-                    <label id="label-login" for="log-login-show"
-                        class="sing-up-label d-flex justify-content-center align-items-center"><span
-                            class="sign-up">SIGN
-                            UP</span>
-                    </label>
+                       <div class="d-flex justify-content-center">
+                        <label id="label-login" for="log-login-show" class="sing-up-label d-flex justify-content-center align-items-center w-50 mb-0 p-0">
+                            <span class="sign-up">SIGN UP</span>
+                        </label>
+                       </div>
                     <input type="radio" name="active-log-panel" id="log-login-show">
                 </div>
                 <div class="white-panel">
                     <div class="login-show">
-                        <h2 class="text-center login-title">LOG IN</h2>
+                        <h2 class="text-center login-title">LOGIN</h2>
                         <form method="POST" action="{{ route('login') }}">
                             @csrf
                             <div class=" form-login">
                                 <div class="input-placeholder">
                                     <input type="text" name="email" required>
-                                    <div class="placeholder pl-3 fontAwesome">
+                                    <div class="placeholder pl-3 fontAwesome top_placeholder_style">
                                         &#xf0e0; Email
                                     </div>
                                 </div>
                                 <div class="input-placeholder">
                                     <input type="password" name="password" required>
-                                    <div class="placeholder pl-3 fontAwesome">
+                                    <div class="placeholder pl-3 fontAwesome top_placeholder_style">
                                         &#xf023; Password
                                     </div>
                                 </div>
 
                             </div>
-                            <button type="submit" class="btn-login info login-button">LOG IN</button>
+                            <button type="submit" class="btn-login info login-button">LOGIN</button>
                         </form>
-                        <div class="row">
-                            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12 mt-4 remember-me">
-                                <div class="form-check checkbox-lg form-login">
-                                    <input class="form-check-input aling-items-center justify-conent-center d-flex"
+                        <div class="row mt-3 mb-1 align-items-center justify-content-between">
+                            <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-xs-12 remember-me">
+                                <div class="form-check form-login">
+                                    <input class="mb-0 form-check-input align-items-center justify-conent-center d-flex"
                                         type="checkbox" value="" id="checkbox-2"
                                         style="background-color:none !important" />&nbsp;
-                                    <label class="formemail-registration-check-label" for="checkbox-2">Remember
+                                    <label class="formemail-registration-check-label mb-0" for="checkbox-2">Remember
                                         me</label>
                                 </div>
                             </div>
-                            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12 mt-3">
-                                <a href="{{ route('lost.password') }}" class="btn-lost-password d-flex">Lost your
-                                    password?</a></p>
+                            <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-xs-12 lost_pas_div">
+                                <a href="{{ route('lost.password') }}" class="btn-lost-password p-0">Lost your
+                                    password?</a>
                             </div>
                         </div>
-                        <hr>
+                        <hr/>
                         <div class="row">
                             <div class=" col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
                                 <p class="required-field"><span class="req">*</span> Required field</p>
@@ -126,13 +126,12 @@
                             <h2 class="d-flex justify-content-center align-items-center sing-up-label">SIGN UP</h2>
                             <div class="input-placeholder">
                                 <input type="text" id="email" name="email" required>
-                                <div class="placeholder pl-3 fontAwesome">
+                                <div class="placeholder pl-3 fontAwesome top_placeholder_style">
                                     &#xf0e0; Email
                                 </div>
                             </div>
                             <button type="button" name="save" id="save" onclick="signUp2()"
-                                class="btn-login">Sign
-                                up</button>
+                                class="btn-login">SIGN UP</button>
                         </form>
                         <div class="row">
                             <div class="col-md-6 mt-5">
@@ -143,7 +142,7 @@
                     </div>
                 </div>
                 <div class="login-info-box text-white">
-                    <h2 class=" dont-have-an-account">Have an account?</h2>
+                    <h2 class=" dont-have-an-account text-center">Have an account?</h2>
                     <p class=" dont-have-an-account-pra" id="account">Your
                         personal data will be used to support
                         your experience
@@ -151,8 +150,9 @@
                         this website, to manage access to your account, and for other purposes described in our privacy
                         policy.
                     </p>
-                    <label id="label-register" for="log-reg-show"
-                        class="d-flex justify-content-center align-items-center  sing-up-label">LOG IN</label>
+                    <div class="d-flex justify-content-center">
+                        <label id="label-register" for="log-reg-show" class="d-flex justify-content-center align-items-center w-50 mb-0 p-0 sing-up-label">LOGIN</label>
+                    </div>
                     <input type="radio" name="active-log-panel" id="log-reg-show" checked="checked">
                 </div>
 

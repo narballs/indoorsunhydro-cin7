@@ -1059,18 +1059,28 @@ class ProductController extends Controller
                 $product_buy_list->delete();
             }
         } else {
-            $product_buy_list = new ProductBuyList();
-            $product_buy_list->list_id = $list_id;
-            $product_buy_list->product_id = $request->product_id;
-            $product_buy_list->option_id = $request->option_id;
-            $product_buy_list->sub_total = $active_price;
-            $product_buy_list->quantity = $request->quantity;
-            $product_buy_list->save();
+
+            $flag = ProductBuyList::where('list_id', $list_id)
+                ->where('product_id', $request->product_id)
+                ->where('option_id', $request->option_id)
+                ->first();
+            if(empty($flag)) {
+                $product_buy_list = new ProductBuyList();
+                $product_buy_list->list_id = $list_id;
+                $product_buy_list->product_id = $request->product_id;
+                $product_buy_list->option_id = $request->option_id;
+                $product_buy_list->sub_total = $active_price;
+                $product_buy_list->quantity = $request->quantity;
+                $product_buy_list->save();
+            }
+            else{
+                $flag->delete();
+            }
         }
 
         return response()->json([
             'success' => true,
-            'msg' => 'List created Successully !'
+            'msg' => 'List created Successfully !'
         ]);
     }
 

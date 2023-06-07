@@ -17,6 +17,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Str;
 
 class OrderController extends Controller
 {
@@ -103,7 +104,8 @@ class OrderController extends Controller
                 $order_id =  $order->id;
                 $currentOrder = ApiOrder::where('id', $order->id)->first();
                 $apiApproval = $currentOrder->apiApproval;
-                $currentOrder->reference = 'DEV4' . '-QCOM-' . $order_id;
+                $random_string = Str::random(10);
+                $currentOrder->reference = 'DEV4' . '-QCOM-' .$random_string . $order_id;
 
                 $currentOrder->save();
                 $currentOrder = ApiOrder::where('id', $order->id)->with('contact')->first();

@@ -4,7 +4,9 @@
 
 @import url('https://fonts.googleapis.com/css?family=Mukta');
 @import url('https://fonts.cdnfonts.com/css/regular');
-
+.top_placeholder_style {
+    top:-10px !important;
+}
 #tax_rate {
     /* color: #5D5DF8 !important; */
 }
@@ -316,15 +318,28 @@ a {
     margin-top: 27px !important;
 }
 
+.dont-have-an-account-pra {
+    font-family: 'Poppins' !important;
+    font-style: normal !important;
+    font-weight: 300 !important;
+    font-size: 16px !important;
+    line-height: 27px !important;
+    text-align: center !important;
+    color: #FFFFFF !important;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+}
+
 .dont-have-an-account {
     font-family: 'Poppins' !important;
     font-style: normal !important;
-    font-weight: 700 !important;
-    font-size: 22px !important;
+    font-weight: 400 !important;
+    font-size: 21px !important;
     line-height: 48px !important;
-    letter-spacing: 0.05em !important;
+    letter-spacing: 0em !important;
     color: #FFFFFF !important;
 }
+
 
 .login-reg-panel input[type="radio"] {
     position: relative;
@@ -338,7 +353,7 @@ a {
 .login-reg-panel #label-login,
 .login-reg-panel #label-register {
     font-family: 'Poppins';
-    border: 1px solid #9E9E9E;
+    /* border: 1px solid #9E9E9E; */
     padding: 23px 23px;
     display: block;
     text-align: center;
@@ -431,19 +446,10 @@ a {
     width: 36% !important;
     padding: 0 8px !important;
     top: 20% !important;
-    left: 0 !important;
+    left: 5% !important;
     position: absolute !important;
     text-align: left !important;
 
-}
-
-.register-info-box {
-    width: 46% !important;
-    padding: 0 29px !important;
-    top: 4% !important;
-    right: 0 !important;
-    position: absolute !important;
-    text-align: left !important;
 }
 
 
@@ -494,7 +500,8 @@ a {
     background: #7BC533;
     border: none;
     font-weight: 600;
-    font-size: 18px;
+    font-size: 24px;
+    letter-spacing: 0.05em;
 
 }
 
@@ -505,10 +512,12 @@ a {
 }
 
 .btn-lost-password {
-    font-family: 'Poppins';
+    display: contents !important;
+    font-family: 'Poppins' !important;
     color: #7BC533;
     text-decoration: none;
-    font-size: 15px;
+    font-size: 15px !important;
+    font-weight: 300;
 }
 
 .checkbox-lg .form-check-input {
@@ -1827,13 +1836,13 @@ input[type=number] {
 
 .sing-up-label {
     width: 100%;
-    height: 69px;
+    height: 60px;
     top: 788px;
     font-family: 'Poppins';
     font-style: normal;
     font-weight: 600;
     font-size: 24px;
-    line-height: 36px;
+    line-height: 30px;
 }
 
 .please-tell-uss {
@@ -2218,6 +2227,9 @@ input[type=number] {
 }
 
 @media only screen and (max-width: 2560px) and (min-width: 1921px) {
+    .lost_pas_div {
+        text-align: right !important;
+    }
     .top-img {
         margin-bottom: 12px;
         width: 100% !important;
@@ -2279,21 +2291,20 @@ input[type=number] {
     .dont-have-an-account {
         font-family: 'Poppins' !important;
         font-style: normal !important;
-        font-weight: 500 !important;
+        font-weight: 400 !important;
         font-size: 21px !important;
         line-height: 48px !important;
-        letter-spacing: 0.05em !important;
+        letter-spacing: 0em !important;
         color: #FFFFFF !important;
     }
 
     .dont-have-an-account-pra {
-        font-family: 'Regular', sans-serif !important;
+        font-family: 'Poppins' !important;
         font-style: normal !important;
-        font-weight: 500 !important;
+        font-weight: 300 !important;
         font-size: 16px !important;
         line-height: 27px !important;
         text-align: center !important;
-        letter-spacing: 0.05em;
         color: #FFFFFF !important;
         padding-left: 0px !important;
         padding-right: 0px !important;
@@ -2302,6 +2313,9 @@ input[type=number] {
 }
 
 @media only screen and (max-width: 1920px) and (min-width: 1441px) {
+    .lost_pas_div {
+        text-align: right !important;
+    }
     .top-img {
         margin-bottom: 12px;
         width: 100% !important;
@@ -2365,21 +2379,20 @@ input[type=number] {
     .dont-have-an-account {
         font-family: 'Poppins' !important;
         font-style: normal !important;
-        font-weight: 500 !important;
+        font-weight: 400 !important;
         font-size: 22px !important;
         line-height: 48px !important;
-        letter-spacing: 0.05em !important;
+        letter-spacing: 0 !important;
         color: #FFFFFF !important;
     }
 
     .dont-have-an-account-pra {
-        font-family: 'Regular', sans-serif !important;
+        font-family: 'Poppins' !important;
+        font-weight: 300 !important;
         font-style: normal !important;
-        font-weight: 500 !important;
         font-size: 16px !important;
         line-height: 27px !important;
         text-align: center !important;
-        letter-spacing: 0.05em;
         color: #FFFFFF !important;
         padding-left: 0px !important;
         padding-right: 0px !important;
@@ -2389,6 +2402,9 @@ input[type=number] {
 
 
 @media only screen and (max-width: 1440px) and (min-width: 1025) {
+    .login-info-box {
+        left:5% !important;
+    }
     .top-header-navigation {
         width: 100% !important;
         font-size: 10px;
@@ -2428,6 +2444,7 @@ input[type=number] {
     }
 
     .btn-lost-password {
+        display: contents ;
         font-family: 'Poppins';
         color: #7BC533;
         text-decoration: none;
@@ -2443,7 +2460,7 @@ input[type=number] {
     .dont-have-an-account {
         font-family: 'Poppins' !important;
         font-style: normal !important;
-        font-weight: 700 !important;
+        font-weight: 400 !important;
         font-size: 22px !important;
         line-height: 48px !important;
         letter-spacing: 0.05em !important;
@@ -2452,13 +2469,12 @@ input[type=number] {
     }
 
     .dont-have-an-account-pra {
-        font-family: 'Regular', sans-serif !important;
+        font-family: 'Poppins' !important;
+        font-weight: 300 !important;
         font-style: normal !important;
-        font-weight: 500 !important;
         font-size: 13px !important;
         line-height: 27px !important;
         text-align: center !important;
-        letter-spacing: 0.05em;
         color: #FFFFFF !important;
         padding-left: 0px !important;
         padding-right: 0px !important;
@@ -2488,14 +2504,15 @@ input[type=number] {
     }
 
     .dont-have-an-account-pra {
-        font-family: 'Regular', sans-serif !important;
-        font-style: normal;
-        font-weight: 500;
-        font-size: 13px;
-        line-height: 27px;
-        text-align: center;
-        letter-spacing: 0.05em;
-        color: #FFFFFF;
+        font-family: 'Poppins' !important;
+        font-style: normal !important;
+        font-weight: 300 !important;
+        font-size: 16px !important;
+        line-height: 27px !important;
+        text-align: center !important;
+        color: #FFFFFF !important;
+        padding-left: 0px !important;
+        padding-right: 0px !important;
     }
 
     .top-img {
@@ -2534,12 +2551,12 @@ input[type=number] {
     .register-info-box {
         width: 48% !important;
         padding: 0 50px !important;
-        top: 10% !important;
+        top: 20% !important;
     }
 
     .sing-up-label {
         width: 100%;
-        height: 30px;
+        height: 40px;
         top: 788px;
         font-family: 'Poppins';
         font-style: normal;
@@ -2609,6 +2626,7 @@ input[type=number] {
     }
 
     .btn-lost-password {
+        display: contents ;
         font-family: 'Poppins';
         color: #7BC533;
         font-size: 10px;
@@ -2618,24 +2636,23 @@ input[type=number] {
 
     .dont-have-an-account {
         font-family: 'Poppins';
-        font-weight: 500;
+        font-weight: 400;
         font-size: 12px;
     }
 
     .dont-have-an-account-pra {
-        font-family: 'Regular', sans-serif !important;
+        font-family: 'poppins' !important;
         font-style: normal;
-        font-weight: 500;
+        font-weight: 300;
         font-size: 9px;
         line-height: 27px;
         text-align: center;
-        letter-spacing: 0.05em;
         color: #FFFFFF;
     }
 
-    .login-reg-panel #label-register {
+    /* .login-reg-panel #label-register {
         height: 51px;
-    }
+    } */
 }
 
 @media only screen and (max-width: 820px) and (min-width: 426px) {
@@ -2725,7 +2742,7 @@ input[type=number] {
 
     .dont-have-an-account {
         font-family: 'Poppins' !important;
-        font-weight: 500 !important;
+        font-weight: 400 !important;
         font-size: 19px !important;
         color: #FFFFFF !important;
         line-height: 17px !important;
@@ -2838,9 +2855,9 @@ input[type=number] {
 
     .login-info-box {
         width: 44% !important;
-        padding: 0 32px !important;
+        padding: 0px !important;
         top: 20% !important;
-        /* left: 0 !important; */
+        left: 0.5% !important;
         /* position: absolute !important; */
         /* text-align: left !important; */
     }
@@ -2980,6 +2997,7 @@ input[type=number] {
     }
 
     .btn-lost-password {
+        display: contents ;
         font-family: 'Poppins';
         color: #7BC533;
         font-size: 10px;
@@ -5371,7 +5389,7 @@ select.list-dt:focus {
     .dont-have-an-account {
         font-family: 'Poppins' !important;
         font-style: normal !important;
-        font-weight: 500 !important;
+        font-weight: 400 !important;
         font-size: 12px !important;
         line-height: 48px !important;
         letter-spacing: 0.05em !important;
@@ -5380,16 +5398,15 @@ select.list-dt:focus {
     }
 
     .dont-have-an-account-pra {
-        font-family: 'Regular', sans-serif !important;
+        font-family: 'Poppins' !important;
         font-style: normal;
-        font-weight: 200 !important;
+        font-weight: 300 !important;
         font-size: 6px !important;
         line-height: 15px !important;
         font-weight: 400 !important;
         font-size: 9px !important;
         line-height: 17px !important;
         text-align: center;
-        letter-spacing: 0.05em;
         color: #FFFFFF;
 
     }
@@ -5438,7 +5455,7 @@ select.list-dt:focus {
         width: 37% !important;
         padding: 0 8px !important;
         top: 12% !important;
-        left: 0 !important;
+        left: 5% !important;
         position: absolute !important;
         text-align: left !important;
     }
@@ -5447,13 +5464,13 @@ select.list-dt:focus {
         font-weight: 600 !important;
         font-size: 11px !important;
         line-height: 24px !important;
-        letter-spacing: 0.05em !important;
+        letter-spacing: 0em !important;
     }
 
     .register-info-box {
         width: 46% !important;
         padding: 0 29px !important;
-        top: 4% !important;
+        top: 12% !important;
         right: 0 !important;
         position: absolute !important;
         text-align: left !important;
@@ -5615,23 +5632,24 @@ select.list-dt:focus {
     }
 
     .btn-lost-password {
+        display: contents ;
         font-family: 'Poppins';
         color: #7BC533;
-        font-size: 10px;
+        font-size: 10px !important;
         margin-bottom: -30px;
         text-decoration: none;
     }
 
     .dont-have-an-account {
         font-family: 'Poppins';
-        font-weight: 500;
+        font-weight: 400;
         font-size: 12px;
     }
 
     .dont-have-an-account-pra {
-        font-family: 'Regular', sans-serif !important;
+        font-family: 'poppins' !important;
         font-style: normal;
-        font-weight: 500;
+        font-weight: 300;
         font-size: 9px;
         line-height: 27px;
         text-align: center;
