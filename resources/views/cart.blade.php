@@ -22,15 +22,14 @@
                 <div class="h-100 py-5">
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="col-md-12">
-                                @if (Session::has('message'))
-                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                        {{ Session::get('message') }}
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                            aria-label="Close"></button>
-                                    </div>
-                                @endif
-                            </div>
+
+                            @if (Auth::check() == true && $contact->status == 0)
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    Checkout has been disabled.
+
+                                </div>
+                            @endif
+
                             <div class="table-responsive">
                                 <table class="table mt-4" id="cart_table">
                                     <thead class="table-head-items">
@@ -96,7 +95,9 @@
                                                     </td>
                                                     <td scope=" row">
                                                         <div class="d-flex align-items-center">
-                                                                                      @if (!empty($cart['image']))
+                                                                                        
+                                                                                        
+                                                                            @if (!empty($cart['image']))
                                                                 <img src="{{ $cart['image'] }}"
                                                                     class="img-fluid rounded-3" style="width: 80px; height:100px;"
                                                                     alt="Book">
@@ -286,13 +287,13 @@
                                         </button>
                                     </a>
                                 @elseif (Auth::check() == true && $contact->status == 0)
-                                    <a href="javascript:void(0)">
-                                        <button class="procedd-to-checkout-disable mt-3">
-
-                                            Your company is disabled
-
-                                        </button>
-                                    </a>
+                                    <div class="alert alert-danger alert-dismissible fade show py-2" role="alert">
+                                        <span class="d-flex justify-content-center align-items-center">
+                                            Checkout has been disabled for this email address, please contact your
+                                            account
+                                            manager to re-enable checkout.
+                                        </span>
+                                    </div>
                                 @elseif(Auth::check() == true && empty($contact->contact_id))
                                     <a href="{{ url('/checkout/') }}">
                                         <button class="procedd-to-checkout mt-3">

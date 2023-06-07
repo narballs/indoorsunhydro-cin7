@@ -29,6 +29,8 @@ class Kernel extends ConsoleKernel
             ->hourly();
         $schedule->command('Assign:UserToContacts')
             ->hourly();
+        $schedule->command('AutoOrder:Sync')
+            ->everyThreeMinutes();
     }
 
     /**
