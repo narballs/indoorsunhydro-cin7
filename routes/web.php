@@ -100,6 +100,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('admin/users', UserController::class);
     Route::get('admin/dashboard', [DashboardController::class, 'index'])->name('admin.view');
     Route::get('admin/orders', [OrderManagementController::class, 'index'])->name('admin.orders');
+    Route::delete('admin/orders/all/delete', [OrderManagementController::class, 'deleteAllOrders']);
     Route::get('admin/order/create', [OrderManagementController::class, 'create'])->name('admin.order.create');
     Route::get('/admin/order-detail/{id}', [OrderManagementController::class, 'show'])->name('admin.order.detail');
     Route::post('admin/order-comments', [OrderManagementController::class, 'addComments'])->name('admin.order.comments');

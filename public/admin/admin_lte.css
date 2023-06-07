@@ -765,3 +765,36 @@ ul.pager>.main-row>.pagination>li {
 .nav-item .logout_sidebar p {
     color: #DC4E41 !important;
 }
+
+.btn-row {
+    background: #F9F9F9 !important;
+    border: 1px solid #EAECF0 !important;
+    border-radius: 7px !important;
+}
+
+.cancel-row-items-order-page {
+
+    background: #DC4E41 !important;
+    border-radius: 4px !important;
+    color: #ffffff !important;
+    color: #ffffff !important;
+    width: 105px !important;
+}
+
+.fulfill-row-items-order-page {
+    background: #7CC633 !important;
+    border-radius: 4px !important;
+    color: #ffffff !important;
+    color: #ffffff !important;
+    width: 105px !important;
+}
+
+.form-check-input:checked {
+    background-color: #7CC633 !important;
+    border-color: #7CC633 !important;
+}
+
+.select-row-items {
+    width: 112px !important;
+
+}
