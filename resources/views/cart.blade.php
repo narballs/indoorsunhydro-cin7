@@ -29,7 +29,6 @@
 
                                 </div>
                             @endif
-
                             <div class="table-responsive">
                                 <table class="table mt-4" id="cart_table">
                                     <thead class="table-head-items">
@@ -95,16 +94,14 @@
                                                     </td>
                                                     <td scope=" row">
                                                         <div class="d-flex align-items-center">
-                                                                                        
-                                                                                        
-                                                                            @if (!empty($cart['image']))
+                                                        @if (!empty($cart['image']))
                                                                 <img src="{{ $cart['image'] }}"
-                                                                    class="img-fluid rounded-3" style="width: 80px; height:100px;"
+                                                                    class="img-fluid rounded-3" style="width: 80px;"
                                                                     alt="Book">
                                                             @else
                                                                 <img src="/theme/img/image_not_available.png"
-                                                                    class="img-fluid rounded-3"
-                                                                    style="width: 78px;height: 83px;" alt="Book">
+                                                                    class="img-fluid rounded-3" style="width: 78px;"
+                                                                    alt="Book">
                                             @endif
                                             <div class="flex-column ms-4">
                                                 <span class="mb-2">

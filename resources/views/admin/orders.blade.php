@@ -12,7 +12,7 @@
                                 Orders
                             </p>
                         </div>
-                        <div class="col-md-8">
+                        <div class="col-md-6">
                             <div class="progress border d-none w-50 mx-auto" id="progress-bar">
                                 <div class="progress-bar progress-bar-striped progress-bar-animated bg-info"
                                     role="progressbar" aria-valuenow="100" aria-valuemin="" aria-valuemax="100"></div>
@@ -39,13 +39,42 @@
             </div>
             <div class="card-body product_table_body">
                 <div class="col-md-12 p-0">
+                    <div class="col-md-12 btn-row my-3">
+                        <div class="row">
+                            <div class="col-md-3 d-flex justify-content-between align-content-center py-2">
+                                <span class="border-right pe-5 select-row-items">
+                                    10 selected
+                                </span>
+                                <span>
+                                    <a class=" delete_all btn btn-sm fulfill-row-items-order-page "
+                                        data-url="{{ url('admin/orders/all/delete') }}">
+                                        Fulfill Order
+                                    </a>
+                                </span>
+                                <span>
+                                    <a class="delete_all btn btn-danger btn-sm cancel-row-items-order-page"
+                                        data-url="{{ url('admin/orders/all/delete') }}">
+                                        Cancel Order
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
                     <table class="table border table-customer mb-5">
                         <thead>
                             <tr class="table-header-background">
                                 <td class="d-flex table-row-item">
-                                    <span class="tabel-checkbox">
+                                    <div class="custom-control custom-checkbox">
+                                        <input
+                                            class="checkbox-table tabel-checkbox custom-control-input custom-control-input-danger"
+                                            type="checkbox" id="" checked="">
+                                        <label for="customCheckbox4" class="custom-control-label">Custom Checkbox
+                                            with
+                                            custom color</label>
+                                    </div>
+                                    {{-- <span class="tabel-checkbox">
                                         <input type="checkbox" name="test" class="checkbox-table" id="selectAll">
-                                    </span>
+                                    </span> --}}
                                     <span class="table-row-heading">
                                         <i class="fas fa-arrow-up"></i>
                                     </span>
@@ -88,10 +117,11 @@
                                         </td>
                                     </tr>
                                 @else
-                                    <tr id="row-{{ $order->id }}" class="order-row border-bottom">
+                                    <tr id="tr_{{ $order->id }}" class="order-row border-bottom">
                                         <td class="d-flex table-items">
                                             <span class="tabel-checkbox">
-                                                <input type="checkbox" name="test" class="checkbox-table">
+                                                {{-- <input type="checkbox" name="test" class="checkbox-table"> --}}
+                                                <input type="checkbox" class="sub_chk" data-id="{{ $order->id }}">
                                             </span>
                                             <span class="table-row-heading">
                                                 {{ $order->id }}
@@ -244,7 +274,7 @@
 
 @section('css')
     <link rel="stylesheet" href="/css/admin_custom.css">
-    <link rel="stylesheet" href="{{ asset('admin/admin_lte.css') }}">
+    <link rel="stylesheet" href="{{ asset('admin/admin_lte.css?v1') }}">
     <link href="https://fonts.cdnfonts.com/css/poppins" rel="stylesheet">
 
     <style type="text/css">
@@ -405,12 +435,6 @@
             })
         });
 
-        // select all checkbox by click
-        $(document).on('click', '#selectAll', function(e) {
-            var table = $(e.target).closest('table');
-            $('td input:checkbox', table).prop('checked', this.checked);
-        });
-
         function cancelOrder() {
             var order_id = $("#order_id").val();
             $.ajax({
@@ -490,6 +514,79 @@
                 }
             });
         }
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('#selectAll').on('click', function(e) {
+                if ($(this).is(':checked', true)) {
+                    $(".sub_chk").prop('checked', true);
+                } else {
+                    $(".sub_chk").prop('checked', false);
+                }
+            });
+            $('.delete_all').on('click', function(e) {
+                var allVals = [];
+                $(".sub_chk:checked").each(function() {
+                    allVals.push($(this).attr('data-id'));
+                });
+                if (allVals.length <= 0) {
+                    Swal.fire(
+                        'Please select a row to delete',
+                    )
+                } else {
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You won't delete this order!",
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, delete it!'
+                    }).then((result) => {
+                        if (result.value) {
+                            var join_selected_values = allVals.join(",");
+                            $.ajax({
+                                url: $(this).data('url'),
+                                type: 'DELETE',
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                                        'content')
+                                },
+                                data: 'ids=' + join_selected_values,
+                                success: function(data) {
+                                    if (data['success']) {
+                                        // alert('success');
+                                        $(".sub_chk:checked").each(function() {
+                                            $(this).parents("tr").remove();
+                                        });
+                                        Swal.fire(
+                                            'Deleted!',
+                                            'Your order has been deleted.',
+                                            'success'
+                                        )
+                                    } else if (data['error']) {
+                                        alert(data['error']);
+                                    } else {
+                                        Swal.fire(
+                                            'Please select a row to delete',
+                                        )
+                                    }
+                                },
+                                error: function(data) {
+                                    alert(data.responseText);
+                                }
+                            });
+
+                            $.each(allVals, function(index, value) {
+                                $('table tr').filter("[data-row-id='" + value + "']")
+                                    .remove();
+                            });
+                        }
+                    });
+                }
+            });
+        });
     </script>
 @stop
 @section('plugins.Sweetalert2', true)
