@@ -42,7 +42,7 @@
                     <div class="col-md-12 btn-row my-3">
                         <div class="row">
                             <div class="col-md-3 d-flex justify-content-between align-content-center py-2">
-                                <span class="border-right pe-5 select-row-items" id="items_selected">
+                                <span class="border-right pe-5 select-row-items ms-2" id="items_selected">
                                     0 Selected
                                 </span>
                                 <span>
@@ -65,7 +65,8 @@
                             <tr class="table-header-background">
                                 <td class="d-flex table-row-item mt-0">
                                     <div class="custom-control custom-checkbox tabel-checkbox">
-                                        <input class="custom-control-input custom-control-input-success checkbox-table" type="checkbox" id="selectAll" value="">
+                                        <input class="custom-control-input custom-control-input-success checkbox-table"
+                                            type="checkbox" id="selectAll" value="">
                                         <label for="selectAll" class="custom-control-label"></label>
                                         <span class="table-row-heading">
                                             <i class="fas fa-arrow-up mt-1" style="font-size:14.5px ;"></i>
@@ -113,8 +114,11 @@
                                     <tr id="tr_{{ $order->id }}" class="order-row border-bottom">
                                         <td class="d-flex table-items">
                                             <div class="custom-control custom-checkbox tabel-checkbox">
-                                                <input class="custom-control-input custom-control-input-success sub_chk"  data-id="{{ $order->id }}" type="checkbox" id="separate_check_{{$order->id}}">
-                                                <label for="separate_check_{{$order->id}}" class="custom-control-label"></label>
+                                                <input class="custom-control-input custom-control-input-success sub_chk"
+                                                    data-id="{{ $order->id }}" type="checkbox"
+                                                    id="separate_check_{{ $order->id }}">
+                                                <label for="separate_check_{{ $order->id }}"
+                                                    class="custom-control-label"></label>
                                             </div>
                                             <span class="table-row-heading">
                                                 {{ $order->id }}
@@ -175,9 +179,11 @@
                                                 <span class="badge badge-danger is_approded_2">Cancelled</span>
                                             @endif
                                         </td>
-                                        <td class="td_padding_row">{{ $order->paymentTerms }}</td>
+                                        <td class="td_padding_row">
+                                            {{ $order->paymentTerms }}
+                                        </td>
                                         <td class="created_by toggleClass td_padding_row">
-                                            <div class="btn-group">
+                                            {{-- <div class="btn-group">
                                                 <button type="button" class="btn p-0 btn-white dropdown-toggle"
                                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                     <i class="fas fa-ellipsis-h" style="color: #CBCBCB !important;"></i>
@@ -245,6 +251,29 @@
                                                         @endif
                                                     </form>
                                                 </div>
+                                            </div> --}}
+                                            {{-- <td class="created_by toggleClass"> --}}
+                                            <div class="d-flex justify-content-between aling-items-center pe-5">
+                                                <span>
+                                                    <a href="{{ url('admin/order-detail/' . $order->id) }}"
+                                                        class="view a_class" title="" data-toggle="tooltip"
+                                                        data-original-title="View">
+                                                        <i class="icon-style  fas fa-eye  i_class"></i>
+                                                    </a>
+                                                </span>
+                                                <span>
+                                                    <a href="#" class="edit a_class" title=""
+                                                        data-toggle="tooltip" data-original-title="Edit"><i
+                                                            class="icon-style fa fa-pen  "></i>
+                                                    </a>
+                                                </span>
+                                                <span>
+                                                    <a href="#" class="delete deleteIcon a_class"
+                                                        id="{{ $order->id }}" title="" data-toggle="tooltip"
+                                                        data-original-title="Delete"><i
+                                                            class="icon-style fa fa-trash-alt  "></i>
+                                                    </a>
+                                                </span>
                                             </div>
                                         </td>
                                     </tr>
@@ -267,7 +296,7 @@
 
 @section('css')
     <link rel="stylesheet" href="/css/admin_custom.css">
-    <link rel="stylesheet" href="{{ asset('admin/admin_lte.css?v1') }}">
+    <link rel="stylesheet" href="{{ asset('admin/admin_lte.css?v2') }}">
     <link href="https://fonts.cdnfonts.com/css/poppins" rel="stylesheet">
 
     <style type="text/css">
@@ -421,7 +450,7 @@
                                 'Your order has been deleted.',
                                 'success'
                             )
-                            $('#row-' + id).remove();
+                            $('#tr_' + id).remove();
                         }
                     });
                 }
@@ -516,16 +545,17 @@
                     let count_checked = $(".sub_chk").prop('checked', true);
                     $('#items_selected').html('');
                     $('#items_selected').html(count_checked.length + ' Selected');
-                    
+
                 } else {
-                    let count_unchecked =  $(".sub_chk").prop('checked', false);
+                    let count_unchecked = $(".sub_chk").prop('checked', false);
                     $('#items_selected').html('');
                     $('#items_selected').html('0' + ' Selected');
                 }
             });
 
             $('.sub_chk').on('click', function(e) {
-                count_checked = $(".sub_chk:checked").length < 1 ? $('#selectAll').prop('checked', false) : '';
+                count_checked = $(".sub_chk:checked").length < 1 ? $('#selectAll').prop('checked', false) :
+                    '';
                 if ($(this).is(':checked', true)) {
                     let count_checked = $(".sub_chk:checked").length;
                     $('#items_selected').html('');
