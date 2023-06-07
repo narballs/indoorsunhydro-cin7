@@ -1,10 +1,15 @@
 @include('partials.header')
 @include('partials.top-bar')
 @include('partials.search-bar')
-<div class="mb-4 mt-2">
+{{-- <div class="mb-4 mt-2">
     <p style="line-height: 95px;"
         class="fw-bold fs-2 product-btn my-auto border-0 text-white text-center align-middle pbtn_mbl">
         PRODUCTS
+    </p>
+</div> --}}
+<div class="row justify-content-center align-items-center" style="background-color: #008BD3;height:70px;">
+    <p class="fw-bold fs-2 my-auto border-0 text-white text-center align-middle">
+       PRODUCTS
     </p>
 </div>
 <?php //dd($category_id);
@@ -35,7 +40,7 @@
                     </select>
                 </div>
                 <div class="col">
-                    <?php //dd($category_id);
+                    <?php //dd($brand_id);
                     ?>
                     <label>Categories</label>
                     <select class="form-select" id="selected_cat" name="selected_cat"
@@ -48,15 +53,7 @@
                         @endforeach
                     </select>
                 </div>
-                <!--         <div class="col">
-               <label>Brand</label>
-               <select class="form-select" id="brand" name="brands[]" onchange="handleSelectChange()">
-                  <option value="0">Select Brand</option>
-                  @foreach ($brands as $_brand_id => $brand_name)
-					<option value="{{ $_brand_id }}" {{ isset($brand_id) && $brand_id == $_brand_id ? 'selected="selected"' : '' }}>{{ $brand_name }}</option>
-				@endforeach
-               </select>
-            </div> -->
+                
                 <div class="col">
                     <label>Sub Category</label>
                     <select class="form-select" id="childeren" name="childeren[]"
@@ -69,7 +66,15 @@
                         @endforeach
                     </select>
                 </div>
-
+                <div class="col">
+                    <label>Brand</label>
+                    <select class="form-select" id="brand" name="brands[]" onchange="handleSelectChange()">
+                        <option value="0">Select Brand</option>
+                        @foreach ($brands as $_brand_id => $brand_name)
+                            <option value="{{ $_brand_id }}" {{ isset($brand_id) && $brand_id == $_brand_id ? 'selected="selected"' : '' }}>{{ $brand_name }}</option>
+                        @endforeach
+                    </select>
+                </div>
                 <div class="col">
                     <label>Result per page</label>
                     <select id="per_page" class="form-select" onchange="handleSelectChange()">
@@ -97,6 +102,11 @@
         </div>
     </form>
     <div class="row" id="product_rows">
+        @if(count($products) == 0)
+            <div class="col-md-12 mt-3">
+                <div class="alert alert-danger">No Product Found</div>
+            </div>
+        @endif
         @foreach ($products as $key => $product)
             @foreach ($product->options as $option)
                 @include('product_row')
@@ -223,19 +233,18 @@
     </div>
 
     <div class="row" id="product_rows">
+        @if(count($products) == 0)
+            <div class="col-md-12 mt-3">
+                <div class="alert alert-danger">No Product Found</div>
+            </div>
+        @endif
         @foreach ($products as $key => $product)
             @foreach ($product->options as $option)
                 @include('product_row')
             @endforeach
         @endforeach
     </div>
-    {{-- <div class="row desktop-view">
-      <div class="container">
-         <div class="col-md-6 m-auto">
-            {{$products->appends(Request::all())->links()}}
-         </div>
-      </div>
-   </div> --}}
+    
     <div class="row mobile-view">
         <div class="container">
             <div class="col-sm-6 m-auto">
@@ -333,19 +342,17 @@
         </div>
     </form>
     <div class="row" id="product_rows">
+        @if(count($products) == 0)
+            <div class="col-md-12 mt-3">
+                <div class="alert alert-danger">No Product Found</div>
+            </div>
+        @endif
         @foreach ($products as $key => $product)
             @foreach ($product->options as $option)
                 @include('product_row')
             @endforeach
         @endforeach
     </div>
-    {{-- <div class="row desktop-view">
-      <div class="container">
-         <div class="col-md-6 m-auto">
-            {{$products->appends(Request::all())->links()}}
-         </div>
-      </div>
-   </div> --}}
     <div class="row ipad-view">
         <div class="container">
             <div class="col-sm-6 m-auto">
@@ -392,14 +399,23 @@
                                     name="selected_cat">
                                     <option class="filter_drop_down_mbl" value="">Select Category</option>
                                     @foreach ($categories as $category)
-                                        <option class="filter_drop_down_mbl" value="{{ $category->id }}">{{ $category->name }}</option>
+                                        <option class="filter_drop_down_mbl" value="{{ $category->id }}" {{ isset($category_id) && $category_id == $category->id ? 'selected="selected"' : '' }}>{{ $category->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
                             <div class="col-md-12 mt-2">
+                                <?php
+                                    $child_cat = App\Models\Category::where('parent_id', $category_id)->get();
+                                ?>
                                 <label class="filter_heading_mbl">Sub Category</label>
                                 <select class="form-select form-select-mbl" id="childeren_mbl" name="childeren_category">
-                                    <option class="filter_drop_down_mbl" value="0">Sub Category</option>
+                                    @if(isset($child_cat) && !empty($child_cat))
+                                        @foreach ($child_cat as $child)
+                                            <option class="filter_drop_down_mbl" value="{{ $child->id }}">{{ $child->name }}</option>
+                                        @endforeach
+                                        @else
+                                        <option class="filter_drop_down_mbl" value=""></option>
+                                    @endif
                                 </select>
                             </div>
                             <div class="col-md-12 mt-2">
@@ -517,6 +533,7 @@
         window.location.href = basic_url
 
     }
+    
     //mobile filter get child category
     function get_child_categories() {
         var parent_id = jQuery('#selected_cat_mbl').val();
@@ -526,6 +543,7 @@
             success: function(response) {
                 console.log(response);
                 if(response.status == 'success') {
+                    $('#childeren_mbl').html('');
                     $.each(response.child_categories, function(index, option) {
                         $('#childeren_mbl').append('<option value="' + option.id + '">' + option.name + '</option>');
                     });
@@ -533,7 +551,6 @@
             }
         });
     } 
-
     //mobile filter
     function handleSelectChangeMbl(searchedOption = '') {
         var basic_url = '';

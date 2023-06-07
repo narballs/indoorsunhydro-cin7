@@ -41,38 +41,29 @@ class SyncOrders extends Command
     {
         $total_order_pages = 3;
         $client = new \GuzzleHttp\Client();
-        // for ($i = 1; $i <= $total_order_pages; $i++) {
-            //$this->info('Processing page#' . $i);
-
-            $res = $client->request(
-                'GET',
-                //'https://api.cin7.com/api/v1/SalesOrders/?page=' . $i,
-                "https://api.cin7.com/api/v1/SalesOrders?where=status='Void'",
-                [
-                    'auth' => [
-                        env('API_USER'),
-                        env('API_PASSWORD')
-                    ]
+        $res = $client->request(
+            'GET',
+            "https://api.cin7.com/api/v1/SalesOrders?where=status='Void'",
+            [
+                'auth' => [
+                    env('API_USER'),
+                    env('API_PASSWORD')
                 ]
-            );
-            $api_orders = $res->getBody()->getContents();
-            //dd($api_orders);
-            $api_orders = json_decode($api_orders);
-            
+            ]
+        );
+        $api_orders = $res->getBody()->getContents();
+        $api_orders = json_decode($api_orders);
+        
+        if (!empty($api_orders)) {
+            foreach ($api_orders as $api_order) {
+                $qcom_order = ApiOrder::where('order_id', $api_order->id)->first();
+                if ($qcom_order) {
+                    $this->info('Api order ids' . $qcom_order->reference);
+                    $qcom_order->isVoid = 1;
+                    $qcom_order->save();
 
-            if (!empty($api_orders)) {
-                foreach ($api_orders as $api_order) {
-                    $qcom_order = ApiOrder::where('order_id', $api_order->id)->first();
-                    //dd($qcom_order);
-                    if ($qcom_order) {
-
-                        $this->info('Api order ids' . $qcom_order->reference);
-                        $qcom_order->isVoid = 1;
-                        $qcom_order->save();
-                    }
-          
                 }
             }
-        // }
+        }
     }
 }

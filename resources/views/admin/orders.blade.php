@@ -142,7 +142,7 @@
                                         </td>
 
                                         <td class="is-approved td_padding_row">
-                                            @if ($order->isApproved == 0 && $order->isVoid == 1)
+                                            @if ($order->isApproved == 1 && $order->isVoid == 1)
                                                 <span class="badge badge-secondary  is_approded_0">Void</span>
                                             @elseif ($order->isApproved == 0 && $order->isVoid == 0)
                                                 <span class="badge badge-warning  is_approded_0">New</span>
@@ -187,7 +187,7 @@
                                                                 data-original-title="Edit">Fulfill
                                                                 Order
                                                             </a>
-                                                        @elseif ($order->isApproved == 0 && $order->isVoid == 1)
+                                                        @elseif ($order->isApproved == 1 && $order->isVoid == 1)
                                                             <a class="dropdown-item disabled bg_secondary" type="button"
                                                                 class="edit a_class" title="" data-toggle="tooltip"
                                                                 data-original-title="Edit">Void
