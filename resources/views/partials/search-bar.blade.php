@@ -19,7 +19,8 @@
                                 value="{{ isset($searched_value) ? $searched_value : '' }}">
                             <span class="input-group-text" id="search-addon" style="border:2px solid #7BC533 !important;">
                                 <button class="btn-info" type="submit" id="search" style="background: transparent;border:none">
-                                    <i class="text-white" data-feather="search" style="width: 20px; !important;"></i>
+                                    {{-- <i class="text-white" data-feather="search" style="width: 20px; !important;"></i> --}}
+                                    <i class="fa fa-search" style="font-size:16px;"></i>
                                 </button>
                             </span>
                         </div>
