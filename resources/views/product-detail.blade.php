@@ -215,7 +215,6 @@
         @endforeach
     </form>
 </div>
-</div>
 {{-- mobile view start --}}
 <div class="row bg-light mobile-view">
     <div class="container">
@@ -230,14 +229,13 @@
             <div class="p_detail_content">
                 <div class="product  product-detail-content1">
                     <div class="d-flex">
-                        <?php $retail_prices = $productOption->retailPrice;?>
                         <div class="product-detail-heading w-75" id="product_name">
                             <h3 class="product-detail-heading">{{$productOption->products->name}}</h3>
                         </div>
 
                         <div class="w-25">
                             <span class="text-danger product-detail-price" id="product_price">
-                                ${{number_format($retail_prices,2)}}</span>
+                                ${{number_format($retail_price,2)}}</span>
                         </div>
                     </div>
                     <div class="row"> <span class="text-uppercase text-muted brand"></span>
@@ -281,7 +279,7 @@
                             <div class="mt-3 p_detail_cart_row">
                                 <div style="">
                                     @if($productOption->stockAvailable > 0)
-                                    <button class=" button-cards product-detail-button-cards text-uppercase" type="button" id="ajaxSubmit">
+                                    <button class="button-cards product-detail-button-cards text-uppercase ajaxSubmit_mbl" type="button" id="ajaxSubmit">
                                         <a class="text-white">Add to cart</a>
                                     </button>
                                     @else
@@ -294,7 +292,7 @@
                         </div>
                         <span class="text-uppercase text-muted brand"></span>
                     </form>
-                    <div class="row price mt-2">
+                    <div class="price mt-2 mb-1">
                         <div class="d-flex">
                             <div class="w-50">
                                 <span class="category-title-heading">Category :</span>
@@ -344,14 +342,13 @@
             <div class="w-100 ps-5 mt-5">
                 <div class="product  product-detail-content1">
                     <div class="d-flex row">
-                        <?php $retail_prices = $productOption->retailPrice;?>
                         <div class="product-detail-heading col-xl-12 col-lg-12 col-md-12 col-xs-12" id="product_name">
                             <h3 class="product-detail-heading">{{$productOption->products->name}}</h3>
                         </div>
 
                         <div class="col-md-12 d-flex">
                             <span class="text-danger product-detail-price mt-4" id="product_price">
-                                ${{number_format($retail_prices,2)}}</span>
+                                ${{number_format($retail_price,2)}}</span>
                         </div>
                     </div>
                     <div class=""> <span class="text-uppercase text-muted brand"></span>
@@ -440,94 +437,92 @@
 
 <script>
     jQuery(document).ready(function(){
-            jQuery('#ajaxSubmit').click(function(e){
-               e.preventDefault();
-               $.ajaxSetup({
-              });
-               jQuery.ajax({
-                  url: "{{ url('add-to-cart') }}",
-                  method: 'post',
-                  data: {
-                    "_token": "{{ csrf_token() }}",
-                    p_id: jQuery('#p_id').val(),
-                    option_id: jQuery('#option_id').val(),
-                    quantity: jQuery('#quantity').val()
-                  },
-                  success: function(response){
-                    if(response.status == 'success'){
-                            var cart_items = response.cart_items;
-                            var cart_total = 0;
-                            var total_cart_quantity = 0;
-
-                        for (var key in cart_items) {
-                            console.log(item);
-                                var item = cart_items[key];
-                                var code =parseFloat(item.code)
-                                var product_id = item.prd_id;
-                                var price = parseFloat(item.price);
-                                var quantity = parseFloat(item.quantity);
-                                var subtotal = parseInt(price * quantity);
-                                var cart_total = cart_total + subtotal;
-                                var total_cart_quantity = total_cart_quantity + quantity;
-                            $('#subtotal_' + product_id).html('$'+subtotal);
-                           
-                        }
-                        $src = $('#main-image').attr('src');
-                        var product_name = document.getElementById("product_name").innerHTML;
-                        var product_price = document.getElementById("product_price").innerHTML;
-                        Swal.fire({
-                            toast: true,
-                            icon: 'success',
-                            title: jQuery('#quantity').val() + ' X ' + product_name + '<div class="text-dark fw-bold fs-5">'+ product_price +'</div>'+ '<br>' + 'added to your cart',
-                            timer: 3000,
-                            imageUrl: $src,
-                            showConfirmButton: false,
-                            position: 'top',
-                            timerProgressBar: true
-                        });
-                    }
-                    $('#top_cart_quantity').html(total_cart_quantity);
-                    $('#cart_items_quantity').html(total_cart_quantity);
-                    $('.cartQtyipad').html(total_cart_quantity);
-                    $('.cartQtymbl').html(total_cart_quantity);
-                    $('#topbar_cart_total').html('$'+parseFloat(cart_total).toFixed(2));
-                    var total = document.getElementById('#top_cart_quantity');
-                       
-                  }});
-
-               });
-            //   jQuery('<div class="quantity-nav"><div class="quantity-div quantity-up">&#xf106;</div><div class="quantity-div quantity-down">&#xf107</div></div>').insertAfter('.quantity input');
-              jQuery('.quantity').each(function () {
-                var spinner = jQuery(this),
-                    input = spinner.find('input[type="number"]'),
-                    btnUp = spinner.find('.quantity-up'),
-                    btnDown = spinner.find('.quantity-down'),
-                    min = input.attr('min'),
-                    max = input.attr('max');
-
-                btnUp.click(function () {
-                  var oldValue = parseFloat(input.val());
-                  if (oldValue >= max) {
-                    var newVal = oldValue;
-                  } else {
-                    var newVal = oldValue + 1;
-                  }
-                  spinner.find("input[id=quantity]").val(newVal);
-                //   spinner.find("input[id=quantity").trigger("change");
-                });
-
-                btnDown.click(function () {
-                    // alert('hi');
-                  var oldValue = parseFloat(input.val());
-                  if (oldValue <= min) {
-                    var newVal = oldValue;
-                  } else {
-                    var newVal = oldValue - 1;
-                  }
-                  spinner.find("input[id=quantity]").val(newVal);
-                //   spinner.find("input").trigger("change");
-                });
-
-              });
+        jQuery(document).on('click', '#ajaxSubmit' , function(e) {
+            $.ajaxSetup({
             });
+            jQuery.ajax({
+                url: "{{ url('add-to-cart') }}",
+                method: 'post',
+                data: {
+                "_token": "{{ csrf_token() }}",
+                p_id: jQuery('#p_id').val(),
+                option_id: jQuery('#option_id').val(),
+                quantity: jQuery('#quantity').val()
+                },
+                success: function(response){
+                if(response.status == 'success'){
+                    var cart_items = response.cart_items;
+                    var cart_total = 0;
+                    var total_cart_quantity = 0;
+
+                    for (var key in cart_items) {
+                        var item = cart_items[key];
+                        var code =parseFloat(item.code)
+                        var product_id = item.prd_id;
+                        var price = parseFloat(item.price);
+                        var quantity = parseFloat(item.quantity);
+                        var subtotal = parseInt(price * quantity);
+                        var cart_total = cart_total + subtotal;
+                        var total_cart_quantity = total_cart_quantity + quantity;
+                        $('#subtotal_' + product_id).html('$'+subtotal);
+                        
+                    }
+                    $src = $('#main-image').attr('src');
+                    var product_name = document.getElementById("product_name").innerHTML;
+                    var product_price = document.getElementById("product_price").innerHTML;
+                    Swal.fire({
+                        toast: true,
+                        icon: 'success',
+                        title: jQuery('#quantity').val() + ' X ' + product_name + '<div class="text-dark fw-bold fs-5">'+ product_price +'</div>'+ '<br>' + 'added to your cart',
+                        timer: 3000,
+                        imageUrl: $src,
+                        showConfirmButton: false,
+                        position: 'top',
+                        timerProgressBar: true
+                    });
+                }
+                $('#top_cart_quantity').html(total_cart_quantity);
+                $('#cart_items_quantity').html(total_cart_quantity);
+                $('.cartQtyipad').html(total_cart_quantity);
+                $('.cartQtymbl').html(total_cart_quantity);
+                $('#topbar_cart_total').html('$'+parseFloat(cart_total).toFixed(2));
+                var total = document.getElementById('#top_cart_quantity');
+                    
+            }});
+
+        });
+        //   jQuery('<div class="quantity-nav"><div class="quantity-div quantity-up">&#xf106;</div><div class="quantity-div quantity-down">&#xf107</div></div>').insertAfter('.quantity input');
+        jQuery('.quantity').each(function () {
+        var spinner = jQuery(this),
+            input = spinner.find('input[type="number"]'),
+            btnUp = spinner.find('.quantity-up'),
+            btnDown = spinner.find('.quantity-down'),
+            min = input.attr('min'),
+            max = input.attr('max');
+
+        btnUp.click(function () {
+            var oldValue = parseFloat(input.val());
+            if (oldValue >= max) {
+            var newVal = oldValue;
+            } else {
+            var newVal = oldValue + 1;
+            }
+            spinner.find("input[id=quantity]").val(newVal);
+        //   spinner.find("input[id=quantity").trigger("change");
+        });
+
+        btnDown.click(function () {
+            // alert('hi');
+            var oldValue = parseFloat(input.val());
+            if (oldValue <= min) {
+            var newVal = oldValue;
+            } else {
+            var newVal = oldValue - 1;
+            }
+            spinner.find("input[id=quantity]").val(newVal);
+        //   spinner.find("input").trigger("change");
+        });
+
+        });
+    });
 </script>
