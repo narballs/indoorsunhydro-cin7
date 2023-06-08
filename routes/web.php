@@ -127,6 +127,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('admin/customer-update/', [ContactController::class, 'customer_update'])->name('admin.customer.update');
     Route::get('admin/api-order-details/{id}', [OrderManagementController::class, 'show_api_order'])->name('admin.api.order.details');
     Route::post('admin/order-full-fill', [OrderManagementController::class, 'order_full_fill'])->name('admin.order.full.fill');
+    Route::post('admin/multiple/cancle/orders', [OrderManagementController::class, 'multiple_cancle_orders']);
     Route::post('admin/check-status', [OrderManagementController::class, 'check_order_status'])->name('admin.check.order.status');
     Route::post('admin/multi/check-status', [OrderManagementController::class, 'mutli_check_order_status'])->name('admin.check.order.status');
     Route::post('admin/order-cancel', [OrderManagementController::class, 'cancelOrder']);
