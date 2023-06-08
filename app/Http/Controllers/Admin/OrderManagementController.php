@@ -542,9 +542,9 @@ class OrderManagementController extends Controller
 
     public function multiOrderFullFill(Request $request)
     {
-        $order_id = $request->ids;
+        $order_ids = $request->ids;
         if (!empty($order_id)) {
-            $orders = ApiOrder::whereIn('id', explode(",", $order_id))
+            $orders = ApiOrder::whereIn('id', explode(",", $order_ids))
                 ->where('order_id', null)
                 ->where('isApproved', 0)
                 ->with('user.contact')
