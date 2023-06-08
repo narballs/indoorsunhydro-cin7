@@ -620,7 +620,6 @@
                                 },
                                 data: 'ids=' + join_selected_values,
                                 success: function(response) {
-                                    console.log(response);
                                     var delay = 8000;
                                     $('#progress-bar').removeClass('d-none');
                                     jQuery(".progress-bar").each(function(i) {
@@ -635,17 +634,30 @@
                                                 Counter: $(this).text()
                                             }, {
                                                 duration: delay,
-                                                // easing: 'swing',
                                                 step: function(now) {
                                                     jQuery(this).text(
                                                         Math.ceil(
                                                             100) +
                                                         '%');
-
                                                 }
                                             });
                                     });
-                                    if (response.status !== 400) {
+                                    if (response.status === 401) {
+                                        $('#progress-bar').addClass('d-none');
+                                        Swal.fire(
+                                            'Warning!',
+                                            'Order Already fullfilled',
+                                            'warning'
+                                        )
+                                    } else if (response.status === 402) {
+                                        $('#progress-bar').addClass('d-none');
+                                        Swal.fire(
+                                            'Warning!',
+                                            'Order request is null',
+                                            'warning'
+                                        )
+                                        setInterval('location.reload()', 100);
+                                    } else {
                                         jQuery.ajax({
                                             url: "{{ url('admin/multi/check-status') }}",
                                             method: 'POST',
@@ -679,13 +691,6 @@
                                                     8000);
                                             }
                                         });
-                                    } else {
-                                        $('#progress-bar').addClass('d-none');
-                                        Swal.fire(
-                                            'Warning!',
-                                            'Order Already fullfilled',
-                                            'warning'
-                                        )
                                     }
                                 },
                             });
