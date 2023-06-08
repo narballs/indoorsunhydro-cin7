@@ -12,7 +12,7 @@
                                 Orders
                             </p>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-8">
                             <div class="progress border d-none w-50 mx-auto" id="progress-bar">
                                 <div class="progress-bar progress-bar-striped progress-bar-animated bg-info"
                                     role="progressbar" aria-valuenow="100" aria-valuemin="" aria-valuemax="100"></div>
@@ -46,49 +46,48 @@
                                     0 Selected
                                 </span>
                                 <span>
-                                    <a class=" delete_all btn btn-sm fulfill-row-items-order-page "
-                                        data-url="{{ url('admin/orders/all/delete') }}">
+                                    <a class="order_ful_fill btn btn-sm fulfill-row-items-order-page "
+                                        data-url="{{ url('admin/orders/multi-full-fill') }}">
                                         Fulfill Order
                                     </a>
                                 </span>
                                 <span>
-                                    <a class="delete_all btn btn-danger btn-sm cancel-row-items-order-page"
-                                        data-url="{{ url('admin/orders/all/delete') }}">
+                                    <a class="multiple_cancel_orders btn btn-danger btn-sm cancel-row-items-order-page"
+                                        data-url="{{ url('admin/multiple/cancle/orders') }}">
                                         Cancel Order
                                     </a>
                                 </span>
                             </div>
 
-                         @if($auto_fulfill == 1)
-                            <div class="col-md-7 d-flex justify-content-end align-items-center">
-                                <span class="d-flex">
-                                    
-                                    <a class=" btn  btn-sm fulfill-row-items-order-page" >
-                                        Auto Fullfill
-                                    </a>
-                                    <label class="custom-control custom-checkbox ">
-                                        <input type="checkbox" id="auto_full_fill" value="{{$auto_fulfill}}"
-                                            class="custom-control-input general_switch" onchange="autoFullfill()" {{ isset($auto_fulfill) && $auto_fulfill == 1 ? 'checked="checked"' : '' }}
-                                          >
-                                        <span class="custom-control-indicator"></span>
-                                    </label>
-                                </span>
-                            </div>
-                            @else 
-                            <div class="col-md-7 d-flex justify-content-end align-items-center">
-                                <span class="d-flex">
-                                    
-                                    <a class=" btn  btn-sm fulfill-row-items-order-page" >
-                                        Auto Fullfill
-                                    </a>
-                                    <label class="custom-control custom-checkbox ">
-                                        <input type="checkbox" id="auto_full_fill" value=""
-                                            class="custom-control-input general_switch" onchange="autoFullfill()"
-                                          >
-                                        <span class="custom-control-indicator"></span>
-                                    </label>
-                                </span>
-                            </div>
+                            @if ($auto_fulfill == 1)
+                                <div class="col-md-9 d-flex justify-content-end align-items-center">
+                                    <span class="d-flex">
+
+                                        <a class=" btn  btn-sm fulfill-row-items-order-page">
+                                            Auto Fullfill
+                                        </a>
+                                        <label class="custom-control custom-checkbox ">
+                                            <input type="checkbox" id="auto_full_fill" value="{{ $auto_fulfill }}"
+                                                class="custom-control-input general_switch" onchange="autoFullfill()"
+                                                {{ isset($auto_fulfill) && $auto_fulfill == 1 ? 'checked="checked"' : '' }}>
+                                            <span class="custom-control-indicator"></span>
+                                        </label>
+                                    </span>
+                                </div>
+                            @else
+                                <div class="col-md-9 d-flex justify-content-end align-items-center">
+                                    <span class="d-flex">
+
+                                        <a class=" btn  btn-sm fulfill-row-items-order-page">
+                                            Auto Fullfill
+                                        </a>
+                                        <label class="custom-control custom-checkbox ">
+                                            <input type="checkbox" id="auto_full_fill" value=""
+                                                class="custom-control-input general_switch" onchange="autoFullfill()">
+                                            <span class="custom-control-indicator"></span>
+                                        </label>
+                                    </span>
+                                </div>
                             @endif
                         </div>
                     </div>
@@ -100,7 +99,7 @@
                                         <input class="custom-control-input custom-control-input-success checkbox-table"
                                             type="checkbox" id="selectAll" value="">
                                         <label for="selectAll" class="custom-control-label ml-3"></label>
-                                        
+
                                         <span class="table-row-heading">
                                             <i class="fas fa-arrow-up mt-1" style="font-size:14.5px ;"></i>
                                         </span>
@@ -313,6 +312,7 @@
         .custom-checkbox .custom-control-input:focus~.custom-control-indicator {
             box-shadow: none !important;
         }
+
         .text-successs {
             color: #7CC633 !important;
             font-family: 'Poppins', sans-serif !important;
@@ -418,7 +418,6 @@
             });
         });
 
-
         function perPage() {
             var search = $('#search').val();
             var activeCustomer = $('#active_customer').val();
@@ -511,7 +510,6 @@
                     }
                 });
             });
-
             jQuery.ajax({
                 url: "{{ url('admin/order-full-fill') }}",
                 method: 'post',
@@ -538,23 +536,20 @@
                                     'success'
                                 )
                             } else {
-                                // $('#fullfill_failed').html(response.status);
                                 Swal.fire('Order fullfilled failed')
                             }
-
-                            // $('#progress-bar').addClass('d-none');
                             setInterval('location.reload()', 3000);
                         }
                     });
                 }
             });
         }
+
         function autoFullfill() {
             var value = $('#auto_full_fill').val();
             if (value == 1) {
                 var auto_fullfill = true;
-            }
-            else {
+            } else {
                 auto_fullfill = false;
             }
 
@@ -576,14 +571,12 @@
                     let count_checked = $(".sub_chk").prop('checked', true);
                     $('#items_selected').html('');
                     $('#items_selected').html(count_checked.length + ' Selected');
-
                 } else {
                     let count_unchecked = $(".sub_chk").prop('checked', false);
                     $('#items_selected').html('');
                     $('#items_selected').html('0' + ' Selected');
                 }
             });
-
             $('.sub_chk').on('click', function(e) {
                 count_checked = $(".sub_chk:checked").length < 1 ? $('#selectAll').prop('checked', false) :
                     '';
@@ -597,62 +590,174 @@
                     $('#items_selected').html(count_unchecked + ' Selected');
                 }
             })
-            $('.delete_all').on('click', function(e) {
-                var allVals = [];
+            $('.order_ful_fill').on('click', function(e) {
+                var orderIds = [];
                 $(".sub_chk:checked").each(function() {
-                    allVals.push($(this).attr('data-id'));
+                    orderIds.push($(this).attr('data-id'));
                 });
-                if (allVals.length <= 0) {
+                if (orderIds.length <= 0) {
                     Swal.fire(
-                        'Please select a row to delete',
+                        'Please select at least one record to process.',
                     )
                 } else {
                     Swal.fire({
                         title: 'Are you sure?',
-                        text: "You won't delete this order!",
+                        text: "your want to full-fill order(s)?",
                         type: 'warning',
                         showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Yes, delete it!'
+                        confirmButtonColor: '#7CC633 ',
+                        cancelButtonColor: '#DC4E41',
+                        confirmButtonText: 'Yes, Full Fill it!'
                     }).then((result) => {
                         if (result.value) {
-                            var join_selected_values = allVals.join(",");
+                            var join_selected_values = orderIds.join(",");
                             $.ajax({
                                 url: $(this).data('url'),
-                                type: 'DELETE',
+                                type: 'POST',
                                 headers: {
                                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
                                         'content')
                                 },
                                 data: 'ids=' + join_selected_values,
-                                success: function(data) {
-                                    if (data['success']) {
-                                        // alert('success');
-                                        $(".sub_chk:checked").each(function() {
-                                            $(this).parents("tr").remove();
+                                success: function(response) {
+                                    console.log(response);
+                                    var delay = 8000;
+                                    $('#progress-bar').removeClass('d-none');
+                                    jQuery(".progress-bar").each(function(i) {
+                                        jQuery(this).delay(delay * i).animate({
+                                            width: $(this).attr(
+                                                    'aria-valuenow') +
+                                                '%'
+                                        }, delay);
+
+                                        jQuery(this).prop('Counter', 1)
+                                            .animate({
+                                                Counter: $(this).text()
+                                            }, {
+                                                duration: delay,
+                                                // easing: 'swing',
+                                                step: function(now) {
+                                                    jQuery(this).text(
+                                                        Math.ceil(
+                                                            100) +
+                                                        '%');
+
+                                                }
+                                            });
+                                    });
+                                    if (response.status !== 400) {
+                                        jQuery.ajax({
+                                            url: "{{ url('admin/multi/check-status') }}",
+                                            method: 'POST',
+                                            headers: {
+                                                'X-CSRF-TOKEN': $(
+                                                        'meta[name="csrf-token"]'
+                                                    )
+                                                    .attr('content')
+                                            },
+                                            data: 'ids=' + join_selected_values,
+                                            success: function(response) {
+                                                console.log(response
+                                                    .status);
+                                                if (response.status ===
+                                                    'Order fullfilled successfully'
+                                                ) {
+                                                    Swal.fire(
+                                                        'Good job!',
+                                                        'Order fullfilled successfully',
+                                                        'success'
+                                                    )
+                                                } else {
+                                                    Swal.fire(
+                                                        'Order fullfilled failed'
+                                                    )
+                                                }
+                                                $('#progress-bar').addClass(
+                                                    'd-none');
+                                                setInterval(
+                                                    'location.reload()',
+                                                    8000);
+                                            }
                                         });
-                                        Swal.fire(
-                                            'Deleted!',
-                                            'Your order has been deleted.',
-                                            'success'
-                                        )
-                                    } else if (data['error']) {
-                                        alert(data['error']);
                                     } else {
+                                        $('#progress-bar').addClass('d-none');
                                         Swal.fire(
-                                            'Please select a row to delete',
+                                            'Warning!',
+                                            'Order Already fullfilled',
+                                            'warning'
                                         )
                                     }
                                 },
-                                error: function(data) {
-                                    alert(data.responseText);
-                                }
                             });
+                        }
+                    });
+                }
+            });
+            $('.multiple_cancel_orders').on('click', function(e) {
+                var orderIds = [];
+                $(".sub_chk:checked").each(function() {
+                    orderIds.push($(this).attr('data-id'));
+                });
+                if (orderIds.length <= 0) {
+                    Swal.fire(
+                        'Please select at least one record to process.',
+                    )
+                } else {
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "your want to cancel order(s)?",
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#DC4E41',
+                        cancelButtonColor: '#7CC633',
+                        confirmButtonText: 'Yes, Cancel it!'
+                    }).then((result) => {
+                        if (result.value) {
+                            var join_selected_values = orderIds.join(",");
+                            $.ajax({
+                                url: $(this).data('url'),
+                                type: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                                        'content')
+                                },
+                                data: 'ids=' + join_selected_values,
+                                success: function(response) {
+                                    console.log(response.data);
+                                    if (response.status === 400) {
+                                        Swal.fire(
+                                            'Warning!',
+                                            'Your order is already cancel!',
+                                            'warning'
+                                        )
+                                    } else if (response.status === 401) {
+                                        Swal.fire(
+                                            'Warning!',
+                                            'Your order is null !',
+                                            'warning'
+                                        )
+                                    } else if (response.status === 402) {
+                                        Swal.fire(
+                                            'Warning!',
+                                            'Your order request is null !',
+                                            'warning'
+                                        )
+                                    } else if (response.status === 200) {
+                                        Swal.fire(
+                                            'Good job!',
+                                            'Order cancel successfully',
+                                            'success'
+                                        )
+                                    }
 
-                            $.each(allVals, function(index, value) {
-                                $('table tr').filter("[data-row-id='" + value + "']")
-                                    .remove();
+                                    setInterval('location.reload()', 3000);
+                                },
+                                error: function(response) {
+                                    if (response.status.error) {
+                                        console.log(response.status.error.message);
+                                    }
+
+                                },
                             });
                         }
                     });

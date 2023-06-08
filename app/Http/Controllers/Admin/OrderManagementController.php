@@ -19,6 +19,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\Subscribe;
 use App\Helpers\MailHelper;
+use App\Helpers\OrderHelper;
 use App\Models\BuyList;
 use App\Models\ProductBuyList;
 use App\Models\TaxClass;
@@ -61,14 +62,14 @@ class OrderManagementController extends Controller
         $formatedDate = $createdDate->format('jS \of F Y h:i:s A');
         $orderCreatedDate = Carbon::createFromFormat('Y-m-d H:i:s', $createdDate, 'America/Los_Angeles');
         $currentTime = Carbon::now();
-     
+
 
 
         $time_diff = $orderCreatedDate->diffInMinutes($currentTime);
         $time_difference_seconds = date('s');
-                 
 
-        
+
+
         $customer = Contact::where('user_id', $order->user_id)->first();
         $option_ids = ApiOrderItem::where('order_id', $id)->pluck('option_id')->toArray();
         $orderitems = $this->option_ids = $option_ids;
@@ -437,7 +438,6 @@ class OrderManagementController extends Controller
         SalesOrders::dispatch('create_order', $order)->onQueue(env('QUEUE_NAME'));
     }
 
-
     public function cancelOrder(Request $request)
     {
         $order_id = $request->input('order_id');
@@ -480,7 +480,7 @@ class OrderManagementController extends Controller
 
     public function check_order_status(Request $request)
     {
-        sleep(10);
+        sleep(20);
         $order = ApiOrder::where('id', $request->order_id)->first();
         if ($order->order_id != null) {
             $msg = 'Order fullfilled successfully';
@@ -491,7 +491,23 @@ class OrderManagementController extends Controller
             'status' => $msg
         ]);
     }
-    // destroy order 
+
+    public function mutli_check_order_status(Request $request)
+    {
+        sleep(20);
+        $ids = $request->ids;
+        $orders = ApiOrder::where('id', $ids)->get();
+        foreach ($orders as $order) {
+            if ($order->order_id != null) {
+                $msg = 'Order fullfilled successfully';
+            } else {
+                $msg = 'Order fullfilled failed please try later';
+            }
+            return response()->json([
+                'status' => $msg
+            ]);
+        }
+    }
 
     public function destroy(Request $request)
     {
@@ -506,5 +522,92 @@ class OrderManagementController extends Controller
             'status' => 'success',
             'message' => 'Order deleted successfully ! ',
         ]);
+    }
+
+    public function deleteAllOrders(Request $request)
+    {
+        $ids = $request->ids;
+        $orders = ApiOrder::whereIn('id', explode(",", $ids))->get();
+        foreach ($orders as $order) {
+            $order_items = ApiOrderItem::where('order_id', $order->id)->get();
+            foreach ($order_items as $item) {
+                $item->delete();
+            }
+            $order->delete();
+        }
+        return response()->json([
+            'success' => 'Order deleted successfully ! ',
+        ]);
+    }
+
+    public function multiOrderFullFill(Request $request)
+    {
+        $order_id = $request->ids;
+        if (!empty($order_id)) {
+            $orders = ApiOrder::whereIn('id', explode(",", $order_id))
+                ->with('user.contact')
+                ->get();
+            if (count($orders) > 0) {
+                foreach ($orders as $order) {
+                    if ($order->order_id == null && $order->isApproved == 0) {
+                        $order_data = OrderHelper::get_order_data_to_process($order);
+                        SalesOrders::dispatch('create_order', $order_data)
+                            ->onQueue(env('QUEUE_NAME'));
+                    } else {
+                        return response()->json([
+                            'message' => 'Your Order is already full-filled !',
+                            'status' => 400
+                        ]);
+                    }
+                }
+            } else {
+                return response()->json([
+                    'message' => 'Your order in null !',
+                    'status' => '401'
+                ]);
+            }
+        } else {
+            return response()->json([
+                'message' => 'Your order request is null !',
+                'status' => '402'
+            ]);
+        }
+    }
+
+    public function multiple_cancle_orders(Request $request)
+    {
+        $order_id = $request->ids;
+        if (!empty($order_id)) {
+            $orders = ApiOrder::whereIn('id', explode(",", $order_id))
+                ->with('user.contact')
+                ->get();
+            if (count($orders) > 0) {
+                foreach ($orders as $order) {
+                    if ($order->isApproved != 0) {
+                        return response()->json([
+                            'status' => 400,
+                            'message' => 'Your order is already cancel!'
+                        ]);
+                    } else {
+                        $order->isApproved = 2;
+                        $order->save();
+                    }
+                }
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Order canceled successfully ! ',
+                ]);
+            } else {
+                return response()->json([
+                    'message' => 'Your order is null !',
+                    'status' => 401
+                ]);
+            }
+        } else {
+            return response()->json([
+                'message' => 'Your order request is null !',
+                'status' => 402
+            ]);
+        }
     }
 }

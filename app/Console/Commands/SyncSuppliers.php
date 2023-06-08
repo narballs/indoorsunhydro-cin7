@@ -61,7 +61,7 @@ class SyncSuppliers extends Command
         $client2 = new \GuzzleHttp\Client();
         $api_contact_ids = [];
         $total_record_count = 0;
-        $total_contact_pages = 150;
+        $total_contact_pages = 1;
 
 
 
@@ -266,6 +266,17 @@ class SyncSuppliers extends Command
                     ]);
                     $UserLog->save();
                 }
+            }
+
+            $current_date = Carbon::now();
+            $current_date_day = $current_date->format('Y-m-d');
+            $current_date_time = $current_date->format('H:i:s');
+
+            $current_date_to_update = $current_date_day . 'T' . $current_date_time .'Z';
+            if ($record_count > 0) {
+                $sync_log->record_count = $record_count;
+                $sync_log->last_synced = $current_date_to_update;
+                $sync_log->save();
             }
         }
         
