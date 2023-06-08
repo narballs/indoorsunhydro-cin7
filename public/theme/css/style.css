@@ -323,20 +323,21 @@ a {
 .dont-have-an-account-pra {
     font-family: 'Poppins' !important;
     font-style: normal !important;
-    font-weight: 300 !important;
+    font-weight: 400 !important;
     font-size: 16px !important;
     line-height: 27px !important;
     text-align: center !important;
     color: #FFFFFF !important;
     padding-left: 0px !important;
     padding-right: 0px !important;
+    letter-spacing: 0.05em !important;
 }
 
 .dont-have-an-account {
     font-family: 'Poppins' !important;
     font-style: normal !important;
-    font-weight: 400 !important;
-    font-size: 21px !important;
+    font-weight: 600 !important;
+    font-size: 22px !important;
     line-height: 48px !important;
     letter-spacing: 0em !important;
     color: #FFFFFF !important;
@@ -518,8 +519,9 @@ a {
     font-family: 'Poppins' !important;
     color: #7BC533;
     text-decoration: none;
-    font-size: 15px !important;
-    font-weight: 300;
+    font-style: normal !important;
+    font-weight: 400 !important;
+    font-size: 17px !important;
 }
 
 .checkbox-lg .form-check-input {
@@ -569,13 +571,13 @@ a {
 }
 
 .form-signup input {
-    background-color: #EBEBEB !important;
-    border: none !important;
+    background-color: #F5F5F5 !important;
+    border: 1px solid #EBEBEB !important;
 }
 
 .form-login input {
-    background-color: #EBEBEB !important;
-    border: none !important;
+    background-color: #F5F5F5 !important;
+    border: 1px solid #EBEBEB !important;
 }
 
 .req {
@@ -2298,8 +2300,8 @@ input[type=number] {
     .dont-have-an-account {
         font-family: 'Poppins' !important;
         font-style: normal !important;
-        font-weight: 400 !important;
-        font-size: 21px !important;
+        font-weight: 600 !important;
+        font-size: 32px !important;
         line-height: 48px !important;
         letter-spacing: 0em !important;
         color: #FFFFFF !important;
@@ -2308,13 +2310,14 @@ input[type=number] {
     .dont-have-an-account-pra {
         font-family: 'Poppins' !important;
         font-style: normal !important;
-        font-weight: 300 !important;
-        font-size: 16px !important;
+        font-weight: 400 !important;
+        font-size: 18px !important;
         line-height: 27px !important;
         text-align: center !important;
         color: #FFFFFF !important;
         padding-left: 0px !important;
         padding-right: 0px !important;
+        letter-spacing: 0.05em !important;
     }
 
 }
@@ -2387,8 +2390,8 @@ input[type=number] {
     .dont-have-an-account {
         font-family: 'Poppins' !important;
         font-style: normal !important;
-        font-weight: 400 !important;
-        font-size: 22px !important;
+        font-weight: 600 !important;
+        font-size: 32px !important;
         line-height: 48px !important;
         letter-spacing: 0 !important;
         color: #FFFFFF !important;
@@ -2396,7 +2399,7 @@ input[type=number] {
 
     .dont-have-an-account-pra {
         font-family: 'Poppins' !important;
-        font-weight: 300 !important;
+        font-weight: 400 !important;
         font-style: normal !important;
         font-size: 16px !important;
         line-height: 27px !important;
@@ -2479,7 +2482,7 @@ input[type=number] {
 
     .dont-have-an-account-pra {
         font-family: 'Poppins' !important;
-        font-weight: 300 !important;
+        font-weight: 400 !important;
         font-style: normal !important;
         font-size: 13px !important;
         line-height: 27px !important;
