@@ -53,6 +53,7 @@ class SyncAPiData extends Command
         $last_synced_date = $sync_log->last_synced;
         $current_date = Carbon::now()->toDateString();
         $current_date = Carbon::now();
+        //dd($current_date);
         $current_date = $current_date->toDateString(). ' '. $current_date->format('H:i:s');
         $this->info('Last updated time#--------------------------' .$last_synced_date);
         $this->info('Current time#--------------------------' .$current_date);
@@ -150,7 +151,7 @@ class SyncAPiData extends Command
 
 
             // Find total category pages
-            $total_products_pages = 150;
+            $total_products_pages = 1;
 
 
             for ($i = 1; $i <= $total_products_pages; $i++) {
@@ -204,6 +205,7 @@ class SyncAPiData extends Command
                     $this->info('Record Count => '. $record_count);
                     if ($record_count < 1 || empty($record_count)) {
                         $sync_log->last_synced = $current_date;
+                        $sync_log->record_count = $total_record_count;
                         $sync_log->save();
                         $this->info('Total Record Count#--------------------------' .$total_record_count);
                         $this->info('----------------break-----------------');
@@ -417,9 +419,14 @@ class SyncAPiData extends Command
                     }
                 }
             }
-            $current_date = Carbon::now()->toDateString().'T'.'00:00:00'.'Z';
+            $current_date = Carbon::now();
+            $current_date_day = $current_date->format('Y-m-d');
+            $current_date_time = $current_date->format('H:i:s');
+
+            $current_date_to_update = $current_date_day . 'T' . $current_date_time .'Z';
             if ($record_count > 0) {
-                $sync_log->last_synced = $current_date;
+                $sync_log->record_count = $record_count;
+                $sync_log->last_synced = $current_date_to_update;
                 $sync_log->save();
             }
         }
