@@ -545,31 +545,26 @@ class OrderManagementController extends Controller
         $order_id = $request->ids;
         if (!empty($order_id)) {
             $orders = ApiOrder::whereIn('id', explode(",", $order_id))
+                ->where('order_id', null)
+                ->where('isApproved', 0)
                 ->with('user.contact')
                 ->get();
             if (count($orders) > 0) {
                 foreach ($orders as $order) {
-                    if ($order->order_id == null && $order->isApproved == 0) {
-                        $order_data = OrderHelper::get_order_data_to_process($order);
-                        SalesOrders::dispatch('create_order', $order_data)
-                            ->onQueue(env('QUEUE_NAME'));
-                    } else {
-                        return response()->json([
-                            'message' => 'Your Order is already full-filled !',
-                            'status' => 400
-                        ]);
-                    }
+                    $order_data = OrderHelper::get_order_data_to_process($order);
+                    SalesOrders::dispatch('create_order', $order_data)
+                        ->onQueue(env('QUEUE_NAME'));
                 }
             } else {
                 return response()->json([
-                    'message' => 'Your order in null !',
-                    'status' => '401'
+                    'message' => 'Your order is already fullfill !',
+                    'status' => 401
                 ]);
             }
         } else {
             return response()->json([
                 'message' => 'Your order request is null !',
-                'status' => '402'
+                'status' => 401
             ]);
         }
     }
