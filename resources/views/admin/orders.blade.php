@@ -12,7 +12,7 @@
                                 Orders
                             </p>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-8">
                             <div class="progress border d-none w-50 mx-auto" id="progress-bar">
                                 <div class="progress-bar progress-bar-striped progress-bar-animated bg-info"
                                     role="progressbar" aria-valuenow="100" aria-valuemin="" aria-valuemax="100"></div>
@@ -46,8 +46,10 @@
                                     0 Selected
                                 </span>
                                 <span>
-                                    <a class=" delete_all btn btn-sm fulfill-row-items-order-page "
-                                        data-url="{{ url('admin/orders/all/delete') }}">
+                                    {{-- <input class="btn btn-sm fulfill-row-items-order-page" type="button"
+                                        value="Fullfill Order" onclick="fullFillOrder()"> --}}
+                                    <a class="order_ful_fill btn btn-sm fulfill-row-items-order-page "
+                                        data-url="{{ url('admin/orders/multi-full-fill') }}">
                                         Fulfill Order
                                     </a>
                                 </span>
@@ -418,7 +420,6 @@
             });
         });
 
-
         function perPage() {
             var search = $('#search').val();
             var activeCustomer = $('#active_customer').val();
@@ -597,7 +598,7 @@
                     $('#items_selected').html(count_unchecked + ' Selected');
                 }
             })
-            $('.delete_all').on('click', function(e) {
+            $('.order_ful_fill').on('click', function(e) {
                 var allVals = [];
                 $(".sub_chk:checked").each(function() {
                     allVals.push($(this).attr('data-id'));
@@ -609,50 +610,83 @@
                 } else {
                     Swal.fire({
                         title: 'Are you sure?',
-                        text: "You won't delete this order!",
+                        text: "You won't fullfill this order!",
                         type: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#3085d6',
                         cancelButtonColor: '#d33',
-                        confirmButtonText: 'Yes, delete it!'
+                        confirmButtonText: 'Yes, Full Fill it!'
                     }).then((result) => {
                         if (result.value) {
                             var join_selected_values = allVals.join(",");
                             $.ajax({
                                 url: $(this).data('url'),
-                                type: 'DELETE',
+                                type: 'POST',
                                 headers: {
                                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
                                         'content')
                                 },
                                 data: 'ids=' + join_selected_values,
-                                success: function(data) {
-                                    if (data['success']) {
-                                        // alert('success');
-                                        $(".sub_chk:checked").each(function() {
-                                            $(this).parents("tr").remove();
-                                        });
-                                        Swal.fire(
-                                            'Deleted!',
-                                            'Your order has been deleted.',
-                                            'success'
-                                        )
-                                    } else if (data['error']) {
-                                        alert(data['error']);
-                                    } else {
-                                        Swal.fire(
-                                            'Please select a row to delete',
-                                        )
-                                    }
+                                success: function(response) {
+                                    var delay = 8000;
+                                    $('#progress-bar').removeClass('d-none');
+                                    jQuery(".progress-bar").each(function(i) {
+                                        jQuery(this).delay(delay * i).animate({
+                                            width: $(this).attr(
+                                                    'aria-valuenow') +
+                                                '%'
+                                        }, delay);
+
+                                        jQuery(this).prop('Counter', 1)
+                                            .animate({
+                                                Counter: $(this).text()
+                                            }, {
+                                                duration: delay,
+                                                // easing: 'swing',
+                                                step: function(now) {
+                                                    jQuery(this).text(
+                                                        Math.ceil(
+                                                            100) +
+                                                        '%');
+
+                                                }
+                                            });
+                                    })
+
+                                    jQuery.ajax({
+                                        url: "{{ url('admin/multi/check-status') }}",
+                                        method: 'POST',
+                                        headers: {
+                                            'X-CSRF-TOKEN': $(
+                                                    'meta[name="csrf-token"]')
+                                                .attr('content')
+                                        },
+                                        data: 'ids=' + join_selected_values,
+                                        success: function(response) {
+                                            console.log(response.status);
+                                            if (response.status ===
+                                                'Order fullfilled successfully'
+                                            ) {
+                                                Swal.fire(
+                                                    'Good job!',
+                                                    'Order fullfilled successfully',
+                                                    'success'
+                                                )
+                                            } else {
+                                                Swal.fire(
+                                                    'Order fullfilled failed'
+                                                )
+                                            }
+                                            $('#progress-bar').addClass(
+                                                'd-none');
+                                            setInterval('location.reload()',
+                                                8000);
+                                        }
+                                    });
                                 },
                                 error: function(data) {
                                     alert(data.responseText);
                                 }
-                            });
-
-                            $.each(allVals, function(index, value) {
-                                $('table tr').filter("[data-row-id='" + value + "']")
-                                    .remove();
                             });
                         }
                     });
