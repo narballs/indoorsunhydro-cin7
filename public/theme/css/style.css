@@ -4789,6 +4789,10 @@ select.list-dt:focus {
         color: #131313 !important;
     }
 
+    .product-detail-content1 {
+        border-bottom: 0.840301px solid #EBEBEB;
+    }
+
     .form-select-mbl {
         background-color: #F5F5F5 !important;
         border: 1px solid #DDDDDD !important;
