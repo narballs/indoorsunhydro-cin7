@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use App\Models\ApiOrder;
 use App\Jobs\SalesOrders;
 use App\Models\ApiOrderItem;
+use App\Models\AdminSetting;
 
 use App\Helpers\OrderHelper;
 
@@ -42,6 +43,11 @@ class AutoOrdersSync extends Command
      * @return int
      */
     public function handle() {
+
+        $option = AdminSetting::where('option_name', 'auto_full_fill')->first();
+        if ($option->option_value == 0) {
+            return;
+        }
 
         $minutes = $this->option('minutes');
 

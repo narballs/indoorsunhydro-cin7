@@ -81,6 +81,11 @@
       </div>
    </div>
    <div class="row">
+      @if(count($products) == 0)
+         <div class="col-md-12 mt-3">
+               <div class="alert alert-danger">No Product Found</div>
+         </div>
+      @endif
       @foreach ($products as $key => $product)
       @foreach($product->options as $option)
       <?php $count ++; ?>

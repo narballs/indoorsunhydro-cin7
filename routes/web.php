@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\OrderManagementController;
 use App\Http\Controllers\Admin\ShippingMethodController;
 use App\Http\Controllers\Admin\ContactController;
+use App\Http\Controllers\Admin\AdminSettingsController;
 use App\Http\Controllers\Admin\AdminCommandsController;
 use App\Http\Controllers\ChangePasswordController;
 use App\Http\Controllers\Admin\CustomerSearchController;
@@ -233,6 +234,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('admin/add-to-list', [AdminBuyListController::class, 'addToList']);
     Route::post('admin/generate-list', [AdminBuyListController::class, 'genrateList']);
     Route::post('admin/share-list', [AdminShareListController::class, 'shareList']);
+    Route::post('admin/auto-full-fill', [AdminSettingsController::class, 'autoFullfill']);
     Route::get('admin/admin-users', [UserController::class, 'adminUsers']);
     Route::get('admin/get-parent', [ContactController::class, 'getParent']);
     Route::get('admin/get-parent', [ContactController::class, 'getParent']);

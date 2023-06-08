@@ -60,6 +60,38 @@
                                     </a>
                                 </span>
                             </div>
+
+                         @if($auto_fulfill == 1)
+                            <div class="col-md-7 d-flex justify-content-end align-items-center">
+                                <span class="d-flex">
+                                    
+                                    <a class=" btn  btn-sm fulfill-row-items-order-page" >
+                                        Auto Fullfill
+                                    </a>
+                                    <label class="custom-control custom-checkbox ">
+                                        <input type="checkbox" id="auto_full_fill" value="{{$auto_fulfill}}"
+                                            class="custom-control-input general_switch" onchange="autoFullfill()" {{ isset($auto_fulfill) && $auto_fulfill == 1 ? 'checked="checked"' : '' }}
+                                          >
+                                        <span class="custom-control-indicator"></span>
+                                    </label>
+                                </span>
+                            </div>
+                            @else 
+                            <div class="col-md-7 d-flex justify-content-end align-items-center">
+                                <span class="d-flex">
+                                    
+                                    <a class=" btn  btn-sm fulfill-row-items-order-page" >
+                                        Auto Fullfill
+                                    </a>
+                                    <label class="custom-control custom-checkbox ">
+                                        <input type="checkbox" id="auto_full_fill" value=""
+                                            class="custom-control-input general_switch" onchange="autoFullfill()"
+                                          >
+                                        <span class="custom-control-indicator"></span>
+                                    </label>
+                                </span>
+                            </div>
+                            @endif
                         </div>
                     </div>
                     <table class="table border table-customer mb-5">
@@ -69,7 +101,8 @@
                                     <div class="custom-control custom-checkbox tabel-checkbox">
                                         <input class="custom-control-input custom-control-input-success checkbox-table"
                                             type="checkbox" id="selectAll" value="">
-                                        <label for="selectAll" class="custom-control-label"></label>
+                                        <label for="selectAll" class="custom-control-label ml-3"></label>
+                                        
                                         <span class="table-row-heading">
                                             <i class="fas fa-arrow-up mt-1" style="font-size:14.5px ;"></i>
                                         </span>
@@ -120,7 +153,7 @@
                                                     data-id="{{ $order->id }}" type="checkbox"
                                                     id="separate_check_{{ $order->id }}">
                                                 <label for="separate_check_{{ $order->id }}"
-                                                    class="custom-control-label"></label>
+                                                    class="custom-control-label ml-3"></label>
                                             </div>
                                             <span class="table-row-heading">
                                                 {{ $order->id }}
@@ -159,7 +192,6 @@
                                                 {{ $order->contact->email }}
                                             @endif
                                         </td>
-
                                         <td class="created_by_order_total td_padding_row">
                                             ${{ number_format($order->total, 2) }}</td>
                                         <td class="td_padding_row">
@@ -169,7 +201,6 @@
                                                 @endif
                                             @endif
                                         </td>
-
                                         <td class="is-approved td_padding_row">
                                             @if ($order->isApproved == 1 && $order->isVoid == 1)
                                                 <span class="badge badge-secondary  is_approded_0">Void</span>
@@ -227,11 +258,63 @@
 @stop
 
 @section('css')
-    <link rel="stylesheet" href="/css/admin_custom.css">
-    <link rel="stylesheet" href="{{ asset('admin/admin_lte.css?v2') }}">
+    <link rel="stylesheet" href="/theme/css/admin_custom.css">
+    <link rel="stylesheet" href="{{ asset('/admin/admin_lte.css') }}">
     <link href="https://fonts.cdnfonts.com/css/poppins" rel="stylesheet">
 
     <style type="text/css">
+        .custom-checkbox {
+            min-height: 1rem;
+            padding-left: 0;
+            margin-right: 0;
+            cursor: pointer;
+        }
+
+        .custom-checkbox .custom-control-indicator {
+            content: "";
+            display: inline-block;
+            position: relative;
+            width: 30px;
+            height: 10px;
+            background-color: #818181;
+            border-radius: 15px;
+            margin-right: 10px;
+            -webkit-transition: background .3s ease;
+            transition: background .3s ease;
+            vertical-align: middle;
+            margin: 0 16px;
+            box-shadow: none;
+        }
+
+        .custom-checkbox .custom-control-indicator:after {
+            content: "";
+            position: absolute;
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            background-color: #f1f1f1;
+            border-radius: 21px;
+            box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4);
+            left: -2px;
+            top: -4px;
+            -webkit-transition: left .3s ease, background .3s ease, box-shadow .1s ease;
+            transition: left .3s ease, background .3s ease, box-shadow .1s ease;
+        }
+
+        .custom-checkbox .custom-control-input:checked~.custom-control-indicator {
+            background-color: #28a745;
+            background-image: none;
+            box-shadow: none !important;
+        }
+
+        .custom-checkbox .custom-control-input:checked~.custom-control-indicator:after {
+            background-color: #28a745;
+            left: 15px;
+        }
+
+        .custom-checkbox .custom-control-input:focus~.custom-control-indicator {
+            box-shadow: none !important;
+        }
         .text-successs {
             color: #7CC633 !important;
             font-family: 'Poppins', sans-serif !important;
@@ -465,6 +548,24 @@
                         }
                     });
                 }
+            });
+        }
+        function autoFullfill() {
+            var value = $('#auto_full_fill').val();
+            if (value == 1) {
+                var auto_fullfill = true;
+            }
+            else {
+                auto_fullfill = false;
+            }
+
+            jQuery.ajax({
+                url: "{{ url('admin/auto-full-fill') }}",
+                method: 'post',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "auto_fullfill": auto_fullfill
+                },
             });
         }
     </script>

@@ -47,12 +47,13 @@
                                     <form>
                                         @csrf
                                         <input type="hidden" value="{{ $time_diff }}" id="timeSpanToCancel">
+                                        <input type="hidden" value="{{ $time_difference_seconds }}" id="seconds">
                                         @if ($order->isApproved == 2)
                                             <button type="button" class="btn btn-danger btn-sm" disabled>Cancel
                                                 Order</button>
                                             <div class="countdown">
                                             </div>
-                                        @elseif($order->isApproved == 1 || $time_diff > 15)
+                                        @elseif($order->isApproved == 1 || $time_diff > 3)
                                             <div class="col-md-12">
                                                 <button type="button" class="btn btn-secondary btn-sm" disabled>
                                                     Cancel Order
@@ -89,8 +90,8 @@
                                             </div>
                                         @else
                                             <div class="col-md-12" style="margin-left: 50px;">
-                                                <input class="btn btn-primary btn-sm" type="button" value="Fullfill Order"
-                                                    onclick="fullFillOrder()">
+                                                <input id="full_fill" class="btn btn-primary btn-sm" type="button"
+                                                    value="Fullfill Order" onclick="fullFillOrder()">
                                             </div>
                                             <div class="spinner-border d-none" role="status" id="spinner">
                                                 <span class="sr-only" style="margin-left: 227px">Activating...</span>
@@ -294,9 +295,9 @@
         $(document).ready(function() {
             console.log(time_left);
             var time_left = $('#timeSpanToCancel').val();
-
+            var sec = $('#seconds').val();
             time_left = 3 - time_left;
-            var timer2 = time_left + ":01";
+            var timer2 = time_left + ":" + sec;
             var interval = setInterval(function() {
                 var timer = timer2.split(':');
                 //by parsing integer, I avoid all extra string processing
@@ -305,34 +306,23 @@
                 --seconds;
                 minutes = (seconds < 0) ? --minutes : minutes;
                 if (minutes < 0) clearInterval(interval);
+
                 seconds = (seconds < 0) ? 59 : seconds;
                 seconds = (seconds < 10) ? '0' + seconds : seconds;
                 minutes = (minutes < 10) ? minutes : minutes;
                 $('#cancel_order').val('Cancel Order in ' + minutes + ':' + seconds);
                 if (minutes == 0 && seconds == '00' || time_left < 1) {
                     $('#cancel_order').addClass('disabled');
+                    //$('#full_fill').addClass('disabled');
                     $('#cancel_order').val('Cancel Order');
-                    //window.location.reload();
+
                     minutes = 0;
                     seconds = 0;
                     timer.lap();
                     console.log('finsih');
-                    // fullFillOrder();
-
-                    //return; 
-
                 }
-
                 timer2 = minutes + ':' + seconds;
-
-
-
-                // console.log(minutes);
-                // console.log(seconds);
-
             }, 1000);
-            //window.location.reload();
-
         });
 
         function addComment(isUserAdded) {
@@ -358,7 +348,6 @@
         }
 
         function updateStatus() {
-
             var status = $("#status").val();
             var order_id_status = $("#order_id_status").val();
             jQuery.ajax({
