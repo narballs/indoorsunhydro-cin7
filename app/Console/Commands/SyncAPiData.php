@@ -47,19 +47,30 @@ class SyncAPiData extends Command
      */
     public function handle()
     {
-        $sync_time  = Carbon::now()->toIso8601String();
+
+        $current_date = Carbon::now()->setTimezone('UTC')->format('Y-m-d H:i:s');
         $sync_log = ApiSyncLog::where('end_point', 'https://api.cin7.com/api/v1/Products')->first();
+        if (empty($sync_log)) {
+            $sync_log = new ApiSyncLog();
+            $sync_log->end_point = 'https://api.cin7.com/api/v1/Products';
+            $sync_log->desription = 'Products Sync';
+            $sync_log->record_count = 0;
+            $sync_log->last_synced = $current_date;
+            $sync_log->save();
+        }
 
         $last_synced_date = $sync_log->last_synced;
-        $current_date = Carbon::now()->toDateString();
-        $current_date = Carbon::now();
-        //dd($current_date);
-        $current_date = $current_date->toDateString(). ' '. $current_date->format('H:i:s');
-        $this->info('Last updated time#--------------------------' .$last_synced_date);
-        $this->info('Current time#--------------------------' .$current_date);
+        
+        
+        $this->info('Last updated time#--------------------------' . $last_synced_date);
+        $this->info('Current time#--------------------------' . $current_date);
+
         $rawDate = Carbon::parse($last_synced_date);
+        
         $getdate = $rawDate->format('Y-m-d');
         $getTime = $rawDate->format('H:i:s');
+
+
         $formattedDateSting = $getdate . 'T' . $getTime . 'Z';
         $client2 = new \GuzzleHttp\Client();
         $total_record_count = 0;
@@ -151,7 +162,7 @@ class SyncAPiData extends Command
 
 
             // Find total category pages
-            $total_products_pages = 1;
+            $total_products_pages = 150;
 
 
             for ($i = 1; $i <= $total_products_pages; $i++) {
@@ -160,7 +171,7 @@ class SyncAPiData extends Command
 
                     $res = $client2->request(
                         'GET', 
-                        'https://api.cin7.com/api/v1/Products?where=modifieddate>='. $formattedDateSting .'&page='.$i, 
+                        'https://api.cin7.com/api/v1/Products?where=modifieddate>='. $formattedDateSting . '&page=' . $i . '&rows=250', 
                         [
                             'auth' => [
                                'IndoorSunHydroUS',
@@ -178,13 +189,10 @@ class SyncAPiData extends Command
 
 
                     $this->info('Record Count => ' . $record_count);
+                    
                     if ($record_count < 1 || empty($record_count)) {
-                        $sync_log->last_synced = $current_date;
-                        $sync_log->record_count = $total_record_count;
-                        $sync_log->save();
-                        $this->info('Total Record Count#--------------------------' .$total_record_count);
                         $this->info('----------------break-----------------');
-                    break;
+                        break;
                     }
                 }
                 catch (\Exception $e) {
@@ -194,26 +202,15 @@ class SyncAPiData extends Command
                     $errorlog->exception = $e->getCode();
                     $errorlog->save();
                 }
-                // $record_count = count($api_products);
-                // $total_record_count += $record_count; 
-                // dd($total_record_count);
+
           
                 $brands = [];
-                foreach($api_products as $api_product) {
+                foreach ($api_products as $api_product) {
                     $this->info($api_product->id);
-                    $this->info('Record Count per page #--------------------------' .$record_count);
-                    $this->info('Record Count => '. $record_count);
-                    if ($record_count < 1 || empty($record_count)) {
-                        $sync_log->last_synced = $current_date;
-                        $sync_log->record_count = $total_record_count;
-                        $sync_log->save();
-                        $this->info('Total Record Count#--------------------------' .$total_record_count);
-                        $this->info('----------------break-----------------');
-                        break;
-                    }
+
                     $brands[] = $api_product->brand;
                     $this->info('---------------------------------------');
-                    $this->info('Processing Products ' . $api_product->name);
+                    $this->info('Processing Products ' . $api_product->name . ' => ' . $api_product->modifiedDate);
                     $this->info('---------------------------------------');
                     $product = Product::where('product_id', $api_product->id)->with('options.price')->first();
     
@@ -392,47 +389,42 @@ class SyncAPiData extends Command
                     if ($api_product->productOptions) {
                         foreach ($api_product->productOptions as $api_productOption) {
                             $productOption = new ProductOption([
-                                        'option_id' =>  $api_productOption->id,
-                                        'product_id' =>  $api_productOption->productId,
-                                        'status' =>  $api_productOption->status,
-                                        'code' =>  $api_productOption->code,
-                                        'productOptionSizeCode' =>  $api_productOption->productOptionSizeCode,
-                                        'supplierCode' =>  $api_productOption->supplierCode,
-                                        'option1' =>  $api_productOption->option1,
-                                        'option2' =>  $api_productOption->option2,
-                                        'option3' =>  $api_productOption->option3,
-                                        'optionWeight' =>  $api_productOption->optionWeight,
-                                        'size' =>  $api_productOption->size,
-                                        'retailPrice' =>  $api_productOption->retailPrice,
-                                        'wholesalePrice' =>  $api_productOption->wholesalePrice,
-                                        'vipPrice' =>  $api_productOption->vipPrice,
-                                        'specialPrice' =>  $api_productOption->specialPrice,
-                                        'specialsStartDate' =>  $api_productOption->specialsStartDate,
-                                        'stockAvailable' =>  $api_productOption->stockAvailable,
-                                        'stockOnHand' =>  $api_productOption->stockOnHand,
-                                        'specialDays' =>  $api_productOption->specialDays,
-                                        'image' =>  !empty($api_productOption->image) ? $api_productOption->image->link: ''
+                                'option_id' =>  $api_productOption->id,
+                                'product_id' =>  $api_productOption->productId,
+                                'status' =>  $api_productOption->status,
+                                'code' =>  $api_productOption->code,
+                                'productOptionSizeCode' =>  $api_productOption->productOptionSizeCode,
+                                'supplierCode' =>  $api_productOption->supplierCode,
+                                'option1' =>  $api_productOption->option1,
+                                'option2' =>  $api_productOption->option2,
+                                'option3' =>  $api_productOption->option3,
+                                'optionWeight' =>  $api_productOption->optionWeight,
+                                'size' =>  $api_productOption->size,
+                                'retailPrice' =>  $api_productOption->retailPrice,
+                                'wholesalePrice' =>  $api_productOption->wholesalePrice,
+                                'vipPrice' =>  $api_productOption->vipPrice,
+                                'specialPrice' =>  $api_productOption->specialPrice,
+                                'specialsStartDate' =>  $api_productOption->specialsStartDate,
+                                'stockAvailable' =>  $api_productOption->stockAvailable,
+                                'stockOnHand' =>  $api_productOption->stockOnHand,
+                                'specialDays' =>  $api_productOption->specialDays,
+                                'image' =>  !empty($api_productOption->image) ? $api_productOption->image->link: ''
                             ]);
                             $productOption->save();
                         }
-
                     }
                 }
             }
-            $current_date = Carbon::now();
-            $current_date_day = $current_date->format('Y-m-d');
-            $current_date_time = $current_date->format('H:i:s');
-
-            $current_date_to_update = $current_date_day . 'T' . $current_date_time .'Z';
-            if ($record_count > 0) {
-                $sync_log->record_count = $record_count;
-                $sync_log->last_synced = $current_date_to_update;
-                $sync_log->save();
-            }
+            
         }
+
+        $sync_log->last_synced = $current_date;
+        $sync_log->record_count = $total_record_count;
+        $sync_log->save();
+
+        $this->info('Total Record Count#' . $total_record_count);
         $this->info('------------------------------');
-        $this->info('All products processed');
-        $this->info('-------------------------------');
+        $this->info('-------------Finished------------------');
     }
 }
 
