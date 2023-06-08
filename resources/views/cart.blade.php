@@ -22,26 +22,33 @@
                 <div class="h-100 py-5">
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="col-md-12">
-                                @if (Session::has('message'))
-                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                        {{ Session::get('message') }}
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                            aria-label="Close"></button>
-                                    </div>
-                                @endif
-                            </div>
+
+                            @if (Auth::check() == true && $contact->status == 0)
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    Checkout has been disabled.
+
+                                </div>
+                            @endif
                             <div class="table-responsive">
                                 <table class="table mt-4" id="cart_table">
                                     <thead class="table-head-items">
                                         <tr>
-                                            <th scope="col" class="th-lg" class="table-head-items">
+                                            {{-- <th scope="col" class="th-lg" class="table-head-items">
                                                 <span>
                                                     <img class="img-fluid" src="/theme/img/barcode.png"
                                                         style="width: 29px;
 													">
                                                 </span>
                                                 <span class=" cart-total">SKU</span>
+                                            </th> --}}
+                                            <th>
+                                                <div
+                                                    class="d-flex aling-items-center justify-content-between sku-img-cart-page-table-header">
+                                                    <span>
+                                                        <img class="img-fluid w-75" src="/theme/img/barcode.png">
+                                                    </span>
+                                                    <span class=" cart-total">SKU</span>
+                                                </div>
                                             </th>
                                             <th scope="col" class="th-lg" class="table-head-items">
                                                 <span>
@@ -96,14 +103,14 @@
                                                     </td>
                                                     <td scope=" row">
                                                         <div class="d-flex align-items-center">
-                                                                                      @if (!empty($cart['image']))
+                                                                      @if (!empty($cart['image']))
                                                                 <img src="{{ $cart['image'] }}"
-                                                                    class="img-fluid rounded-3" style="width: 120px;"
+                                                                    class="img-fluid rounded-3" style="width: 80px;"
                                                                     alt="Book">
                                                             @else
                                                                 <img src="/theme/img/image_not_available.png"
-                                                                    class="img-fluid rounded-3"
-                                                                    style="width: 78px;height: 83px;" alt="Book">
+                                                                    class="img-fluid rounded-3" style="width: 78px;"
+                                                                    alt="Book">
                                             @endif
                                             <div class="flex-column ms-4">
                                                 <span class="mb-2">
@@ -199,7 +206,7 @@
         </section>
     </div>
     <div class="col-md-3 p-0  mt-5">
-        <div class="table-responsive">
+        <div class="table-responsive" style="padding-top:3px !important;">
             <?php
             $tax = $cart_total * ($tax_class->rate / 100);
             $total_including_tax = $tax + $cart_total;
@@ -286,13 +293,13 @@
                                         </button>
                                     </a>
                                 @elseif (Auth::check() == true && $contact->status == 0)
-                                    <a href="javascript:void(0)">
-                                        <button class="procedd-to-checkout-disable mt-3">
-
-                                            Your company is disabled
-
-                                        </button>
-                                    </a>
+                                    <div class="alert alert-danger alert-dismissible fade show py-2" role="alert">
+                                        <span class="d-flex justify-content-center align-items-center">
+                                            Checkout has been disabled for this email address, please contact your
+                                            account
+                                            manager to re-enable checkout.
+                                        </span>
+                                    </div>
                                 @elseif(Auth::check() == true && empty($contact->contact_id))
                                     <a href="{{ url('/checkout/') }}">
                                         <button class="procedd-to-checkout mt-3">

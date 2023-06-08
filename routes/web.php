@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\OrderManagementController;
 use App\Http\Controllers\Admin\ShippingMethodController;
 use App\Http\Controllers\Admin\ContactController;
+use App\Http\Controllers\Admin\AdminSettingsController;
 use App\Http\Controllers\Admin\AdminCommandsController;
 use App\Http\Controllers\ChangePasswordController;
 use App\Http\Controllers\Admin\CustomerSearchController;
@@ -100,6 +101,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('admin/users', UserController::class);
     Route::get('admin/dashboard', [DashboardController::class, 'index'])->name('admin.view');
     Route::get('admin/orders', [OrderManagementController::class, 'index'])->name('admin.orders');
+    Route::delete('admin/orders/all/delete', [OrderManagementController::class, 'deleteAllOrders']);
+    Route::post('admin/orders/multi-full-fill', [OrderManagementController::class, 'multiOrderFullFill']);
     Route::get('admin/order/create', [OrderManagementController::class, 'create'])->name('admin.order.create');
     Route::get('/admin/order-detail/{id}', [OrderManagementController::class, 'show'])->name('admin.order.detail');
     Route::post('admin/order-comments', [OrderManagementController::class, 'addComments'])->name('admin.order.comments');
@@ -125,6 +128,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('admin/api-order-details/{id}', [OrderManagementController::class, 'show_api_order'])->name('admin.api.order.details');
     Route::post('admin/order-full-fill', [OrderManagementController::class, 'order_full_fill'])->name('admin.order.full.fill');
     Route::post('admin/check-status', [OrderManagementController::class, 'check_order_status'])->name('admin.check.order.status');
+    Route::post('admin/multi/check-status', [OrderManagementController::class, 'mutli_check_order_status'])->name('admin.check.order.status');
     Route::post('admin/order-cancel', [OrderManagementController::class, 'cancelOrder']);
     Route::post('admin/customer-activate', [ContactController::class, 'activate_customer'])->name('admin.customer.activate');
     Route::post('admin/update-pricing-column', [ContactController::class, 'update_pricing_column'])->name('admin.update.pricing.column');
@@ -230,6 +234,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('admin/add-to-list', [AdminBuyListController::class, 'addToList']);
     Route::post('admin/generate-list', [AdminBuyListController::class, 'genrateList']);
     Route::post('admin/share-list', [AdminShareListController::class, 'shareList']);
+    Route::post('admin/auto-full-fill', [AdminSettingsController::class, 'autoFullfill']);
     Route::get('admin/admin-users', [UserController::class, 'adminUsers']);
     Route::get('admin/get-parent', [ContactController::class, 'getParent']);
     Route::get('admin/get-parent', [ContactController::class, 'getParent']);

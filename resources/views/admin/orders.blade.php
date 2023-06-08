@@ -39,16 +39,74 @@
             </div>
             <div class="card-body product_table_body">
                 <div class="col-md-12 p-0">
+                    <div class="col-md-12 btn-row my-3">
+                        <div class="row">
+                            <div class="col-md-3 d-flex justify-content-between align-content-center py-2">
+                                <span class="border-right pe-5 select-row-items ms-2" id="items_selected">
+                                    0 Selected
+                                </span>
+                                <span>
+                                    {{-- <input class="btn btn-sm fulfill-row-items-order-page" type="button"
+                                        value="Fullfill Order" onclick="fullFillOrder()"> --}}
+                                    <a class="order_ful_fill btn btn-sm fulfill-row-items-order-page "
+                                        data-url="{{ url('admin/orders/multi-full-fill') }}">
+                                        Fulfill Order
+                                    </a>
+                                </span>
+                                <span>
+                                    <a class="delete_all btn btn-danger btn-sm cancel-row-items-order-page"
+                                        data-url="{{ url('admin/orders/all/delete') }}">
+                                        Cancel Order
+                                    </a>
+                                </span>
+                            </div>
+
+                         @if($auto_fulfill == 1)
+                            <div class="col-md-7 d-flex justify-content-end align-items-center">
+                                <span class="d-flex">
+                                    
+                                    <a class=" btn  btn-sm fulfill-row-items-order-page" >
+                                        Auto Fullfill
+                                    </a>
+                                    <label class="custom-control custom-checkbox ">
+                                        <input type="checkbox" id="auto_full_fill" value="{{$auto_fulfill}}"
+                                            class="custom-control-input general_switch" onchange="autoFullfill()" {{ isset($auto_fulfill) && $auto_fulfill == 1 ? 'checked="checked"' : '' }}
+                                          >
+                                        <span class="custom-control-indicator"></span>
+                                    </label>
+                                </span>
+                            </div>
+                            @else 
+                            <div class="col-md-7 d-flex justify-content-end align-items-center">
+                                <span class="d-flex">
+                                    
+                                    <a class=" btn  btn-sm fulfill-row-items-order-page" >
+                                        Auto Fullfill
+                                    </a>
+                                    <label class="custom-control custom-checkbox ">
+                                        <input type="checkbox" id="auto_full_fill" value=""
+                                            class="custom-control-input general_switch" onchange="autoFullfill()"
+                                          >
+                                        <span class="custom-control-indicator"></span>
+                                    </label>
+                                </span>
+                            </div>
+                            @endif
+                        </div>
+                    </div>
                     <table class="table border table-customer mb-5">
                         <thead>
                             <tr class="table-header-background">
-                                <td class="d-flex table-row-item">
-                                    <span class="tabel-checkbox">
-                                        <input type="checkbox" name="test" class="checkbox-table" id="selectAll">
-                                    </span>
-                                    <span class="table-row-heading">
-                                        <i class="fas fa-arrow-up"></i>
-                                    </span>
+                                <td class="d-flex table-row-item mt-0">
+                                    <div class="custom-control custom-checkbox tabel-checkbox">
+                                        <input class="custom-control-input custom-control-input-success checkbox-table"
+                                            type="checkbox" id="selectAll" value="">
+                                        <label for="selectAll" class="custom-control-label ml-3"></label>
+                                        
+                                        <span class="table-row-heading">
+                                            <i class="fas fa-arrow-up mt-1" style="font-size:14.5px ;"></i>
+                                        </span>
+                                    </div>
                                 </td>
                                 <td>
                                     <span class="d-flex table-row-item"> Created By</span>
@@ -88,11 +146,15 @@
                                         </td>
                                     </tr>
                                 @else
-                                    <tr id="row-{{ $order->id }}" class="order-row border-bottom">
+                                    <tr id="tr_{{ $order->id }}" class="order-row border-bottom">
                                         <td class="d-flex table-items">
-                                            <span class="tabel-checkbox">
-                                                <input type="checkbox" name="test" class="checkbox-table">
-                                            </span>
+                                            <div class="custom-control custom-checkbox tabel-checkbox">
+                                                <input class="custom-control-input custom-control-input-success sub_chk"
+                                                    data-id="{{ $order->id }}" type="checkbox"
+                                                    id="separate_check_{{ $order->id }}">
+                                                <label for="separate_check_{{ $order->id }}"
+                                                    class="custom-control-label ml-3"></label>
+                                            </div>
                                             <span class="table-row-heading">
                                                 {{ $order->id }}
                                             </span>
@@ -130,7 +192,6 @@
                                                 {{ $order->contact->email }}
                                             @endif
                                         </td>
-
                                         <td class="created_by_order_total td_padding_row">
                                             ${{ number_format($order->total, 2) }}</td>
                                         <td class="td_padding_row">
@@ -140,7 +201,6 @@
                                                 @endif
                                             @endif
                                         </td>
-
                                         <td class="is-approved td_padding_row">
                                             @if ($order->isApproved == 1 && $order->isVoid == 1)
                                                 <span class="badge badge-secondary  is_approded_0">Void</span>
@@ -152,76 +212,31 @@
                                                 <span class="badge badge-danger is_approded_2">Cancelled</span>
                                             @endif
                                         </td>
-                                        <td class="td_padding_row">{{ $order->paymentTerms }}</td>
-                                        <td class="created_by toggleClass td_padding_row">
-                                            <div class="btn-group">
-                                                <button type="button" class="btn p-0 btn-white dropdown-toggle"
-                                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <i class="fas fa-ellipsis-h" style="color: #CBCBCB !important;"></i>
-                                                </button>
-                                                <div class="dropdown-menu dropdonwn_menu">
-                                                    <a class="dropdown-item"
-                                                        href="{{ url('admin/order-detail/' . $order->id) }}"
+                                        <td class="td_padding_row">
+                                            {{ $order->paymentTerms }}
+                                        </td>
+                                        <td class="created_by toggleClass td_padding_row ps-0">
+                                            <div class="d-flex justify-content-between aling-items-center pe-5">
+                                                <span>
+                                                    <a href="{{ url('admin/order-detail/' . $order->id) }}"
                                                         class="view a_class" title="" data-toggle="tooltip"
-                                                        data-original-title="View">Previews
+                                                        data-original-title="View">
+                                                        <i class="icon-style  fas fa-eye  i_class"></i>
                                                     </a>
-                                                    <a class="dropdown-item delete deleteIcon a_class" href="#"
-                                                        class="" id="{{ $order->id }}" title=""
-                                                        data-toggle="tooltip" data-original-title="Delete">Delete
+                                                </span>
+                                                <span>
+                                                    <a href="#" class="edit a_class" title=""
+                                                        data-toggle="tooltip" data-original-title="Edit"><i
+                                                            class="icon-style fa fa-pen  "></i>
                                                     </a>
-                                                    <a class="dropdown-item"href="#" class="edit a_class"
-                                                        title="" data-toggle="tooltip"
-                                                        data-original-title="Edit">Edit
+                                                </span>
+                                                <span>
+                                                    <a href="#" class="delete deleteIcon a_class"
+                                                        id="{{ $order->id }}" title="" data-toggle="tooltip"
+                                                        data-original-title="Delete"><i
+                                                            class="icon-style fa fa-trash-alt"></i>
                                                     </a>
-                                                    <form>
-                                                        @csrf
-                                                        @if ($order->isApproved == 1 && $order->isVoid == 0)
-                                                            <a class="dropdown-item disabled bg_success" type="button"
-                                                                class="edit a_class" title="" data-toggle="tooltip"
-                                                                data-original-title="Edit">Fulfill
-                                                                Order
-                                                            </a>
-                                                        @elseif ($order->isApproved == 2 && $order->isVoid == 0)
-                                                            <a class="dropdown-item disabled bg_danger" type="button"
-                                                                class="edit a_class" title="" data-toggle="tooltip"
-                                                                data-original-title="Edit">Fulfill
-                                                                Order
-                                                            </a>
-                                                        @elseif ($order->isApproved == 1 && $order->isVoid == 1)
-                                                            <a class="dropdown-item disabled bg_secondary" type="button"
-                                                                class="edit a_class" title="" data-toggle="tooltip"
-                                                                data-original-title="Edit">Void
-                                                            </a>
-                                                        @else
-                                                            <a class="dropdown-item" type="button" class="edit a_class"
-                                                                title="" data-toggle="tooltip"
-                                                                data-original-title="Edit"
-                                                                onclick="fullFillOrder()">Fulfill
-                                                                Order
-                                                            </a>
-                                                            <input type="hidden" value="{{ $order->id }}"
-                                                                id="order_id">
-                                                        @endif
-                                                        @if ($order->isApproved == 2 && $order->isVoid == 0)
-                                                            <a class="dropdown-item disabled bg_danger" type="button"
-                                                                class="edit a_class" title="" data-toggle="tooltip"
-                                                                data-original-title="Edit">Cancel
-                                                                Order
-                                                            </a>
-                                                        @elseif($order->isApproved == 1 && $order->isVoid == 0)
-                                                            <a class="dropdown-item disabled bg_success" type="button"
-                                                                class="edit a_class" title="" data-toggle="tooltip"
-                                                                data-original-title="Edit">Cancel Order
-                                                            </a>
-                                                        @elseif($order->isApproved == 0 && $order->isVoid == 0)
-                                                            <a class="dropdown-item" type="button" class="edit a_class"
-                                                                title="" data-toggle="tooltip"
-                                                                data-original-title="Edit" onclick="cancelOrder()">Cancel
-                                                                Order
-                                                            </a>
-                                                        @endif
-                                                    </form>
-                                                </div>
+                                                </span>
                                             </div>
                                         </td>
                                     </tr>
@@ -243,11 +258,63 @@
 @stop
 
 @section('css')
-    <link rel="stylesheet" href="/css/admin_custom.css">
-    <link rel="stylesheet" href="{{ asset('admin/admin_lte.css') }}">
+    <link rel="stylesheet" href="/theme/css/admin_custom.css">
+    <link rel="stylesheet" href="{{ asset('/admin/admin_lte.css') }}">
     <link href="https://fonts.cdnfonts.com/css/poppins" rel="stylesheet">
 
     <style type="text/css">
+        .custom-checkbox {
+            min-height: 1rem;
+            padding-left: 0;
+            margin-right: 0;
+            cursor: pointer;
+        }
+
+        .custom-checkbox .custom-control-indicator {
+            content: "";
+            display: inline-block;
+            position: relative;
+            width: 30px;
+            height: 10px;
+            background-color: #818181;
+            border-radius: 15px;
+            margin-right: 10px;
+            -webkit-transition: background .3s ease;
+            transition: background .3s ease;
+            vertical-align: middle;
+            margin: 0 16px;
+            box-shadow: none;
+        }
+
+        .custom-checkbox .custom-control-indicator:after {
+            content: "";
+            position: absolute;
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            background-color: #f1f1f1;
+            border-radius: 21px;
+            box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4);
+            left: -2px;
+            top: -4px;
+            -webkit-transition: left .3s ease, background .3s ease, box-shadow .1s ease;
+            transition: left .3s ease, background .3s ease, box-shadow .1s ease;
+        }
+
+        .custom-checkbox .custom-control-input:checked~.custom-control-indicator {
+            background-color: #28a745;
+            background-image: none;
+            box-shadow: none !important;
+        }
+
+        .custom-checkbox .custom-control-input:checked~.custom-control-indicator:after {
+            background-color: #28a745;
+            left: 15px;
+        }
+
+        .custom-checkbox .custom-control-input:focus~.custom-control-indicator {
+            box-shadow: none !important;
+        }
         .text-successs {
             color: #7CC633 !important;
             font-family: 'Poppins', sans-serif !important;
@@ -353,7 +420,6 @@
             });
         });
 
-
         function perPage() {
             var search = $('#search').val();
             var activeCustomer = $('#active_customer').val();
@@ -398,17 +464,11 @@
                                 'Your order has been deleted.',
                                 'success'
                             )
-                            $('#row-' + id).remove();
+                            $('#tr_' + id).remove();
                         }
                     });
                 }
             })
-        });
-
-        // select all checkbox by click
-        $(document).on('click', '#selectAll', function(e) {
-            var table = $(e.target).closest('table');
-            $('td input:checkbox', table).prop('checked', this.checked);
         });
 
         function cancelOrder() {
@@ -490,6 +550,149 @@
                 }
             });
         }
+        function autoFullfill() {
+            var value = $('#auto_full_fill').val();
+            if (value == 1) {
+                var auto_fullfill = true;
+            }
+            else {
+                auto_fullfill = false;
+            }
+
+            jQuery.ajax({
+                url: "{{ url('admin/auto-full-fill') }}",
+                method: 'post',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "auto_fullfill": auto_fullfill
+                },
+            });
+        }
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('#selectAll').on('click', function(e) {
+                if ($(this).is(':checked', true)) {
+                    let count_checked = $(".sub_chk").prop('checked', true);
+                    $('#items_selected').html('');
+                    $('#items_selected').html(count_checked.length + ' Selected');
+
+                } else {
+                    let count_unchecked = $(".sub_chk").prop('checked', false);
+                    $('#items_selected').html('');
+                    $('#items_selected').html('0' + ' Selected');
+                }
+            });
+
+            $('.sub_chk').on('click', function(e) {
+                count_checked = $(".sub_chk:checked").length < 1 ? $('#selectAll').prop('checked', false) :
+                    '';
+                if ($(this).is(':checked', true)) {
+                    let count_checked = $(".sub_chk:checked").length;
+                    $('#items_selected').html('');
+                    $('#items_selected').html(count_checked + ' Selected');
+                } else {
+                    let count_unchecked = $(".sub_chk:checked").length;
+                    $('#items_selected').html('');
+                    $('#items_selected').html(count_unchecked + ' Selected');
+                }
+            })
+            $('.order_ful_fill').on('click', function(e) {
+                var allVals = [];
+                $(".sub_chk:checked").each(function() {
+                    allVals.push($(this).attr('data-id'));
+                });
+                if (allVals.length <= 0) {
+                    Swal.fire(
+                        'Please select a row to delete',
+                    )
+                } else {
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You won't fullfill this order!",
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, Full Fill it!'
+                    }).then((result) => {
+                        if (result.value) {
+                            var join_selected_values = allVals.join(",");
+                            $.ajax({
+                                url: $(this).data('url'),
+                                type: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                                        'content')
+                                },
+                                data: 'ids=' + join_selected_values,
+                                success: function(response) {
+                                    var delay = 8000;
+                                    $('#progress-bar').removeClass('d-none');
+                                    jQuery(".progress-bar").each(function(i) {
+                                        jQuery(this).delay(delay * i).animate({
+                                            width: $(this).attr(
+                                                    'aria-valuenow') +
+                                                '%'
+                                        }, delay);
+
+                                        jQuery(this).prop('Counter', 1)
+                                            .animate({
+                                                Counter: $(this).text()
+                                            }, {
+                                                duration: delay,
+                                                // easing: 'swing',
+                                                step: function(now) {
+                                                    jQuery(this).text(
+                                                        Math.ceil(
+                                                            100) +
+                                                        '%');
+
+                                                }
+                                            });
+                                    })
+
+                                    jQuery.ajax({
+                                        url: "{{ url('admin/multi/check-status') }}",
+                                        method: 'POST',
+                                        headers: {
+                                            'X-CSRF-TOKEN': $(
+                                                    'meta[name="csrf-token"]')
+                                                .attr('content')
+                                        },
+                                        data: 'ids=' + join_selected_values,
+                                        success: function(response) {
+                                            console.log(response.status);
+                                            if (response.status ===
+                                                'Order fullfilled successfully'
+                                            ) {
+                                                Swal.fire(
+                                                    'Good job!',
+                                                    'Order fullfilled successfully',
+                                                    'success'
+                                                )
+                                            } else {
+                                                Swal.fire(
+                                                    'Order fullfilled failed'
+                                                )
+                                            }
+                                            $('#progress-bar').addClass(
+                                                'd-none');
+                                            setInterval('location.reload()',
+                                                8000);
+                                        }
+                                    });
+                                },
+                                error: function(data) {
+                                    alert(data.responseText);
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        });
     </script>
 @stop
 @section('plugins.Sweetalert2', true)

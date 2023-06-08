@@ -53,8 +53,7 @@ class SyncOrders extends Command
         );
         $api_orders = $res->getBody()->getContents();
         $api_orders = json_decode($api_orders);
-
-
+        
         if (!empty($api_orders)) {
             foreach ($api_orders as $api_order) {
                 $qcom_order = ApiOrder::where('order_id', $api_order->id)->first();
@@ -62,6 +61,7 @@ class SyncOrders extends Command
                     $this->info('Api order ids' . $qcom_order->reference);
                     $qcom_order->isVoid = 1;
                     $qcom_order->save();
+
                 }
             }
         }

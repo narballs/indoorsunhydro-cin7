@@ -2,8 +2,14 @@
 @include('partials.top-bar')
 @include('partials.search-bar')
 
-<div class="mb-5">
+{{-- <div class="mb-5">
    <p style="line-height: 95px;" class="fw-bold fs-2 product-btn my-auto border-0 text-white text-center align-middle">
+      PRODUCTS
+   </p>
+</div> --}}
+
+<div class="row justify-content-center align-items-center" style="background-color: #008BD3;height:70px;">
+   <p class="fw-bold fs-2 my-auto border-0 text-white text-center align-middle">
       PRODUCTS
    </p>
 </div>
@@ -16,7 +22,7 @@
             <input type="hidden" id="parent_category_slug" value="{{ $parent_category_slug }}">
             <div class="col">
                <label>Sort by</label>
-               <select class="form-select" id="search_price" onchange="handleSelectChange('best_selling')">
+               	<select class="form-select" id="search_price" onchange="handleSelectChange('best_selling')">
                   <option value="0">Select Option</option>
                   <option class="form-group" value="best-selling" {{ $price_creteria }} {{ isset($price_creteria) &&
                      $price_creteria=='best-selling' ? 'selected="selected"' : '' }}>Best Selling</option>
@@ -112,94 +118,101 @@
       </div>
    </form>
    <div class="row">
+      @if(count($products) == 0)
+         <div class="col-md-12 mt-3">
+               <div class="alert alert-danger">No Product Found</div>
+         </div>
+      @endif
       @foreach($products as $key=>$product)
-      @foreach($product->options as $option)
-      <div class="col-sm-12 col-md-6 col-lg-3 d-flex align-self-stretch">
-         <div class="card shadow-sm mb-4 w-100">
-            @if($option->image != '')
-            <a href="{{ url('product-detail/'.$product->id.'/'.$option->option_id) }}"><img src="{{$option['image']}}"
-                  class="col-md-10 offset-1" /></a>
-            @else
-            <img src="{{ asset('theme/img/image_not_available.png') }}" class="w-100 img-fluid h-75 w-75"
-               onclick="showdetails({{$product->id}})" />
-            @endif
-            <div class="card-body d-flex flex-column text-center">
-               <input type="hidden" name="quantity" value="1" id="quantity">
-               <input type="hidden" name="p_id" id="p_{{$product->id}}" value="{{$product->id}}">
-               <h5 class="card-title" style="font-weight: 500;
-                        font-size: 16px;"><a
-                     href="{{ url('product-detail/'.$product->id.'/'.$option->option_id.'/'.$product->slug) }}"
-                     id=product_name_{{$product->id}}>{{$product->name}}</a></h5>
-               <div class="mt-auto">
-                  <p class="text-uppercase mb-0 text-center text-danger">
-                     <?php 
-               foreach($option->price as $price)
-                  {
-                    switch ($pricing) {
-                        case "Retail":
-                            $retail_price = $price->retailUSD;
-                            break;
-                        case "Wholesale":
-                            $retail_price = $price->wholesaleUSD;
-                            break;
-                        case "TerraIntern":
-                            $retail_price = $price->terraInternUSD;
-                            break;
-                        case "Sacramento":
-                            $retail_price = $price->sacramentoUSD;
-                            break;
-                        case "Oklahoma":
-                            $retail_price = $price->oklahomaUSD;
-                            break;
-                        case "Calaveras":
-                            $retail_price = $price->calaverasUSD;
-                        break;
-                        case "Tier1":
-                            $retail_price = $price->tier1USD;
-                        break;
-                        case "Tier2":
-                            $retail_price = $price->tier2USD;
-                        break;
-                        case "Tier3":
-                            $retail_price = $price->tier3USD;
-                        break;
-                        case "ComercialOk":
-                            $retail_price = $price->commercialOKUSD;
-                        break;
-                        case "Cost":
-                            $retail_price = $price->costUSD;
-                        break;
-                        default : 
-                        $retail_price = $price->retailUSD;
-                        }
-                  }
-            
-                  // if($pricing == 'WholesaleUSD') {
-                  //   $retail_prices = $option->wholesalePrice;
-                  // }
-                  // else {
-                  //   $retail_prices = $option->retailPrice;
-                  // }
-                  ?>
-                     ${{number_format($retail_price,2)}}
-                  </p>
-                  <button class="button-cards col w-100" style="max-height: 46px;"
-                     onclick="updateCart({{$product->id}},{{$option->option_id}})">Add to cart</button>
+         @foreach($product->options as $option)
+         <div class="col-sm-12 col-md-6 col-lg-3 d-flex align-self-stretch">
+            <div class="card shadow-sm mb-4 w-100">
+               @if($option->image != '')
+               <a href="{{ url('product-detail/'.$product->id.'/'.$option->option_id) }}"><img src="{{$option['image']}}"
+                     class="col-md-10 offset-1" /></a>
+               @else
+               <img src="{{ asset('theme/img/image_not_available.png') }}" class="w-100 img-fluid h-75 w-75"
+                  onclick="showdetails({{$product->id}})" />
+               @endif
+               <div class="card-body d-flex flex-column text-center">
+                  <input type="hidden" name="quantity" value="1" id="quantity">
+                  <input type="hidden" name="p_id" id="p_{{$product->id}}" value="{{$product->id}}">
+                  <h5 class="card-title" style="font-weight: 500;
+                           font-size: 16px;"><a
+                        href="{{ url('product-detail/'.$product->id.'/'.$option->option_id.'/'.$product->slug) }}"
+                        id="product_name_{{$product->id}}">{{$product->name}}</a></h5>
+                  <div class="mt-auto">
+                     <p class="text-uppercase mb-0 text-center text-danger">
+                        <?php 
+                  foreach($option->price as $price)
+                     {
+                     switch ($pricing) {
+                           case "Retail":
+                              $retail_price = $price->retailUSD;
+                              break;
+                           case "Wholesale":
+                              $retail_price = $price->wholesaleUSD;
+                              break;
+                           case "TerraIntern":
+                              $retail_price = $price->terraInternUSD;
+                              break;
+                           case "Sacramento":
+                              $retail_price = $price->sacramentoUSD;
+                              break;
+                           case "Oklahoma":
+                              $retail_price = $price->oklahomaUSD;
+                              break;
+                           case "Calaveras":
+                              $retail_price = $price->calaverasUSD;
+                           break;
+                           case "Tier1":
+                              $retail_price = $price->tier1USD;
+                           break;
+                           case "Tier2":
+                              $retail_price = $price->tier2USD;
+                           break;
+                           case "Tier3":
+                              $retail_price = $price->tier3USD;
+                           break;
+                           case "ComercialOk":
+                              $retail_price = $price->commercialOKUSD;
+                           break;
+                           case "Cost":
+                              $retail_price = $price->costUSD;
+                           break;
+                           default : 
+                           $retail_price = $price->retailUSD;
+                           }
+                     }
+               
+                     // if($pricing == 'WholesaleUSD') {
+                     //   $retail_prices = $option->wholesalePrice;
+                     // }
+                     // else {
+                     //   $retail_prices = $option->retailPrice;
+                     // }
+                     ?>
+                        ${{number_format($retail_price,2)}}
+                     </p>
+                     <button class="button-cards col w-100" style="max-height: 46px;"
+                        onclick="updateCart({{$product->id}},{{$option->option_id}})">Add to cart</button>
+                  </div>
                </div>
             </div>
          </div>
-      </div>
-      @endforeach
+         @endforeach
       @endforeach
    </div>
 </div>
 <div class="container mobile-view">
-   <div class="pt-3" style="border: 1px solid lightgray;">
-      <p class="d-flex justify-content-center align-items-center">
-         <button class="filler-and-sort btn btn-primary w-75 filler-and-sort" type="button" data-bs-toggle="collapse"
-            data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-            Filter and Sort <span><img src="/theme/img/filler-icon.png" alt=""></span>
-         </button>
+   <div class="">
+      <p class="d-flex justify-content-start align-items-center mb-0">
+          <button class="filler-and-sort btn  filler-and-sort p-0 filterMblbtn" type="button" data-bs-toggle="modal"
+              data-bs-target="#filter_model" aria-expanded="false" aria-controls="" style="border: none !important;">
+              <i class="fa fa-sliders filterIco_mbl"></i>
+              <span class="search_filter_text">Search Filter </span>
+              {{-- <img src="/theme/img/filler-icon.png" alt=""></span> --}}
+          </button>
       </p>
    </div>
    <div class="collapse mt-5" id="collapseExample">
@@ -311,33 +324,38 @@
       </div>
    </div>
    <div class="row">
+      @if(count($products) == 0)
+         <div class="col-md-12 mt-3">
+               <div class="alert alert-danger">No Product Found</div>
+         </div>
+      @endif
       @foreach($products as $key=>$product)
-      @foreach($product->options as $option)
-      <div class="col-sm-12 col-md-6 col-lg-3 d-flex align-self-stretch">
-         <div class="card shadow-sm mb-4 w-100">
-            @if($option->image != '')
-            <a href="{{ url('product-detail/'.$product->id.'/'.$option->option_id) }}"><img src="{{$option['image']}}"
-                  class="col-md-10 offset-1" /></a>
-            @else
-            <img src="{{ asset('theme/img/image_not_available.png') }}" class="w-100 img-fluid h-75 w-75"
-               onclick="showdetails({{$product->id}})" />
-            @endif
-            <div class="card-body d-flex flex-column text-center">
-               <input type="hidden" name="quantity" value="1" id="quantity">
-               <input type="hidden" name="p_id" id="p_{{$product->id}}" value="{{$product->id}}">
-               <h5 class="card-title" style="font-weight: 500;
-                        font-size: 16px;"><a
-                     href="{{ url('product-detail/'.$product->id.'/'.$option->option_id.'/'.$product->slug) }}"
-                     id=product_name_{{$product->id}}>{{$product->name}}</a></h5>
-               <div class="mt-auto">
-                  <p class="text-uppercase mb-0 text-center text-danger">${{$product->retail_price}}</p>
-                  <button class="button-cards col w-100" style="max-height: 46px;"
-                     onclick="updateCart({{$product->id}},{{$option->option_id}})">Add to cart</button>
+         @foreach($product->options as $option)
+         <div class="col-sm-12 col-md-6 col-lg-3 d-flex align-self-stretch">
+            <div class="card shadow-sm mb-4 w-100">
+               @if($option->image != '')
+               <a href="{{ url('product-detail/'.$product->id.'/'.$option->option_id) }}"><img src="{{$option['image']}}"
+                     class="col-md-10 offset-1" /></a>
+               @else
+               <img src="{{ asset('theme/img/image_not_available.png') }}" class="w-100 img-fluid h-75 w-75"
+                  onclick="showdetails({{$product->id}})" />
+               @endif
+               <div class="card-body d-flex flex-column text-center">
+                  <input type="hidden" name="quantity" value="1" id="quantity">
+                  <input type="hidden" name="p_id" id="p_{{$product->id}}" value="{{$product->id}}">
+                  <h5 class="card-title" style="font-weight: 500;
+                           font-size: 16px;"><a
+                        href="{{ url('product-detail/'.$product->id.'/'.$option->option_id.'/'.$product->slug) }}"
+                        id="product_name_{{$product->id}}">{{$product->name}}</a></h5>
+                  <div class="mt-auto">
+                     <p class="text-uppercase mb-0 text-center text-danger">${{$product->retail_price}}</p>
+                     <button class="button-cards col w-100" style="max-height: 46px;"
+                        onclick="updateCart({{$product->id}},{{$option->option_id}})">Add to cart</button>
+                  </div>
                </div>
             </div>
          </div>
-      </div>
-      @endforeach
+         @endforeach
       @endforeach
    </div>
 </div>
@@ -443,181 +461,347 @@
       </div>
    </form>
    <div class="row">
+      @if(count($products) == 0)
+         <div class="col-md-12 mt-3">
+               <div class="alert alert-danger">No Product Found</div>
+         </div>
+      @endif
       @foreach($products as $key=>$product)
-      @foreach($product->options as $option)
-      <div class="col-sm-12 col-md-6 col-lg-3 d-flex align-self-stretch">
-         <div class="card shadow-sm mb-4 w-100">
-            @if($option->image != '')
-            <a href="{{ url('product-detail/'.$product->id.'/'.$option->option_id) }}"><img src="{{$option['image']}}"
-                  class="col-md-10 offset-1" /></a>
-            @else
-            <img src="{{ asset('theme/img/image_not_available.png') }}" class="w-100 img-fluid h-75 w-75"
-               onclick="showdetails({{$product->id}})" />
-            @endif
-            <div class="card-body d-flex flex-column text-center">
-               <input type="hidden" name="quantity" value="1" id="quantity">
-               <input type="hidden" name="p_id" id="p_{{$product->id}}" value="{{$product->id}}">
-               <h5 class="card-title" style="font-weight: 500;
-                        font-size: 16px;"><a
-                     href="{{ url('product-detail/'.$product->id.'/'.$option->option_id.'/'.$product->slug) }}"
-                     id=product_name_{{$product->id}}>{{$product->name}}</a></h5>
-               <div class="mt-auto">
-                  <p class="text-uppercase mb-0 text-center text-danger">${{$product->retail_price}}</p>
-                  <button class="button-cards col w-100" style="max-height: 46px;"
-                     onclick="updateCart({{$product->id}},{{$option->option_id}})">Add to cart</button>
+         @foreach($product->options as $option)
+         <div class="col-sm-12 col-md-6 col-lg-3 d-flex align-self-stretch">
+            <div class="card shadow-sm mb-4 w-100">
+               @if($option->image != '')
+               <a href="{{ url('product-detail/'.$product->id.'/'.$option->option_id) }}"><img src="{{$option['image']}}"
+                     class="col-md-10 offset-1" /></a>
+               @else
+               <img src="{{ asset('theme/img/image_not_available.png') }}" class="w-100 img-fluid h-75 w-75"
+                  onclick="showdetails({{$product->id}})" />
+               @endif
+               <div class="card-body d-flex flex-column text-center">
+                  <input type="hidden" name="quantity" value="1" id="quantity">
+                  <input type="hidden" name="p_id" id="p_{{$product->id}}" value="{{$product->id}}">
+                  <h5 class="card-title" style="font-weight: 500;
+                           font-size: 16px;"><a
+                        href="{{ url('product-detail/'.$product->id.'/'.$option->option_id.'/'.$product->slug) }}"
+                        id="product_name_{{$product->id}}">{{$product->name}}</a></h5>
+                  <div class="mt-auto">
+                     <p class="text-uppercase mb-0 text-center text-danger">${{$product->retail_price}}</p>
+                     <button class="button-cards col w-100" style="max-height: 46px;"
+                        onclick="updateCart({{$product->id}},{{$option->option_id}})">Add to cart</button>
+                  </div>
                </div>
             </div>
          </div>
-      </div>
-      @endforeach
+         @endforeach
       @endforeach
    </div>
 </div>
 
+{{-- pop up filter mobile --}}
+
+<div class="modal fade" id="filter_model" tabindex="-1" aria-labelledby="filter_content" aria-hidden="true" data-bs-backdrop="static">
+   
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header  mobile_filter_header">
+            <h5 class="modal-title mobile_filter_title" id="filter_content">Search Filter</h5>
+            <button type="button" class="bg-none mbl_filter_btn" data-bs-dismiss="modal" aria-label="Close">
+               <i class="fa fa-times mbl_filter_close"></i>
+            </button>
+         </div>
+         <div class="modal-body">
+            <div class="card card-body p-0 border-0">
+               <form id="form-filter-pop">
+                  <div class="row pb-4 pt-2 border-0">
+                     <div class="col-md-12">
+                        <label class="filter_heading_mbl">Sort by</label>
+                        <select class="form-select form-select-mbl" id="search_price_mbl">
+                           <option class="filter_drop_down_mbl " value="0">Select Option</option>
+                           <option class="filter_drop_down_mbl form-group" value="best-selling">Best Selling</option>
+                           <option class="filter_drop_down_mbl form-group" value="price-low-to-high">Price Low to High
+                           </option>
+                           <option class="filter_drop_down_mbl form-group" value="price-high-to-low">Price High to Low
+                           </option>
+                           <option class="filter_drop_down_mbl form-group" value="brand-a-to-z">Brand A to Z</option>
+                           <option class="filter_drop_down_mbl form-group" value="brand-z-to-a">Brand Z to A</option>
+                        </select>
+                     </div>
+                     <div class="col-md-12 mt-2">
+                        <?php //dd($category_id);
+                                ?>
+                        <label class="filter_heading_mbl">Categories</label>
+                        <select class="form-select form-select-mbl" 
+                           id="selected_cat_mbl" name="selected_cat">
+                           <option class="filter_drop_down_mbl" value="">Select Category</option>
+                           @foreach ($categories as $category)
+                           <option class="filter_drop_down_mbl" value="{{$category->id}}">{{ $category->name }}
+                           </option>
+                           @endforeach
+                        </select>
+                     </div>
+                     {{-- <div class="col-md-12 mt-2">
+                        <label class="filter_heading_mbl">Sub Category</label>
+                        <select class="form-select form-select-mbl" id="childeren_mbl" name="childeren_category">
+                            <option class="filter_drop_down_mbl" value="0">Sub Category</option>
+                        </select>
+                     </div> --}}
+                     <div class="col-md-12 mt-2">
+                        <label class="filter_heading_mbl">Brand</label>
+                        <select class="form-select form-select-mbl" id="brand_mbl" name="brands[]">
+                           <option class="filter_drop_down_mbl" value="0">Select Brand</option>
+                           @foreach ($brands as $_brand_id => $brand_name)
+                           <option class="filter_drop_down_mbl" value="{{ $_brand_id }}" {{ isset($brand_id) && $brand_id==$_brand_id ? 'selected="selected"'
+                           : '' }}>{{ $brand_name }}</option>
+                           @endforeach
+                        </select>
+                     </div>
+                     <div class="col-md-12 mt-2">
+                        <label class="filter_heading_mbl">Result per page</label>
+                        <select id="per_page_mbl" class="form-select form-select-mbl">
+                           <option class="filter_drop_down_mbl" value="20">20</option>
+                           <option class="filter_drop_down_mbl" value="40">40</option>
+                           <option class="filter_drop_down_mbl" value="60">60</option>
+                        </select>
+                     </div>
+
+                     <div class="col-md-12 mt-2">
+                        <?php if (empty($stock) || $stock == 'in-stock') {
+                                    $text = 'In stock';
+                                    $danger = '';
+                                    $stock = 'in-stock';
+                                } else {
+                                    $text = 'Out of Stock';
+                                    $danger = 'bg-danger';
+                                    $stock = 'out-of-stock';
+                                }
+                                ?>
+                        <label class="filter_heading_mbl">Show Only</label>
+                        <select id="in_stk" class="form-select form-select-mbl">
+                           <option class="filter_drop_down_mbl" value="0">Show Only</option>
+                           <option class="filter_drop_down_mbl" value="in-stock" {{ isset($stock) && $stock=='in-stock'
+                              ? 'selected' : '' }}>In Stock</option>
+                           <option class="filter_drop_down_mbl" value="out-of-stock" {{ isset($stock) &&
+                              $stock=='out-of-stock' ? 'selected' : '' }}>Out of Stock</option>
+                        </select>
+                     </div>
+                  </div>
+                  <div class="row justify-content-center">
+                     <button type="button" onclick="handleSelectChangeMbl()" class="btn btn-success filter-done-btn">
+                        <span class="filter-done-btn-text">Done</span>
+                     </button>
+                  </div>
+               </form>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+
+{{-- pop up filter mobile end --}}
+
+
+
 <!-- Remove the container if you want to extend the Footer to full width. -->
 <script>
+   //mobile filter get child category
+   function get_child_categories() {
+      var child_category = jQuery('#selected_cat_mbl').val();
+      var parent_id = child_category.substring(0, child_category.indexOf('/'));;
+      jQuery.ajax({
+            url: '/child/categories/' + parent_id,
+            method: 'get',
+            success: function(response) {
+               if(response.status == 'success') {
+                  $.each(response.child_categories, function(index, option) {
+                     $('#childeren_mbl').append('<option value="' + option.id + '">' + option.name + '</option>');
+                  });
+               }
+            }
+      });
+   } 
+
+   // mobile filter
+   function handleSelectChangeMbl(searchedOption = '') {
+      var basic_url = '';
+      var selected_category = jQuery('#selected_cat_mbl').val();
+      var brand = jQuery('#brand_mbl').val();
+      var brand1 = jQuery('#brand_mbl option:selected').text();
+      var per_page = jQuery('#per_page_mbl').val();
+      var search_price = jQuery('#search_price_mbl').val();
+      var childeren = jQuery('#childeren_mbl').val();
+      var stock = jQuery('#in_stk').val();
+      var category_id = jQuery('#category_id').val();
+      var parent_category_slug = jQuery('#parent_category_slug').val();
+      var emptyCategory = 0;
+      var emptychildCategory = 0;
+      
+      
+      if (selected_category != '') {
+            basic_url = `&selected_category=${selected_category}`;
+      }
+      else {
+            basic_url = `&selected_category=${emptyCategory}`;
+      }
+
+      if (brand != '') {
+            basic_url = basic_url + `&brand_id=${brand}`;
+      }
+
+      if (per_page != '') {
+            basic_url = basic_url + `&per_page=${per_page}`;
+      }
+      if (search_price != '') {
+            basic_url = basic_url + `&search_price=${search_price}`;
+      }
+      if (stock != '') {
+            basic_url = basic_url + `&stock=${stock }`;
+
+      }
+      
+      basic_url = "?" + basic_url.slice(1);
+      var main_url  = window.location.origin + '/product/search' +  basic_url;
+      window.location.href = main_url;
+
+   }
    function updateCart(id, option_id) {
-            jQuery.ajax({
-               url: "{{ url('/add-to-cart/') }}",
+
+      jQuery.ajax({
+            url: "{{ url('/add-to-cart/') }}",
                method: 'post',
                data: {
-                 "_token": "{{ csrf_token() }}",
+                  "_token": "{{ csrf_token() }}",
                   p_id: jQuery('#p_'+id).val(),
-                  quantity: 1,
-                  option_id: option_id
-
+                  option_id: option_id,
+                  quantity: 1
                },
+            success: function(response) {
+            if(response.status == 'success') {
+                     var cart_items = response.cart_items;
+                     var cart_total = 0;
+                     var total_cart_quantity = 0;
 
-               success: function(response){
-                        if(response.status == 'success'){
-                        var cart_items = response.cart_items;
-                        var cart_total = 0;
-                        var total_cart_quantity = 0;
+                     for (var key in cart_items) {
+                        var item = cart_items[key];
 
-                        for (var key in cart_items) {
-                            var item = cart_items[key];
-                            var product_id = item.prd_id;
-                            var price = parseFloat(item.price);
-                            var quantity = parseFloat(item.quantity);
-                            var subtotal = parseInt(price * quantity);
-                            var cart_total = cart_total + subtotal;
-                            var total_cart_quantity = total_cart_quantity + quantity;
-                            $('#subtotal_' + product_id).html('$'+subtotal);
-                            var product_name = document.getElementById("product_name_"+jQuery('#p_'+id).val()).innerHTML;
-                        }
-                        
-                        Swal.fire({
-                            toast: true,
-                            icon: 'success',
-                            title: jQuery('#quantity').val() + ' X ' + product_name + ' added to your cart',
-                            timer: 3000,
-                            showConfirmButton: false,
-                            position: 'top',
-                            timerProgressBar: true
-                        });
+                        var product_id = item.prd_id;
+                        var price = parseFloat(item.price);
+                        var quantity = parseFloat(item.quantity);
+
+                        var subtotal = parseFloat(price * quantity);
+                        var cart_total = cart_total + subtotal;
+                        var total_cart_quantity = total_cart_quantity + quantity;
+                        $('#subtotal_' + product_id).html('$'+subtotal);
+                        var product_name = document.getElementById("product_name_"+jQuery('#p_'+id).val()).innerHTML;
                      }
-                     $('#top_cart_quantity').html(total_cart_quantity);
-                     $('#cart_items_quantity').html(total_cart_quantity);
-                     $('.cartQtyipad').html(total_cart_quantity);
-                     $('.cartQtymbl').html(total_cart_quantity);
-                     $('#topbar_cart_total').html('$'+parseFloat(cart_total).toFixed(2));
-                     $('.topbar_cart_total_ipad').html('$'+parseFloat(cart_total).toFixed(2));
-                    var total = document.getElementById('#top_cart_quantity');
-               }});
+                     
+                     Swal.fire({
+                        toast: true,
+                        icon: 'success',
+                        title: jQuery('#quantity').val() + ' X ' + product_name + ' added to your cart',
+                        timer: 3000,
+                        showConfirmButton: false,
+                        position: 'top',
+                        timerProgressBar: true
+                     });
+               }
+                  $('#top_cart_quantity').html(total_cart_quantity);
+                  $('.cartQtyipad').html(total_cart_quantity);
+                  $('.cartQtymbl').html(total_cart_quantity);
+                  $('#cart_items_quantity').html(total_cart_quantity);
+                  $('#topbar_cart_total').html('$'+parseFloat(cart_total).toFixed(2));
+                  $('.topbar_cart_total_ipad').html('$'+parseFloat(cart_total).toFixed(2));
+                  var total = document.getElementById('#top_cart_quantity');
+            }});
 
-             return false;
-         }
-            function categoryChange() {
-            var categories = jQuery('#categories').val();
-            window.location.href =  window.location.origin+'/products/'+category_id;
+         return false;
+   }
+	function categoryChange() {
+		var categories = jQuery('#categories').val();
+		window.location.href =  window.location.origin+'/products/'+category_id;
 
-         } 
+	} 
 
-         function inStockOutstock() {
-            var value = jQuery('#in-stock').val();
-            if (value == 'in-stock') {
-               jQuery('#in-stock').addClass('bg-danger');
-               jQuery('#in-stock').addClass('out-of-stock');
-               $("#in-stock").html("Out of Stock");
-               $("#in-stock").prop("value", "out-of-stock");
+	function inStockOutstock() {
+		var value = jQuery('#in-stock').val();
+		if (value == 'in-stock') {
+			jQuery('#in-stock').addClass('bg-danger');
+			jQuery('#in-stock').addClass('out-of-stock');
+			$("#in-stock").html("Out of Stock");
+			$("#in-stock").prop("value", "out-of-stock");
 
-            }
-            else {
-               jQuery('#in-stock').removeClass('bg-danger');
-               jQuery('#in-stock').removeClass('out-of-stock');
-               jQuery('#in-stock').addClass('in-stock');
-               $("#in-stock").prop("value", "in-stock");
-               $("#in-stock").html("In Stock");
-               
-            }
-           
-         }
+		}
+		else {
+			jQuery('#in-stock').removeClass('bg-danger');
+			jQuery('#in-stock').removeClass('out-of-stock');
+			jQuery('#in-stock').addClass('in-stock');
+			$("#in-stock").prop("value", "in-stock");
+			$("#in-stock").html("In Stock");
+			
+		}
+	
+	}
 
-         function handleSelectChange(searchedOption = '') {
-            var category_id = jQuery('#categories').val();
-            var selected_cat_id = jQuery('#selected_cat').val();
-            var price = jQuery('#search_price').val();
-            var brand = jQuery('#brand').val();
-            var per_page = jQuery('#per_page').val();
-            var stock = jQuery('#in-stock').val();
-            var search_price = jQuery('#search_price').val();
-            var category_id = jQuery('#category_id').val();
-            var selected_category_id = jQuery('#categories').val();
-            var parent_category_slug = jQuery('#parent_category_slug').val();
-            //var chosen = true;
+    function handleSelectChange(searchedOption = '') {
+		var category_id = jQuery('#categories').val();
+		var selected_cat_id = jQuery('#selected_cat').val();
+		var price = jQuery('#search_price').val();
+		var brand = jQuery('#brand').val();
+		var per_page = jQuery('#per_page').val();
+		var stock = jQuery('#in-stock').val();
+		var search_price = jQuery('#search_price').val();
+		var category_id = jQuery('#category_id').val();
+		var selected_category_id = jQuery('#categories').val();
+		var parent_category_slug = jQuery('#parent_category_slug').val();
+		//var chosen = true;
 
-            if (searchedOption == 'category') {
-               var brand = '';
-            }
+		if (searchedOption == 'category') {
+			var brand = '';
+		}
 
 
-            if (selected_cat_id != ''){ 
-               //alert(selected_cat_id);
-               var slug = selected_cat_id;
-              var basic_url = '/products/'+selected_cat_id + '/?';
-               //window.location.href = basic_url;
-               //var basic_url = `/products/${selected_cat_id}/${slug}`;
-             
-            }
-            else {
-            
-               var slug = `${category_id}/${parent_category_slug}`
-            }
-               
-                
-           
+		if (selected_cat_id != ''){ 
+			//alert(selected_cat_id);
+			var slug = selected_cat_id;
+			var basic_url = '/products/'+selected_cat_id + '/?';
+			//window.location.href = basic_url;
+			//var basic_url = `/products/${selected_cat_id}/${slug}`;
+			
+		}
+		else {
+		
+			var slug = `${category_id}/${parent_category_slug}`
+		}
+		// alert(selected_category_id);
+		
+		// alert(selected_category_id);
 
-            // alert(selected_category_id);
-           
-            // alert(selected_category_id);
+		// if (categories !='') {
 
-            // if (categories !='') {
+		// }
 
-            // }
+		if (brand != '') {
+			basic_url = `?brand_id=${brand}`;
+		}
+		if (per_page != '') {
+			basic_url = basic_url+`&per_page=${per_page}`;
+		}
+		if (search_price != '') {
+			basic_url = basic_url+`&search_price=${search_price}`;
+		}
+		if (selected_category_id != '') {
+			basic_url = basic_url+`&selected_category_id=${selected_cat_id}`;
+		}
+		if (stock != '') {
+			basic_url = basic_url+`&stock=${stock}`;
+		}
 
-            if (brand != '') {
-               basic_url = `?brand_id=${brand}`;
-            }
-            if (per_page != '') {
-               basic_url = basic_url+`&per_page=${per_page}`;
-            }
-            if (search_price != '') {
-               basic_url = basic_url+`&search_price=${search_price}`;
-            }
-            if (selected_category_id != '') {
-               basic_url = basic_url+`&selected_category_id=${selected_cat_id}`;
-            }
-            if (stock != '') {
-               basic_url = basic_url+`&stock=${stock}`;
-            }
+		// alert(basic_url);
+		
+		
+		window.location.href = basic_url;
 
-          // alert(basic_url);
-          
-          
-            window.location.href = basic_url;
-
-         //}
-      }
+		//}
+    }
 
 </script>
 
