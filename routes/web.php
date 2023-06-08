@@ -101,6 +101,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('admin/dashboard', [DashboardController::class, 'index'])->name('admin.view');
     Route::get('admin/orders', [OrderManagementController::class, 'index'])->name('admin.orders');
     Route::delete('admin/orders/all/delete', [OrderManagementController::class, 'deleteAllOrders']);
+    Route::post('admin/orders/multi-full-fill', [OrderManagementController::class, 'multiOrderFullFill']);
     Route::get('admin/order/create', [OrderManagementController::class, 'create'])->name('admin.order.create');
     Route::get('/admin/order-detail/{id}', [OrderManagementController::class, 'show'])->name('admin.order.detail');
     Route::post('admin/order-comments', [OrderManagementController::class, 'addComments'])->name('admin.order.comments');
@@ -126,6 +127,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('admin/api-order-details/{id}', [OrderManagementController::class, 'show_api_order'])->name('admin.api.order.details');
     Route::post('admin/order-full-fill', [OrderManagementController::class, 'order_full_fill'])->name('admin.order.full.fill');
     Route::post('admin/check-status', [OrderManagementController::class, 'check_order_status'])->name('admin.check.order.status');
+    Route::post('admin/multi/check-status', [OrderManagementController::class, 'mutli_check_order_status'])->name('admin.check.order.status');
     Route::post('admin/order-cancel', [OrderManagementController::class, 'cancelOrder']);
     Route::post('admin/customer-activate', [ContactController::class, 'activate_customer'])->name('admin.customer.activate');
     Route::post('admin/update-pricing-column', [ContactController::class, 'update_pricing_column'])->name('admin.update.pricing.column');

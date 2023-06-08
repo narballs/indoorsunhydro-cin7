@@ -18,6 +18,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\Subscribe;
 use App\Helpers\MailHelper;
+use App\Helpers\OrderHelper;
 use App\Models\BuyList;
 use App\Models\ProductBuyList;
 use App\Models\TaxClass;
@@ -472,7 +473,7 @@ class OrderManagementController extends Controller
 
     public function check_order_status(Request $request)
     {
-        sleep(10);
+        sleep(20);
         $order = ApiOrder::where('id', $request->order_id)->first();
         if ($order->order_id != null) {
             $msg = 'Order fullfilled successfully';
@@ -483,8 +484,24 @@ class OrderManagementController extends Controller
             'status' => $msg
         ]);
     }
-    // destroy order 
+    public function mutli_check_order_status(Request $request)
+    {
+        sleep(20);
+        $ids = $request->ids;
+        $order = ApiOrder::where('id', $ids)->get();
+        foreach ($order as $order) {
+            if ($order->order_id != null) {
+                $msg = 'Order fullfilled successfully';
+            } else {
+                $msg = 'Order fullfilled failed please try later';
+            }
+            return response()->json([
+                'status' => $msg
+            ]);
+        }
+    }
 
+    // destroy order 
     public function destroy(Request $request)
     {
         $order_id = $request->id;
@@ -514,5 +531,17 @@ class OrderManagementController extends Controller
         return response()->json([
             'success' => 'Order deleted successfully ! ',
         ]);
+    }
+
+    public function multiOrderFullFill(Request $request)
+    {
+        $order_id = $request->ids;
+        $currentOrders = ApiOrder::whereIn('id', explode(",", $order_id))
+            ->with('user.contact')
+            ->get();
+        foreach ($currentOrders as $order) {
+            $order_data = OrderHelper::get_order_data_to_process($order);
+            SalesOrders::dispatch('create_order', $order_data)->onQueue(env('QUEUE_NAME'));
+        }
     }
 }

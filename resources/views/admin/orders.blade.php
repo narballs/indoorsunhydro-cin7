@@ -12,7 +12,7 @@
                                 Orders
                             </p>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-8">
                             <div class="progress border d-none w-50 mx-auto" id="progress-bar">
                                 <div class="progress-bar progress-bar-striped progress-bar-animated bg-info"
                                     role="progressbar" aria-valuenow="100" aria-valuemin="" aria-valuemax="100"></div>
@@ -46,8 +46,10 @@
                                     0 Selected
                                 </span>
                                 <span>
-                                    <a class=" delete_all btn btn-sm fulfill-row-items-order-page "
-                                        data-url="{{ url('admin/orders/all/delete') }}">
+                                    {{-- <input class="btn btn-sm fulfill-row-items-order-page" type="button"
+                                        value="Fullfill Order" onclick="fullFillOrder()"> --}}
+                                    <a class="order_ful_fill btn btn-sm fulfill-row-items-order-page "
+                                        data-url="{{ url('admin/orders/multi-full-fill') }}">
                                         Fulfill Order
                                     </a>
                                 </span>
@@ -182,77 +184,7 @@
                                         <td class="td_padding_row">
                                             {{ $order->paymentTerms }}
                                         </td>
-                                        <td class="created_by toggleClass td_padding_row">
-                                            {{-- <div class="btn-group">
-                                                <button type="button" class="btn p-0 btn-white dropdown-toggle"
-                                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <i class="fas fa-ellipsis-h" style="color: #CBCBCB !important;"></i>
-                                                </button>
-                                                <div class="dropdown-menu dropdonwn_menu">
-                                                    <a class="dropdown-item"
-                                                        href="{{ url('admin/order-detail/' . $order->id) }}"
-                                                        class="view a_class" title="" data-toggle="tooltip"
-                                                        data-original-title="View">Previews
-                                                    </a>
-                                                    <a class="dropdown-item delete deleteIcon a_class" href="#"
-                                                        class="" id="{{ $order->id }}" title=""
-                                                        data-toggle="tooltip" data-original-title="Delete">Delete
-                                                    </a>
-                                                    <a class="dropdown-item"href="#" class="edit a_class"
-                                                        title="" data-toggle="tooltip"
-                                                        data-original-title="Edit">Edit
-                                                    </a>
-                                                    <form>
-                                                        @csrf
-                                                        @if ($order->isApproved == 1 && $order->isVoid == 0)
-                                                            <a class="dropdown-item disabled bg_success" type="button"
-                                                                class="edit a_class" title="" data-toggle="tooltip"
-                                                                data-original-title="Edit">Fulfill
-                                                                Order
-                                                            </a>
-                                                        @elseif ($order->isApproved == 2 && $order->isVoid == 0)
-                                                            <a class="dropdown-item disabled bg_danger" type="button"
-                                                                class="edit a_class" title="" data-toggle="tooltip"
-                                                                data-original-title="Edit">Fulfill
-                                                                Order
-                                                            </a>
-                                                        @elseif ($order->isApproved == 1 && $order->isVoid == 1)
-                                                            <a class="dropdown-item disabled bg_secondary" type="button"
-                                                                class="edit a_class" title="" data-toggle="tooltip"
-                                                                data-original-title="Edit">Void
-                                                            </a>
-                                                        @else
-                                                            <a class="dropdown-item" type="button" class="edit a_class"
-                                                                title="" data-toggle="tooltip"
-                                                                data-original-title="Edit"
-                                                                onclick="fullFillOrder()">Fulfill
-                                                                Order
-                                                            </a>
-                                                            <input type="hidden" value="{{ $order->id }}"
-                                                                id="order_id">
-                                                        @endif
-                                                        @if ($order->isApproved == 2 && $order->isVoid == 0)
-                                                            <a class="dropdown-item disabled bg_danger" type="button"
-                                                                class="edit a_class" title="" data-toggle="tooltip"
-                                                                data-original-title="Edit">Cancel
-                                                                Order
-                                                            </a>
-                                                        @elseif($order->isApproved == 1 && $order->isVoid == 0)
-                                                            <a class="dropdown-item disabled bg_success" type="button"
-                                                                class="edit a_class" title="" data-toggle="tooltip"
-                                                                data-original-title="Edit">Cancel Order
-                                                            </a>
-                                                        @elseif($order->isApproved == 0 && $order->isVoid == 0)
-                                                            <a class="dropdown-item" type="button" class="edit a_class"
-                                                                title="" data-toggle="tooltip"
-                                                                data-original-title="Edit" onclick="cancelOrder()">Cancel
-                                                                Order
-                                                            </a>
-                                                        @endif
-                                                    </form>
-                                                </div>
-                                            </div> --}}
-                                            {{-- <td class="created_by toggleClass"> --}}
+                                        <td class="created_by toggleClass td_padding_row ps-0">
                                             <div class="d-flex justify-content-between aling-items-center pe-5">
                                                 <span>
                                                     <a href="{{ url('admin/order-detail/' . $order->id) }}"
@@ -271,7 +203,7 @@
                                                     <a href="#" class="delete deleteIcon a_class"
                                                         id="{{ $order->id }}" title="" data-toggle="tooltip"
                                                         data-original-title="Delete"><i
-                                                            class="icon-style fa fa-trash-alt  "></i>
+                                                            class="icon-style fa fa-trash-alt"></i>
                                                     </a>
                                                 </span>
                                             </div>
@@ -404,7 +336,6 @@
                 test.classList.remove('bg-icon');
             });
         });
-
 
         function perPage() {
             var search = $('#search').val();
@@ -566,7 +497,7 @@
                     $('#items_selected').html(count_unchecked + ' Selected');
                 }
             })
-            $('.delete_all').on('click', function(e) {
+            $('.order_ful_fill').on('click', function(e) {
                 var allVals = [];
                 $(".sub_chk:checked").each(function() {
                     allVals.push($(this).attr('data-id'));
@@ -578,50 +509,83 @@
                 } else {
                     Swal.fire({
                         title: 'Are you sure?',
-                        text: "You won't delete this order!",
+                        text: "You won't fullfill this order!",
                         type: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#3085d6',
                         cancelButtonColor: '#d33',
-                        confirmButtonText: 'Yes, delete it!'
+                        confirmButtonText: 'Yes, Full Fill it!'
                     }).then((result) => {
                         if (result.value) {
                             var join_selected_values = allVals.join(",");
                             $.ajax({
                                 url: $(this).data('url'),
-                                type: 'DELETE',
+                                type: 'POST',
                                 headers: {
                                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
                                         'content')
                                 },
                                 data: 'ids=' + join_selected_values,
-                                success: function(data) {
-                                    if (data['success']) {
-                                        // alert('success');
-                                        $(".sub_chk:checked").each(function() {
-                                            $(this).parents("tr").remove();
-                                        });
-                                        Swal.fire(
-                                            'Deleted!',
-                                            'Your order has been deleted.',
-                                            'success'
-                                        )
-                                    } else if (data['error']) {
-                                        alert(data['error']);
-                                    } else {
-                                        Swal.fire(
-                                            'Please select a row to delete',
-                                        )
-                                    }
+                                success: function(response) {
+                                    var delay = 8000;
+                                    $('#progress-bar').removeClass('d-none');
+                                    jQuery(".progress-bar").each(function(i) {
+                                        jQuery(this).delay(delay * i).animate({
+                                            width: $(this).attr(
+                                                    'aria-valuenow') +
+                                                '%'
+                                        }, delay);
+
+                                        jQuery(this).prop('Counter', 1)
+                                            .animate({
+                                                Counter: $(this).text()
+                                            }, {
+                                                duration: delay,
+                                                // easing: 'swing',
+                                                step: function(now) {
+                                                    jQuery(this).text(
+                                                        Math.ceil(
+                                                            100) +
+                                                        '%');
+
+                                                }
+                                            });
+                                    })
+
+                                    jQuery.ajax({
+                                        url: "{{ url('admin/multi/check-status') }}",
+                                        method: 'POST',
+                                        headers: {
+                                            'X-CSRF-TOKEN': $(
+                                                    'meta[name="csrf-token"]')
+                                                .attr('content')
+                                        },
+                                        data: 'ids=' + join_selected_values,
+                                        success: function(response) {
+                                            console.log(response.status);
+                                            if (response.status ===
+                                                'Order fullfilled successfully'
+                                            ) {
+                                                Swal.fire(
+                                                    'Good job!',
+                                                    'Order fullfilled successfully',
+                                                    'success'
+                                                )
+                                            } else {
+                                                Swal.fire(
+                                                    'Order fullfilled failed'
+                                                )
+                                            }
+                                            $('#progress-bar').addClass(
+                                                'd-none');
+                                            setInterval('location.reload()',
+                                                8000);
+                                        }
+                                    });
                                 },
                                 error: function(data) {
                                     alert(data.responseText);
                                 }
-                            });
-
-                            $.each(allVals, function(index, value) {
-                                $('table tr').filter("[data-row-id='" + value + "']")
-                                    .remove();
                             });
                         }
                     });
