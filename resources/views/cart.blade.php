@@ -1282,9 +1282,6 @@
         margin-bottom: 25px;
     }
 
-    .top-bar-height {
-        height: 78px;
-    }
 </style>
 
 <script>

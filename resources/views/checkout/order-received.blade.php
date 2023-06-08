@@ -1,7 +1,7 @@
 @include('partials.header')
 @include('partials.top-bar')
 @include('partials.search-bar')
-<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Ubuntu:regular,bold&subset=Latin">
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Ubuntu:regular,bold&subset=Latin">
 <style>
 	.order-confirmation-page-table-data-heading,
 	thead,
