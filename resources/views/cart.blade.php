@@ -23,10 +23,16 @@
                     <div class="row">
                         <div class="col-md-12">
 
+
                             @if (Auth::check() == true && $contact->status == 0)
                                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                     Checkout has been disabled.
-
+                                </div>
+                            @endif
+                            @if (session('message'))
+                                <div class="alert alert-danger alert-dismissible fade show">
+                                    {{ session('message') }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                 </div>
                             @endif
                             <div class="table-responsive">
@@ -320,9 +326,8 @@
             </table>
         </div>
     </div>
-</div>
-</div>
-
+                        </div>
+                        </div>
 <!--Mobile View -->
 <!-- MultiStep Form  -->
 <div class="container-fluid mobile-view">
