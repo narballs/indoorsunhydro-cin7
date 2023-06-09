@@ -39,12 +39,14 @@
             </div>
             <div class="card-body product_table_body">
                 <div class="col-md-12 p-0">
-                    <div class="col-md-12 btn-row my-3">
-                        <div class="row">
-                            <div class="col-md-3 d-flex justify-content-between align-content-center py-2">
+                    <div class="col-md-12 btn-row mb-4">
+                        <div class="row py-2">
+                            <div class="col-md-9 d-flex justify-content-between align-content-center py-2">
                                 <span class="border-right pe-5 select-row-items ms-2" id="items_selected">
                                     0 Selected
                                 </span>
+                            </div>
+                            <div class="col-md-3 d-flex justify-content-between align-items-center">
                                 <span>
                                     <a class="order_ful_fill btn btn-sm fulfill-row-items-order-page "
                                         data-url="{{ url('admin/orders/multi-full-fill') }}">
@@ -57,12 +59,8 @@
                                         Cancel Order
                                     </a>
                                 </span>
-                            </div>
-
-                            @if ($auto_fulfill == 1)
-                                <div class="col-md-9 d-flex justify-content-end align-items-center">
+                                @if ($auto_fulfill == 1)
                                     <span class="d-flex">
-
                                         <a class=" btn  btn-sm fulfill-row-items-order-page">
                                             Auto Fullfill
                                         </a>
@@ -73,11 +71,8 @@
                                             <span class="custom-control-indicator"></span>
                                         </label>
                                     </span>
-                                </div>
-                            @else
-                                <div class="col-md-9 d-flex justify-content-end align-items-center">
+                                @else
                                     <span class="d-flex">
-
                                         <a class=" btn  btn-sm fulfill-row-items-order-page">
                                             Auto Fullfill
                                         </a>
@@ -87,8 +82,8 @@
                                             <span class="custom-control-indicator"></span>
                                         </label>
                                     </span>
-                                </div>
-                            @endif
+                                @endif
+                            </div>
                         </div>
                     </div>
                     <table class="table border table-customer mb-5">
@@ -212,8 +207,8 @@
                                         <td class="td_padding_row">
                                             {{ $order->paymentTerms }}
                                         </td>
-                                        <td class="created_by toggleClass td_padding_row ps-0">
-                                            <div class="d-flex justify-content-between aling-items-center pe-5">
+                                        <td class="created_by toggleClass td_padding_row">
+                                            <div class="d-flex aling-items-center order-table-actions">
                                                 <span>
                                                     <a href="{{ url('admin/order-detail/' . $order->id) }}"
                                                         class="view a_class" title="" data-toggle="tooltip"
@@ -255,9 +250,9 @@
 @stop
 
 @section('css')
-    <link rel="stylesheet" href="/theme/css/admin_custom.css">
-    <link rel="stylesheet" href="{{ asset('/admin/admin_lte.css') }}">
-    <link href="https://fonts.cdnfonts.com/css/poppins" rel="stylesheet">
+    <link rel="stylesheet" href="/theme/css/admin_custom.css?v2">
+    <link rel="stylesheet" href="{{ asset('/admin/admin_lte.css?v2') }}">
+    <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/poppins">
 
     <style type="text/css">
         .custom-checkbox {
@@ -441,12 +436,12 @@
             let csrf = '{{ csrf_token() }}';
             Swal.fire({
                 title: 'Are you sure?',
-                text: "You won't delete this order!",
+                text: "You want to delete this order!",
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
+                confirmButtonText: 'Yes, delete !'
             }).then((result) => {
                 if (result.value) {
                     $.ajax({
@@ -602,12 +597,12 @@
                 } else {
                     Swal.fire({
                         title: 'Are you sure?',
-                        text: "your want to full-fill order(s)?",
+                        text: "You want to full-fill order(s)?",
                         type: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#7CC633 ',
                         cancelButtonColor: '#DC4E41',
-                        confirmButtonText: 'Yes, Full Fill it!'
+                        confirmButtonText: 'Yes, Full Fill !'
                     }).then((result) => {
                         if (result.value) {
                             var join_selected_values = orderIds.join(",");
@@ -713,12 +708,12 @@
                 } else {
                     Swal.fire({
                         title: 'Are you sure?',
-                        text: "your want to cancel order(s)?",
+                        text: "You want to cancel order(s)?",
                         type: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#DC4E41',
                         cancelButtonColor: '#7CC633',
-                        confirmButtonText: 'Yes, Cancel it!'
+                        confirmButtonText: 'Yes, Cancel !'
                     }).then((result) => {
                         if (result.value) {
                             var join_selected_values = orderIds.join(",");
