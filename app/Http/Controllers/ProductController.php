@@ -721,12 +721,17 @@ class ProductController extends Controller
     public function cart(Request $request)
     {
         $cart_items = $request->session()->get('cart');
-        //dd($cart_items);
         $user_id = auth()->id();
-        $contact = [];
+
+        $company  = session()->get('company');
+        $contact_id = session()->get('contact_id');
         if (!empty($user_id)) {
             $contact = Contact::where('user_id', $user_id)->first();
         }
+        if (!empty($user_id) && !empty($contact_id)) {
+            $contact = Contact::where('user_id', $user_id)->where('contact_id', $contact_id)->orWhere('secondary_id', $contact_id)->first();
+        }
+
         $tax_class = TaxClass::where('is_default', 1)->first();
 
 
