@@ -74,13 +74,13 @@
                                     <td class="d-flex table-items">
                                         <div class="custom-control custom-checkbox tabel-checkbox">
                                             <input class="custom-control-input custom-control-input-success sub_chk"
-                                                data-id="{{ $order->id }}" type="checkbox"
-                                                id="separate_check_{{ $order->id }}">
-                                            <label for="separate_check_{{ $order->id }}"
+                                                data-id="{{ $log->id }}" type="checkbox"
+                                                id="separate_check_{{ $log->id }}">
+                                            <label for="separate_check_{{ $log->id }}"
                                                 class="custom-control-label ml-4"></label>
                                         </div>
                                         <span class="table-row-heading-order">
-                                            {{ $order->id }}
+                                            {{ $key + 1 }}
                                         </span>
                                     </td>
                                     <td class="user_name">
