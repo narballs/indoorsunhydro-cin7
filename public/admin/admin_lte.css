@@ -624,8 +624,10 @@ a {
 
 .search_row_admin-interface {
     border-radius: 8.8914px;
-    /* width: 48% !important; */
     height: 49px !important;
+    display: flex;
+    justify-content: space-between;
+
 }
 
 .search_row_admin_user {
