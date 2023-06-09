@@ -163,9 +163,11 @@ $cart_price = 0;
         </div>
     </div>
     <div class="row ps-5">
+        <div class="text-center d-none" id="progress_spinner"><img src="/theme/img/progress.gif" alt=""></div>
         <div class="col-md-12">
             <p class="item-purchased-thank-you-page">Item Purchased </p>
         </div>
+
         <div class=" col-xl-9 col-lg-9 col-md-12 col-sm-12 pe-5">
             <table class="table">
                 <tr>
@@ -1277,6 +1279,11 @@ $cart_price = 0;
             </div>
             <script>
                 function validate() {
+                    $('#progress_spinner').removeClass('d-none');
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("#progress_spinner").offset().top
+                    }, 2000);
+
                     $('#proceed_to_checkout').prop('disabled', true);
                     $('#proceed_to_checkout').addClass('text-muted');
                     if (!$("input[name=method_option]").is(':checked')) {
