@@ -213,20 +213,21 @@
                                                     <a href="{{ url('admin/order-detail/' . $order->id) }}"
                                                         class="view a_class" title="" data-toggle="tooltip"
                                                         data-original-title="View">
-                                                        <i class="icon-style  fas fa-eye  i_class"></i>
+                                                        <img src="/theme/img/view.png" alt="" class="img-fluid">
                                                     </a>
                                                 </span>
                                                 <span>
                                                     <a href="#" class="edit a_class" title=""
-                                                        data-toggle="tooltip" data-original-title="Edit"><i
-                                                            class="icon-style fa fa-pen  "></i>
+                                                        data-toggle="tooltip" data-original-title="Edit"><img
+                                                            src="/theme/img/edit.png" alt="" class="img-fluid">
                                                     </a>
                                                 </span>
                                                 <span>
                                                     <a href="#" class="delete deleteIcon a_class"
                                                         id="{{ $order->id }}" title="" data-toggle="tooltip"
-                                                        data-original-title="Delete"><i
-                                                            class="icon-style fa fa-trash-alt"></i>
+                                                        data-original-title="Delete">
+                                                        <img src="/theme/img/delete.png" alt=""
+                                                            class="img-fluid">
                                                     </a>
                                                 </span>
                                             </div>

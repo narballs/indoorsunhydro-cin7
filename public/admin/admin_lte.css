@@ -817,3 +817,8 @@ ul.pager>.main-row>.pagination>li {
     border-color: #7BC533 !important;
     background-color: #7BC533 !important;
 }
+
+.customer-items-row {
+    padding-top: 27px !important;
+    padding-bottom: 0px !important;
+}
