@@ -338,6 +338,7 @@
 .product_secion_main_body {
     padding-left: 0px !important;
     padding-right: 0px !important;
+    padding: 0px !important;
 }
 
 .product_section_header {
@@ -623,8 +624,10 @@ a {
 
 .search_row_admin-interface {
     border-radius: 8.8914px;
-    /* width: 48% !important; */
     height: 49px !important;
+    display: flex;
+    justify-content: space-between;
+
 }
 
 .search_row_admin_user {
@@ -647,7 +650,7 @@ a {
     font-family: 'Poppins', sans-serif !important;
     font-style: normal !important;
     font-weight: 400 !important;
-    font-size: 24px !important;
+    font-size: 20px !important;
     line-height: 27px !important;
     margin-left: 1.5rem !important;
     color: #242424 !important;
@@ -815,4 +818,9 @@ ul.pager>.main-row>.pagination>li {
 .custom-control-input-success:checked~.custom-control-label::before {
     border-color: #7BC533 !important;
     background-color: #7BC533 !important;
+}
+
+.customer-items-row {
+    padding-top: 27px !important;
+    padding-bottom: 0px !important;
 }

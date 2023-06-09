@@ -42,7 +42,7 @@ return [
     | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Basic-Configuration
     |
     */
-    'logo' => '<b>Admin LTE</b>',
+    'logo' => '<b>INOOR SUN HYDRO</b>',
     // 'logo_img' => '/vendor/almasaeed2010/adminlte/dist/img/AdminLTELogo.png',
     'logo_img_class' => 'd-none brand-image img-circle elevation-3',
     'logo_img_xl' => null,

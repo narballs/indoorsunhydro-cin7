@@ -39,19 +39,21 @@
                 <table class="table border mb-5 table-shipping-method">
                     <thead>
                         <tr class="table-header-background">
-                            <td class="d-flex table-row-item">
-                                <span class="tabel-checkbox">
-                                    <input type="checkbox" name="test" class="checkbox-table" id="selectAll">
-                                </span>
-                                <span class="table-row-heading">
-                                    <i class="fas fa-arrow-up"></i>
-                                </span>
-                            </td>
+                            <td class="d-flex table-row-item mt-0">
+                                <div class="custom-control custom-checkbox tabel-checkbox">
+                                    <input class="custom-control-input custom-control-input-success checkbox-table"
+                                        type="checkbox" id="selectAll" value="">
+                                    <label for="selectAll" class="custom-control-label ml-4"></label>
+
+                                    <span class="table-row-heading-order">
+                                        <i class="fas fa-arrow-up mt-1" style="font-size:14.5px ;"></i>
+                                    </span>
+                                </div>
                             <td>
                                 <span class="d-flex table-row-item"> Name</span>
                             </td>
                             <td>
-                                <span class="d-flex table-row-item"> Action</span>
+                                <span class="d-flex table-row-item"></span>
                             </td>
 
                         </tr>
@@ -60,37 +62,41 @@
                         @foreach ($roles as $key => $role)
                             <tr id="row-{{ $role->id }}" class="shipping-method-row border-bottom">
                                 <td class="d-flex table-items">
-                                    <span class="tabel-checkbox">
-                                        <input type="checkbox" name="test" class="checkbox-table">
-                                    </span>
-                                    <span class="table-row-heading">
+                                    <div class="custom-control custom-checkbox tabel-checkbox">
+                                        <input class="custom-control-input custom-control-input-success sub_chk"
+                                            data-id="{{ $role->id }}" type="checkbox"
+                                            id="separate_check_{{ $role->id }}">
+                                        <label for="separate_check_{{ $role->id }}"
+                                            class="custom-control-label ml-4"></label>
+                                    </div>
+                                    <span class="table-row-heading-order">
                                         {{ $key + 1 }}
                                     </span>
                                 </td>
                                 <td class="shipping_name">
                                     <span class="d-flex table-items-title">{{ $role->name }}</span>
                                 </td>
-                                <td class="shipping_action">
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown"
-                                            aria-haspopup="true" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-h" style="color: #CBCBCB !important;"></i>
-                                        </button>
-                                        <div class="dropdown-menu dropdonwn_menu">
-                                            <a class="dropdown-item" href="{{ route('roles.show', $role->id) }}"
-                                                class="view a_class" title="" data-toggle="tooltip"
-                                                data-original-title="View">Previews
+                                <td class="created_by toggleClass td_padding_row">
+                                    <div class="d-flex aling-items-center order-table-actions">
+                                        <span>
+                                            <a href="{{ route('roles.show', $role->id) }}" class="view a_class"
+                                                title="" data-toggle="tooltip" data-original-title="View">
+                                                <img src="/theme/img/view.png" alt="" class="img-fluid">
                                             </a>
-                                            <a class="dropdown-item"href="{{ route('roles.edit', $role->id) }}"
-                                                class="edit a_class" title="" data-toggle="tooltip"
-                                                data-original-title="Edit">Edit
+                                        </span>
+                                        <span>
+                                            <a href="{{ route('roles.edit', $role->id) }}" class="edit a_class"
+                                                title="" data-toggle="tooltip" data-original-title="Edit"><img
+                                                    src="/theme/img/edit.png" alt="" class="img-fluid">
                                             </a>
-                                            <a class="dropdown-item delete deleteIcon a_class"
-                                                href="{{ route('roles.destroy', $role->id) }}}}" class=""
-                                                id="{{ $role->id }}" title="" data-toggle="tooltip"
-                                                data-original-title="Delete">Delete
+                                        </span>
+                                        <span>
+                                            <a href="{{ route('roles.destroy', $role->id) }}}}"
+                                                class="delete deleteIcon a_class" id="{{ $role->id }}" title=""
+                                                data-toggle="tooltip" data-original-title="Delete">
+                                                <img src="/theme/img/delete.png" alt="" class="img-fluid">
                                             </a>
-                                        </div>
+                                        </span>
                                     </div>
                                 </td>
                             </tr>
