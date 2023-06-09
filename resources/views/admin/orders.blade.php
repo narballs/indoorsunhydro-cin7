@@ -39,14 +39,13 @@
             </div>
             <div class="card-body product_table_body">
                 <div class="col-md-12 p-0">
-                    <div class="col-md-12 btn-row my-3">
-                        <div class="row">
+                    <div class="col-md-12 btn-row mb-4">
+                        <div class="row py-2">
                             <div class="col-md-9 d-flex justify-content-between align-content-center py-2">
                                 <span class="border-right pe-5 select-row-items ms-2" id="items_selected">
                                     0 Selected
                                 </span>
                             </div>
-
                             <div class="col-md-3 d-flex justify-content-between align-items-center">
                                 <span>
                                     <a class="order_ful_fill btn btn-sm fulfill-row-items-order-page "
@@ -62,7 +61,6 @@
                                 </span>
                                 @if ($auto_fulfill == 1)
                                     <span class="d-flex">
-
                                         <a class=" btn  btn-sm fulfill-row-items-order-page">
                                             Auto Fullfill
                                         </a>
@@ -75,7 +73,6 @@
                                     </span>
                                 @else
                                     <span class="d-flex">
-
                                         <a class=" btn  btn-sm fulfill-row-items-order-page">
                                             Auto Fullfill
                                         </a>
@@ -85,8 +82,8 @@
                                             <span class="custom-control-indicator"></span>
                                         </label>
                                     </span>
+                                @endif
                             </div>
-                            @endif
                         </div>
                     </div>
                     <table class="table border table-customer mb-5">
