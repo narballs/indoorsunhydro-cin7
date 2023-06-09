@@ -29,7 +29,6 @@
         </div>
     @endif
 
-
     {!! Form::open(['route' => 'roles.store', 'method' => 'POST']) !!}
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
@@ -59,7 +58,7 @@
 
 @section('css')
 
-    <link rel="stylesheet" href="/css/admin_custom.css">
+    <link rel="stylesheet" href="/theme/css/admin_custom.css">
     <link rel="stylesheet" href="{{ asset('admin/admin_lte.css') }}">
     <style>
         .text-successs {

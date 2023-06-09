@@ -98,9 +98,9 @@
                                     <div class="custom-control custom-checkbox tabel-checkbox">
                                         <input class="custom-control-input custom-control-input-success checkbox-table"
                                             type="checkbox" id="selectAll" value="">
-                                        <label for="selectAll" class="custom-control-label ml-3"></label>
+                                        <label for="selectAll" class="custom-control-label ml-4"></label>
 
-                                        <span class="table-row-heading">
+                                        <span class="table-row-heading-order">
                                             <i class="fas fa-arrow-up mt-1" style="font-size:14.5px ;"></i>
                                         </span>
                                     </div>
@@ -150,9 +150,9 @@
                                                     data-id="{{ $order->id }}" type="checkbox"
                                                     id="separate_check_{{ $order->id }}">
                                                 <label for="separate_check_{{ $order->id }}"
-                                                    class="custom-control-label ml-3"></label>
+                                                    class="custom-control-label ml-4"></label>
                                             </div>
-                                            <span class="table-row-heading">
+                                            <span class="table-row-heading-order">
                                                 {{ $order->id }}
                                             </span>
                                         </td>
@@ -649,6 +649,9 @@
                                             'Order Already fullfilled',
                                             'warning'
                                         )
+                                        setInterval(
+                                            'location.reload()',
+                                            8000);
                                     } else if (response.status === 402) {
                                         $('#progress-bar').addClass('d-none');
                                         Swal.fire(

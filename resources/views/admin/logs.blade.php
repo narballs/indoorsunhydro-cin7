@@ -23,8 +23,7 @@
                             </p>
                         </div>
                     </div>
-                    <div class="row search_row_admin-interface justify-content-between"
-                        style="margin-top: 12px !important;">
+                    <div class="row search_row_admin-interface justify-content-between" style="margin-top: 12px !important;">
                         <div class="col-md-2 product_search">
                             <div class="has-search">
                                 <span class="fa fa-search form-control-feedback"></span>
@@ -34,7 +33,7 @@
                                 </form>
                             </div>
                         </div>
-                        
+
                     </div>
                 </div>
             </div>
@@ -68,31 +67,31 @@
                         </thead>
                         <tbody>
                             @foreach ($api_logs as $key => $log)
-                                    <tr id="row-{{ $log->id }}" class="user-row border-bottom">
-                                        <td class="d-flex user-table-items">
-                                            <span class="tabel-checkbox-user">
-                                                <input type="checkbox" name="test" class="checkbox-table" id="selectAll">
-                                            </span>
-                                            <span class="table-row-heading-user">
-                                                {{ $key + 1 }}
-                                            </span>
-                                        </td>
-                                        <td class="user_name">
-                                        	{{$log->end_point}}
-                                        </td>
-                                        <td class="user_table_items">
-                                        	{{$log->desription}}
-                                        </td>
-                                        <td class="user_table_items">
-                                        	{{$log->last_synced}}
-                                        </td>
-                                         <td class="user_table_items">
-                                        	{{$log->record_count}}
-                                        </td>
-                                    </tr>
-                                @endforeach
+                                <tr id="row-{{ $log->id }}" class="user-row border-bottom">
+                                    <td class="d-flex user-table-items">
+                                        <span class="tabel-checkbox-user">
+                                            <input type="checkbox" name="test" class="checkbox-table" id="selectAll">
+                                        </span>
+                                        <span class="table-row-heading-user">
+                                            {{ $key + 1 }}
+                                        </span>
+                                    </td>
+                                    <td class="user_name">
+                                        {{ $log->end_point }}
+                                    </td>
+                                    <td class="user_table_items">
+                                        {{ $log->desription }}
+                                    </td>
+                                    <td class="user_table_items">
+                                        {{ $log->last_synced }}
+                                    </td>
+                                    <td class="user_table_items">
+                                        {{ $log->record_count }}
+                                    </td>
+                                </tr>
+                            @endforeach
                         </tbody>
-                        
+
                 </table>
             </div>
         </div>
@@ -101,7 +100,7 @@
 </div>
 
 @section('css')
-    <link rel="stylesheet" href="/css/admin_custom.css">
+    <link rel="stylesheet" href="/theme/css/admin_custom.css">
     <link rel="stylesheet" href="{{ asset('admin/admin_lte.css') }}">
     <style>
         .text-successs {
