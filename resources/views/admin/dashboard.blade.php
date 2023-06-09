@@ -29,8 +29,8 @@
     </div>
 @endsection
 @section('css')
-    <link rel="stylesheet" href="/theme/css/admin_custom.css">
-    <link rel="stylesheet" href="{{ asset('admin/admin_lte.css') }}">
+    <link rel="stylesheet" href="/theme/css/admin_custom.css?v2">
+    <link rel="stylesheet" href="{{ asset('admin/admin_lte.css?v2') }}">
     <style>
         .text-successs {
             color: #7CC633 !important;
