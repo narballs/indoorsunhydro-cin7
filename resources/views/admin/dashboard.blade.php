@@ -1,32 +1,62 @@
 @extends('adminlte::page')
-
 @section('title', 'Dashboard')
-
 @section('content_header')
-    <h1>Dashboard</h1>
 @endsection
-
 @section('content')
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card card-primary">
-                <div class="card-body">
+    <div class="table-wrapper">
+        <div class="card-body product_secion_main_body">
+            <div class="row border-bottom product_section_header">
+                <div class="col-md-12">
                     <div class="row">
-                        <div class="col-md-12 d-flex justify-content-end align-items-center">
-
-                            <button type="button" class="btn btn-import-contacts create-new-order-btn">
-                                Import Contacts
-                            </button>
-                            <div id="div_import_contacts" class="spinner-border hide ml-4" role="status">
+                        <div class="col-md-9">
+                            <p class="product_heading">
+                                Products
+                            </p>
+                        </div>
+                        <div class="col-md-1">
+                            <div id="div_import_contacts" class="spinner-border hide" role="status">
                                 <span class="sr-only">Loading...</span>
                             </div>
                         </div>
-                        <div class="col-md-12 mt-4" id="div_message"></div>
+                        <div class="col-md-2 d-flex justify-content-end create_bnt">
+                            <button type="button" class="btn create_new_product_btn btn-import-contacts">
+                                Import Contacts +
+                            </button>
+                        </div>
+                        <div class="col-md-6 m-auto" id="div_message"></div>
+                    </div>
+                    <div class="row search_row_admin-interface">
+                        <div class="col-md-2 product_search">
+                            <div class="has-search ">
+                                <span class="fa fa-search form-control-feedback"></span>
+                                <form method="get" action="/admin/dashboard" class="mb-2">
+                                    <input type="text" class="form-control" id="search" name="search"
+                                        placeholder="Search" value="{{ isset($search) ? $search : '' }}" />
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    {{-- <div class="row">
+        <div class="col-md-12">
+            <div class="card card-primary">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12 d-flex justify-content-end align-items-center">
+                            <button type="button" class="btn btn-import-contacts create-new-order-btn">
+                                Import Contacts
+                            </button>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> --}}
 @endsection
 @section('css')
     <link rel="stylesheet" href="/theme/css/admin_custom.css?v2">
@@ -101,10 +131,12 @@
                         $('#div_import_contacts').hide();
 
                         if (response.status == 'success') {
-                            $('#div_message').html('<div class="alert alert-success">' +
+                            $('#div_message').html(
+                                '<div class="alert alert-success" role="alert">' +
                                 response.message + '</div>');
                         } else {
-                            $('#div_message').html('<div class="alert alert-danger">' + response
+                            $('#div_message').html(
+                                '<div class="alert alert-danger" role="alert">' + response
                                 .message + '</div>');
                         }
                     }
