@@ -10,7 +10,7 @@
                     <div class="row">
                         <div class="col-md-9">
                             <p class="product_heading">
-                                Products
+                                Dashboard
                             </p>
                         </div>
                         <div class="col-md-1">
@@ -40,23 +40,6 @@
             </div>
         </div>
     </div>
-    {{-- <div class="row">
-        <div class="col-md-12">
-            <div class="card card-primary">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-12 d-flex justify-content-end align-items-center">
-                            <button type="button" class="btn btn-import-contacts create-new-order-btn">
-                                Import Contacts
-                            </button>
-
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> --}}
 @endsection
 @section('css')
     <link rel="stylesheet" href="/theme/css/admin_custom.css?v2">
