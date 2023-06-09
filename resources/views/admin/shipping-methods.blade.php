@@ -55,7 +55,7 @@
                                 <span class="d-flex table-row-item"> Status</span>
                             </td>
                             <td>
-                                <span class="d-flex table-row-item"> Action</span>
+                                <span class="d-flex table-row-item"></span>
                             </td>
 
                         </tr>
@@ -89,29 +89,6 @@
                                             <span class="badge badge-danger status-disabled"> Disabled</span>
                                         </td>
                                     @endif
-                                    {{-- <td class="shipping_action">
-                                        <div class="btn-group">
-                                            <button type="button" class="btn btn-white dropdown-toggle"
-                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <i class="fas fa-ellipsis-h" style="color: #CBCBCB !important;"></i>
-                                            </button>
-                                            <div class="dropdown-menu dropdonwn_menu">
-                                                <a class="dropdown-item"
-                                                    href="{{ url('admin/shipping-details/' . $shippingmethod->id) }}"
-                                                    class="view a_class" title="" data-toggle="tooltip"
-                                                    data-original-title="View">Previews
-                                                </a>
-                                                <a class="dropdown-item"href="{{ url('admin/shipping-method/' . $shippingmethod->id) }}"
-                                                    class="edit a_class" title="" data-toggle="tooltip"
-                                                    data-original-title="Edit">Edit
-                                                </a>
-                                                <a class="dropdown-item delete deleteIcon a_class" href="#"
-                                                    class="" id="{{ $shippingmethod->id }}" title=""
-                                                    data-toggle="tooltip" data-original-title="Delete">Delete
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </td> --}}
                                     <td class="created_by toggleClass td_padding_row">
                                         <div class="d-flex aling-items-center order-table-actions">
                                             <span>

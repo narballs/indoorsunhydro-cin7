@@ -63,7 +63,7 @@
                                 <span class="d-flex table-row-item">Notes</span>
                             </td>
                             <td>
-                                <span class="d-flex table-row-item">Action</span>
+                                <span class="d-flex table-row-item"></span>
                             </td>
 
                         </tr>

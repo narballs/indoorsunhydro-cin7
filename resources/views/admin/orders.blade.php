@@ -125,7 +125,7 @@
                                     <span class="d-flex table-row-item"> Payment Term</span>
                                 </td>
                                 <td>
-                                    <span class="d-flex table-row-item"> Actions</span>
+                                    <span class="d-flex table-row-item"></span>
                                 </td>
                             </tr>
                         </thead>
@@ -253,7 +253,6 @@
 @section('css')
     <link rel="stylesheet" href="/theme/css/admin_custom.css?v2">
     <link rel="stylesheet" href="{{ asset('/admin/admin_lte.css?v2') }}">
-    <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/poppins">
 
     <style type="text/css">
         .custom-checkbox {
