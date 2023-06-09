@@ -50,7 +50,3 @@
 	.custom-checkbox .custom-control-input:focus~.custom-control-indicator {
 		box-shadow: none !important;
 	}
-
-	.order-table-actions {
-		justify-content: space-around !important;
-	}

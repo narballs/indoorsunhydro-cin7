@@ -43,13 +43,16 @@
                     <tr>
                         <thead>
                             <tr class="table-header-background">
-                                <td class="d-flex table-row-item">
-                                    <span class="tabel-checkbox-user">
-                                        <input type="checkbox" name="test" class="checkbox-table" id="selectAll">
-                                    </span>
-                                    <span class="table-row-heading">
-                                        <i class="fas fa-arrow-up"></i>
-                                    </span>
+                                <td class="d-flex table-row-item mt-0">
+                                    <div class="custom-control custom-checkbox tabel-checkbox">
+                                        <input class="custom-control-input custom-control-input-success checkbox-table"
+                                            type="checkbox" id="selectAll" value="">
+                                        <label for="selectAll" class="custom-control-label ml-4"></label>
+
+                                        <span class="table-row-heading-order">
+                                            <i class="fas fa-arrow-up mt-1" style="font-size:14.5px ;"></i>
+                                        </span>
+                                    </div>
                                 </td>
                                 <td>
                                     <span class="d-flex table-row-item">Endpoint</span>
@@ -68,12 +71,16 @@
                         <tbody>
                             @foreach ($api_logs as $key => $log)
                                 <tr id="row-{{ $log->id }}" class="user-row border-bottom">
-                                    <td class="d-flex user-table-items">
-                                        <span class="tabel-checkbox-user">
-                                            <input type="checkbox" name="test" class="checkbox-table" id="selectAll">
-                                        </span>
-                                        <span class="table-row-heading-user">
-                                            {{ $key + 1 }}
+                                    <td class="d-flex table-items">
+                                        <div class="custom-control custom-checkbox tabel-checkbox">
+                                            <input class="custom-control-input custom-control-input-success sub_chk"
+                                                data-id="{{ $order->id }}" type="checkbox"
+                                                id="separate_check_{{ $order->id }}">
+                                            <label for="separate_check_{{ $order->id }}"
+                                                class="custom-control-label ml-4"></label>
+                                        </div>
+                                        <span class="table-row-heading-order">
+                                            {{ $order->id }}
                                         </span>
                                     </td>
                                     <td class="user_name">

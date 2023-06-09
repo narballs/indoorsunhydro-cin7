@@ -36,13 +36,16 @@
                 <table class="table border mb-5 table-contact-method">
                     <thead>
                         <tr class="table-header-background">
-                            <td class="d-flex table-row-item">
-                                <span class="tabel-checkbox">
-                                    <input type="checkbox" name="test" class="checkbox-table" id="selectAll">
-                                </span>
-                                <span class="table-row-heading">
-                                    <i class="fas fa-arrow-up"></i>
-                                </span>
+                            <td class="d-flex table-row-item mt-0">
+                                <div class="custom-control custom-checkbox tabel-checkbox">
+                                    <input class="custom-control-input custom-control-input-success checkbox-table"
+                                        type="checkbox" id="selectAll" value="">
+                                    <label for="selectAll" class="custom-control-label ml-4"></label>
+
+                                    <span class="table-row-heading-order">
+                                        <i class="fas fa-arrow-up mt-1" style="font-size:14.5px ;"></i>
+                                    </span>
+                                </div>
                             </td>
                             <td>
                                 <span class="d-flex table-row-item">Name</span>
@@ -68,11 +71,15 @@
                     <tbody>
                         @foreach ($contacts as $key => $contact)
                             <tr id="row-{{ $contact->id }}" class="supplier-row border-bottom">
-                                <td class="d-flex supplier-table-items">
-                                    <span class="tabel-checkbox">
-                                        <input type="checkbox" name="test" class="checkbox-table">
-                                    </span>
-                                    <span class="table-row-heading">
+                                <td class="d-flex table-items">
+                                    <div class="custom-control custom-checkbox tabel-checkbox">
+                                        <input class="custom-control-input custom-control-input-success sub_chk"
+                                            data-id="{{ $contact->id }}" type="checkbox"
+                                            id="separate_check_{{ $contact->id }}">
+                                        <label for="separate_check_{{ $contact->id }}"
+                                            class="custom-control-label ml-4"></label>
+                                    </div>
+                                    <span class="table-row-heading-order">
                                         {{ $key + 1 }}
                                     </span>
                                 </td>
@@ -105,7 +112,7 @@
                                         {{ $contact->notes }}
                                     </span>
                                 </td>
-                                <td class="created_by toggleClass">
+                                {{-- <td class="created_by toggleClass">
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown"
                                             aria-haspopup="true" aria-expanded="false">
@@ -125,6 +132,30 @@
                                             </a>
                                         </div>
                                     </div>
+                                </td> --}}
+                                <td class="created_by toggleClass">
+                                    <div class="d-flex aling-items-center order-table-actions">
+                                        <span>
+                                            <a href="{{ url('admin/order-detail/' . $contact->id) }}" class="view a_class"
+                                                title="" data-toggle="tooltip" data-original-title="View">
+                                                <img src="/theme/img/view.png" alt="" class="img-fluid">
+                                            </a>
+                                        </span>
+                                        <span>
+
+                                            <a href="javascript:void(0)" data-id="{{ $contact->id }}" class="edit a_class"
+                                                title="" data-toggle="tooltip" data-original-title="Edit"><img
+                                                    src="/theme/img/edit.png" alt="" class="img-fluid">
+                                            </a>
+                                        </span>
+                                        <span>
+                                            <a href="javascript:void(0)" data-id="{{ $contact->id }}"
+                                                class="delete deleteIcon a_class" title="" data-toggle="tooltip"
+                                                data-original-title="Delete">
+                                                <img src="/theme/img/delete.png" alt="" class="img-fluid">
+                                            </a>
+                                        </span>
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach
@@ -142,8 +173,8 @@
     @stop
 
     @section('css')
-        <link rel="stylesheet" href="/theme/css/admin_custom.css">
-        <link rel="stylesheet" href="{{ asset('admin/admin_lte.css') }}">
+        <link rel="stylesheet" href="/theme/css/admin_custom.css?v2">
+        <link rel="stylesheet" href="{{ asset('admin/admin_lte.css?v2') }}">
         <style type="text/css">
             .text-successs {
                 color: #7CC633 !important;

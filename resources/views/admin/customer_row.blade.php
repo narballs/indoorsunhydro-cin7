@@ -1,27 +1,29 @@
 <tr id="row-{{ $contact->id }}" class="customer-row border-bottom">
-    <td class="d-flex customer-table-items">
-        <span class="tabel-checkbox-user">
-            <input type="checkbox" name="test" class="checkbox-table">
-        </span>
-        <span class="table-row-heading-user">
+    <td class="d-flex table-items">
+        <div class="custom-control custom-checkbox tabel-checkbox">
+            <input class="custom-control-input custom-control-input-success sub_chk" data-id="{{ $contact->id }}"
+                type="checkbox" id="separate_check_{{ $contact->id }}">
+            <label for="separate_check_{{ $contact->id }}" class="custom-control-label ml-4"></label>
+        </div>
+        <span class="table-row-heading-order">
             {{ $key + 1 }}
         </span>
     </td>
-    <td>
+    <td class="customer-items-row">
         {{ $contact->id }}
     </td>
     @if (!$contact->contact_id)
-        <td><span class="badge bg-info">empty</span></td>
+        <td class="customer-items-row"><span class="badge bg-info">empty</span></td>
     @else
-        <td>{{ $contact->contact_id }}</td>
+        <td class="customer-items-row">{{ $contact->contact_id }}</td>
     @endif
-    <td class="customer_name">
+    <td class="customer_name customer-items-row">
         <a class="customer_full_name" href="{{ url('admin/customer-detail/' . $contact->id) }}">
             <span>{{ $contact->firstName }} {{ $contact->lastName }}</span>
         </a>
     </td>
 
-    <td>
+    <td class="customer-items-row">
         @if ($contact->user_id == '')
             <span class="badge badge-danger">Unmerged</span>
         @else
@@ -29,28 +31,28 @@
         @endif
     </td>
 
-    <td class="customer-row">
+    <td class="customer-row customer-items-row">
         <span>
             {{ $contact->priceColumn }}
         </span>
     </td>
-    <td>
+    <td class="customer-items-row">
         <span>
             {{ $contact->company }}
         </span>
     </td>
-    <td>
+    <td class="customer-items-row">
         <a href="{{ url('admin/customer-detail/' . $contact->id) }}">
             {{ $contact->email }}
         </a>
     </td>
-    <td title="{{ $contact->notes }}">
+    <td title="{{ $contact->notes }}" class="customer-items-row">
         <span>
             {{ Illuminate\Support\Str::limit($contact->notes, 30) }}
         </span>
     </td>
     @if ($contact && $contact->status == 1)
-        <td>
+        <td class="customer-items-row">
             <span class="d-flex">
                 <span class="badge badge-success">Active</span>
                 <label class="custom-control custom-checkbox ">
@@ -62,7 +64,7 @@
             </span>
         </td>
     @else
-        <td>
+        <td class="customer-items-row">
             <span class="d-flex">
                 <span class="badge badge-warning">Inactive</span>
                 <label class="custom-control custom-checkbox ">
@@ -74,25 +76,26 @@
             </span>
         </td>
     @endif
-
-    <td class="created_by toggleClass">
-        <div class="btn-group">
-            <button type="button" class="btn p-0 btn-white dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                aria-expanded="false">
-                <i class="fas fa-ellipsis-h" style="color: #CBCBCB !important;"></i>
-            </button>
-            <div class="dropdown-menu dropdonwn_menu">
-                <a class="dropdown-item" href="{{ url('admin/customer-detail/' . $contact->id) }}" class="view a_class"
-                    title="" data-toggle="tooltip" data-original-title="View">Previews
+    <td class="created_by toggleClass td_padding_row">
+        <div class="d-flex aling-items-center order-table-actions">
+            <span>
+                <a href="{{ url('admin/customer-detail/' . $contact->id) }}" class="view a_class" title=""
+                    data-toggle="tooltip" data-original-title="View">
+                    <img src="/theme/img/view.png" alt="" class="img-fluid">
                 </a>
-                <a class="dropdown-item delete deleteIcon a_class"
-                    href="{{ url('admin/customer-delete/' . $contact->id) }}" class="" id="{{ $contact->id }}"
-                    title="" data-toggle="tooltip" data-original-title="Delete">Delete
+            </span>
+            <span>
+                <a href="{{ url('admin/customer-edit/' . $contact->id) }}" class="edit a_class" title=""
+                    data-toggle="tooltip" data-original-title="Edit"><img src="/theme/img/edit.png" alt=""
+                        class="img-fluid">
                 </a>
-                <a class="dropdown-item"href="{{ url('admin/customer-edit/' . $contact->id) }}" class="edit a_class"
-                    title="" data-toggle="tooltip" data-original-title="Edit">Edit
+            </span>
+            <span>
+                <a href=" {{ url('admin/customer-delete/' . $contact->id) }}" class="delete deleteIcon a_class"
+                    id="{{ $contact->id }}" title="" data-toggle="tooltip" data-original-title="Delete">
+                    <img src="/theme/img/delete.png" alt="" class="img-fluid">
                 </a>
-            </div>
+            </span>
         </div>
     </td>
 </tr>
