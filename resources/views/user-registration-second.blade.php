@@ -84,21 +84,40 @@
                             <div class=" form-login">
                                 <div class="input-placeholder">
                                     <input type="text" name="email" required>
-                                    <div class="placeholder pl-3 fontAwesome top_placeholder_style">
+                                    <div class="placeholder pl-3 fontAwesome top_placeholder_style " style="background: none !important;left:0px !important;">
                                         &#xf0e0; Email
                                     </div>
                                 </div>
                                 <div class="input-placeholder">
                                     <input type="password" name="password" required>
-                                    <div class="placeholder pl-3 fontAwesome top_placeholder_style">
+                                    <div class="placeholder pl-3 fontAwesome top_placeholder_style " style="background: none !important;left:0px !important;">
                                         &#xf023; Password
                                     </div>
                                 </div>
 
                             </div>
                             <button type="submit" class="btn-login info login-button">LOGIN</button>
+
+                            <div class="row mt-3 mb-1 align-items-center justify-content-between">
+                                <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-xs-12 remember-me">
+                                    <div class="form-check form-login  pl-4 d-flex align-items-center">
+                                        <input class="mb-0 mt-0 form-check-input desktop-login align-items-center justify-conent-center d-flex"
+                                            type="checkbox" value="" id="checkbox-2"
+                                            style="background-color:none !important; width:20px !important; height:20px !important;" />
+                                        <label class="ml-2 formemail-registration-check-label mb-0" for="checkbox-2" style="color:#9A9A9A !important;">Remember
+                                            me</label>
+                                    </div>
+                                </div>
+                                <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-xs-12 lost_pas_div">
+                                    <a href="{{ route('lost.password') }}" class="btn-lost-password p-0">Lost your
+                                        password?</a>
+                                </div>
+                            </div>
+                            <div class="row mx-auto mt-3" style="border-bottom:1px solid #EBEBEB;">
+
+                            </div>
                         </form>
-                        <div class="row mt-3 mb-1 align-items-center justify-content-between">
+                        {{-- <div class="row mt-3 mb-1 align-items-center justify-content-between">
                             <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-xs-12 remember-me">
                                 <div class="form-check form-login  pl-4 d-flex align-items-center">
                                     <input class="mb-0 mt-0 form-check-input desktop-login align-items-center justify-conent-center d-flex"
@@ -112,11 +131,11 @@
                                 <a href="{{ route('lost.password') }}" class="btn-lost-password p-0">Lost your
                                     password?</a>
                             </div>
-                        </div>
-                        <hr/ style="border: 0px solid #EBEBEB; !important;">
-                        <div class="row">
+                        </div> --}}
+                        {{-- <hr/ style="border: 0px solid #EBEBEB; !important;"> --}}
+                        <div class="row mt-2">
                             <div class=" col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
-                                <p class="required-field" style="color:#9A9A9A !important;><span class="req">*</span> Required field</p>
+                                <p class="required-field" style="color:#9A9A9A !important ;font-weight:400 !important;"><span class="req">*</span> Required field</p>
                             </div>
                         </div>
                     </div>
@@ -126,7 +145,7 @@
                             <h2 class="d-flex justify-content-center align-items-center sing-up-label">SIGN UP</h2>
                             <div class="input-placeholder">
                                 <input type="text" id="email" name="email" required>
-                                <div class="placeholder pl-3 fontAwesome top_placeholder_style">
+                                <div class="placeholder pl-3 fontAwesome top_placeholder_style " style="background: none !important;left:0px !important;">
                                     &#xf0e0; Email
                                 </div>
                             </div>
@@ -135,7 +154,7 @@
                         </form>
                         <div class="row">
                             <div class="col-md-6 mt-5">
-                                <p class="required-field"><span class="req">*</span> Required field</p>
+                                <p class="required-field" style="color:#9A9A9A !important ;font-weight:400 !important;"><span class="req">*</span> Required field</p>
                             </div>
                         </div>
                         <div id="signup_error" class="text-danger"></div>
