@@ -48,10 +48,17 @@
                             </div>
                             <div class="col-md-3 d-flex justify-content-between align-items-center">
                                 <span>
+                                    @if($auto_fullfill == false)
                                     <a class="order_ful_fill btn btn-sm fulfill-row-items-order-page "
                                         data-url="{{ url('admin/orders/multi-full-fill') }}">
                                         Fulfill Order
                                     </a>
+                                    @else
+                                    <a class="order_ful_fill btn btn-sm fulfill-row-items-order-page disabled "
+                                        data-url="#">
+                                        Fulfill Order
+                                    </a>
+                                    @endif
                                 </span>
                                 <span>
                                     <a class="multiple_cancel_orders btn btn-danger btn-sm cancel-row-items-order-page"
@@ -538,7 +545,7 @@
                             } else {
                                 Swal.fire('Order fullfilled failed')
                             }
-                            setInterval('location.reload()', 3000);
+                            setInterval('location.reload()', 300);
                         }
                     });
                 }
@@ -560,6 +567,9 @@
                     "_token": "{{ csrf_token() }}",
                     "auto_fullfill": auto_fullfill
                 },
+                 success: function(response) {
+                     setInterval('location.reload()', 300);
+                 }
             });
         }
     </script>
@@ -659,7 +669,7 @@
                                             'Order request is null',
                                             'warning'
                                         )
-                                        setInterval('location.reload()', 100);
+                                        setInterval('location.reload()', 300);
                                     } else {
                                         jQuery.ajax({
                                             url: "{{ url('admin/multi/check-status') }}",
