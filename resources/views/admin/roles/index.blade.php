@@ -36,80 +36,82 @@
                 </div>
             </div>
             <div class="card-body product_table_body">
-                <table class="table border mb-5 table-shipping-method">
-                    <thead>
-                        <tr class="table-header-background">
-                            <td class="d-flex table-row-item mt-0">
-                                <div class="custom-control custom-checkbox tabel-checkbox">
-                                    <input class="custom-control-input custom-control-input-success checkbox-table"
-                                        type="checkbox" id="selectAll" value="">
-                                    <label for="selectAll" class="custom-control-label ml-4"></label>
-
-                                    <span class="table-row-heading-order">
-                                        <i class="fas fa-arrow-up mt-1" style="font-size:14.5px ;"></i>
-                                    </span>
-                                </div>
-                            <td>
-                                <span class="d-flex table-row-item"> Name</span>
-                            </td>
-                            <td>
-                                <span class="d-flex table-row-item"></span>
-                            </td>
-
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($roles as $key => $role)
-                            <tr id="row-{{ $role->id }}" class="shipping-method-row border-bottom">
-                                <td class="d-flex table-items">
+                <div class="col-md-12 shadow border order-table-items-data">
+                    <table class="table bg-white mb-0 table-shipping-method">
+                        <thead>
+                            <tr class="table-header-background">
+                                <td class="d-flex table-row-item mt-0">
                                     <div class="custom-control custom-checkbox tabel-checkbox">
-                                        <input class="custom-control-input custom-control-input-success sub_chk"
-                                            data-id="{{ $role->id }}" type="checkbox"
-                                            id="separate_check_{{ $role->id }}">
-                                        <label for="separate_check_{{ $role->id }}"
-                                            class="custom-control-label ml-4"></label>
-                                    </div>
-                                    <span class="table-row-heading-order">
-                                        {{ $key + 1 }}
-                                    </span>
-                                </td>
-                                <td class="shipping_name">
-                                    <span class="d-flex table-items-title">{{ $role->name }}</span>
-                                </td>
-                                <td class="created_by toggleClass td_padding_row">
-                                    <div class="d-flex aling-items-center order-table-actions">
-                                        <span>
-                                            <a href="{{ route('roles.show', $role->id) }}" class="view a_class"
-                                                title="" data-toggle="tooltip" data-original-title="View">
-                                                <img src="/theme/img/view.png" alt="" class="img-fluid">
-                                            </a>
-                                        </span>
-                                        <span>
-                                            <a href="{{ route('roles.edit', $role->id) }}" class="edit a_class"
-                                                title="" data-toggle="tooltip" data-original-title="Edit"><img
-                                                    src="/theme/img/edit.png" alt="" class="img-fluid">
-                                            </a>
-                                        </span>
-                                        <span>
-                                            <a href="{{ route('roles.destroy', $role->id) }}}}"
-                                                class="delete deleteIcon a_class" id="{{ $role->id }}" title=""
-                                                data-toggle="tooltip" data-original-title="Delete">
-                                                <img src="/theme/img/delete.png" alt="" class="img-fluid">
-                                            </a>
+                                        <input class="custom-control-input custom-control-input-success checkbox-table"
+                                            type="checkbox" id="selectAll" value="">
+                                        <label for="selectAll" class="custom-control-label ml-4"></label>
+
+                                        <span class="table-row-heading-order">
+                                            <i class="fas fa-arrow-up mt-1" style="font-size:14.5px ;"></i>
                                         </span>
                                     </div>
+                                <td>
+                                    <span class="d-flex table-row-item"> Name</span>
+                                </td>
+                                <td>
+                                    <span class="d-flex table-row-item"></span>
+                                </td>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($roles as $key => $role)
+                                <tr id="row-{{ $role->id }}" class="shipping-method-row border-bottom">
+                                    <td class="d-flex table-items">
+                                        <div class="custom-control custom-checkbox tabel-checkbox">
+                                            <input class="custom-control-input custom-control-input-success sub_chk"
+                                                data-id="{{ $role->id }}" type="checkbox"
+                                                id="separate_check_{{ $role->id }}">
+                                            <label for="separate_check_{{ $role->id }}"
+                                                class="custom-control-label ml-4"></label>
+                                        </div>
+                                        <span class="table-row-heading-order">
+                                            {{ $key + 1 }}
+                                        </span>
+                                    </td>
+                                    <td class="shipping_name">
+                                        <span class="d-flex table-items-title">{{ $role->name }}</span>
+                                    </td>
+                                    <td class="created_by toggleClass td_padding_row">
+                                        <div class="d-flex aling-items-center order-table-actions">
+                                            <span>
+                                                <a href="{{ route('roles.show', $role->id) }}" class="view a_class"
+                                                    title="" data-toggle="tooltip" data-original-title="View">
+                                                    <img src="/theme/img/view.png" alt="" class="img-fluid">
+                                                </a>
+                                            </span>
+                                            <span>
+                                                <a href="{{ route('roles.edit', $role->id) }}" class="edit a_class"
+                                                    title="" data-toggle="tooltip" data-original-title="Edit"><img
+                                                        src="/theme/img/edit.png" alt="" class="img-fluid">
+                                                </a>
+                                            </span>
+                                            <span>
+                                                <a href="{{ route('roles.destroy', $role->id) }}}}"
+                                                    class="delete deleteIcon a_class" id="{{ $role->id }}"
+                                                    title="" data-toggle="tooltip" data-original-title="Delete">
+                                                    <img src="/theme/img/delete.png" alt="" class="img-fluid">
+                                                </a>
+                                            </span>
+                                        </div>
+                                    </td>
+                                </tr>
+                        </tbody>
+                        @endforeach
+                        <tfoot>
+                            <tr>
+                                <td colspan="10">
+                                    {{ $roles->links('pagination.custom_pagination') }}
                                 </td>
                             </tr>
-                    </tbody>
-                    @endforeach
-                    <tfoot>
-                        <tr>
-                            <td colspan="10">
-                                {{ $roles->links('pagination.custom_pagination') }}
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
+                        </tfoot>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

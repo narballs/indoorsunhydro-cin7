@@ -783,15 +783,22 @@
                                         <th>
                                             Type
                                         </th>
+                                        <th>
+                                            Credit Limit
+                                        </th>
+                                       <!--   <th>
+                                            Balance Owing
+                                        </th> -->
                                     </tr>
                                 </thead>
                                 <tbody id="secondary_user">
+
                                     <?php $secondary_contacts; ?>
                                     @foreach ($secondary_contacts as $childeren)
                                         <tr id="row-{{ $childeren->id }}">
                                             @if ($childeren->company)
                                                 <td>
-                                                    {{ $childeren->company }}
+                                                  {{ $childeren->company }}
                                                 </td>
                                             @else
                                                 <td>
@@ -860,6 +867,12 @@
                                                     <span class="badge bg-secondary">secondary contact</span>
                                                 @endif
                                             </td>
+                                            <td class="text-center">
+                                                ${{number_format($childeren->credit_limit ,2)}}
+                                            </td>
+                                          <!--   <td class="text-center">
+                                                ${{number_format($childeren->balance_owing ,2)}}
+                                            </td> -->
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -1279,6 +1292,7 @@
                 url: "{{ url('/my-account/') }}",
                 method: 'GET',
                 success: function(response) {
+                    console.log(response);
                     var data = response.user_orders;
                     var can_approve_order = response.can_approve_order;
                     var order_approver_for_company = response.order_approver_for_company;

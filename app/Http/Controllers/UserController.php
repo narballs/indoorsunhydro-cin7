@@ -289,7 +289,6 @@ class UserController extends Controller
         $credentials = $request->except(['_token']);
         $user = User::where('email', $request->email)->first();
 
-
         $email_user = session::put('user', $user);
         $cart = [];
         if (auth()->attempt($credentials)) {
@@ -358,10 +357,10 @@ class UserController extends Controller
 
                         $companies = Contact::where('user_id', auth()->user()->id)->get();
 
-                        if ($companies[0]->contact_id == null) {
-                            UserHelper::switch_company($companies[0]->secondary_id);
+                        if ($companies[1]->contact_id == null) {
+                            UserHelper::switch_company($companies[1]->secondary_id);
                         } else {
-                            UserHelper::switch_company($companies[0]->contact_id);
+                            UserHelper::switch_company($companies[1]->contact_id);
                         }
                         Session::put('companies', $companies);
                         return redirect()->route('my_account');
@@ -838,6 +837,7 @@ class UserController extends Controller
     {
         Session::forget('contact_id');
         Session::forget('company');
+        Session::forget('companies');
         Session::forget('cart');
         $switch_user = Auth::loginUsingId($id);
         $auth_user_email = $switch_user->email;
@@ -859,8 +859,9 @@ class UserController extends Controller
             Session::put('cart', $cart);
         }
         $contact_id = auth()->user()->id;
-        $contact = Contact::where('user_id', $contact_id)->first();
+        $contact = Contact::where('user_id', $contact_id)->where('status' , '!=', 0)->first();
         $companies = Contact::where('user_id', auth()->user()->id)->get();
+
         if (!empty($contact)) {
             if ($contact->contact_id == null) {
                 $active_contact_id = $contact->secondary_id;
@@ -875,9 +876,11 @@ class UserController extends Controller
             Session::put('companies', $companies);
             return redirect('/');
         } else {
-            $contact = Contact::where('secondary_id', $contact_id)->first();
+            $contact = Contact::where('secondary_id', $contact_id)->where('status', '!=', 0)->first();
+
             $active_contact_id = $contact->secondary_id;
             $active_company = $contact->company;
+            //dd($active_company);
             Session::put([
                 'contact_id' => $active_contact_id,
                 'company' => $active_company
