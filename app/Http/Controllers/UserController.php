@@ -357,10 +357,10 @@ class UserController extends Controller
 
                         $companies = Contact::where('user_id', auth()->user()->id)->get();
 
-                        if ($companies[1]->contact_id == null) {
-                            UserHelper::switch_company($companies[1]->secondary_id);
+                        if ($companies[0]->contact_id == null) {
+                            UserHelper::switch_company($companies[0]->secondary_id);
                         } else {
-                            UserHelper::switch_company($companies[1]->contact_id);
+                            UserHelper::switch_company($companies[0]->contact_id);
                         }
                         Session::put('companies', $companies);
                         return redirect()->route('my_account');
