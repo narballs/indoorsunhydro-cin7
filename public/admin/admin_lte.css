@@ -767,6 +767,8 @@ ul.pager>.main-row>.pagination>li {
 
 .order-table-items-data {
     border-radius: 12px !important;
+    padding: 3px !important;
+    background: #F9F9F9 !important;
 }
 
 .logout_sidebar .logout_icon {
