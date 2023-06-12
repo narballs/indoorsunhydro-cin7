@@ -590,7 +590,7 @@ class ProductController extends Controller
 
     public function addToCart(Request $request)
     {
-        
+
         $id = $request->p_id;
         $option_id = $request->option_id;
 
@@ -720,6 +720,7 @@ class ProductController extends Controller
 
     public function cart(Request $request)
     {
+        $contact = [];
         $cart_items = $request->session()->get('cart');
         $user_id = auth()->id();
 
@@ -731,7 +732,7 @@ class ProductController extends Controller
         if (!empty($user_id) && !empty($contact_id)) {
             $contact = Contact::where('user_id', $user_id)->where('contact_id', $contact_id)->orWhere('secondary_id', $contact_id)->first();
         }
-        
+
         $tax_class = TaxClass::where('is_default', 1)->first();
 
 
@@ -1070,7 +1071,7 @@ class ProductController extends Controller
                 ->where('product_id', $request->product_id)
                 ->where('option_id', $request->option_id)
                 ->first();
-            if(empty($flag)) {
+            if (empty($flag)) {
                 $product_buy_list = new ProductBuyList();
                 $product_buy_list->list_id = $list_id;
                 $product_buy_list->product_id = $request->product_id;
@@ -1078,8 +1079,7 @@ class ProductController extends Controller
                 $product_buy_list->sub_total = $active_price;
                 $product_buy_list->quantity = $request->quantity;
                 $product_buy_list->save();
-            }
-            else{
+            } else {
                 $flag->delete();
             }
         }
@@ -1174,9 +1174,10 @@ class ProductController extends Controller
     }
 
     //add multi favorites to cart
-    public function multi_favorites_to_cart (Request $request) {
-        if(!empty($request->all_fav)) {
-            foreach($request->all_fav as $multi_favorites) {
+    public function multi_favorites_to_cart(Request $request)
+    {
+        if (!empty($request->all_fav)) {
+            foreach ($request->all_fav as $multi_favorites) {
                 $id = $multi_favorites['product_id'];
                 $option_id = $multi_favorites['option_id'];
 
