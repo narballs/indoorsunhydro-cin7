@@ -58,7 +58,8 @@ class AutoOrdersSync extends Command
         $this->info('---------------------------------------------------------');
 
         $orders = ApiOrder::where('created_at', '<', $execution_time)
-            ->where('order_id', null)->where('isApproved', 0)
+            ->where('order_id', null)
+            ->where('isApproved', 0)
             ->with('user.contact')
             ->get();
 
