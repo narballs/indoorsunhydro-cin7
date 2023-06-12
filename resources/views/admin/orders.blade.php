@@ -87,7 +87,7 @@
                         </div>
                     </div>
                     <div class="col-md-12 shadow border order-table-items-data p-0">
-                        <table class="table border-bottom  table-customer mb-5">
+                        <table class="table border-bottom bg-white  table-customer mb-5">
                             <thead>
                                 <tr class="table-header-background">
                                     <td class="d-flex table-row-item mt-0">
@@ -257,7 +257,7 @@
 
 @section('css')
     <link rel="stylesheet" href="/theme/css/admin_custom.css?v3">
-    <link rel="stylesheet" href="{{ asset('/admin/admin_lte.css?v3') }}">
+    <link rel="stylesheet" href="{{ asset('/admin/admin_lte.css?v4') }}">
 
     <style type="text/css">
         .custom-checkbox {
