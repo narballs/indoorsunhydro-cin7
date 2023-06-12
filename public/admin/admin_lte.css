@@ -712,7 +712,7 @@ a {
 }
 
 .next_btn_css {
-    width: 109.87px;
+    width: 75.87px !important;
     height: 34.11px;
     background: #FFFFFF;
     border: 0.944079px solid #D7D7D7;
@@ -763,6 +763,10 @@ ul.pager>.main-row>.pagination>li {
     border-radius: 4px !important;
     margin-left: 25px !important;
     width: 190px !important;
+}
+
+.order-table-items-data {
+    border-radius: 12px !important;
 }
 
 .logout_sidebar .logout_icon {
