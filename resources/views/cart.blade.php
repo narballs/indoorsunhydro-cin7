@@ -108,7 +108,7 @@
                                                         </span>
                                                     </td>
                                                     <td scope=" row">
-                                                        <div class="d-flex align-items-center mt-2">
+                                                        <div class="d-flex align-items-center mt-3">
                                                                       @if (!empty($cart['image']))
                                                                 <img src="{{ $cart['image'] }}"
                                                                     class="img-fluid rounded-3" style="width: 80px;"
@@ -133,7 +133,7 @@
                                 </p>
                             </td>
                             <td class="align-middle">
-                                <div class="mt-3">
+                                <div class="mt-4 ml-1">
                                     <div class="quantity">
                                         <input type="number" name="quantity" id={{ 'row_quantity_' . $pk_product_id }}
                                             min="1" max="20" step="1"
@@ -155,7 +155,7 @@
                                     </div>
                                 </div>
                             </td>
-                            <td class="align-middle">
+                            <td class="align-middle pl-0">
                                 <div class="row align-items-center text-center">
                                     <span class="mb-0 text-danger ps-2  cart-page-items">
                                         <span
