@@ -30,9 +30,8 @@
                                 </div>
                             @endif
                             @if (session('message'))
-                                <div class="alert alert-danger alert-dismissible fade show">
+                                <div class="alert alert-danger">
                                     {{ session('message') }}
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                 </div>
                             @endif
                             <div class="table-responsive">
@@ -1310,6 +1309,9 @@
         margin-bottom: 25px;
     }
 
+    .top-bar-height {
+        height: 78px;
+    }
 </style>
 
 <script>
