@@ -68,7 +68,7 @@
             </div>
             <div class="card-body product_table_body">
                 <div id="admin-users"></div>
-                <table class="table border table-users" id="user-table">
+                <table alt="..." class="table border table-users" id="user-table">
                     <tr>
                         <thead>
                             <tr class="table-header-background">
