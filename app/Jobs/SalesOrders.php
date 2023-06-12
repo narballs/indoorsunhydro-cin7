@@ -112,57 +112,16 @@ class SalesOrders implements ShouldQueue
                 $adminTemplate = 'emails.approval-notifications';
                 MailHelper::sendMailNotification('emails.admin-order-fullfillment', $data);
             }
+
+
+            $api_order = ApiOrder::where('order_id', $order_id)->where('reference', $reference)->first();
+            $api_order->order_id = $order_id;
+            $api_order->isApproved = 1;
+            $api_order->save();
         }
 
-        $api_order = ApiOrder::where('reference', $reference)->first();
-        $api_order->order_id = $order_id;
-        $api_order->isApproved = true;
-        $api_order->save();
 
         exit;
-        // $reference = 'QCOM-70';
-        // $apiOrder = ApiOrder::where('reference', $reference)->first();
-        // $user_id = $apiOrder['user_id'];
-        // echo $user_id;exit;
-        // $contact = Contact::where('user_id', $user_id)->first();
-        // //echo $contact->contact_id;exit;
-        // $order = ApiOrder::where('reference', $reference)->update(
-        //     [
-        //         'memberId' => $contact->contact_id
-        //     ]
-        // );
-        //dd($contact['user_id']);exit;
-        //dd($apiOrder);
-
-
-        // $reference = $response[0]->code;
-        // //dd($reference);
-        // $last_row = DB::table('api_orders')->latest('id')->first();
-        // $id = $last_row->id;
-        // //echo $last_row->id;exit;
-        // // $apiOrder = ApiOrder::where('id', $id)->update(
-        // //     [
-        // //         'order_id' => $order_id, 
-        // //         'reference' => $reference
-        // //     ]
-        // // );
-        // $orders = ApiOrder::where('apiApproval', 'pending')->get();
-        // //dd($orders);
-        // foreach ($orders as $key => $order) {
-        //     $order_items = ApiOrderItem::where('order_id', $order->order_id)->with('product')->first();
-        // dd($order_items);
-        // }
-
-        // $apiOrder = ApiOrder::where('reference', $reference)->update(
-        //     [
-        //         'order_id' => $order_id, 
-        //         'reference' => $reference
-        //     ]
-        // );
-        //  dd($res);
-        // // echo 'here';exit;
-        // //dd($apiOrder);
-
     }
 
     /**
