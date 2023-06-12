@@ -563,7 +563,7 @@
                     "auto_fullfill": auto_fullfill
                 },
                  success: function(response) {
-                     setInterval('location.reload()', 300);
+                     setInterval('location.reload()', 1000);
                  }
             });
         }
