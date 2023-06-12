@@ -107,7 +107,7 @@
                                                         </span>
                                                     </td>
                                                     <td scope=" row">
-                                                        <div class="d-flex align-items-center">
+                                                        <div class="d-flex align-items-center mt-2">
                                                                       @if (!empty($cart['image']))
                                                                 <img src="{{ $cart['image'] }}"
                                                                     class="img-fluid rounded-3" style="width: 80px;"
@@ -132,7 +132,7 @@
                                 </p>
                             </td>
                             <td class="align-middle">
-                                <div class="col-md-3">
+                                <div class="mt-3">
                                     <div class="quantity">
                                         <input type="number" name="quantity" id={{ 'row_quantity_' . $pk_product_id }}
                                             min="1" max="20" step="1"
@@ -155,14 +155,16 @@
                                 </div>
                             </td>
                             <td class="align-middle">
-                                <span class="mb-0 text-danger ps-2  cart-page-items">
-                                    <span
-                                        id="subtotal_{{ $pk_product_id }}">${{ number_format($cart['price'] * $cart['quantity'], 2) }}</span>
-                                </span>
-                                <p class="text-center remove-item-cart">
-                                    <a href="{{ url('remove/' . $pk_product_id) }}" id="remove"
-                                        class="remove-cart-page-button">Remove</a>
-                                </p>
+                                <div class="row align-items-center text-center">
+                                    <span class="mb-0 text-danger ps-2  cart-page-items">
+                                        <span
+                                            id="subtotal_{{ $pk_product_id }}">${{ number_format($cart['price'] * $cart['quantity'], 2) }}</span>
+                                    </span>
+                                    <p class="text-center remove-item-cart mb-0">
+                                        <a href="{{ url('remove/' . $pk_product_id) }}" id="remove"
+                                            class="remove-cart-page-button">Remove</a>
+                                    </p>
+                                </div>
                             </td>
                             </tr>
                             @endforeach
