@@ -34,13 +34,16 @@
                 <table class="table border mb-5 table-shipping-method">
                     <thead>
                         <tr class="table-header-background">
-                            <td class="d-flex table-row-item">
-                                <span class="tabel-checkbox">
-                                    <input type="checkbox" name="test" class="checkbox-table" id="selectAll">
-                                </span>
-                                <span class="table-row-heading">
-                                    <i class="fas fa-arrow-up"></i>
-                                </span>
+                            <td class="d-flex table-row-item mt-0">
+                                <div class="custom-control custom-checkbox tabel-checkbox">
+                                    <input class="custom-control-input custom-control-input-success checkbox-table"
+                                        type="checkbox" id="selectAll" value="">
+                                    <label for="selectAll" class="custom-control-label ml-4"></label>
+
+                                    <span class="table-row-heading-order">
+                                        <i class="fas fa-arrow-up mt-1" style="font-size:14.5px ;"></i>
+                                    </span>
+                                </div>
                             </td>
                             <td>
                                 <span class="d-flex table-row-item"> Name</span>
@@ -52,7 +55,7 @@
                                 <span class="d-flex table-row-item"> Status</span>
                             </td>
                             <td>
-                                <span class="d-flex table-row-item"> Action</span>
+                                <span class="d-flex table-row-item"></span>
                             </td>
 
                         </tr>
@@ -62,10 +65,14 @@
                             @if (!empty($shippingmethod))
                                 <tr id="row-{{ $shippingmethod->id }}" class="shipping-method-row border-bottom">
                                     <td class="d-flex table-items">
-                                        <span class="tabel-checkbox">
-                                            <input type="checkbox" name="test" class="checkbox-table">
-                                        </span>
-                                        <span class="table-row-heading">
+                                        <div class="custom-control custom-checkbox tabel-checkbox">
+                                            <input class="custom-control-input custom-control-input-success sub_chk"
+                                                data-id="{{ $shippingmethod->id }}" type="checkbox"
+                                                id="separate_check_{{ $shippingmethod->id }}">
+                                            <label for="separate_check_{{ $shippingmethod->id }}"
+                                                class="custom-control-label ml-4"></label>
+                                        </div>
+                                        <span class="table-row-heading-order">
                                             {{ $key + 1 }}
                                         </span>
                                     </td>
@@ -82,27 +89,30 @@
                                             <span class="badge badge-danger status-disabled"> Disabled</span>
                                         </td>
                                     @endif
-                                    <td class="shipping_action">
-                                        <div class="btn-group">
-                                            <button type="button" class="btn btn-white dropdown-toggle"
-                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <i class="fas fa-ellipsis-h" style="color: #CBCBCB !important;"></i>
-                                            </button>
-                                            <div class="dropdown-menu dropdonwn_menu">
-                                                <a class="dropdown-item"
-                                                    href="{{ url('admin/shipping-details/' . $shippingmethod->id) }}"
+                                    <td class="created_by toggleClass td_padding_row">
+                                        <div class="d-flex aling-items-center order-table-actions">
+                                            <span>
+                                                <a href="{{ url('admin/shipping-details/' . $shippingmethod->id) }}"
                                                     class="view a_class" title="" data-toggle="tooltip"
-                                                    data-original-title="View">Previews
+                                                    data-original-title="View">
+                                                    <img src="/theme/img/view.png" alt="" class="img-fluid">
                                                 </a>
-                                                <a class="dropdown-item"href="{{ url('admin/shipping-method/' . $shippingmethod->id) }}"
+                                            </span>
+                                            <span>
+
+                                                <a href="{{ url('admin/shipping-method/' . $shippingmethod->id) }}"
                                                     class="edit a_class" title="" data-toggle="tooltip"
-                                                    data-original-title="Edit">Edit
+                                                    data-original-title="Edit"><img src="/theme/img/edit.png" alt=""
+                                                        class="img-fluid">
                                                 </a>
-                                                <a class="dropdown-item delete deleteIcon a_class" href="#"
-                                                    class="" id="{{ $shippingmethod->id }}" title=""
-                                                    data-toggle="tooltip" data-original-title="Delete">Delete
+                                            </span>
+                                            <span>
+                                                <a href="#" class="delete deleteIcon a_class"
+                                                    id="{{ $shippingmethod->id }}" title="" data-toggle="tooltip"
+                                                    data-original-title="Delete">
+                                                    <img src="/theme/img/delete.png" alt="" class="img-fluid">
                                                 </a>
-                                            </div>
+                                            </span>
                                         </div>
                                     </td>
                                 </tr>

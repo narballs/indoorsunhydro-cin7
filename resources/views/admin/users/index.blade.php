@@ -1,9 +1,6 @@
 @extends('adminlte::page')
-
 @section('title', 'Dashboard')
-
 @section('content_header')
-
 @stop
 @section('content')
     @if ($message = Session::get('success'))
@@ -11,7 +8,6 @@
             <p>{{ $message }}</p>
         </div>
     @endif
-
     <div class="table-wrapper">
         <div class="card-body product_secion_main_body">
             <div class="row border-bottom product_section_header">
@@ -28,8 +24,7 @@
                             </a>
                         </div>
                     </div>
-                    <div class="row search_row_admin-interface justify-content-between"
-                        style="margin-top: 12px !important;">
+                    <div class="row search_row_admin-interface" style="margin-top: 12px !important;">
                         <div class="col-md-2 product_search">
                             <div class="has-search">
                                 <span class="fa fa-search form-control-feedback"></span>
@@ -39,6 +34,7 @@
                                 </form>
                             </div>
                         </div>
+                        <div class="col-md-5"></div>
                         <div class="col-md-2">
                             <select name="users" id="users" onchange="userFilter()" class="form-control"
                                 style="height: 39px;margin-top: -7px;">
@@ -54,7 +50,7 @@
                                     Not Merged</option>
                             </select>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-2 d-flex justify-content-end">
                             <select name="secondary_user" id="secondary-user" onchange="userFilter()" class="form-control"
                                 style="height: 39px; margin-top: -7px; margin-left: -7px;">
                                 <option value="all" class="form-control">Secndary/Primary</option>
@@ -106,7 +102,7 @@
                                     <span class="d-flex table-row-item"> Roles</span>
                                 </td>
                                 <td>
-                                    <span class="d-flex table-row-item"> Action</span>
+                                    <span class="d-flex table-row-item"></span>
                                 </td>
                             </tr>
                         </thead>
@@ -365,17 +361,13 @@
                 test.classList.add('bg-icon');
             });
         });
-
-
         $('.user-row-none').mouseleave(function() {
             let id = $(this).attr('id');
             children = $(this).children('.user_name').children('span').removeClass('text-successs');
-
             bg_success = $(this).children('.background_success').children('.background_success_1').removeClass(
                 'background-success');
             bg_success = $(this).children('.is-approved').children('.is_approded_0').removeClass(
                 'background-warning');
-
             bg_success = $(this).children('.is_parent').children('.is_parent_1').removeClass(
                 'background-secondary');
             bg_success = $(this).children('.is_parent').children('.is_parent_0').removeClass(
@@ -462,7 +454,6 @@
                     primary_id: primary_id,
                 },
                 success: function(response) {
-
                     if (response.status == 200) {
                         $('#spinner2').addClass('d-none');
 
@@ -472,7 +463,6 @@
 
                     }
                 }
-
             });
         }
 

@@ -624,8 +624,10 @@ a {
 
 .search_row_admin-interface {
     border-radius: 8.8914px;
-    /* width: 48% !important; */
     height: 49px !important;
+    display: flex;
+    justify-content: space-between;
+
 }
 
 .search_row_admin_user {
@@ -816,4 +818,9 @@ ul.pager>.main-row>.pagination>li {
 .custom-control-input-success:checked~.custom-control-label::before {
     border-color: #7BC533 !important;
     background-color: #7BC533 !important;
+}
+
+.customer-items-row {
+    padding-top: 27px !important;
+    padding-bottom: 0px !important;
 }

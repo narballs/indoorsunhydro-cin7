@@ -158,7 +158,7 @@
                                             <span
                                                 class="ms-1 d-none d-sm-inline  fs-5 ms-3 mt-1 ml-0 pl-0 nav-items-link"
                                                 onclick="wishLists()">
-                                                My Favourites
+                                                My Favorites
                                             </span>
                                         </div>
                                     </div>
@@ -387,11 +387,11 @@
                         <div class="col-md-8 border-bottom border-4 d-flex pb-4 p-0 bg-white">
                             <img src="/theme/img/heartfilled.png" style="margin: 5px 3px 0px 9px;" width="28px"
                                 height="28px">
-                            <span class="pt-1 my-account-content-heading">My Favourites</span>
+                            <span class="pt-1 my-account-content-heading">My Favorites</span>
                         </div>
                         <div class="col-md-4 border-bottom" style="    padding-left: 151px;">
-                            <button class="btn btn-outline-success" data-bs-toggle="modal"
-                                data-bs-target="#exampleModal">Create List</button>
+                            {{-- <button class="btn btn-outline-success" data-bs-toggle="modal" --}}
+                                {{-- data-bs-target="#exampleModal">Create List</button> --}}
                         </div>
 
                         <div class="col-md-8 bg-light m-auto rounded-end pt-3 pb-3" style=""
@@ -448,7 +448,7 @@
                         </div>
                     </div>
                     <!-- Modal -->
-                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                    {{-- <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
                         aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
@@ -471,7 +471,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel"
                         aria-hidden="true">
                         <div class="modal-dialog">
@@ -1064,7 +1064,7 @@
                     console.log(images[1]);
                     listitems += '<div class="container p-0">';
                     listitems += '<header class="text-center">' +
-                        '<h1>My Favourites</h1>' +
+                        '<h1>My Favorites</h1>' +
                         '</header>' +
 
                         '<div class="row">' +

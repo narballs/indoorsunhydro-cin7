@@ -720,27 +720,6 @@
 										
 										<tr class="border_bottom_mb">
 											<td style="width: 20% !important;">
-												{{-- <div class="row">
-													<div class="col-md-2 py-2 mobile_thankyou_img_div">
-														@if ($option->image)
-														<img class="img-fluid img-thumbnail m_chechout_image" src="{{$option->image}}" alt=""
-															width="90px" style="max-height: 90px">
-														@else
-														<img src="/theme/img/image_not_available.png" class="m_chechout_image" alt="" width="80px">
-														@endif
-													</div>
-													<div class="col-md-5 py-2 ps-0 prod-name-img mobile_text_class" style="">
-														<a class="order-confirmation-page-product-category-name pb-3"
-															href=" {{ url('product-detail/'. $item->product->id.'/'.$option->option_id.'/'.$item->product->slug) }}">
-															{{$item->product->name}}
-														</a>
-														<br>
-														<p class="order-confirmation-page-product-title">Title:<span
-																class="order-confirmation-page-product-item">
-																{{$item->product->name}}</span>
-														</p>
-													</div>
-												</div> --}}
 												<div class="py-2 mobile_thankyou_img_div">
 													@if ($option->image)
 													<img class="img-fluid img-thumbnail m_chechout_image" src="{{$option->image}}" alt=""
@@ -751,47 +730,16 @@
 												</div>
 											</td>
 											<td style="width:80%;">
-												<div class="ps-0 mobile_text_class" style="">
-													<a class="order-confirmation-page-product-category-name pb-3"
-														href=" {{ url('product-detail/'. $item->product->id.'/'.$option->option_id.'/'.$item->product->slug) }}">
-														{{$item->product->name}}
-													</a>
-													<br>
-													<p class="order-confirmation-page-product-title">Title:<span
-															class="order-confirmation-page-product-item">
-															{{$item->product->name}}</span>
+												<div class="ps-0 mobile_text_class mt-1" style="">
+													<p class="order-confirmation-page-product-title">
+														<a class="order-confirmation-page-product-category-name pb-3"
+															href=" {{ url('product-detail/'. $item->product->id.'/'.$option->option_id.'/'.$item->product->slug) }}">
+															{{$item->product->name}}
+														</a>
 													</p>
 												</div>
-												<table border="0" style="width:100%" cellpadding="0" cellspacing="0" class="innerTable_mobile">
-													<tr>
-														<td style="text-align: right">
-															<p class=" mb-0 order-confirmation-page-product-price">
-																${{number_format($item->price,2)}}</p>
-														</td>
-													</tr>
-												</table>
+												<p class=" mb-0 order-confirmation-page-product-price text-right"> ${{number_format($item->price,2)}}</p>
 											</td>
-											{{-- <td>Shipping</td> --}}
-											{{-- <td>
-												<div class="row">
-													<div class="col-md-12">
-														<p class="pt-4 order-confirmation-page-product-quantity">
-															{{$item->quantity}}</p>
-													</div>
-												</div>
-											</td>
-											<td>
-												<p class="pt-4 order-confirmation-page-product-price">
-													${{number_format($item->price,2)}}</p>
-											</td> --}}
-											{{-- <td >
-												<p class="pt-4 order-confirmation-page-product-quantity">
-													{{$item->quantity}}</p>
-											</td>
-											<td >
-												<p class="pt-4 order-confirmation-page-product-price">
-													${{number_format($item->price,2)}}</p>
-											</td> --}}
 										</tr>
 										@endforeach
 									@endforeach
