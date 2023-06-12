@@ -1,14 +1,8 @@
 @extends('adminlte::page')
-
 @section('title', 'Dashboard')
-
 @section('content_header')
-
 @stop
-
 @section('content')
-
-
     <div class="table-wrapper">
         <div class="table-title">
             <span>
@@ -41,28 +35,29 @@
             </div>
         </div>
         <div class="card card-body">
-
-            <table class="table table-striped table-hover table-bordered table-customer" id="table">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Name <i class="fa fa-sort"></i></th>
-                        <th>Status <i class="fa fa-sort"></i></th>
-                        <th>Price Tier<i class="fa fa-sort"></i></th>
-                        <th>Company</th>
-                        <th>Email<i class="fa fa-sort"></i></th>
-                        <th class="w-75">Notes<i class="fa fa-sort"></i></th>
-                        <th class="w-25">Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="searched">
-                    <?php $count = 0; ?>
-                    @foreach ($contacts as $key => $contact)
-                        <?php $count++; ?>
-                        @include('admin.customer_row')
-                    @endforeach
-                </tbody>
-            </table>
+            <div class="col-md-12 shadow border order-table-items-data">
+                <table class="table bg-white mb-0 table-customer" id="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name <i class="fa fa-sort"></i></th>
+                            <th>Status <i class="fa fa-sort"></i></th>
+                            <th>Price Tier<i class="fa fa-sort"></i></th>
+                            <th>Company</th>
+                            <th>Email<i class="fa fa-sort"></i></th>
+                            <th class="w-75">Notes<i class="fa fa-sort"></i></th>
+                            <th class="w-25">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="searched">
+                        <?php $count = 0; ?>
+                        @foreach ($contacts as $key => $contact)
+                            <?php $count++; ?>
+                            @include('admin.customer_row')
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
             <div class="row">
                 <div class="col-md-10">
                     {{ $contacts->appends(Request::all())->links() }}
@@ -77,12 +72,10 @@
                         </option>
                         <option value="30">30</option>
                     </select>
-
                 </div>
             </div>
         </div>
     @stop
-
     @section('css')
         <link rel="stylesheet" href="/css/admin_custom.css">
         <style type="text/css">

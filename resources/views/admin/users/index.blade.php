@@ -68,178 +68,185 @@
             </div>
             <div class="card-body product_table_body">
                 <div id="admin-users"></div>
-                <table alt="..." class="table border table-users" id="user-table">
-                    <tr>
-                        <thead>
-                            <tr class="table-header-background">
-                                <td class="d-flex table-row-item">
-                                    <span class="tabel-checkbox-user">
-                                        <input type="checkbox" name="test" class="checkbox-table" id="selectAll">
-                                    </span>
-                                    <span class="table-row-heading">
-                                        <i class="fas fa-arrow-up"></i>
-                                    </span>
-                                </td>
-                                <td>
-                                    <span class="d-flex table-row-item"> Full Name</span>
-                                </td>
-                                <td>
-                                    <span class="d-flex table-row-item"> Email</span>
-                                </td>
-                                <td>
-                                    <span class="d-flex table-row-item"> Cin7 User-ID </span>
-                                </td>
-                                <td>
-                                    <span class="d-flex table-row-item"> Company (Account aka Parent) </span>
-                                </td>
-                                <td>
-                                    <span class="d-flex table-row-item"> Secondary Contact Company</span>
-                                </td>
-                                <td>
-                                    <span class="d-flex table-row-item"> Type</span>
-                                </td>
-                                <td>
-                                    <span class="d-flex table-row-item"> Roles</span>
-                                </td>
-                                <td>
-                                    <span class="d-flex table-row-item"></span>
-                                </td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($data as $key => $user)
-                                @foreach ($user->contact as $contact)
-                                    <tr id="row-{{ $user->id }}" class="user-row border-bottom">
-                                        <td class="d-flex user-table-items">
-                                            <span class="tabel-checkbox-user">
-                                                <input type="checkbox" name="test" class="checkbox-table" id="selectAll">
-                                            </span>
-                                            <span class="table-row-heading-user">
-                                                {{ $key + 1 }}
-                                            </span>
-                                        </td>
-                                        <td class="user_name">
-                                            @if ($contact)
-                                                <span> {{ $contact->firstName }} {{ $contact->lastName }}</span>
-                                            @elseif ($user->first_name)
-                                                <span> {{ $user->first_name }} {{ $user->last_name }} </span>
-                                            @else
-                                                <span class="badge badge-info w-100">empty</span>
-                                            @endif
-                                        </td>
-                                        <td class="user_table_items">
-                                            {{ $user->email }}</td>
-                                        <td class="user_table_items">
-                                            @if ($contact)
-                                                @if ($contact->contact_id)
-                                                    {{ $contact->contact_id }}
+                <div class="col-md-12 shadow border order-table-items-data">
+                    <table class="table bg-white table-users" id="user-table">
+                        <tr>
+                            <thead>
+                                <tr class="table-header-background">
+                                    <td class="d-flex table-row-item">
+                                        <span class="tabel-checkbox-user">
+                                            <input type="checkbox" name="test" class="checkbox-table" id="selectAll">
+                                        </span>
+                                        <span class="table-row-heading">
+                                            <i class="fas fa-arrow-up"></i>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="d-flex table-row-item"> Full Name</span>
+                                    </td>
+                                    <td>
+                                        <span class="d-flex table-row-item"> Email</span>
+                                    </td>
+                                    <td>
+                                        <span class="d-flex table-row-item"> Cin7 User-ID </span>
+                                    </td>
+                                    <td>
+                                        <span class="d-flex table-row-item"> Company (Account aka Parent) </span>
+                                    </td>
+                                    <td>
+                                        <span class="d-flex table-row-item"> Secondary Contact Company</span>
+                                    </td>
+                                    <td>
+                                        <span class="d-flex table-row-item"> Type</span>
+                                    </td>
+                                    <td>
+                                        <span class="d-flex table-row-item"> Roles</span>
+                                    </td>
+                                    <td>
+                                        <span class="d-flex table-row-item"></span>
+                                    </td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($data as $key => $user)
+                                    @foreach ($user->contact as $contact)
+                                        <tr id="row-{{ $user->id }}" class="user-row border-bottom">
+                                            <td class="d-flex user-table-items">
+                                                <span class="tabel-checkbox-user">
+                                                    <input type="checkbox" name="test" class="checkbox-table"
+                                                        id="selectAll">
+                                                </span>
+                                                <span class="table-row-heading-user">
+                                                    {{ $key + 1 }}
+                                                </span>
+                                            </td>
+                                            <td class="user_name">
+                                                @if ($contact)
+                                                    <span> {{ $contact->firstName }} {{ $contact->lastName }}</span>
+                                                @elseif ($user->first_name)
+                                                    <span> {{ $user->first_name }} {{ $user->last_name }} </span>
                                                 @else
-                                                    {{ $contact->parent_id }}
+                                                    <span class="badge badge-info w-100">empty</span>
                                                 @endif
-                                            @else
-                                                <span class="badge badge-info w-100">empty</span>
-                                            @endif
-                                        </td>
-                                        <td class="is_parent user_table_items">
-                                            @if ($contact)
-                                                @if ($contact->is_parent == 1)
-                                                    <span>{{ $contact->company }}</span>
-                                                @else
-                                                    <span class="badge badge-secondary is_parent_1">empty</span>
-                                                @endif
-                                            @else
-                                                <span class="badge badge-secondary  is_parent_0">empty</span>
-                                            @endif
-                                        </td>
-                                        <td class="is_parent user_table_items">
-                                            @if ($contact)
-                                                @if ($contact->is_parent == 0)
-                                                    <span> {{ $contact->company }}</span>
-                                                @else
-                                                    <span class="badge badge-secondary  is_parent_1">empty</span>
-                                                @endif
-                                            @else
-                                                <span class="badge badge-secondary  is_parent_0">empty</span>
-                                            @endif
-                                        </td>
-                                        <td class="background_contact_id user_table_items">
-                                            @if ($contact)
-                                                @if (!empty($contact->contact_id))
-                                                    <span class="badge badge-primary  background_primary_1">primary</span>
-                                                @else
-                                                    <span
-                                                        class="badge badge-secondary  background_secondary_1">secondary</span>
-                                                @endif
-                                            @endif
-                                        </td>
-                                        <td class="background_success user_table_items">
-                                            @if (!empty($user->getRoleNames()))
-                                                @foreach ($user->getRoleNames() as $role)
-                                                    <label
-                                                        class="badge badge-success  background_success_1">{{ $role }}</label>
-                                                @endforeach
-                                            @endif
-                                        </td>
-                                        <td class="user_action ">
-                                            <div class="btn-group">
-                                                <button type="button" class="btn btn-white dropdown-toggle"
-                                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <i class="fas fa-ellipsis-h" style="color: #CBCBCB !important;"></i>
-                                                </button>
-                                                <div class="dropdown-menu dropdonwn_menu">
-                                                    <a class="dropdown-item" href="{{ route('users.show', $user->id) }}"
-                                                        class="view a_class" title="" data-toggle="tooltip"
-                                                        data-original-title="View">Previews
-                                                    </a>
-                                                    <a class="dropdown-item delete deleteIcon a_class"
-                                                        href="{{ route('users.destroy', $user->id) }}" class=""
-                                                        id="{{ $user->id }}" title="" data-toggle="tooltip"
-                                                        data-original-title="Delete">Delete
-                                                    </a>
-                                                    <a class="dropdown-item"href="{{ route('users.edit', $user->id) }}"
-                                                        class="edit a_class" title="" data-toggle="tooltip"
-                                                        data-original-title="Edit">Edit
-                                                    </a>
-                                                    <a class="dropdown-item"href="{{ url('admin/user-switch/' . $user->id) }}"
-                                                        class="edit a_class" title="" data-toggle="tooltip"
-                                                        data-original-title="Edit">Switch User
-                                                    </a>
-                                                    @if ($contact)
-                                                        @if ($contact->secondary_contact)
-                                                            <button type="button" class="btn"
-                                                                data-id="{{ $user->id }}" data-toggle="modal"
-                                                                onclick="assignParent('{{ $user->id }}')">Set
-                                                                Parent</button>
-                                                            <input type="hidden" value='{{ $user->id }}'
-                                                                id='{{ $user->id }}'>
-                                                        @endif
-                                                    @endif
-                                                    @if ($user->is_updated == 0)
-                                                        <a class="dropdown-item"href="{{ url('admin/send-password/' . $user->id) }}"
-                                                            class="edit a_class" title="" data-toggle="tooltip"
-                                                            data-original-title="Edit">Send Password
-                                                        </a>
+                                            </td>
+                                            <td class="user_table_items">
+                                                {{ $user->email }}</td>
+                                            <td class="user_table_items">
+                                                @if ($contact)
+                                                    @if ($contact->contact_id)
+                                                        {{ $contact->contact_id }}
                                                     @else
-                                                        <a class="dropdown-item disabled"href="{{ url('admin/send-password/' . $user->id) }}"
-                                                            class="edit a_class" title="" data-toggle="tooltip"
-                                                            data-original-title="Edit">Send Password
-                                                        </a>
+                                                        {{ $contact->parent_id }}
                                                     @endif
+                                                @else
+                                                    <span class="badge badge-info w-100">empty</span>
+                                                @endif
+                                            </td>
+                                            <td class="is_parent user_table_items">
+                                                @if ($contact)
+                                                    @if ($contact->is_parent == 1)
+                                                        <span>{{ $contact->company }}</span>
+                                                    @else
+                                                        <span class="badge badge-secondary is_parent_1">empty</span>
+                                                    @endif
+                                                @else
+                                                    <span class="badge badge-secondary  is_parent_0">empty</span>
+                                                @endif
+                                            </td>
+                                            <td class="is_parent user_table_items">
+                                                @if ($contact)
+                                                    @if ($contact->is_parent == 0)
+                                                        <span> {{ $contact->company }}</span>
+                                                    @else
+                                                        <span class="badge badge-secondary  is_parent_1">empty</span>
+                                                    @endif
+                                                @else
+                                                    <span class="badge badge-secondary  is_parent_0">empty</span>
+                                                @endif
+                                            </td>
+                                            <td class="background_contact_id user_table_items">
+                                                @if ($contact)
+                                                    @if (!empty($contact->contact_id))
+                                                        <span
+                                                            class="badge badge-primary  background_primary_1">primary</span>
+                                                    @else
+                                                        <span
+                                                            class="badge badge-secondary  background_secondary_1">secondary</span>
+                                                    @endif
+                                                @endif
+                                            </td>
+                                            <td class="background_success user_table_items">
+                                                @if (!empty($user->getRoleNames()))
+                                                    @foreach ($user->getRoleNames() as $role)
+                                                        <label
+                                                            class="badge badge-success  background_success_1">{{ $role }}</label>
+                                                    @endforeach
+                                                @endif
+                                            </td>
+                                            <td class="user_action ">
+                                                <div class="btn-group">
+                                                    <button type="button" class="btn btn-white dropdown-toggle"
+                                                        data-toggle="dropdown" aria-haspopup="true"
+                                                        aria-expanded="false">
+                                                        <i class="fas fa-ellipsis-h"
+                                                            style="color: #CBCBCB !important;"></i>
+                                                    </button>
+                                                    <div class="dropdown-menu dropdonwn_menu">
+                                                        <a class="dropdown-item"
+                                                            href="{{ route('users.show', $user->id) }}"
+                                                            class="view a_class" title="" data-toggle="tooltip"
+                                                            data-original-title="View">Previews
+                                                        </a>
+                                                        <a class="dropdown-item delete deleteIcon a_class"
+                                                            href="{{ route('users.destroy', $user->id) }}" class=""
+                                                            id="{{ $user->id }}" title=""
+                                                            data-toggle="tooltip" data-original-title="Delete">Delete
+                                                        </a>
+                                                        <a class="dropdown-item"href="{{ route('users.edit', $user->id) }}"
+                                                            class="edit a_class" title="" data-toggle="tooltip"
+                                                            data-original-title="Edit">Edit
+                                                        </a>
+                                                        <a class="dropdown-item"href="{{ url('admin/user-switch/' . $user->id) }}"
+                                                            class="edit a_class" title="" data-toggle="tooltip"
+                                                            data-original-title="Edit">Switch User
+                                                        </a>
+                                                        @if ($contact)
+                                                            @if ($contact->secondary_contact)
+                                                                <button type="button" class="btn"
+                                                                    data-id="{{ $user->id }}" data-toggle="modal"
+                                                                    onclick="assignParent('{{ $user->id }}')">Set
+                                                                    Parent</button>
+                                                                <input type="hidden" value='{{ $user->id }}'
+                                                                    id='{{ $user->id }}'>
+                                                            @endif
+                                                        @endif
+                                                        @if ($user->is_updated == 0)
+                                                            <a class="dropdown-item"href="{{ url('admin/send-password/' . $user->id) }}"
+                                                                class="edit a_class" title="" data-toggle="tooltip"
+                                                                data-original-title="Edit">Send Password
+                                                            </a>
+                                                        @else
+                                                            <a class="dropdown-item disabled"href="{{ url('admin/send-password/' . $user->id) }}"
+                                                                class="edit a_class" title="" data-toggle="tooltip"
+                                                                data-original-title="Edit">Send Password
+                                                            </a>
+                                                        @endif
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </td>
-                                    </tr>
+                                            </td>
+                                        </tr>
+                                    @endforeach
                                 @endforeach
-                            @endforeach
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td colspan="10">
-                                    {{ $data->links('pagination.custom_pagination') }}
-                                </td>
-                            </tr>
-                        </tfoot>
-                </table>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="10">
+                                        {{ $data->links('pagination.custom_pagination') }}
+                                    </td>
+                                </tr>
+                            </tfoot>
+                    </table>
+                </div>
                 <!-- Modal -->
                 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
                     aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -278,7 +285,6 @@
     @endsection
 </div>
 </div>
-
 @section('css')
     <link rel="stylesheet" href="/theme/css/admin_custom.css">
     <link rel="stylesheet" href="{{ asset('admin/admin_lte.css') }}">

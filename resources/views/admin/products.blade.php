@@ -33,8 +33,8 @@
                 </div>
             </div>
             <div class="card-body product_table_body">
-                <div class="col-md-12 p-0">
-                    <table class="table border mb-5 table-product" id="table">
+                <div class="col-md-12 shadow border order-table-items-data">
+                    <table class="table mb-0 bg-white table-product" id="table">
                         <thead>
                             <tr class="table-header-background">
                                 <td class="d-flex table-row-item">
