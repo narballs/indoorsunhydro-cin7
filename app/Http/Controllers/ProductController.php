@@ -731,7 +731,7 @@ class ProductController extends Controller
         if (!empty($user_id) && !empty($contact_id)) {
             $contact = Contact::where('user_id', $user_id)->where('contact_id', $contact_id)->orWhere('secondary_id', $contact_id)->first();
         }
-
+        
         $tax_class = TaxClass::where('is_default', 1)->first();
 
 

@@ -86,6 +86,7 @@
                                                     <div class="row">
                                                         <div class="col-lg-10  col-xl-10  d-flex align-items-center">
                                                             <li class="nav-item dropdown position-static width_fix adjust_arrow_color">
+                                                                <?php// dd($session_contact_company);?>
                                                                 @if (!empty($session_contact_company))
                                                                     <a class="select_company_hover nav-link dropdown-toggle select_company_top remove_focus"
                                                                         href="#" id="navbarDropdown" role="button"
