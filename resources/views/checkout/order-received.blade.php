@@ -134,7 +134,8 @@
 
 	@media  screen and (min-width : 375px ) and (max-width:650px) {
 		.mobile-font {
-			font-size:25px !important;
+			font-weight: 600 !important;
+			font-size: 20px !important;
 		}
 		.mobile_class {
 			padding-left: 0px !important;
@@ -149,6 +150,7 @@
 			padding-left: 0.1rem !important;
 			padding-right: 0.1rem !important;
 			margin-top: 0rem !important;
+			padding-top: 0rem !important;
 		}
 		.thank-you-card {
 			margin-top: 0px !important;
@@ -158,6 +160,12 @@
 		}
 		.order-confirmation-page-title {
 			margin-bottom: 0px !important;
+			font-weight: 700 !important;
+			font-size: 16px !important;
+		}
+		.mobile-font-part {
+			font-weight:400 !important;
+			font-size: 16px !important;
 		}
 		
 		.shipping_mobile {
@@ -183,6 +191,126 @@
 		.order-confirmation-page-second-row {
 			padding-top: 2rem !important;
 		}
+		.order-confirmation-page-order-number-title {
+			font-weight: 400 !important;
+			font-size: 10px !important;
+			margin-bottom: 5px !important;                                                                                        
+		}
+		.order-confirmation-page-order-number-item {
+			font-weight: 600 !important;
+			font-size: 30px !important;
+		}
+		.order-confirmation-page-date-title {
+			font-weight: 400 !important;
+			font-size: 16px !important;
+			margin-bottom: 5px !important;
+		}
+		.order-confirmation-page-date-item {
+			font-weight: 600 !important;
+			font-size: 16px !important;
+		}
+		.order-confirmation-page-mobile-title {
+			margin-bottom: 5px !important;
+			font-weight: 400 !important;
+			font-size: 16px !important;
+		}
+		.order-confirmation-page-mobile-item {
+			font-weight: 600 !important;
+			font-size: 16px !important;
+		}
+
+		.order-confirmation-page-email-title {
+			margin-bottom: 5px !important;
+			font-weight: 400 !important;
+			font-size: 16px !important;
+		}
+
+		.order-confirmation-page-email-item {
+			font-weight: 600 !important;
+			font-size: 16px !important;
+		}
+
+		.order-confirmation-page-payment-method-title {
+			margin-bottom: 5px !important;
+			font-weight: 400 !important;
+			font-size: 16px !important;
+		}
+
+		.order-confirmation-page-payment-method-item {
+			font-weight: 600 !important;
+			font-size: 16px !important;
+		}
+
+
+		.order-confirmation-page-shipping-title {
+			margin-bottom: 5px !important;
+			font-weight: 400 !important;
+			font-size: 16px !important;
+		}
+
+		.order-confirmation-page-shipping-item {
+			font-weight: 600 !important;
+			font-size: 16px !important;
+		}
+
+		.order-confirmation-page-tax-title {
+			margin-bottom: 5px !important;
+			font-weight: 400 !important;
+			font-size: 16px !important;
+		}
+
+		.order-confirmation-page-tax-item {
+			font-weight: 600 !important;
+			font-size: 16px !important;
+		}
+
+		.order-confirmation-page-total-title {
+			font-size: 10px !important;
+			margin-bottom: 5px !important;
+			font-weight: 400 !important;
+		}
+
+		.order-confirmation-page-total-item {
+			font-weight: 600 !important;
+			font-size: 30px !important;
+		}
+
+		.order-confirmation-page-top-heading{
+			margin-bottom: 0px !important;
+		}
+		.order-confirmation-page-first-name-last-name-user-name {
+			font-size: 13.35px !important;
+		}
+		.order-confirmation-page-address-line-one-title {
+			font-size: 13.35px !important;	
+		}
+		.order-confirmation-page-address-line-one-item {
+			font-size: 13.35px !important;	
+		}
+
+		.order-confirmation-page-address-line-tow-title , .order-confirmation-page-city-name-title , .order-confirmation-page-state-name-title , .order-confirmation-page-zip-name-title  {
+			font-size: 13.35px !important;	
+		}
+		.order-confirmation-page-address-line-tow-item , .order-confirmation-page-city-name-item ,  .order-confirmation-page-state-name-item, .order-confirmation-page-zip-name-item{
+			font-size: 13.35px !important;	
+		}
+		.order-confirmation-page-product-category-name {
+			font-size: 12px !important;
+		}
+		.order-confirmation-page-product-price {
+			font-size: 16px !important;
+		}
+		.purchase-title-mobile {
+			margin-top: 0rem !important;
+		}
+		.order-confirmation-page-view-invoice-button {
+			font-family: 'Roboto' !important;
+			font-style: normal !important;
+			font-weight: 500 !important;
+			font-size: 16px !important;
+			line-height: 19px !important;
+			letter-spacing: 0.01em !important;
+		}
 		
 	}
 
@@ -203,7 +331,7 @@
 							<p class="order-confirmation-page-title">
 								{{$order_contact->firstName}}
 								{{$order_contact->lastName}}
-								<span class="order-confirmation-page-user-name mobile-font">Your order has been received.</span>
+								<span class="order-confirmation-page-user-name mobile-font mobile-font-part">Your order has been received.</span>
 							</p>
 						</div>
 					</div>
@@ -634,7 +762,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="row ps-5 mt-5 pe-5 div_increase_mobile">
+					<div class="row ps-5 mt-5 pe-5 div_increase_mobile purchase-title-mobile">
 						<div class="col-md-12 mt-5 mobile_b_bottom">
 							<p class="order-confirmation-page-item-purchased-title mobile-font ">Item Purchased </p>
 						</div>
@@ -747,8 +875,7 @@
 							</table>
 							<div class="row">
 								<div class="col-md-2 m-auto">
-									<a href="#" class="order-confirmation-page-view-invoice-button btn w-100">VIEW
-										INVOICE</a>
+									<a href="#" class="order-confirmation-page-view-invoice-button btn w-100 text-uppercase">View Invoice</a>
 								</div>
 							</div>
 						</div>

@@ -287,11 +287,10 @@
                         </td>
                     </tr>
                 </tbody>
-                <tfoot class="border-0" style="border-color: #ffff !important;">
+                {{-- <tfoot class="border-0" style="border-color: #ffff !important;">
                     <tr>
                         <td colspan="2">
-                            <li
-                                class="list-group-item d-flex justify-content-center align-items-center border-0 px-0 mb-3">
+                            <li class="list-group-item d-flex justify-content-center align-items-center border-0 px-0 mb-3">
                                 @if (Auth::check() == true && $contact->status == 1 && !empty($contact->contact_id))
                                     <a href="{{ url('/checkout') }}">
                                         <button class="procedd-to-checkout mt-3">
@@ -322,8 +321,37 @@
                             </li>
                         </td>
                     </tr>
-                </tfoot>
+                </tfoot> --}}
             </table>
+            <div>
+                @if (Auth::check() == true && $contact->status == 1 && !empty($contact->contact_id))
+                    <a href="{{ url('/checkout') }}">
+                        <button class="procedd-to-checkout mt-3 w-100 mb-4">
+                            PROCEED TO CHECKOUT
+                        </button>
+                    </a>
+                @elseif (Auth::check() == true && $contact->status == 0)
+                    <div class="alert alert-danger alert-dismissible fade show py-2" role="alert">
+                        <span class="d-flex justify-content-center align-items-center">
+                            Checkout has been disabled for this email address, please contact your
+                            account
+                            manager to re-enable checkout.
+                        </span>
+                    </div>
+                @elseif(Auth::check() == true && empty($contact->contact_id))
+                    <a href="{{ url('/checkout/') }}">
+                        <button class="procedd-to-checkout mt-3 w-100 mb-4">
+                            PROCEED TO CHECKOUT
+                        </button>
+                    </a>
+                @else
+                    <a href="{{ url('/user/') }}">
+                        <button class="procedd-to-checkout mt-3 w-100 mb-4">
+                            Login or Register
+                        </button>
+                    </a>
+                @endif
+            </div>
         </div>
     </div>
                         </div>
