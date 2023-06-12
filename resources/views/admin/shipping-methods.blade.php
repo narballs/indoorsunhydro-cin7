@@ -31,106 +31,108 @@
                 </div>
             </div>
             <div class="card-body product_table_body">
-                <table class="table border mb-5 table-shipping-method">
-                    <thead>
-                        <tr class="table-header-background">
-                            <td class="d-flex table-row-item mt-0">
-                                <div class="custom-control custom-checkbox tabel-checkbox">
-                                    <input class="custom-control-input custom-control-input-success checkbox-table"
-                                        type="checkbox" id="selectAll" value="">
-                                    <label for="selectAll" class="custom-control-label ml-4"></label>
+                <div class="col-md-12 shadow border order-table-items-data">
+                    <table class="table bg-white  mb-0 table-shipping-method">
+                        <thead>
+                            <tr class="table-header-background">
+                                <td class="d-flex table-row-item mt-0">
+                                    <div class="custom-control custom-checkbox tabel-checkbox">
+                                        <input class="custom-control-input custom-control-input-success checkbox-table"
+                                            type="checkbox" id="selectAll" value="">
+                                        <label for="selectAll" class="custom-control-label ml-4"></label>
 
-                                    <span class="table-row-heading-order">
-                                        <i class="fas fa-arrow-up mt-1" style="font-size:14.5px ;"></i>
-                                    </span>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="d-flex table-row-item"> Name</span>
-                            </td>
-                            <td>
-                                <span class="d-flex table-row-item"> Cost</span>
-                            </td>
-                            <td>
-                                <span class="d-flex table-row-item"> Status</span>
-                            </td>
-                            <td>
-                                <span class="d-flex table-row-item"></span>
-                            </td>
-
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($shippingmethods as $key => $shippingmethod)
-                            @if (!empty($shippingmethod))
-                                <tr id="row-{{ $shippingmethod->id }}" class="shipping-method-row border-bottom">
-                                    <td class="d-flex table-items">
-                                        <div class="custom-control custom-checkbox tabel-checkbox">
-                                            <input class="custom-control-input custom-control-input-success sub_chk"
-                                                data-id="{{ $shippingmethod->id }}" type="checkbox"
-                                                id="separate_check_{{ $shippingmethod->id }}">
-                                            <label for="separate_check_{{ $shippingmethod->id }}"
-                                                class="custom-control-label ml-4"></label>
-                                        </div>
                                         <span class="table-row-heading-order">
-                                            {{ $key + 1 }}
+                                            <i class="fas fa-arrow-up mt-1" style="font-size:14.5px ;"></i>
                                         </span>
-                                    </td>
-                                    <td class="shipping_name">
-                                        <span class="d-flex table-items-title">{{ $shippingmethod->title }}</span>
-                                    </td>
-                                    <td class="d-flex table-items">{{ $shippingmethod->cost }}</td>
-                                    @if ($shippingmethod->status == 1)
-                                        <td>
-                                            <span class="badge badge-success status-disabled"> Enabled</span>
-                                        </td>
-                                    @else
-                                        <td>
-                                            <span class="badge badge-danger status-disabled"> Disabled</span>
-                                        </td>
-                                    @endif
-                                    <td class="created_by toggleClass td_padding_row">
-                                        <div class="d-flex aling-items-center order-table-actions">
-                                            <span>
-                                                <a href="{{ url('admin/shipping-details/' . $shippingmethod->id) }}"
-                                                    class="view a_class" title="" data-toggle="tooltip"
-                                                    data-original-title="View">
-                                                    <img src="/theme/img/view.png" alt="" class="img-fluid">
-                                                </a>
-                                            </span>
-                                            <span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="d-flex table-row-item"> Name</span>
+                                </td>
+                                <td>
+                                    <span class="d-flex table-row-item"> Cost</span>
+                                </td>
+                                <td>
+                                    <span class="d-flex table-row-item"> Status</span>
+                                </td>
+                                <td>
+                                    <span class="d-flex table-row-item"></span>
+                                </td>
 
-                                                <a href="{{ url('admin/shipping-method/' . $shippingmethod->id) }}"
-                                                    class="edit a_class" title="" data-toggle="tooltip"
-                                                    data-original-title="Edit"><img src="/theme/img/edit.png" alt=""
-                                                        class="img-fluid">
-                                                </a>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($shippingmethods as $key => $shippingmethod)
+                                @if (!empty($shippingmethod))
+                                    <tr id="row-{{ $shippingmethod->id }}" class="shipping-method-row border-bottom">
+                                        <td class="d-flex table-items">
+                                            <div class="custom-control custom-checkbox tabel-checkbox">
+                                                <input class="custom-control-input custom-control-input-success sub_chk"
+                                                    data-id="{{ $shippingmethod->id }}" type="checkbox"
+                                                    id="separate_check_{{ $shippingmethod->id }}">
+                                                <label for="separate_check_{{ $shippingmethod->id }}"
+                                                    class="custom-control-label ml-4"></label>
+                                            </div>
+                                            <span class="table-row-heading-order">
+                                                {{ $key + 1 }}
                                             </span>
-                                            <span>
-                                                <a href="#" class="delete deleteIcon a_class"
-                                                    id="{{ $shippingmethod->id }}" title="" data-toggle="tooltip"
-                                                    data-original-title="Delete">
-                                                    <img src="/theme/img/delete.png" alt="" class="img-fluid">
-                                                </a>
-                                            </span>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @else
-                                <tr>
-                                    <td colspan="5" class="text-center">No Shipping Methods Found</td>
-                                </tr>
-                            @endif
-                        @endforeach
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td colspan="10">
-                                {{ $shippingmethods->links('pagination.custom_pagination') }}
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
+                                        </td>
+                                        <td class="shipping_name">
+                                            <span class="d-flex table-items-title">{{ $shippingmethod->title }}</span>
+                                        </td>
+                                        <td class="d-flex table-items">{{ $shippingmethod->cost }}</td>
+                                        @if ($shippingmethod->status == 1)
+                                            <td>
+                                                <span class="badge badge-success status-disabled"> Enabled</span>
+                                            </td>
+                                        @else
+                                            <td>
+                                                <span class="badge badge-danger status-disabled"> Disabled</span>
+                                            </td>
+                                        @endif
+                                        <td class="created_by toggleClass td_padding_row">
+                                            <div class="d-flex aling-items-center order-table-actions">
+                                                <span>
+                                                    <a href="{{ url('admin/shipping-details/' . $shippingmethod->id) }}"
+                                                        class="view a_class" title="" data-toggle="tooltip"
+                                                        data-original-title="View">
+                                                        <img src="/theme/img/view.png" alt="" class="img-fluid">
+                                                    </a>
+                                                </span>
+                                                <span>
+
+                                                    <a href="{{ url('admin/shipping-method/' . $shippingmethod->id) }}"
+                                                        class="edit a_class" title="" data-toggle="tooltip"
+                                                        data-original-title="Edit"><img src="/theme/img/edit.png"
+                                                            alt="" class="img-fluid">
+                                                    </a>
+                                                </span>
+                                                <span>
+                                                    <a href="#" class="delete deleteIcon a_class"
+                                                        id="{{ $shippingmethod->id }}" title="" data-toggle="tooltip"
+                                                        data-original-title="Delete">
+                                                        <img src="/theme/img/delete.png" alt="" class="img-fluid">
+                                                    </a>
+                                                </span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @else
+                                    <tr>
+                                        <td colspan="5" class="text-center">No Shipping Methods Found</td>
+                                    </tr>
+                                @endif
+                            @endforeach
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="10">
+                                    {{ $shippingmethods->links('pagination.custom_pagination') }}
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

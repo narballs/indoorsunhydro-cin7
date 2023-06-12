@@ -39,71 +39,72 @@
             </div>
             <div class="card-body product_table_body">
                 <div id="admin-users"></div>
-                <table class="table border table-users" id="user-table">
-                    <tr>
-                        <thead>
-                            <tr class="table-header-background">
-                                <td class="d-flex table-row-item mt-0">
-                                    <div class="custom-control custom-checkbox tabel-checkbox">
-                                        <input class="custom-control-input custom-control-input-success checkbox-table"
-                                            type="checkbox" id="selectAll" value="">
-                                        <label for="selectAll" class="custom-control-label ml-4"></label>
-
-                                        <span class="table-row-heading-order">
-                                            <i class="fas fa-arrow-up mt-1" style="font-size:14.5px ;"></i>
-                                        </span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <span class="d-flex table-row-item">Endpoint</span>
-                                </td>
-                                <td>
-                                    <span class="d-flex table-row-item">Description</span>
-                                </td>
-                                <td>
-                                    <span class="d-flex table-row-item">Last Synced</span>
-                                </td>
-                                <td>
-                                    <span class="d-flex table-row-item">Records updated</span>
-                                </td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($api_logs as $key => $log)
-                                <tr id="row-{{ $log->id }}" class="user-row border-bottom">
-                                    <td class="d-flex table-items">
+                <div class="col-md-12 shadow border order-table-items-data">
+                    <table class="table  bg-white table-users" id="user-table">
+                        <tr>
+                            <thead>
+                                <tr class="table-header-background">
+                                    <td class="d-flex table-row-item mt-0">
                                         <div class="custom-control custom-checkbox tabel-checkbox">
-                                            <input class="custom-control-input custom-control-input-success sub_chk"
-                                                data-id="{{ $log->id }}" type="checkbox"
-                                                id="separate_check_{{ $log->id }}">
-                                            <label for="separate_check_{{ $log->id }}"
-                                                class="custom-control-label ml-4"></label>
+                                            <input class="custom-control-input custom-control-input-success checkbox-table"
+                                                type="checkbox" id="selectAll" value="">
+                                            <label for="selectAll" class="custom-control-label ml-4"></label>
+
+                                            <span class="table-row-heading-order">
+                                                <i class="fas fa-arrow-up mt-1" style="font-size:14.5px ;"></i>
+                                            </span>
                                         </div>
-                                        <span class="table-row-heading-order">
-                                            {{ $key + 1 }}
-                                        </span>
                                     </td>
-                                    <td class="user_name">
-                                        {{ $log->end_point }}
+                                    <td>
+                                        <span class="d-flex table-row-item">Endpoint</span>
                                     </td>
-                                    <td class="user_table_items">
-                                        {{ $log->desription }}
+                                    <td>
+                                        <span class="d-flex table-row-item">Description</span>
                                     </td>
-                                    <td class="user_table_items">
-                                        {{ $log->last_synced }}
+                                    <td>
+                                        <span class="d-flex table-row-item">Last Synced</span>
                                     </td>
-                                    <td class="user_table_items">
-                                        {{ $log->record_count }}
+                                    <td>
+                                        <span class="d-flex table-row-item">Records updated</span>
                                     </td>
                                 </tr>
-                            @endforeach
-                        </tbody>
+                            </thead>
+                            <tbody>
+                                @foreach ($api_logs as $key => $log)
+                                    <tr id="row-{{ $log->id }}" class="user-row border-bottom">
+                                        <td class="d-flex table-items">
+                                            <div class="custom-control custom-checkbox tabel-checkbox">
+                                                <input class="custom-control-input custom-control-input-success sub_chk"
+                                                    data-id="{{ $log->id }}" type="checkbox"
+                                                    id="separate_check_{{ $log->id }}">
+                                                <label for="separate_check_{{ $log->id }}"
+                                                    class="custom-control-label ml-4"></label>
+                                            </div>
+                                            <span class="table-row-heading-order">
+                                                {{ $key + 1 }}
+                                            </span>
+                                        </td>
+                                        <td class="user_name">
+                                            {{ $log->end_point }}
+                                        </td>
+                                        <td class="user_table_items">
+                                            {{ $log->desription }}
+                                        </td>
+                                        <td class="user_table_items">
+                                            {{ $log->last_synced }}
+                                        </td>
+                                        <td class="user_table_items">
+                                            {{ $log->record_count }}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
 
-                </table>
+                    </table>
+                </div>
             </div>
-        </div>
-    @endsection
-</div>
+        @endsection
+    </div>
 </div>
 
 @section('css')

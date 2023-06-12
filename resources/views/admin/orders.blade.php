@@ -86,7 +86,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-12 shadow border order-table-items-data p-0">
+                    <div class="col-md-12 shadow border order-table-items-data">
                         <table class="table  bg-white  table-customer mb-0">
                             <thead>
                                 <tr class="table-header-background">
