@@ -13,14 +13,14 @@
                                 Products
                             </p>
                         </div>
-                        <div class="col-md-2 d-flex justify-content-end create_bnt">
+                        <div class="col-md-2 pt-2">
                             <button type="button" class="btn create_new_product_btn">
                                 Create New Product +
                             </button>
                         </div>
                     </div>
                     <div class="row search_row_admin-interface">
-                        <div class="col-md-2 product_search">
+                        <div class="col-md-4 product_search">
                             <div class="has-search ">
                                 <span class="fa fa-search form-control-feedback"></span>
                                 <form method="get" action="/admin/products" class="mb-2">

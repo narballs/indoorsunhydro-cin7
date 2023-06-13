@@ -8,12 +8,12 @@
             <div class="row border-bottom product_section_header">
                 <div class="col-md-12">
                     <div class="row">
-                        <div class="col-md-10">
+                        <div class="col-md-6">
                             <p class="product_heading">
                                 Buy Lists
                             </p>
                         </div>
-                        <div class="col-md-2 pt-3">
+                        <div class="col-md-6 text-right pt-1">
                             <a href="{{ 'buy-list/create ' }}" type="button" class="btn create_new_buylist_btn">
                                 Create new buy list +
                             </a>

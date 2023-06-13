@@ -25,7 +25,7 @@
                         </div>
                     </div>
                     <div class="row search_row_admin-interface">
-                        <div class="col-md-2 order-search">
+                        <div class="col-md-4 order-search">
                             <div class="has-search ">
                                 <span class="fa fa-search form-control-feedback"></span>
                                 <form method="get" action="/admin/orders" class="mb-2">
@@ -41,15 +41,13 @@
                 <div class="col-md-12 p-0">
                     <div class="col-md-12 btn-row mb-4">
                         <div class="row py-2">
-                            {{-- <div class="col-xxl-10 col-xl-7 col-lg-7 col-md-12 col-sm-2 d-flex justify-content-between align-content-center py-2"> --}}
                             <div class="col-md-4 col-lg-4 col-xl-7 col-xxl-2">
                                 <span class="border-right pe-5 select-row-items ms-2" id="items_selected">
                                     0 Selected
                                 </span>
                             </div>
-                            {{-- <div class="col-xxl-2 col-xl-5 col-lg-5 col-md-12 col-sm-12 d-flex  align-items-center justify-content-between"> --}}
                             <div class="col-md-8 col-lg-8 col-xl-5 col-xxl-10 d-flex justify-content-end">
-                                <div class="col-md-12 col-xl-12 col-lg-12 justify-content-around d-flex">
+                                <div class="col-md-12 col-xl-12 col-lg-12 justify-content-end d-flex">
                                     <span class="">
                                         @if ($auto_fullfill == false)
                                             <a class="order_ful_fill btn btn-sm fulfill-row-items-order-page"
@@ -63,7 +61,7 @@
                                             </a>
                                         @endif
                                     </span>
-                                    <span>
+                                    <span class="cancel-button-order-page">
                                         <a class="multiple_cancel_orders btn btn-danger btn-sm cancel-row-items-order-page"
                                             data-url="{{ url('admin/multiple/cancle/orders') }}">
                                             Cancel Order

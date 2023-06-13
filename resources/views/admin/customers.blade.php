@@ -17,12 +17,12 @@
             <div class="row border-bottom product_section_header">
                 <div class="col-md-12">
                     <div class="row">
-                        <div class="col-md-10">
+                        <div class="col-md-6">
                             <p class="product_heading">
                                 Customer
                             </p>
                         </div>
-                        <div class="col-md-2 d-flex justify-content-end create_bnt">
+                        <div class="col-md-6 text-right create_bnt">
                             <a href="{{ 'customer/create' }}" class="btn create-new-order-btn">
                                 Create New Customer +
                             </a>
@@ -30,7 +30,7 @@
                     </div>
                     <div class="row search_row_admin-interface justify-content-between"
                         style="margin-top: 12px !important;">
-                        <div class="col-md-2 product_search">
+                        <div class="col-md-4 product_search">
                             <div class="has-search">
                                 <span class="fa fa-search form-control-feedback"></span>
                                 <form method="get" action="/admin/customers" class="mb-2">

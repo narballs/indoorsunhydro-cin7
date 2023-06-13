@@ -13,12 +13,12 @@
             <div class="row border-bottom product_section_header">
                 <div class="col-md-12">
                     <div class="row">
-                        <div class="col-md-10">
+                        <div class="col-md-6">
                             <p class="product_heading">
                                 Users Management
                             </p>
                         </div>
-                        <div class="col-md-2 d-flex justify-content-end create_bnt">
+                        <div class="col-md-6 text-right create_bnt">
                             <a href="{{ route('users.create') }}" class="btn create-new-order-btn">
                                 Create new user +
                             </a>

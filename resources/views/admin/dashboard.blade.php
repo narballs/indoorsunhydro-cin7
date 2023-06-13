@@ -8,7 +8,7 @@
             <div class="row border-bottom product_section_header">
                 <div class="col-md-12">
                     <div class="row">
-                        <div class="col-md-9">
+                        <div class="col-md-8">
                             <p class="product_heading">
                                 Dashboard
                             </p>
@@ -18,7 +18,7 @@
                                 <span class="sr-only">Loading...</span>
                             </div>
                         </div>
-                        <div class="col-md-2 d-flex justify-content-end create_bnt">
+                        <div class="col-md-3 text-right create_bnt">
                             <button type="button" class="btn create_new_product_btn btn-import-contacts">
                                 Import Contacts +
                             </button>
@@ -26,7 +26,7 @@
                         <div class="col-md-6 m-auto" id="div_message"></div>
                     </div>
                     <div class="row search_row_admin-interface">
-                        <div class="col-md-2 product_search">
+                        <div class="col-md-4 product_search">
                             <div class="has-search ">
                                 <span class="fa fa-search form-control-feedback"></span>
                                 <form method="get" action="/admin/dashboard" class="mb-2">
