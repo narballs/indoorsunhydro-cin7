@@ -337,7 +337,7 @@ a {
     font-family: 'Poppins' !important;
     font-style: normal !important;
     font-weight: 600 !important;
-    font-size: 22px !important;
+    font-size: 32px !important;
     line-height: 48px !important;
     letter-spacing: 0em !important;
     color: #FFFFFF !important;
@@ -379,7 +379,7 @@ a {
 .register-info-box {
     width: 46%;
     padding: 0 50px;
-    top: 20%;
+    top: 10%;
     right: 0;
     position: absolute;
     text-align: left;
@@ -2473,7 +2473,7 @@ input[type=number] {
         font-family: 'Poppins' !important;
         font-style: normal !important;
         font-weight: 400 !important;
-        font-size: 22px !important;
+        font-size: 32px !important;
         line-height: 48px !important;
         letter-spacing: 0.05em !important;
         color: #FFFFFF !important;
@@ -2563,7 +2563,10 @@ input[type=number] {
     .register-info-box {
         width: 48% !important;
         padding: 0 50px !important;
-        top: 20% !important;
+        top: 10% !important;
+    }
+    .login-info-box {
+        top:10% !important;
     }
 
     .sing-up-label {
@@ -2754,11 +2757,19 @@ input[type=number] {
 
     .dont-have-an-account {
         font-family: 'Poppins' !important;
-        font-weight: 400 !important;
+        font-weight: 600 !important;
         font-size: 19px !important;
         color: #FFFFFF !important;
         line-height: 17px !important;
+        /* font-family: 'Poppins' !important;
+        font-style: normal !important;
+        font-weight: 600 !important;
+        font-size: 32px !important;
+        line-height: 48px !important;
+        letter-spacing: 0em !important;
+        color: #FFFFFF !important; */
     }
+    
 
     #label-register {
         font-family: 'Poppins' !important;
@@ -2868,7 +2879,7 @@ input[type=number] {
     .login-info-box {
         width: 44% !important;
         padding: 0px !important;
-        top: 20% !important;
+        top: 12% !important;
         left: 0.5% !important;
         /* position: absolute !important; */
         /* text-align: left !important; */
