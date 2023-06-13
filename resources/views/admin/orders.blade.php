@@ -48,16 +48,16 @@
                             </div>
                             <div class="col-md-3 d-flex justify-content-between align-items-center">
                                 <span>
-                                    @if($auto_fullfill == false)
-                                    <a class="order_ful_fill btn btn-sm fulfill-row-items-order-page "
-                                        data-url="{{ url('admin/orders/multi-full-fill') }}">
-                                        Fulfill Order
-                                    </a>
+                                    @if ($auto_fullfill == false)
+                                        <a class="order_ful_fill btn btn-sm fulfill-row-items-order-page "
+                                            data-url="{{ url('admin/orders/multi-full-fill') }}">
+                                            Fulfill Order
+                                        </a>
                                     @else
-                                    <a class="order_ful_fill btn btn-sm fulfill-row-items-order-page disabled "
-                                        data-url="#">
-                                        Fulfill Order
-                                    </a>
+                                        <a class="order_ful_fill btn btn-sm fulfill-row-items-order-page disabled "
+                                            data-url="#">
+                                            Fulfill Order
+                                        </a>
                                     @endif
                                 </span>
                                 <span>
@@ -185,7 +185,7 @@
                                             </td>
                                             <td class="td_padding_row">{{ $order->reference }}</td>
                                             <td class="td_padding_row">
-                                                {{ $order->created_at->format('d/m/Y') }}
+                                                {{ date('m/d/Y', strtotime($order->created_at)) }}
                                             </td>
                                             <td class="td_padding_row">
                                                 @if ($order->contact)
@@ -567,9 +567,9 @@
                     "_token": "{{ csrf_token() }}",
                     "auto_fullfill": auto_fullfill
                 },
-                 success: function(response) {
-                     setInterval('location.reload()', 1000);
-                 }
+                success: function(response) {
+                    setInterval('location.reload()', 1000);
+                }
             });
         }
     </script>
