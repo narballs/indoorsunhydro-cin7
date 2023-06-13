@@ -33,79 +33,87 @@
                 </div>
             </div>
             <div class="card-body product_table_body">
-                <table class="table border mb-5 table-contact-method">
-                    <thead>
-                        <tr class="table-header-background">
-                            <td class="d-flex table-row-item">
-                                <span class="tabel-checkbox">
-                                    <input type="checkbox" name="test" class="checkbox-table" id="selectAll">
-                                </span>
-                                <span class="table-row-heading">
-                                    <i class="fas fa-arrow-up"></i>
-                                </span>
-                            </td>
-                            <td>
-                                <span class="d-flex table-row-item">Name</span>
-                            </td>
-                            <td>
-                                <span class="d-flex table-row-item">Status</span>
-                            </td>
-                            <td>
-                                <span class="d-flex table-row-item">Price Tier</span>
-                            </td>
-                            <td>
-                                <span class="d-flex table-row-item">Company</span>
-                            </td>
-                            <td>
-                                <span class="d-flex table-row-item">Notes</span>
-                            </td>
-                            <td>
-                                <span class="d-flex table-row-item">Action</span>
-                            </td>
+                <div class="col-md-12 shadow border order-table-items-data">
+                    <table class="table bg-white  mb-0 table-contact-method">
+                        <thead>
+                            <tr class="table-header-background">
+                                <td class="d-flex table-row-item mt-0">
+                                    <div class="custom-control custom-checkbox tabel-checkbox">
+                                        <input class="custom-control-input custom-control-input-success checkbox-table"
+                                            type="checkbox" id="selectAll" value="">
+                                        <label for="selectAll" class="custom-control-label ml-4"></label>
 
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($contacts as $key => $contact)
-                            <tr id="row-{{ $contact->id }}" class="supplier-row border-bottom">
-                                <td class="d-flex supplier-table-items">
-                                    <span class="tabel-checkbox">
-                                        <input type="checkbox" name="test" class="checkbox-table">
-                                    </span>
-                                    <span class="table-row-heading">
-                                        {{ $key + 1 }}
-                                    </span>
+                                        <span class="table-row-heading-order">
+                                            <i class="fas fa-arrow-up mt-1" style="font-size:14.5px ;"></i>
+                                        </span>
+                                    </div>
                                 </td>
-                                <td class="supplier_name pb-0 pt-3">
-                                    <span>
-                                        {{ $contact->firstName }}
-                                    </span>
+                                <td>
+                                    <span class="d-flex table-row-item">Name</span>
                                 </td>
-                                <td class="supplier-status pb-0 pt-3">
-                                    @if ($contact->status == '1')
-                                        <span class="badge badge-success  supplier_status_1">Active</span>
-                                    @else
-                                        <span class="badge badge-warning supplier_status_0">Inactive</span>
-                                    @endif
+                                <td>
+                                    <span class="d-flex table-row-item">Status</span>
                                 </td>
-                                <td class="pb-0 pt-3">
-                                    @if (!empty($contact->priceColunm))
-                                        {{ $contact->priceColumn }}
-                                    @else
-                                        <span class="badge badge-danger supplier_status_2">empty</span>
-                                    @endif
+                                <td>
+                                    <span class="d-flex table-row-item">Price Tier</span>
                                 </td>
-                                <td class="pb-0 pt-3">
-                                    <span>
-                                        {{ $contact->company }}
-                                    </span>
+                                <td>
+                                    <span class="d-flex table-row-item">Company</span>
                                 </td>
-                                <td class="pb-0 pt-3">
-                                    <span>
-                                        {{ $contact->notes }}
-                                    </span>
+                                <td>
+                                    <span class="d-flex table-row-item">Notes</span>
                                 </td>
-                                <td class="created_by toggleClass">
+                                <td>
+                                    <span class="d-flex table-row-item"></span>
+                                </td>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($contacts as $key => $contact)
+                                <tr id="row-{{ $contact->id }}" class="supplier-row border-bottom">
+                                    <td class="d-flex table-items">
+                                        <div class="custom-control custom-checkbox tabel-checkbox">
+                                            <input class="custom-control-input custom-control-input-success sub_chk"
+                                                data-id="{{ $contact->id }}" type="checkbox"
+                                                id="separate_check_{{ $contact->id }}">
+                                            <label for="separate_check_{{ $contact->id }}"
+                                                class="custom-control-label ml-4"></label>
+                                        </div>
+                                        <span class="table-row-heading-order">
+                                            {{ $key + 1 }}
+                                        </span>
+                                    </td>
+                                    <td class="supplier_name pb-0 pt-3">
+                                        <span>
+                                            {{ $contact->firstName }}
+                                        </span>
+                                    </td>
+                                    <td class="supplier-status pb-0 pt-3">
+                                        @if ($contact->status == '1')
+                                            <span class="badge badge-success  supplier_status_1">Active</span>
+                                        @else
+                                            <span class="badge badge-warning supplier_status_0">Inactive</span>
+                                        @endif
+                                    </td>
+                                    <td class="pb-0 pt-3">
+                                        @if (!empty($contact->priceColunm))
+                                            {{ $contact->priceColumn }}
+                                        @else
+                                            <span class="badge badge-danger supplier_status_2">empty</span>
+                                        @endif
+                                    </td>
+                                    <td class="pb-0 pt-3">
+                                        <span>
+                                            {{ $contact->company }}
+                                        </span>
+                                    </td>
+                                    <td class="pb-0 pt-3">
+                                        <span>
+                                            {{ $contact->notes }}
+                                        </span>
+                                    </td>
+                                    {{-- <td class="created_by toggleClass">
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown"
                                             aria-haspopup="true" aria-expanded="false">
@@ -125,25 +133,52 @@
                                             </a>
                                         </div>
                                     </div>
+                                </td> --}}
+                                    <td class="created_by toggleClass">
+                                        <div class="d-flex aling-items-center order-table-actions">
+                                            <span>
+                                                <a href="{{ url('admin/order-detail/' . $contact->id) }}"
+                                                    class="view a_class" title="" data-toggle="tooltip"
+                                                    data-original-title="View">
+                                                    <img src="/theme/img/view.png" alt="" class="img-fluid">
+                                                </a>
+                                            </span>
+                                            <span>
+
+                                                <a href="javascript:void(0)" data-id="{{ $contact->id }}"
+                                                    class="edit a_class" title="" data-toggle="tooltip"
+                                                    data-original-title="Edit"><img src="/theme/img/edit.png" alt=""
+                                                        class="img-fluid">
+                                                </a>
+                                            </span>
+                                            <span>
+                                                <a href="javascript:void(0)" data-id="{{ $contact->id }}"
+                                                    class="delete deleteIcon a_class" title="" data-toggle="tooltip"
+                                                    data-original-title="Delete">
+                                                    <img src="/theme/img/delete.png" alt="" class="img-fluid">
+                                                </a>
+                                            </span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="7">
+                                    {{ $contacts->links('pagination.custom_pagination') }}
                                 </td>
                             </tr>
-                        @endforeach
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td colspan="7">
-                                {{ $contacts->links('pagination.custom_pagination') }}
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
+                        </tfoot>
+                    </table>
+                </div>
             </div>
         </div>
     @stop
 
     @section('css')
-        <link rel="stylesheet" href="/css/admin_custom.css">
-        <link rel="stylesheet" href="{{ asset('admin/admin_lte.css') }}">
+        <link rel="stylesheet" href="/theme/css/admin_custom.css?v2">
+        <link rel="stylesheet" href="{{ asset('admin/admin_lte.css?v2') }}">
         <style type="text/css">
             .text-successs {
                 color: #7CC633 !important;

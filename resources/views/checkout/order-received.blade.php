@@ -134,7 +134,8 @@
 
 	@media  screen and (min-width : 375px ) and (max-width:650px) {
 		.mobile-font {
-			font-size:25px !important;
+			font-weight: 600 !important;
+			font-size: 20px !important;
 		}
 		.mobile_class {
 			padding-left: 0px !important;
@@ -149,6 +150,7 @@
 			padding-left: 0.1rem !important;
 			padding-right: 0.1rem !important;
 			margin-top: 0rem !important;
+			padding-top: 0rem !important;
 		}
 		.thank-you-card {
 			margin-top: 0px !important;
@@ -158,6 +160,12 @@
 		}
 		.order-confirmation-page-title {
 			margin-bottom: 0px !important;
+			font-weight: 700 !important;
+			font-size: 16px !important;
+		}
+		.mobile-font-part {
+			font-weight:400 !important;
+			font-size: 16px !important;
 		}
 		
 		.shipping_mobile {
@@ -183,6 +191,126 @@
 		.order-confirmation-page-second-row {
 			padding-top: 2rem !important;
 		}
+		.order-confirmation-page-order-number-title {
+			font-weight: 400 !important;
+			font-size: 10px !important;
+			margin-bottom: 5px !important;                                                                                        
+		}
+		.order-confirmation-page-order-number-item {
+			font-weight: 600 !important;
+			font-size: 30px !important;
+		}
+		.order-confirmation-page-date-title {
+			font-weight: 400 !important;
+			font-size: 16px !important;
+			margin-bottom: 5px !important;
+		}
+		.order-confirmation-page-date-item {
+			font-weight: 600 !important;
+			font-size: 16px !important;
+		}
+		.order-confirmation-page-mobile-title {
+			margin-bottom: 5px !important;
+			font-weight: 400 !important;
+			font-size: 16px !important;
+		}
+		.order-confirmation-page-mobile-item {
+			font-weight: 600 !important;
+			font-size: 16px !important;
+		}
+
+		.order-confirmation-page-email-title {
+			margin-bottom: 5px !important;
+			font-weight: 400 !important;
+			font-size: 16px !important;
+		}
+
+		.order-confirmation-page-email-item {
+			font-weight: 600 !important;
+			font-size: 16px !important;
+		}
+
+		.order-confirmation-page-payment-method-title {
+			margin-bottom: 5px !important;
+			font-weight: 400 !important;
+			font-size: 16px !important;
+		}
+
+		.order-confirmation-page-payment-method-item {
+			font-weight: 600 !important;
+			font-size: 16px !important;
+		}
+
+
+		.order-confirmation-page-shipping-title {
+			margin-bottom: 5px !important;
+			font-weight: 400 !important;
+			font-size: 16px !important;
+		}
+
+		.order-confirmation-page-shipping-item {
+			font-weight: 600 !important;
+			font-size: 16px !important;
+		}
+
+		.order-confirmation-page-tax-title {
+			margin-bottom: 5px !important;
+			font-weight: 400 !important;
+			font-size: 16px !important;
+		}
+
+		.order-confirmation-page-tax-item {
+			font-weight: 600 !important;
+			font-size: 16px !important;
+		}
+
+		.order-confirmation-page-total-title {
+			font-size: 10px !important;
+			margin-bottom: 5px !important;
+			font-weight: 400 !important;
+		}
+
+		.order-confirmation-page-total-item {
+			font-weight: 600 !important;
+			font-size: 30px !important;
+		}
+
+		.order-confirmation-page-top-heading{
+			margin-bottom: 0px !important;
+		}
+		.order-confirmation-page-first-name-last-name-user-name {
+			font-size: 13.35px !important;
+		}
+		.order-confirmation-page-address-line-one-title {
+			font-size: 13.35px !important;	
+		}
+		.order-confirmation-page-address-line-one-item {
+			font-size: 13.35px !important;	
+		}
+
+		.order-confirmation-page-address-line-tow-title , .order-confirmation-page-city-name-title , .order-confirmation-page-state-name-title , .order-confirmation-page-zip-name-title  {
+			font-size: 13.35px !important;	
+		}
+		.order-confirmation-page-address-line-tow-item , .order-confirmation-page-city-name-item ,  .order-confirmation-page-state-name-item, .order-confirmation-page-zip-name-item{
+			font-size: 13.35px !important;	
+		}
+		.order-confirmation-page-product-category-name {
+			font-size: 12px !important;
+		}
+		.order-confirmation-page-product-price {
+			font-size: 16px !important;
+		}
+		.purchase-title-mobile {
+			margin-top: 0rem !important;
+		}
+		.order-confirmation-page-view-invoice-button {
+			font-family: 'Roboto' !important;
+			font-style: normal !important;
+			font-weight: 500 !important;
+			font-size: 16px !important;
+			line-height: 19px !important;
+			letter-spacing: 0.01em !important;
+		}
 		
 	}
 
@@ -203,7 +331,7 @@
 							<p class="order-confirmation-page-title">
 								{{$order_contact->firstName}}
 								{{$order_contact->lastName}}
-								<span class="order-confirmation-page-user-name mobile-font">Your order has been received.</span>
+								<span class="order-confirmation-page-user-name mobile-font mobile-font-part">Your order has been received.</span>
 							</p>
 						</div>
 					</div>
@@ -634,7 +762,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="row ps-5 mt-5 pe-5 div_increase_mobile">
+					<div class="row ps-5 mt-5 pe-5 div_increase_mobile purchase-title-mobile">
 						<div class="col-md-12 mt-5 mobile_b_bottom">
 							<p class="order-confirmation-page-item-purchased-title mobile-font ">Item Purchased </p>
 						</div>
@@ -720,27 +848,6 @@
 										
 										<tr class="border_bottom_mb">
 											<td style="width: 20% !important;">
-												{{-- <div class="row">
-													<div class="col-md-2 py-2 mobile_thankyou_img_div">
-														@if ($option->image)
-														<img class="img-fluid img-thumbnail m_chechout_image" src="{{$option->image}}" alt=""
-															width="90px" style="max-height: 90px">
-														@else
-														<img src="/theme/img/image_not_available.png" class="m_chechout_image" alt="" width="80px">
-														@endif
-													</div>
-													<div class="col-md-5 py-2 ps-0 prod-name-img mobile_text_class" style="">
-														<a class="order-confirmation-page-product-category-name pb-3"
-															href=" {{ url('product-detail/'. $item->product->id.'/'.$option->option_id.'/'.$item->product->slug) }}">
-															{{$item->product->name}}
-														</a>
-														<br>
-														<p class="order-confirmation-page-product-title">Title:<span
-																class="order-confirmation-page-product-item">
-																{{$item->product->name}}</span>
-														</p>
-													</div>
-												</div> --}}
 												<div class="py-2 mobile_thankyou_img_div">
 													@if ($option->image)
 													<img class="img-fluid img-thumbnail m_chechout_image" src="{{$option->image}}" alt=""
@@ -751,47 +858,16 @@
 												</div>
 											</td>
 											<td style="width:80%;">
-												<div class="ps-0 mobile_text_class" style="">
-													<a class="order-confirmation-page-product-category-name pb-3"
-														href=" {{ url('product-detail/'. $item->product->id.'/'.$option->option_id.'/'.$item->product->slug) }}">
-														{{$item->product->name}}
-													</a>
-													<br>
-													<p class="order-confirmation-page-product-title">Title:<span
-															class="order-confirmation-page-product-item">
-															{{$item->product->name}}</span>
+												<div class="ps-0 mobile_text_class mt-1" style="">
+													<p class="order-confirmation-page-product-title">
+														<a class="order-confirmation-page-product-category-name pb-3"
+															href=" {{ url('product-detail/'. $item->product->id.'/'.$option->option_id.'/'.$item->product->slug) }}">
+															{{$item->product->name}}
+														</a>
 													</p>
 												</div>
-												<table border="0" style="width:100%" cellpadding="0" cellspacing="0" class="innerTable_mobile">
-													<tr>
-														<td style="text-align: right">
-															<p class=" mb-0 order-confirmation-page-product-price">
-																${{number_format($item->price,2)}}</p>
-														</td>
-													</tr>
-												</table>
+												<p class=" mb-0 order-confirmation-page-product-price text-right"> ${{number_format($item->price,2)}}</p>
 											</td>
-											{{-- <td>Shipping</td> --}}
-											{{-- <td>
-												<div class="row">
-													<div class="col-md-12">
-														<p class="pt-4 order-confirmation-page-product-quantity">
-															{{$item->quantity}}</p>
-													</div>
-												</div>
-											</td>
-											<td>
-												<p class="pt-4 order-confirmation-page-product-price">
-													${{number_format($item->price,2)}}</p>
-											</td> --}}
-											{{-- <td >
-												<p class="pt-4 order-confirmation-page-product-quantity">
-													{{$item->quantity}}</p>
-											</td>
-											<td >
-												<p class="pt-4 order-confirmation-page-product-price">
-													${{number_format($item->price,2)}}</p>
-											</td> --}}
 										</tr>
 										@endforeach
 									@endforeach
@@ -799,8 +875,7 @@
 							</table>
 							<div class="row">
 								<div class="col-md-2 m-auto">
-									<a href="#" class="order-confirmation-page-view-invoice-button btn w-100">VIEW
-										INVOICE</a>
+									<a href="#" class="order-confirmation-page-view-invoice-button btn w-100 text-uppercase">View Invoice</a>
 								</div>
 							</div>
 						</div>

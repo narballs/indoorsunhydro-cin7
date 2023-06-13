@@ -5,7 +5,6 @@
 @section('content_header')
     <h1>Dashboard</h1>
 @stop
-
 @section('content')
     <!-- sdfkjlsdkfjsdlkfk -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -74,7 +73,7 @@
                                 <div class="col-md-6">
                                     <form>
                                         @csrf
-                                        @if ($order->isApproved == 1)
+                                        @if ($order->isApproved == 1 )
                                             <div class="col-md-12">
                                                 <button type="button" class="btn btn-secondary btn-sm" disabled>
                                                     Fullfilled
@@ -88,7 +87,16 @@
                                                     Fullfilled
                                                 </button>
                                             </div>
-                                        @else
+
+                                        @elseif ($order->isApproved == 0 && $auto_fullfill == true )
+                                            <div class="col-md-12" style="margin-left: 50px;">
+                                                <input id="full_fill" class="btn btn-primary btn-sm " type="button"
+                                                    value="Fullfill Order" disabled>
+                                            </div>
+                                            <div class="spinner-border d-none" role="status" id="spinner">
+                                                <span class="sr-only" style="margin-left: 227px">Activating...</span>
+                                            </div>
+                                         @elseif ($order->isApproved == 0 && $auto_fullfill == false )
                                             <div class="col-md-12" style="margin-left: 50px;">
                                                 <input id="full_fill" class="btn btn-primary btn-sm" type="button"
                                                     value="Fullfill Order" onclick="fullFillOrder()">
@@ -250,7 +258,7 @@
 @stop
 
 @section('css')
-    <link rel="stylesheet" href="/css/admin_custom.css">
+    <link rel="stylesheet" href="/theme/css/admin_custom.css">
     <link rel="stylesheet" href="{{ asset('admin/admin_lte.css') }}">
 
     <style type="text/css">

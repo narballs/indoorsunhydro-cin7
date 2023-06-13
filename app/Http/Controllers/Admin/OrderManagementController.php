@@ -37,6 +37,14 @@ class OrderManagementController extends Controller
 
     public function index(Request $request)
     {
+        $auto_full_fill = AdminSetting::where('option_name', 'auto_full_fill')->first();
+        $auto_full_fill_value = $auto_full_fill->option_value;
+        if ($auto_full_fill_value == 1) {
+            $auto_fullfill = true;
+        }
+        else {
+            $auto_fullfill = false;
+        }
         $search = $request->get('search');
         $orders_query = ApiOrder::with(['createdby', 'processedby', 'contact'])->orderBy('id', 'DESC');
         $option = AdminSetting::where('option_name', 'auto_full_fill')->first();
@@ -50,11 +58,19 @@ class OrderManagementController extends Controller
                 ->orWhere('stage', 'like', '%' . $search . '%');
         }
         $orders =  $orders_query->paginate(10);
-        return view('admin/orders', compact('orders', 'search', 'auto_fulfill'));
+        return view('admin/orders', compact('orders', 'search', 'auto_fulfill', 'auto_fullfill'));
     }
 
     public function show($id)
     {
+        $auto_full_fill = AdminSetting::where('option_name', 'auto_full_fill')->first();
+        $auto_full_fill_value = $auto_full_fill->option_value;
+        if ($auto_full_fill_value == 1) {
+            $auto_fullfill = true;
+        }
+        else {
+            $auto_fullfill = false;
+        }
         $statuses = OrderStatus::all();
         $order = ApiOrder::where('id', $id)->with('texClasses')->first();
         $tax_class = TaxClass::where('is_default', 1)->first();
@@ -88,7 +104,8 @@ class OrderManagementController extends Controller
             'customer',
             'formatedDate',
             'time_diff',
-            'time_difference_seconds'
+            'time_difference_seconds',
+            'auto_fullfill'
         ));
     }
 
@@ -542,34 +559,29 @@ class OrderManagementController extends Controller
 
     public function multiOrderFullFill(Request $request)
     {
-        $order_id = $request->ids;
-        if (!empty($order_id)) {
-            $orders = ApiOrder::whereIn('id', explode(",", $order_id))
+        $order_ids = $request->ids;
+        if (!empty($order_ids)) {
+            $orders = ApiOrder::whereIn('id', explode(",", $order_ids))
+                ->where('order_id', null)
+                ->where('isApproved', 0)
                 ->with('user.contact')
                 ->get();
             if (count($orders) > 0) {
                 foreach ($orders as $order) {
-                    if ($order->order_id == null && $order->isApproved == 0) {
-                        $order_data = OrderHelper::get_order_data_to_process($order);
-                        SalesOrders::dispatch('create_order', $order_data)
-                            ->onQueue(env('QUEUE_NAME'));
-                    } else {
-                        return response()->json([
-                            'message' => 'Your Order is already full-filled !',
-                            'status' => 400
-                        ]);
-                    }
+                    $order_data = OrderHelper::get_order_data_to_process($order);
+                    SalesOrders::dispatch('create_order', $order_data)
+                        ->onQueue(env('QUEUE_NAME'));
                 }
             } else {
                 return response()->json([
-                    'message' => 'Your order in null !',
-                    'status' => '401'
+                    'message' => 'Your order is already fullfill !',
+                    'status' => 401
                 ]);
             }
         } else {
             return response()->json([
                 'message' => 'Your order request is null !',
-                'status' => '402'
+                'status' => 401
             ]);
         }
     }

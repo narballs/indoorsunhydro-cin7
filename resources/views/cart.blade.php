@@ -30,9 +30,8 @@
                                 </div>
                             @endif
                             @if (session('message'))
-                                <div class="alert alert-danger alert-dismissible fade show">
+                                <div class="alert alert-danger">
                                     {{ session('message') }}
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                 </div>
                             @endif
                             <div class="table-responsive">
@@ -108,7 +107,7 @@
                                                         </span>
                                                     </td>
                                                     <td scope=" row">
-                                                        <div class="d-flex align-items-center">
+                                                        <div class="d-flex align-items-center mt-3">
                                                                       @if (!empty($cart['image']))
                                                                 <img src="{{ $cart['image'] }}"
                                                                     class="img-fluid rounded-3" style="width: 80px;"
@@ -133,7 +132,7 @@
                                 </p>
                             </td>
                             <td class="align-middle">
-                                <div class="col-md-3">
+                                <div class="mt-4 ml-1">
                                     <div class="quantity">
                                         <input type="number" name="quantity" id={{ 'row_quantity_' . $pk_product_id }}
                                             min="1" max="20" step="1"
@@ -155,15 +154,17 @@
                                     </div>
                                 </div>
                             </td>
-                            <td class="align-middle">
-                                <span class="mb-0 text-danger ps-2  cart-page-items">
-                                    <span
-                                        id="subtotal_{{ $pk_product_id }}">${{ number_format($cart['price'] * $cart['quantity'], 2) }}</span>
-                                </span>
-                                <p class="text-center remove-item-cart">
-                                    <a href="{{ url('remove/' . $pk_product_id) }}" id="remove"
-                                        class="remove-cart-page-button">Remove</a>
-                                </p>
+                            <td class="align-middle pl-0">
+                                <div class="row align-items-center text-center">
+                                    <span class="mb-0 text-danger ps-2  cart-page-items">
+                                        <span
+                                            id="subtotal_{{ $pk_product_id }}">${{ number_format($cart['price'] * $cart['quantity'], 2) }}</span>
+                                    </span>
+                                    <p class="text-center remove-item-cart mb-0">
+                                        <a href="{{ url('remove/' . $pk_product_id) }}" id="remove"
+                                            class="remove-cart-page-button">Remove</a>
+                                    </p>
+                                </div>
                             </td>
                             </tr>
                             @endforeach
@@ -287,11 +288,10 @@
                         </td>
                     </tr>
                 </tbody>
-                <tfoot class="border-0" style="border-color: #ffff !important;">
+                {{-- <tfoot class="border-0" style="border-color: #ffff !important;">
                     <tr>
                         <td colspan="2">
-                            <li
-                                class="list-group-item d-flex justify-content-center align-items-center border-0 px-0 mb-3">
+                            <li class="list-group-item d-flex justify-content-center align-items-center border-0 px-0 mb-3">
                                 @if (Auth::check() == true && $contact->status == 1 && !empty($contact->contact_id))
                                     <a href="{{ url('/checkout') }}">
                                         <button class="procedd-to-checkout mt-3">
@@ -322,8 +322,37 @@
                             </li>
                         </td>
                     </tr>
-                </tfoot>
+                </tfoot> --}}
             </table>
+            <div>
+                @if (Auth::check() == true && $contact->status == 1 && !empty($contact->contact_id))
+                    <a href="{{ url('/checkout') }}">
+                        <button class="procedd-to-checkout mt-3 w-100 mb-4">
+                            PROCEED TO CHECKOUT
+                        </button>
+                    </a>
+                @elseif (Auth::check() == true && $contact->status == 0)
+                    <div class="alert alert-danger alert-dismissible fade show py-2" role="alert">
+                        <span class="d-flex justify-content-center align-items-center">
+                            Checkout has been disabled for this email address, please contact your
+                            account
+                            manager to re-enable checkout.
+                        </span>
+                    </div>
+                @elseif(Auth::check() == true && empty($contact->contact_id))
+                    <a href="{{ url('/checkout/') }}">
+                        <button class="procedd-to-checkout mt-3 w-100 mb-4">
+                            PROCEED TO CHECKOUT
+                        </button>
+                    </a>
+                @else
+                    <a href="{{ url('/user/') }}">
+                        <button class="procedd-to-checkout mt-3 w-100 mb-4">
+                            Login or Register
+                        </button>
+                    </a>
+                @endif
+            </div>
         </div>
     </div>
                         </div>
@@ -1282,6 +1311,9 @@
         margin-bottom: 25px;
     }
 
+    .top-bar-height {
+        height: 78px;
+    }
 </style>
 
 <script>

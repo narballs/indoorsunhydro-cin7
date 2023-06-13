@@ -55,72 +55,77 @@
                 </div>
             </div>
             <div class="card-body product_table_body">
-                <table class="table border table-customer" id="table">
-                    <thead>
-                        <tr class="table-header-background">
-                            <td class="d-flex table-row-item">
-                                <span class="tabel-checkbox-user">
-                                    <input type="checkbox" name="test" class="checkbox-table" id="selectAll">
-                                </span>
-                                <span class="customer-table-row-heading ">
-                                    <i class="fas fa-arrow-up"></i>
-                                </span>
-                            </td>
-                            <td>
-                                <span class="d-flex table-row-item"> QcomID</span>
-                            </td>
-                            <td>
-                                <span class="d-flex table-row-item"> Cin7ID</span>
-                            </td>
-                            <td>
-                                <span class="d-flex table-row-item"> Full Name </span>
-                            </td>
-                            <td>
-                                <span class="d-flex table-row-item"> Merged</span>
-                            </td>
-                            <td>
-                                <span class="d-flex table-row-item"> Price Tier</span>
-                            </td>
-                            <td>
-                                <span class="d-flex table-row-item"> Company</span>
-                            </td>
-                            <td>
-                                <span class="d-flex table-row-item"> Email</span>
-                            </td>
-                            <td>
-                                <span class="d-flex table-row-item"> Notes</span>
-                            </td>
-                            <td>
-                                <span class="d-flex table-row-item"> Status</span>
-                            </td>
-                            <td>
-                                <span class="d-flex table-row-item"> Action</span>
+                <div class="col-md-12 shadow border order-table-items-data">
+                    <table class="table bg-white mb-0 table-customer" id="table">
+                        <thead>
+                            <tr class="table-header-background">
+                                <td class="d-flex table-row-item mt-0">
+                                    <div class="custom-control custom-checkbox tabel-checkbox">
+                                        <input class="custom-control-input custom-control-input-success checkbox-table"
+                                            type="checkbox" id="selectAll" value="">
+                                        <label for="selectAll" class="custom-control-label ml-4"></label>
+
+                                        <span class="table-row-heading-order">
+                                            <i class="fas fa-arrow-up mt-1" style="font-size:14.5px ;"></i>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="d-flex table-row-item"> QcomID</span>
+                                </td>
+                                <td>
+                                    <span class="d-flex table-row-item"> Cin7ID</span>
+                                </td>
+                                <td>
+                                    <span class="d-flex table-row-item"> Full Name </span>
+                                </td>
+                                <td>
+                                    <span class="d-flex table-row-item"> Merged</span>
+                                </td>
+                                <td>
+                                    <span class="d-flex table-row-item"> Price Tier</span>
+                                </td>
+                                <td>
+                                    <span class="d-flex table-row-item"> Company</span>
+                                </td>
+                                <td>
+                                    <span class="d-flex table-row-item"> Email</span>
+                                </td>
+                                <td>
+                                    <span class="d-flex table-row-item"> Notes</span>
+                                </td>
+                                <td>
+                                    <span class="d-flex table-row-item"> Status</span>
+                                </td>
+                                <td>
+                                    <span class="d-flex table-row-item"> </span>
+                                </td>
+                            </tr>
+                        </thead>
+                        <tbody id="searched">
+                            <?php $count = 0; ?>
+                            @foreach ($contacts as $key => $contact)
+                                <?php $count++; ?>
+                                @include('admin.customer_row')
+                            @endforeach
+                        </tbody>
+                    </table>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="10">
+                                {{ $contacts->links('pagination.custom_pagination') }}
                             </td>
                         </tr>
-                    </thead>
-                    <tbody id="searched">
-                        <?php $count = 0; ?>
-                        @foreach ($contacts as $key => $contact)
-                            <?php $count++; ?>
-                            @include('admin.customer_row')
-                        @endforeach
-                    </tbody>
-                </table>
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td colspan="10">
-                            {{ $contacts->links('pagination.custom_pagination') }}
-                        </td>
-                    </tr>
-                </tfoot>
+                    </tfoot>
+                </div>
             </div>
         </div>
     </div>
 @stop
 
 @section('css')
-    <link rel="stylesheet" href="/css/admin_custom.css">
+    <link rel="stylesheet" href="/theme/css/admin_custom.css">
     <link rel="stylesheet" href="{{ asset('admin/admin_lte.css') }}">
     <style>
         .custom-checkbox {

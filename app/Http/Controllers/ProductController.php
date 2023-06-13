@@ -590,6 +590,7 @@ class ProductController extends Controller
 
     public function addToCart(Request $request)
     {
+
         $id = $request->p_id;
         $option_id = $request->option_id;
 
@@ -719,13 +720,19 @@ class ProductController extends Controller
 
     public function cart(Request $request)
     {
-        $cart_items = $request->session()->get('cart');
-        //dd($cart_items);
-        $user_id = auth()->id();
         $contact = [];
+        $cart_items = $request->session()->get('cart');
+        $user_id = auth()->id();
+
+        $company  = session()->get('company');
+        $contact_id = session()->get('contact_id');
         if (!empty($user_id)) {
             $contact = Contact::where('user_id', $user_id)->first();
         }
+        if (!empty($user_id) && !empty($contact_id)) {
+            $contact = Contact::where('user_id', $user_id)->where('contact_id', $contact_id)->orWhere('secondary_id', $contact_id)->first();
+        }
+
         $tax_class = TaxClass::where('is_default', 1)->first();
 
 
@@ -1033,18 +1040,18 @@ class ProductController extends Controller
         }
 
 
-        $user_lists = BuyList::where('user_id', $user_id)->where('contact_id', $contact_id)->where('title', 'My Favourites')->exists();
+        $user_lists = BuyList::where('user_id', $user_id)->where('contact_id', $contact_id)->where('title', 'My Favorites')->exists();
         if ($user_lists == false) {
             $wishlist = new BuyList();
-            $wishlist->title = 'My Favourites';
+            $wishlist->title = 'My Favorites';
             $wishlist->status = 'Public';
-            $wishlist->description = 'My Favourites';
+            $wishlist->description = 'My Favorites';
             $wishlist->user_id = $user_id;
             $wishlist->contact_id = $contact_id;
             $wishlist->save();
             $list_id = $wishlist->id;
         } else {
-            $list = BuyList::where('title', 'My Favourites')->where('user_id', $user_id)->where('contact_id', $contact_id)->first();
+            $list = BuyList::where('title', 'My Favorites')->where('user_id', $user_id)->where('contact_id', $contact_id)->first();
             $list_id = $list->id;
         }
 
@@ -1064,7 +1071,7 @@ class ProductController extends Controller
                 ->where('product_id', $request->product_id)
                 ->where('option_id', $request->option_id)
                 ->first();
-            if(empty($flag)) {
+            if (empty($flag)) {
                 $product_buy_list = new ProductBuyList();
                 $product_buy_list->list_id = $list_id;
                 $product_buy_list->product_id = $request->product_id;
@@ -1072,8 +1079,7 @@ class ProductController extends Controller
                 $product_buy_list->sub_total = $active_price;
                 $product_buy_list->quantity = $request->quantity;
                 $product_buy_list->save();
-            }
-            else{
+            } else {
                 $flag->delete();
             }
         }
@@ -1088,7 +1094,7 @@ class ProductController extends Controller
     {
         $user_id = Auth::id();
         $contact_id = session()->get('contact_id');
-        $lists = BuyList::where('user_id', $user_id)->where('contact_id', $contact_id)->with('list_products.product.options.price')->where('title', 'My Favourites')->get();
+        $lists = BuyList::where('user_id', $user_id)->where('contact_id', $contact_id)->with('list_products.product.options.price')->where('title', 'My Favorites')->get();
 
         // dd($lists);
         //$list_title = $list->title;
@@ -1147,7 +1153,7 @@ class ProductController extends Controller
     {
         $user_id = Auth::id();
         $contact_id = session()->get('contact_id');
-        $lists = BuyList::where('user_id', $user_id)->where('contact_id', $contact_id)->with('list_products.product.options.price')->where('title', 'My Favourites')->get();
+        $lists = BuyList::where('user_id', $user_id)->where('contact_id', $contact_id)->with('list_products.product.options.price')->where('title', 'My Favorites')->get();
 
         $product_buy_list_id = $request->product_buy_list_id;
         $delete_favorite = ProductBuyList::find($product_buy_list_id)->delete();
@@ -1165,5 +1171,122 @@ class ProductController extends Controller
             'status' => 'success',
             'child_categories' => $child_categories
         ], 200);
+    }
+
+    //add multi favorites to cart
+    public function multi_favorites_to_cart(Request $request)
+    {
+        if (!empty($request->all_fav)) {
+            foreach ($request->all_fav as $multi_favorites) {
+                $id = $multi_favorites['product_id'];
+                $option_id = $multi_favorites['option_id'];
+
+                $productOption = ProductOption::where('option_id', $option_id)->with('products.options.price')->first();
+                $cart = session()->get('cart');
+                if (Auth::id() !== null) {
+                    $user_id = Auth::id();
+                } else {
+                    $user_id = '';
+                }
+
+                $contact_id = '';
+                $secondary_id = '';
+
+                if ($user_id) {
+                    $contact = Contact::where('user_id', $user_id)->first();
+                    $contact_id = $contact->contact_id;
+                    $secondary_id = $contact->secondary_id;
+                }
+
+                if ($contact_id || $secondary_id) {
+                    $pricing = $contact->priceColumn;
+                }
+
+                if (!empty($user_id) && !empty($contact_id || $secondary_id)) {
+                    foreach ($productOption->products->options as $option) {
+                        foreach ($option->price as $price) {
+
+                            if ($pricing == 'RetailUSD') {
+
+                                $price = $price['retailUSD'];
+                            } elseif ($pricing == 'WholesaleUSD') {
+                                $price = $price['wholesaleUSD'];
+                            } elseif ($pricing == 'TerraInternUSD') {
+                                $price = $price['terraInternUSD'];
+                            } elseif ($pricing == 'SacramentoUSD') {
+                                $price = $price['sacramentoUSD'];
+                            } elseif ($pricing == 'OklahomaUSD') {
+                                $price = $price['oklahomaUSD'];
+                            } elseif ($pricing == 'CalaverasUSD') {
+                                $price = $price['calaverasUSD'];
+                            } elseif ($pricing == 'Tier1USD') {
+                                $price = $price['tier1USD'];
+                            } elseif ($pricing == 'Tier2USD') {
+                                $price = $price['tier2USD'];
+                            } elseif ($pricing == 'Tier3USD') {
+                                $price = $price['tier3USD'];
+                            } elseif ($pricing == 'ComercialOkUSD') {
+                                $price = $price['commercialOKUSD'];
+                            } elseif ($pricing == 'CostUSD') {
+                                $price = $price['costUSD'];
+                            } else {
+                                $price = $price['retailUSD'];
+                            }
+                        }
+                    }
+                } else {
+                    foreach ($productOption->products->options as $option) {
+                        foreach ($option->price as $price) {
+                            $price = $price['retailUSD'];
+                        }
+                    }
+                }
+
+                if (isset($cart[$id])) {
+                    $hash_cart = session()->get('cart_hash');
+                    $product_in_active_cart = Cart::where('qoute_id', $id)->first();
+                    if ($product_in_active_cart) {
+                        $current_quantity = $product_in_active_cart->quantity;
+                        $product_in_active_cart->quantity = $current_quantity + $request->quantity;
+                        $product_in_active_cart->save();
+                    }
+                    $cart[$id]['quantity'] += $request->quantity;
+                } else {
+
+                    $hash_cart = $request->session()->get('cart_hash');
+                    $cart_hash_exist = session()->has('cart_hash');
+
+
+                    if ($cart_hash_exist == false) {
+                        $request->session()->put('cart_hash', Str::random(10));
+                    }
+
+                    $cart[$id] = [
+                        "product_id" => $productOption->products->product_id,
+                        "name" => $productOption->products->name,
+                        "quantity" => $request->quantity,
+                        "price" => $price,
+                        "code" => $productOption->code,
+                        "image" => $productOption->image,
+                        'option_id' => $productOption->option_id,
+                        "slug" => $productOption->products->slug,
+                        "cart_hash" => session()->get('cart_hash')
+                    ];
+                    $cart[$id]['user_id'] = $user_id;
+                    $cart[$id]['is_active'] = 1;
+                    $cart[$id]['qoute_id'] = $id;
+
+                    $qoute = Cart::create($cart[$id]);
+                }
+
+                $request->session()->put('cart', $cart);
+                $cart_items = session()->get('cart');
+            }
+            return response()->json([
+                'status' => 'success',
+                'cart_items' => $cart_items,
+                'cart' => $cart,
+            ]);
+        }
     }
 }

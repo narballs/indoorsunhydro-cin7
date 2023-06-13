@@ -36,7 +36,7 @@
                             <img class="basket-icon mt-2 pt-1" src="{{asset('/theme/img/icons/Cart-icon.svg')}}">
                             <span
                                 class="cart-basket d-flex align-items-center justify-content-center float-sm-end cart-counter rounded-circle ml-3"
-                                id="top_cart_quantity">
+                                id="top_cart_quantity"  style="border:2.4px solid #FFFFFF">
                                 <?php
                                 $total_quantity = 0;
                                 $grand_total = 0;

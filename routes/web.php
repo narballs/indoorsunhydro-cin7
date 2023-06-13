@@ -199,6 +199,7 @@ Route::post('/add-to-wish-list/', [ProductController::class, 'addToWishList']);
 Route::get('/get-wish-lists/', [ProductController::class, 'getWishLists']);
 Route::get('/get-lists-names/', [ProductController::class, 'getListNames']);
 Route::post('/create-list/', [ProductController::class, 'createList']);
+Route::post('/multi-favorites-to-cart/', [ProductController::class, 'multi_favorites_to_cart']);
 
 Route::group(['middleware' => ['auth']], function () {
     Route::resource('admin/roles', RoleController::class);

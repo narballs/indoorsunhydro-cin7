@@ -70,13 +70,13 @@
                         this website, to
                         manage access to your account, and for other purposes described in our privacy policy.</p>
                        <div class="d-flex justify-content-center">
-                        <label id="label-login" for="log-login-show" class="sing-up-label d-flex justify-content-center align-items-center w-50 mb-0 p-0">
+                        <label id="label-login" for="log-login-show" class="sing-up-label d-flex justify-content-center align-items-center w-75 mb-0 p-0">
                             <span class="sign-up">SIGN UP</span>
                         </label>
                        </div>
                     <input type="radio" name="active-log-panel" id="log-login-show">
                 </div>
-                <div class="white-panel">
+                <div class="white-panel" style="box-shadow: 0 0 0 0 !important;">
                     <div class="login-show">
                         <h2 class="text-center login-title">LOGIN</h2>
                         <form method="POST" action="{{ route('login') }}">
@@ -84,27 +84,46 @@
                             <div class=" form-login">
                                 <div class="input-placeholder">
                                     <input type="text" name="email" required>
-                                    <div class="placeholder pl-3 fontAwesome top_placeholder_style">
+                                    <div class="placeholder pl-3 fontAwesome top_placeholder_style " style="background: none !important;left:0px !important;">
                                         &#xf0e0; Email
                                     </div>
                                 </div>
                                 <div class="input-placeholder">
                                     <input type="password" name="password" required>
-                                    <div class="placeholder pl-3 fontAwesome top_placeholder_style">
+                                    <div class="placeholder pl-3 fontAwesome top_placeholder_style " style="background: none !important;left:0px !important;">
                                         &#xf023; Password
                                     </div>
                                 </div>
 
                             </div>
                             <button type="submit" class="btn-login info login-button">LOGIN</button>
+
+                            <div class="row mt-3 mb-1 align-items-center justify-content-between">
+                                <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-xs-12 remember-me">
+                                    <div class="form-check form-login  pl-4 d-flex align-items-center">
+                                        <input class="mb-0 mt-0 form-check-input desktop-login align-items-center justify-conent-center d-flex"
+                                            type="checkbox" value="" id="checkbox-2"
+                                            style="background-color:none !important; width:20px !important; height:20px !important;" />
+                                        <label class="ml-2 formemail-registration-check-label mb-0" for="checkbox-2" style="color:#9A9A9A !important;">Remember
+                                            me</label>
+                                    </div>
+                                </div>
+                                <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-xs-12 lost_pas_div">
+                                    <a href="{{ route('lost.password') }}" class="btn-lost-password p-0">Lost your
+                                        password?</a>
+                                </div>
+                            </div>
+                            <div class="row mx-auto mt-3" style="border-bottom:1px solid #EBEBEB;">
+
+                            </div>
                         </form>
-                        <div class="row mt-3 mb-1 align-items-center justify-content-between">
+                        {{-- <div class="row mt-3 mb-1 align-items-center justify-content-between">
                             <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-xs-12 remember-me">
-                                <div class="form-check form-login">
-                                    <input class="mb-0 form-check-input align-items-center justify-conent-center d-flex"
+                                <div class="form-check form-login  pl-4 d-flex align-items-center">
+                                    <input class="mb-0 mt-0 form-check-input desktop-login align-items-center justify-conent-center d-flex"
                                         type="checkbox" value="" id="checkbox-2"
-                                        style="background-color:none !important" />&nbsp;
-                                    <label class="formemail-registration-check-label mb-0" for="checkbox-2">Remember
+                                        style="background-color:none !important; width:20px !important; height:20px !important;" />
+                                    <label class="ml-2 formemail-registration-check-label mb-0" for="checkbox-2" style="color:#9A9A9A !important;">Remember
                                         me</label>
                                 </div>
                             </div>
@@ -112,11 +131,11 @@
                                 <a href="{{ route('lost.password') }}" class="btn-lost-password p-0">Lost your
                                     password?</a>
                             </div>
-                        </div>
-                        <hr/>
-                        <div class="row">
+                        </div> --}}
+                        {{-- <hr/ style="border: 0px solid #EBEBEB; !important;"> --}}
+                        <div class="row mt-2">
                             <div class=" col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
-                                <p class="required-field"><span class="req">*</span> Required field</p>
+                                <p class="required-field" style="color:#9A9A9A !important ;font-weight:400 !important;"><span class="req">*</span> Required field</p>
                             </div>
                         </div>
                     </div>
@@ -126,7 +145,7 @@
                             <h2 class="d-flex justify-content-center align-items-center sing-up-label">SIGN UP</h2>
                             <div class="input-placeholder">
                                 <input type="text" id="email" name="email" required>
-                                <div class="placeholder pl-3 fontAwesome top_placeholder_style">
+                                <div class="placeholder pl-3 fontAwesome top_placeholder_style " style="background: none !important;left:0px !important;">
                                     &#xf0e0; Email
                                 </div>
                             </div>
@@ -135,7 +154,7 @@
                         </form>
                         <div class="row">
                             <div class="col-md-6 mt-5">
-                                <p class="required-field"><span class="req">*</span> Required field</p>
+                                <p class="required-field" style="color:#9A9A9A !important ;font-weight:400 !important;"><span class="req">*</span> Required field</p>
                             </div>
                         </div>
                         <div id="signup_error" class="text-danger"></div>
@@ -151,7 +170,7 @@
                         policy.
                     </p>
                     <div class="d-flex justify-content-center">
-                        <label id="label-register" for="log-reg-show" class="d-flex justify-content-center align-items-center w-50 mb-0 p-0 sing-up-label">LOGIN</label>
+                        <label id="label-register" for="log-reg-show" class="d-flex justify-content-center align-items-center w-75 mb-0 p-0 sing-up-label">LOGIN</label>
                     </div>
                     <input type="radio" name="active-log-panel" id="log-reg-show" checked="checked">
                 </div>

@@ -39,17 +39,26 @@
             </div>
             <div class="card-body product_table_body">
                 <div class="col-md-12 p-0">
-                    <div class="col-md-12 btn-row my-3">
-                        <div class="row">
-                            <div class="col-md-3 d-flex justify-content-between align-content-center py-2">
+                    <div class="col-md-12 btn-row mb-4">
+                        <div class="row py-2">
+                            <div class="col-md-9 d-flex justify-content-between align-content-center py-2">
                                 <span class="border-right pe-5 select-row-items ms-2" id="items_selected">
                                     0 Selected
                                 </span>
+                            </div>
+                            <div class="col-md-3 d-flex justify-content-between align-items-center">
                                 <span>
-                                    <a class="order_ful_fill btn btn-sm fulfill-row-items-order-page "
-                                        data-url="{{ url('admin/orders/multi-full-fill') }}">
-                                        Fulfill Order
-                                    </a>
+                                    @if ($auto_fullfill == false)
+                                        <a class="order_ful_fill btn btn-sm fulfill-row-items-order-page "
+                                            data-url="{{ url('admin/orders/multi-full-fill') }}">
+                                            Fulfill Order
+                                        </a>
+                                    @else
+                                        <a class="order_ful_fill btn btn-sm fulfill-row-items-order-page disabled "
+                                            data-url="#">
+                                            Fulfill Order
+                                        </a>
+                                    @endif
                                 </span>
                                 <span>
                                     <a class="multiple_cancel_orders btn btn-danger btn-sm cancel-row-items-order-page"
@@ -57,12 +66,8 @@
                                         Cancel Order
                                     </a>
                                 </span>
-                            </div>
-
-                            @if ($auto_fulfill == 1)
-                                <div class="col-md-9 d-flex justify-content-end align-items-center">
+                                @if ($auto_fulfill == 1)
                                     <span class="d-flex">
-
                                         <a class=" btn  btn-sm fulfill-row-items-order-page">
                                             Auto Fullfill
                                         </a>
@@ -73,11 +78,8 @@
                                             <span class="custom-control-indicator"></span>
                                         </label>
                                     </span>
-                                </div>
-                            @else
-                                <div class="col-md-9 d-flex justify-content-end align-items-center">
+                                @else
                                     <span class="d-flex">
-
                                         <a class=" btn  btn-sm fulfill-row-items-order-page">
                                             Auto Fullfill
                                         </a>
@@ -87,167 +89,173 @@
                                             <span class="custom-control-indicator"></span>
                                         </label>
                                     </span>
-                                </div>
-                            @endif
+                                @endif
+                            </div>
                         </div>
                     </div>
-                    <table class="table border table-customer mb-5">
-                        <thead>
-                            <tr class="table-header-background">
-                                <td class="d-flex table-row-item mt-0">
-                                    <div class="custom-control custom-checkbox tabel-checkbox">
-                                        <input class="custom-control-input custom-control-input-success checkbox-table"
-                                            type="checkbox" id="selectAll" value="">
-                                        <label for="selectAll" class="custom-control-label ml-3"></label>
+                    <div class="col-md-12 shadow border order-table-items-data">
+                        <table class="table  bg-white  table-customer mb-0">
+                            <thead>
+                                <tr class="table-header-background">
+                                    <td class="d-flex table-row-item mt-0">
+                                        <div class="custom-control custom-checkbox tabel-checkbox">
+                                            <input class="custom-control-input custom-control-input-success checkbox-table"
+                                                type="checkbox" id="selectAll" value="">
+                                            <label for="selectAll" class="custom-control-label ml-4"></label>
 
-                                        <span class="table-row-heading">
-                                            <i class="fas fa-arrow-up mt-1" style="font-size:14.5px ;"></i>
-                                        </span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <span class="d-flex table-row-item"> Created By</span>
-                                </td>
-                                <td>
-                                    <span class="d-flex table-row-item"> Reference</span>
-                                </td>
-                                <td>
-                                    <span class="d-flex table-row-item"> Date Created</span>
-                                </td>
-                                <td>
-                                    <span class="d-flex table-row-item"> Primary Account Email</span>
-                                </td>
-                                <td>
-                                    <span class="d-flex table-row-item"> Order Total </span>
-                                </td>
-                                <td>
-                                    <span class="d-flex table-row-item"> Company Name </span>
-                                </td>
-                                <td>
-                                    <span class="d-flex table-row-item"> Stage</span>
-                                </td>
-                                <td>
-                                    <span class="d-flex table-row-item"> Payment Term</span>
-                                </td>
-                                <td>
-                                    <span class="d-flex table-row-item"> Actions</span>
-                                </td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($orders as $order)
-                                @if (empty($order))
-                                    <tr>
-                                        <td>
-                                            <div class="alert alert-danger">No Orders Found</div>
-                                        </td>
-                                    </tr>
-                                @else
-                                    <tr id="tr_{{ $order->id }}" class="order-row border-bottom">
-                                        <td class="d-flex table-items">
-                                            <div class="custom-control custom-checkbox tabel-checkbox">
-                                                <input class="custom-control-input custom-control-input-success sub_chk"
-                                                    data-id="{{ $order->id }}" type="checkbox"
-                                                    id="separate_check_{{ $order->id }}">
-                                                <label for="separate_check_{{ $order->id }}"
-                                                    class="custom-control-label ml-3"></label>
-                                            </div>
-                                            <span class="table-row-heading">
-                                                {{ $order->id }}
+                                            <span class="table-row-heading-order">
+                                                <i class="fas fa-arrow-up mt-1" style="font-size:14.5px ;"></i>
                                             </span>
-                                        </td>
-                                        <td class="created_by toggleClass pb-0 pt-3">
-                                            @if (!empty($order->primaryId) && !empty($order->primary_contact))
-                                                <span title="Secondary Contact" class="created_by_order">
-                                                    {{ $order->primary_contact->firstName }}
-                                                    {{ $order->primary_contact->lastName }}</span><br>
-                                            @elseif (!empty($order->secondaryId) && !empty($order->secondary_contact))
-                                                <span title="Secondary Contact"
-                                                    class="created_by_order">{{ $order->secondary_contact->firstName }}
-                                                    {{ $order->secondary_contact->lastName }}</span><br>
-                                            @elseif (!empty($order->contact))
-                                                {{ $order->contact->firstName }} {{ $order->contact->lastName }}
-                                            @endif
-                                            <span class="order_submited_email">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="d-flex table-row-item"> Created By</span>
+                                    </td>
+                                    <td>
+                                        <span class="d-flex table-row-item"> Reference</span>
+                                    </td>
+                                    <td>
+                                        <span class="d-flex table-row-item"> Date Created</span>
+                                    </td>
+                                    <td>
+                                        <span class="d-flex table-row-item"> Primary Account Email</span>
+                                    </td>
+                                    <td>
+                                        <span class="d-flex table-row-item"> Order Total </span>
+                                    </td>
+                                    <td>
+                                        <span class="d-flex table-row-item"> Company Name </span>
+                                    </td>
+                                    <td>
+                                        <span class="d-flex table-row-item"> Stage</span>
+                                    </td>
+                                    <td>
+                                        <span class="d-flex table-row-item"> Payment Term</span>
+                                    </td>
+                                    <td>
+                                        <span class="d-flex table-row-item"></span>
+                                    </td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($orders as $order)
+                                    @if (empty($order))
+                                        <tr>
+                                            <td>
+                                                <div class="alert alert-danger">No Orders Found</div>
+                                            </td>
+                                        </tr>
+                                    @else
+                                        <tr id="tr_{{ $order->id }}" class="order-row border-bottom">
+                                            <td class="d-flex table-items">
+                                                <div class="custom-control custom-checkbox tabel-checkbox">
+                                                    <input class="custom-control-input custom-control-input-success sub_chk"
+                                                        data-id="{{ $order->id }}" type="checkbox"
+                                                        id="separate_check_{{ $order->id }}">
+                                                    <label for="separate_check_{{ $order->id }}"
+                                                        class="custom-control-label ml-4"></label>
+                                                </div>
+                                                <span class="table-row-heading-order">
+                                                    {{ $order->id }}
+                                                </span>
+                                            </td>
+                                            <td class="created_by toggleClass pb-0 pt-3">
                                                 @if (!empty($order->primaryId) && !empty($order->primary_contact))
-                                                    <span
-                                                        title="Secondary Contact">{{ $order->primary_contact->email }}</span>
+                                                    <span title="Secondary Contact" class="created_by_order">
+                                                        {{ $order->primary_contact->firstName }}
+                                                        {{ $order->primary_contact->lastName }}</span><br>
                                                 @elseif (!empty($order->secondaryId) && !empty($order->secondary_contact))
-                                                    <span
-                                                        title="Secondary Contact">{{ $order->secondary_contact->email }}</span>
+                                                    <span title="Secondary Contact"
+                                                        class="created_by_order">{{ $order->secondary_contact->firstName }}
+                                                        {{ $order->secondary_contact->lastName }}</span><br>
                                                 @elseif (!empty($order->contact))
-                                                    {{ $order->contact->email }} {{ $order->contact->lastName }}
+                                                    {{ $order->contact->firstName }} {{ $order->contact->lastName }}
                                                 @endif
-                                            </span>
-                                        </td>
-                                        <td class="td_padding_row">{{ $order->reference }}</td>
-                                        <td class="td_padding_row">
-                                            {{ $order->created_at->format('d/m/Y') }}
-                                        </td>
-                                        <td class="td_padding_row">
-                                            @if ($order->contact)
-                                                {{ $order->contact->email }}
-                                            @endif
-                                        </td>
-                                        <td class="created_by_order_total td_padding_row">
-                                            ${{ number_format($order->total, 2) }}</td>
-                                        <td class="td_padding_row">
-                                            @if ($order->contact)
-                                                @if ($order->contact->company)
-                                                    {{ $order->contact->company }}
+                                                <span class="order_submited_email">
+                                                    @if (!empty($order->primaryId) && !empty($order->primary_contact))
+                                                        <span
+                                                            title="Secondary Contact">{{ $order->primary_contact->email }}</span>
+                                                    @elseif (!empty($order->secondaryId) && !empty($order->secondary_contact))
+                                                        <span
+                                                            title="Secondary Contact">{{ $order->secondary_contact->email }}</span>
+                                                    @elseif (!empty($order->contact))
+                                                        {{ $order->contact->email }} {{ $order->contact->lastName }}
+                                                    @endif
+                                                </span>
+                                            </td>
+                                            <td class="td_padding_row">{{ $order->reference }}</td>
+                                            <td class="td_padding_row">
+                                                {{ date('m/d/Y', strtotime($order->created_at)) }}
+                                            </td>
+                                            <td class="td_padding_row">
+                                                @if ($order->contact)
+                                                    {{ $order->contact->email }}
                                                 @endif
-                                            @endif
-                                        </td>
-                                        <td class="is-approved td_padding_row">
-                                            @if ($order->isApproved == 1 && $order->isVoid == 1)
-                                                <span class="badge badge-secondary  is_approded_0">Void</span>
-                                            @elseif ($order->isApproved == 0 && $order->isVoid == 0)
-                                                <span class="badge badge-warning  is_approded_0">New</span>
-                                            @elseif ($order->isApproved == 1)
-                                                <span class="badge badge-success is_approded_1">Fullfilled</span>
-                                            @elseif ($order->isApproved == 2)
-                                                <span class="badge badge-danger is_approded_2">Cancelled</span>
-                                            @endif
-                                        </td>
-                                        <td class="td_padding_row">
-                                            {{ $order->paymentTerms }}
-                                        </td>
-                                        <td class="created_by toggleClass td_padding_row ps-0">
-                                            <div class="d-flex justify-content-between aling-items-center pe-5">
-                                                <span>
-                                                    <a href="{{ url('admin/order-detail/' . $order->id) }}"
-                                                        class="view a_class" title="" data-toggle="tooltip"
-                                                        data-original-title="View">
-                                                        <i class="icon-style  fas fa-eye  i_class"></i>
-                                                    </a>
-                                                </span>
-                                                <span>
-                                                    <a href="#" class="edit a_class" title=""
-                                                        data-toggle="tooltip" data-original-title="Edit"><i
-                                                            class="icon-style fa fa-pen  "></i>
-                                                    </a>
-                                                </span>
-                                                <span>
-                                                    <a href="#" class="delete deleteIcon a_class"
-                                                        id="{{ $order->id }}" title="" data-toggle="tooltip"
-                                                        data-original-title="Delete"><i
-                                                            class="icon-style fa fa-trash-alt"></i>
-                                                    </a>
-                                                </span>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @endif
-                            @endforeach
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td colspan="10">
-                                    {{ $orders->links('pagination.custom_pagination') }}
-                                </td>
-                            </tr>
-                        </tfoot>
-                    </table>
+                                            </td>
+                                            <td class="created_by_order_total td_padding_row">
+                                                ${{ number_format($order->total, 2) }}</td>
+                                            <td class="td_padding_row">
+                                                @if ($order->contact)
+                                                    @if ($order->contact->company)
+                                                        {{ $order->contact->company }}
+                                                    @endif
+                                                @endif
+                                            </td>
+                                            <td class="is-approved td_padding_row">
+                                                @if ($order->isApproved == 1 && $order->isVoid == 1)
+                                                    <span class="badge badge-secondary  is_approded_0">Void</span>
+                                                @elseif ($order->isApproved == 0 && $order->isVoid == 0)
+                                                    <span class="badge badge-warning  is_approded_0">New</span>
+                                                @elseif ($order->isApproved == 1)
+                                                    <span class="badge badge-success is_approded_1">Fullfilled</span>
+                                                @elseif ($order->isApproved == 2)
+                                                    <span class="badge badge-danger is_approded_2">Cancelled</span>
+                                                @endif
+                                            </td>
+                                            <td class="td_padding_row">
+                                                {{ $order->paymentTerms }}
+                                            </td>
+                                            <td class="created_by toggleClass td_padding_row">
+                                                <div class="d-flex aling-items-center order-table-actions">
+                                                    <span>
+                                                        <a href="{{ url('admin/order-detail/' . $order->id) }}"
+                                                            class="view a_class" title="" data-toggle="tooltip"
+                                                            data-original-title="View">
+                                                            <img src="/theme/img/view.png" alt=""
+                                                                class="img-fluid">
+                                                        </a>
+                                                    </span>
+                                                    <span>
+                                                        <a href="#" class="edit a_class" title=""
+                                                            data-toggle="tooltip" data-original-title="Edit"><img
+                                                                src="/theme/img/edit.png" alt=""
+                                                                class="img-fluid">
+                                                        </a>
+                                                    </span>
+                                                    <span>
+                                                        <a href="#" class="delete deleteIcon a_class"
+                                                            id="{{ $order->id }}" title=""
+                                                            data-toggle="tooltip" data-original-title="Delete">
+                                                            <img src="/theme/img/delete.png" alt=""
+                                                                class="img-fluid">
+                                                        </a>
+                                                    </span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endif
+                                @endforeach
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="10">
+                                        {{ $orders->links('pagination.custom_pagination') }}
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -255,9 +263,8 @@
 @stop
 
 @section('css')
-    <link rel="stylesheet" href="/theme/css/admin_custom.css">
-    <link rel="stylesheet" href="{{ asset('/admin/admin_lte.css') }}">
-    <link href="https://fonts.cdnfonts.com/css/poppins" rel="stylesheet">
+    <link rel="stylesheet" href="/theme/css/admin_custom.css?v3">
+    <link rel="stylesheet" href="{{ asset('/admin/admin_lte.css?v4') }}">
 
     <style type="text/css">
         .custom-checkbox {
@@ -441,12 +448,12 @@
             let csrf = '{{ csrf_token() }}';
             Swal.fire({
                 title: 'Are you sure?',
-                text: "You won't delete this order!",
+                text: "You want to delete this order!",
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
+                confirmButtonText: 'Yes, delete !'
             }).then((result) => {
                 if (result.value) {
                     $.ajax({
@@ -538,7 +545,7 @@
                             } else {
                                 Swal.fire('Order fullfilled failed')
                             }
-                            setInterval('location.reload()', 3000);
+                            setInterval('location.reload()', 300);
                         }
                     });
                 }
@@ -560,6 +567,9 @@
                     "_token": "{{ csrf_token() }}",
                     "auto_fullfill": auto_fullfill
                 },
+                success: function(response) {
+                    setInterval('location.reload()', 1000);
+                }
             });
         }
     </script>
@@ -602,12 +612,12 @@
                 } else {
                     Swal.fire({
                         title: 'Are you sure?',
-                        text: "your want to full-fill order(s)?",
+                        text: "You want to full-fill order(s)?",
                         type: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#7CC633 ',
                         cancelButtonColor: '#DC4E41',
-                        confirmButtonText: 'Yes, Full Fill it!'
+                        confirmButtonText: 'Yes, Full Fill !'
                     }).then((result) => {
                         if (result.value) {
                             var join_selected_values = orderIds.join(",");
@@ -620,7 +630,6 @@
                                 },
                                 data: 'ids=' + join_selected_values,
                                 success: function(response) {
-                                    console.log(response);
                                     var delay = 8000;
                                     $('#progress-bar').removeClass('d-none');
                                     jQuery(".progress-bar").each(function(i) {
@@ -635,17 +644,33 @@
                                                 Counter: $(this).text()
                                             }, {
                                                 duration: delay,
-                                                // easing: 'swing',
                                                 step: function(now) {
                                                     jQuery(this).text(
                                                         Math.ceil(
                                                             100) +
                                                         '%');
-
                                                 }
                                             });
                                     });
-                                    if (response.status !== 400) {
+                                    if (response.status === 401) {
+                                        $('#progress-bar').addClass('d-none');
+                                        Swal.fire(
+                                            'Warning!',
+                                            'Order Already fullfilled',
+                                            'warning'
+                                        )
+                                        setInterval(
+                                            'location.reload()',
+                                            8000);
+                                    } else if (response.status === 402) {
+                                        $('#progress-bar').addClass('d-none');
+                                        Swal.fire(
+                                            'Warning!',
+                                            'Order request is null',
+                                            'warning'
+                                        )
+                                        setInterval('location.reload()', 300);
+                                    } else {
                                         jQuery.ajax({
                                             url: "{{ url('admin/multi/check-status') }}",
                                             method: 'POST',
@@ -679,13 +704,6 @@
                                                     8000);
                                             }
                                         });
-                                    } else {
-                                        $('#progress-bar').addClass('d-none');
-                                        Swal.fire(
-                                            'Warning!',
-                                            'Order Already fullfilled',
-                                            'warning'
-                                        )
                                     }
                                 },
                             });
@@ -705,12 +723,12 @@
                 } else {
                     Swal.fire({
                         title: 'Are you sure?',
-                        text: "your want to cancel order(s)?",
+                        text: "You want to cancel order(s)?",
                         type: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#DC4E41',
                         cancelButtonColor: '#7CC633',
-                        confirmButtonText: 'Yes, Cancel it!'
+                        confirmButtonText: 'Yes, Cancel !'
                     }).then((result) => {
                         if (result.value) {
                             var join_selected_values = orderIds.join(",");

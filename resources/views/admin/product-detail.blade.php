@@ -10,7 +10,6 @@
         <div class="d-flex justify-content-between align-items-center py-3">
             <h2 class="h5 mb-0"><a href="#" class="text-muted"></a>Product Details</h2>
         </div>
-
         <!-- Main content -->
         <div class="row">
             <div class="col-lg-12">
@@ -151,37 +150,6 @@
                                 <h5><b>Pricing Column</b></h5>
                             </div>
                             <table class="table">
-                                <!--       	<tr>
-                                         <td class="text-center">retailUSD</td>
-                                         </tr>
-                                         <tr>
-                                         <td class="text-center">wholesaleUSD</td>
-                                         </tr>
-                                         <tr>
-                                         <td class="text-center">sacramentoUSD</td>
-                                         </tr>
-                                         <tr>
-                                         <td class="text-center">terraInternUSD</td>
-                                         </tr>
-                                         <tr>
-                                         <td class="text-center">oklahomaUSD</td>
-                                         </tr>
-                                         <tr>
-                                         <td class="text-center">calaverasUSD</td> -->
-                                <!--        		<th class="text-center">tier1USD</th>
-                                         <th class="text-center">tier2USD</th>
-                                         <th class="text-center">tier3USD</th>
-                                         <th class="text-center">commercialOKUSD</th>
-                                         <th class="text-center">costUSD</th>
-                                         <th class="text-center">specialPrice</th> -->
-                                <!--  	</tr> -->
-                                <?php
-                                // foreach($product->options as $option) {
-                                // 	foreach($option->price as $price)
-                                // 	echo $price->retailUSD;
-                                // }
-                                // exit;
-                                ?>
                                 @foreach ($product->options as $option)
                                     @if ($option->status != 'Disabled')
                                         @foreach ($option->price as $price)
