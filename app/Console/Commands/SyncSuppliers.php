@@ -57,6 +57,8 @@ class SyncSuppliers extends Command
         }
 
         $last_synced_date = $sync_log->last_synced;
+
+        $total_record_count = 0;
         
         
         $this->info('Last updated time#--------------------------' . $last_synced_date);
