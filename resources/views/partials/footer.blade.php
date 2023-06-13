@@ -88,6 +88,15 @@
             $('.register-show').removeClass('show-log-panel');
         }
     });
+
+    //set active class on click
+    var path = window.location.href; 
+    $('.account_navigation li a').each(function() {
+            if (this.href == path) {
+            $(this).parent().addClass('active');
+        }
+    });
+</script>
 </script>
 <script type="text/javascript">
     $(document).ready(function() {

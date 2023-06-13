@@ -95,6 +95,14 @@ Route::get('/get-lists-names/', [ProductController::class, 'getListNames']);
 Route::post('/create-list/', [ProductController::class, 'createList']);
 Route::post('/delete/favorite/product', [ProductController::class, 'delete_favorite_product']);
 Route::get('/child/categories/{parent_id}', [ProductController::class, 'get_child_categories']);
+Route::group(['prefix' => 'my-account/'], function () {
+    Route::get('my-favorites', [UserController::class, 'myFavorites'])->name('myFavorites');
+    Route::get('my-orders', [UserController::class, 'myOrders'])->name('myOrders');
+    Route::get('my-order-detail/{id}', [UserController::class, 'order_detail'])->name('order_detail');
+    Route::get('address/', [UserController::class, 'address'])->name('address');
+    Route::get('account-details/', [UserController::class, 'account_details'])->name('account_details');
+    Route::get('additional-users', [UserController::class, 'additional_users'])->name('additional_users');
+});
 
 Route::group(['middleware' => ['auth']], function () {
     Route::resource('admin/roles', RoleController::class);

@@ -1,13 +1,14 @@
 <?php $i = 1; //dd($lists); ?>
 @foreach ($lists as $list)
     {{-- <div class="my-account-content-heading text-center mb-4">{{ $list->title }}</div> --}}
-    <div class="row justify-content-end">
+    @if(count($list->list_products) > 0)
+    <div class="row justify-content-end" id="btn_collector">
         <div class="col-md-8">
             <div class="row">
                 <div class="col-md-6 my-account-content-heading text-center">
                     {{ $list->title }}
                 </div>
-                <div class="col-md-6 d-flex justify-content-between">
+                <div class="col-md-6 d-flex justify-content-around">
                     <button class="btn btn-info btn-sm" id="add_selected" onclick="add_selected_to_cart()" type="button">
                         Add Selected to Cart
                     </button>
@@ -19,6 +20,13 @@
             </div>
         </div>
     </div>
+    @else
+    <div class="row" id="">
+        <h3>
+            No Favorite Products Found!
+        </h3>
+    </div>
+    @endif
    
     {{-- <div class="wrapper2">
             <?php
