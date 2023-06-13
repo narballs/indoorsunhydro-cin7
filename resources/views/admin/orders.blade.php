@@ -12,13 +12,13 @@
                                 Orders
                             </p>
                         </div>
-                        <div class="col-md-8">
+                        <div class="col-md-6">
                             <div class="progress border d-none w-50 mx-auto" id="progress-bar">
                                 <div class="progress-bar progress-bar-striped progress-bar-animated bg-info"
                                     role="progressbar" aria-valuenow="100" aria-valuemin="" aria-valuemax="100"></div>
                             </div>
                         </div>
-                        <div class="col-md-2 d-flex justify-content-end create_bnt">
+                        <div class="col-md-4 create_bnt text-right">
                             <button type="button" class="btn create-new-order-btn">
                                 Create New Order +
                             </button>
@@ -41,59 +41,63 @@
                 <div class="col-md-12 p-0">
                     <div class="col-md-12 btn-row mb-4">
                         <div class="row py-2">
-                            <div class="col-md-9 d-flex justify-content-between align-content-center py-2">
+                            {{-- <div class="col-xxl-10 col-xl-7 col-lg-7 col-md-12 col-sm-2 d-flex justify-content-between align-content-center py-2"> --}}
+                            <div class="col-md-4 col-lg-4 col-xl-7 col-xxl-2">
                                 <span class="border-right pe-5 select-row-items ms-2" id="items_selected">
                                     0 Selected
                                 </span>
                             </div>
-                            <div class="col-md-3 d-flex justify-content-between align-items-center">
-                                <span>
-                                    @if ($auto_fullfill == false)
-                                        <a class="order_ful_fill btn btn-sm fulfill-row-items-order-page "
-                                            data-url="{{ url('admin/orders/multi-full-fill') }}">
-                                            Fulfill Order
+                            {{-- <div class="col-xxl-2 col-xl-5 col-lg-5 col-md-12 col-sm-12 d-flex  align-items-center justify-content-between"> --}}
+                            <div class="col-md-8 col-lg-8 col-xl-5 col-xxl-10 d-flex justify-content-end">
+                                <div class="col-md-12 col-xl-12 col-lg-12 justify-content-around d-flex">
+                                    <span class="">
+                                        @if ($auto_fullfill == false)
+                                            <a class="order_ful_fill btn btn-sm fulfill-row-items-order-page"
+                                                data-url="{{ url('admin/orders/multi-full-fill') }}">
+                                                Fulfill Order
+                                            </a>
+                                        @else
+                                            <a class="order_ful_fill btn btn-sm fulfill-row-items-order-page disabled "
+                                                data-url="#">
+                                                Fulfill Order
+                                            </a>
+                                        @endif
+                                    </span>
+                                    <span>
+                                        <a class="multiple_cancel_orders btn btn-danger btn-sm cancel-row-items-order-page"
+                                            data-url="{{ url('admin/multiple/cancle/orders') }}">
+                                            Cancel Order
                                         </a>
+                                    </span>
+                                    @if ($auto_fulfill == 1)
+                                        <span class="d-flex">
+                                            <a class=" btn  btn-sm fulfill-row-items-order-page">
+                                                Auto Fullfill
+                                            </a>
+                                            <label class="custom-control custom-checkbox ">
+                                                <input type="checkbox" id="auto_full_fill" value="{{ $auto_fulfill }}"
+                                                    class="custom-control-input general_switch" onchange="autoFullfill()"
+                                                    {{ isset($auto_fulfill) && $auto_fulfill == 1 ? 'checked="checked"' : '' }}>
+                                                <span class="custom-control-indicator"></span>
+                                            </label>
+                                        </span>
                                     @else
-                                        <a class="order_ful_fill btn btn-sm fulfill-row-items-order-page disabled "
-                                            data-url="#">
-                                            Fulfill Order
-                                        </a>
+                                        <span class="d-flex">
+                                            <a class=" btn  btn-sm fulfill-row-items-order-page">
+                                                Auto Fullfill
+                                            </a>
+                                            <label class="custom-control custom-checkbox ">
+                                                <input type="checkbox" id="auto_full_fill" value=""
+                                                    class="custom-control-input general_switch" onchange="autoFullfill()">
+                                                <span class="custom-control-indicator"></span>
+                                            </label>
+                                        </span>
                                     @endif
-                                </span>
-                                <span>
-                                    <a class="multiple_cancel_orders btn btn-danger btn-sm cancel-row-items-order-page"
-                                        data-url="{{ url('admin/multiple/cancle/orders') }}">
-                                        Cancel Order
-                                    </a>
-                                </span>
-                                @if ($auto_fulfill == 1)
-                                    <span class="d-flex">
-                                        <a class=" btn  btn-sm fulfill-row-items-order-page">
-                                            Auto Fullfill
-                                        </a>
-                                        <label class="custom-control custom-checkbox ">
-                                            <input type="checkbox" id="auto_full_fill" value="{{ $auto_fulfill }}"
-                                                class="custom-control-input general_switch" onchange="autoFullfill()"
-                                                {{ isset($auto_fulfill) && $auto_fulfill == 1 ? 'checked="checked"' : '' }}>
-                                            <span class="custom-control-indicator"></span>
-                                        </label>
-                                    </span>
-                                @else
-                                    <span class="d-flex">
-                                        <a class=" btn  btn-sm fulfill-row-items-order-page">
-                                            Auto Fullfill
-                                        </a>
-                                        <label class="custom-control custom-checkbox ">
-                                            <input type="checkbox" id="auto_full_fill" value=""
-                                                class="custom-control-input general_switch" onchange="autoFullfill()">
-                                            <span class="custom-control-indicator"></span>
-                                        </label>
-                                    </span>
-                                @endif
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-12 shadow border order-table-items-data">
+                    <div class="col-md-12 shadow border order-table-items-data table-responsive">
                         <table class="table  bg-white  table-customer mb-0">
                             <thead>
                                 <tr class="table-header-background">
@@ -133,7 +137,9 @@
                                         <span class="d-flex table-row-item"> Payment Term</span>
                                     </td>
                                     <td>
-                                        <span class="d-flex table-row-item"></span>
+                                        <span class="d-flex table-row-item" style="visibility: hidden;">
+                                            Actions
+                                        </span>
                                     </td>
                                 </tr>
                             </thead>
