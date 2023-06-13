@@ -45,7 +45,6 @@ class SyncSuppliers extends Command
      */
     public function handle()
     {
-        
         $current_date = Carbon::now()->setTimezone('UTC')->format('Y-m-d H:i:s');
         $sync_log = ApiSyncLog::where('end_point', 'https://api.cin7.com/api/v1/Contacts')->first();
         if (empty($sync_log)) {
@@ -58,6 +57,8 @@ class SyncSuppliers extends Command
         }
 
         $last_synced_date = $sync_log->last_synced;
+
+        $total_record_count = 0;
         
         
         $this->info('Last updated time#--------------------------' . $last_synced_date);
