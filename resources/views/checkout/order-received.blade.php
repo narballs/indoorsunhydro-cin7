@@ -182,7 +182,7 @@
 
 		.div_increase_mobile  {
 			margin-left:0rem !important;
-			margin-right:0.5rem !important;
+			margin-right:0rem !important;
 			padding: 0rem !important;
 			padding-left:0rem !important;
 			padding-right:0rem !important;
