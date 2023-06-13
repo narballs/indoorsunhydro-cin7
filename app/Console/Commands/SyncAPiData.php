@@ -14,6 +14,10 @@ use App\Models\ApiErrorLog;
 use App\Models\ApiSyncLog;
 use Carbon\Carbon;
 
+use App\Helpers\UtilHelper;
+
+
+
 class SyncAPiData extends Command
 {
     /**
@@ -180,6 +184,10 @@ class SyncAPiData extends Command
                          
                         ]
                     );
+
+                    UtilHelper::saveDailyApiLog('sync_products');
+
+
                     $api_products = $res->getBody()->getContents();
               
                     $api_products = json_decode($api_products);

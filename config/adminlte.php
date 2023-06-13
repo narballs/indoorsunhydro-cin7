@@ -274,6 +274,11 @@ return [
         ],
 
         [
+            'text' => 'Daily API Logs',
+            'url'  => 'admin/daily_api_logs',
+        ],
+
+        [
             'text'    => 'Contacts',
             'url'  => 'admin/customers',
         ],

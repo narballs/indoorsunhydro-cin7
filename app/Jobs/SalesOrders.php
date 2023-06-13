@@ -71,21 +71,21 @@ class SalesOrders implements ShouldQueue
     {
         switch ($this->_method) {
             case 'create_order':
-                $res = UtilHelper::sendRequest('POST', $this->_apiBaseURL . 'v1/SalesOrders', $this->_body, []);
-                break;
+                $res = UtilHelper::sendRequest('POST', $this->_apiBaseURL . 'v1/SalesOrders', $this->_body, ['api_end_point' => 'create_order']);
+            break;
             case 'update_order':
-                $res = UtilHelper::sendRequest('PUT', $this->_apiBaseURL . 'v1/SalesOrders', $this->_body, []);
-                break;
+                $res = UtilHelper::sendRequest('PUT', $this->_apiBaseURL . 'v1/SalesOrders', $this->_body, ['api_end_point' => 'update_order']);
+            break;
             case 'list_order':
-                $res = UtilHelper::sendRequest('GET', $this->_apiBaseURL . 'v1/SalesOrders', $this->_body, []);
-                break;
-            case 'retrive_order':
-                $res = UtilHelper::sendRequest('GET', $this->_apiBaseURL . 'v1/SalesOrders/' . $this->_pathParam, $this->_body, []);
-                break;
+                $res = UtilHelper::sendRequest('GET', $this->_apiBaseURL . 'v1/SalesOrders', $this->_body, ['api_end_point' => 'list_order']);
+            break;
+            case 'retrieve_order':
+                $res = UtilHelper::sendRequest('GET', $this->_apiBaseURL . 'v1/SalesOrders/' . $this->_pathParam, $this->_body, ['api_end_point' => 'retrieve_order']);
+            break;
 
             default:
                 $res = UtilHelper::sendRequest('GET', $this->_apiBaseURL . 'v1/SalesOrders', $this->_body, []);
-                break;
+            break;
         }
         $response = json_decode($res);
         $order_id = $response[0]->id;

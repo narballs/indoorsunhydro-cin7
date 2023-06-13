@@ -647,11 +647,27 @@ class UserController extends Controller
             if (!$user_id) {
                 return redirect('/user/');
             }
-
             $user = User::where('id', $user_id)->first();
-
+            $can_approve_order = $user->hasRole('Order Approver');
+            $selected_company = Session::get('company');
             $all_ids = UserHelper::getAllMemberIds($user);
-
+            $contact_ids = Contact::whereIn('id', $all_ids)
+                ->pluck('contact_id')
+                ->toArray();
+            $user_orders = ApiOrder::whereIn('memberId', $contact_ids)
+                ->with('contact')
+                ->with('apiOrderItem')
+                ->orderBy('id', 'desc')
+                ->get();
+            $custom_roles_with_company = DB::table('custom_roles')
+                ->where('user_id', $user_id)
+                ->where('company', $selected_company)
+                ->first();
+            if (!empty($custom_roles_with_company) && $custom_roles_with_company->company == $selected_company) {
+                $order_approver_for_company = true;
+            } else {
+                $order_approver_for_company = false;
+            }
             $user_address = Contact::where('user_id', $user_id)->first();
             $secondary_contacts = Contact::whereIn('id', $all_ids)->get();
             $list = BuyList::where('id', 20)->with('list_products.product.options')->first();
@@ -680,9 +696,257 @@ class UserController extends Controller
                 'states',
                 'secondary_contacts',
                 'parent',
-                'companies'
+                'companies',
+                'user_orders',
+                'can_approve_order',
+                'order_approver_for_company'
+
             ));
         }
+    }
+
+    //get favorites in separate page
+    public function myFavorites(Request $request)
+    {
+        $user_id = Auth::id();
+        if (!$user_id) {
+            return redirect('/user/');
+        }
+        $contact_id = session()->get('contact_id');
+        $lists = BuyList::where('user_id', $user_id)->where('contact_id', $contact_id)->with('list_products.product.options.price')->where('title', 'My Favorites')->get();
+        
+        $user = User::where('id', $user_id)->first();
+        $all_ids = UserHelper::getAllMemberIds($user);
+        $user_address = Contact::where('user_id', $user_id)->first();
+        $secondary_contacts = Contact::whereIn('id', $all_ids)->get();
+        $list = BuyList::where('id', 20)->with('list_products.product.options')->first();
+        $contact = Contact::where('email', $user_address->email)->first();
+        $companies = Contact::where('user_id', $user_id)->get();
+
+        if ($contact) {
+            $parent = Contact::where('contact_id', $contact->parent_id)->get();
+        } else {
+            $parent = "";
+        }
+
+        $states = UsState::all();
+        if ($request->ajax()) {
+            $user_orders = ApiOrder::where('user_id', $user_id)->with('apiOrderItem')->get();
+            foreach ($user_orders as $user_order) {
+                $createdDate = $user_order->created_at;
+                $user_order->createdDate = $createdDate->format('F \  j, Y');
+            }
+            return $user_orders;
+        }
+        $wishlist = BuyList::with('list_products')->where('user_id', $user_id)->first();
+        
+        
+        
+        return view('my-account.my-favorites', compact(
+            'lists',
+            'user',
+            'user_address',
+            'secondary_contacts',
+            'parent',
+            'companies',
+            'states'
+        ));
+        // return $images;
+    } 
+    //end
+
+    //order
+    public function myOrders() {
+        $user_id = auth()->id();
+        $user = User::where('id', $user_id)->first();
+        $all_ids = UserHelper::getAllMemberIds($user);
+        $companies = Contact::where('user_id', $user_id)->get();
+        $user_address = Contact::where('user_id', $user_id)->first();
+        $contact = Contact::where('email', $user_address->email)->first();
+        $secondary_contacts = Contact::whereIn('id', $all_ids)->get();
+        if ($contact) {
+            $parent = Contact::where('contact_id', $contact->parent_id)->get();
+        } else {
+            $parent = "";
+        }
+        $contact_ids = Contact::whereIn('id', $all_ids)
+            ->pluck('contact_id')
+            ->toArray();
+
+        $user_orders = ApiOrder::whereIn('memberId', $contact_ids)
+            ->with('contact')
+            ->with('apiOrderItem')
+            ->orderBy('id', 'desc')
+            ->get();
+        $can_approve_order = $user->hasRole('Order Approver');
+        $selected_company = Session::get('company');
+
+        $custom_roles_with_company = DB::table('custom_roles')
+            ->where('user_id', $user_id)
+            ->where('company', $selected_company)
+            ->first();
+        if (!empty($custom_roles_with_company) && $custom_roles_with_company->company == $selected_company) {
+            $order_approver_for_company = true;
+        } else {
+            $order_approver_for_company = false;
+            }
+        // foreach ($user_orders as $user_order) {
+        //     $createdDate = $user_order->created_at;
+        //     $user_order->createdDate = $createdDate->format('F \  j, Y');
+        // }
+        $states = UsState::all();
+        return view('my-account.my-orders', compact(
+            'user',
+            'user_address',
+            'states',
+            'secondary_contacts',
+            'parent',
+            'companies',
+            'user_orders',
+            'can_approve_order',
+            'order_approver_for_company'
+
+        ));
+    }
+    // order detail 
+    public function order_detail(Request  $request , $id) {
+        $user_id = Auth::id();
+        if (!$user_id) {
+            return redirect('/user/');
+        }
+        $contact_id = session()->get('contact_id');
+        $lists = BuyList::where('user_id', $user_id)->where('contact_id', $contact_id)->with('list_products.product.options.price')->where('title', 'My Favorites')->get();
+        
+        $user = User::where('id', $user_id)->first();
+        $all_ids = UserHelper::getAllMemberIds($user);
+        $user_address = Contact::where('user_id', $user_id)->first();
+        $secondary_contacts = Contact::whereIn('id', $all_ids)->get();
+        $list = BuyList::where('id', 20)->with('list_products.product.options')->first();
+        $contact = Contact::where('email', $user_address->email)->first();
+        $companies = Contact::where('user_id', $user_id)->get();
+
+        if ($contact) {
+            $parent = Contact::where('contact_id', $contact->parent_id)->get();
+        } else {
+            $parent = "";
+        }
+        $user_order = ApiOrder::with('texClasses')->where('id', $id)->first();
+        $createdDate = $user_order->created_at;
+        $user_order->createdDate = $createdDate->format('F \  j, Y');
+        $user_address = Contact::where('user_id', $user_id)->first();
+        $orderdetails = ApiOrderItem::where('order_id', $id)->with('product')->get();
+        return view('my-account.order-detail', compact(
+            'lists',
+            'user',
+            'user_address',
+            'secondary_contacts',
+            'parent',
+            'companies',
+            'user_order',
+            'orderdetails'
+        ));
+    }
+    // address
+
+    public function address(Request  $request) {
+        $user_id = Auth::id();
+        if (!$user_id) {
+            return redirect('/user/');
+        }
+        $contact_id = session()->get('contact_id');
+        $lists = BuyList::where('user_id', $user_id)->where('contact_id', $contact_id)->with('list_products.product.options.price')->where('title', 'My Favorites')->get();
+        
+        $user = User::where('id', $user_id)->first();
+        $all_ids = UserHelper::getAllMemberIds($user);
+        $user_address = Contact::where('user_id', $user_id)->first();
+        $secondary_contacts = Contact::whereIn('id', $all_ids)->get();
+        $list = BuyList::where('id', 20)->with('list_products.product.options')->first();
+        $contact = Contact::where('email', $user_address->email)->first();
+        $companies = Contact::where('user_id', $user_id)->get();
+
+        if ($contact) {
+            $parent = Contact::where('contact_id', $contact->parent_id)->get();
+        } else {
+            $parent = "";
+        }
+        $states = UsState::all();
+        return view('my-account.address', compact(
+            'lists',
+            'user',
+            'user_address',
+            'secondary_contacts',
+            'parent',
+            'companies',
+            'states'
+        ));
+    }
+
+    //account details
+    public function account_details(Request  $request) {
+        $user_id = Auth::id();
+        if (!$user_id) {
+            return redirect('/user/');
+        }
+        $contact_id = session()->get('contact_id');
+        $lists = BuyList::where('user_id', $user_id)->where('contact_id', $contact_id)->with('list_products.product.options.price')->where('title', 'My Favorites')->get();
+        
+        $user = User::where('id', $user_id)->first();
+        $all_ids = UserHelper::getAllMemberIds($user);
+        $user_address = Contact::where('user_id', $user_id)->first();
+        $secondary_contacts = Contact::whereIn('id', $all_ids)->get();
+        $list = BuyList::where('id', 20)->with('list_products.product.options')->first();
+        $contact = Contact::where('email', $user_address->email)->first();
+        $companies = Contact::where('user_id', $user_id)->get();
+
+        if ($contact) {
+            $parent = Contact::where('contact_id', $contact->parent_id)->get();
+        } else {
+            $parent = "";
+        }
+        $states = UsState::all();
+        return view('my-account.account_details', compact(
+            'lists',
+            'user',
+            'user_address',
+            'secondary_contacts',
+            'parent',
+            'companies',
+            'states'
+        ));
+    }
+
+    //additional users
+    public function additional_users (Request  $request) {
+        $user_id = Auth::id();
+        if (!$user_id) {
+            return redirect('/user/');
+        }
+        $contact_id = session()->get('contact_id');
+        $lists = BuyList::where('user_id', $user_id)->where('contact_id', $contact_id)->with('list_products.product.options.price')->where('title', 'My Favorites')->get();
+        
+        $user = User::where('id', $user_id)->first();
+        $all_ids = UserHelper::getAllMemberIds($user);
+        $user_address = Contact::where('user_id', $user_id)->first();
+        $secondary_contacts = Contact::whereIn('id', $all_ids)->get();
+        $list = BuyList::where('id', 20)->with('list_products.product.options')->first();
+        $contact = Contact::where('email', $user_address->email)->first();
+        $companies = Contact::where('user_id', $user_id)->get();
+
+        if ($contact) {
+            $parent = Contact::where('contact_id', $contact->parent_id)->get();
+        } else {
+            $parent = "";
+        }
+        $states = UsState::all();
+        return view('my-account.additional_users', compact(
+            'lists',
+            'user',
+            'user_address',
+            'secondary_contacts',
+            'parent',
+            'companies',
+            'states'
+        ));
     }
 
     public function my_qoutes()

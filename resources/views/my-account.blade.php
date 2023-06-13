@@ -1,7 +1,7 @@
 @include('partials.header')
 @include('partials.top-bar')
 @include('partials.search-bar')
-<link rel="stylesheet" href="http://indoorsunhydro.local/vendor/adminlte/dist/css/adminlte.min.css">
+{{-- <link rel="stylesheet" href="http://indoorsunhydro.local/vendor/adminlte/dist/css/adminlte.min.css"> --}}
 <style>
     .nav .active {
         background: #F5F5F5;
@@ -32,264 +32,9 @@
 <div class="container-fluid" style="width:1621px  !important;">
     <div class="row bg-light">
         <div class="container-fluid" id="main-row">
-            <div class="row my-2" style="border-radius: 0.5rem !important;margin:auto">
-                <div class="col-md-6 col-xl-6 col-xs-12 col-sm-12">
-                    <div class="row bg-white">
-                        <div class="col-md-2">
-                        </div>
-                        <div class="col-md-4 text-left mt-2">
-                            <span class="d-block my-acount-profile text-capitalize">{{ $user->first_name }}
-                                {{ $user->last_name }}</span>
-                            <span class="d-block" style="font-family: Roboto">{{ $user->email }}</span>
-                            <div class="col-md-12 ps-0">
-                                @php
-                                    $session_contact_id = Session::get('contact_id');
-                                @endphp
-                                <form action="">
-                                    <select class="form-select" name="company_switch" id="company_switch"
-                                        onchange="switch_company()" aria-label="Default select example"
-                                        style="background: #F4FFEC !important;">
-                                        <option class="form-select">Select one company</option>
-                                        @foreach ($companies as $company)
-                                            @php
-                                                if ($company->contact_id) {
-                                                    $contact_id = $company->contact_id;
-                                                    $primary = '(primary)';
-                                                } else {
-                                                    $contact_id = $company->secondary_id;
-                                                    $primary = '(secondary)';
-                                                }
-                                            @endphp
-                                            <option class="form-control" value="{{ $contact_id }}"
-                                                {{ $session_contact_id == $contact_id ? 'selected' : '' }}>
-                                                {{ $company->company }}{{ $primary }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </form>
-
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-xl-6 col-xs-12 col-12 col-sm-12">
-                            @if ($message = Session::get('success'))
-                                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6 col-xl-6 col-xs-12 col-sm-12 p-0 align-middle d-flex justify-content-center align-items-center"
-                    style="background: #F4FFEC; color: #7BC743; border-top-right-radius: 0.5rem !important;border-bottom-right-radius: 0.5rem !important">
-                    <span style="font-family: 'Roboto';font-style: normal;font-weight: 500;font-size: 40px;">
-                        My Account
-                    </span>
-                </div>
-            </div>
+            @include('my-account.my-account-top-bar')
             <div class="row flex-xl-nowrap p-0 m-0 mr-3">
-                <div class="col-xl-2 col-sm-12 col-xs-12 p-0 bg-white" style="border-radius: 10px !important;">
-                    <div class="d-flex flex-column align-items-center align-items-sm-start pt-2 text-white min-vh-100">
-                        <a href="/"
-                            class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-                            <span class="fs-5 d-none d-sm-inline">Menu</span>
-                        </a>
-                        <ul class="nav nav-pills flex-column w-100 mb-sm-auto mb-0 align-items-center align-items-sm-start"
-                            id="menu">
-                            <li class="nav-item w-100 text-dark active mb-3" id="dashboard">
-                                <a href="javascript:void(0);" class="nav-link align-middle px-0 ms-3">
-                                    <i class="fs-4 bi-house"></i>
-                                    <div class="row">
-                                        <div class="col-md-2">
-                                            <span>
-                                                <img src="theme/img/home_nav.png" id="home_active"
-                                                    style="display: none;">
-                                                <img src="theme/img/home_unvisited.png" id="home_inactive">
-                                            </span>
-                                        </div>
-                                        <div class="col-md-10">
-                                            <span class=" ms-1 d-none d-sm-inline fs-5 ms-3 mt-1 ml-0 pl-0"
-                                                onclick="dashboard()" id="dashboard">
-                                                Dashboard
-                                            </span>
-                                        </div>
-
-
-                                    </div>
-                                </a>
-                            </li>
-                            <li class="nav-item w-100 mb-3" id="recent_orders">
-                                <a href="javascript:void(0);" class="nav-link px-0 align-middle  px-0 ms-3">
-                                    <i class="fs-4 bi-table"></i>
-                                    <div class="row">
-                                        <div class="col-md-2">
-                                            <span>
-                                                <img src="theme/img/order_visited.png" id="order_active"
-                                                    style="display: none;">
-                                                <img src="theme/img/order_unvisited.png" id="order_inactive">
-                                            </span>
-                                        </div>
-                                        <div class="col-md-10">
-                                            <span
-                                                class="ms-1 d-none d-sm-inline  fs-5 ms-3 mt-1 ml-0 pl-0 nav-items-link"
-                                                onclick="showOrders()">
-                                                Orders
-                                            </span>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li class="nav-item w-100 mb-3" id="wish_lists">
-                                <a href="javascript:void(0);" class="nav-link px-0 align-middle  px-0 ms-3">
-                                    <i class="fs-4 bi-table"></i>
-                                    <div class="row">
-                                        <div class="col-md-2">
-                                            <span>
-                                                <img src="theme/img/heart-icon.png" id="order_active"
-                                                    style="display: none;" width="30px" height="30px">
-                                                <img src="theme/img/heartfilled.png" id="order_inactive" class="mt-1"
-                                                    width="28px" height="23px">
-                                            </span>
-                                        </div>
-                                        <div class="col-md-10">
-                                            <span
-                                                class="ms-1 d-none d-sm-inline  fs-5 ms-3 mt-1 ml-0 pl-0 nav-items-link"
-                                                onclick="wishLists()">
-                                                My Favorites
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                </a>
-                            </li>
-                            <li class="nav-item w-100 mb-3 d-none" id="qoutes">
-                                <a href="#" class="nav-link px-0 align-middle  px-0 ms-3">
-                                    <i class="fs-4 bi-table"></i>
-                                    <div class="row">
-                                        <div class="col-md-2">
-                                            <span>
-                                                <img src="theme/img/heart-icon.png" id="order_active"
-                                                    style="display: none;" width="30px" height="30px">
-                                                <img src="theme/img/quotation-icon.png" id="order_inactive"
-                                                    class="mt-1" width="28px" height="23px">
-                                            </span>
-                                        </div>
-                                        <div class="col-md-10">
-                                            <span
-                                                class="ms-1 d-none d-sm-inline  fs-5 ms-3 mt-1 ml-0 pl-0 nav-items-link"
-                                                onclick="qoute()">
-                                                Quotes
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                </a>
-                            </li>
-                            <li class="nav-item w-100 mb-3" id="current_address">
-                                <a href="javascript:void(0);" class="nav-link px-0 align-middle  px-0 ms-3">
-                                    <i class="fs-4 bi-bootstrap"></i>
-                                    <!-- <span class="ms-1 d-none d-sm-inline text-dark fs-5" onclick="edit_address()">Addresses</span> -->
-                                    <div class="row">
-                                        <div class="col-md-2">
-                                            <span>
-                                                <img src="theme/img/address_active.png" id="order_active"
-                                                    style="display: none;">
-                                                <img src="theme/img/address_inactive.png" id="order_inactive">
-                                            </span>
-                                        </div>
-                                        <div class="col-md-10">
-                                            <span
-                                                class="ms-1 d-none d-sm-inline fs-5 ms-3 mt-1 ml-0 pl-0 nav-items-link"
-                                                onclick="edit_address()">
-                                                Addresses
-                                            </span>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li class="w-100 mb-3" id="account_details">
-                                <a href="#submenu3" class="nav-link px-0 align-middle  px-0 ms-3">
-                                    <i class="fs-4 bi-grid"></i>
-                                    <!-- <span class="ms-1 d-none d-sm-inline text-dark fs-5" onclick="accountDetails()">Account Details</span> -->
-                                    <div class="row">
-                                        <div class="col-md-2">
-                                            <span>
-                                                <img src="theme/img/account_active.png" id="order_active"
-                                                    style="display: none;">
-                                                <img src="theme/img/account_inactive.png" id="order_inactive">
-                                            </span>
-                                        </div>
-                                        <div class="col-md-10">
-                                            <span
-                                                class="ms-1 d-none d-sm-inline  fs-5 ms-3 mt-1 ml-0 pl-0 nav-items-link"
-                                                onclick="accountDetails()">
-                                                Account Details
-                                            </span>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-
-                            <li class="w-100 mb-3" id="additional_users">
-                                <a href="#additional-user" class="nav-link px-0 align-middle  px-0 ms-3">
-                                    <i class="fs-4 bi-grid"></i>
-                                    <!-- <span class="ms-1 d-none d-sm-inline text-dark fs-5" onclick="accountDetails()">Account Details</span> -->
-                                    <div class="row">
-                                        <div class="col-md-2">
-                                            <span>
-                                                <img src="theme/img/account_active.png" id="additional_active"
-                                                    style="display: none;">
-                                                <img src="theme/img/account_inactive.png" id="order_inactive">
-                                            </span>
-                                        </div>
-                                        <div class="col-md-10">
-                                            <span
-                                                class="ms-1 d-none d-sm-inline  fs-5 ms-3 mt-1 ml-0 pl-0 nav-items-link"
-                                                onclick="additionalUsers()" id="auto_click">
-                                                Additional Users
-                                            </span>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li class="border-bottom border-4"
-                                style="width: 240px; font-family: Roboto;margin: auto; "></li>
-                            <li class="w-100">
-                                <a class="text-white nav-link px-0 align-middle  px-0 ms-3 "
-                                    href="{{ route('logout') }}"
-                                    onclick="event.preventDefault(); document.getElementById('frm-logout').submit();">
-                                    <div class="row">
-                                        <div class="col-md-2 mt-1">
-                                            <span class="">
-                                                <img src="theme/img/logout.png" id="order_inactive">
-                                            </span>
-                                        </div>
-                                        <div class="col-md-10">
-                                            <span
-                                                class="ms-1  d-sm-inline text-dark fs-5 ms-3 mt-1 ml-0 pl-0 nav-items-link">
-                                                Logout
-                                            </span>
-                                        </div>
-
-
-                                    </div>
-                                </a>
-
-                                <form id="frm-logout" action="{{ route('logout') }}" method="POST">
-                                    {{ csrf_field() }}
-
-                                </form>
-
-                            </li>
-                        </ul>
-                        <div class="dropdown pb-4">
-                        </div>
-                    </div>
-                </div>
-
+                @include('my-account.my-account-side-bar')
                 <div class="col-xl-10 col-sm-12 col-xs-12 py-3 bg-white ms-3" style="border-radius: 10px !important;">
                     <div class="intro" id="intro">
                         <div class="col-md-12">
@@ -318,18 +63,21 @@
                         </div>
 
                         <div class="col-md-12  mt-4 dashboard-content pl-1 ms-3">
-                            From your account dashboard you can view your <span
-                                class="dashboard-link-text text-decoration-underline" onclick="showOrders()">Recent
-                                orders</span> manage your <span class="dashboard-link-text text-decoration-underline"
-                                onclick="edit_address()">Shipping and billing addresses</span> and <span
-                                class="dashboard-link-text text-decoration-underline" onclick="accountDetails()">Edit
-                                your password and account details.</span>
+                            From your account dashboard you can view your 
+                            <a class="dashboard-link-text text-decoration-underline" href="{{route('myOrders')}}">Recent orders
+                            </a> 
+                            manage your 
+                            <a class="dashboard-link-text text-decoration-underline" href="{{route('address')}}">Shipping and billing addresses
+                            </a> and 
+                            <a class="dashboard-link-text text-decoration-underline" href="{{route('account_details')}}">Edit
+                                your password and account details.
+                            </a>
                         </div>
                     </div>
                     <div id="my_quotes_detail_table"></div>
                     <div class="d-none mt-3 mb-3 pr-4 pl-4" id="orders">
                         <div class="col-md-12 border-bottom border-4 pb-4 p-0">
-                            <img src="theme/img/orders_main.png" style="margin: -6px 1px 1px 1px;">
+                            <img src="/theme/img/orders_main.png" style="margin: -6px 1px 1px 1px;">
                             <span class="pt-1 my-account-content-heading ">Orders</span>
                         </div>
 
@@ -981,7 +729,7 @@
             </div>
         </div>
     </div>
-    <script>
+    {{-- <script>
         function qoute() {
             $('#my_quotes_detail_table').addClass('d-none');
             $('#my_quotes').addClass('d-none');
@@ -1894,7 +1642,8 @@
             }
 
         }
-    </script>
+    </script> --}}
+    @include('my-account.my-account-scripts')
 
     <!-- Remove the container if you want to extend the Footer to full width. -->
     @include('partials.product-footer')

@@ -21,6 +21,8 @@ use App\Http\Controllers\Users\RoleController;
 use App\Http\Controllers\Admin\AdminBuyListController;
 use App\Http\Controllers\Admin\AdminShareListController;
 use App\Http\Controllers\Admin\LogsController;
+use App\Http\Controllers\Admin\DailyApiLogController;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
@@ -95,6 +97,14 @@ Route::get('/get-lists-names/', [ProductController::class, 'getListNames']);
 Route::post('/create-list/', [ProductController::class, 'createList']);
 Route::post('/delete/favorite/product', [ProductController::class, 'delete_favorite_product']);
 Route::get('/child/categories/{parent_id}', [ProductController::class, 'get_child_categories']);
+Route::group(['prefix' => 'my-account/'], function () {
+    Route::get('my-favorites', [UserController::class, 'myFavorites'])->name('myFavorites');
+    Route::get('my-orders', [UserController::class, 'myOrders'])->name('myOrders');
+    Route::get('my-order-detail/{id}', [UserController::class, 'order_detail'])->name('order_detail');
+    Route::get('address/', [UserController::class, 'address'])->name('address');
+    Route::get('account-details/', [UserController::class, 'account_details'])->name('account_details');
+    Route::get('additional-users', [UserController::class, 'additional_users'])->name('additional_users');
+});
 
 Route::group(['middleware' => ['auth']], function () {
     Route::resource('admin/roles', RoleController::class);
@@ -146,6 +156,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('admin/send-password/{id}', [UserController::class, 'send_password'])->name('users.send_password');
     Route::get('admin/go-back', [UserController::class, 'switch_user_back'])->name('users.switch_user_back');
     Route::get('admin/api-sync-logs', [LogsController::class, 'index']);
+
+    Route::get('admin/daily_api_logs', [DailyApiLogController::class, 'index']);
+    
+    
+    
     Route::get('admin/logout', function () {
         Auth::logout();
         Session::forget('logged_in_as_another_user');
