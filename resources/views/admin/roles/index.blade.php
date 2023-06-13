@@ -11,19 +11,19 @@
             <div class="row border-bottom product_section_header">
                 <div class="col-md-12">
                     <div class="row">
-                        <div class="col-md-10">
+                        <div class="col-md-6">
                             <p class="product_heading">
                                 Roles
                             </p>
                         </div>
-                        <div class="col-md-2 pt-3">
+                        <div class="col-md-6 text-right pt-3">
                             <a href="{{ route('roles.create') }}" class="btn create_new_shipping_btn">
                                 Create new method +
                             </a>
                         </div>
                     </div>
                     <div class="row search_row_admin-interface">
-                        <div class="col-md-2 product_search">
+                        <div class="col-md-4 product_search">
                             <div class="has-search ">
                                 <span class="fa fa-search form-control-feedback"></span>
                                 <form method="get" action="admin/roles" class="mb-2">
