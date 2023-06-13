@@ -18,6 +18,10 @@ use App\Models\TaxClass;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Helpers\UserHelper;
+use App\Models\UsState;
+use App\Models\ApiOrder;
+use App\Models\User;
 
 class ProductController extends Controller
 {

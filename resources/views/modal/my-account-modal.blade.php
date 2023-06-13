@@ -129,4 +129,5 @@
     </div>
   </div>
 </div>
-<a class="ms-3" data-bs-toggle="modal" href="#address_modal_id" role="button"><img src="theme/img/edit_pen.png"></a>
+<a class="ms-3" data-bs-toggle="modal" data-bs-target="#address_modal_id" role="button"><img src="/theme/img/edit_pen.png"></a>
+
