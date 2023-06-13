@@ -42,7 +42,7 @@
                     <div class="col-md-12 btn-row mb-4">
                         <div class="row py-2">
                             <div class="col-md-4 col-lg-4 col-xl-7 col-xxl-2">
-                                <span class="border-right pe-5 select-row-items ms-2" id="items_selected">
+                                <span class="border-right pe-5 select-row-items ms-2 pt-2" id="items_selected">
                                     0 Selected
                                 </span>
                             </div>
@@ -219,21 +219,21 @@
                                             <td class="td_padding_row">
                                                 {{ $order->paymentTerms }}
                                             </td>
-                                            <td class="created_by toggleClass td_padding_row">
+                                            <td class="created_by toggleClass td_padding_row orders-action">
                                                 <div class="d-flex aling-items-center order-table-actions">
                                                     <span>
                                                         <a href="{{ url('admin/order-detail/' . $order->id) }}"
                                                             class="view a_class" title="" data-toggle="tooltip"
                                                             data-original-title="View">
                                                             <img src="/theme/img/view.png" alt=""
-                                                                class="img-fluid">
+                                                                class="img-fluid w-100">
                                                         </a>
                                                     </span>
                                                     <span>
                                                         <a href="#" class="edit a_class" title=""
                                                             data-toggle="tooltip" data-original-title="Edit"><img
                                                                 src="/theme/img/edit.png" alt=""
-                                                                class="img-fluid">
+                                                                class="img-fluid w-100">
                                                         </a>
                                                     </span>
                                                     <span>
@@ -241,8 +241,9 @@
                                                             id="{{ $order->id }}" title=""
                                                             data-toggle="tooltip" data-original-title="Delete">
                                                             <img src="/theme/img/delete.png" alt=""
-                                                                class="img-fluid">
+                                                                class="img-fluid w-100">
                                                         </a>
+
                                                     </span>
                                                 </div>
                                             </td>
