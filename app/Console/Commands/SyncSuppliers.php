@@ -45,7 +45,7 @@ class SyncSuppliers extends Command
      */
     public function handle()
     {
-        
+        return;
         $current_date = Carbon::now()->setTimezone('UTC')->format('Y-m-d H:i:s');
         $sync_log = ApiSyncLog::where('end_point', 'https://api.cin7.com/api/v1/Contacts')->first();
         if (empty($sync_log)) {
