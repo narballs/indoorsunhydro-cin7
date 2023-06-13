@@ -44,6 +44,7 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                <?php $total_count = 0; ?>
                                 @foreach ($daily_api_logs as $key => $daily_api_log)
                                     <tr id="row-{{ $daily_api_log->id }}" class="user-row border-bottom">
                                         <td class="user_name">
@@ -54,11 +55,15 @@
                                         </td>
                                         <td class="user_table_items">
                                             {{ $daily_api_log->count }}
+                                            <?php $total_count += $daily_api_log->count; ?> 
                                         </td>
                                     </tr>
                                 @endforeach
+                                <tr class="user-row border-bottom">
+                                    <td colspan="2" class="text-right text-bold">Total Count:</td>
+                                    <td class="text-left text-bold">{{ number_format($total_count) }}</td>
+                                </tr>
                             </tbody>
-
                     </table>
                 </div>
             </div>
