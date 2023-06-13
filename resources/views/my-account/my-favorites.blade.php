@@ -75,7 +75,7 @@
                                                 <input type="hidden" value="{{ $product->product->name  }}" id="prd_name_{{ $product->id }}">
                                                 <tr style="border-bottom :1px solid lightgray;" id="p_{{ $product->id }}">
                                                     <td style="border:none;vertical-align: middle;width:10%;">
-                                                        <input type="checkbox" class="favorite_check_box" name="" product-id="{{$product->id}}" option-id="{{$product->option_id}}" id="check_{{$product->id}}_{{$product->option_id}}" class="single_fav_check mt-1">
+                                                        <input type="checkbox" class="single_fav_check" name="" product-id="{{$product->id}}" option-id="{{$product->option_id}}" id="check_{{$product->id}}_{{$product->option_id}}" class="single_fav_check mt-1">
                                                     </td>
                                                     <td style="border:none;vertical-align: middle;width:10%;">
                                                         {{ $i++ }}
