@@ -11,6 +11,8 @@ use App\Models\ApiErrorLog;
 use App\Models\ApiSyncLog;
 use Illuminate\Http\Request;
 
+use App\Helpers\UtilHelper;
+
 
 class SyncSuppliers extends Command
 {
@@ -91,6 +93,8 @@ class SyncSuppliers extends Command
                         ]
                     ]
                 );
+
+                UtilHelper::saveDailyApiLog('sync_contacts');
 
                 $api_contacts = $res->getBody()->getContents();
                 $api_contacts = json_decode($api_contacts);

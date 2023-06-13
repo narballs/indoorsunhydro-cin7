@@ -5,6 +5,9 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Models\Product;
 use App\Models\ProductOption;
+
+use App\Helpers\UtilHelper;
+
 class SyncStock extends Command
 {
     /**
@@ -62,6 +65,9 @@ class SyncStock extends Command
                     ]                     
                 ]
             );
+
+            UtilHelper::saveDailyApiLog('product_stock');
+
             $api_stock = $res->getBody()->getContents();
             $api_stock = json_decode($api_stock);
             

@@ -15,9 +15,13 @@ use App\Models\Brand;
 use App\Models\BuyList;
 use App\Models\ProductBuyList;
 use App\Models\TaxClass;
+use App\Models\AdminSetting;
+
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+
+use App\Helpers\UtilHelper;
 
 class ProductController extends Controller
 {
@@ -337,25 +341,32 @@ class ProductController extends Controller
 
     public function showProductDetail($id, $option_id)
     {
+
         $product = Product::where('id', $id)->first();
         $location_inventories = [];
 
         try {
-            $url = 'https://api.cin7.com/api/v1/Stock?where=productId=' . $product->product_id . '&productOptionId=' . $option_id;
-            $client2 = new \GuzzleHttp\Client();
-            $res = $client2->request(
-                'GET',
-                $url,
-                [
-                    'auth' => [
-                        'IndoorSunHydroUS',
-                        'faada8a7a5ef4f90abaabb63e078b5c1'
-                    ]
 
-                ]
-            );
-            $inventory = $res->getBody()->getContents();
-            $location_inventories = json_decode($inventory);
+            $setting = AdminSetting::where('option_name', 'check_product_stock')->first();
+            if (!empty($setting) && ($setting->option_value == 'yes')) {
+                $url = 'https://api.cin7.com/api/v1/Stock?where=productId=' . $product->product_id . '&productOptionId=' . $option_id;
+                $client2 = new \GuzzleHttp\Client();
+                $res = $client2->request(
+                    'GET',
+                    $url,
+                    [
+                        'auth' => [
+                            env('API_USER'),
+                            env('API_PASSWORD')
+                        ]
+                    ]
+                );
+                $inventory = $res->getBody()->getContents();
+                $location_inventories = json_decode($inventory);
+
+                UtilHelper::saveDailyApiLog('product_stock');
+            }
+
         } catch (Exception $ex) {
         }
 
