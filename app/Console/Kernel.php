@@ -18,19 +18,24 @@ class Kernel extends ConsoleKernel
     ];
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
-        $schedule->command('Sync:ApiData')
-            ->hourly();
-        $schedule->command('Sync:Stock')
-            ->hourly();
-        $schedule->command('sync:supplier')
-            ->hourly();
-        $schedule->command('ContactsTo:Users')
-            ->hourly();
-        $schedule->command('Assign:UserToContacts')
-            ->hourly();
-        $schedule->command('AutoOrder:Sync')
-            ->everyThreeMinutes();
+        // Api endpoints starts here
+        
+        $schedule->command('Sync:ApiData')->hourly();
+        
+        $schedule->command('sync:supplier')->hourly();
+        $schedule->command('AutoOrder:Sync')->everyThreeMinutes();
+
+        // Disabling for now
+        //$schedule->command('Sync:Stock')->hourly();
+        // Api endpoints ends here
+
+
+        // Internal endpoints starts here
+
+        $schedule->command('ContactsTo:Users')->hourly();
+        $schedule->command('Assign:UserToContacts')->hourly();
+
+        // Internal endpoints ends here
     }
 
     /**
