@@ -4,6 +4,8 @@ namespace App\Helpers;
 
 use GuzzleHttp\Client;
 
+use App\Models\DailyApiLog;
+
 class UtilHelper
 {
     /**
@@ -41,22 +43,46 @@ class UtilHelper
         switch ($method) {
             case 'POST':
                 $res = $client->post($url, $authHeaders);
-                break;
+            break;
             case 'PUT':
                 $res = $client->put($url, $authHeaders);
-                break;
+            break;
             case 'GET':
                 $res = $client->get($url, $authHeaders); 
-                break;
+            break;
 
             default:
                 $res = $client->get($url, [
                     'auth' => $authHeaders
                 ]);
-                break;
+            break;
+        }
+
+        if (!empty($extra['api_end_point'])) {
+            self::saveDailyApiLog($extra['api_end_point']);
         }
 
         $api_response = $res->getBody()->getContents();
         return $api_response;
+    }
+
+    public static function saveDailyApiLog($api_end_point)
+    {
+        $daily_api_log = DailyApiLog::where('date', date('Y-m-d'))
+            ->where('api_endpoint', $api_end_point)
+            ->first();
+        
+        if (empty($daily_api_log)) {
+            $daily_api_log = new DailyApiLog();
+            $daily_api_log->date = date('Y-m-d');
+            $daily_api_log->api_endpoint = $api_end_point;
+            $daily_api_log->count = 1;
+            $daily_api_log->save();
+        } else {
+            $daily_api_log->count = $daily_api_log->count + 1;
+            $daily_api_log->save();
+        }
+
+        return true;
     }
 }
