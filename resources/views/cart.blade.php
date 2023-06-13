@@ -1310,10 +1310,6 @@
         border-radius: 0 0 4px 0;
         margin-bottom: 25px;
     }
-
-    .top-bar-height {
-        height: 78px;
-    }
 </style>
 
 <script>

@@ -13,19 +13,19 @@
             <div class="row border-bottom product_section_header">
                 <div class="col-md-12">
                     <div class="row">
-                        <div class="col-md-10">
+                        <div class="col-md-6">
                             <p class="product_heading">
                                 Users Management
                             </p>
                         </div>
-                        <div class="col-md-2 d-flex justify-content-end create_bnt">
+                        <div class="col-md-6 text-right create_bnt">
                             <a href="{{ route('users.create') }}" class="btn create-new-order-btn">
                                 Create new user +
                             </a>
                         </div>
                     </div>
                     <div class="row search_row_admin-interface" style="margin-top: 12px !important;">
-                        <div class="col-md-2 product_search">
+                        <div class="col-md-4 product_search">
                             <div class="has-search">
                                 <span class="fa fa-search form-control-feedback"></span>
                                 <form method="get" action="/admin/users" class="mb-2">
@@ -34,34 +34,38 @@
                                 </form>
                             </div>
                         </div>
-                        <div class="col-md-5"></div>
-                        <div class="col-md-2">
-                            <select name="users" id="users" onchange="userFilter()" class="form-control"
-                                style="height: 39px;margin-top: -7px;">
-                                <option value="all" class="form-control">All</option>
-                                <option value="admin-user" class="form-control"
-                                    {{ isset($usersData) && $usersData == 'admin-user' ? 'selected="selected"' : '' }}>
-                                    Admin Users </option>
-                                <option value="cin7-merged" class="form-control"
-                                    {{ isset($usersData) && $usersData == 'cin7-merged' ? 'selected="selected"' : '' }}>
-                                    Cin7 Merged</option>
-                                <option value="not-merged" class="form-control"
-                                    {{ isset($usersData) && $usersData == 'not-merged' ? 'selected="selected"' : '' }}>
-                                    Not Merged</option>
-                            </select>
-                        </div>
-                        <div class="col-md-2 d-flex justify-content-end">
-                            <select name="secondary_user" id="secondary-user" onchange="userFilter()" class="form-control"
-                                style="height: 39px; margin-top: -7px; margin-left: -7px;">
-                                <option value="all" class="form-control">Secndary/Primary</option>
-                                <option value="secondary-user" class="form-control"
-                                    {{ isset($secondaryUser) && $secondaryUser == 'secondary-user' ? 'selected="selected"' : '' }}>
-                                    Secondary Users
-                                </option>
-                                <option value="primary-user" class="form-control"
-                                    {{ isset($secondaryUser) && $secondaryUser == 'primary-user' ? 'selected="selected"' : '' }}>
-                                    Primary Users</option>
-                            </select>
+                        <div class="col-md-2"></div>
+                        <div class="col-md-4">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <select name="users" id="users" onchange="userFilter()" class="form-control"
+                                        style="height: 39px;margin-top: -7px;">
+                                        <option value="all" class="form-control">All</option>
+                                        <option value="admin-user" class="form-control"
+                                            {{ isset($usersData) && $usersData == 'admin-user' ? 'selected="selected"' : '' }}>
+                                            Admin Users </option>
+                                        <option value="cin7-merged" class="form-control"
+                                            {{ isset($usersData) && $usersData == 'cin7-merged' ? 'selected="selected"' : '' }}>
+                                            Cin7 Merged</option>
+                                        <option value="not-merged" class="form-control"
+                                            {{ isset($usersData) && $usersData == 'not-merged' ? 'selected="selected"' : '' }}>
+                                            Not Merged</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <select name="secondary_user" id="secondary-user" onchange="userFilter()"
+                                        class="form-control" style="height: 39px; margin-top: -7px; margin-left: -7px;">
+                                        <option value="all" class="form-control">Secndary/Primary</option>
+                                        <option value="secondary-user" class="form-control"
+                                            {{ isset($secondaryUser) && $secondaryUser == 'secondary-user' ? 'selected="selected"' : '' }}>
+                                            Secondary Users
+                                        </option>
+                                        <option value="primary-user" class="form-control"
+                                            {{ isset($secondaryUser) && $secondaryUser == 'primary-user' ? 'selected="selected"' : '' }}>
+                                            Primary Users</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
