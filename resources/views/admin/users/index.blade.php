@@ -55,7 +55,7 @@
                                 <div class="col-md-6">
                                     <select name="secondary_user" id="secondary-user" onchange="userFilter()"
                                         class="form-control" style="height: 39px; margin-top: -7px; margin-left: -7px;">
-                                        <option value="all" class="form-control">Secndary/Primary</option>
+                                        <option value="all" class="form-control">Secondary/Primary</option>
                                         <option value="secondary-user" class="form-control"
                                             {{ isset($secondaryUser) && $secondaryUser == 'secondary-user' ? 'selected="selected"' : '' }}>
                                             Secondary Users
