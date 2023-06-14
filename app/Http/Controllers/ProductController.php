@@ -914,11 +914,11 @@ class ProductController extends Controller
         }
         $brands = [];
         if (!empty($brand_ids)) {
-            $brands = Brand::whereIn('id', $brand_ids)->pluck('name', 'id')->toArray();
+            $brands = Brand::whereIn('id', $brand_ids)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
         } elseif (empty($search_queries)) {
             $brands = Brand::orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
         }
-        $categories = Category::where('parent_id', 0)->get();
+        $categories = Category::where('parent_id', 0)->orderBy('name', 'ASC')->get();
         $category_ids = Category::where('parent_id', $category_id)->pluck('id')->toArray();
         array_push($category_ids, $category_id);
         $all_product_ids = Product::whereIn('category_id', $category_ids)->pluck('id')->toArray();
