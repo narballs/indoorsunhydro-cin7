@@ -18,55 +18,9 @@
                                     role="progressbar" aria-valuenow="100" aria-valuemin="" aria-valuemax="100"></div>
                             </div>
                         </div>
-                        <div class="col-md-4 create_bnt text-right">
-                            <button type="button" class="btn create-new-order-btn">
-                                Create New Order +
-                            </button>
-                        </div>
-                    </div>
-                    <div class="row search_row_admin-interface">
-                        <div class="col-md-4 order-search">
-                            <div class="has-search ">
-                                <span class="fa fa-search form-control-feedback"></span>
-                                <form method="get" action="/admin/orders" class="mb-2">
-                                    <input type="text" class="form-control" id="search" name="search"
-                                        placeholder="Search" value="{{ isset($search) ? $search : '' }}" />
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card-body product_table_body">
-                <div class="col-md-12 p-0">
-                    <div class="col-md-12 btn-row mb-4">
-                        <div class="row py-2">
-                            <div class="col-md-4 col-lg-4 col-xl-7 col-xxl-2">
-                                <span class="border-right pe-5 select-row-items ms-2 pt-2" id="items_selected">
-                                    0 Selected
-                                </span>
-                            </div>
-                            <div class="col-md-8 col-lg-8 col-xl-5 col-xxl-10 d-flex justify-content-end">
-                                <div class="col-md-12 col-xl-12 col-lg-12 justify-content-end d-flex">
-                                    <span class="d-none" id="fullfillOrder">
-                                        @if ($auto_fullfill == false)
-                                            <a class="order_ful_fill btn btn-sm fulfill-row-items-order-page"
-                                                data-url="{{ url('admin/orders/multi-full-fill') }}">
-                                                Fulfill Order
-                                            </a>
-                                        @else
-                                            <a class="order_ful_fill btn btn-sm fulfill-row-items-order-page disabled "
-                                                data-url="#">
-                                                Fulfill Order
-                                            </a>
-                                        @endif
-                                    </span>
-                                    <span class="cancel-button-order-page d-none" id="cancelOrder">
-                                        <a class="multiple_cancel_orders btn btn-danger btn-sm cancel-row-items-order-page"
-                                            data-url="{{ url('admin/multiple/cancle/orders') }}">
-                                            Cancel Order
-                                        </a>
-                                    </span>
+                        <div class="col-md-4 create_bnt d-flex justify-content-end">
+                            <div class="d-flex">
+                                <span>
                                     @if ($auto_fulfill == 1)
                                         <span class="d-flex">
                                             <a class=" btn  btn-sm fulfill-row-items-order-page">
@@ -91,6 +45,59 @@
                                             </label>
                                         </span>
                                     @endif
+                                </span>
+                                <span>
+                                    <button type="button" class="btn create-new-order-btn">
+                                        Create New Order +
+                                    </button>
+                                </span>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row search_row_admin-interface">
+                        <div class="col-md-4 order-search">
+                            <div class="has-search ">
+                                <span class="fa fa-search form-control-feedback"></span>
+                                <form method="get" action="/admin/orders" class="mb-2">
+                                    <input type="text" class="form-control" id="search" name="search"
+                                        placeholder="Search" value="{{ isset($search) ? $search : '' }}" />
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body product_table_body">
+                <div class="col-md-12 p-0">
+                    <div class="col-md-12 btn-row mb-4 d-none" id="fullfillOrder">
+                        <div class="row py-2">
+                            <div class="col-md-4 col-lg-4 col-xl-7 col-xxl-2">
+                                <span class="border-right pe-5 select-row-items ms-2 pt-2" id="items_selected">
+                                    0 Selected
+                                </span>
+                            </div>
+                            <div class="col-md-8 col-lg-8 col-xl-5 col-xxl-10 d-flex justify-content-end">
+                                <div class="col-md-12 col-xl-12 col-lg-12 justify-content-end d-flex">
+                                    <span id="fullfillOrder">
+                                        @if ($auto_fullfill == false)
+                                            <a class="order_ful_fill btn btn-sm fulfill-row-items-order-page"
+                                                data-url="{{ url('admin/orders/multi-full-fill') }}">
+                                                Fulfill Order
+                                            </a>
+                                        @else
+                                            <a class="order_ful_fill btn btn-sm fulfill-row-items-order-page disabled "
+                                                data-url="#">
+                                                Fulfill Order
+                                            </a>
+                                        @endif
+                                    </span>
+                                    <span class="cancel-button-order-page">
+                                        <a class="multiple_cancel_orders btn btn-danger btn-sm cancel-row-items-order-page"
+                                            data-url="{{ url('admin/multiple/cancle/orders') }}">
+                                            Cancel Order
+                                        </a>
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -586,13 +593,11 @@
                     let count_checked = $(".sub_chk").prop('checked', true);
                     $('#items_selected').html('');
                     $('#fullfillOrder').removeClass('d-none');
-                    $('#cancelOrder').removeClass('d-none');
                     $('#items_selected').html(count_checked.length + ' Selected');
                 } else {
                     let count_unchecked = $(".sub_chk").prop('checked', false);
                     $('#items_selected').html('');
                     $('#fullfillOrder').addClass('d-none');
-                    $('#cancelOrder').addClass('d-none');
                     $('#items_selected').html('0' + ' Selected');
                 }
             });
@@ -603,7 +608,6 @@
                     let count_checked = $(".sub_chk:checked").length;
                     $('#items_selected').html('');
                     $('#fullfillOrder').removeClass('d-none');
-                    $('#cancelOrder').removeClass('d-none');
                     $('#items_selected').html(count_checked + ' Selected');
                 } else {
                     let count_unchecked = $(".sub_chk:checked").length;
@@ -611,7 +615,6 @@
                     $('#items_selected').html(count_unchecked + ' Selected');
                     if (count_unchecked == 0) {
                         $('#fullfillOrder').addClass('d-none');
-                        $('#cancelOrder').addClass('d-none');
                     }
                 }
             })
@@ -620,11 +623,9 @@
                 $(".sub_chk:checked").each(function() {
                     orderIds.push($(this).attr('data-id'));
                     $('#fullfillOrder').removeClass('d-none');
-                    $('#cancelOrder').removeClass('d-none');
                 });
                 if (orderIds.length <= 0) {
                     $('#fullfillOrder').addClass('d-none');
-                    $('#cancelOrder').addClass('d-none');
                     Swal.fire(
                         'Please select at least one record to process.',
                     )
