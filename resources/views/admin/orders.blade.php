@@ -48,7 +48,7 @@
                             </div>
                             <div class="col-md-8 col-lg-8 col-xl-5 col-xxl-10 d-flex justify-content-end">
                                 <div class="col-md-12 col-xl-12 col-lg-12 justify-content-end d-flex">
-                                    <span class="">
+                                    <span class="d-none" id="fullfillOrder">
                                         @if ($auto_fullfill == false)
                                             <a class="order_ful_fill btn btn-sm fulfill-row-items-order-page"
                                                 data-url="{{ url('admin/orders/multi-full-fill') }}">
@@ -61,7 +61,7 @@
                                             </a>
                                         @endif
                                     </span>
-                                    <span class="cancel-button-order-page">
+                                    <span class="cancel-button-order-page d-none" id="cancelOrder">
                                         <a class="multiple_cancel_orders btn btn-danger btn-sm cancel-row-items-order-page"
                                             data-url="{{ url('admin/multiple/cancle/orders') }}">
                                             Cancel Order
@@ -585,10 +585,14 @@
                 if ($(this).is(':checked', true)) {
                     let count_checked = $(".sub_chk").prop('checked', true);
                     $('#items_selected').html('');
+                    $('#fullfillOrder').removeClass('d-none');
+                    $('#cancelOrder').removeClass('d-none');
                     $('#items_selected').html(count_checked.length + ' Selected');
                 } else {
                     let count_unchecked = $(".sub_chk").prop('checked', false);
                     $('#items_selected').html('');
+                    $('#fullfillOrder').addClass('d-none');
+                    $('#cancelOrder').addClass('d-none');
                     $('#items_selected').html('0' + ' Selected');
                 }
             });
@@ -598,19 +602,29 @@
                 if ($(this).is(':checked', true)) {
                     let count_checked = $(".sub_chk:checked").length;
                     $('#items_selected').html('');
+                    $('#fullfillOrder').removeClass('d-none');
+                    $('#cancelOrder').removeClass('d-none');
                     $('#items_selected').html(count_checked + ' Selected');
                 } else {
                     let count_unchecked = $(".sub_chk:checked").length;
                     $('#items_selected').html('');
                     $('#items_selected').html(count_unchecked + ' Selected');
+                    if (count_unchecked == 0) {
+                        $('#fullfillOrder').addClass('d-none');
+                        $('#cancelOrder').addClass('d-none');
+                    }
                 }
             })
             $('.order_ful_fill').on('click', function(e) {
                 var orderIds = [];
                 $(".sub_chk:checked").each(function() {
                     orderIds.push($(this).attr('data-id'));
+                    $('#fullfillOrder').removeClass('d-none');
+                    $('#cancelOrder').removeClass('d-none');
                 });
                 if (orderIds.length <= 0) {
+                    $('#fullfillOrder').addClass('d-none');
+                    $('#cancelOrder').addClass('d-none');
                     Swal.fire(
                         'Please select at least one record to process.',
                     )
