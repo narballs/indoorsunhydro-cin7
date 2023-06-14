@@ -236,8 +236,13 @@ class UserController extends Controller
 
     public function userRegistration()
     {
-        $data['states'] = UsState::get(["state_name", "id"]);
-        return view('user-registration-second',  $data);
+        if(!auth()->user()) {
+            $data['states'] = UsState::get(["state_name", "id"]);
+            return view('user-registration-second',  $data);
+        }else {
+            return redirect()->route('my_account');
+        }
+        
     }
 
     public function lost_password()

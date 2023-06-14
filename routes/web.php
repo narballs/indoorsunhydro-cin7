@@ -59,7 +59,9 @@ Route::get('send-mail', function () {
 Route::get('/products/{id}/{slug}', [ProductController::class, 'showProductByCategory']);
 Route::get('/products/', [ProductController::class, 'showAllProducts']);
 Route::get('/product-detail/{id}/{option_id}/{slug}', [ProductController::class, 'showProductDetail']);
-Route::get('/user/', [UserController::class, 'userRegistration'])->name('user');
+Route::group(['middleware' => ['alreadyloggedin']], function () {
+    Route::get('/user/', [UserController::class, 'userRegistration'])->name('user');
+});
 Route::post('api/fetch-cities', [UserController::class, 'fetchCity']);
 Route::post('/login/', [UserController::class, 'process_login'])->name('login');
 Route::post('/user-contact/', [UserController::class, 'save_contact'])->name('save_contact');
