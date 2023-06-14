@@ -60,7 +60,7 @@ class OrderManagementController extends Controller
                     $orders_query->where('firstName', 'like', '%' . $search . '%')
                         ->orWhere('lastName', 'like', '%' . $search . '%')
                         ->orWhere('email', 'like', '%' . $search . '%')
-                        ->orWhere('company', 'like', '%' . $search . '%')
+                        ->orWhere('company', 'like', '%' . $search . '%');
                 });
         }
         $orders =  $orders_query->paginate(10);
