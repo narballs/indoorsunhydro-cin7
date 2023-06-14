@@ -60,7 +60,7 @@
                         @else
                         <div class="row" id="">
                             <h3>
-                                No Favorite Products Found!
+                                There are no product(s) in your favorite list. 
                             </h3>
                         </div>
                         @endif
@@ -163,7 +163,7 @@
                     Swal.fire({
                         toast: true,
                         icon: 'success',
-                        title: 'Products added to cart successfully',
+                        title: 'Product(s) added to cart successfully',
                         timer: 2000,
                         showConfirmButton: false,
                         position: 'top',
@@ -196,7 +196,7 @@
             Swal.fire({
                 toast: true,
                 icon: 'error',
-                title: 'Please select at least one product to add to cart',
+                title: 'Please select at least one product to add it into your cart.',
                 timer: 1000,
                 showConfirmButton: false,
                 position: 'top',
@@ -246,7 +246,7 @@
             success: function(response) {
                 if (response.status == 'success') {
                     wishLists();
-                    Swal.fire('Success!', 'Product removed Successfully!');
+                    Swal.fire('Success!', 'Product removed from your favorites.');
                 }
             }
         });

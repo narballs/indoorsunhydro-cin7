@@ -185,7 +185,7 @@
                 } else {
                     Swal.fire(
                         'Warning!',
-                        'Please make sure you are logged in and selected company Thanks !',
+                        'Please make sure you are logged in and selected a company.',
                         'warning',
                     );
                 }
