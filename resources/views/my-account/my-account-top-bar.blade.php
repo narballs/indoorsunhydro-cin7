@@ -15,7 +15,7 @@
                         <select class="form-select" name="company_switch" id="company_switch"
                             onchange="switch_company()" aria-label="Default select example"
                             style="background: #F4FFEC !important;">
-                            <option class="form-select">Select one company</option>
+                            <option class="form-select" value="">Select one company</option>
                             @foreach ($companies as $company)
                                 @php
                                     if ($company->contact_id) {
@@ -27,7 +27,7 @@
                                     }
                                 @endphp
                                 <option class="form-control" value="{{ $contact_id }}"
-                                    {{ $session_contact_id == $contact_id ? 'selected' : '' }}>
+                                    {{ $session_contact_id == $contact_id ? 'selected' : '' }} {{$company->status == 0 ? 'disabled text-muted' : '' }}>
                                     {{ $company->company }}{{ $primary }}
                                 </option>
                             @endforeach
