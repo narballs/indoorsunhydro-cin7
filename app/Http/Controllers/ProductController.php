@@ -37,7 +37,7 @@ class ProductController extends Controller
         }
         $parent_category = Category::find($category_id);
         $parent_category_slug = $parent_category->slug;
-        $categories = Category::where('parent_id', 0)->get();
+        $categories = Category::orderBy('name', 'ASC')->where('parent_id', 0)->get();
         //git switch branch
         $category_ids = Category::where('parent_id', $category_id)->pluck('id')->toArray();
         array_push($category_ids, $category_id);
@@ -46,7 +46,7 @@ class ProductController extends Controller
         $all_product_ids = Product::whereIn('category_id', $category_ids)->pluck('id')->toArray();
         $brand_ids = Product::whereIn('id', $all_product_ids)->pluck('brand_id')->toArray();
 
-        $childerens  = Category::where('parent_id', $category_id)->get();
+        $childerens  = Category::orderBy('name', 'ASC')->where('parent_id', $category_id)->get();
 
         $brand_id = $request->get('brand_id');
         $stock = $request->get('stock');
@@ -104,7 +104,7 @@ class ProductController extends Controller
             //echo '<pre>'; var_export($queries); echo '</pre>';
         }
 
-        $brands = Brand::whereIn('id', $brand_ids)->pluck('name', 'id')->toArray();
+        $brands = Brand::orderBy('name', 'ASC')->whereIn('id', $brand_ids)->pluck('name', 'id')->toArray();
         $user_id = Auth::id();
         $contact = '';
         if ($user_id != null) {
@@ -170,7 +170,7 @@ class ProductController extends Controller
 
         $selected_category_id = $request->get('selected_category');
 
-        $childerens = Category::where('parent_id', $selected_category_id)->get();
+        $childerens = Category::orderBy('name', 'ASC')->where('parent_id', $selected_category_id)->get();
 
 
 
@@ -234,11 +234,11 @@ class ProductController extends Controller
 
         $brands = [];
         if (!empty($brand_ids)) {
-            $brands = Brand::whereIn('id', $brand_ids)->pluck('name', 'id')->toArray();
+            $brands = Brand::orderBy('name', 'ASC')->whereIn('id', $brand_ids)->pluck('name', 'id')->toArray();
         } elseif (empty($search_queries)) {
             $brands = Brand::orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
         }
-        $categories = Category::where('parent_id', 0)->get();
+        $categories = Category::where('parent_id', 0)->orderBy('name', 'ASC')->get();
         $category_ids = Category::where('parent_id', $category_id)->pluck('id')->toArray();
         array_push($category_ids, $category_id);
         $all_product_ids = Product::whereIn('category_id', $category_ids)->pluck('id')->toArray();
@@ -405,12 +405,29 @@ class ProductController extends Controller
             $pricing = 'RetailUSD';
         }
 
+        $contact_id = session()->get('contact_id');
+        $user_list = BuyList::where('user_id', $user_id)
+            ->where('contact_id', $contact_id)
+            ->first();
 
+
+        $user_buy_list_options = [];
+
+        if (!empty($user_list)) {
+            $user_buy_list_options = ProductBuyList::where('list_id', $user_list->id)->pluck('option_id', 'option_id')->toArray();
+        }
+
+        $lists = BuyList::where('user_id', $user_id)
+            ->where('contact_id', $contact_id)
+            ->with('list_products')
+            ->get();
         return view('product-detail', compact(
             'productOption',
             'pname',
             'pricing',
             'location_inventories',
+            'user_buy_list_options',
+            'lists'
         ));
     }
     public function showProductByCategory_slug($slug)
@@ -497,7 +514,7 @@ class ProductController extends Controller
         } elseif (empty($search_queries)) {
             $brands = Brand::orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
         }
-        $categories = Category::where('parent_id', 0)->get();
+        $categories = Category::orderBy('name', 'ASC')->where('parent_id', 0)->get();
         $brand = Brand::where('name', $name)->first();
         $brand_id = $brand->id;
         $products_in_brand = Product::where('brand_id', $brand_id)->pluck('category_id', 'category_id')->toArray();
