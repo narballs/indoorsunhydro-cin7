@@ -5251,15 +5251,16 @@ select.list-dt:focus {
         font-family: 'Poppins' !important;
         font-style: normal !important;
         font-weight: 600 !important;
-        font-size: 14px !important;
+        font-size: 12px !important;
         line-height: 18px !important;
         color: #131313 !important;
     }
 
     .cart-page-price {
         color: #e84d3d !important;
-        font-size: 16px !important;
-        font-weight: bold !important;
+        font-size: 12px !important;
+        font-weight: 600 !important;
+        line-height: 18px !important;
         font-family: 'Poppins' !important;
     }
 
@@ -5369,14 +5370,21 @@ select.list-dt:focus {
 
     .cart-total-checkout-page {
         font-size: 15px !important;
-        font-weight: 700;
+        font-weight: 600;
         font-family: 'Poppins';
-        text-transform: uppercase;
+        /* text-transform: uppercase; */
+    }
+    
+    .cart-sub-total-checkout-page {
+        font-size: 15px !important;
+        font-weight: 500;
+        font-family: 'Poppins';
+        /* text-transform: uppercase; */
     }
 
     .sub-total-checkout-page {
         margin-left: 89px;
-        font-size: 18px;
+        font-size: 15px;
         font-family: 'Poppins';
         font-weight: 600;
         color: #e84d3d !important;
