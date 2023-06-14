@@ -41,12 +41,12 @@ class OrderManagementController extends Controller
         $auto_full_fill_value = $auto_full_fill->option_value;
         if ($auto_full_fill_value == 1) {
             $auto_fullfill = true;
-        }
-        else {
+        } else {
             $auto_fullfill = false;
         }
         $search = $request->get('search');
-        $orders_query = ApiOrder::with(['createdby', 'processedby', 'contact'])->orderBy('id', 'DESC');
+        $orders_query = ApiOrder::with(['createdby', 'processedby', 'contact'])
+            ->orderBy('id', 'DESC');
         $option = AdminSetting::where('option_name', 'auto_full_fill')->first();
         $auto_fulfill = $option->option_value;
         if (!empty($search)) {
@@ -55,9 +55,17 @@ class OrderManagementController extends Controller
                 ->orWhere('modifiedDate', 'like', '%' . $search . '%')
                 ->orWhere('reference', 'like', '%' . $search . '%')
                 ->orWhere('total', 'like', '%' . $search . '%')
-                ->orWhere('stage', 'like', '%' . $search . '%');
+                ->orWhere('stage', 'like', '%' . $search . '%')
+                ->orWhereHas('contact', function ($orders_query) use ($search) {
+                    $orders_query->where('firstName', 'like', '%' . $search . '%')
+                        ->orWhere('lastName', 'like', '%' . $search . '%')
+                        ->orWhere('email', 'like', '%' . $search . '%')
+                        ->orWhere('company', 'like', '%' . $search . '%')
+                });
         }
         $orders =  $orders_query->paginate(10);
+
+
         return view('admin/orders', compact('orders', 'search', 'auto_fulfill', 'auto_fullfill'));
     }
 
@@ -67,8 +75,7 @@ class OrderManagementController extends Controller
         $auto_full_fill_value = $auto_full_fill->option_value;
         if ($auto_full_fill_value == 1) {
             $auto_fullfill = true;
-        }
-        else {
+        } else {
             $auto_fullfill = false;
         }
         $statuses = OrderStatus::all();
