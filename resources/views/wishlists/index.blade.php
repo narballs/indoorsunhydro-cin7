@@ -23,7 +23,7 @@
     @else
     <div class="row" id="">
         <h3>
-            No Favorite Products Found!
+            There are no product(s) in your favorite list. 
         </h3>
     </div>
     @endif
