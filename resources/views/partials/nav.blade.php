@@ -112,13 +112,13 @@ $categories = NavHelper::getCategories();
                     </form>
                     <div class="dropdown">
                         @if (!empty($session_contact_company))
-                            <a class="btn btn-secondary dropdown-toggle mbl_cmp_drp p-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mbl_cmp_drp">{!! \Illuminate\Support\Str::limit($session_contact_company, 14) !!}</span>
+                            <a class="btn btn-secondary dropdown-toggle mbl_cmp_drp p-0 text-left" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mbl_cmp_drp t">{!! \Illuminate\Support\Str::limit($session_contact_company, 14) !!}</span>
                                 <i class="fa fa-angle-down" style="color:#242424;"></i>
                             </a>
                         @else
-                            <a class="btn btn-secondary dropdown-toggle mbl_cmp_drp p-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mbl_cmp_drp">Select Company</span>
+                            <a class="btn btn-secondary dropdown-toggle mbl_cmp_drp p-0 text-left" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mbl_cmp_drp ">Select Company</span>
                                 <i class="fa fa-angle-down" style="color:#242424;"></i>
                             </a>
                         @endif
