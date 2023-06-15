@@ -391,29 +391,29 @@
                                                             @if ($cart_items)
                                                                 @foreach ($cart_items as $pk_product_id => $cart)
                                                                     <tr>
-                                                                        <td class="p-0" style="vertical-align: center;">
+                                                                        <td class="p-1" style="vertical-align: middle;width:20%;background-color:#F7F7F7;">
                                                                             @if (!empty($cart['image']))
                                                                                 <img src="{{ $cart['image'] }}"
                                                                                     class="img-fluid rounded-3 "
-                                                                                    alt="Book" style="width:186px;">
+                                                                                    alt="Book" style="width:100px;height:50px;">
                                                                             @else
                                                                                 <img src="/theme/img/image_not_available.png"
                                                                                     class="img-fluid rounded-3 "
-                                                                                    alt="Book" style="width:186px;">
+                                                                                    alt="Book" style="width:100px;height:50px;">
                                                                             @endif
                                                                         </td>
-                                                                        <td class="p-0">
-                                                                            <table>
+                                                                        <td class="p-1 pl-3" style="width:80%;">
+                                                                            <table style="width: 100%">
                                                                                 <tr>
-                                                                                    <td class="p-0">
+                                                                                    <td class="p-0" style="width:80%;">
                                                                                         <div class="">
-                                                                                            <a class=" ps-0 pe-3 cart-page-items"
+                                                                                            <a class="cart-page-items"
                                                                                                 href="{{ url('product-detail/' . $cart['product_id'] . '/' . $cart['option_id'] . '/' . $cart['slug']) }}">{{ $cart['name'] }}
                                                                                             </a>
                                                                                             
                                                                                         </div>
                                                                                     </td>
-                                                                                    <td class="p-0">
+                                                                                    <td class="p-0 text-right"  style="width:20%;" align="right">
                                                                                         <div class="cart-page-price ps-3"
                                                                                             id="m_p_price_{{ $pk_product_id }}">
                                                                                             ${{ number_format($cart['price'], 2) }}
@@ -421,7 +421,7 @@
                                                                                     </td>
                                                                                 </tr>
                                                                                 <tr>
-                                                                                    <td class="">
+                                                                                    <td class="p-0 pt-3" style="width:80%;">
                                                                                         {{-- <div class="d-flex">
                                                                                             <input type="hidden" name="p_id"
                                                                                                 id="p_id"
@@ -466,13 +466,15 @@
                                                                                                 <i class="fa fa-angle-right text-dark align-middle" style="font-size: 8px;"></i>
                                                                                             </button>
                                                                                         </div>
-                                                                                    </td>
-                                                                                    <td class="text-right">
-                                                                                        <a href="{{ url('remove/' . $pk_product_id) }}" id="remove" class="remove_p_mbl">
-                                                                                            <span>
-                                                                                                Remove
-                                                                                            </span>
-                                                                                        </a>
+                                                                                    </td> 
+                                                                                    <td class="p-0 pt-3" style="width:20%;vertical-align:bottom;" align="right">
+                                                                                        <div class="d-flex justify-content-end">
+                                                                                            <a href="{{ url('remove/' . $pk_product_id) }}" id="remove" class="remove_p_mbl">
+                                                                                                <span>
+                                                                                                    Remove
+                                                                                                </span>
+                                                                                            </a>
+                                                                                        </div>
                                                                                     </td>
                                                                                 </tr>
                                                                             </table>
