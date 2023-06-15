@@ -48,6 +48,81 @@
 	}
 
 	@media  screen and (min-width : 360px ) and (max-width:425px) { 
+		.orderSummarymbl {
+			background: #FAFAFA;
+			border-top-right-radius: 5.24485px;
+			border-top-left-radius: 5.24485px;
+		}
+		.suborderSummarymbl_main {
+			background: #FAFAFA;
+		}
+		.suborderSummarymbl{
+			background: #F7F7F7;
+			border-radius: 5.24485px;
+		}
+		.delievery_options_mbl {
+			font-family: 'Roboto';
+			font-style: normal;
+			font-weight: 600;
+			font-size: 18.8814px;
+			line-height: 22px;
+
+			color: #000000;
+
+		}
+		.summary_sub_total_head {
+			
+			font-family: 'Roboto';
+			font-style: normal;
+			font-weight: 400;
+			font-size: 16.7835px;
+			line-height: 20px;
+			color: #303030;
+
+		}
+		.summary_sub_total_price {
+			font-family: 'Roboto';
+			font-style: normal;
+			font-weight: 600;
+			font-size: 16.7835px;
+			line-height: 20px;
+			color: #000000;
+
+		}
+		.local_order {
+			background: #E6F6FF;
+			border-radius: 5.24485px;
+		}
+		.label_delievery {
+			font-family: 'Poppins';
+			font-style: normal;
+			font-weight: 400;
+			font-size: 14.6856px;
+			line-height: 22px;
+			color: #303030;
+			vertical-align: middle;
+		}
+		.radio_delievery {
+			width: 14.69px;
+			height: 14.69px;
+			vertical-align: middle;
+		}
+		.radio_selected{
+			background: #008BD3;
+			border-radius: 8px;
+		}
+		.radio_not_selected{
+			background: #D9D9D9;
+			border-radius: 8px;
+		}
+		.summary_total_price {
+			font-family: 'Roboto';
+			font-style: normal;
+			font-weight: 600;
+			font-size: 31.4691px;
+			line-height: 37px;
+			color: #000000;
+		}
 		.m_chechout_image {
 			width: 57.08px !important;
 			height: 57.08px !important;
@@ -375,13 +450,13 @@
 						<div class="col-xl-1 col-lg-3 col-md-6 col-sm-12 ms-4">
 							<p class="order-confirmation-page-tax-title">Tax</p>
 							<p class="order-confirmation-page-tax-item">
-								$
+								${{ number_format($order->total_including_tax - $order->productTotal, 2) }}
 							</p>
 						</div>
 						<div class="col-xl-1 col-lg-3 col-md-6 col-sm-12 ms-4">
 							<p class="order-confirmation-page-total-title">Total</p>
 							<p class="order-confirmation-page-total-item">
-								${{number_format($order->total, 2)}}
+								${{number_format($order->total_including_tax, 2)}}
 							</p>
 						</div>
 					</div>
@@ -432,13 +507,13 @@
 								<div class="col-md-3">
 									<p class="order-confirmation-page-tax-title">Tax</p>
 									<p class="order-confirmation-page-tax-item">
-										$
+										${{ number_format($order->total_including_tax - $order->productTotal, 2) }}
 									</p>
 								</div>
 								<div class="col-md-3">
 									<p class="order-confirmation-page-total-title">Total</p>
 									<p class="order-confirmation-page-total-item">
-										${{number_format($order->total, 2)}}
+										${{number_format($order->total_including_tax, 2)}}
 									</p>
 								</div>
 							</div>
@@ -502,13 +577,13 @@
 								<div class="col-md-4">
 									<p class="order-confirmation-page-tax-title">Tax</p>
 									<p class="order-confirmation-page-tax-item">
-										$
+										${{ number_format($order->total_including_tax - $order->productTotal, 2) }}
 									</p>
 								</div>
 								<div class="col-md-4">
 									<p class="order-confirmation-page-total-title">Total</p>
 									<p class="order-confirmation-page-total-item">
-										${{number_format($order->total, 2)}}
+										${{number_format($order->total_including_tax, 2)}}
 									</p>
 								</div>
 							</div>
@@ -574,13 +649,13 @@
 								<div class="col-sm-6">
 									<p class="order-confirmation-page-tax-title">Tax</p>
 									<p class="order-confirmation-page-tax-item">
-										$
+										${{ number_format($order->total_including_tax - $order->productTotal, 2) }}
 									</p>
 								</div>
 								<div class="col-sm-6">
 									<p class="order-confirmation-page-total-title">Total</p>
 									<p class="order-confirmation-page-total-item">
-										${{number_format($order->total, 2)}}
+										${{number_format($order->total_including_tax, 2)}}
 									</p>
 								</div>
 							</div>
@@ -873,6 +948,85 @@
 									@endforeach
 								</tbody>
 							</table>
+							
+							<div class="w-100 orderSummarymbl p-2">
+								<div class="">
+									<h3 class="delievery_options_mbl">
+										Delivery Options
+									</h3>
+									<div class="d-flex">
+										@if($order->paymentTerms == 'C.O.D')
+										<div class="w-50 local_order p-1 d-flex align-items-center justify-content-evenly">
+											<span class="radio_delievery radio_selected"></span>
+											<span class="label_delievery">
+												Local Delievery
+											</span>
+										</div>
+										<div class="w-50 text-right p-1 d-flex align-items-center justify-content-center">
+											<span class="radio_delievery radio_not_selected mx-3"></span>
+											<span class="label_delievery">
+												Pickup Order
+											</span>
+										</div>
+										@endif
+										@if($order->paymentTerms == 'Pickup Order')
+										<div class="w-50  p-1 d-flex align-items-center justify-content-evenly">
+											<span class="radio_delievery radio_not_selected"></span>
+											<span class="label_delievery">
+												Local Delievery
+											</span>
+										</div>
+										<div class="w-50 text-right local_order p-1 d-flex align-items-center justify-content-center">
+											<span class="radio_delievery radio_selected mx-3"></span>
+											<span class="label_delievery">
+												Pickup Order
+											</span>
+										</div>
+										@endif
+									</div>
+								</div>
+							</div>
+							<div class="w-100 suborderSummarymbl_main">
+								<div class="suborderSummarymbl p-2">
+									<div>
+										<h3 class="delievery_options_mbl">
+											Total
+										</h3>
+										<div class="d-flex w-100">
+											<div class="w-50 p-1">
+												<span class="summary_sub_total_head">Subtotal:</span>
+											</div>
+											<div class="w-50 p-1 text-right">
+												<span class="summary_sub_total_price text-right">${{ number_format($order->productTotal, 2) }}</span>
+											</div>
+										</div>
+										<div class="d-flex w-100">
+											<div class="w-50 p-1">
+												<span class="summary_sub_total_head">Rate ({{$order->texClasses->rate . '%' }}) :</span>
+											</div>
+											<div class="w-50 p-1 text-right">
+												<span class="summary_sub_total_price text-right">${{ number_format($order->total_including_tax - $order->productTotal, 2) }}</span>
+											</div>
+										</div>
+										<div class="d-flex w-100">
+											<div class="w-50 p-1">
+												<span class="summary_sub_total_head">Discount:</span>
+											</div>
+											<div class="w-50 p-1 text-right">
+												<span class="summary_sub_total_price text-right">$0</span>
+											</div>
+										</div>
+										<div class="d-flex w-100">
+											<div class="w-50 p-1 d-flex align-items-center">
+												<span class="summary_sub_total_head">Total:</span>
+											</div>
+											<div class="w-50 p-1 text-right">
+												<span class="summary_total_price text-right">${{ number_format($order->total_including_tax, 2) }}</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
 							<div class="row">
 								<div class="col-md-2 m-auto">
 									<a href="#" class="order-confirmation-page-view-invoice-button btn w-100 text-uppercase">View Invoice</a>
