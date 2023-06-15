@@ -4794,6 +4794,27 @@ select.list-dt:focus {
 /* mobile css */
 
 @media only screen and (max-width: 425px) and (min-width: 360px) {
+    
+    .mbl-border-bottom {
+        border: 0.544901px solid #EBEBEB !important;
+    }
+    .login-inputMbl {
+        background: #F5F5F5 !important;
+        border: 0.544901px solid #EBEBEB !important;
+    }
+    .remember-me {
+        width: 50% !important;
+    }
+    .lost_pas_div {
+        width: 50% !important;
+        text-align: right !important;
+    }
+    .mobile_footer_set {
+        margin-top: 8rem !important;
+    } 
+    .main_image_mbl {
+        height: 30rem !important;
+    }
     .filter_heading_mbl {
         font-family: 'Poppins' !important;
         font-style: normal !important;
@@ -5413,36 +5434,36 @@ select.list-dt:focus {
 
     .login-title {
         font-family: 'Poppins';
-        font-style: normal !important;
-        font-weight: 600 !important;
-        font-size: 13px !important;
-        letter-spacing: 0.05em !important;
-        margin-top: 0px !important;
-        height: 39px !important;
+        font-style: normal;
+        font-weight: 600;
+        font-size: 24px;
+        line-height: 36px;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+         color: #131313;
+
     }
 
     .dont-have-an-account {
         font-family: 'Poppins' !important;
         font-style: normal !important;
-        font-weight: 400 !important;
-        font-size: 12px !important;
-        line-height: 48px !important;
+        font-weight: 600 !important;
+        font-size: 20px !important;
+        line-height: 30px !important;
         letter-spacing: 0.05em !important;
         color: #FFFFFF !important;
-        line-height: 17px !important;
     }
 
     .dont-have-an-account-pra {
         font-family: 'Poppins' !important;
         font-style: normal;
-        font-weight: 300 !important;
-        font-size: 6px !important;
-        line-height: 15px !important;
         font-weight: 400 !important;
-        font-size: 9px !important;
-        line-height: 17px !important;
+        font-size: 11px !important;
+        line-height: 16px !important;
+        font-weight: 400 !important;
         text-align: center;
         color: #FFFFFF;
+        letter-spacing: 0.05em !important;
 
     }
 
@@ -5460,20 +5481,22 @@ select.list-dt:focus {
         align-items: center !important;
         text-align: center !important;
         width: 100% !important;
-        height: 285px !important;
+        height: 412px !important;
         background-color: #7BC533;
-        margin-top: 256px !important;
+        margin-top: 130px !important;
     }
 
     .white-panel {
         background-color: rgba(255, 255, 255, 1) !important;
         position: absolute !important;
-        top: -57px !important;
+        top: -180px !important;
         transition: .3s ease-in-out !important;
         z-index: 0 !important;
         box-shadow: 0 0 15px 9px #00000096 !important;
-        width: 182px !important;
-        height: 343px !important;
+        width: 90% !important;
+        height: 355px !important;
+        left: 5%;
+        
     }
 
     .login-show input[type="text"],
@@ -5482,33 +5505,36 @@ select.list-dt:focus {
         display: block !important;
         margin: 11px 0 !important;
         padding: 5px !important;
-        border: 1px solid #b5b5b5 !important;
+        border: 0.544901px solid #EBEBEB !important;
         outline: none !important;
+        height: 43px;
     }
 
     .login-info-box {
-        width: 37% !important;
-        padding: 0 8px !important;
-        top: 12% !important;
-        left: 5% !important;
+        width: 100% !important;
+        padding: 0 20px !important;
+        top: 55% !important;
+        left: 0% !important;
         position: absolute !important;
-        text-align: left !important;
     }
 
     .formemail-registration-check-label {
-        font-weight: 600 !important;
+        font-family: 'Poppins'!important;
+        font-style: normal!important;
+        font-weight: 500 !important;
         font-size: 11px !important;
-        line-height: 24px !important;
+        line-height: 16px !important;
+        color: #8F8F8F !important;
         letter-spacing: 0em !important;
+
     }
 
     .register-info-box {
-        width: 46% !important;
-        padding: 0 29px !important;
-        top: 12% !important;
-        right: 0 !important;
+        width: 100% !important;
+        padding: 0 20px !important;
+        top: 55% !important;
+        left: 0% !important;
         position: absolute !important;
-        text-align: left !important;
     }
 
     mt-4 remember-me {
@@ -5610,10 +5636,10 @@ select.list-dt:focus {
         color: #7B7B7B;
     }
 
-    .form-login input {
+    /* .form-login input {
         background-color: #EBEBEB !important;
         border: none !important;
-    }
+    } */
 
     .req {
         color: red;
@@ -5661,18 +5687,28 @@ select.list-dt:focus {
     .required-field {
         font-family: 'Poppins';
         font-style: normal;
-        font-weight: 480;
-        font-size: 10px;
-        line-height: 24px;
+        font-weight: 500;
+        font-size: 11px;
+        line-height: 16px;
+    }
+    .mbl-reme-check {
+        width: 17px !important;
+        height: 17px !important;
+        background: #F5F5F5 !important;
+        border: 0.544901px solid #EBEBEB !important;
+        border-radius: 3.26941px !important;
     }
 
     .btn-lost-password {
-        display: contents;
-        font-family: 'Poppins';
-        color: #7BC533;
-        font-size: 10px !important;
-        margin-bottom: -30px;
         text-decoration: none;
+        font-family: 'Poppins' !important;
+        font-style: normal !important;
+        font-weight: 500 !important;
+        font-size: 11px !important;
+        line-height: 16px !important;
+        text-align: right !important;
+        color: #7BC533 !important;
+
     }
 
     .dont-have-an-account {
@@ -5695,25 +5731,37 @@ select.list-dt:focus {
     .login-reg-panel #label-login,
     .login-reg-panel #label-register {
         font-family: 'Poppins';
-        border: 1px solid #9E9E9E;
         padding: 23px 23px;
-        display: block;
-        text-align: center;
         color: #7BC533;
         background-color: white;
         cursor: pointer;
-        font-weight: 600 !important;
-        font-size: 11px !important;
+        font-style: normal;
+        font-weight: 500 !important;
+        font-size: 14px !important;
+        height: 43px !important;
+        width: 292px !important;
+        line-height: 21px;
+        border: none;
+        text-align: center;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+
     }
 
     .btn-login {
         width: 100%;
-        height: 33px !important;
-        color: #FFFF;
-        background: #7BC533;
+        height: 43px !important;
+        background-color: #7BC533;
         border: none;
-        font-weight: 600;
-        font-size: 13px !important;
+        font-family: 'Poppins';
+        font-style: normal;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 21px;
+        text-align: center;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: #FFFFFF;
     }
 
     .login-show,
