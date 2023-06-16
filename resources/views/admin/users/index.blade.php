@@ -220,10 +220,12 @@
                                                             class="edit a_class" title="" data-toggle="tooltip"
                                                             data-original-title="Edit">Edit
                                                         </a>
-                                                        <a class="dropdown-item"href="{{ url('admin/user-switch/' . $user->id.'/'. $contact_switch_id) }}"
-                                                            class="edit a_class" title="" data-toggle="tooltip"
-                                                            data-original-title="Edit">Switch User
-                                                        </a>
+                                                        @if($contact->status != 0)
+                                                            <a class="dropdown-item"href="{{ url('admin/user-switch/' . $user->id.'/'. $contact_switch_id) }}"
+                                                                class="edit a_class" title="" data-toggle="tooltip"
+                                                                data-original-title="Edit">Switch User
+                                                            </a>
+                                                        @endif
                                                         @if ($contact)
                                                             @if ($contact->secondary_contact)
                                                                 <button type="button" class="btn"
