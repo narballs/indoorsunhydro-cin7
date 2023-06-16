@@ -60,7 +60,7 @@ class UserHelper
     }
 
     public static function switch_company($contact_id) {
-        $contact = Contact::where('contact_id', $contact_id)->where('secondary_id' , $contact_id)->where('status', '!=', 0)->first();
+        $contact = Contact::where('contact_id', $contact_id)->where('status', '!=', 0)->first();
         if (!empty($contact)) {
             $active_contact_id = $contact->contact_id;
             $active_company = $contact->company;
@@ -70,15 +70,17 @@ class UserHelper
             ]);
 
         } 
-        // else {
-        //     $contact = Contact::where('secondary_id', $contact_id)->where('status', '!=', 0)->first();
-        //     $active_contact_id = $contact->secondary_id;
-        //     $active_company = $contact->company;
-        //     Session::put([
-        //         'contact_id' => $active_contact_id,
-        //         'company' => $active_company
-        //     ]);
-        // }
+        else {
+            $contact = Contact::where('secondary_id', $contact_id)->where('status', '!=', 0)->first();
+            if (!empty($contact)) {
+                $active_contact_id = $contact->secondary_id;
+                $active_company = $contact->company;
+                Session::put([
+                    'contact_id' => $active_contact_id,
+                    'company' => $active_company
+                ]);
+            }
+        }
 
         return response()->json([
             'status' => '204',
