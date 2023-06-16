@@ -228,7 +228,7 @@
     </form>
 </div>
 {{-- mobile view start --}}
-<div class="row bg-light mobile-view">
+<div class="row bg-light mobile-view w-100">
     <div class="container">
         <div class="row bg-white justify-content-center">
             <div class="d-flex align-items-center justify-content-center mx-1 ml-4 p_detail_image_row">
