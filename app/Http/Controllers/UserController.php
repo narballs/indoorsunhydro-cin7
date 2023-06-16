@@ -1130,7 +1130,7 @@ class UserController extends Controller
         $contact_id = auth()->user()->id;
         $contact = Contact::where('user_id', $id)->where('contact_id', $contactId)->orWhere('secondary_id', $contactId)->where('status' , '!=', 0)->first();
         $companies = Contact::where('user_id', auth()->user()->id)->get();
-
+        
         if (!empty($contact)) {
             if ($contact->contact_id == null) {
                 $active_contact_id = $contact->secondary_id;
@@ -1138,18 +1138,19 @@ class UserController extends Controller
                 $active_contact_id = $contact->contact_id;
             }
             $active_company = $contact->company;
+
             Session::put([
                 'contact_id' => $active_contact_id,
                 'company' => $active_company
             ]);
             Session::put('companies', $companies);
+
             return redirect('/');
         } else {
             $contact = Contact::where('secondary_id', $contact_id)->where('status', '!=', 0)->first();
             if (!empty($contact)) {
                 $active_contact_id = $contact->secondary_id;
                 $active_company = $contact->company;
-                //dd($active_company);
                 Session::put([
                     'contact_id' => $active_contact_id,
                     'company' => $active_company

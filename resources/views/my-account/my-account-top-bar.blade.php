@@ -1,4 +1,3 @@
-       <?php //dd(Session::get('contact_id'))?>
 <div class="row my-2" style="border-radius: 0.5rem !important;margin:auto">
     <div class="col-md-6 col-xl-6 col-xs-12 col-sm-12">
         <div class="row bg-white">
@@ -17,7 +16,6 @@
                             onchange="switch_company()" aria-label="Default select example"
                             style="background: #F4FFEC !important;">
                             <option class="form-select" value="">Select one company</option>
-
                             @foreach ($companies as $company)
                                 @php
                                     if ($company->contact_id) {
@@ -27,11 +25,8 @@
                                         $contact_id = $company->secondary_id;
                                         $primary = '(secondary)';
                                     }
-
                                 @endphp
-
                                 <option class="form-control" value="{{ $contact_id }}"
-
                                     {{ $session_contact_id == $contact_id ? 'selected' : '' }} {{$company->status == 0 ? 'disabled text-muted' : '' }}>
                                     {{ $company->company }}{{ $primary }}
                                 </option>
