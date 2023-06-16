@@ -155,11 +155,8 @@
                     success: function(result) {
                         console.log(result);
                         setInterval('location.reload()', 7000);
-                        // $(".flash").hide();
-                        // $("#pageData").html(result);
                     }
                 });
-
             }
         </script>
     @stop

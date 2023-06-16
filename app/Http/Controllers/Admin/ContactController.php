@@ -54,7 +54,11 @@ class ContactController extends Controller
                 ->orWhere('email', 'like', '%' . $search . '%')
                 ->orWhere('company', 'like', '%' . $search . '%')
                 ->orWhere('phone', 'like', '%' . $search . '%')
-                ->orWhere('mobile', 'like', '%' . $search . '%');
+                ->orWhere('mobile', 'like', '%' . $search . '%')
+                ->orWhere('contact_id', 'like', '%' . $search . '%')
+                ->orWhere('id', 'like', '%' . $search . '%')
+                ->orWhere('priceColumn', 'like', '%' . $search . '%')
+                ->orWhere('notes', 'like', '%' . $search . '%');
         }
 
         $contacts = $contact_query->paginate($perPage);

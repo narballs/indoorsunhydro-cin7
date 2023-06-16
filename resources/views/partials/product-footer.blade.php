@@ -67,7 +67,7 @@
     </div>
 </footer>
 
-<footer class="text-white text-lg-start h-90 mobile-view" style="background: #212121">
+<footer class="text-white text-lg-start h-90 mobile-view mobile_footer_set" style="background: #212121">
     <div class="container mt-5">
         <div class="row">
             <div class="col-md-12">
@@ -101,11 +101,11 @@
                     <p class="p-footer-mbl ms-4-footer mx-1">My orders</p>
                     
                     <h5 class="foooter-main-head-mbl contact-us-footer mt-5 mb-4 text-uppercase">PAYMENT METHOD</h5>
-                    <div class="d-flex">
-                        <img class="img-fluid" style="margin-right:0.5rem !important;" src="/theme/paymentsImg/paypal.png">
-                        <img class="img-fluid" style="margin-right:0.5rem !important;" src="/theme/paymentsImg/discover.png">
-                        <img class="img-fluid" style="margin-right:0.5rem !important;" src="/theme/paymentsImg/cm.png">
-                        <img class="img-fluid" style="margin-right:0.5rem !important;" src="/theme/paymentsImg/visa.png">
+                    <div class="d-flex w-100 justify-content-between">
+                        <img class="img-fluid" style="" src="/theme/paymentsImg/paypal.png">
+                        <img class="img-fluid" style="" src="/theme/paymentsImg/discover.png">
+                        <img class="img-fluid" style="" src="/theme/paymentsImg/cm.png">
+                        <img class="img-fluid" style="" src="/theme/paymentsImg/visa.png">
                         
                     </div>
 

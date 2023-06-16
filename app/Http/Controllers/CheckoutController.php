@@ -76,7 +76,8 @@ class CheckoutController extends Controller
         $order = ApiOrder::where('id', $id)
             ->with(
                 'user.contact',
-                'apiOrderItem.product.options'
+                'apiOrderItem.product.options',
+                'texClasses'
             )->first();
         $order_contact = Contact::where('contact_id', $order->memberId)->first();
         $createdDate = $order->created_at;

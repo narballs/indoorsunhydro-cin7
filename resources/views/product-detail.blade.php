@@ -78,7 +78,19 @@
                                     ?>
                                     <div class="product-detail-heading col-xl-12 col-lg-12 col-md-12 col-xs-12"
                                         id="product_name">
-                                        <h3 class="product-detail-heading">{{$productOption->products->name}}</h3>
+                                        <div class="row">
+                                            <div class="col-md-11">
+                                                <h3 class="product-detail-heading">{{$productOption->products->name}}</h3>
+                                            </div>
+                                            <div class="col-md-1 d-flex justify-content-center">
+                                                <a style="width:20px !important;" href="javascript:void(0);" class="subscribe">
+                                                    <i class="fa-solid fav-{{ $productOption->option_id }} fa-heart {{ isset($user_buy_list_options[$productOption->option_id]) ? '' : 'text-muted' }} "
+                                                        id="{{ $productOption->option_id }}" data-toggle="popover"
+                                                        onclick="addToList('{{ $productOption->product_id }}', '{{ $productOption->option_id }}', '{{ isset($user_buy_list_options[$productOption->option_id]) }}')">
+                                                    </i>
+                                                </a>
+                                            </div>
+                                        </div>
                                     </div>
                                     <?php //dd($productOption->products->status);?>
                                     <div class="col-md-12 d-flex">
@@ -238,7 +250,8 @@
                                 ${{number_format($retail_price,2)}}</span>
                         </div>
                     </div>
-                    <div class="row"> <span class="text-uppercase text-muted brand"></span>
+                    <div class="row"> 
+                        <span class="text-uppercase text-muted brand"></span>
 
                         <div class="price d-flex flex-row align-items-center">
                             @if ($productOption->stockAvailable > 0)
@@ -253,8 +266,13 @@
                                 <span class="text-danger instock-label">OUT OF STOCK</span>
                             </div>
                             @endif
+                            <a style="width:20px !important;" href="javascript:void(0);" class="mx-3 subscribe">
+                                <i class="fa-solid fav-{{ $productOption->option_id }} fa-heart {{ isset($user_buy_list_options[$productOption->option_id]) ? '' : 'text-muted' }} "
+                                    id="{{ $productOption->option_id }}" data-toggle="popover"
+                                    onclick="addToList('{{ $productOption->product_id }}', '{{ $productOption->option_id }}', '{{ isset($user_buy_list_options[$productOption->option_id]) }}')">
+                                </i>
+                            </a>
                         </div>
-
                     </div>
                     <form id="cart">
                         @csrf
@@ -368,6 +386,12 @@
                                     STOCK</span>
                             </div>
                             @endif
+                            <a style="width:20px !important;" href="javascript:void(0);" class="mx-3 subscribe">
+                                <i class="fa-solid fav-{{ $productOption->option_id }} fa-heart {{ isset($user_buy_list_options[$productOption->option_id]) ? '' : 'text-muted' }} "
+                                    id="{{ $productOption->option_id }}" data-toggle="popover"
+                                    onclick="addToList('{{ $productOption->product_id }}', '{{ $productOption->option_id }}', '{{ isset($user_buy_list_options[$productOption->option_id]) }}')">
+                                </i>
+                            </a>
                         </div>
 
                     </div>
@@ -429,6 +453,22 @@
             </div>
         </div>
     </div>
+</div>
+<div id="popover-form" class="d-none">
+    <form id="myform" class="form-inline" role="form">
+        @foreach ($lists as $list)
+            <div class="form-group">
+                <ul style="font-family: 'Poppins';font-style: normal;font-weight: 600;font-size: 14px;padding:1px;">
+                    <li style="">
+                        {{ $list->title }} &nbsp;<input type="radio" value="{{ $list->id }}"
+                            name="list_id" />
+                    </li>
+                </ul>
+            </div>
+        @endforeach
+        <button type="submit" class="btn btn-warning"
+            onclick="addToList('{{ $productOption->product_id }}', '{{ $productOption->option_id }}')">Add</button>
+    </form>
 </div>
 {{-- ipad view end --}}
 
@@ -525,4 +565,35 @@
 
         });
     });
+    function addToList(product_id, option_id, status) {
+        var list_id = $("input[name='list_id']:checked").val();
+        var option_id = option_id;
+        $.ajax({
+            url: "{{ url('/add-to-wish-list/') }}",
+            method: 'post',
+            data: {
+                "_token": "{{ csrf_token() }}",
+                product_id,
+                option_id,
+                quantity: 1,
+                list_id,
+                status,
+            },
+
+
+            success: function(success) {
+                if (success.success == true) {
+                    $('.fav-' + option_id).toggleClass('text-muted');
+                } else {
+                    Swal.fire(
+                        'Warning!',
+                        'Please make sure you are logged in and selected a company.',
+                        'warning',
+                    );
+                }
+
+            }
+        });
+        return false;
+    }
 </script>

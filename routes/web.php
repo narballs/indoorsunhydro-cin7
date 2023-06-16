@@ -59,7 +59,9 @@ Route::get('send-mail', function () {
 Route::get('/products/{id}/{slug}', [ProductController::class, 'showProductByCategory']);
 Route::get('/products/', [ProductController::class, 'showAllProducts']);
 Route::get('/product-detail/{id}/{option_id}/{slug}', [ProductController::class, 'showProductDetail']);
-Route::get('/user/', [UserController::class, 'userRegistration'])->name('user');
+Route::group(['middleware' => ['alreadyloggedin']], function () {
+    Route::get('/user/', [UserController::class, 'userRegistration'])->name('user');
+});
 Route::post('api/fetch-cities', [UserController::class, 'fetchCity']);
 Route::post('/login/', [UserController::class, 'process_login'])->name('login');
 Route::post('/user-contact/', [UserController::class, 'save_contact'])->name('save_contact');
@@ -152,7 +154,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('admin/admin-users', [UserController::class, 'adminUsers']);
     Route::get('admin/get-parent', [ContactController::class, 'getParent']);
     Route::post('admin/assign-parent-child', [ContactController::class, 'assingParentChild']);
-    Route::get('admin/user-switch/{id}', [UserController::class, 'switch_user'])->name('users.switch');
+    Route::get('admin/user-switch/{id}/{contactId}', [UserController::class, 'switch_user'])->name('users.switch');
     Route::get('admin/send-password/{id}', [UserController::class, 'send_password'])->name('users.send_password');
     Route::get('admin/go-back', [UserController::class, 'switch_user_back'])->name('users.switch_user_back');
     Route::get('admin/api-sync-logs', [LogsController::class, 'index']);
