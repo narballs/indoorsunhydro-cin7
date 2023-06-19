@@ -102,10 +102,10 @@
                     
                     <h5 class="foooter-main-head-mbl contact-us-footer mt-5 mb-4 text-uppercase">PAYMENT METHOD</h5>
                     <div class="d-flex w-100 justify-content-between">
-                        <img class="img-fluid" style="" src="/theme/paymentsImg/paypal.png">
-                        <img class="img-fluid" style="" src="/theme/paymentsImg/discover.png">
-                        <img class="img-fluid" style="" src="/theme/paymentsImg/cm.png">
-                        <img class="img-fluid" style="" src="/theme/paymentsImg/visa.png">
+                        <div class="w-25"><img class="img-fluid" style="" src="/theme/paymentsImg/paypal.png"></div>
+                        <div class="w-25"><img class="img-fluid" style="" src="/theme/paymentsImg/discover.png"></div>
+                        <div class="w-25"><img class="img-fluid" style="" src="/theme/paymentsImg/cm.png"></div>
+                        <div class="w-25"><img class="img-fluid" style="" src="/theme/paymentsImg/visa.png"></div>
                         
                     </div>
 
@@ -134,7 +134,7 @@
                 </div> --}}
             </div>
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 footer-end ">
-                <p class="mt-4">
+                <p class="">
                     Copyright @ Indoorsun Hydro. All right reserved
                 </p>
             </div>
