@@ -248,7 +248,7 @@
     <div class="row mobile-view">
         <div class="container">
             <div class="col-sm-6 m-auto">
-                {{ $products->appends(Request::all())->onEachSide(1)->links() }}
+                {{ $products->appends(Request::all())->onEachSide(0)->links() }}
             </div>
         </div>
     </div>
