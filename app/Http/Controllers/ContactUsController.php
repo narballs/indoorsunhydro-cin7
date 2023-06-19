@@ -8,14 +8,31 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\JsonResponse;
 use App\Mail\Subscribe;
 use App\Http\Requests\Users\ContactUsRequest;
+use App\Services\ZendeskService;
+use Zendesk\API\HttpClient as ZendeskClient;
 
 class ContactUsController extends Controller
 {
+    
+    // protected $zendeskService;
+
+    // public function __construct(ZendeskService $zendeskService)
+    // {
+    //     $this->zendeskService = $zendeskService;
+    // }
+    
     public function index() {
         return view('contact-us');
     }
 
     public function store(ContactUsRequest $request) {
+        $this->validate($request, [
+            'subject' => 'required',
+            'message' => 'required',
+            'name' => 'required|min:1',
+            'email' => 'required|email',
+        ]);
+
         $contact = new ContactUs([
             'name' => $request->get('name'),
             'email' => $request->get('email'),
@@ -29,6 +46,34 @@ class ContactUsController extends Controller
         $email = $query->email;
         $subject = $query->subject;
 
+        
+        $subdomain = env('ZENDESK_SUBDOMAIN'); 
+        $username = env('ZENDESK_USERNAME'); 
+        $token =  env('ZENDESK_TOKEN'); 
+        $auth = [
+            'token' => $token, 
+        ];
+        
+        $client = new ZendeskClient($subdomain);
+        $client->setAuth('basic', ['username' => $username, 'token' => $token]);
+
+        $subject = $request->input('subject');
+        $description = $request->input('message');
+        $requesterName = $request->input('name');
+        $requesterEmail = $request->input('email');
+
+        $ticketData = [
+            'subject' => $subject,
+            'description' => $description,
+            'requester' => [
+                'email' => $requesterEmail,
+                'name' => $requesterName,
+            ],
+        ];
+
+        $response = $client->tickets()->create($ticketData);
+        // $ticketId = $response->ticket->id;
+
         Mail::send('emails.subscribers',
             array(
                 'name' => $request->get('name'),
@@ -41,16 +86,7 @@ class ContactUsController extends Controller
             $message->from('wqszeeshan@gmail.com');
             $message->to($email)->subject($subject);
         });
-        // Mail::to($request->get('email'))->send(new Subscribe($request->get('email')));
-        // //     return new JsonResponse(
-        // //     [
-        // //         'success' => true, 
-        // //         'message' => "Thank you for subscribing to our email, please check your inbox"
-        // //     ], 
-        // //     200
-        // // );
-         return response()->json(['success' => true, 'created'=> true, 'msg' => 'Thank you for subscribing to our email, please check your inbox.']);
-    // return back()->with('success', 'We have received your message and would like to thank you for writing to us.');
+        return response()->json(['success' => true, 'created'=> true, 'msg' => 'Thanyou for Contacting us , We will be in touched with you very shortly.']);
     }
 }
 

@@ -32,14 +32,14 @@
 								<div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
 									<div class="form-login">
 										<div class="input-placeholder mt-3">
-											<input type="text" name="name" required="" id="name">
+											<input type="text" class="form-control" name="name" required="" id="name">
 											<div class="placeholder pl-3 mt-4 fontAwesome">
 												 Name
 											</div>
 											<div id="name-error" class="text-danger contact-us-error"></div>
 										</div>
 										<div class="input-placeholder mt-3 ">
-											<input class="contact-us-field" type="text" name="email" required=""
+											<input class="contact-us-field form-control" type="email" name="email" required=""
 												id="email">
 											<div class="placeholder pl-3 mt-4 fontAwesome">
 												 Email
@@ -47,7 +47,7 @@
 											<div id="email-error" class="text-danger contact-us-error"></div>
 										</div>
 										<div class="input-placeholder mt-3">
-											<input type="subject" name="subject" required="" id="subject">
+											<input type="text"  class="form-control" name="subject" required="" id="subject">
 											<div class="placeholder pl-3 mt-4 fontAwesome">
 												 Subject
 											</div>
@@ -58,9 +58,11 @@
 								<div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
 									<div class="input-placeholder mt-3">
 										<textarea type="text" name="message" required="" id="message"
-											class="message fontAwesome pl-4 form-control"
-											placeholder=" Message"></textarea>
-										<div id="message-error" class="text-danger contact-us-error"></div>
+											class="message fontAwesome pl-4 form-control"></textarea>
+											<div class="placeholder pl-3 mt-3 fontAwesome" id="message_place_holder">
+												 Message
+											</div>
+										<div id="message-error" class="text-danger contact-us-error message_error"></div>
 										<button type="button" name="save" class="btn-login mt-3" id="save"
 											onclick="contactUs()">SEND</button>
 									</div>
@@ -79,11 +81,12 @@
 		var name = $('#name').val();
 		var subject = $('#subject').val();
 		var message = $('#message').val();
-
+		$('#message_place_holder').addClass('d-none')
 		//$('#contact_us_spinner').show();
 		$("#spinner-global").removeClass('hide_default')
 		$('#save').prop('disabled', true);
 		$('.contact-us-error').html('');
+		
 		
 		jQuery.ajax({
 			method: 'post',
