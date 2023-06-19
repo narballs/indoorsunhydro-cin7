@@ -74,18 +74,18 @@ class ContactUsController extends Controller
         $response = $client->tickets()->create($ticketData);
         // $ticketId = $response->ticket->id;
 
-        Mail::send('emails.subscribers',
-            array(
-                'name' => $request->get('name'),
-                'email' => $request->get('email'),
-                'subject' => $request->get('subject'),
-                'message' => $request->get('message'),
+        // Mail::send('emails.subscribers',
+        //     array(
+        //         'name' => $request->get('name'),
+        //         'email' => $request->get('email'),
+        //         'subject' => $request->get('subject'),
+        //         'message' => $request->get('message'),
 
-            ), function($message) use ($contact, $email, $subject){
+        //     ), function($message) use ($contact, $email, $subject){
         
-            $message->from('wqszeeshan@gmail.com');
-            $message->to($email)->subject($subject);
-        });
+        //     $message->from('wqszeeshan@gmail.com');
+        //     $message->to($email)->subject($subject);
+        // });
         return response()->json(['success' => true, 'created'=> true, 'msg' => 'Thanyou for Contacting us , We will be in touched with you very shortly.']);
     }
 }
