@@ -4794,7 +4794,32 @@ select.list-dt:focus {
 /* mobile css */
 
 @media only screen and (max-width: 425px) and (min-width: 280px) {
+    .card_product_title {
+        height: 2rem !important;
+        margin-bottom: 0rem !important;
+    }
     
+    /* home page  */
+    .our_advantages {
+        font-family: 'Poppins';
+        font-style: normal;
+        font-weight: 600;
+        font-size: 24px;
+        line-height: 36px;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: #1A1A1A;
+    }
+    .nation_wide_para {
+        font-family: 'Poppins';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 21px;
+        text-align: center;
+        letter-spacing: 0.05em;
+        color: #75787B;
+    }
     .prd_mbl_card_bdy {
         padding: 0.25rem !important;
     }
@@ -5228,6 +5253,7 @@ select.list-dt:focus {
     .category-pra {
         font-size: 13px !important;
         font-family: 'Poppins' !important;
+        line-height: 163%;
     }
 
     /* product details page end */
@@ -6007,9 +6033,9 @@ select.list-dt:focus {
         #filter_model {
             left: 0.5rem !important;
         }
-        .button-cards {
+        /* .button-cards {
             font-size: 8.0772px !important;
-        }
+        } */
         
     }
 
@@ -6024,4 +6050,13 @@ select.list-dt:focus {
 
     /* ****************   Mobile Filter end   ********************** */
 
+}
+
+.card_product_title {
+    height: 3rem ;
+    margin-bottom: 0rem ;
+}
+
+.p_price_resp {
+    color: #DC4E41 !important;
 }

@@ -251,7 +251,7 @@
                         </div>
 
                         <div class="w-25">
-                            <span class="text-danger product-detail-price" id="product_price">
+                            <span class="product-detail-price" id="product_price">
                                 ${{number_format($retail_price,2)}}</span>
                         </div>
                     </div>
@@ -302,11 +302,11 @@
                             <div class="mt-3 p_detail_cart_row">
                                 <div style="">
                                     @if($productOption->stockAvailable > 0)
-                                    <button class="button-cards product-detail-button-cards text-uppercase ajaxSubmit_mbl" type="button" id="ajaxSubmit">
+                                    <button class="button-cards product-detail-button-cards text-uppercase ajaxSubmit_mbl w-100" type="button" id="ajaxSubmit">
                                         <a class="text-white">Add to cart</a>
                                     </button>
                                     @else
-                                    <button class="button-cards product-detail-button-cards opacity-50 text-uppercase" type="submit">
+                                    <button class="button-cards product-detail-button-cards opacity-50 text-uppercase w-100" type="submit">
                                         <a class="text-white">Add to cart</a>
                                     </button>
                                     @endif
