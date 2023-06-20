@@ -7,7 +7,7 @@
         PRODUCTS
     </p>
 </div> --}}
-<div class="row justify-content-center align-items-center" style="background-color: #008BD3;height:70px;">
+<div class="w-100 mx-0 row justify-content-center align-items-center" style="background-color: #008BD3;height:70px;">
     <p class="fw-bold fs-2 my-auto border-0 text-white text-center align-middle">
        PRODUCTS
     </p>
@@ -245,7 +245,7 @@
         @endforeach
     </div>
     
-    <div class="row mobile-view">
+    <div class="row mobile-view w-100">
         <div class="container">
             <div class="col-sm-6 m-auto">
                 {{ $products->appends(Request::all())->onEachSide(0)->links() }}

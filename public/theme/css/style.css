@@ -4795,6 +4795,59 @@ select.list-dt:focus {
 
 @media only screen and (max-width: 425px) and (min-width: 280px) {
     
+    .prd_mbl_card_bdy {
+        padding: 0.25rem !important;
+    }
+    .product_row_mobile_responsive {
+        width: 50% !important;
+        padding: 0.5rem !important;
+    }
+    .img_responsive_mbl {
+        width: 112.74px !important;
+        height: 112.74px !important;
+    }
+    .product-row-product-title {
+        font-family: 'Poppins';
+        font-style: normal;
+        font-weight: 500;
+        font-size: 10px;
+        line-height: 15px;
+        text-align: center;
+        color: #000000;
+
+    }
+    .p_price_resp {
+        margin-top: 1rem !important;
+        font-family: 'Poppins';
+        font-style: normal;
+        font-weight: 600;
+        font-size: 15.1158px;
+        line-height: 23px;
+        color: #DC4E41;
+
+    }
+    .category-cart-page {
+        font-family: 'Poppins';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 7.5579px;
+        line-height: 11px;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: #8A8A8A;
+    }
+    .prd_btn_resp {
+        font-family: 'Poppins';
+        font-style: normal;
+        font-weight: 600;
+        font-size: 10.0772px;
+        line-height: 15px;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: #FFFFFF;
+        width: 75% !important;
+
+    }
     .mbl-border-bottom {
         border: 0.544901px solid #EBEBEB !important;
     }
@@ -5337,12 +5390,16 @@ select.list-dt:focus {
         background-color: #7BC533 !important;
         color: #FFFFFF !important;
         border: none !important;
-        width: 188px !important;
-        font: Poppins !important;
         font-weight: 600 !important;
-        font-size: 16px !important;
-        height: 44px !important;
         line-height: 27px !important;
+        font-family: 'Poppins';
+        font-style: normal;
+        font-size: 10.0772px;
+        line-height: 15px;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        height: 25.19px;
+        width: 75% !important;
     }
 
     .applay-coupon-code-modal-btn {
@@ -5950,14 +6007,20 @@ select.list-dt:focus {
         #filter_model {
             left: 0.5rem !important;
         }
+        .button-cards {
+            font-size: 8.0772px !important;
+        }
+        
     }
 
     @media only screen and (min-width: 400px) and (max-width: 425px) {
         #filter_model {
             left: 2rem !important;
         }
+        
     }
 
+    
 
     /* ****************   Mobile Filter end   ********************** */
 
