@@ -86,7 +86,7 @@ class ContactUsController extends Controller
         //     $message->from('wqszeeshan@gmail.com');
         //     $message->to($email)->subject($subject);
         // });
-        return response()->json(['success' => true, 'created'=> true, 'msg' => 'Thanyou for Contacting us , We will be in touched with you very shortly.']);
+        return response()->json(['success' => true, 'created'=> true, 'msg' => "Thank you. Your request has been received. You'll get an email notification confirming a ticket has been created."]);
     }
 }
 
