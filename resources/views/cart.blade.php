@@ -365,6 +365,16 @@
             <div class="card border-0 px-0">
                 <div class="row">
                     <div class="col-md-12 mx-0">
+                        @if (Auth::check() == true && $contact->status == 0)
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                Checkout has been disabled.
+                            </div>
+                        @endif
+                        @if (session('message'))
+                            <div class="alert alert-danger">
+                                {{ session('message') }}
+                            </div>
+                        @endif
                         <div id="msform">
                             <!-- progressbar -->
                             {{-- <ul id="progressbar">
@@ -536,13 +546,21 @@
                                                         <p id="mbl_total_p" class="cart-total-checkout-page mt-0 mb-0 text-right" style="color:#E74B3B;">${{ number_format($total_including_tax, 2) }}</p>
                                                     </div>
                                                 </div>
-                                                @if (Auth::check() == true && !empty($contact->contact_id))
+                                                @if (Auth::check() == true && $contact->status == 1 && !empty($contact->contact_id))
                                                     <div class="row">
                                                         <a href="{{ url('/checkout') }}">
                                                             <button id="mbl_chk_btn" class="procedd-to-checkout mt-4  w-100">
                                                                 PROCEED TO CHECKOUT
                                                             </button>
                                                         </a>
+                                                    </div>
+                                                @elseif (Auth::check() == true && $contact->status == 0)
+                                                    <div class="alert alert-danger alert-dismissible fade show py-2" role="alert">
+                                                        <span class="d-flex justify-content-center align-items-center">
+                                                            Checkout has been disabled for this email address, please contact your
+                                                            account
+                                                            manager to re-enable checkout.
+                                                        </span>
                                                     </div>
                                                 @elseif(Auth::check() == true && empty($contact->contact_id))
                                                     <div class="row">
@@ -552,7 +570,7 @@
                                                             </button>
                                                         </a>
                                                     </div>
-                                                @elseif (Auth::check() != true)
+                                                @else
                                                     <div>
                                                         <a href="{{ url('/user/') }}">
                                                             <button id="mbl_chk_btn" class="procedd-to-checkout mt-4  w-100">

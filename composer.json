@@ -20,7 +20,8 @@
         "spatie/laravel-query-builder": "^4.0",
         "symfony/http-client": "^5.4",
         "symfony/mailgun-mailer": "^5.4",
-        "twilio/sdk": "^6.44"
+        "twilio/sdk": "^6.44",
+        "zendesk/zendesk_api_client_php": "^2.2"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
@@ -37,7 +38,8 @@
         "psr-4": {
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
-            "Database\\Seeders\\": "database/seeders/"
+            "Database\\Seeders\\": "database/seeders/",
+            "Zendesk\\API\\": "vendor/zendesk/zendesk_api_client_php/src/"
         }
     },
     "autoload-dev": {

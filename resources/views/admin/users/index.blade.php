@@ -114,6 +114,16 @@
                             <tbody>
                                 @foreach ($data as $key => $user)
                                     @foreach ($user->contact as $contact)
+                                        @php 
+                                        $contact_switch_id;
+                                        if($contact->contact_id) {
+                                            $contact_switch_id = $contact->contact_id;
+                                        
+                                        }else {
+                                            $contact_switch_id = $contact->secondary_id;
+                                        }
+                                        @endphp
+                                        
                                         <tr id="row-{{ $user->id }}" class="user-row border-bottom">
                                             <td class="d-flex user-table-items">
                                                 <span class="tabel-checkbox-user">
@@ -210,10 +220,12 @@
                                                             class="edit a_class" title="" data-toggle="tooltip"
                                                             data-original-title="Edit">Edit
                                                         </a>
-                                                        <a class="dropdown-item"href="{{ url('admin/user-switch/' . $user->id) }}"
-                                                            class="edit a_class" title="" data-toggle="tooltip"
-                                                            data-original-title="Edit">Switch User
-                                                        </a>
+                                                        @if($contact->status != 0)
+                                                            <a class="dropdown-item"href="{{ url('admin/user-switch/' . $user->id.'/'. $contact_switch_id) }}"
+                                                                class="edit a_class" title="" data-toggle="tooltip"
+                                                                data-original-title="Edit">Switch User
+                                                            </a>
+                                                        @endif
                                                         @if ($contact)
                                                             @if ($contact->secondary_contact)
                                                                 <button type="button" class="btn"

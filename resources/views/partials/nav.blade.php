@@ -198,7 +198,7 @@ $categories = NavHelper::getCategories();
                     <div class="mobile_menu_bar_cart">
                         <a href="{{ '/cart/' }}">
                             <img class="basket-icon mt-2" src="{{asset('/theme/img/icons/Cart-icon.svg')}}">
-                            <span class="cartQtymbl cart-basket d-flex align-items-center justify-content-center float-sm-end cart-counter rounded-circle " id="top_cart_quantity">
+                            <span class="cartQtymbl cart-basket d-flex align-items-center justify-content-center float-sm-end cart-counter rounded-circle " id="top_cart_quantity" style="border: 2px solid #ffffff;">
                                {{ $total_quantity }}
                             </span>
                         </a>

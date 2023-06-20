@@ -840,6 +840,7 @@
 
     function switch_company(contactId) {
         var company = $('#company_switch').val();
+        console.log(company);
         jQuery.ajax({
             url: "{{ url('/switch-company/') }}",
             method: 'POST',

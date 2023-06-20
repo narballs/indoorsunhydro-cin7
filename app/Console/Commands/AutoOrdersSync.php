@@ -45,7 +45,7 @@ class AutoOrdersSync extends Command
      * @return int
      */
     public function handle() {
-
+        
         $option = AdminSetting::where('option_name', 'auto_full_fill')->first();
         if ($option->option_value == 0) {
             return;

@@ -69,14 +69,17 @@ class UserHelper
                 'company' => $active_company
             ]);
 
-        } else {
+        } 
+        else {
             $contact = Contact::where('secondary_id', $contact_id)->where('status', '!=', 0)->first();
-            $active_contact_id = $contact->secondary_id;
-            $active_company = $contact->company;
-            Session::put([
-                'contact_id' => $active_contact_id,
-                'company' => $active_company
-            ]);
+            if (!empty($contact)) {
+                $active_contact_id = $contact->secondary_id;
+                $active_company = $contact->company;
+                Session::put([
+                    'contact_id' => $active_contact_id,
+                    'company' => $active_company
+                ]);
+            }
         }
 
         return response()->json([

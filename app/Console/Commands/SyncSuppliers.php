@@ -117,7 +117,7 @@ class SyncSuppliers extends Command
                 $errorlog->save();
             }
 
-
+            if ($api_contacts) {
 
                 foreach ($api_contacts as $api_contact) {
                     $this->info($api_contact->id);
@@ -278,9 +278,11 @@ class SyncSuppliers extends Command
                     }
                 }
 
-            $sync_log->last_synced = $current_date;
-            $sync_log->record_count = $total_record_count;
-            $sync_log->save();
+
+                $sync_log->last_synced = $current_date;
+                $sync_log->record_count = $total_record_count;
+                $sync_log->save();
+             }
         }
         
 

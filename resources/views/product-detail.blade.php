@@ -1,7 +1,12 @@
 @include('partials.header')
 @include('partials.top-bar')
 @include('partials.search-bar')
-<div class="container">
+<div class="w-100 mx-0 row justify-content-center align-items-center" style="background-color: #008BD3;height:70px;">
+    <p class="fw-bold fs-2 my-auto border-0 text-white text-center align-middle">
+       PRODUCT DETAIL
+    </p>
+</div>
+<div class="container mt-3">
     @if(session('success'))
     <div class="alert alert-success">
         {{ session('success') }}
@@ -228,7 +233,7 @@
     </form>
 </div>
 {{-- mobile view start --}}
-<div class="row bg-light mobile-view">
+<div class="row bg-light mobile-view w-100">
     <div class="container">
         <div class="row bg-white justify-content-center">
             <div class="d-flex align-items-center justify-content-center mx-1 ml-4 p_detail_image_row">
