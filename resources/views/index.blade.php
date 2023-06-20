@@ -7,7 +7,7 @@
         @include('partials.banner')
         <div class="bg-light pb-5">
             <div class="container-sm bg-light">
-                <div class="row">
+                <div class="row mx-0">
                     <div class="col-md-8 pe-0 ps-0">
                         <div class="card mt-5">
                             <div class="card-body text-center">
@@ -167,38 +167,39 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-12">
-                        <h1
-                            class="text-center our-advantages border-0 d-flex justify-content-center align-items-center">
-                            Our advantages
-                        </h1>
-                    </div>
-
-                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xs-12 mt-5 p-0">
-                        <div class="thumbnail-img">
-                            <img src="/theme/img/National shipping.png" class="img-fluid" alt="">
+                    <div class="row advantages_div">
+                        <div class="col-md-12">
+                            <h1
+                                class="text-center our-advantages border-0 d-flex justify-content-center align-items-center our_advantages">
+                                Our advantages
+                            </h1>
                         </div>
-
-                        <h4 class="thumbnail-items text-center mt-5">Nationwide Shipping</h4>
-                        <p class="thumbnail-pra mt-3 ">with multiple warehouses you can get the supplies you need
-                            delivered to
-                            your door faster</p>
-                    </div>
-                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xs-12 mt-5 p-0">
-                        <div class="thumbnail-img">
-                            <img src="/theme/img/Icon_lowest_prices.png" class="img-fluid" alt="">
+                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xs-12 mt-5 p-0">
+                            <div class="thumbnail-img">
+                                <img src="/theme/img/National shipping.png" class="img-fluid" alt="">
+                            </div>
+    
+                            <h4 class="thumbnail-items text-center mt-5">Nationwide Shipping</h4>
+                            <p class="thumbnail-pra mt-3 nation_wide_para">with multiple warehouses you can get the supplies you need
+                                delivered to
+                                your door faster</p>
                         </div>
-                        <h4 class="thumbnail-items text-center mt-5">Lowest Prices</h4>
-                        <p class="thumbnail-pra mt-3">we purchase in bulk so you don’t have to</p>
-                    </div>
-                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xs-12 mt-5 p-0">
-                        <div class="thumbnail-img">
-                            <img src="/theme/img/Icon_quality.png" class="img-fluid" alt="">
+                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xs-12 mt-5 p-0">
+                            <div class="thumbnail-img">
+                                <img src="/theme/img/Icon_lowest_prices.png" class="img-fluid" alt="">
+                            </div>
+                            <h4 class="thumbnail-items text-center mt-5">Lowest Prices</h4>
+                            <p class="thumbnail-pra mt-3 nation_wide_para">we purchase in bulk so you don’t have to</p>
                         </div>
-                        <h4 class="thumbnail-items text-center mt-5">Quality Products</h4>
-                        <p class="thumbnail-pra mt-3">we only carry products that we stand by, we honor all
-                            manufacturer
-                            warranties</p>
+                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xs-12 mt-5 p-0">
+                            <div class="thumbnail-img">
+                                <img src="/theme/img/Icon_quality.png" class="img-fluid" alt="">
+                            </div>
+                            <h4 class="thumbnail-items text-center mt-5">Quality Products</h4>
+                            <p class="thumbnail-pra mt-3 nation_wide_para">we only carry products that we stand by, we honor all
+                                manufacturer
+                                warranties</p>
+                        </div>
                     </div>
                 </div>
             </div>
