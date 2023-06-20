@@ -31,6 +31,7 @@ use \Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
 use App\Jobs\SalesOrders;
 use App\Models\Cart;
+use Illuminate\Auth\Events\Validated;
 
 class UserController extends Controller
 {
@@ -236,13 +237,12 @@ class UserController extends Controller
 
     public function userRegistration()
     {
-        if(!auth()->user()) {
+        if (!auth()->user()) {
             $data['states'] = UsState::get(["state_name", "id"]);
             return view('user-registration-second',  $data);
-        }else {
+        } else {
             return redirect()->route('my_account');
         }
-        
     }
 
     public function lost_password()
@@ -525,7 +525,6 @@ class UserController extends Controller
     {
         $user = User::latest()->first();
         $registering_email = $user->email;
-        // serach weather contact already exist;
         $existing_contacts = Contact::where('email', $registering_email)->get();
         if ($existing_contacts->isNotEmpty()) {
             foreach ($existing_contacts as $existing_contact) {
@@ -606,52 +605,10 @@ class UserController extends Controller
 
     public function my_account(Request $request)
     {
-        if ($request->ajax()) {
-            $user_id = auth()->id();
-            $companies = Contact::where('user_id', auth()->user()->id)->get();
-            $user = User::where('id', $user_id)->first();
-            $can_approve_order = $user->hasRole('Order Approver');
-            $selected_company = Session::get('company');
-
-            $custom_roles_with_company = DB::table('custom_roles')
-                ->where('user_id', $user_id)
-                ->where('company', $selected_company)
-                ->first();
-            if (!empty($custom_roles_with_company) && $custom_roles_with_company->company == $selected_company) {
-                $order_approver_for_company = true;
-            } else {
-                $order_approver_for_company = false;
-            }
-
-            $all_ids = UserHelper::getAllMemberIds($user);
-            $contact_ids = Contact::whereIn('id', $all_ids)
-                ->pluck('contact_id')
-                ->toArray();
-
-            $user_orders = ApiOrder::whereIn('memberId', $contact_ids)
-                ->with('contact')
-                ->with('apiOrderItem')
-                ->orderBy('id', 'desc')
-                ->get();
-
-
-            foreach ($user_orders as $user_order) {
-                $createdDate = $user_order->created_at;
-                $user_order->createdDate = $createdDate->format('F \  j, Y');
-            }
-
-            $response = [
-                'can_approve_order' => $can_approve_order,
-                'user_orders' => $user_orders,
-                'order_approver_for_company' => $order_approver_for_company
-            ];
-
-            return $response;
+        $user_id = auth()->id();
+        if (!auth()->user()) {
+            return redirect('/user/');
         } else {
-            $user_id = auth()->id();
-            if (!$user_id) {
-                return redirect('/user/');
-            }
             $user = User::where('id', $user_id)->first();
             $can_approve_order = $user->hasRole('Order Approver');
             $selected_company = Session::get('company');
@@ -661,9 +618,9 @@ class UserController extends Controller
                 ->toArray();
             $user_orders = ApiOrder::whereIn('memberId', $contact_ids)
                 ->with('contact')
-                ->with('apiOrderItem')
+                ->with('apiOrderItem.product')
                 ->orderBy('id', 'desc')
-                ->get();
+                ->paginate(3);
             $custom_roles_with_company = DB::table('custom_roles')
                 ->where('user_id', $user_id)
                 ->where('company', $selected_company)
@@ -673,6 +630,7 @@ class UserController extends Controller
             } else {
                 $order_approver_for_company = false;
             }
+
             $user_address = Contact::where('user_id', $user_id)->first();
             $secondary_contacts = Contact::whereIn('id', $all_ids)->get();
             $list = BuyList::where('id', 20)->with('list_products.product.options')->first();
@@ -686,14 +644,6 @@ class UserController extends Controller
             }
 
             $states = UsState::all();
-            if ($request->ajax()) {
-                $user_orders = ApiOrder::where('user_id', $user_id)->with('apiOrderItem')->get();
-                foreach ($user_orders as $user_order) {
-                    $createdDate = $user_order->created_at;
-                    $user_order->createdDate = $createdDate->format('F \  j, Y');
-                }
-                return $user_orders;
-            }
             $wishlist = BuyList::with('list_products')->where('user_id', $user_id)->first();
             return view('my-account', compact(
                 'user',
@@ -705,7 +655,6 @@ class UserController extends Controller
                 'user_orders',
                 'can_approve_order',
                 'order_approver_for_company'
-
             ));
         }
     }
@@ -718,8 +667,12 @@ class UserController extends Controller
             return redirect('/user/');
         }
         $contact_id = session()->get('contact_id');
-        $lists = BuyList::where('user_id', $user_id)->where('contact_id', $contact_id)->with('list_products.product.options.price')->where('title', 'My Favorites')->get();
-        
+        $lists = BuyList::where('user_id', $user_id)
+            ->where('contact_id', $contact_id)
+            ->with('list_products.product.options.price')
+            ->where('title', 'My Favorites')
+            ->paginate(6);
+
         $user = User::where('id', $user_id)->first();
         $all_ids = UserHelper::getAllMemberIds($user);
         $user_address = Contact::where('user_id', $user_id)->first();
@@ -744,9 +697,6 @@ class UserController extends Controller
             return $user_orders;
         }
         $wishlist = BuyList::with('list_products')->where('user_id', $user_id)->first();
-        
-        
-        
         return view('my-account.my-favorites', compact(
             'lists',
             'user',
@@ -757,11 +707,12 @@ class UserController extends Controller
             'states'
         ));
         // return $images;
-    } 
+    }
     //end
 
     //order
-    public function myOrders() {
+    public function myOrders()
+    {
         $user_id = auth()->id();
         $user = User::where('id', $user_id)->first();
         $all_ids = UserHelper::getAllMemberIds($user);
@@ -794,11 +745,8 @@ class UserController extends Controller
             $order_approver_for_company = true;
         } else {
             $order_approver_for_company = false;
-            }
-        // foreach ($user_orders as $user_order) {
-        //     $createdDate = $user_order->created_at;
-        //     $user_order->createdDate = $createdDate->format('F \  j, Y');
-        // }
+        }
+
         $states = UsState::all();
         return view('my-account.my-orders', compact(
             'user',
@@ -814,14 +762,15 @@ class UserController extends Controller
         ));
     }
     // order detail 
-    public function order_detail(Request  $request , $id) {
+    public function order_detail(Request  $request, $id)
+    {
         $user_id = Auth::id();
         if (!$user_id) {
             return redirect('/user/');
         }
         $contact_id = session()->get('contact_id');
         $lists = BuyList::where('user_id', $user_id)->where('contact_id', $contact_id)->with('list_products.product.options.price')->where('title', 'My Favorites')->get();
-        
+
         $user = User::where('id', $user_id)->first();
         $all_ids = UserHelper::getAllMemberIds($user);
         $user_address = Contact::where('user_id', $user_id)->first();
@@ -853,21 +802,27 @@ class UserController extends Controller
     }
     // address
 
-    public function address(Request  $request) {
+    public function address(Request  $request)
+    {
         $user_id = Auth::id();
         if (!$user_id) {
             return redirect('/user/');
         }
         $contact_id = session()->get('contact_id');
-        $lists = BuyList::where('user_id', $user_id)->where('contact_id', $contact_id)->with('list_products.product.options.price')->where('title', 'My Favorites')->get();
-        
+        $lists = BuyList::where('user_id', $user_id)->where('contact_id', $contact_id)
+            ->with('list_products.product.options.price')
+            ->where('title', 'My Favorites')
+            ->get();
+
         $user = User::where('id', $user_id)->first();
         $all_ids = UserHelper::getAllMemberIds($user);
         $user_address = Contact::where('user_id', $user_id)->first();
-        $secondary_contacts = Contact::whereIn('id', $all_ids)->get();
+        $secondary_contacts = Contact::whereIn('id', $all_ids)->paginate(3);
         $list = BuyList::where('id', 20)->with('list_products.product.options')->first();
         $contact = Contact::where('email', $user_address->email)->first();
         $companies = Contact::where('user_id', $user_id)->get();
+
+        $address_user = User::where('id', $user_id)->with('contact')->first();
 
         if ($contact) {
             $parent = Contact::where('contact_id', $contact->parent_id)->get();
@@ -877,24 +832,25 @@ class UserController extends Controller
         $states = UsState::all();
         return view('my-account.address', compact(
             'lists',
-            'user',
             'user_address',
             'secondary_contacts',
             'parent',
             'companies',
-            'states'
+            'states',
+            'address_user'
         ));
     }
 
     //account details
-    public function account_details(Request  $request) {
+    public function account_profile(Request  $request)
+    {
         $user_id = Auth::id();
         if (!$user_id) {
             return redirect('/user/');
         }
         $contact_id = session()->get('contact_id');
         $lists = BuyList::where('user_id', $user_id)->where('contact_id', $contact_id)->with('list_products.product.options.price')->where('title', 'My Favorites')->get();
-        
+
         $user = User::where('id', $user_id)->first();
         $all_ids = UserHelper::getAllMemberIds($user);
         $user_address = Contact::where('user_id', $user_id)->first();
@@ -902,37 +858,39 @@ class UserController extends Controller
         $list = BuyList::where('id', 20)->with('list_products.product.options')->first();
         $contact = Contact::where('email', $user_address->email)->first();
         $companies = Contact::where('user_id', $user_id)->get();
-
+        $user_profile = User::where('id', $user_id)->with('contact')->first();
         if ($contact) {
             $parent = Contact::where('contact_id', $contact->parent_id)->get();
         } else {
             $parent = "";
         }
         $states = UsState::all();
-        return view('my-account.account_details', compact(
+        return view('my-account.account_profile', compact(
             'lists',
             'user',
             'user_address',
             'secondary_contacts',
             'parent',
             'companies',
-            'states'
+            'states',
+            'user_profile'
         ));
     }
 
     //additional users
-    public function additional_users (Request  $request) {
+    public function additional_users(Request  $request)
+    {
         $user_id = Auth::id();
         if (!$user_id) {
             return redirect('/user/');
         }
         $contact_id = session()->get('contact_id');
         $lists = BuyList::where('user_id', $user_id)->where('contact_id', $contact_id)->with('list_products.product.options.price')->where('title', 'My Favorites')->get();
-        
+
         $user = User::where('id', $user_id)->first();
         $all_ids = UserHelper::getAllMemberIds($user);
         $user_address = Contact::where('user_id', $user_id)->first();
-        $secondary_contacts = Contact::whereIn('id', $all_ids)->get();
+        $secondary_contacts = Contact::whereIn('id', $all_ids)->paginate(2);
         $list = BuyList::where('id', 20)->with('list_products.product.options')->first();
         $contact = Contact::where('email', $user_address->email)->first();
         $companies = Contact::where('user_id', $user_id)->get();
@@ -1002,17 +960,22 @@ class UserController extends Controller
         return $data;
     }
 
-    public function user_addresses(Request $request)
+    public function address_user_my_account(Request $request)
     {
         $user_id = auth()->id();
         $contact_id = $request->contact_id;
-        $contact = Contact::where('user_id', $user_id)->where('contact_id', $contact_id)->orWhere('secondary_id', $contact_id)->first();
+        $contact = Contact::where('user_id', $user_id)
+            ->where('contact_id', $contact_id)
+            ->orWhere('secondary_id', $contact_id)
+            ->first();
 
         if ($contact->secondary_id) {
-            $parent_id = Contact::where('secondary_id', $contact->secondary_id)->first()->parent_id;
+            $parent_id = Contact::where('secondary_id', $contact->secondary_id)
+                ->first()->parent_id;
             $contact_id = $parent_id;
         } else {
-            $user_address = Contact::where('user_id', $user_id)->where('contact_id', $contact_id)->first();
+            $user_address = Contact::where('user_id', $user_id)
+                ->where('contact_id', $contact_id)->first();
         }
         $request->validate([
             'first_name' => 'required',
@@ -1072,21 +1035,6 @@ class UserController extends Controller
                 $contact->postCode = $request->zip;
 
                 $contact->save();
-
-                // $contact->update(
-                //     [
-                //         'firstName' => $request->first_name,
-                //         'lastName' => $request->last_name,
-                //         'address1' => $request->address1,
-                //         'address2' => $request->address2,
-                //         'company' => $request->company_name,
-                //         'state' => $request->state,
-                //         'phone' => $request->phone,
-                //         'city' => $request->town_city,
-                //         'postCode' =>$request->zip
-                //         //'email' => request('email')
-                //     ]
-                // );
             }
             return response()->json(['success' => true, 'created' => true, 'msg' => 'Address updated Successfully']);
         } else {
@@ -1128,7 +1076,7 @@ class UserController extends Controller
             Session::put('cart', $cart);
         }
         $contact_id = auth()->user()->id;
-        $contact = Contact::where('user_id', $contact_id)->where('status' , '!=', 0)->first();
+        $contact = Contact::where('user_id', $contact_id)->where('status', '!=', 0)->first();
         $companies = Contact::where('user_id', auth()->user()->id)->get();
 
         if (!empty($contact)) {
@@ -1226,6 +1174,7 @@ class UserController extends Controller
             'secondary_contact' => $secondary_contact_data,
         ]);
     }
+
     public function delete_secondary_user(Request $request)
     {
         $id = $request->id;
@@ -1267,6 +1216,7 @@ class UserController extends Controller
             ]);
         }
     }
+
     public function switch_company_select(Request $request)
     {
         $contact_id = $request->contact_id;
@@ -1290,7 +1240,6 @@ class UserController extends Controller
             'message' => 'Company Switch Select Successfully !'
         ]);
     }
-
 
     public function send_password_fornt_end($id)
     {
@@ -1514,5 +1463,29 @@ class UserController extends Controller
         Auth::login($user);
 
         return view('reset-password', compact('user'));
+    }
+
+    public function account_profile_update(Request $request)
+    {
+        $Validated = $request->validate([
+            'email' => 'required|email|unique:users,email,' . $request->id,
+            'firstName' => 'required',
+            'lastName' => 'required',
+            'phone' => 'required',
+            'password' => 'required',
+            'password_confirmation' => 'required_with:password|same:password'
+        ]);
+        $user_id = $request->id;
+        $user_profile = User::find($user_id);
+        $user_profile->email = $request->input('email');
+        $user_profile->password = Hash::make($request->input('password'));
+        $user_profile->save();
+        $user_profile_contact = Contact::where('user_id', $user_id)->first();
+        $user_profile_contact->firstName = $request->input('firstName');
+        $user_profile_contact->lastName = $request->input('lastName');
+        $user_profile_contact->phone = $request->input('phone');
+        $user_profile_contact->save();
+
+        return redirect()->back()->with('success', 'Profile Updated Successfully !');
     }
 }

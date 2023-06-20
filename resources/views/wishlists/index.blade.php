@@ -1,130 +1,118 @@
-<?php $i = 1; //dd($lists); ?>
+@php
+    $i = 1;
+@endphp
 @foreach ($lists as $list)
-    {{-- <div class="my-account-content-heading text-center mb-4">{{ $list->title }}</div> --}}
-    @if(count($list->list_products) > 0)
-    <div class="row justify-content-end" id="btn_collector">
-        <div class="col-md-8">
-            <div class="row">
-                <div class="col-md-6 my-account-content-heading text-center">
-                    {{ $list->title }}
-                </div>
+    @if (count($list->list_products) > 0)
+        <div class="row justify-content-end btn-row-selection d-none" id="Collector">
+            <div class="col-md-8">
                 <div class="col-md-6 d-flex justify-content-around">
                     <button class="btn btn-info btn-sm" id="add_selected" onclick="add_selected_to_cart()" type="button">
                         Add Selected to Cart
                     </button>
-                
+
                     <button class="btn btn-info btn-sm" id="add_all_to_cart" type="button" onclick="add_all_to_cart()">
                         Add All to Cart
                     </button>
                 </div>
             </div>
         </div>
-    </div>
-    @else
-    <div class="row" id="">
-        <h3>
-            There are no product(s) in your favorite list. 
-        </h3>
-    </div>
     @endif
-   
-    {{-- <div class="wrapper2">
-            <?php
-            $images = [];
-            foreach ($list->list_products as $list) {
-                foreach ($list->product->options as $image) {
-                    array_push($images, $image->image);
-                }
-            }
-            ?>
-            @if (!empty($images[0]))
-                <img class="img2" src="{{$images[0]}}"  style="border-radius: 15px 0px 0px 0px;max-height:193px !important; min-height:193px !important ;"/>
-            @else
-                <img class="img2" src="theme/img/greenback.png"  style="border-radius: 15px 0px 0px 0px;max-height:193px !important; min-height:193px !important ;"/>
-            @endif
-            @if (!empty($images[1]))
-                <img class="img2" src="{{$images[1]}}" style="border-radius: 0px 15px 0px 0px;max-height:193px !important ; min-height:193px !important ;position: relative ;"/>
-            @else
-                <img class="img2" src="theme/img/greenback.png" style="border-radius: 0px 15px 0px 0px;max-height:193px !important ; min-height:193px !important ;"/>
-            @endif
-            @if (!empty($images[2]))
-                <img class="img2 box-height" src="{{$images[2]}}" style="border-radius: 0px 0px 0px 0px"/>
-            @else
-                <img class="img2 box-height" src="theme/img/greenback.png" style="border-radius: 0px 0px 0px 0px"/>
-            @endif
-            @if (!empty($images[3]))
-                <img class="img2 box-height" src="{{$images[3]}}" />
-            @else
-                <img class="img2 box-height" src="theme/img/greenback.png" />
-            @endif
-            @if (!empty($images[4]))
-                <img class="img2 box-height" src="{{$images[4]}}" />
-            @else
-                <img class="img2 box-height" src="theme/img/greenback.png" />
-            @endif
-            @if (!empty($images[5]))
-                <img class="img2 box-height" src="{{$images[5]}}" style="border-radius: 0px 0px 15px 0px"/>
-            @else
-                <img class="img2 box-height" src="theme/img/greenback.png" style="border-radius: 0px 0px 0px 0px"/>
-            @endif
-        </div> --}}
-@endforeach
-@foreach ($lists as $list)
-    @foreach ($list->list_products as $product)
-        @foreach ($product->product->options as $option)
-            <div>
-                @foreach ($option->price as $price)
-                    <table class="table">
-                        <tbody>
-                            <input type="hidden" value="{{ $product->id }}" id="prd_{{ $product->id }}">
-                            <input type="hidden" value="{{ $product->product->name  }}" id="prd_name_{{ $product->id }}">
-                            <tr style="border-bottom :1px solid lightgray;" id="p_{{ $product->id }}">
-                                <td style="border:none;vertical-align: middle;">
-                                    <input type="checkbox" name="" product-id="{{$product->id}}" option-id="{{$product->option_id}}" id="check_{{$product->id}}_{{$product->option_id}}" class="single_fav_check mt-1">
-                                </td>
-                                <td style="border:none;vertical-align: middle;">
-                                    {{ $i++ }}
-                                </td>
-                                <td style="width:400px; border:none;vertical-align: middle;">
-                                    <a
-                                        href="{{ url('product-detail/' . $product->id . '/' . $product->option_id . '/' . $product->product->slug) }}">{{ $product->product->name }}
-                                    </a>
-                                </td>
-                                <td style="border:none;">
-                                    @if ($product->product->images)
-                                        <img src="{{ $option->image }}" class="" width="50px" height="50px">
-                                    @else
-                                        <img src="/theme/image_not_available.png" class="" width="50px"
-                                            height="50px">
-                                    @endif
-                                </td>
-                                <td style="border:none; vertical-align: middle;">
-                                    ${{ $product->sub_total }}
-                                </td>
+    <div>
+        <table class="table address-table-items-data m-0 ">
+            <thead>
+                <tr class="table-header-background">
+                    <td class="d-flex table-row-item">
+                        <div class="custom-control custom-checkbox tabel-checkbox">
+                            <input class="custom-control-input custom-control-input-success checkbox-table"
+                                type="checkbox" id="selectAll" value="">
+                            <label for="selectAll" class="custom-control-label"></label>
 
-                                <td style="border:none; vertical-align: middle;">
-                                    <button type="submit" style="border:none; background:none;" onclick="add_favorite_to_cart('{{$product->id}}', '{{$product->option_id}}')">
-                                        <i class="fa fa-cart-plus"></i>
-                                    </button>
-                                </td>
+                            <span class="table-row-heading-order">
+                                <i class="fas fa-arrow-up mt-1" style="font-size:14.5px ;"></i>
+                            </span>
+                        </div>
+                    </td>
+                    <td class="my_account_addresses">Product</td>
+                    <td class="my_account_addresses">Images</td>
+                    <td class="my_account_addresses">Price</td>
+                    <td class="my_account_addresses">Add To Cart</td>
+                    <td class="my_account_addresses">Actions</td>
+                </tr>
+            </thead>
+            <tbody>
+                @if (count($list->list_products) > 0)
+                    @foreach ($list->list_products as $product)
+                        @foreach ($product->product->options as $option)
+                            <div id="">
+                                @foreach ($option->price as $price)
+                                    <input type="hidden" value="{{ $product->id }}" id="prd_{{ $product->id }}">
+                                    <input type="hidden" value="{{ $product->product->name }}"
+                                        id="prd_name_{{ $product->id }}">
+                                    <tr style="border-bottom :1px solid lightgray;" id="p_{{ $product->id }}">
+                                        <td>
+                                            <div class="custom-checkbox-input tabel-checkbox">
+                                                <input type="checkbox" class="single_fav_check" name=""
+                                                    product-id="{{ $product->id }}"
+                                                    option-id="{{ $product->option_id }}"
+                                                    id="check_{{ $product->id }}_{{ $product->option_id }}"
+                                                    class="single_fav_check mt-1">
+                                                {{ $i++ }}
+                                        </td>
+                                        <td style="border:none; vertical-align: middle; width: 26rem">
+                                            <a href="{{ url('product-detail/' . $product->id . '/' . $product->option_id . '/' . $product->product->slug) }}"
+                                                class="favorite_product_name_slug">{{ $product->product->name }}
+                                            </a>
+                                        </td>
+                                        <td style="border:none">
+                                            <div class="my_favorite_product_img p-1" style="width:67px">
+                                                @if ($product->product->images)
+                                                    <img src="{{ $option->image }}" class="" height="50px"
+                                                        width="58px">
+                                                @else
+                                                    <img src="/theme/image_not_available.png" class=""
+                                                        height="50px">
+                                                @endif
+                                            </div>
 
-                                <td style="border:none; vertical-align: middle;">
-                                    <button type="button" style="background: none; border:none;"
-                                        onclick="remove_from_favorite('{{ $product->id }}')"
-                                        data-option="{{ $product->option_id }}" data-contact="{{ $list->contact_id }}"
-                                        data-user="{{ $list->user_id }}" data-list="{{ $product->list_id }}"
-                                        data-title="{{ $list->title }}">
-                                        <i class="fa fa-times-circle mt-1" type="button"
-                                            style="color: red;font-size: 18px;"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-            </div>
-        @endforeach
-    @endforeach
-@endforeach
+                                        </td>
+                                        <td style="border:none; vertical-align: middle">
+                                            <span class="favorite_product_price">
+                                                ${{ $product->sub_total }}
+                                            </span>
+                                        </td>
+                                        <td style="border:none; vertical-align: middle">
+                                            <button type="submit" style="border:none; background:none;"
+                                                onclick="add_favorite_to_cart('{{ $product->id }}', '{{ $product->option_id }}')">
+                                                <img src="/theme/img/fav_cart_icon.png" alt="">
+                                            </button>
+                                        </td>
+                                        <td style="border:none; vertical-align: middle">
+                                            <button type="button" class="btn favorite_remove_btn"
+                                                onclick="remove_from_favorite('{{ $product->id }}')"
+                                                data-option="{{ $product->option_id }}"
+                                                data-contact="{{ $list->contact_id }}"
+                                                data-user="{{ $list->user_id }}" data-list="{{ $product->list_id }}"
+                                                data-title="{{ $list->title }}">
+                                                Remove
+                                            </button>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </div>
+                        @endforeach
+                    @endforeach
+                @else
+                    <tr>
+                        <td colspan="5">
+                            <h3 class="text-center">
+                                There are no product(s) in your favorite list.
+                            </h3>
+                        </td>
+                    </tr>
+                @endif
+            </tbody>
+        </table>
+    </div>
 @endforeach
 <script>
     //main multi function 
@@ -134,7 +122,7 @@
             method: 'post',
             data: {
                 "_token": "{{ csrf_token() }}",
-                all_fav : all_fav,
+                all_fav: all_fav,
                 quantity: 1
             },
             success: function(response) {
@@ -153,11 +141,11 @@
                         var subtotal = parseFloat(price * quantity);
                         var cart_total = cart_total + subtotal;
                         var total_cart_quantity = total_cart_quantity + quantity;
-                        $('#subtotal_' + product_id).html('$'+subtotal);
+                        $('#subtotal_' + product_id).html('$' + subtotal);
                     }
                     $('#top_cart_quantity').html(total_cart_quantity);
                     $('#cart_items_quantity').html(total_cart_quantity);
-                    $('#topbar_cart_total').html('$'+parseFloat(cart_total).toFixed(2));
+                    $('#topbar_cart_total').html('$' + parseFloat(cart_total).toFixed(2));
                     var total = document.getElementById('#top_cart_quantity');
                     Swal.fire({
                         toast: true,
@@ -171,7 +159,7 @@
                 }
             }
         });
-    } 
+    }
     //add all favorites to cart
     function add_all_to_cart() {
         var all_fav = [];
@@ -191,7 +179,7 @@
     //add selected favorites to cart
     function add_selected_to_cart() {
         var selected_check = $('.single_fav_check:checked');
-        if(selected_check.length == 0) {
+        if (selected_check.length == 0) {
             Swal.fire({
                 toast: true,
                 icon: 'error',
@@ -201,8 +189,7 @@
                 position: 'top',
                 timerProgressBar: true
             });
-        }
-        else {
+        } else {
             var all_fav = [];
             selected_check.each(function() {
                 if ($(this).is(':checked')) {
@@ -222,7 +209,7 @@
             }, 1000);
         }
     }
-    
+
     function remove_from_favorite(id) {
         var product_buy_list_id = id;
         var option_id = $(this).attr('data-option');
@@ -259,7 +246,7 @@
                 "_token": "{{ csrf_token() }}",
                 p_id: id,
                 option_id: option_id,
-                quantity: 1 , 
+                quantity: 1,
             },
             success: function(response) {
                 if (response.status == 'success') {
@@ -277,14 +264,15 @@
                         var subtotal = parseFloat(price * quantity);
                         var cart_total = cart_total + subtotal;
                         var total_cart_quantity = total_cart_quantity + quantity;
-                        $('#subtotal_' + product_id).html('$'+subtotal);
-                        var product_name = document.getElementById('prd_name_'+ id).value;
+                        $('#subtotal_' + product_id).html('$' + subtotal);
+                        var product_name = document.getElementById('prd_name_' + id).value;
                     }
-                    
+
                     Swal.fire({
                         toast: true,
                         icon: 'success',
-                        title: quantity + ' X ' + document.getElementById('prd_name_'+ id).value + ' added to your cart',
+                        title: quantity + ' X ' + document.getElementById('prd_name_' + id).value +
+                            ' added to your cart',
                         timer: 3000,
                         showConfirmButton: false,
                         position: 'top',
@@ -292,10 +280,11 @@
                     });
                 }
                 $('#top_cart_quantity').html(total_cart_quantity);
-                
+
                 $('#cart_items_quantity').html(total_cart_quantity);
-                $('#topbar_cart_total').html('$'+parseFloat(cart_total).toFixed(2));
+                $('#topbar_cart_total').html('$' + parseFloat(cart_total).toFixed(2));
                 var total = document.getElementById('#top_cart_quantity');
-        }});
+            }
+        });
     }
 </script>

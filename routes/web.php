@@ -70,7 +70,7 @@ Route::get('/my-account/', [UserController::class, 'my_account'])->name('my_acco
 Route::get('/my-qoutes/', [UserController::class, 'my_qoutes'])->name('my_qoutes');
 Route::get('/my-qoutes-details/{id}', [UserController::class, 'my_qoutes_details'])->name('my_qoutes_details');
 Route::get('/my-qoute-edit/{id}', [UserController::class, 'my_qoute_edit'])->name('my_qoute_edit');
-Route::get('/user-addresses/', [UserController::class, 'user_addresses'])->name('user_addresses');
+Route::get('/my-account-user-addresses/', [UserController::class, 'address_user_my_account'])->name('user_addresses_my_account');
 Route::get('/user-order-detail/{id}', [UserController::class, 'user_order_detail'])->name('user-order-detail');
 Route::post('/register/basic/create', [UserController::class, 'process_signup'])->name('register');
 Route::post('/switch-company/', [UserController::class, 'switch_company'])->name('switch-company');
@@ -100,11 +100,12 @@ Route::post('/create-list/', [ProductController::class, 'createList']);
 Route::post('/delete/favorite/product', [ProductController::class, 'delete_favorite_product']);
 Route::get('/child/categories/{parent_id}', [ProductController::class, 'get_child_categories']);
 Route::group(['prefix' => 'my-account/'], function () {
-    Route::get('my-favorites', [UserController::class, 'myFavorites'])->name('myFavorites');
+    Route::get('my-favorites', [UserController::class, 'myFavorites'])->name('my_favorites');
     Route::get('my-orders', [UserController::class, 'myOrders'])->name('myOrders');
     Route::get('my-order-detail/{id}', [UserController::class, 'order_detail'])->name('order_detail');
-    Route::get('address/', [UserController::class, 'address'])->name('address');
-    Route::get('account-details/', [UserController::class, 'account_details'])->name('account_details');
+    Route::get('address/', [UserController::class, 'address'])->name('my_account_address');
+    Route::get('account-profile/', [UserController::class, 'account_profile'])->name('account_profile');
+    Route::post('account-profile/update', [UserController::class, 'account_profile_update'])->name('account_profile_update');
     Route::get('additional-users', [UserController::class, 'additional_users'])->name('additional_users');
 });
 
@@ -160,9 +161,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('admin/api-sync-logs', [LogsController::class, 'index']);
 
     Route::get('admin/daily_api_logs', [DailyApiLogController::class, 'index']);
-    
-    
-    
+
+
+
     Route::get('admin/logout', function () {
         Auth::logout();
         Session::forget('logged_in_as_another_user');
