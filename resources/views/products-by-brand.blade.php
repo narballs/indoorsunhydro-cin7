@@ -347,7 +347,7 @@
                   <h5 class="card-title" style="font-weight: 500;
                            font-size: 16px;"><a
                         href="{{ url('product-detail/'.$product->id.'/'.$option->option_id.'/'.$product->slug) }}"
-                        id="product_name_{{$product->id}}">{{ \Illuminate\Support\Str::limit($product->name, 15) }}</a></h5>
+                        id="product_name_{{$product->id}}">{{ \Illuminate\Support\Str::limit($product->name, 10) }}</a></h5>
                   <div class="mt-auto">
                      <p class="text-uppercase mb-0 text-center text-danger">${{$product->retail_price}}</p>
                      <button class="button-cards col w-100 mt-2" style="max-height: 46px;"
