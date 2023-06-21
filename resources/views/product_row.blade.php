@@ -1,4 +1,4 @@
-<div class="col-md-6 col-lg-3 d-flex align-self-stretch mt-3 mb-1 product_row_mobile_responsive">
+<div class="col-md-6 col-lg-3 d-flex align-self-stretch mt-2 product_row_mobile_responsive pt-1">
     <div class="p-2 shadow-sm  w-100 h-100" style="background-color: #fff;
     background-clip: border-box;
     border: 1px solid rgba(0,0,0,.125);
@@ -24,9 +24,9 @@
             </a>
         @endif
         <div class="card-body d-flex flex-column text-center mt-2 prd_mbl_card_bdy">
-            <h5 class="card-title" style="font-weight: 500;font-size: 16px;" id="product_name_{{ $product->id }}">
+            <h5 class="card-title card_product_title" style="font-weight: 500;font-size: 16px;" id="product_name_{{ $product->id }}">
                 <a title="{{$product->name}}" class="product-row-product-title" href="{{ url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug) }}">
-                    {{ \Illuminate\Support\Str::limit($product->name, 15) }}</a>
+                    {{ \Illuminate\Support\Str::limit($product->name, 33) }}</a>
             </h5>
             <input type="hidden" name="quantity" value="1" id="quantity">
             <input type="hidden" name="p_id" id="p_{{ $product->id }}" value="{{ $product->id }}">
@@ -75,24 +75,24 @@
                     }
                 }
                 ?>
-                <h4 text="{{ $retail_price }}" class="text-uppercase mb-0 text-center text-danger p_price_resp">
+                <h4 text="{{ $retail_price }}" class="text-uppercase mb-0 text-center p_price_resp mt-0">
                     ${{ number_format($retail_price, 2) }}</h4>
                 @if ($product->categories)
-                    <p class="category-cart-page mt-4" title="{{$product->categories->name}}">
+                    <p class="category-cart-page  mt-2 mb-2" title="{{$product->categories->name}}">
                         
                         Category:&nbsp;&nbsp;{{ \Illuminate\Support\Str::limit($product->categories->name, 4) }}
                     </p>
                 @else
-                    <p class="category-cart-page mt-4">
+                    <p class="category-cart-page mt-2 mb-2">
                         Category:&nbsp;&nbsp;Unassigned
                     </p>
                 @endif
                 @if ($product->stockAvailable > 0 || $option->stockAvailable > 0)
-                    <button class="prd_btn_resp ajaxSubmit button-cards col w-100 mt-2" type="submit" style="max-height: 46px;"
+                    <button class="prd_btn_resp ajaxSubmit button-cards col w-100 mt-2 mb-1" type="submit" style="max-height: 46px;"
                         id="ajaxSubmit_{{ $product->id }}"
                         onclick="updateCart('{{ $product->id }}', '{{ $option->option_id }}')">Add to cart</button>
                 @else
-                    <button class="prd_btn_resp ajaxSubmit text-white bg-danger bg-gradient button-cards col w-100 autocomplete=off"
+                    <button class="prd_btn_resp ajaxSubmit mb-2 text-white bg-danger bg-gradient button-cards col w-100 autocomplete=off"
                         tabindex="-1" type="submit" style="max-height: 46px;" id="ajaxSubmit_{{ $product->id }}"
                         disabled onclick="return updateCart('{{ $product->id }}')">Out of Stock</button>
                 @endif

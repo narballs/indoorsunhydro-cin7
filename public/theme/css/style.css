@@ -4797,18 +4797,48 @@ select.list-dt:focus {
 /* mobile css */
 
 @media only screen and (max-width: 425px) and (min-width: 280px) {
-    
+    .card_product_title {
+        height: 2rem !important;
+        margin-bottom: 0rem !important;
+    }
+
+    /* home page  */
+    .our_advantages {
+        font-family: 'Poppins';
+        font-style: normal;
+        font-weight: 600;
+        font-size: 24px;
+        line-height: 36px;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: #1A1A1A;
+    }
+
+    .nation_wide_para {
+        font-family: 'Poppins';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 21px;
+        text-align: center;
+        letter-spacing: 0.05em;
+        color: #75787B;
+    }
+
     .prd_mbl_card_bdy {
         padding: 0.25rem !important;
     }
+
     .product_row_mobile_responsive {
         width: 50% !important;
         padding: 0.5rem !important;
     }
+
     .img_responsive_mbl {
         width: 112.74px !important;
         height: 112.74px !important;
     }
+
     .product-row-product-title {
         font-family: 'Poppins';
         font-style: normal;
@@ -4819,6 +4849,7 @@ select.list-dt:focus {
         color: #000000;
 
     }
+
     .p_price_resp {
         margin-top: 1rem !important;
         font-family: 'Poppins';
@@ -4829,6 +4860,7 @@ select.list-dt:focus {
         color: #DC4E41;
 
     }
+
     .category-cart-page {
         font-family: 'Poppins';
         font-style: normal;
@@ -4839,6 +4871,7 @@ select.list-dt:focus {
         text-transform: uppercase;
         color: #8A8A8A;
     }
+
     .prd_btn_resp {
         font-family: 'Poppins';
         font-style: normal;
@@ -4851,26 +4884,33 @@ select.list-dt:focus {
         width: 75% !important;
 
     }
+
     .mbl-border-bottom {
         border: 0.544901px solid #EBEBEB !important;
     }
+
     .login-inputMbl {
         background: #F5F5F5 !important;
         border: 0.544901px solid #EBEBEB !important;
     }
+
     .remember-me {
         width: 50% !important;
     }
+
     .lost_pas_div {
         width: 50% !important;
         text-align: right !important;
     }
+
     .mobile_footer_set {
         margin-top: 8rem !important;
-    } 
+    }
+
     .main_image_mbl {
         height: 30rem !important;
     }
+
     .filter_heading_mbl {
         font-family: 'Poppins' !important;
         font-style: normal !important;
@@ -5231,6 +5271,7 @@ select.list-dt:focus {
     .category-pra {
         font-size: 13px !important;
         font-family: 'Poppins' !important;
+        line-height: 163%;
     }
 
     /* product details page end */
@@ -5500,7 +5541,7 @@ select.list-dt:focus {
         line-height: 36px;
         letter-spacing: 0.05em;
         text-transform: uppercase;
-         color: #131313;
+        color: #131313;
 
     }
 
@@ -5556,7 +5597,7 @@ select.list-dt:focus {
         width: 90% !important;
         height: 355px !important;
         left: 5%;
-        
+
     }
 
     .login-show input[type="text"],
@@ -5579,8 +5620,8 @@ select.list-dt:focus {
     }
 
     .formemail-registration-check-label {
-        font-family: 'Poppins'!important;
-        font-style: normal!important;
+        font-family: 'Poppins' !important;
+        font-style: normal !important;
         font-weight: 500 !important;
         font-size: 11px !important;
         line-height: 16px !important;
@@ -5751,6 +5792,7 @@ select.list-dt:focus {
         font-size: 11px;
         line-height: 16px;
     }
+
     .mbl-reme-check {
         width: 17px !important;
         height: 17px !important;
@@ -6010,696 +6052,31 @@ select.list-dt:focus {
         #filter_model {
             left: 0.5rem !important;
         }
-        .button-cards {
+
+        /* .button-cards {
             font-size: 8.0772px !important;
-        }
-        
+        } */
+
     }
 
     @media only screen and (min-width: 400px) and (max-width: 425px) {
         #filter_model {
             left: 2rem !important;
         }
-        
+
     }
 
-    
+
 
     /* ****************   Mobile Filter end   ********************** */
 
 }
 
-/* my account page css start*/
-.nav-tabs .nav-link {
-    border: 1px solid #dee2e6 !important;
-    border-top-left-radius: 0.25rem !important;
-    border-top-right-radius: 0.25rem !important;
-    font-family: 'Poppins' !important;
-    font-style: normal !important;
-    font-weight: 400 !important;
-    font-size: 18px !important;
-    line-height: 26px !important;
-    color: #989898 !important;
+.card_product_title {
+    height: 3rem;
+    margin-bottom: 0rem;
 }
 
-.nav-tabs .nav-link.active {
-    background-color: #F5F5F5 !important;
-    border-color: #dee2e6 #dee2e6 #fff;
-    color: #000000 !important;
-    border-radius: 0px !important;
-    font-family: 'Poppins' !important;
-    font-style: normal !important;
-    font-weight: 500 !important;
-    font-size: 18px !important;
-    line-height: 26px !important;
-    /* identical to box height, or 143% */
-
-
-    color: #242424;
-}
-
-.nav-tabs {
-    border-bottom: none !important;
-}
-
-.search_row_my_account_page {
-    border-radius: 8.8914px;
-    height: 49px !important;
-    display: flex;
-    justify-content: space-between;
-    margin-top: 12px !important;
-    align-items: center !important;
-
-}
-
-.my_account_search {
-    background: #FFFFFF;
-    border: 1.29139px solid #E1E1E1;
-    border-radius: 6px !important;
-    height: 40px !important;
-    margin-top: 4px !important;
-}
-
-.has-search .form-control {
-    padding-left: 2.375rem;
-}
-
-.has-search .form-control-feedback {
-    position: absolute;
-    z-index: 2;
-    display: block;
-    width: 2.375rem;
-    height: 2.375rem;
-    line-height: 2.375rem;
-    text-align: center;
-    pointer-events: none;
-    color: #aaa;
-}
-
-.my_account_search_btn {
-    background: #7BC533;
-    box-shadow: 0px 1.41191px 2.82382px rgba(16, 24, 40, 0.05);
-    border-radius: 6px !important;
-    font-family: 'Poppins' !important;
-    font-style: normal !important;
-    font-weight: 500 !important;
-    font-size: 18px !important;
-    line-height: 26px !important;
-    color: #FFFFFF !important;
-}
-
-.total_order_my_account {
-    font-family: 'Poppins';
-    font-style: normal;
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 24px;
-    display: flex;
-    align-items: center;
-    color: #131313;
-}
-
-.placed_in_my_account {
-    font-weight: 300 !important;
-}
-
-.select_months_my_account {
-    margin-top: -7px !important;
-    margin-left: 13px !important;
-    font-style: normal !important;
-    font-weight: 400 !important;
-    font-size: 14px !important;
-    line-height: 24px !important;
-    letter-spacing: -0.006em !important;
-    color: #252C32 !important;
-}
-
-.my_account_order_card {
-    background: #FFFFFF !important;
-    border: 1.23724px solid #EAECF0 !important;
-    border-radius: 7.42347px !important;
-}
-
-.order_place_my_account {
-    font-family: 'Poppins' !important;
-    font-style: normal !important;
-    font-weight: 400 !important;
-    font-size: 14.8469px !important;
-    line-height: 25px !important;
-    color: #7D7D7D !important;
-}
-
-.order_date_my_account {
-    font-weight: 500 !important;
-}
-
-.total_price_my_account {
-    color: #008BD3 !important;
-    font-weight: 500 !important;
-}
-
-.shipping_to_my_account {
-    font-weight: 500 !important;
-    color: #008BD3 !important;
-
-}
-
-.order_number_my_account {
-    font-weight: 500 !important;
-}
-
-.picked_up_date {
-    font-family: 'Poppins' !important;
-    font-style: normal !important;
-    font-weight: 600 !important;
-    font-size: 20px !important;
-    line-height: 30px !important;
-    display: flex !important;
-    align-items: center !important;
-    color: #242424 !important;
-
-}
-
-.buy_agin {
-    font-family: 'Poppins' !important;
-    font-style: normal !important;
-    font-weight: 500 !important;
-    font-size: 20px !important;
-    line-height: 30px !important;
-    display: flex !important;
-    align-items: center !important;
-    color: #242424 !important;
-}
-
-.my_account_img {
-    height: 50px !important;
-    width: 100px !important;
-}
-
-.my_account_images {
-    height: 91px !important;
-    width: 100px !important;
-}
-
-.img_my_account_order {
-    background-color: #E1E1E1 !important;
-}
-
-.my_account_total_items_listing {
-    font-family: 'Poppins';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 20px;
-    line-height: 25px;
-    color: #242424;
-}
-
-.all_items_to_cart_btn {
-    background: #7BC533 !important;
-    box-shadow: 0px 2.47449px 3.71173px rgba(0, 0, 0, 0.08) !important;
-    border-radius: 7.42347px !important;
-    font-family: 'Poppins' !important;
-    font-style: normal !important;
-    font-weight: 500 !important;
-    font-size: 14px !important;
-    line-height: 21px !important;
-    align-items: center !important;
-    text-align: center !important;
-    color: #FFFFFF !important;
-    width: 201px !important;
-}
-
-.my_account_view_order_btn {
-    background: #FFFFFF !important;
-    border: 1.23724px solid #DDDDDD !important;
-    box-shadow: 0px 2.47449px 3.71173px rgba(0, 0, 0, 0.08) !important;
-    border-radius: 7.42347px !important;
-    font-family: 'Poppins' !important;
-    font-style: normal !important;
-    font-weight: 400 !important;
-    font-size: 14px !important;
-    line-height: 21px !important;
-    align-items: center !important;
-    text-align: center !important;
-    color: #000000 !important;
-    width: 201px !important;
-}
-
-.track_package_cart_btn {
-    background: #7BC533 !important;
-    box-shadow: 0px 2.47449px 3.71173px rgba(0, 0, 0, 0.08) !important;
-    border-radius: 7.42347px !important;
-    font-family: 'Poppins' !important;
-    font-style: normal !important;
-    font-weight: 500 !important;
-    font-size: 14px !important;
-    line-height: 21px !important;
-    align-items: center !important;
-    text-align: center !important;
-    color: #FFFFFF !important;
-    width: 201px !important;
-}
-
-.return_or_replace_items_btn {
-    background: #FFFFFF !important;
-    border: 1.23724px solid #DDDDDD !important;
-    box-shadow: 0px 2.47449px 3.71173px rgba(0, 0, 0, 0.08) !important;
-    border-radius: 7.42347px !important;
-    font-family: 'Poppins' !important;
-    font-style: normal !important;
-    font-weight: 400 !important;
-    font-size: 14px !important;
-    line-height: 21px !important;
-    align-items: center !important;
-    text-align: center !important;
-    color: #000000 !important;
-    width: 201px !important;
-}
-
-.arriving_wednesday_my_account {
-    font-family: 'Poppins';
-    font-style: normal;
-    font-weight: 600;
-    font-size: 20px;
-    line-height: 30px;
-    display: flex;
-    align-items: center;
-    color: #008BD3;
-}
-
-.delivery_estimate_date_my_account {
-    font-family: 'Poppins';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 18px;
-    line-height: 27px;
-    display: flex;
-    align-items: center;
-    color: #7D7D7D;
-}
-
-.my_account_product_name {
-    font-family: 'Poppins';
-    font-style: normal;
-    font-weight: 500;
-    font-size: 20px;
-    line-height: 30px;
-    display: flex;
-    align-items: center;
-    color: #131313;
-}
-
-.my_account_buy_it_again {
-    background: #7BC533 !important;
-    box-shadow: 0px 2.47492px 3.71237px rgba(0, 0, 0, 0.08) !important;
-    border-radius: 6px !important;
-    font-family: 'Poppins' !important;
-    font-style: normal !important;
-    font-weight: 500 !important;
-    font-size: 14px !important;
-    line-height: 21px !important;
-    align-items: center !important;
-    text-align: center !important;
-    color: #FFFFFF !important;
-    width: 145px !important;
-}
-
-.my_account_buy_agin_heading {
-    font-family: 'Poppins';
-    font-style: normal;
-    font-weight: 500;
-    font-size: 20px;
-    line-height: 30px;
-    display: flex;
-    align-items: center;
-    color: #242424;
-}
-
-.my_account_buy_again_product_name {
-    font-family: 'Poppins';
-    font-style: normal;
-    font-weight: 500;
-    font-size: 14.6693px;
-    line-height: 22px;
-    color: #000000;
-}
-
-.my_account_total_price_buy_again {
-    font-family: 'Poppins';
-    font-style: normal;
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 24px;
-    color: #DC4E41;
-}
-
-.my_account_buy_again_category_name {
-    font-family: 'Poppins';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 11.002px;
-    line-height: 17px;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: #8A8A8A;
-}
-
-.buy_again_add_to_cart_btn {
-    background: #7BC533 !important;
-    box-shadow: 0px 2.47492px 3.71237px rgba(0, 0, 0, 0.08) !important;
-    border-radius: 6px !important;
-    font-family: 'Poppins' !important;
-    font-style: normal !important;
-    font-weight: 500 !important;
-    font-size: 14px !important;
-    line-height: 21px !important;
-    /* display: flex; */
-    align-items: center !important;
-    text-align: center !important;
-    color: #FFFFFF !important;
-}
-
-.account_detais_profile {
-    font-family: 'Poppins';
-    font-style: normal;
-    font-weight: 500;
-    font-size: 28px;
-    line-height: 65px;
-    letter-spacing: -0.022em;
-    color: #242424;
-}
-
-.my_profile_form {
-    background: #FFFFFF !important;
-    border: 1.00119px solid #E1E1E1 !important;
-    box-shadow: 0px 1.00119px 2.00238px rgba(16, 24, 40, 0.05) !important;
-    border-radius: 6px !important;
-    font-family: 'Poppins' !important;
-    font-style: normal !important;
-    font-weight: 400 !important;
-    font-size: 18px !important;
-    line-height: 24px !important;
-    color: #828282 !important;
-}
-
-.my_profile_form_label {
-    font-family: 'Poppins' !important;
-    font-style: normal !important;
-    font-weight: 400 !important;
-    font-size: 18px !important;
-    line-height: 24px !important;
-    color: #242424 !important;
-}
-
-.my_profile_form::placeholder {
-    font-family: 'Poppins' !important;
-    font-style: normal !important;
-    font-weight: 400 !important;
-    font-size: 18px !important;
-    line-height: 24px !important;
-    color: #828282 !important;
-}
-
-.profile_save_changes {
-    background: #7CC633 !important;
-    border: 1.00119px solid #7CC633 !important;
-    box-shadow: 0px 1.00119px 2.00238px rgba(16, 24, 40, 0.05) !important;
-    border-radius: 6px !important;
-    font-family: 'Poppins' !important;
-    font-style: normal !important;
-    font-weight: 500 !important;
-    font-size: 18px !important;
-    line-height: 24px !important;
-    color: #FFFFFF !important;
-}
-
-.my_account_default_address {
-    font-family: 'Poppins' !important;
-    font-style: normal !important;
-    font-weight: 500 !important;
-    font-size: 27.2886px !important;
-    line-height: 65px !important;
-    letter-spacing: -0.022em !important;
-    color: #242424 !important;
-}
-
-.default_billing_address {
-    font-family: 'Poppins' !important;
-    font-style: normal !important;
-    font-weight: 500 !important;
-    font-size: 20.4664px !important;
-    line-height: 31px !important;
-    color: #242424 !important;
-}
-
-.my_account_address_items {
-    font-family: 'Poppins' !important;
-    font-style: normal !important;
-    font-weight: 400 !important;
-    font-size: 19px !important;
-    line-height: 34px !important;
-    color: #242424 !important;
-    margin-bottom: 0px !important;
-}
-
-.change_billing_address_btn {
-    font-family: 'Poppins' !important;
-    font-style: normal !important;
-    font-weight: 400 !important;
-    font-size: 19px !important;
-    align-items: center !important;
-    color: #006FBE !important;
-}
-
-.change_billing_address_btn:focus {
-    outline: none !important;
-    box-shadow: none !important;
-}
-
-.mobileFormat {
-    font-family: 'Poppins' !important;
-    font-style: normal !important;
-    font-weight: 400 !important;
-    font-size: 19px !important;
-    line-height: 34px !important;
-    color: #006FBE !important;
-}
-
-.my_account_add_a_new_address {
-    font-family: 'Poppins' !important;
-    font-style: normal !important;
-    font-weight: 400 !important;
-    font-size: 18px !important;
-    line-height: 27px !important;
-    letter-spacing: -0.006em;
-    color: #525252 !important;
-    background: #FBFBFB !important;
-    border: 1.13957px solid #EAECF0 !important;
-    border-radius: 6.83745px !important;
-}
-
-.additional_address_entries {
-    font-family: 'Poppins' !important;
-    font-style: normal !important;
-    font-weight: 500 !important;
-    font-size: 27.2886px !important;
-    line-height: 65px !important;
-    letter-spacing: -0.022em !important;
-    color: #242424 !important;
-}
-
-.table-header-background {
-    background-color: #F9F9F9 !important;
-    font-family: 'Poppins', sans-serif !important;
-    font-style: normal;
-    font-weight: 500;
-    font-size: 12.4108px;
-    line-height: 17px;
-    color: #525252;
-    border-bottom: 0.944079px solid #EAECF0 !important;
-}
-
-.custom-control-input-success:checked~.custom-control-label::before {
-    border-color: #7BC533 !important;
-    background-color: #7BC533 !important;
-}
-
-.custom-control-label::after {
-    position: absolute;
-    top: 0.25rem;
-    left: 0;
-    display: block;
-    width: 1rem;
-    height: 1rem;
-    content: "";
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-size: 50% 50%;
-    background: #FFFFFF !important;
-    border: 1.28813px solid #D0D5DD !important;
-    border-radius: 4.72877px !important;
-}
-
-.my_account_addresses {
-    font-family: 'Poppins' !important;
-    font-style: normal !important;
-    font-weight: 400 !important;
-    font-size: 18px !important;
-    line-height: 23px !important;
-    color: #242424 !important;
-}
-
-.my_account_all_items {
-    font-family: 'Poppins' !important;
-    font-style: normal !important;
-    font-weight: 400 !important;
-    font-size: 18px !important;
-    line-height: 26px !important;
-    color: #828282 !important;
-}
-
-.table td,
-.table th {
-    padding: 0.75rem;
-    vertical-align: top;
-    border-top: none !important;
-}
-
-/* pagination css */
-.previous_btn {
-    justify-content: flex-start !important;
-    padding-left: 30px !important;
-    margin-top: 30px !important;
-}
-
-.order_page_number {
-    display: flex;
-    justify-content: center !important;
-    margin-top: 30px !important;
-
-}
-
-.prev_btn_css {
-    width: 109.87px;
-    height: 34.11px;
-    background: #FFFFFF;
-    border: 0.944079px solid #D7D7D7 !important;
-    box-shadow: 0px 0.944079px 1.88816px rgba(16, 24, 40, 0.05) !important;
-    border-radius: 4px !important;
-    padding: 0.2rem !important;
-    margin-left: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.next_btn_css {
-    width: 75.87px !important;
-    height: 34.11px;
-    background: #FFFFFF;
-    border: 0.944079px solid #D7D7D7 !important;
-    box-shadow: 0px 0.944079px 1.88816px rgba(16, 24, 40, 0.05) !important;
-    border-radius: 4px !important;
-    padding: 0.2rem !important;
-}
-
-.my-active>span {
-    background: rgba(124, 198, 51, 0.17) !important;
-    border-radius: 7.55263px !important;
-    padding: 0.6rem 1rem;
-    color: #7CC633;
-    font-style: normal;
-    font-weight: 500;
-    font-size: 13.2171px;
-    line-height: 19px;
-}
-
-.non_active_page_number {
-    font-style: normal;
-    font-weight: 500;
-    font-size: 13.2171px;
-    line-height: 19px;
-    color: #828282;
-}
-
-.prev_next_btn {
-    font-family: 'Poppins' !important;
-    font-style: normal !important;
-    font-weight: 500 !important;
-    font-size: 13.2171px !important;
-    line-height: 19px !important;
-    color: #4B4B4B !important;
-}
-
-ul.pager>.main-row>.pagination>li {
-    padding: 5px;
-}
-
-.next_btn {
-    display: flex;
-    justify-content: end !important;
-    padding-right: 30px !important;
-    margin-top: 30px !important;
-}
-
-.table-row-item {
-    padding-left: 25px !important;
-}
-
-.address-table-items-data>tbody {
-    border-top: none !important;
-    padding: 10px !important;
-}
-
-.my_account_users_heading {
-    font-family: 'Poppins' !important;
-    font-style: normal !important;
-    font-weight: 500 !important;
-    font-size: 27.0833px !important;
-    line-height: 65px !important;
-    letter-spacing: -0.022em !important;
-    color: #242424 !important;
-}
-
-.custom-checkbox-input {
-    padding-left: 0.938rem !important;
-    padding-bottom: 0px !important;
-    padding-top: 0.938rem !important;
-}
-
-.favorite_product_name_slug {
-    font-family: 'Poppins' !important;
-    font-style: normal !important;
-    font-weight: 500 !important;
-    font-size: 1.125rem !important;
-    line-height: 1.688rem !important;
-    color: #008BD3 !important;
-}
-
-.favorite_product_price {
-    font-family: 'Poppins' !important;
-    font-style: normal;
-    font-weight: 400;
-    font-size: 1.194rem !important;
-    line-height: 1.625rem !important;
-    text-align: center;
-    color: #828282 !important;
-}
-
-.favorite_remove_btn {
-    font-family: 'Poppins';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 1.194rem !important;
-    line-height: 1.625rem !important;
-    text-align: center;
+.p_price_resp {
     color: #DC4E41 !important;
-}
-
-.my_favorite_product_img {
-    background-color: #EAECF0 !important;
-}
-
-.custom-checkbox .custom-control-input:checked~.custom-control-label::after {
-    background-color: #7BC533 !important;
 }
