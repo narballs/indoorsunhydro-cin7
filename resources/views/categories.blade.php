@@ -257,8 +257,12 @@
       @include('product_row')
       @endforeach
       @endforeach
-      {{$products->appends(Request::all())->links()}}
+      <div class=" w-100 justify-content-center p-2 mt-3">
+         {{ $products->appends(Request::all())->onEachSide(1)->links('pagination.front_custom_pagination') }}
+      </div>
+      
    </div>
+   
    
 </div>
 {{-- moible view end --}}

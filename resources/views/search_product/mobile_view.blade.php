@@ -102,14 +102,17 @@
       @include('product_row')
       @endforeach
       @endforeach
+      <div class=" w-100 justify-content-center p-2 mt-3">
+         {{ $products->appends(Request::all())->onEachSide(1)->links('pagination.front_custom_pagination') }}
+      </div>
    </div>
-   <div class="row mobile-view">
+   {{-- <div class="row mobile-view">
       <div class="container">
          <div class="col-md-6">
             {{ $products->appends(Request::all())->onEachSide(1)->links() }}
          </div>
       </div>
-   </div>
+   </div> --}}
 </div>
 
 
