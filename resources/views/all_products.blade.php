@@ -7,7 +7,7 @@
         PRODUCTS
     </p>
 </div> --}}
-<div class="row justify-content-center align-items-center" style="background-color: #008BD3;height:70px;">
+<div class="w-100 mx-0 row justify-content-center align-items-center" style="background-color: #008BD3;height:70px;">
     <p class="fw-bold fs-2 my-auto border-0 text-white text-center align-middle">
        PRODUCTS
     </p>
@@ -124,11 +124,12 @@
 
 {{-- moible view --}}
 <div class="container mobile-view">
-    <div class="">
+    <div class="row mt-3">
         <p class="d-flex justify-content-start align-items-center mb-0">
             <button class="filler-and-sort btn  filler-and-sort p-0 filterMblbtn" type="button" data-bs-toggle="modal"
                 data-bs-target="#filter_model" aria-expanded="false" aria-controls="" style="border: none !important;">
-                <i class="fa fa-sliders filterIco_mbl"></i>
+                {{-- <i class="fa fa-sliders filterIco_mbl"></i> --}}
+                <img src="/theme/img/icons/filter_mobile_icon.png" alt="">
                 <span class="search_filter_text">Search Filter </span>
                 {{-- <img src="/theme/img/filler-icon.png" alt=""></span> --}}
             </button>
@@ -245,10 +246,10 @@
         @endforeach
     </div>
     
-    <div class="row mobile-view">
+    <div class="row mobile-view w-100">
         <div class="container">
             <div class="col-sm-6 m-auto">
-                {{ $products->appends(Request::all())->onEachSide(1)->links() }}
+                {{ $products->appends(Request::all())->onEachSide(0)->links() }}
             </div>
         </div>
     </div>

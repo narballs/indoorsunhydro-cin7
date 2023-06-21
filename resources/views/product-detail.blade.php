@@ -1,7 +1,12 @@
 @include('partials.header')
 @include('partials.top-bar')
 @include('partials.search-bar')
-<div class="container">
+<div class="w-100 mx-0 row justify-content-center align-items-center" style="background-color: #008BD3;height:70px;">
+    <p class="fw-bold fs-2 my-auto border-0 text-white text-center align-middle">
+       PRODUCT DETAIL
+    </p>
+</div>
+<div class="container mt-3">
     @if(session('success'))
     <div class="alert alert-success">
         {{ session('success') }}
@@ -228,7 +233,7 @@
     </form>
 </div>
 {{-- mobile view start --}}
-<div class="row bg-light mobile-view">
+<div class="row bg-light mobile-view w-100">
     <div class="container">
         <div class="row bg-white justify-content-center">
             <div class="d-flex align-items-center justify-content-center mx-1 ml-4 p_detail_image_row">
@@ -246,7 +251,7 @@
                         </div>
 
                         <div class="w-25">
-                            <span class="text-danger product-detail-price" id="product_price">
+                            <span class="product-detail-price" id="product_price">
                                 ${{number_format($retail_price,2)}}</span>
                         </div>
                     </div>
@@ -297,11 +302,11 @@
                             <div class="mt-3 p_detail_cart_row">
                                 <div style="">
                                     @if($productOption->stockAvailable > 0)
-                                    <button class="button-cards product-detail-button-cards text-uppercase ajaxSubmit_mbl" type="button" id="ajaxSubmit">
+                                    <button class="button-cards product-detail-button-cards text-uppercase ajaxSubmit_mbl w-100" type="button" id="ajaxSubmit">
                                         <a class="text-white">Add to cart</a>
                                     </button>
                                     @else
-                                    <button class="button-cards product-detail-button-cards opacity-50 text-uppercase" type="submit">
+                                    <button class="button-cards product-detail-button-cards opacity-50 text-uppercase w-100" type="submit">
                                         <a class="text-white">Add to cart</a>
                                     </button>
                                     @endif

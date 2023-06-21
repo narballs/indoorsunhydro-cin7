@@ -90,9 +90,9 @@
     });
 
     //set active class on click
-    var path = window.location.href; 
+    var path = window.location.href;
     $('.account_navigation li a').each(function() {
-            if (this.href == path) {
+        if (this.href == path) {
             $(this).parent().addClass('active');
         }
     });
@@ -131,6 +131,33 @@
             $("#additional_users").removeClass("active");
         }
     });
+</script>
+<script>
+    $(document).ready(function() {
+        var input = $('.mobileFormat').html();
+        var formattedInput = formatPhoneNumber(input);
+        $('.mobileFormat').html(formattedInput);
+    });
+
+    function formatPhoneNumber(input) {
+        // Remove all non-digit characters from the input
+        var digits = input.replace(/\D/g, '');
+
+        // Format the digits as (555) 123-4567
+        var formattedInput = '';
+        for (var i = 0; i < digits.length; i++) {
+            if (i === 0) {
+                formattedInput += '(';
+            } else if (i === 3) {
+                formattedInput += ') ';
+            } else if (i === 6) {
+                formattedInput += '-';
+            }
+            formattedInput += digits.charAt(i);
+        }
+
+        return formattedInput;
+    }
 </script>
 <script>
     $(document).ready(function() {

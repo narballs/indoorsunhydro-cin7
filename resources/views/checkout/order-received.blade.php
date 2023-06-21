@@ -47,7 +47,7 @@
 		}
 	}
 
-	@media  screen and (min-width : 360px ) and (max-width:425px) { 
+	@media  screen and (min-width : 280px ) and (max-width:425px) { 
 		.orderSummarymbl {
 			background: #FAFAFA;
 			border-top-right-radius: 5.24485px;
@@ -171,8 +171,15 @@
 	}
 	
 	/* mobile view  */
-
-	@media  screen and (min-width : 375px ) and (max-width:767px) {
+	@media  screen and (min-width : 280px ) and (max-width:350px) {
+		.label_delievery {
+			font-size: 11px !important;
+		}
+		.summary_total_price {
+			font-size: 20px !important;
+		}
+	}
+	@media  screen and (min-width : 280px ) and (max-width:767px) {
 		.media-1440 {
 			display:none;
 		}
@@ -192,7 +199,7 @@
 			margin-left: 0px !important;
 		}
 	}
-	@media  screen and (min-width : 375px ) and (max-width:700px) {
+	@media  screen and (min-width : 280px ) and (max-width:700px) {
 		.div_increase_mobile  {
 			margin-left:0rem !important;
 			margin-right:0rem !important;
@@ -207,7 +214,7 @@
 		
 	}
 
-	@media  screen and (min-width : 375px ) and (max-width:650px) {
+	@media  screen and (min-width : 280px ) and (max-width:650px) {
 		.mobile-font {
 			font-weight: 600 !important;
 			font-size: 20px !important;
@@ -962,8 +969,8 @@
 												Local Delievery
 											</span>
 										</div>
-										<div class="w-50 text-right p-1 d-flex align-items-center justify-content-center">
-											<span class="radio_delievery radio_not_selected mx-3"></span>
+										<div class="w-50 text-right p-1 d-flex align-items-center justify-content-evenly">
+											<span class="radio_delievery radio_not_selected"></span>
 											<span class="label_delievery">
 												Pickup Order
 											</span>
@@ -976,8 +983,8 @@
 												Local Delievery
 											</span>
 										</div>
-										<div class="w-50 text-right local_order p-1 d-flex align-items-center justify-content-center">
-											<span class="radio_delievery radio_selected mx-3"></span>
+										<div class="w-50 text-right local_order p-1 d-flex align-items-center justify-content-evenly">
+											<span class="radio_delievery radio_selected"></span>
 											<span class="label_delievery">
 												Pickup Order
 											</span>

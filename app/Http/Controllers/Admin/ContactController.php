@@ -528,7 +528,7 @@ class ContactController extends Controller
                         $secondary_contact->secondary_id = $apiSecondaryContact->id;
                         $secondary_contact->is_parent = 0;
                         $secondary_contact->status = 1;
-                        $secondary_contact->company = $apiSecondaryContact->company;
+                        $secondary_contact->company = $api_contact->company;
                         $secondary_contact->firstName = $apiSecondaryContact->firstName;
                         $secondary_contact->lastName = $apiSecondaryContact->lastName;
                         $secondary_contact->jobTitle  = $apiSecondaryContact->jobTitle;
@@ -543,7 +543,7 @@ class ContactController extends Controller
                         $secondary_contact->secondary_id = $apiSecondaryContact->id;
                         $secondary_contact->is_parent = 0;
                         $secondary_contact->status = 1;
-                        $secondary_contact->company = $apiSecondaryContact->company;
+                        $secondary_contact->company = $api_contact->company;
                         $secondary_contact->firstName = $apiSecondaryContact->firstName;
                         $secondary_contact->lastName = $apiSecondaryContact->lastName;
                         $secondary_contact->jobTitle  = $apiSecondaryContact->jobTitle;

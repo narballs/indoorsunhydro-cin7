@@ -205,11 +205,12 @@
    </div>
 </div>
 <div class="container mobile-view">
-   <div class="">
+   <div class="row mt-3">
       <p class="d-flex justify-content-start align-items-center mb-0">
           <button class="filler-and-sort btn  filler-and-sort p-0 filterMblbtn" type="button" data-bs-toggle="modal"
               data-bs-target="#filter_model" aria-expanded="false" aria-controls="" style="border: none !important;">
-              <i class="fa fa-sliders filterIco_mbl"></i>
+              {{-- <i class="fa fa-sliders filterIco_mbl"></i> --}}
+              <img src="/theme/img/icons/filter_mobile_icon.png" alt="">
               <span class="search_filter_text">Search Filter </span>
               {{-- <img src="/theme/img/filler-icon.png" alt=""></span> --}}
           </button>
@@ -331,25 +332,26 @@
       @endif
       @foreach($products as $key=>$product)
          @foreach($product->options as $option)
-         <div class="col-sm-12 col-md-6 col-lg-3 d-flex align-self-stretch">
-            <div class="card shadow-sm mb-4 w-100">
+         <div class="col-md-6 col-lg-3 d-flex align-self-stretch mt-3 mb-1 product_row_mobile_responsive">
+            <div class="p-2 shadow-sm  w-100 h-100" style="background-color: #fff;background-clip: border-box;border: 1px solid rgba(0,0,0,.125);
+            border-radius: 0.25rem;">
                @if($option->image != '')
                <a href="{{ url('product-detail/'.$product->id.'/'.$option->option_id) }}"><img src="{{$option['image']}}"
-                     class="col-md-10 offset-1" /></a>
+                     class="col-md-10 offset-1 img_responsive_mbl" /></a>
                @else
-               <img src="{{ asset('theme/img/image_not_available.png') }}" class="w-100 img-fluid h-75 w-75"
+               <img src="{{ asset('theme/img/image_not_available.png') }}" class="img_responsive_mbl w-100 img-fluid h-75 w-75"
                   onclick="showdetails({{$product->id}})" />
                @endif
-               <div class="card-body d-flex flex-column text-center">
+               <div class="card-body d-flex flex-column text-center prd_mbl_card_bdy">
                   <input type="hidden" name="quantity" value="1" id="quantity">
                   <input type="hidden" name="p_id" id="p_{{$product->id}}" value="{{$product->id}}">
                   <h5 class="card-title" style="font-weight: 500;
                            font-size: 16px;"><a
                         href="{{ url('product-detail/'.$product->id.'/'.$option->option_id.'/'.$product->slug) }}"
-                        id="product_name_{{$product->id}}">{{$product->name}}</a></h5>
+                        id="product_name_{{$product->id}}">{{ \Illuminate\Support\Str::limit($product->name, 10) }}</a></h5>
                   <div class="mt-auto">
                      <p class="text-uppercase mb-0 text-center text-danger">${{$product->retail_price}}</p>
-                     <button class="button-cards col w-100" style="max-height: 46px;"
+                     <button class="button-cards col w-100 mt-2" style="max-height: 46px;"
                         onclick="updateCart({{$product->id}},{{$option->option_id}})">Add to cart</button>
                   </div>
                </div>

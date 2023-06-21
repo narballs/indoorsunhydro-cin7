@@ -1,5 +1,8 @@
-<div class="col-sm-12 col-md-6 col-lg-3 d-flex align-self-stretch mt-3 mb-3">
-    <div class="card shadow-sm mb-4 w-100 h-100">
+<div class="col-md-6 col-lg-3 d-flex align-self-stretch mt-2 product_row_mobile_responsive pt-1">
+    <div class="p-2 shadow-sm  w-100 h-100" style="background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: 0.25rem;">
         @if ($product->images != '')
             <a style="width:20px !important;" href="javascript:void(0);" class="ml-2 mt-2 subscribe">
                 <i class="fa-solid fav-{{ $option->option_id }} fa-heart {{ isset($user_buy_list_options[$option->option_id]) ? '' : 'text-muted' }} "
@@ -9,26 +12,26 @@
             </a>
             <a href="{{ url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug) }}">
                 <span class="d-flex justify-content-center align-content-center">
-                    <img src="{{ $product->images }}" class="col-md-10 .image-body offset-1 mt-2"
-                        style="width: 120px; max-height: 300px; " />
+                    <img src="{{ $product->images }}" class="img_responsive_mbl col-md-10 .image-body offset-1 mt-2"
+                        style="width: 120px;height: 250px; " />
                 </span>
             </a>
         @else
             <a href="{{ url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug) }}">
                 <span class="d-flex justify-content-center align-items-center">
-                    <img src=" {{ asset('theme/img/image_not_available.png') }}" class="w-100  h-75 w-75" />
+                    <img src=" {{ asset('theme/img/image_not_available.png') }}" class="img_responsive_mbl  w-100  h-75 w-75" />
                 </span>
             </a>
         @endif
-        <div class="card-body d-flex flex-column text-center mt-2">
-            <h5 class="card-title" style="font-weight: 500;font-size: 16px;" id="product_name_{{ $product->id }}">
-                <a class="product-row-product-title"
-                    href="{{ url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug) }}">{{ $product->name }}</a>
+        <div class="card-body d-flex flex-column text-center mt-2 prd_mbl_card_bdy">
+            <h5 class="card-title card_product_title" style="font-weight: 500;font-size: 16px;" id="product_name_{{ $product->id }}">
+                <a title="{{$product->name}}" class="product-row-product-title" href="{{ url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug) }}">
+                    {{ \Illuminate\Support\Str::limit($product->name, 33) }}</a>
             </h5>
             <input type="hidden" name="quantity" value="1" id="quantity">
             <input type="hidden" name="p_id" id="p_{{ $product->id }}" value="{{ $product->id }}">
             @csrf
-            <div class="mt-auto">
+            <div class="col-md-12 p-1">
                 <?php
                 $retail_price = 0;
                 foreach ($option->price as $price) {
@@ -72,23 +75,24 @@
                     }
                 }
                 ?>
-                <h4 text="{{ $retail_price }}" class="text-uppercase mb-0 text-center text-danger">
+                <h4 text="{{ $retail_price }}" class="text-uppercase mb-0 text-center p_price_resp mt-0">
                     ${{ number_format($retail_price, 2) }}</h4>
                 @if ($product->categories)
-                    <p class="category-cart-page mt-4">
-                        Category:&nbsp;&nbsp;{{ $product->categories->name }}
+                    <p class="category-cart-page  mt-2 mb-2" title="{{$product->categories->name}}">
+                        
+                        Category:&nbsp;&nbsp;{{ \Illuminate\Support\Str::limit($product->categories->name, 4) }}
                     </p>
                 @else
-                    <p class="category-cart-page mt-4">
+                    <p class="category-cart-page mt-2 mb-2">
                         Category:&nbsp;&nbsp;Unassigned
                     </p>
                 @endif
                 @if ($product->stockAvailable > 0 || $option->stockAvailable > 0)
-                    <button class="ajaxSubmit button-cards col w-100 mt-2" type="submit" style="max-height: 46px;"
+                    <button class="prd_btn_resp ajaxSubmit button-cards col w-100 mt-2 mb-1" type="submit" style="max-height: 46px;"
                         id="ajaxSubmit_{{ $product->id }}"
                         onclick="updateCart('{{ $product->id }}', '{{ $option->option_id }}')">Add to cart</button>
                 @else
-                    <button class="ajaxSubmit text-white bg-danger bg-gradient button-cards col w-100 autocomplete=off"
+                    <button class="prd_btn_resp ajaxSubmit mb-2 text-white bg-danger bg-gradient button-cards col w-100 autocomplete=off"
                         tabindex="-1" type="submit" style="max-height: 46px;" id="ajaxSubmit_{{ $product->id }}"
                         disabled onclick="return updateCart('{{ $product->id }}')">Out of Stock</button>
                 @endif

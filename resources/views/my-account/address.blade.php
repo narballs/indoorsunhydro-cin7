@@ -1,109 +1,222 @@
 @include('partials.header')
 @include('partials.top-bar')
 @include('partials.search-bar')
-<style>
-    .nav .active {
-        background: #F5F5F5;
-        /* border-left: none !important; */
-        /* color: green !important; */
-        color: #008AD0 !important;
-    }
-
-    nav svg {
-        max-height: 20px !important;
-    }
-
-    #spinner-global {
-        display: none !important;
-    }
-
-    input[type=number]::-webkit-outer-spin-button {
-
-        opacity: 20;
-
-    }
-</style>
-<div class="mb-5">
+@section('addresses-active', 'active')
+<div class="col-md-12 p-0">
     <p style="line-height: 95px;" class="fw-bold fs-2 product-btn my-auto border-0 text-white text-center align-middle">
         MY ACCOUNT
     </p>
 </div>
-<div class="container-fluid" style="width:1621px  !important;">
-    <div class="row bg-light">
-        <div class="container-fluid" id="main-row">
-            @include('my-account.my-account-top-bar')
-            <div class="row flex-xl-nowrap p-0 m-0 mr-3">
-                @include('my-account.my-account-side-bar')
-
-                <div class="col-xl-10 col-sm-12 col-xs-12 py-3 bg-white ms-3" style="border-radius: 10px !important;">
-                    <div class="edit_address mt-3 mb-3 pr-4" id="edit_address">
-                        <div class="col-md-12 border-bottom border-4 p-0 ms-3 mr-3">
-                            <div class="row mb-4 mt-3">
-                                <div class="col-md-4 ">
-                                    <img src="/theme/img/addresses_main.png" style="margin: -1px 2px 1px 1px;">
-                                    <span class="pt-1 my-account-content-heading">Addresses</span>
-                                </div>
-                                <div class="col-md-8">
-                                </div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-10 m-auto">
+            <div class="row">
+                <div class="col-md-6 py-3">
+                    @include('my-account.my-account-side-bar')
+                </div>
+                <div class="col-md-5 py-3 text-right">
+                    <button type="button" class="btn my_account_add_a_new_address"> Add a new address +</button>
+                </div>
+            </div>
+            <div class="col-md-12 p-0 my-4">
+                <div class="card me-xxl-5 me-lx-5 me-lg-5">
+                    <div class="card-header bg-white ps-5">
+                        <p class="my_account_default_address">
+                            Default Addresses
+                        </p>
+                    </div>
+                    <div class="card-boday">
+                        <div class="row ps-5 my-5">
+                            <div class="col-md-6">
+                                <p class="default_billing_address">
+                                    Default Billing Address
+                                </p>
+                                <p class="my_account_address_items">
+                                    {{ $address_user->contact[0]['firstName'] }}
+                                    {{ $address_user->contact[0]['lastName'] }}
+                                </p>
+                                <p class="my_account_address_items">
+                                    {{ $address_user->contact[0]['postalAddress1'] }}
+                                </p>
+                                <p class="my_account_address_items">
+                                    {{ $address_user->contact[0]['postalAddress2'] }}
+                                </p>
+                                <p class="my_account_address_items">
+                                    {{ $address_user->contact[0]['postalState'] }}
+                                </p>
+                                <p class="my_account_address_items">
+                                    <span class="my_account_address_items">
+                                        Tel:
+                                    </span>
+                                    <span class="mobileFormat">
+                                        <span>
+                                            @if ($address_user->contact[0]['phone'])
+                                                {{ $address_user->contact[0]['phone'] }}
+                                            @else
+                                                {{ $address_user->contact[0]['mobile'] }}
+                                            @endif
+                                        </span>
+                                </p>
+                                <p>
+                                    <button type="button" class="btn p-0 change_billing_address_btn"
+                                        data-bs-toggle="modal" data-bs-target="#address_modal_id">
+                                        Change billing address
+                                    </button>
+                                </p>
+                            </div>
+                            <div class="col-md-6">
+                                <p class="default_billing_address">
+                                    Default Shipping Address
+                                </p>
+                                <p class="my_account_address_items">
+                                    {{ $address_user->contact[0]['firstName'] }}
+                                    {{ $address_user->contact[0]['lastName'] }}
+                                </p>
+                                <p class="my_account_address_items">
+                                    {{ $address_user->contact[0]['postalAddress1'] }}
+                                </p>
+                                <p class="my_account_address_items">
+                                    {{ $address_user->contact[0]['postalAddress2'] }}
+                                </p>
+                                <p class="my_account_address_items">
+                                    {{ $address_user->contact[0]['postalState'] }}
+                                </p>
+                                <p class="my_account_address_items">
+                                    <span class="my_account_address_items">
+                                        Tel:
+                                    </span>
+                                    <span class="mobileFormat">
+                                        @if ($address_user->contact[0]['phone'])
+                                            {{ $address_user->contact[0]['phone'] }}
+                                        @else
+                                            {{ $address_user->contact[0]['mobile'] }}
+                                        @endif
+                                    </span>
+                                </p>
+                                <p>
+                                    <button type="button" class="btn p-0 change_billing_address_btn"
+                                        data-bs-toggle="modal" data-bs-target="#address_modal_id">
+                                        Change Shipping address
+                                    </button>
+                                </p>
                             </div>
                         </div>
-                        <div class="bg-blue ms-3 mt-3">
-                            <span class="billing-address-heading">Billing Address</span>
-                        </div>
-                        <div class="ms-3 mt-3">
-                            <p class="table-row-content">The following addresses will be used on the checkout page
-                                by default.</p>
-                        </div>
-                        <div class="row table-row-content">
-                            <div class="col-md-5">
-                                <div class="p-3">
-                                    <div class="row">
-                                        <div class="col-md-10 billing-address-heading-subtitle">Billing Address
-                                        </div>
-                                        <div class="col-md-2">@include('modal.my-account-modal')</div>
-                                    </div>
-                                    <div class="row mt-2">
-                                        <div class="col-md-12 name">
-                                            <span class="user_names">{{ $user_address->firstName }}
-                                                {{ $user_address->lastName }}</span>
-                                            {{ $user_address->postalAddress1 }}{{ $user_address->postalAddress2 }}
-                                        </div>
-                                    </div>
-                                    <div class="name">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 my-4">
+                <div class="card me-xxl-5 me-lx-5 me-lg-5">
+                    <p class="additional_address_entries px-5 py-4 mb-0">
+                        Additional Address Entries
+                    </p>
+                    <div class="row">
+                        <div class="col-md-12 p-0">
+                            <table class="table address-table-items-data m-0 ">
+                                <thead>
+                                    <tr class="table-header-background">
+                                        <td class="d-flex table-row-item">
+                                            <div class="custom-control custom-checkbox tabel-checkbox">
+                                                <input
+                                                    class="custom-control-input custom-control-input-success checkbox-table"
+                                                    type="checkbox" id="selectAll" value="">
+                                                <label for="selectAll" class="custom-control-label"></label>
 
-                                    </div>
-                                    <div class="row m-0">
-                                        {{ $user_address->postalCity }} {{ $user_address->postalState }}
-                                        {{ $user_address->postalPostCode }}
-                                    </div>
-
-                                </div>
-                                <div style="display:none">@include('modal.my-account-modal')</div>
-                            </div>
-                            <div class="col-md-5 border-start ms-4">
-                                <div class="p-3">
-                                    <div class="row">
-                                        <div class="col-md-10 billing-address-heading-subtitle">
-                                            Shipping Address
-                                        </div>
-                                        <div class="col-md-2">@include('modal.my-account-modal')</div>
-                                    </div>
-                                    <div class="row mt-2">
-                                        <div class="col-md-12 name">
-                                            <span class="user_names">{{ $user_address->firstName }}
-                                                {{ $user_address->lastName }}</span>
-                                            {{ $user_address->postalAddress1 }}{{ $user_address->postalAddress2 }}
-                                        </div>
-                                    </div>
-                                    <div class="name">
-
-                                    </div>
-                                    <div class="row m-0">
-                                        {{ $user_address->postalCity }} {{ $user_address->postalState }}
-                                        {{ $user_address->postalPostCode }}
-                                    </div>
-                                </div>
-                            </div>
+                                                <span class="table-row-heading-order">
+                                                    <i class="fas fa-arrow-up mt-1" style="font-size:14.5px ;"></i>
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td class="my_account_addresses">Name</td>
+                                        <td class="my_account_addresses">Address</td>
+                                        <td class="my_account_addresses">City</td>
+                                        <td class="my_account_addresses">Country</td>
+                                        <td class="my_account_addresses">State</td>
+                                        <td class="my_account_addresses">Zip Code</td>
+                                        <td class="my_account_addresses">Phone Number</td>
+                                        <td></td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($secondary_contacts as $key => $contact)
+                                        <tr class="py-5">
+                                            <td class="d-flex table-items">
+                                                <div class="custom-control custom-checkbox tabel-checkbox">
+                                                    <input
+                                                        class="custom-control-input custom-control-input-success sub_chk"
+                                                        data-id="{{ $contact->id }}" type="checkbox"
+                                                        id="separate_check_{{ $contact->id }}">
+                                                    <label for="separate_check_{{ $contact->id }}"
+                                                        class="custom-control-label"></label>
+                                                </div>
+                                                <span>
+                                                    {{ $key + 1 }}
+                                                </span>
+                                            </td>
+                                            <td class="my_account_address_items">
+                                                @if (!empty($contact['firstName'] && $contact['lastName']))
+                                                    {{ $contact['firstName'] . ' ' . $contact['lastName'] }}
+                                                @else
+                                                    <span class="badge badge-info">empty</span>
+                                                @endif
+                                            </td>
+                                            <td class="my_account_all_items">
+                                                @if (!empty($contact['postalAddress1']))
+                                                    {{ $contact['postalAddress1'] }}
+                                                @else
+                                                    <span class="badge badge-info">empty</span>
+                                                @endif
+                                            </td>
+                                            <td class="my_account_all_items">
+                                                @if (!empty($contact['postalCity']))
+                                                    {{ $contact['postalCity'] }}
+                                                @else
+                                                    <span class="badge badge-info">empty</span>
+                                                @endif
+                                            </td>
+                                            <td class="my_account_all_items">
+                                                @if (!empty($contact['Country']))
+                                                    {{ $contact['Country'] }}
+                                                @else
+                                                    <span class="badge badge-info">empty</span>
+                                                @endif
+                                            </td>
+                                            <td class="my_account_all_items">
+                                                @if (!empty($contact['postalState']))
+                                                    {{ $contact['postalState'] }}
+                                                @else
+                                                    <span class="badge badge-info">empty</span>
+                                                @endif
+                                            </td>
+                                            <td class="my_account_all_items">
+                                                @if (!empty($contact['postalCode']))
+                                                    {{ $contact['postalCode'] }}
+                                                @else
+                                                    <span class="badge badge-info">empty</span>
+                                                @endif
+                                            </td>
+                                            <td class="my_account_all_items">
+                                                @if (!empty($contact['phone']))
+                                                    {{ $contact['phone'] }}
+                                                @elseif(!empty($contact['mobile']))
+                                                    {{ $contact['mobile'] }}
+                                                @else
+                                                    <span class="badge badge-info">empty</span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                <img src="/theme/img/dots_icons.png" alt="">
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="12">
+                                        {{ $secondary_contacts->links('pagination.custom_pagination') }}
+                                    </td>
+                                </tr>
+                            </tfoot>
                         </div>
                     </div>
                 </div>
@@ -111,7 +224,8 @@
         </div>
     </div>
 </div>
+
+
 @include('my-account.my-account-scripts')
 @include('partials.product-footer')
-<!-- End of .container -->
 @include('partials.footer')

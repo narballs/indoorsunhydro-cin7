@@ -128,11 +128,12 @@
 </div>
 {{-- moible view start --}}
 <div class="container mobile-view">
-   <div class="mt-2">
+   <div class="row mt-3">
       <p class="d-flex justify-content-start align-items-center mb-0">
          <button class="filler-and-sort btn  filler-and-sort p-0 filterMblbtn" type="button" data-bs-toggle="modal"
             data-bs-target="#filter_model" aria-expanded="false" aria-controls="" style="border: none !important;">
-            <i class="fa fa-sliders filterIco_mbl"></i>
+            {{-- <i class="fa fa-sliders filterIco_mbl"></i> --}}
+            <img src="/theme/img/icons/filter_mobile_icon.png" alt="">
             <span class="search_filter_text">Search Filter </span>
             {{-- <img src="/theme/img/filler-icon.png" alt=""></span> --}}
          </button>
