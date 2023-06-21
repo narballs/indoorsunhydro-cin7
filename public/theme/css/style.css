@@ -6746,12 +6746,13 @@ ul.pager>.main-row>.pagination>li {
 .custom-checkbox .custom-control-input:checked~.custom-control-label::after {
     background-color: #7BC533 !important;
 
-    =======.card_product_title {
-        height: 3rem;
-        margin-bottom: 0rem;
-    }
+}
 
-    .p_price_resp {
-        color: #DC4E41 !important;
-        >>>>>>>244c38f33147661626f77da0fab3ea6af88267f5
-    }
+.card_product_title {
+    height: 3rem;
+    margin-bottom: 0rem;
+}
+
+.p_price_resp {
+    color: #DC4E41 !important;
+}

@@ -104,13 +104,13 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-12 my-4">
+            <div class="col-md-12 my-4 p-0">
                 <div class="card me-xxl-5 me-lx-5 me-lg-5">
                     <p class="additional_address_entries px-5 py-4 mb-0">
                         Additional Address Entries
                     </p>
                     <div class="row">
-                        <div class="col-md-12 p-0">
+                        <div class="col-md-12">
                             <table class="table address-table-items-data m-0 ">
                                 <thead>
                                     <tr class="table-header-background">
