@@ -6,7 +6,7 @@
       PRODUCTS
    </p>
 </div> --}}
-<div class="row justify-content-center align-items-center" style="background-color: #008BD3;height:70px;">
+<div class="w-100 mx-0 row justify-content-center align-items-center" style="background-color: #008BD3;height:70px;">
    <p class="fw-bold fs-2 my-auto border-0 text-white text-center align-middle">
       PRODUCTS
    </p>
@@ -257,9 +257,9 @@
       @include('product_row')
       @endforeach
       @endforeach
+      {{$products->appends(Request::all())->links()}}
    </div>
-   <!--    {{$products->links('pagination::bootstrap-4')}} -->
-   {{$products->appends(Request::all())->links()}}
+   
 </div>
 {{-- moible view end --}}
 

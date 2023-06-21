@@ -8,7 +8,7 @@
    </p>
 </div> --}}
 
-<div class="row justify-content-center align-items-center" style="background-color: #008BD3;height:70px;">
+<div class="w-100 mx-0 row justify-content-center align-items-center" style="background-color: #008BD3;height:70px;">
    <p class="fw-bold fs-2 my-auto border-0 text-white text-center align-middle">
       PRODUCTS
    </p>
@@ -332,7 +332,7 @@
       @endif
       @foreach($products as $key=>$product)
          @foreach($product->options as $option)
-         <div class="col-md-6 col-lg-3 d-flex align-self-stretch mt-3 mb-1 product_row_mobile_responsive">
+         <div class="col-md-6 col-lg-3 d-flex align-self-stretch mt-2 product_row_mobile_responsive pt-1">
             <div class="p-2 shadow-sm  w-100 h-100" style="background-color: #fff;background-clip: border-box;border: 1px solid rgba(0,0,0,.125);
             border-radius: 0.25rem;">
                @if($option->image != '')
