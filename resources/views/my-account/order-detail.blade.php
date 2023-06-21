@@ -85,8 +85,8 @@
                                             {{-- {{ dd($orderItem) }} --}}
                                             <tr>
                                                 <td class="order_detail_page_product_name">
-                                                    <a
-                                                        href="{{ url('product-detail/' . $orderItem->product_id . '/' . $orderItem->option_id . '/' . $orderItem->product->slug) }}">
+                                                    <a href="{{ url('product-detail/' . $orderItem->product_id . '/' . $orderItem->option_id . '/' . $orderItem->product->slug) }}"
+                                                        class="btn order_detail_page_product_name">
                                                         {{ $orderItem->product->name }}
                                                     </a>
                                                 </td>
@@ -145,7 +145,7 @@
                                     @else
                                         <tr>
                                             <td class="order_detail_page_product_name">
-                                                <a
+                                                <a class="btn order_detail_page_product_name "
                                                     href="{{ url('product-detail/' . $order_detail['apiOrderItem'][0]['product_id'] . '/' . $order_detail['apiOrderItem'][0]['option_id'] . '/' . $order_detail['apiOrderItem'][0]['product']->slug) }}">
                                                     {{ $order_detail['apiOrderItem'][0]['product']->name }}
                                             </td>
