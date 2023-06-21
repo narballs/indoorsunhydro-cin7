@@ -6750,12 +6750,10 @@ ul.pager>.main-row>.pagination>li {
 
 .custom-checkbox .custom-control-input:checked~.custom-control-label::after {
     background-color: #7BC533 !important;
-
 }
-
 .card_product_title {
-    height: 3rem;
-    margin-bottom: 0rem;
+        height: 3rem;
+        margin-bottom: 0rem;
 }
 
 .p_price_resp {
