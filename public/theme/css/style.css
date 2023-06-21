@@ -1196,8 +1196,8 @@ label {
     background: yellow;
 }*/
 .nav .active {
-    background: #F5F5F5;
-    border-left: 3px solid #008AD0;
+    /* background: #F5F5F5; */
+    /* border-left: 3px solid #008AD0; */
     color: green !important;
 
 }
@@ -6078,37 +6078,28 @@ select.list-dt:focus {
 }
 
 /* my account page css start*/
-.nav-tabs .nav-link {
-    border: 1px solid #dee2e6 !important;
-    border-top-left-radius: 0.25rem !important;
-    border-top-right-radius: 0.25rem !important;
+.order_detail_tabs .nav-link {
     font-family: 'Poppins' !important;
     font-style: normal !important;
     font-weight: 400 !important;
     font-size: 18px !important;
     line-height: 26px !important;
     color: #989898 !important;
+    border: 1.29139px solid #E1E1E1 !important;
+    text-align: center;
 }
 
-.nav-tabs .nav-link.active {
+.order_detail_tabs .nav-link.active {
     background-color: #F5F5F5 !important;
-    border-color: #dee2e6 #dee2e6 #fff;
     color: #000000 !important;
-    border-radius: 0px !important;
     font-family: 'Poppins' !important;
     font-style: normal !important;
     font-weight: 500 !important;
     font-size: 18px !important;
     line-height: 26px !important;
-    /* identical to box height, or 143% */
-
-
     color: #242424;
 }
 
-.nav-tabs {
-    border-bottom: none !important;
-}
 
 .search_row_my_account_page {
     border-radius: 8.8914px;
@@ -6758,4 +6749,106 @@ ul.pager>.main-row>.pagination>li {
 
 .p_price_resp {
     color: #DC4E41 !important;
+}
+
+.my_account_order_card_header {
+    height: 4.331rem !important;
+}
+
+.my_account_order_details_heading {
+    font-family: 'Poppins' !important;
+    font-style: normal !important;
+    font-weight: 500 !important;
+    font-size: 27.2886px !important;
+    line-height: 4.063rem !important;
+    letter-spacing: -0.022em;
+    color: #242424 !important;
+}
+
+.my_account_order_details_page_date_title {
+    font-family: 'Poppins' !important;
+    font-style: normal !important;
+    font-weight: 400 !important;
+    font-size: 0.928rem !important;
+    line-height: 1.563rem !important;
+    color: #7D7D7D !important;
+}
+
+.my_account_order_details_page_date_item {
+    font-family: 'Poppins' !important;
+    font-style: normal 1important;
+    font-weight: 500 !important;
+    font-size: 0.928rem !important;
+    line-height: 1.563rem !important;
+    color: #7D7D7D !important;
+}
+
+.my_account_order_details_page_date_order_id_title {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 0.928em;
+    line-height: 1.563rem !important;
+    color: #7D7D7D !important;
+}
+
+.my_account_order_details_page_date_order_id_item {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 0.928em;
+    line-height: 1.563rem !important;
+    color: #008BD3 !important;
+
+}
+
+.my_account_order_detail_page_table_title {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 1.125rem !important;
+    line-height: 1.563rem !important;
+    color: #7D7D7D !important;
+}
+
+.order_detail_page_product_name {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 1.125rem !important;
+    line-height: 1.563rem !important;
+    color: #008BD3 !important;
+}
+
+/* .order_detail_page_card {
+    background: #FFFFFF !important;
+    border: 1.36443px solid #E1E1E1 !important;
+    border-radius: 8px !important;
+} */
+
+.order_detail_page_prices {
+    font-family: 'Poppins' !important;
+    font-style: normal !important;
+    font-weight: 500 !important;
+    font-size: 1.125rem !important;
+    line-height: 1.563rem !important;
+    color: #242424 !important;
+}
+
+.order_detail_page_order_btn {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 1.125rem !important;
+    line-height: 1.563rem !important;
+    color: #989898 !important;
+}
+
+.order_detail_page_order_detail_btn {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 1.125rem !important;
+    line-height: 1.563rem !important;
+    color: #7BC533 !important;
 }

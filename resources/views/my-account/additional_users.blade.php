@@ -18,7 +18,7 @@
                 <div class="col-md-6 py-4">
                     <div class="row search_row_my_account_page">
                         <div class="col-md-10 d-flex ">
-                            <div class="has-search my_account_search w-100  pt-2 ">
+                            <div class="has-search my_account_search w-100 ">
                                 <span class="fa fa-search form-control-feedback"></span>
                                 <form method="get" action="#" class="mb-2">
                                     <input type="text" class="form-control border-0" id="search" name="search"
