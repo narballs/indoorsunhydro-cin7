@@ -764,12 +764,20 @@ class UserController extends Controller
     // order detail 
     public function order_detail(Request  $request, $id)
     {
+        $order_detail = ApiOrder::where('id', $id)
+            ->with('apiOrderItem.product.options')
+            ->with('texClasses')
+            ->first();
         $user_id = Auth::id();
         if (!$user_id) {
             return redirect('/user/');
         }
         $contact_id = session()->get('contact_id');
-        $lists = BuyList::where('user_id', $user_id)->where('contact_id', $contact_id)->with('list_products.product.options.price')->where('title', 'My Favorites')->get();
+        $lists = BuyList::where('user_id', $user_id)
+            ->where('contact_id', $contact_id)
+            ->with('list_products.product.options.price')
+            ->where('title', 'My Favorites')
+            ->get();
 
         $user = User::where('id', $user_id)->first();
         $all_ids = UserHelper::getAllMemberIds($user);
@@ -797,7 +805,8 @@ class UserController extends Controller
             'parent',
             'companies',
             'user_order',
-            'orderdetails'
+            'orderdetails',
+            'order_detail'
         ));
     }
     // address
