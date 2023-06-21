@@ -5188,10 +5188,11 @@ select.list-dt:focus {
     }
 
     .quantity-div.quantity-up {
-        height: 12px !important;
-        top: 0.2rem;
-        left: 0.5rem;
-        width: 0.5rem;
+        height: 15.5px !important;
+        top: 0rem;
+        left: 1rem;
+        width: 1rem;
+        background: #FFFFFF;
     }
 
     .quantity-div {
@@ -5206,10 +5207,14 @@ select.list-dt:focus {
         width: 23px !important;
         line-height: 26px !important; */
         position: absolute;
-        left: 0.5rem;
-        top: 1.2rem;
-        height: 8px !important;
-        width: 0.5rem;
+        left: 1rem;
+        top: 0.95rem;
+        height: 1px !important;
+        width: 1rem;
+        background: #FFFFFF;
+    }
+    #qt_mbl_number {
+        margin-bottom: 10px;
     }
 
     .category-title-heading {
@@ -5870,7 +5875,7 @@ select.list-dt:focus {
     }
 
     .quantity-nav {
-        width: 10px !important;
+        width: 18px !important;
         height: 31px !important;
         position: relative;
         top: -131.5%;
