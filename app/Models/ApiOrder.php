@@ -42,6 +42,10 @@ class ApiOrder extends Model
     {
         return $this->belongsTo('App\Models\Contact', 'memberId', 'contact_id');
     }
+    public function product()
+    {
+        return $this->belongsTo('App\Models\Product', 'product_id', 'id');
+    }
 
     public function createdby()
     {
