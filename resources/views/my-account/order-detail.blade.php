@@ -22,7 +22,7 @@
                         <img src="/theme/img/arow_order_detail.png" alt="">
                     </span>
                     <span>
-                        <a href="*" class="btn order_detail_page_order_detail_btn">Order detail</a>
+                        <a href="#" class="btn order_detail_page_order_detail_btn">Order detail</a>
                     </span>
 
                 </div>

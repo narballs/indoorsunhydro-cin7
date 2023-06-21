@@ -5231,6 +5231,7 @@ select.list-dt:focus {
         width: 1rem;
         background: #FFFFFF;
     }
+
     #qt_mbl_number {
         margin-bottom: 10px;
     }
@@ -6742,9 +6743,10 @@ ul.pager>.main-row>.pagination>li {
 .custom-checkbox .custom-control-input:checked~.custom-control-label::after {
     background-color: #7BC533 !important;
 }
+
 .card_product_title {
-        height: 3rem;
-        margin-bottom: 0rem;
+    height: 3rem;
+    margin-bottom: 0rem;
 }
 
 .p_price_resp {
@@ -6851,4 +6853,10 @@ ul.pager>.main-row>.pagination>li {
     font-size: 1.125rem !important;
     line-height: 1.563rem !important;
     color: #7BC533 !important;
+}
+
+.btn.focus,
+.btn:focus {
+    outline: 0;
+    box-shadow: none !important;
 }
