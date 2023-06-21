@@ -22,10 +22,10 @@
                     @if (is_array($element))
                         @foreach ($element as $page => $url)
                             @if ($page == $paginator->currentPage())
-                                <li class="active my-active-front pd_nmber"><span class="">{{ $page }}</span>
+                                <li class="active my-active-front pd_nmber_front"><span class="">{{ $page }}</span>
                                 </li>
                             @else
-                                <li class="pd_nmber"><a href="{{ $url }}"><span
+                                <li class="pd_nmber_front"><a href="{{ $url }}"><span
                                             class="non_active_page_number">{{ $page }}</span></a></li>
                             @endif
                         @endforeach

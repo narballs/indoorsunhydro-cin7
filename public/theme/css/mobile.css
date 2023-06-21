@@ -25,12 +25,14 @@
     color: #8A8A8A;
 
 }
-.pd_nmber {
+.pd_nmber_front {
    width:11.89%;
    text-align: center;
    display: flex;
    align-items: center;
    justify-content: center;
+   list-style: none;
+   text-decoration: none;
 }
 
 .my-active-front{
@@ -39,7 +41,13 @@
     font-style: normal;
     font-weight: 400;
     font-size: 12px;
-    line-height: 18px;
+    line-height: 15px;
     color: #FFFFFF;
+    width: 18.86px;
+    height: 18.86px;
+    margin-top: 7px;
     
+}
+.all_list_pages > li {
+    list-style: none;
 }

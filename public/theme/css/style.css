@@ -4904,7 +4904,7 @@ select.list-dt:focus {
     }
 
     .mobile_footer_set {
-        margin-top: 8rem !important;
+        /* margin-top: 8rem !important; */
     }
 
     .main_image_mbl {
@@ -5589,13 +5589,13 @@ select.list-dt:focus {
         width: 100% !important;
         height: 412px !important;
         background-color: #7BC533;
-        margin-top: 130px !important;
+        margin-top: 80px !important;
     }
 
     .white-panel {
         background-color: rgba(255, 255, 255, 1) !important;
         position: absolute !important;
-        top: -180px !important;
+        top: -150px !important;
         transition: .3s ease-in-out !important;
         z-index: 0 !important;
         box-shadow: 0 0 15px 9px #00000096 !important;
@@ -5619,7 +5619,7 @@ select.list-dt:focus {
     .login-info-box {
         width: 100% !important;
         padding: 0 20px !important;
-        top: 55% !important;
+        top: 60% !important;
         left: 0% !important;
         position: absolute !important;
     }
@@ -5638,7 +5638,7 @@ select.list-dt:focus {
     .register-info-box {
         width: 100% !important;
         padding: 0 20px !important;
-        top: 55% !important;
+        top: 60% !important;
         left: 0% !important;
         position: absolute !important;
     }
