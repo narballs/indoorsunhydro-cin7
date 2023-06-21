@@ -14,24 +14,24 @@
                 <div class="col-md-6 py-3">
                     @include('my-account.my-account-side-bar')
                 </div>
-                <div class="col-md-6">
+                {{-- <div class="col-md-6 py-4">
                     <div class="row search_row_my_account_page">
-                        <div class="col-md-8 my_account_search">
-                            <div class="has-search">
+                        <div class="col-md-10 d-flex ">
+                            <div class="has-search my_account_search w-100 ">
                                 <span class="fa fa-search form-control-feedback"></span>
                                 <form method="get" action="#" class="mb-2">
                                     <input type="text" class="form-control border-0" id="search" name="search"
                                         placeholder="Search all orders" value="{{ isset($search) ? $search : '' }}" />
                             </div>
-                        </div>
-                        <div class="col-md-4">
-                            <button type="button" class="btn my_account_search_btn">Search</button>
+                            <div class="ps-3">
+                                <button type="button" class="btn my_account_search_btn">Search</button>
+                            </div>
                         </div>
                         </form>
                     </div>
-                </div>
+                </div> --}}
                 <div class="col-md-12 my-4">
-                    <div class="row">
+                    {{-- <div class="row">
                         <div class="col-md-12 d-flex ps-4">
                             <span>
                                 <p class="total_order_my_account">12 orders
@@ -49,7 +49,7 @@
                                 </select>
                             </span>
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="row">
                         <div class="col-md-12">
                             <div class="row">
@@ -117,6 +117,9 @@
                                                             @endif
                                                         @endif
                                                         <div class="row">
+                                                            @php
+                                                                $totalItems = $user_order->apiOrderItem->count();
+                                                            @endphp
                                                             @if (count($user_order->apiOrderItem) > 1)
                                                                 @foreach ($user_order->apiOrderItem as $orderItem)
                                                                     <div class="my-2" style="width:20% !important">
@@ -153,7 +156,7 @@
                                                                             {{ $orderItem->product->name }}
                                                                         </p>
                                                                         <p>
-                                                                            <button type="button"
+                                                                            {{-- <button type="button"
                                                                                 class="btn my_account_buy_it_again">
                                                                                 <span>
                                                                                     <img src="/theme/img/green_icon.png"
@@ -161,7 +164,7 @@
                                                                                         class="img-fluid pe-2 ">
                                                                                 </span>Buy it
                                                                                 again
-                                                                            </button>
+                                                                            </button> --}}
                                                                         </p>
                                                                     </div>
                                                                 @endforeach
@@ -170,21 +173,21 @@
                                                     </div>
                                                     @if (count($user_order->apiOrderItem) > 1)
                                                         <div class="col-md-5 text-right">
-                                                            <button type="button" class="btn all_items_to_cart_btn ">
+                                                            {{-- <button type="button" class="btn all_items_to_cart_btn ">
                                                                 Add
                                                                 all
                                                                 items
                                                                 to
                                                                 Cart
-                                                            </button>
+                                                            </button> --}}
                                                             <br>
-                                                            <button type="button"
+                                                            <a href="{{ url('my-account/my-order-detail/' . $user_order->id) }}"
                                                                 class="btn my_account_view_order_btn my-1">View
-                                                                order</button>
+                                                                order</a>
                                                         </div>
                                                     @else
                                                         <div class="col-md-5 text-right">
-                                                            <button type="button"
+                                                            {{-- <button type="button"
                                                                 class="btn track_package_cart_btn">Track
                                                                 package
                                                                 Cart
@@ -192,24 +195,26 @@
                                                             <br>
                                                             <button type="button"
                                                                 class="btn return_or_replace_items_btn my-1">Return
-                                                                or replace items</button> <br>
-                                                            <button type="button"
+                                                                or replace items</button> <br> --}}
+                                                            <a href="{{ url('my-account/my-order-detail/' . $user_order->id) }}"
                                                                 class="btn return_or_replace_items_btn my-1">View
-                                                                Order Details</button> <br>
+                                                                Order Details</a>
                                                         </div>
                                                     @endif
                                                 </div>
                                             </div>
                                             <div class="card-footer bg-white">
                                                 <p class="my_account_total_items_listing">
-                                                    {{ $totalItems = $user_orders->count() }} items in the order
+                                                    {{ $totalItems }} items
+                                                    in
+                                                    the order
                                                 </p>
                                             </div>
                                         </div>
                                     @endforeach
                                     {{ $user_orders->appends(Request::all())->links() }}
                                 </div>
-                                <div class="col-md-3 my-3">
+                                {{-- <div class="col-md-3 my-3">
                                     <div class="card px-4 py-4 my-4">
                                         <p class="my_account_buy_agin_heading">Buy again</p>
                                         <div class="row">
@@ -384,7 +389,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
                     </div>

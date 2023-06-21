@@ -244,15 +244,14 @@
                 @include('product_row')
             @endforeach
         @endforeach
-    </div>
-    
-    <div class="row mobile-view w-100">
-        <div class="container">
-            <div class="col-sm-6 m-auto">
-                {{ $products->appends(Request::all())->onEachSide(0)->links() }}
-            </div>
+        <div class="w-100 justify-content-center p-2 mt-3">
+            {{ $products->appends(Request::all())->onEachSide(1)->links('pagination.front_custom_pagination') }}
         </div>
     </div>
+    
+    {{-- <div class="row mobile-view w-100"> --}}
+        
+    {{-- </div> --}}
 </div>
 {{-- mobile view end --}}
 

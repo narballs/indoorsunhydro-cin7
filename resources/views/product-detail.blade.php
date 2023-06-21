@@ -243,14 +243,14 @@
                 <img id="" class="p_detail_img" src="/theme/img/image_not_available.png" class=""/>
                 @endif
             </div>
-            <div class="p_detail_content">
+            <div class="p_detail_content pr-0">
                 <div class="product  product-detail-content1">
                     <div class="d-flex">
                         <div class="product-detail-heading w-75" id="product_name">
                             <h3 class="product-detail-heading">{{$productOption->products->name}}</h3>
                         </div>
 
-                        <div class="w-25">
+                        <div class="w-25 text-right">
                             <span class="product-detail-price" id="product_price">
                                 ${{number_format($retail_price,2)}}</span>
                         </div>
@@ -281,20 +281,20 @@
                     </div>
                     <form id="cart">
                         @csrf
-                        <div class="cart row  justify-content-between align-items-center">
+                        <div class="cart d-flex  justify-content-between align-items-center">
                             <div class="mt-3 p_detail_stock_row">
-                                <div class="quantity p_detail_stock_qty">
-                                    <input type="number" name="quantity" id="quantity" min="1"
+                                <div class="quantity p_detail_stock_qty qty_mbl_holder">
+                                    <input type="number" name="quantity" class="mobile_qty" id="qt_mbl_number" min="1"
                                         max="{{$productOption->stockAvailable}}" step="1" value="1">
                                     <input type="hidden" name="p_id" id="p_id" value="{{$productOption->products->id}}">
                                     <input type="hidden" name="option_id" id="option_id"
                                         value="{{$productOption->option_id}}">
                                     <div class="quantity-nav">
-                                        <div class="quantity-div quantity-up">
-                                            <i class="fa fa-angle-up text-dark u_btn"></i>
+                                        <div class="quantity-div quantity-up up_qty_mbl">
+                                            <i class="fa fa-angle-up text-dark u_btn mt-1"></i>
                                         </div>
-                                        <div class="quantity-div quantity-down">
-                                            <i class="fa fa-angle-down text-dark d_btn"></i>
+                                        <div class="quantity-div quantity-down down_qty_mbl">
+                                            <i class="fa fa-angle-down text-dark d_btn mt-1"></i>
                                         </div>
                                     </div>
                                 </div>
@@ -302,7 +302,7 @@
                             <div class="mt-3 p_detail_cart_row">
                                 <div style="">
                                     @if($productOption->stockAvailable > 0)
-                                    <button class="button-cards product-detail-button-cards text-uppercase ajaxSubmit_mbl w-100" type="button" id="ajaxSubmit">
+                                    <button class="button-cards product-detail-button-cards text-uppercase ajaxSubmit_mbl w-100" type="button" id="ajaxSubmit_mbl">
                                         <a class="text-white">Add to cart</a>
                                     </button>
                                     @else
@@ -418,7 +418,7 @@
                             </div>
                             <div class="w-50" style="">
                                 @if($productOption->stockAvailable > 0)
-                                <button class=" button-cards product-detail-button-cards text-uppercase" style="font-size: 16px !important;;
+                                <button class=" button-cards product-detail-button-cards text-uppercase" style="font-size: 16px !important;
                                     width: 252px !important;" type="button" id="ajaxSubmit"><a class="text-white">Add
                                         to
                                         cart</a></button>
@@ -538,37 +538,124 @@
         });
         //   jQuery('<div class="quantity-nav"><div class="quantity-div quantity-up">&#xf106;</div><div class="quantity-div quantity-down">&#xf107</div></div>').insertAfter('.quantity input');
         jQuery('.quantity').each(function () {
-        var spinner = jQuery(this),
-            input = spinner.find('input[type="number"]'),
-            btnUp = spinner.find('.quantity-up'),
-            btnDown = spinner.find('.quantity-down'),
-            min = input.attr('min'),
-            max = input.attr('max');
+            var spinner = jQuery(this),
+                input = spinner.find('input[type="number"]'),
+                btnUp = spinner.find('.quantity-up'),
+                btnDown = spinner.find('.quantity-down'),
+                min = input.attr('min'),
+                max = input.attr('max');
 
-        btnUp.click(function () {
-            var oldValue = parseFloat(input.val());
-            if (oldValue >= max) {
-            var newVal = oldValue;
-            } else {
-            var newVal = oldValue + 1;
-            }
-            spinner.find("input[id=quantity]").val(newVal);
-        //   spinner.find("input[id=quantity").trigger("change");
-        });
+            btnUp.click(function () {
+                var oldValue = parseFloat(input.val());
+                if (oldValue >= max) {
+                var newVal = oldValue;
+                } else {
+                var newVal = oldValue + 1;
+                }
+                spinner.find("input[id=quantity]").val(newVal);
+            //   spinner.find("input[id=quantity").trigger("change");
+            });
 
-        btnDown.click(function () {
-            // alert('hi');
-            var oldValue = parseFloat(input.val());
-            if (oldValue <= min) {
-            var newVal = oldValue;
-            } else {
-            var newVal = oldValue - 1;
-            }
-            spinner.find("input[id=quantity]").val(newVal);
-        //   spinner.find("input").trigger("change");
-        });
+            btnDown.click(function () {
+                // alert('hi');
+                var oldValue = parseFloat(input.val());
+                if (oldValue <= min) {
+                var newVal = oldValue;
+                } else {
+                var newVal = oldValue - 1;
+                }
+                spinner.find("input[id=quantity]").val(newVal);
+            //   spinner.find("input").trigger("change");
+            });
 
         });
+        //mobile
+        jQuery(document).on('click', '#ajaxSubmit_mbl' , function(e) {
+            $.ajaxSetup({
+            });
+            jQuery.ajax({
+                url: "{{ url('add-to-cart') }}",
+                method: 'post',
+                data: {
+                "_token": "{{ csrf_token() }}",
+                p_id: jQuery('#p_id').val(),
+                option_id: jQuery('#option_id').val(),
+                quantity: jQuery('.mobile_qty').val()
+                },
+                success: function(response){
+                if(response.status == 'success'){
+                    var cart_items = response.cart_items;
+                    var cart_total = 0;
+                    var total_cart_quantity = 0;
+
+                    for (var key in cart_items) {
+                        var item = cart_items[key];
+                        var code =parseFloat(item.code)
+                        var product_id = item.prd_id;
+                        var price = parseFloat(item.price);
+                        var quantity = parseFloat(item.quantity);
+                        var subtotal = parseInt(price * quantity);
+                        var cart_total = cart_total + subtotal;
+                        var total_cart_quantity = total_cart_quantity + quantity;
+                        $('#subtotal_' + product_id).html('$'+subtotal);
+                        
+                    }
+                    $src = $('#main-image').attr('src');
+                    var product_name = document.getElementById("product_name").innerHTML;
+                    var product_price = document.getElementById("product_price").innerHTML;
+                    Swal.fire({
+                        toast: true,
+                        icon: 'success',
+                        title: jQuery('.mobile_qty').val() + ' X ' + product_name + '<div class="text-dark fw-bold fs-5">'+ product_price +'</div>'+ '<br>' + 'added to your cart',
+                        timer: 3000,
+                        imageUrl: $src,
+                        showConfirmButton: false,
+                        position: 'top',
+                        timerProgressBar: true
+                    });
+                }
+                $('#top_cart_quantity').html(total_cart_quantity);
+                $('#cart_items_quantity').html(total_cart_quantity);
+                $('.cartQtyipad').html(total_cart_quantity);
+                $('.cartQtymbl').html(total_cart_quantity);
+                $('#topbar_cart_total').html('$'+parseFloat(cart_total).toFixed(2));
+                var total = document.getElementById('#top_cart_quantity');
+                    
+            }});
+
+        });
+        // jQuery('.qty_mbl_holder').each(function () {
+            // var spinner = jQuery(this),
+            var input = $('.mobile_qty');
+            var btnUp = $('.up_qty_mbl');
+            var btnDown = $('.down_qty_mbl');
+            var min = input.attr('min');
+            var max = input.attr('max');
+
+            btnUp.click(function () {
+                var oldValue = parseFloat(input.val());
+                if (oldValue >= max) {
+                    var newVal = oldValue;
+                } else {
+                    var newVal = oldValue + 1;
+                }
+                input.val(newVal);
+            //   spinner.find("input[id=quantity").trigger("change");
+            });
+
+            btnDown.click(function () {
+                // alert('hi');
+                var oldValue = parseFloat(input.val());
+                if (oldValue <= min) {
+                var newVal = oldValue;
+                } else {
+                var newVal = oldValue - 1;
+                }
+                input.val(newVal);
+            //   spinner.find("input").trigger("change");
+            });
+
+        // });
     });
     function addToList(product_id, option_id, status) {
         var list_id = $("input[name='list_id']:checked").val();
