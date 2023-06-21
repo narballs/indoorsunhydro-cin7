@@ -1,0 +1,45 @@
+.prev_btn_css_front_end_mbl {
+    width: 32.69px;
+    height: 32.69px;
+    border-radius: 0px !important;
+    display: flex !important;
+    align-items: center !important;
+    background: #C4C4C4;
+}
+
+.next_btn_css_front_end_mbl {
+    width: 32.69px;
+    height: 32.69px;
+    background: #C4C4C4;
+    border-radius: 0px !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+.non_active_page_number {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 18px;
+    color: #8A8A8A;
+
+}
+.pd_nmber {
+   width:11.89%;
+   text-align: center;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+
+.my-active-front{
+    background-color: #7BC533;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 18px;
+    color: #FFFFFF;
+    
+}
