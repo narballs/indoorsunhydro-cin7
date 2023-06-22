@@ -96,7 +96,7 @@
                                             </td>
                                             <td class="my_account_all_items" style="vertical-align: middle;">
                                                 <a href="{{ url('send-password/fornt-end/' . $contact->user_id) }}"
-                                                    class="btn bg-white">send password</a>
+                                                    class="btn bg-white ps-0">send password</a>
                                             </td>
                                             <td class="my_account_all_items" style="vertical-align: middle;">
                                                 @if (!empty($contact['contact_id']))
