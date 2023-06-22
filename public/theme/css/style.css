@@ -5005,6 +5005,7 @@ select.list-dt:focus {
         margin: 0px;
         margin-top: -2rem !important;
         margin-left: 0.8rem !important;
+        font-size: 10px;
     }
 
     .font-mobile-class {
