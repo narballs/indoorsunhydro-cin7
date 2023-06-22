@@ -31,7 +31,7 @@
                 </div>
             </div>
             <div class="card-body product_table_body">
-                <div class="col-md-12 shadow-sm border order-table-items-data">
+                <div class="col-md-12 shadow-sm border order-table-items-data table-responsive">
                     <table class="table bg-white  mb-0 table-shipping-method">
                         <thead>
                             <tr class="table-header-background">

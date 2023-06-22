@@ -39,8 +39,8 @@
             </div>
             <div class="card-body product_table_body">
                 <div id="admin-users"></div>
-                <div class="col-md-12 shadow-sm border order-table-items-data">
-                    <table class="table  bg-white table-users" id="user-table">
+                <div class="col-md-12 shadow-sm border order-table-items-data table-responsive">
+                    <table class="table bg-white table-users mb-0" id="user-table">
                         <tr>
                             <thead>
                                 <tr class="table-header-background">
@@ -99,7 +99,6 @@
                                     </tr>
                                 @endforeach
                             </tbody>
-
                     </table>
                 </div>
             </div>
