@@ -12,10 +12,10 @@
     <div class="row">
         <div class="col-md-10 m-auto">
             <div class="row">
-                <div class="col-md-6 py-4">
+                <div class="col-md-6 pt-4">
                     @include('my-account.my-account-side-bar')
                 </div>
-                <div class="col-md-6 py-4">
+                {{-- <div class="col-md-6 py-4">
                     <div class="row search_row_my_account_page">
                         <div class="col-md-10 d-flex ">
                             <div class="has-search my_account_search w-100 ">
@@ -30,10 +30,10 @@
                         </div>
                         </form>
                     </div>
-                </div>
+                </div> --}}
             </div>
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-12 my-3">
                     <div class="card">
                         <div class="card-header bg-white">
                             <p class="my_account_users_heading mb-0">Users</p>
@@ -42,13 +42,12 @@
                             <table class="table address-table-items-data m-0 ">
                                 <thead class="border-bottom-0 border-bottom-0">
                                     <tr class="table-header-background">
-                                        <td class="d-flex table-row-item">
+                                        <td class="table-row-item">
                                             <div class="custom-control custom-checkbox tabel-checkbox">
                                                 <input
                                                     class="custom-control-input custom-control-input-success checkbox-table"
                                                     type="checkbox" id="selectAll" value="">
                                                 <label for="selectAll" class="custom-control-label"></label>
-
                                                 <span class="table-row-heading-order">
                                                     <i class="fas fa-arrow-up mt-1" style="font-size:14.5px ;"></i>
                                                 </span>
@@ -66,7 +65,7 @@
                                 <tbody>
                                     @foreach ($secondary_contacts as $key => $contact)
                                         <tr>
-                                            <td class="d-flex table-items justify-content-start align-items-lg-center">
+                                            <td class="table-items justify-content-start align-items-lg-center">
                                                 <div class="custom-control custom-checkbox tabel-checkbox">
                                                     <input
                                                         class="custom-control-input custom-control-input-success sub_chk"
@@ -74,30 +73,25 @@
                                                         id="separate_check_{{ $contact->id }}">
                                                     <label for="separate_check_{{ $contact->id }}"
                                                         class="custom-control-label"></label>
-                                                </div>
-                                                <div>
-                                                    {{ $key + 1 }}
+                                                    <span> {{ $key + 1 }}</span>
                                                 </div>
                                             </td>
                                             <td class="my_account_address_items" style="vertical-align: middle;">
                                                 @if (!empty($contact['firstName'] && $contact['lastName']))
                                                     {{ $contact['firstName'] . ' ' . $contact['lastName'] }}
                                                 @else
-                                                    <span class="badge badge-info">empty</span>
                                                 @endif
                                             </td>
                                             <td class="my_account_all_items" style="vertical-align: middle;">
                                                 @if (!empty($contact['email']))
                                                     {{ $contact['email'] }}
                                                 @else
-                                                    <span class="badge badge-info">empty</span>
                                                 @endif
                                             </td>
                                             <td class="my_account_all_items" style="vertical-align: middle;">
                                                 @if (!empty($contact['jobTitle']))
                                                     {{ $contact['jobTitle'] }}
                                                 @else
-                                                    <span class="badge badge-info">empty</span>
                                                 @endif
                                             </td>
                                             <td class="my_account_all_items" style="vertical-align: middle;">
@@ -117,7 +111,6 @@
                                                 @elseif(!empty($contact['mobile']))
                                                     {{ $contact['mobile'] }}
                                                 @else
-                                                    <span class="badge badge-info">empty</span>
                                                 @endif
                                             </td>
                                             <td style="vertical-align: middle;">

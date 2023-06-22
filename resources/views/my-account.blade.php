@@ -11,7 +11,7 @@
     <div class="row">
         <div class="col-md-10 m-auto">
             <div class="row">
-                <div class="col-md-6 py-3">
+                <div class="col-md-6 pt-3">
                     @include('my-account.my-account-side-bar')
                 </div>
                 {{-- <div class="col-md-6 py-4">
@@ -30,7 +30,7 @@
                         </form>
                     </div>
                 </div> --}}
-                <div class="col-md-12 my-4">
+                <div class="col-md-12">
                     {{-- <div class="row">
                         <div class="col-md-12 d-flex ps-4">
                             <span>
@@ -51,11 +51,11 @@
                         </div>
                     </div> --}}
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-12 my-3">
                             <div class="row">
-                                <div class="col-md-8 my-3">
+                                <div class="col-md-8">
                                     @foreach ($user_orders as $user_order)
-                                        <div class="card my_account_order_card my-4">
+                                        <div class="card my_account_order_card my-3">
                                             <div class="card-header my_account_order_card_header">
                                                 <div class="row">
                                                     <div
@@ -203,7 +203,7 @@
                                                     @endif
                                                 </div>
                                             </div>
-                                            <div class="card-footer bg-white">
+                                            <div class="border-top">
                                                 <p class="my_account_total_items_listing">
                                                     {{ $totalItems }} items
                                                     in
@@ -214,182 +214,6 @@
                                     @endforeach
                                     {{ $user_orders->appends(Request::all())->links() }}
                                 </div>
-                                {{-- <div class="col-md-3 my-3">
-                                    <div class="card px-4 py-4 my-4">
-                                        <p class="my_account_buy_agin_heading">Buy again</p>
-                                        <div class="row">
-                                            <div class="col-md-12 mb-4 border-bottom">
-                                                <div class="d-flex">
-                                                    <div class="my-2" style="width:25% !important">
-                                                        <div>
-                                                            <img src="{{ asset('/theme/img/image_not_available.png') }}"
-                                                                alt="" class="img-fluid ">
-                                                        </div>
-                                                    </div>
-                                                    <div style="width:75%">
-                                                        <p class="pt-2 my_account_buy_again_product_name mb-0">Abstrax
-                                                            – Super
-                                                            Lemon
-                                                            Haze
-                                                            (Sativa) Terpene Blend 50 g
-                                                        </p>
-                                                        <p class="m-0 p-0 my_account_total_price_buy_again">$350.00</p>
-                                                        <p class="m-0 p-0 my_account_buy_again_category_name ">
-                                                            Category:
-                                                            Terpenes
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-12 mb-4">
-                                                    <button type="button"
-                                                        class="btn buy_again_add_to_cart_btn w-100">Add to
-                                                        Cart
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-12 mb-4 border-bottom">
-                                                <div class="d-flex">
-                                                    <div class="my-2" style="width:25% !important">
-                                                        <div>
-                                                            <img src="{{ asset('/theme/img/image_not_available.png') }}"
-                                                                alt="" class="img-fluid ">
-                                                        </div>
-                                                    </div>
-                                                    <div style="width:75%">
-                                                        <p class="pt-2 my_account_buy_again_product_name mb-0">Abstrax
-                                                            – Super
-                                                            Lemon
-                                                            Haze
-                                                            (Sativa) Terpene Blend 50 g
-                                                        </p>
-                                                        <p class="m-0 p-0 my_account_total_price_buy_again">$350.00</p>
-                                                        <p class="m-0 p-0 my_account_buy_again_category_name ">
-                                                            Category:
-                                                            Terpenes
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-12 mb-4">
-                                                    <button type="button"
-                                                        class="btn buy_again_add_to_cart_btn w-100">Add to
-                                                        Cart</button>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-12 mb-4 border-bottom">
-                                                <div class="d-flex">
-                                                    <div class="my-2" style="width:25% !important">
-                                                        <div>
-                                                            <img src="{{ asset('/theme/img/image_not_available.png') }}"
-                                                                alt="" class="img-fluid ">
-                                                        </div>
-                                                    </div>
-                                                    <div style="width:75%">
-                                                        <p class="pt-2 my_account_buy_again_product_name mb-0">Abstrax
-                                                            – Super
-                                                            Lemon
-                                                            Haze
-                                                            (Sativa) Terpene Blend 50 g
-                                                        </p>
-                                                        <p class="m-0 p-0 my_account_total_price_buy_again">$350.00</p>
-                                                        <p class="m-0 p-0 my_account_buy_again_category_name ">
-                                                            Category:
-                                                            Terpenes
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-12 mb-4">
-                                                    <button type="button"
-                                                        class="btn buy_again_add_to_cart_btn w-100">Add to
-                                                        Cart</button>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-12 mb-4 border-bottom">
-                                                <div class="d-flex">
-                                                    <div class="my-2" style="width:25% !important">
-                                                        <div>
-                                                            <img src="{{ asset('/theme/img/image_not_available.png') }}"
-                                                                alt="" class="img-fluid ">
-                                                        </div>
-                                                    </div>
-                                                    <div style="width:75%">
-                                                        <p class="pt-2 my_account_buy_again_product_name mb-0">Abstrax
-                                                            – Super
-                                                            Lemon
-                                                            Haze
-                                                            (Sativa) Terpene Blend 50 g
-                                                        </p>
-                                                        <p class="m-0 p-0 my_account_total_price_buy_again">$350.00</p>
-                                                        <p class="m-0 p-0 my_account_buy_again_category_name ">
-                                                            Category:
-                                                            Terpenes
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-12 mb-4">
-                                                    <button type="button"
-                                                        class="btn buy_again_add_to_cart_btn w-100">Add to
-                                                        Cart</button>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-12 mb-4 border-bottom">
-                                                <div class="d-flex">
-                                                    <div class="my-2" style="width:25% !important">
-                                                        <div>
-                                                            <img src="{{ asset('/theme/img/image_not_available.png') }}"
-                                                                alt="" class="img-fluid ">
-                                                        </div>
-                                                    </div>
-                                                    <div style="width:75%">
-                                                        <p class="pt-2 my_account_buy_again_product_name mb-0">Abstrax
-                                                            – Super
-                                                            Lemon
-                                                            Haze
-                                                            (Sativa) Terpene Blend 50 g
-                                                        </p>
-                                                        <p class="m-0 p-0 my_account_total_price_buy_again">$350.00</p>
-                                                        <p class="m-0 p-0 my_account_buy_again_category_name ">
-                                                            Category:
-                                                            Terpenes
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-12 mb-4">
-                                                    <button type="button"
-                                                        class="btn buy_again_add_to_cart_btn w-100">Add to
-                                                        Cart</button>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-12 mb-4 border-bottom">
-                                                <div class="d-flex">
-                                                    <div class="my-2" style="width:25% !important">
-                                                        <div>
-                                                            <img src="{{ asset('/theme/img/image_not_available.png') }}"
-                                                                alt="" class="img-fluid ">
-                                                        </div>
-                                                    </div>
-                                                    <div style="width:75%">
-                                                        <p class="pt-2 my_account_buy_again_product_name mb-0">Abstrax
-                                                            – Super
-                                                            Lemon
-                                                            Haze
-                                                            (Sativa) Terpene Blend 50 g
-                                                        </p>
-                                                        <p class="m-0 p-0 my_account_total_price_buy_again">$350.00</p>
-                                                        <p class="m-0 p-0 my_account_buy_again_category_name ">
-                                                            Category:
-                                                            Terpenes
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-12 mb-4">
-                                                    <button type="button"
-                                                        class="btn buy_again_add_to_cart_btn w-100">Add to
-                                                        Cart</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div> --}}
                             </div>
                         </div>
                     </div>
