@@ -15,7 +15,7 @@
                     @include('my-account.my-account-side-bar')
                 </div>
             </div>
-            <div class="col-md-12 p-0 my-4">
+            <div class="col-md-12 p-0">
                 <div class="card">
                     <div class="card-header bg-white ps-5">
                         <p class="my_account_default_address mb-0">

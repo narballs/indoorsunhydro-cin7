@@ -620,7 +620,7 @@ class UserController extends Controller
                 ->with('contact')
                 ->with('apiOrderItem.product')
                 ->orderBy('id', 'desc')
-                ->paginate(3);
+                ->paginate(10);
             $custom_roles_with_company = DB::table('custom_roles')
                 ->where('user_id', $user_id)
                 ->where('company', $selected_company)
@@ -826,7 +826,7 @@ class UserController extends Controller
         $user = User::where('id', $user_id)->first();
         $all_ids = UserHelper::getAllMemberIds($user);
         $user_address = Contact::where('user_id', $user_id)->first();
-        $secondary_contacts = Contact::whereIn('id', $all_ids)->paginate(3);
+        $secondary_contacts = Contact::whereIn('id', $all_ids)->paginate(10);
         $list = BuyList::where('id', 20)->with('list_products.product.options')->first();
         $contact = Contact::where('email', $user_address->email)->first();
         $companies = Contact::where('user_id', $user_id)->get();
