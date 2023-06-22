@@ -63,7 +63,7 @@ return [
     |
     */
 
-    'logo' => '<b>INOOR SUN HYDRO</b>',
+    'logo' => '<b>INDOOR SUN HYDRO</b>',
     'logo_img_class' => 'd-none brand-image img-circle elevation-3',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
