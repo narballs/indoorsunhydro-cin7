@@ -253,9 +253,9 @@ class ProductController extends Controller
             $products_query = Product::where('status', '!=', 'Inactive')
                 ->whereIn('category_id', $category_ids)
                 ->with('options.price', 'brand');
-            // if (!empty($brand_id)) {
-            //     $products_query->where('brand_id', $brand_id);
-            // }
+            if (!empty($brand_id)) {
+                $products_query->where('brand_id', $brand_id);
+            }
             $childeren_id = $request->get('childeren_id');
             if (!empty($childeren_id)) {
 
@@ -917,7 +917,7 @@ class ProductController extends Controller
         } elseif (empty($search_queries)) {
             $brands = Brand::orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
         }
-        $categories = Category::where('parent_id', 0)->where('status' , 1)->orderBy('name', 'ASC')->get();
+        $categories = Category::where('parent_id', 0)->where('is_active' , 1)->orderBy('name', 'ASC')->get();
         $category_ids = Category::where('parent_id', $category_id)->pluck('id')->toArray();
         array_push($category_ids, $category_id);
         $all_product_ids = Product::whereIn('category_id', $category_ids)->pluck('id')->toArray();
