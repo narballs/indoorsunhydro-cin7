@@ -962,7 +962,7 @@
 										Delivery Options
 									</h3>
 									<div class="d-flex">
-										@if($order->paymentTerms == 'C.O.D')
+										@if($order->paymentTerms == 'Local Delivery')
 										<div class="w-50 local_order p-1 d-flex align-items-center justify-content-evenly">
 											<span class="radio_delievery radio_selected"></span>
 											<span class="label_delievery">
