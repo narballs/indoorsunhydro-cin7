@@ -6860,3 +6860,14 @@ ul.pager>.main-row>.pagination>li {
     outline: 0;
     box-shadow: none !important;
 }
+
+.order_detail_tabs {
+    width: 560.62px !important;
+    border-radius: 6px !important;
+    border: 1.29139px solid #E1E1E1;
+    border-right: none !important
+}
+
+.disable>.prev_btn_css {
+    display: flex !important;
+}

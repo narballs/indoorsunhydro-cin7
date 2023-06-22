@@ -3,7 +3,7 @@
         <div class="row main-row">
             <div class="col-md-3 pagination previous_btn">
                 @if ($paginator->onFirstPage())
-                    <li class="disabled btn btn-flat prev_btn_css">
+                    <li class=" d-flex disabled btn btn-flat prev_btn_css">
 
                         <i class="fa fa-arrow-left  mr-1" style="color:#4B4B4B; font-size:13px;"></i><span
                             class="prev_next_btn"> Previous</span>
