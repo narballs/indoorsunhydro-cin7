@@ -68,7 +68,7 @@
     font-family: 'Poppins', sans-serif !important;
     font-style: normal;
     font-weight: 500;
-    font-size: 0.963rem;
+    font-size: 0.826rem !important;
     line-height: 17px;
     color: #525252;
     border-bottom: 0.944079px solid #EAECF0 !important;
@@ -817,7 +817,7 @@ ul.pager>.main-row>.pagination>li {
     color: #222222 !important;
     font-style: normal !important;
     font-weight: 500 !important;
-    font-size: 0.963rem !important;
+    font-size: 0.826rem !important;
 
 }
 
@@ -859,4 +859,5 @@ ul.pager>.main-row>.pagination>li {
 
 .shadow-sm {
     box-shadow: 0 0.160rem .25rem rgba(0, 0, 0, .075) !important;
+    padding: 0px !important;
 }
