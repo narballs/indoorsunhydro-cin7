@@ -6252,6 +6252,8 @@ select.list-dt:focus {
     font-size: 20px;
     line-height: 25px;
     color: #242424;
+    padding-left: 18px !important;
+    padding-top: 11px !important;
 }
 
 .all_items_to_cart_btn {

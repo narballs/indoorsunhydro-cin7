@@ -52,7 +52,6 @@
                                     </button>
                                 </span>
                             </div>
-
                         </div>
                     </div>
                     <div class="row search_row_admin-interface">
@@ -103,7 +102,7 @@
                         </div>
                     </div>
                     <div class="col-md-12 shadow-sm border order-table-items-data table-responsive">
-                        <table class="table  bg-white  table-customer mb-0">
+                        <table class="table  bg-white  table-customer mb-0 mobile-view">
                             <thead>
                                 <tr class="table-header-background">
                                     <td class="d-flex table-row-item mt-0">
