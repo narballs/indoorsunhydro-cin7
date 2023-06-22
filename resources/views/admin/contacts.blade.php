@@ -33,7 +33,7 @@
                 </div>
             </div>
             <div class="card-body product_table_body">
-                <div class="col-md-12 shadow border order-table-items-data">
+                <div class="col-md-12 shadow-sm border order-table-items-data">
                     <table class="table bg-white  mb-0 table-contact-method">
                         <thead>
                             <tr class="table-header-background">
@@ -72,7 +72,7 @@
                         <tbody>
                             @foreach ($contacts as $key => $contact)
                                 <tr id="row-{{ $contact->id }}" class="supplier-row border-bottom">
-                                    <td class="d-flex table-items">
+                                    <td class="d-flex table-items" style="  padding-top: 14px !important; ">
                                         <div class="custom-control custom-checkbox tabel-checkbox">
                                             <input class="custom-control-input custom-control-input-success sub_chk"
                                                 data-id="{{ $contact->id }}" type="checkbox"
