@@ -18,7 +18,7 @@
                     <button type="button" class="btn my_account_add_a_new_address"> Add a new address +</button>
                 </div>
             </div>
-            <div class="col-md-12 p-0 my-4">
+            <div class="col-md-12 p-0">
                 <div class="card me-xxl-5 me-lx-5 me-lg-5">
                     <div class="card-header bg-white ps-5">
                         <p class="my_account_default_address">
@@ -114,7 +114,7 @@
                             <table class="table address-table-items-data m-0 ">
                                 <thead>
                                     <tr class="table-header-background">
-                                        <td class="d-flex table-row-item">
+                                        <td class="table-row-item">
                                             <div class="custom-control custom-checkbox tabel-checkbox">
                                                 <input
                                                     class="custom-control-input custom-control-input-success checkbox-table"
@@ -139,7 +139,7 @@
                                 <tbody>
                                     @foreach ($secondary_contacts as $key => $contact)
                                         <tr class="py-5">
-                                            <td class="d-flex table-items">
+                                            <td class="table-items">
                                                 <div class="custom-control custom-checkbox tabel-checkbox">
                                                     <input
                                                         class="custom-control-input custom-control-input-success sub_chk"
@@ -147,51 +147,45 @@
                                                         id="separate_check_{{ $contact->id }}">
                                                     <label for="separate_check_{{ $contact->id }}"
                                                         class="custom-control-label"></label>
+                                                    <span>
+                                                        {{ $key + 1 }}
+                                                    </span>
                                                 </div>
-                                                <span>
-                                                    {{ $key + 1 }}
-                                                </span>
                                             </td>
                                             <td class="my_account_address_items">
                                                 @if (!empty($contact['firstName'] && $contact['lastName']))
                                                     {{ $contact['firstName'] . ' ' . $contact['lastName'] }}
                                                 @else
-                                                    <span class="badge badge-info">empty</span>
                                                 @endif
                                             </td>
                                             <td class="my_account_all_items">
                                                 @if (!empty($contact['postalAddress1']))
                                                     {{ $contact['postalAddress1'] }}
                                                 @else
-                                                    <span class="badge badge-info">empty</span>
                                                 @endif
                                             </td>
                                             <td class="my_account_all_items">
                                                 @if (!empty($contact['postalCity']))
                                                     {{ $contact['postalCity'] }}
                                                 @else
-                                                    <span class="badge badge-info">empty</span>
                                                 @endif
                                             </td>
                                             <td class="my_account_all_items">
                                                 @if (!empty($contact['Country']))
                                                     {{ $contact['Country'] }}
                                                 @else
-                                                    <span class="badge badge-info">empty</span>
                                                 @endif
                                             </td>
                                             <td class="my_account_all_items">
                                                 @if (!empty($contact['postalState']))
                                                     {{ $contact['postalState'] }}
                                                 @else
-                                                    <span class="badge badge-info">empty</span>
                                                 @endif
                                             </td>
                                             <td class="my_account_all_items">
                                                 @if (!empty($contact['postalCode']))
                                                     {{ $contact['postalCode'] }}
                                                 @else
-                                                    <span class="badge badge-info">empty</span>
                                                 @endif
                                             </td>
                                             <td class="my_account_all_items">
@@ -200,7 +194,6 @@
                                                 @elseif(!empty($contact['mobile']))
                                                     {{ $contact['mobile'] }}
                                                 @else
-                                                    <span class="badge badge-info">empty</span>
                                                 @endif
                                             </td>
                                             <td>
