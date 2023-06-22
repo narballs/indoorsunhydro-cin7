@@ -73,7 +73,7 @@
                     <div class="col-md-12 btn-row mb-4 d-none" id="fullfillOrder">
                         <div class="row py-2">
                             <div class="col-md-4 col-lg-4 col-xl-7 col-xxl-2">
-                                <span class="border-right pe-5 select-row-items ms-2 pt-2" id="items_selected">
+                                <span class="border-right pe-5 select-row-items ms-2 pt-1" id="items_selected">
                                     0 Selected
                                 </span>
                             </div>
@@ -102,7 +102,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-12 shadow border order-table-items-data table-responsive">
+                    <div class="col-md-12 shadow-sm border order-table-items-data table-responsive">
                         <table class="table  bg-white  table-customer mb-0">
                             <thead>
                                 <tr class="table-header-background">
