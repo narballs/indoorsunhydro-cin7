@@ -27,8 +27,8 @@
             </div>
             <div class="card-body product_table_body">
                 <div id="admin-users"></div>
-                <div class="col-md-12 shadow border order-table-items-data">
-                    <table class="table  bg-white table-users" id="user-table">
+                <div class="col-md-12 shadow-sm border order-table-items-data table-responsive">
+                    <table class="table  bg-white mb-0 table-users" id="user-table">
                         <tr>
                             <thead>
                                 <tr class="table-header-background">
@@ -55,7 +55,7 @@
                                         </td>
                                         <td class="user_table_items">
                                             {{ $daily_api_log->count }}
-                                            <?php $total_count += $daily_api_log->count; ?> 
+                                            <?php $total_count += $daily_api_log->count; ?>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -73,4 +73,4 @@
 @section('css')
     <link rel="stylesheet" href="/theme/css/admin_custom.css">
     <link rel="stylesheet" href="{{ asset('admin/admin_lte.css') }}">
-@stop    
+@stop
