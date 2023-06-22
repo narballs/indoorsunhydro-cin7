@@ -19,7 +19,8 @@
         @else
             <a href="{{ url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug) }}">
                 <span class="d-flex justify-content-center align-items-center">
-                    <img src=" {{ asset('theme/img/image_not_available.png') }}" class="img_responsive_mbl  w-100  h-75 w-75" />
+                    <img src=" {{ asset('theme/img/image_not_available.png') }}" class="img_responsive_mbl_not_available col-md-10 .image-body offset-1 mt-2"
+                    style="width: 120px;height: 266px; " />
                 </span>
             </a>
         @endif

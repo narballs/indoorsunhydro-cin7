@@ -4839,6 +4839,12 @@ select.list-dt:focus {
         height: 112.74px !important;
     }
 
+    .img_responsive_mbl_not_available {
+        width: 112.74px !important;
+        height: 128px !important;
+    }
+
+
     .product-row-product-title {
         font-family: 'Poppins';
         font-style: normal;
@@ -6859,4 +6865,15 @@ ul.pager>.main-row>.pagination>li {
 .btn:focus {
     outline: 0;
     box-shadow: none !important;
+}
+
+.order_detail_tabs {
+    width: 560.62px !important;
+    border-radius: 6px !important;
+    border: 1.29139px solid #E1E1E1;
+    border-right: none !important
+}
+
+.disable>.prev_btn_css {
+    display: flex !important;
 }
