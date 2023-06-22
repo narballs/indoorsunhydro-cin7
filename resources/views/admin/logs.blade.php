@@ -39,7 +39,7 @@
             </div>
             <div class="card-body product_table_body">
                 <div id="admin-users"></div>
-                <div class="col-md-12 shadow border order-table-items-data">
+                <div class="col-md-12 shadow-sm border order-table-items-data">
                     <table class="table  bg-white table-users" id="user-table">
                         <tr>
                             <thead>
@@ -72,7 +72,7 @@
                             <tbody>
                                 @foreach ($api_logs as $key => $log)
                                     <tr id="row-{{ $log->id }}" class="user-row border-bottom">
-                                        <td class="d-flex table-items">
+                                        <td class="d-flex table-items" style="padding-top: 16px !important;">
                                             <div class="custom-control custom-checkbox tabel-checkbox">
                                                 <input class="custom-control-input custom-control-input-success sub_chk"
                                                     data-id="{{ $log->id }}" type="checkbox"
