@@ -33,7 +33,7 @@
                 </div>
             </div>
             <div class="card-body product_table_body">
-                <div class="col-md-12 shadow-sm border order-table-items-data">
+                <div class="col-md-12 shadow-sm border order-table-items-data table-responsive">
                     <table class="table bg-white  mb-0 table-contact-method">
                         <thead>
                             <tr class="table-header-background">
@@ -165,7 +165,7 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td colspan="7">
+                                <td colspan="7" class="p-0">
                                     {{ $contacts->links('pagination.custom_pagination') }}
                                 </td>
                             </tr>

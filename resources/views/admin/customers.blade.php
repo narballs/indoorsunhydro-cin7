@@ -55,7 +55,7 @@
                 </div>
             </div>
             <div class="card-body product_table_body">
-                <div class="col-md-12 shadow-sm border order-table-items-data">
+                <div class="col-md-12 shadow-sm border order-table-items-data table-responsive">
                     <table class="table bg-white mb-0 table-customer" id="table">
                         <thead>
                             <tr class="table-header-background">
@@ -109,15 +109,14 @@
                                 @include('admin.customer_row')
                             @endforeach
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="11">
+                                    {{ $contacts->links('pagination.custom_pagination') }}
+                                </td>
+                            </tr>
+                        </tfoot>
                     </table>
-                    </tbody>
-                    <tfoot class="bg-white">
-                        <tr>
-                            <td colspan="10">
-                                {{ $contacts->links('pagination.custom_pagination') }}
-                            </td>
-                        </tr>
-                    </tfoot>
                 </div>
             </div>
         </div>
