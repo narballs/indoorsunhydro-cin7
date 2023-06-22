@@ -4839,6 +4839,12 @@ select.list-dt:focus {
         height: 112.74px !important;
     }
 
+    .img_responsive_mbl_not_available {
+        width: 112.74px !important;
+        height: 128px !important;
+    }
+
+
     .product-row-product-title {
         font-family: 'Poppins';
         font-style: normal;
