@@ -253,7 +253,7 @@ $cart_price = 0;
                                         <input type="hidden" value="{{ $payment_method->name }}"
                                             name="method_name">
                                         <input type="radio" id="local_delivery_{{ $payment_option->id }}"
-                                            name="method_option"{{ $payment_option->option_name == 'C.O.D' ? 'checked' : '' }}
+                                            name="method_option"{{ $payment_option->option_name == 'Local Delivery' ? 'checked' : '' }}
                                             value="{{ $payment_option->option_name }}" style="background: #008BD3;">
                                         <label for="local_delivery payment-option-label"
                                             class="thank-you-page-product-items-payment-method-cart">{{ $payment_option->option_name }}</label>
@@ -575,7 +575,7 @@ $cart_price = 0;
                                                                                 name="method_name">
                                                                             <input type="radio"
                                                                                 id="local_delivery_{{ $payment_option->id }}"
-                                                                                name="method_option"  {{ $payment_option->option_name == 'C.O.D' ? 'checked' : '' }}
+                                                                                name="method_option"  {{ $payment_option->option_name == 'Local Delivery' ? 'checked' : '' }}
                                                                                 value="{{ $payment_option->option_name }}">
                                                                             <label
                                                                                 for="local_delivery payment-option-label">{{ $payment_option->option_name }}</label>
@@ -946,7 +946,7 @@ $cart_price = 0;
                                                                                 name="method_name">
                                                                             <input type="radio"
                                                                                 id="local_delivery_{{ $payment_option->id }}"
-                                                                                name="method_option"  {{ $payment_option->option_name == 'C.O.D' ? 'checked' : '' }}
+                                                                                name="method_option"  {{ $payment_option->option_name == 'Local Delivery' ? 'checked' : '' }}
                                                                                 value="{{ $payment_option->option_name }}">
                                                                             <label
                                                                                 for="local_delivery payment-option-label">{{ $payment_option->option_name }}</label>
