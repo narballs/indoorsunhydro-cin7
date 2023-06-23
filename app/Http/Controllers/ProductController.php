@@ -999,7 +999,7 @@ class ProductController extends Controller
                     $q->where('status', '!=', 'Disabled');
                 }])->where('status', '!=', 'Inactive')
                     ->where('name', 'LIKE', '%' . $value . '%')
-                    ->Where('code', 'LIKE', '%' . $value . '%')
+                    ->orWhere('code', 'LIKE', '%' . $value . '%')
                     ->paginate($per_page);
             };
         }
