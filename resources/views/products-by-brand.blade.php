@@ -54,10 +54,11 @@
                   onchange="handleSelectChange('category')">
                   <option>Select Category</option>
                   @foreach($categories as $category)
-
-                  <option value="{{$category->id}}/{{$category->slug}}" {{ isset($category_id) &&
-                     $category_id==$category->id ? 'selected="selected"' : '' }}>{{ $category->name }}</option>
-                  <!-- <option value="{{$category->id}}/{{$category->slug}}" {{ isset($selected_category_id) && $selected_category_id == $selected_category_id ? 'selected="selected"' : '' }}>{{ $category->name }}</option> -->
+                     @if($category->name != 'Not visable')
+                     <option value="{{$category->id}}/{{$category->slug}}" {{ isset($category_id) &&
+                        $category_id==$category->id ? 'selected="selected"' : '' }}>{{ $category->name }}</option>
+                     <!-- <option value="{{$category->id}}/{{$category->slug}}" {{ isset($selected_category_id) && $selected_category_id == $selected_category_id ? 'selected="selected"' : '' }}>{{ $category->name }}</option> -->
+                     @endif
                   @endforeach
 
                   <!-- @foreach($products as $key=>$product)
@@ -404,10 +405,11 @@
                   onchange="handleSelectChange('category')">
                   <option>Select Category</option>
                   @foreach($categories as $category)
-
-                  <option value="{{$category->id}}/{{$category->slug}}" {{ isset($category_id) &&
-                     $category_id==$category->id ? 'selected="selected"' : '' }}>{{ $category->name }}</option>
-                  <!-- <option value="{{$category->id}}/{{$category->slug}}" {{ isset($selected_category_id) && $selected_category_id == $selected_category_id ? 'selected="selected"' : '' }}>{{ $category->name }}</option> -->
+                     @if($category->name != 'Not visable')
+                     <option value="{{$category->id}}/{{$category->slug}}" {{ isset($category_id) &&
+                        $category_id==$category->id ? 'selected="selected"' : '' }}>{{ $category->name }}</option>
+                     <!-- <option value="{{$category->id}}/{{$category->slug}}" {{ isset($selected_category_id) && $selected_category_id == $selected_category_id ? 'selected="selected"' : '' }}>{{ $category->name }}</option> -->
+                     @endif
                   @endforeach
 
                   <!-- @foreach($products as $key=>$product)
@@ -539,8 +541,10 @@
                            id="selected_cat_mbl" name="selected_cat">
                            <option class="filter_drop_down_mbl" value="">Select Category</option>
                            @foreach ($categories as $category)
-                           <option class="filter_drop_down_mbl" value="{{$category->id}}">{{ $category->name }}
-                           </option>
+                              @if($category->name != 'Not visable')
+                              <option class="filter_drop_down_mbl" value="{{$category->id}}">{{ $category->name }}
+                              </option>
+                              @endif
                            @endforeach
                         </select>
                      </div>

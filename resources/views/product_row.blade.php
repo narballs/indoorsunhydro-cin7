@@ -13,14 +13,14 @@
             <a href="{{ url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug) }}">
                 <span class="d-flex justify-content-center align-content-center">
                     <img src="{{ $product->images }}" class="img_responsive_mbl col-md-10 .image-body offset-1 mt-2"
-                        style="width: 120px;height: 250px; " />
+                        style="width: 120px;height: 185px; " />
                 </span>
             </a>
         @else
             <a href="{{ url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug) }}">
                 <span class="d-flex justify-content-center align-items-center">
                     <img src=" {{ asset('theme/img/image_not_available.png') }}" class="img_responsive_mbl_not_available col-md-10 .image-body offset-1 mt-2"
-                    style="width: 120px;height: 266px; " />
+                    style="width: 120px;height: 200px; " />
                 </span>
             </a>
         @endif
