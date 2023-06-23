@@ -14,12 +14,12 @@
                 <div class="col-md-6 py-3">
                     @include('my-account.my-account-side-bar')
                 </div>
-                <div class="col-md-5 py-3 text-right">
+                <div class="col-md-6 py-3 text-right">
                     <button type="button" class="btn my_account_add_a_new_address"> Add a new address +</button>
                 </div>
             </div>
             <div class="col-md-12 p-0">
-                <div class="card me-xxl-5 me-lx-5 me-lg-5">
+                <div class="card">
                     <div class="card-header bg-white ps-5">
                         <p class="my_account_default_address">
                             Default Addresses
@@ -105,7 +105,7 @@
                 </div>
             </div>
             <div class="col-md-12 my-4 p-0">
-                <div class="card me-xxl-5 me-lx-5 me-lg-5">
+                <div class="card">
                     <p class="additional_address_entries px-5 py-4 mb-0">
                         Additional Address Entries
                     </p>
@@ -217,7 +217,6 @@
         </div>
     </div>
 </div>
-
 
 @include('my-account.my-account-scripts')
 @include('partials.product-footer')

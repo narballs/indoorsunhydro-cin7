@@ -239,7 +239,8 @@
                                                         <a href="#" class="edit a_class" title=""
                                                             data-toggle="tooltip" data-original-title="Edit"><img
                                                                 src="/theme/img/edit.png" alt=""
-                                                                class="img-fluid w-100">
+                                                                class="img-fluid w-100"
+                                                                style="margin-top: -2px !important">
                                                         </a>
                                                     </span>
                                                     <span>
@@ -247,7 +248,8 @@
                                                             id="{{ $order->id }}" title=""
                                                             data-toggle="tooltip" data-original-title="Delete">
                                                             <img src="/theme/img/delete.png" alt=""
-                                                                class="img-fluid w-100">
+                                                                class="img-fluid w-100"
+                                                                style="margin-top: -3px !important">
                                                         </a>
 
                                                     </span>
@@ -374,7 +376,7 @@
         .badge-warning {
             background-color: #f1e8cb;
             color: #b58903 !important;
-            padding: 6px !important;
+            padding: 5px !important;
             font-style: normal;
             font-weight: 500;
             font-size: 11.3289px;
