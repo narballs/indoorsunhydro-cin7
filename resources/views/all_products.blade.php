@@ -47,9 +47,11 @@
                         onchange="handleSelectChange('category')">
                         <option value="0">Select Category</option>
                         @foreach ($categories as $category)
+                            @if($category->name != 'Not visable')
                             <option value="{{ $category->id }}"
                                 {{ isset($category_id) && $category_id == $category->id ? 'selected="selected"' : '' }}>
                                 {{ $category->name }}</option>
+                            @endif
                         @endforeach
                     </select>
                 </div>
@@ -289,9 +291,11 @@
                         onchange="handleSelectChange('category')">
                         <option value="0">Select Category</option>
                         @foreach ($categories as $category)
-                            <option value="{{ $category->id }}"
+                            @if($category->name != 'Not visable')
+                                <option value="{{ $category->id }}"
                                 {{ isset($category_id) && $category_id == $category->id ? 'selected="selected"' : '' }}>
                                 {{ $category->name }}</option>
+                            @endif
                         @endforeach
                     </select>
                 </div>
@@ -399,13 +403,15 @@
                                     name="selected_cat">
                                     <option class="filter_drop_down_mbl" value="">Select Category</option>
                                     @foreach ($categories as $category)
-                                        <option class="filter_drop_down_mbl" value="{{ $category->id }}" {{ isset($category_id) && $category_id == $category->id ? 'selected="selected"' : '' }}>{{ $category->name }}</option>
+                                        @if($category->name != 'Not visable')
+                                            <option class="filter_drop_down_mbl" value="{{ $category->id }}" {{ isset($category_id) && $category_id == $category->id ? 'selected="selected"' : '' }}>{{ $category->name }}</option>
+                                        @endif
                                     @endforeach
                                 </select>
                             </div>
                             <div class="col-md-12 mt-2">
                                 <?php
-                                    $child_cat = App\Models\Category::where('parent_id', $category_id)->get();
+                                    $child_cat = App\Models\Category::where('parent_id', $category_id)->where('name' , '!=' , 'Not visable')->get();
                                 ?>
                                 <label class="filter_heading_mbl">Sub Category</label>
                                 <select class="form-select form-select-mbl" id="childeren_mbl" name="childeren_category">
