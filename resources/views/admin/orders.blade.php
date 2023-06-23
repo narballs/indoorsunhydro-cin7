@@ -240,7 +240,7 @@
                                                             data-toggle="tooltip" data-original-title="Edit"><img
                                                                 src="/theme/img/edit.png" alt=""
                                                                 class="img-fluid w-100"
-                                                                style="margin-top: -1px !important">
+                                                                style="margin-top: -2px !important">
                                                         </a>
                                                     </span>
                                                     <span>
@@ -249,7 +249,7 @@
                                                             data-toggle="tooltip" data-original-title="Delete">
                                                             <img src="/theme/img/delete.png" alt=""
                                                                 class="img-fluid w-100"
-                                                                style="margin-top: -2px !important">
+                                                                style="margin-top: -3px !important">
                                                         </a>
 
                                                     </span>
