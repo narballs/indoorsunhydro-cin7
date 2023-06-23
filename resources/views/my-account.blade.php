@@ -51,7 +51,7 @@
                         </div>
                     </div> --}}
                     <div class="row">
-                        <div class="col-md-12 my-3">
+                        <div class="col-md-12">
                             <div class="row">
                                 <div class="col-md-8">
                                     @foreach ($user_orders as $user_order)
