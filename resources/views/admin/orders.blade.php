@@ -157,17 +157,21 @@
                                         </tr>
                                     @else
                                         <tr id="tr_{{ $order->id }}" class="order-row border-bottom">
-                                            <td class="d-flex table-items">
+                                            <td class="table-items">
                                                 <div class="custom-control custom-checkbox tabel-checkbox">
-                                                    <input class="custom-control-input custom-control-input-success sub_chk"
-                                                        data-id="{{ $order->id }}" type="checkbox"
-                                                        id="separate_check_{{ $order->id }}">
-                                                    <label for="separate_check_{{ $order->id }}"
-                                                        class="custom-control-label ml-4"></label>
+                                                    <span style="vertical-align: text-bottom;">
+                                                        <input
+                                                            class="custom-control-input custom-control-input-success sub_chk"
+                                                            data-id="{{ $order->id }}" type="checkbox"
+                                                            id="separate_check_{{ $order->id }}">
+                                                        <label for="separate_check_{{ $order->id }}"
+                                                            class="custom-control-label ml-4">
+                                                        </label>
+                                                    </span>
+                                                    <span class="table-row-heading-order">
+                                                        {{ $order->id }}
+                                                    </span>
                                                 </div>
-                                                <span class="table-row-heading-order">
-                                                    {{ $order->id }}
-                                                </span>
                                             </td>
                                             <td class="created_by toggleClass pb-0 pt-3">
                                                 @if (!empty($order->primaryId) && !empty($order->primary_contact))
