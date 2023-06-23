@@ -1,6 +1,6 @@
 <ul class="nav order_detail_tabs">
     <li class="text-center" style="width: 109px !important ;">
-        <a class="nav-link @yield('order-active')" href="{{ url('my-account') }}">Orders</a>
+        <a class="nav-link order_left_border @yield('order-active')" href="{{ url('my-account') }}">Orders</a>
     </li>
     <li class="text-center" style="width: 109px !important ;">
         <a class="nav-link  @yield('account-active')" href="{{ route('account_profile') }}">Profile</a>

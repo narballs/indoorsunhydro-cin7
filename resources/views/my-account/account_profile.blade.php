@@ -12,14 +12,14 @@
     <div class="row">
         <div class="col-md-10 m-auto">
             <div class="row">
-                <div class="col-md-6 pt-3">
+                <div class="col-md-6 pt-3 ps-0 rounded-5">
                     @include('my-account.my-account-side-bar')
                 </div>
                 <div class="row">
-                    <div class="col-md-12">
-                        <div class="card my_account_order_card border">
+                    <div class="col-md-12 p-0">
+                        <div class="card my-3">
                             @if (session('success'))
-                                <div class="col-md-6 m-auto pt-5">
+                                <div class="col-md-6 m-auto pt-5 ">
 
                                     <div class="alert alert-success alert-dismissible fade show" role="alert">
                                         {{ session('success') }}
@@ -29,7 +29,7 @@
                                 </div>
                             @endif
                             <div class="card-header bg-white">
-                                <p class="account_detais_profile ps-4 mb-0">Account Details</p>
+                                <p class="account_detais_profile ps-2 mb-0">Account Details</p>
                             </div>
                             <div class="card-boday">
                                 <form action="{{ route('account_profile_update') }}" method="POST"

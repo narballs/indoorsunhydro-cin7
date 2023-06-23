@@ -6094,8 +6094,12 @@ select.list-dt:focus {
     font-size: 18px !important;
     line-height: 26px !important;
     color: #989898 !important;
-    border: 1.29139px solid #E1E1E1 !important;
     text-align: center;
+    border-left: 1.29139px solid #E1E1E1 !important;
+}
+
+.order_detail_tabs .nav-link.order_left_border {
+    border-left: 0px !important
 }
 
 .order_detail_tabs .nav-link.active {
@@ -6873,10 +6877,9 @@ ul.pager>.main-row>.pagination>li {
 }
 
 .order_detail_tabs {
-    width: 560.62px !important;
+    width: 561.62px !important;
     border-radius: 6px !important;
     border: 1.29139px solid #E1E1E1;
-    border-right: none !important
 }
 
 .disable>.prev_btn_css {
