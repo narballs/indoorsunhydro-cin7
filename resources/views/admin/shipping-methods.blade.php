@@ -156,6 +156,8 @@
             .main-header {
                 border-bottom: none;
                 width: 25%;
+                height: 0px !important;
+                margin-top: 20px !important;
             }
 
             .mobile_heading {
@@ -173,7 +175,7 @@
             }
 
             .mobile_fulfill_div {
-                margin-top: 4rem
+                margin-top: 3.563rem
             }
 
             .fullfill_btn_mbl {
@@ -210,6 +212,7 @@
             .product_table_body {
                 padding-left: 11px !important;
                 padding-right: 7px !important;
+                padding-top: 8px !important;
             }
 
             .select-row-items {
@@ -233,7 +236,7 @@
                 margin-left: -34px !important;
                 color: #242424 !important;
                 margin-bottom: 0.5rem !important;
-                margin-top: 0px !important;
+                margin-top: 20px !important;
                 padding-left: 37px !important;
             }
         }
