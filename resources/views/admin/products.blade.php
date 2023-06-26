@@ -162,6 +162,8 @@
                     .main-header {
                         border-bottom: none;
                         width: 25%;
+                        height: 0px !important;
+                        margin-top: 20px !important;
                     }
 
                     .mobile_heading {
@@ -180,7 +182,7 @@
                     }
 
                     .mobile_fulfill_div {
-                        margin-top: 4rem
+                        margin-top: 3.563rem
                     }
 
                     .fullfill_btn_mbl {
@@ -239,7 +241,7 @@
                         line-height: 24px !important;
                         letter-spacing: 0.252px;
                         color: #242424 !important;
-                        margin-top: 8px !important;
+                        margin-top: 24px !important;
                         margin-bottom: 0.5rem !important;
                     }
                 }

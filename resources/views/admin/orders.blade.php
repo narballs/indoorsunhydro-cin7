@@ -309,7 +309,7 @@
             }
 
             .mobile_fulfill_div {
-                margin-top: 4rem
+                margin-top: 3.563rem
             }
 
             .fullfill_btn_mbl {

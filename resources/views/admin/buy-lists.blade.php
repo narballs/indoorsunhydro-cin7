@@ -151,6 +151,8 @@
             .main-header {
                 border-bottom: none;
                 width: 25%;
+                height: 0px !important;
+                margin-top: 20px !important;
             }
 
             .mobile_heading {
@@ -169,7 +171,7 @@
             }
 
             .mobile_fulfill_div {
-                margin-top: 4rem
+                margin-top: 3.563rem
             }
 
             .fullfill_btn_mbl {
@@ -223,14 +225,13 @@
 
             .product_heading {
                 font-size: 18px !important;
-
                 font-weight: 500 !important;
                 line-height: 24px !important;
                 letter-spacing: -0.252px !important;
                 font-family: 'Poppins', sans-serif !important;
                 margin-left: 37px !important;
                 color: #242424 !important;
-                margin-top: 0px !important;
+                margin-top: 20px !important;
             }
 
             .create_bnt {

@@ -82,7 +82,7 @@
                                             <input type="checkbox" name="test" class="checkbox-table" id="selectAll">
                                         </span>
                                         <span class="table-row-heading">
-                                            <i class="fas fa-arrow-up"></i>
+                                            <i class="fas fa-arrow-up sm-d-none"></i>
                                         </span>
                                     </td>
                                     <td>
@@ -129,7 +129,7 @@
                                                     <input type="checkbox" name="test" class="checkbox-table"
                                                         id="selectAll">
                                                 </span>
-                                                <span class="table-row-heading-user">
+                                                <span class="table-row-heading-user sm-d-none">
                                                     {{ $key + 1 }}
                                                 </span>
                                             </td>
@@ -308,6 +308,8 @@
             .main-header {
                 border-bottom: none;
                 width: 25%;
+                height: 0px !important;
+                margin-top: 20px !important;
             }
 
             .mobile_heading {
@@ -325,7 +327,7 @@
             }
 
             .mobile_fulfill_div {
-                margin-top: 4rem
+                margin-top: 3.563rem
             }
 
             .fullfill_btn_mbl {
@@ -380,12 +382,12 @@
             .product_heading {
                 color: #242424 !important;
                 font-size: 18px !important;
-                font-family: Poppins;
                 font-weight: 500;
                 line-height: 24px;
                 letter-spacing: 0.252px;
                 font-family: 'Poppins', sans-serif !important;
                 margin-left: -5px !important;
+                margin-top: 26px !important;
             }
 
             .create_bnt {
