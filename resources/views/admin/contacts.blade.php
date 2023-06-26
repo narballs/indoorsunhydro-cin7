@@ -277,6 +277,17 @@
                     margin-top: 20px !important;
                 }
 
+                .mobile_screen_Previous_btn {
+                    width: 25% !important;
+                }
+
+                .mobile_screen_pagination_number {
+                    width: 50% !important;
+                }
+
+                .mobile_screen_Previous_next {
+                    width: 25% !important;
+                }
 
             }
 

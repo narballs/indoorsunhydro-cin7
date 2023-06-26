@@ -370,6 +370,18 @@
                 margin-left: 17px !important;
                 margin-top: 29px !important;
             }
+
+            .mobile_screen_Previous_btn {
+                width: 25% !important;
+            }
+
+            .mobile_screen_pagination_number {
+                width: 50% !important;
+            }
+
+            .mobile_screen_Previous_next {
+                width: 25% !important;
+            }
         }
 
         /* mobile responsive admin panel end */
