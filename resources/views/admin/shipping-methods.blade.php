@@ -250,6 +250,7 @@
 
             .mobile_screen_Previous_next {
                 width: 25% !important;
+                margin-top: 11px !important;
             }
         }
 
@@ -302,7 +303,6 @@
             });
         });
 
-
         $('.shipping-method-row-none').mouseleave(function() {
             let id = $(this).attr('id');
             children = $(this).children('.shipping_name').children('span').removeClass('text-successs');
@@ -312,8 +312,6 @@
                 test.classList.remove('bg-icon');
             });
         });
-
-
         $(document).on('click', '#selectAll', function(e) {
             var table = $(e.target).closest('table');
             $('td input:checkbox', table).prop('checked', this.checked);

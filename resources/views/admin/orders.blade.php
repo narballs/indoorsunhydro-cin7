@@ -381,6 +381,7 @@
 
             .mobile_screen_Previous_next {
                 width: 25% !important;
+                margin-top: 11px !important;
             }
         }
 
