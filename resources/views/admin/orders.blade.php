@@ -364,6 +364,7 @@
                 font-weight: 500 !important;
                 line-height: 24px !important;
                 letter-spacing: 0.252px !important;
+                margin-left: 17px !important;
             }
         }
 
