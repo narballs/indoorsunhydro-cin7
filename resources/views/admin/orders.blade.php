@@ -78,6 +78,12 @@
                             </div>
                             <div class="col-md-8 col-lg-8 col-xl-5 col-xxl-10 d-flex justify-content-end">
                                 <div class="col-md-12 col-xl-12 col-lg-12 justify-content-end d-flex">
+                                    <span class="cancel-button-order-page">
+                                        <a class="multiple_cancel_orders btn btn-danger btn-sm cancel-row-items-order-page"
+                                            data-url="{{ url('admin/multiple/cancle/orders') }}">
+                                            Cancel Order
+                                        </a>
+                                    </span>
                                     <span id="fullfillOrder">
                                         @if ($auto_fullfill == false)
                                             <a class="order_ful_fill btn btn-sm fulfill-row-items-order-page"
@@ -90,12 +96,6 @@
                                                 Fulfill Order
                                             </a>
                                         @endif
-                                    </span>
-                                    <span class="cancel-button-order-page">
-                                        <a class="multiple_cancel_orders btn btn-danger btn-sm cancel-row-items-order-page"
-                                            data-url="{{ url('admin/multiple/cancle/orders') }}">
-                                            Cancel Order
-                                        </a>
                                     </span>
                                 </div>
                             </div>
