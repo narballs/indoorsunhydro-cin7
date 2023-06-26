@@ -255,7 +255,7 @@
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <td colspan="10">
+                                    <td colspan="10" class="mobile-screen">
                                         {{ $data->links('pagination.custom_pagination') }}
                                     </td>
                                 </tr>
@@ -410,6 +410,22 @@
                 margin-top: -7px;
                 margin-left: 32px !important;
                 padding-right: 16px !important;
+            }
+
+            .mobile-screen {
+                widows: 100% !important;
+            }
+
+            .mobile_screen_Previous_btn {
+                width: 25% !important;
+            }
+
+            .mobile_screen_pagination_number {
+                width: 50% !important;
+            }
+
+            .mobile_screen_Previous_next {
+                width: 25% !important;
             }
         }
 
