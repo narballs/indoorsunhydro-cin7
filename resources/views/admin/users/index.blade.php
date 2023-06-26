@@ -13,7 +13,7 @@
             <div class="row border-bottom product_section_header">
                 <div class="col-md-12">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-6 mobile_heading">
                             <p class="product_heading">
                                 Users Management
                             </p>
@@ -36,8 +36,8 @@
                         </div>
                         <div class="col-md-2"></div>
                         <div class="col-md-4">
-                            <div class="row">
-                                <div class="col-md-6">
+                            <div class="row filter-row-mobile-secreen">
+                                <div class="col-md-6 fillter-mobile-screen">
                                     <select name="users" id="users" onchange="userFilter()" class="form-control"
                                         style="height: 39px;margin-top: -7px;">
                                         <option value="all" class="form-control">All</option>
@@ -52,9 +52,9 @@
                                             Not Merged</option>
                                     </select>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-6 fillter-mobile-screen">
                                     <select name="secondary_user" id="secondary-user" onchange="userFilter()"
-                                        class="form-control" style="height: 39px; margin-top: -7px; margin-left: -7px;">
+                                        class="form-control select-primary-users" style="">
                                         <option value="all" class="form-control">Secondary/Primary</option>
                                         <option value="secondary-user" class="form-control"
                                             {{ isset($secondaryUser) && $secondaryUser == 'secondary-user' ? 'selected="selected"' : '' }}>
@@ -304,6 +304,113 @@
     <link rel="stylesheet" href="/theme/css/admin_custom.css">
     <link rel="stylesheet" href="{{ asset('admin/admin_lte.css') }}">
     <style>
+        @media(min-width:280px) and (max-width: 425px) {
+            .main-header {
+                border-bottom: none;
+                width: 25%;
+            }
+
+            .mobile_heading {
+                position: absolute;
+                left: 10rem;
+                top: -3rem;
+
+            }
+
+            .search_row_admin-interface {
+                position: absolute;
+                top: 1rem;
+                left: 1rem;
+                width: 95%;
+            }
+
+            .mobile_fulfill_div {
+                margin-top: 4rem
+            }
+
+            .fullfill_btn_mbl {
+                position: absolute;
+                left: 3.3rem;
+            }
+
+            .create_new_btn_mbl {
+                margin-right: 0.5rem;
+            }
+
+            .product_section_header {
+                border-bottom: none !important;
+            }
+
+            .sm-d-none {
+                display: none !important;
+            }
+
+            .bx-mobile {
+                display: flex !important;
+                justify-content: space-around !important;
+                align-items: center !important;
+            }
+
+            .mobile-screen-selected {
+                width: 30%;
+            }
+
+            .mobile-screen-ordrs-btn {
+                width: 70%;
+            }
+
+            .product_table_body {
+                padding-right: 13px !important;
+                margin-top: -17px;
+                padding-left: 0px !important;
+            }
+
+            .select-row-items {
+                padding-left: 12px !important;
+                display: flex;
+                justify-content: start;
+                align-items: center !important;
+                color: #222222 !important;
+                font-style: normal !important;
+                font-weight: 500 !important;
+                font-size: 0.826rem !important;
+                padding-top: 0px !important;
+            }
+
+            .product_heading {
+                color: #242424 !important;
+                font-size: 18px !important;
+                font-family: Poppins;
+                font-weight: 500;
+                line-height: 24px;
+                letter-spacing: 0.252px;
+                font-family: 'Poppins', sans-serif !important;
+                margin-left: -5px !important;
+            }
+
+            .create_bnt {
+                padding: 9px 24px !important;
+                margin-top: 114px !important;
+            }
+
+            .fillter-mobile-screen {
+                width: 50% !important;
+            }
+
+            .filter-row-mobile-secreen {
+                margin-top: 14px !important;
+                padding-left: 30px !important;
+            }
+
+            .product_search {
+                background: #FFFFFF !important;
+                border-radius: 7.25943px !important;
+                margin-top: -7px;
+                margin-left: 32px !important;
+                padding-right: 16px !important;
+            }
+        }
+
         .text-successs {
             color: #7CC633 !important;
             font-family: 'Poppins', sans-serif !important;
