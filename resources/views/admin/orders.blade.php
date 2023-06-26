@@ -289,6 +289,8 @@
             .main-header {
                 border-bottom: none;
                 width: 25%;
+                height: 0px !important;
+                margin-top: 20px !important;
             }
 
             .mobile_heading {
@@ -366,7 +368,7 @@
                 letter-spacing: 0.252px !important;
                 margin-left: 17px !important;
                 margin-left: 17px !important;
-                margin-top: 10px !important;
+                margin-top: 29px !important;
             }
         }
 
