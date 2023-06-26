@@ -7,7 +7,7 @@
             <div class="row border-bottom product_section_header">
                 <div class="col-md-12">
                     <div class="row">
-                        <div class="col-md-2">
+                        <div class="col-md-2 mobile_heading">
                             <p class="order_heading">
                                 Orders
                             </p>
@@ -18,9 +18,9 @@
                                     role="progressbar" aria-valuenow="100" aria-valuemin="" aria-valuemax="100"></div>
                             </div>
                         </div>
-                        <div class="col-md-4 create_bnt d-flex justify-content-end">
+                        <div class="col-md-4 create_bnt d-flex justify-content-end mobile_fulfill_div">
                             <div class="d-flex">
-                                <span>
+                                <span class="fullfill_btn_mbl">
                                     @if ($auto_fulfill == 1)
                                         <span class="d-flex">
                                             <a class=" btn  btn-sm fulfill-row-items-order-page">
@@ -34,7 +34,7 @@
                                             </label>
                                         </span>
                                     @else
-                                        <span class="d-flex">
+                                        <span class="d-flex ">
                                             <a class=" btn  btn-sm fulfill-row-items-order-page">
                                                 Auto Fullfill
                                             </a>
@@ -46,7 +46,7 @@
                                         </span>
                                     @endif
                                 </span>
-                                <span>
+                                <span class="create_new_btn_mbl">
                                     <button type="button" class="btn create-new-order-btn">
                                         Create New Order +
                                     </button>
@@ -284,6 +284,41 @@
     <link rel="stylesheet" href="{{ asset('/admin/admin_lte.css?v4') }}">
 
     <style type="text/css">
+
+        /* mobile responsive admin panel */
+        
+        @media(min-width:280px) and (max-width: 425px) {
+            .main-header {
+                border-bottom: none;
+                width: 25%;
+            }
+            .mobile_heading {
+                position: absolute;
+                left: 10rem;
+                top: -3rem;
+                width: 50%;
+
+            }
+            .search_row_admin-interface {
+                position: absolute;
+                top: 1rem;
+                left: 1rem;
+                width: 95%;
+            }
+            .mobile_fulfill_div {
+                margin-top: 4rem
+            }
+            .fullfill_btn_mbl {
+                position: absolute;
+                left: 3.3rem;
+            }
+            .create_new_btn_mbl {
+                margin-right:0.5rem;
+            }
+            .product_section_header {
+                border-bottom: none !important;
+            }
+        }
         .custom-checkbox {
             min-height: 1rem;
             padding-left: 0;
