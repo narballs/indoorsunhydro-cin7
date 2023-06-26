@@ -56,7 +56,6 @@
 }
 
 .nav-item .active {
-    /* background: none !important; */
     border-bottom: none !important;
     box-shadow: none !important;
     background: rgba(124, 198, 51, 0.15) !important;
