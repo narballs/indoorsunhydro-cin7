@@ -70,13 +70,14 @@
             <div class="card-body product_table_body">
                 <div class="col-md-12 p-0">
                     <div class="col-md-12 btn-row mb-4 d-none" id="fullfillOrder">
-                        <div class="row py-2">
-                            <div class="col-md-4 col-lg-4 col-xl-7 col-xxl-2">
+                        <div class="row py-2 bx-mobile">
+                            <div class="col-md-4 col-lg-4 col-xl-7 mobile-screen-selected">
                                 <span class="border-right pe-5 select-row-items ms-2 pt-1" id="items_selected">
                                     0 Selected
                                 </span>
                             </div>
-                            <div class="col-md-8 col-lg-8 col-xl-5 col-xxl-10 d-flex justify-content-end">
+                            <div
+                                class="col-md-8 col-lg-8 col-xl-5 col-xxl-10 d-flex justify-content-end mobile-screen-ordrs-btn">
                                 <div class="col-md-12 col-xl-12 col-lg-12 justify-content-end d-flex">
                                     <span class="cancel-button-order-page">
                                         <a class="multiple_cancel_orders btn btn-danger btn-sm cancel-row-items-order-page"
@@ -110,8 +111,7 @@
                                             <input class="custom-control-input custom-control-input-success checkbox-table"
                                                 type="checkbox" id="selectAll" value="">
                                             <label for="selectAll" class="custom-control-label ml-4"></label>
-
-                                            <span class="table-row-heading-order">
+                                            <span class="table-row-heading-order sm-d-none">
                                                 <i class="fas fa-arrow-up mt-1" style="font-size:14.5px ;"></i>
                                             </span>
                                         </div>
@@ -168,7 +168,7 @@
                                                             class="custom-control-label ml-4">
                                                         </label>
                                                     </span>
-                                                    <span class="table-row-heading-order">
+                                                    <span class="table-row-heading-order sm-d-none">
                                                         {{ $order->id }}
                                                     </span>
                                                 </div>
@@ -272,7 +272,6 @@
                             </tfoot>
                         </table>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -284,14 +283,14 @@
     <link rel="stylesheet" href="{{ asset('/admin/admin_lte.css?v4') }}">
 
     <style type="text/css">
-
         /* mobile responsive admin panel */
-        
+
         @media(min-width:280px) and (max-width: 425px) {
             .main-header {
                 border-bottom: none;
                 width: 25%;
             }
+
             .mobile_heading {
                 position: absolute;
                 left: 10rem;
@@ -299,26 +298,76 @@
                 width: 50%;
 
             }
+
             .search_row_admin-interface {
                 position: absolute;
                 top: 1rem;
                 left: 1rem;
                 width: 95%;
             }
+
             .mobile_fulfill_div {
                 margin-top: 4rem
             }
+
             .fullfill_btn_mbl {
                 position: absolute;
                 left: 3.3rem;
             }
+
             .create_new_btn_mbl {
-                margin-right:0.5rem;
+                margin-right: 0.5rem;
             }
+
             .product_section_header {
                 border-bottom: none !important;
             }
+
+            .sm-d-none {
+                display: none !important;
+            }
+
+            .bx-mobile {
+                display: flex !important;
+                justify-content: space-around !important;
+                align-items: center !important;
+            }
+
+            .mobile-screen-selected {
+                width: 30%;
+            }
+
+            .mobile-screen-ordrs-btn {
+                width: 70%;
+            }
+
+            .product_table_body {
+                padding-left: 11px !important;
+                padding-right: 7px !important;
+            }
+
+            .select-row-items {
+                padding-left: 2px !important;
+                justify-content: start;
+                align-items: center !important;
+                color: #222222 !important;
+                font-style: normal !important;
+                font-weight: 500 !important;
+                font-size: 0.826rem !important;
+                padding-top: 0px !important;
+            }
+
+            .order_heading {
+                color: #242424 !important;
+                font-size: 18px !important;
+                font-family: Poppins, sans-serif !important;
+                font-weight: 500 !important;
+                line-height: 24px !important;
+                letter-spacing: 0.252px !important;
+            }
         }
+
+        /* mobile responsive admin panel end */
         .custom-checkbox {
             min-height: 1rem;
             padding-left: 0;
