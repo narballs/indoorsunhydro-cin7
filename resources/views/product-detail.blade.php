@@ -213,7 +213,7 @@
 <div id="popover-form">
     <form id="myform" class="form-inline p-0 w-100" role="form">
         @foreach($location_inventories as $inventory)
-            @if($inventory->branchId == 174)
+            @if($inventory->branchId == 174 || $inventory->branchId == 172 || $inventory->branchId == 173)
                 <?php continue;?>
             @endif
             <div class="form-group" style="width:500px">
