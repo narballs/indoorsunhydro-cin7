@@ -59,11 +59,14 @@
                                         <td class="my_account_addresses">Status</td>
                                         <td class="my_account_addresses">Type</td>
                                         <td class="my_account_addresses">Phone Number</td>
+                                        <td class="my_account_addresses">Balance Owing</td>
+                                        <td class="my_account_addresses">Credit Limit</td>
                                         <td></td>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($secondary_contacts as $key => $contact)
+                                    <?php //dd($contact);?>
                                         <tr>
                                             <td class="table-items justify-content-start align-items-lg-center">
                                                 <div class="custom-control custom-checkbox tabel-checkbox">
@@ -112,6 +115,12 @@
                                                     {{ $contact['mobile'] }}
                                                 @else
                                                 @endif
+                                            </td>
+                                            <td class="my_account_all_items" style="vertical-align: middle;">
+                                                ${{ number_format($contact['balance_owing'], 2) }}
+                                            </td>
+                                             <td class="my_account_all_items" style="vertical-align: middle;">
+                                                ${{ number_format($contact['credit_limit'], 2) }}
                                             </td>
                                             <td style="vertical-align: middle;">
                                                 <img src="/theme/img/dots_icons.png" alt="">
