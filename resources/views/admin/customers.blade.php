@@ -17,7 +17,7 @@
             <div class="row border-bottom product_section_header">
                 <div class="col-md-12">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-6 mobile_heading">
                             <p class="product_heading">
                                 Customer
                             </p>
@@ -28,10 +28,10 @@
                             </a>
                         </div>
                     </div>
-                    <div class="row search_row_admin-interface justify-content-between"
-                        style="margin-top: 12px !important;">
+                    <div class="row search_row_admin-interface" style="margin-top: 12px !important;">
                         <div class="col-md-4 product_search">
                             <div class="has-search">
+                                <span class="fa fa-search form-control-feedback"></span>
                                 <span class="fa fa-search form-control-feedback"></span>
                                 <form method="get" action="/admin/customers" class="mb-2">
                                     <input type="text" class="form-control border-0" id="search" name="search"
@@ -39,17 +39,33 @@
                                 </form>
                             </div>
                         </div>
-                        <div class="col-md-2">
-                            <select name="active_customer" id="active_customer" onchange="perPage()" class="form-control"
-                                style="    margin-left: -7px;">
-                                <option value="" class="form-control">Active/Disabled </option>
-                                <option value="active-customer" class="form-control"
-                                    {{ isset($activeCustomer) && $activeCustomer == 'active-customer' ? 'selected="selected"' : '' }}>
-                                    Active </option>
-                                <option value="disable-customer" class="form-control"
-                                    {{ isset($activeCustomer) && $activeCustomer == 'disable-customer' ? 'selected="selected"' : '' }}>
-                                    Disabled </option>
-                            </select>
+                        <div class="col-md-5">
+                            <div class="row filter-row-mobile-secreen">
+                                <div class="col-md-6">
+                                    {{-- <select name="active_customer" id="active_customer" onchange="perPage()"
+                                        class="form-control" style="    margin-left: -7px;">
+                                        <option value="" class="form-control">Active/Disabled </option>
+                                        <option value="active-customer" class="form-control"
+                                            {{ isset($activeCustomer) && $activeCustomer == 'active-customer' ? 'selected="selected"' : '' }}>
+                                            Active </option>
+                                        <option value="disable-customer" class="form-control"
+                                            {{ isset($activeCustomer) && $activeCustomer == 'disable-customer' ? 'selected="selected"' : '' }}>
+                                            Disabled </option>
+                                    </select> --}}
+                                </div>
+                                <div class="col-md-6 fillter-mobile-screen">
+                                    <select name="active_customer" id="active_customer" onchange="perPage()"
+                                        class="form-control" style="    margin-left: -7px;">
+                                        <option value="" class="form-control">Active/Disabled </option>
+                                        <option value="active-customer" class="form-control"
+                                            {{ isset($activeCustomer) && $activeCustomer == 'active-customer' ? 'selected="selected"' : '' }}>
+                                            Active </option>
+                                        <option value="disable-customer" class="form-control"
+                                            {{ isset($activeCustomer) && $activeCustomer == 'disable-customer' ? 'selected="selected"' : '' }}>
+                                            Disabled </option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -66,7 +82,7 @@
                                         <label for="selectAll" class="custom-control-label ml-4"></label>
 
                                         <span class="table-row-heading-order">
-                                            <i class="fas fa-arrow-up mt-1" style="font-size:14.5px ;"></i>
+                                            <i class="fas fa-arrow-up mt-1 sm-d-none" style="font-size:14.5px ;"></i>
                                         </span>
                                     </div>
                                 </td>
@@ -127,6 +143,134 @@
     <link rel="stylesheet" href="/theme/css/admin_custom.css">
     <link rel="stylesheet" href="{{ asset('admin/admin_lte.css') }}">
     <style>
+        @media(min-width:280px) and (max-width: 425px) {
+            .main-header {
+                border-bottom: none;
+                width: 25%;
+                height: 0px !important;
+                margin-top: 20px !important;
+            }
+
+            .mobile_heading {
+                position: absolute;
+                left: 10rem;
+                top: -3rem;
+                width: 0px !important;
+
+            }
+
+            .search_row_admin-interface {
+                position: absolute;
+                top: 1rem;
+                left: 1rem;
+                width: 95%;
+            }
+
+            .mobile_fulfill_div {
+                margin-top: 3.563rem
+            }
+
+            .fullfill_btn_mbl {
+                position: absolute;
+                left: 3.3rem;
+            }
+
+            .create_new_btn_mbl {
+                margin-right: 0.5rem;
+            }
+
+            .product_section_header {
+                border-bottom: none !important;
+            }
+
+            .sm-d-none {
+                display: none !important;
+            }
+
+            .bx-mobile {
+                display: flex !important;
+                justify-content: space-around !important;
+                align-items: center !important;
+            }
+
+            .mobile-screen-selected {
+                width: 30%;
+            }
+
+            .mobile-screen-ordrs-btn {
+                width: 70%;
+            }
+
+            .product_table_body {
+                padding-right: 13px !important;
+                margin-top: -17px;
+                padding-left: 0px !important;
+            }
+
+            .select-row-items {
+                padding-left: 12px !important;
+                display: flex;
+                justify-content: start;
+                align-items: center !important;
+                color: #222222 !important;
+                font-style: normal !important;
+                font-weight: 500 !important;
+                font-size: 0.826rem !important;
+                padding-top: 0px !important;
+            }
+
+            .product_heading {
+                color: #242424 !important;
+                font-size: 18px !important;
+                font-weight: 500;
+                line-height: 24px;
+                letter-spacing: 0.252px;
+                font-family: 'Poppins', sans-serif !important;
+                margin-left: -5px !important;
+                margin-top: 26px !important;
+            }
+
+            .create_bnt {
+                padding: 9px 24px !important;
+                margin-top: 114px !important;
+            }
+
+            .fillter-mobile-screen {
+                width: 100% !important;
+            }
+
+            .filter-row-mobile-secreen {
+                margin-top: 7px !important;
+                padding-left: 41px !important;
+
+            }
+
+            .product_search {
+                background: #FFFFFF !important;
+                border-radius: 7.25943px !important;
+                margin-top: -7px;
+                margin-left: 32px !important;
+                padding-right: 16px !important;
+            }
+
+            .mobile-screen {
+                widows: 100% !important;
+            }
+
+            .mobile_screen_Previous_btn {
+                width: 25% !important;
+            }
+
+            .mobile_screen_pagination_number {
+                width: 50% !important;
+            }
+
+            .mobile_screen_Previous_next {
+                width: 25% !important;
+                margin-top: 11px !important;
+            }
+        }
+
         .custom-checkbox {
             min-height: 1rem;
             padding-left: 0;
