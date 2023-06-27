@@ -42,16 +42,6 @@
                         <div class="col-md-5">
                             <div class="row filter-row-mobile-secreen">
                                 <div class="col-md-6">
-                                    {{-- <select name="active_customer" id="active_customer" onchange="perPage()"
-                                        class="form-control" style="    margin-left: -7px;">
-                                        <option value="" class="form-control">Active/Disabled </option>
-                                        <option value="active-customer" class="form-control"
-                                            {{ isset($activeCustomer) && $activeCustomer == 'active-customer' ? 'selected="selected"' : '' }}>
-                                            Active </option>
-                                        <option value="disable-customer" class="form-control"
-                                            {{ isset($activeCustomer) && $activeCustomer == 'disable-customer' ? 'selected="selected"' : '' }}>
-                                            Disabled </option>
-                                    </select> --}}
                                 </div>
                                 <div class="col-md-6 fillter-mobile-screen">
                                     <select name="active_customer" id="active_customer" onchange="perPage()"
