@@ -290,6 +290,13 @@
                     margin-top: 11px !important;
                 }
 
+                .main-sidebar {
+                    background-color: #fff !important;
+                    box-shadow: none !important;
+                    border-right: 1px solid #EAECF0 !important;
+                    top: -21px !important;
+                }
+
             }
 
             .text-successs {
