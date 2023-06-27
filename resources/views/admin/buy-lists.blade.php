@@ -8,25 +8,34 @@
             <div class="row border-bottom product_section_header">
                 <div class="col-md-12">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-2 mobile_heading">
                             <p class="product_heading">
                                 Buy Lists
                             </p>
                         </div>
-                        <div class="col-md-6 text-right pt-1">
-                            <a href="{{ 'buy-list/create ' }}" type="button" class="btn create_new_buylist_btn">
-                                Create new buy list +
-                            </a>
+                        <div class="col-md-6">
+                            <div class="progress border d-none w-50 mx-auto" id="progress-bar">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-info"
+                                    role="progressbar" aria-valuenow="100" aria-valuemin="" aria-valuemax="100"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 create_bnt d-flex justify-content-end mobile_fulfill_div">
+                            <div class="d-flex">
+                                <span class="create_new_btn_mbl">
+                                    <a href="{{ 'buy-list/create ' }}" type="button" class="btn create_new_buylist_btn">
+                                        Create new buy list +
+                                    </a>
+                                </span>
+                            </div>
                         </div>
                     </div>
                     <div class="row search_row_admin-interface">
-                        <div class="col-md-4 product_search">
+                        <div class="col-md-4 order-search">
                             <div class="has-search ">
                                 <span class="fa fa-search form-control-feedback"></span>
-                                <form method="get" action="/admin/products" class="mb-2">
+                                <form method="get" action="/admin/buy-list" class="mb-2">
                                     <input type="text" class="form-control" id="search" name="search"
-                                        placeholder="Search for order ID, customer, order, status or something..."
-                                        value="{{ isset($search) ? $search : '' }}" />
+                                        placeholder="Search" value="{{ isset($search) ? $search : '' }}" />
                                 </form>
                             </div>
                         </div>
@@ -45,7 +54,7 @@
                                         <label for="selectAll" class="custom-control-label"></label>
 
                                         <span class="table-row-heading-order">
-                                            <i class="fas fa-arrow-up mt-1" style="font-size:14.5px ;"></i>
+                                            <i class="fas fa-arrow-up mt-1 sm-d-none " style="font-size:14.5px ;"></i>
                                         </span>
                                     </div>
                                 </td>
@@ -74,7 +83,7 @@
                                             <label for="separate_check_{{ $buylist->id }}"
                                                 class="custom-control-label "></label>
                                         </div>
-                                        <span class="table-row-heading-order">
+                                        <span class="table-row-heading-order sm-d-none ">
                                             {{ $key + 1 }}
                                         </span>
                                     </td>
@@ -138,6 +147,111 @@
     <link rel="stylesheet" href="{{ asset('admin/admin_lte.css') }}">
 
     <style>
+        @media(min-width:280px) and (max-width: 425px) {
+            .main-header {
+                border-bottom: none;
+                width: 25%;
+                height: 0px !important;
+                margin-top: 20px !important;
+            }
+
+            .mobile_heading {
+                position: absolute;
+                left: 10rem;
+                top: -3rem;
+                width: 50%;
+
+            }
+
+            .search_row_admin-interface {
+                position: absolute;
+                top: 1rem;
+                left: 1rem;
+                width: 95%;
+            }
+
+            .mobile_fulfill_div {
+                margin-top: 3.563rem
+            }
+
+            .fullfill_btn_mbl {
+                position: absolute;
+                left: 3.3rem;
+            }
+
+            .create_new_btn_mbl {
+                margin-right: 0.5rem;
+            }
+
+            .product_section_header {
+                border-bottom: none !important;
+            }
+
+            .sm-d-none {
+                display: none !important;
+            }
+
+            .bx-mobile {
+                display: flex !important;
+                justify-content: space-around !important;
+                align-items: center !important;
+            }
+
+            .mobile-screen-selected {
+                width: 30%;
+            }
+
+            .mobile-screen-ordrs-btn {
+                width: 70%;
+            }
+
+            .product_table_body {
+                padding-left: 11px !important;
+                padding-right: 7px !important;
+                padding-top: 12px !important;
+            }
+
+            .select-row-items {
+                padding-left: 12px !important;
+                display: flex;
+                justify-content: start;
+                align-items: center !important;
+                color: #222222 !important;
+                font-style: normal !important;
+                font-weight: 500 !important;
+                font-size: 0.826rem !important;
+                padding-top: 0px !important;
+            }
+
+            .product_heading {
+                font-size: 18px !important;
+                font-weight: 500 !important;
+                line-height: 24px !important;
+                letter-spacing: -0.252px !important;
+                font-family: 'Poppins', sans-serif !important;
+                margin-left: 37px !important;
+                color: #242424 !important;
+                margin-top: 20px !important;
+            }
+
+            .create_bnt {
+                padding: 0px !imporant;
+            }
+
+            .mobile_screen_Previous_btn {
+                width: 25% !important;
+            }
+
+            .mobile_screen_pagination_number {
+                width: 50% !important;
+            }
+
+            .mobile_screen_Previous_next {
+                width: 25% !important;
+                margin-top: 11px !important;
+            }
+        }
+
         .text-successs {
             color: #7CC633 !important;
             font-family: 'Poppins', sans-serif !important;

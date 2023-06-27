@@ -5,7 +5,7 @@
                 type="checkbox" id="separate_check_{{ $contact->id }}">
             <label for="separate_check_{{ $contact->id }}" class="custom-control-label ml-4"></label>
         </div>
-        <span class="table-row-heading-order">
+        <span class="table-row-heading-order sm-d-none">
             {{ $key + 1 }}
         </span>
     </td>

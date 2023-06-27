@@ -1,7 +1,7 @@
 @if ($paginator->hasPages())
     <ul class="pager m-0 p-0">
         <div class="row main-row">
-            <div class="col-md-3 pagination previous_btn">
+            <div class="col-md-3 pagination previous_btn  mobile_screen_Previous_btn">
                 @if ($paginator->onFirstPage())
                     <li class=" d-flex disabled btn btn-flat prev_btn_css">
 
@@ -17,7 +17,7 @@
                     </li>
                 @endif
             </div>
-            <div class="col-md-6 pagination order_page_number">
+            <div class="col-md-6 pagination order_page_number mobile_screen_pagination_number">
                 @foreach ($elements as $element)
                     @if (is_string($element))
                         <li class="disabled"><span>{{ $element }}</span></li>
@@ -35,7 +35,7 @@
                     @endif
                 @endforeach
             </div>
-            <div class="col-md-3 pagination next_btn">
+            <div class="col-md-3 pagination next_btn mobile_screen_Previous_next">
                 @if ($paginator->hasMorePages())
                     <li>
                         <a class="btn btn-flat next_btn_css" href="{{ $paginator->nextPageUrl() }}" rel="next">
