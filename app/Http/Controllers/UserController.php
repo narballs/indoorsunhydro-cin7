@@ -618,7 +618,7 @@ class UserController extends Controller
                 ->toArray();
             $user_orders = ApiOrder::whereIn('memberId', $contact_ids)
                 ->with('contact' , function($query) {
-                    $query->orderBy('company', 'asc');
+                    $query->orderBy('company');
                 })
                 ->with('apiOrderItem.product')
                 // ->orderBy('id', 'desc')
