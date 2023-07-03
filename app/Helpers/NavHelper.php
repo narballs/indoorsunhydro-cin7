@@ -16,6 +16,7 @@ class NavHelper
     public static function getCategories() {
          $categories = Category::orderBy('name', 'ASC')
             ->with('products')->where('is_active', 1)
+            ->where('name', '!=', 'Not visable')
             ->get();
         return $categories;
     }
