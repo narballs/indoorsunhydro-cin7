@@ -617,9 +617,11 @@ class UserController extends Controller
                 ->pluck('contact_id')
                 ->toArray();
             $user_orders = ApiOrder::whereIn('memberId', $contact_ids)
-                ->with('contact')
+                ->with('contact' , function($query) {
+                    $query->orderBy('company', 'asc');
+                })
                 ->with('apiOrderItem.product')
-                ->orderBy('id', 'desc')
+                // ->orderBy('id', 'desc')
                 ->paginate(10);
             $custom_roles_with_company = DB::table('custom_roles')
                 ->where('user_id', $user_id)
