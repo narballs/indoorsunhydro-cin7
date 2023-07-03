@@ -85,6 +85,29 @@
                                                                 </span>
                                                             </p>
                                                         </span>
+                                                        <span>
+                                                            <p class="order_place_my_account">
+                                                                Company <br>
+                                                                <span class="shipping_to_my_account">
+                                                                     {{$user_order->contact->company}}
+                                                                </span>
+                                                            </p>
+                                                        </span>
+                                                        <span>
+                                                            <p class="order_place_my_account">
+                                                                Status <br>
+                                                                <span class="shipping_to_my_account">
+                                                                    @if($user_order->order_id != null && $user_order->isApproved == 1)
+                                                                        <span class="badge badge-success">FullFilled</span>
+                                                                    @elseif($user_order->order_id == null && $user_order->isApproved == 0)
+                                                                        <span class="badge badge-primary">New</span>
+                                                                    @elseif($user_order->order_id == null && $user_order->isApproved == 2)
+                                                                        <span class="badge badge-danger">Cacelled</span>
+                                                                    @endif
+                                                                    
+                                                                </span>
+                                                            </p>
+                                                        </span>
                                                     </div>
                                                     <div class="col-md-4 text-right">
                                                         <p class="order_place_my_account">
