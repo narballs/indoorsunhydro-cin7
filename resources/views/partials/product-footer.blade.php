@@ -73,10 +73,10 @@
             <div class="col-md-12">
                 <div class="main-page-footer-section footer-section-product mb-5">
                     <h5 class="foooter-main-head-mbl contact-us-footer mt-5 mb-4 text-uppercase">CONTACT US</h5>
-                    <span>
+                    <p><span>
                         <img src="/theme/img/map-pin.png" class="img-fluid">
                     </span>
-                    <span class="footer_head_mbl pra-footer">Los Angeles Warehouse (HQ)</span>
+                    {{-- <span class="footer_head_mbl pra-footer">Los Angeles Warehouse (HQ)</span>
                     <p class="p-footer-mbl ms-4-footer mx-1 ps-4">13310 S. Figueroa St. Los Angeles, CA 90061</p>
                     <span>
                         <img src="/theme/img/map-pin.png" class="img-fluid">
@@ -85,12 +85,13 @@
                         San Fernando Valley Warehouse
                     </span>
                     <p class="p-footer-mbl ms-4-footer mx-1 ps-4">9019 Oso Ave, Chatsworth, CA 91311</p>
-                    <p class="p-footer-mbl ms-4-footer mx-1 ps-4"><span class="day-color-mbl">M-F</span> 10AM-6PM | <span class="day-color-mbl">Sat</span> 12PM-6PM | <span class="day-color-mbl">Sun</span> 12PM-5PM</p>
-                    <span >
+                    <p class="p-footer-mbl ms-4-footer mx-1 ps-4"><span class="day-color-mbl">M-F</span> 10AM-6PM | <span class="day-color-mbl">Sat</span> 12PM-6PM | <span class="day-color-mbl">Sun</span> 12PM-5PM</p> --}}
+                    <span class="p-footer-mbl ms-4-footer mb-2">5671 Warehouse Way Sacramento CA 95826</span></p>
+                    <span>
                         <img src="/theme/img/phone-call.png" class="img-fluid">
                     </span>
-                    <span class="footer_head_mbl pra-footer">(213) 410-5912</span>
-                    <p class="p-footer-mbl ms-4-footer mx-1 ps-4"><span class="day-color-mbl">M-F</span> 10AM-6PM | <span class="day-color-mbl">Sat-Sun</span> 10AM-5PM</p>
+                    <span class="footer_head_mbl pra-footer">(916) 281-3090</span>
+                    <p class="p-footer-mbl ms-4-footer mx-1 ps-4"><span class="day-color-mbl">MONDAY-SUNDAY 7 Days</span> 9AM-5PM</p>
 
                     <h5 class="foooter-main-head-mbl contact-us-footer mt-5 mb-4 text-uppercase">Customer Service</h5>
                     <p class="p-footer-mbl ms-4-footer mx-1">Returns</p>

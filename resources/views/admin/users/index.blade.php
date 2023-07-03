@@ -121,6 +121,10 @@
                                             } else {
                                                 $contact_switch_id = $contact->secondary_id;
                                             }
+
+                                            if($contact->type == 'Supplier'){
+                                                continue;
+                                            }
                                         @endphp
 
                                         <tr id="row-{{ $user->id }}" class="user-row border-bottom">
