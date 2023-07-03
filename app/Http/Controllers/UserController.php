@@ -52,11 +52,7 @@ class UserController extends Controller
         $secondaryUserSearch = $request->secondaryUserSearch;
         $usersData = $request->usersData;
         $secondaryUser = $request->secondaryUser;
-        $user_query = User::orderBy('id', 'DESC')->with('contact')
-            ->with('contact', function ($query) {
-            $query->where('type','!=' , 'Supplier');
-        });
-        
+        $user_query = User::orderBy('id', 'DESC')->with('contact');
         if (!empty($usersData)) {
             if ($usersData == 'admin-user') {
                 $user_query = $user_query->role(['Admin']);
@@ -97,6 +93,7 @@ class UserController extends Controller
                         ->orWhere('lastName', 'like', '%' . $search . '%');
                 });
         }
+
         $data = $user_query->paginate(10);
         $users = User::role(['Admin'])->get();
         $count = $users->count();

@@ -121,6 +121,10 @@
                                             } else {
                                                 $contact_switch_id = $contact->secondary_id;
                                             }
+
+                                            if($contact->type == 'Supplier'){
+                                                continue;
+                                            }
                                         @endphp
 
                                         <tr id="row-{{ $user->id }}" class="user-row border-bottom">
@@ -155,7 +159,6 @@
                                                     <span class="badge badge-info w-100">empty</span>
                                                 @endif
                                             </td>
-                                            
                                             <td class="is_parent user_table_items">
                                                 @if ($contact)
                                                     @if ($contact->is_parent == 1)
