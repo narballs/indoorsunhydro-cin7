@@ -95,6 +95,9 @@
                                         <span class="d-flex table-row-item"> Cin7 User-ID </span>
                                     </td>
                                     <td>
+                                        <span class="d-flex table-row-item"> Contact Type</span>
+                                    </td>
+                                    <td>
                                         <span class="d-flex table-row-item"> Company (Account aka Parent) </span>
                                     </td>
                                     <td>
@@ -153,6 +156,13 @@
                                                     @endif
                                                 @else
                                                     <span class="badge badge-info w-100">empty</span>
+                                                @endif
+                                            </td>
+                                            <td class="is_parent user_table_items">
+                                                @if($contact->type == 'Supplier')
+                                                    <span class="badge badge-success">Supplier</span>
+                                                @elseif($contact->type == 'Customer')
+                                                    <span class="badge badge-primary">Customer</span>
                                                 @endif
                                             </td>
                                             <td class="is_parent user_table_items">
