@@ -620,7 +620,7 @@ class ProductController extends Controller
     {
 
         $id = $request->p_id;
-        // $option_id = $request->option_id;
+        $option_id = $request->option_id;
 
         $productOption = ProductOption::where('option_id', $option_id)->with('products.options.price')->first();
         $cart = session()->get('cart');
