@@ -93,6 +93,12 @@
                                             </div>
                                         </div>
                                     @endif
+                                    @if( $customer->contact_id == null || $customer->contact_id == '')
+                                        <div class="col-md-2">
+                                            <button class="btn btn-primary" type="button"
+                                                onclick="updateContact()">Activate</button>
+                                        </div>
+                                    @endif
                                     @if ($customer->user == '' && $customer->hashKey == '')
                                         @if ($customer->contact_id)
                                             <div class="col-md-2"><button class="btn btn-primary btn-sm" type="button"
@@ -498,7 +504,7 @@
                 success: function(response) {
                     console.log(response);
                     if (response.success == true) {
-
+                        $('#spinner').removeClass('d-none');
                         setInterval('location.reload()', 7000);
                     }
                     if (response.success == false) {

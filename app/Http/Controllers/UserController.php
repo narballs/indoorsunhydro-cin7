@@ -324,6 +324,7 @@ class UserController extends Controller
                 session()->flash('message', 'Successfully Logged in');
                 $companies = Contact::where('user_id', auth()->user()->id)->get();
                 if ($companies->count() == 1) {
+                    
                     if ($companies[0]->contact_id == null) {
                         UserHelper::switch_company($companies[0]->secondary_id);
                     } else {
@@ -337,6 +338,7 @@ class UserController extends Controller
                 $companies = Contact::where('user_id', auth()->user()->id)->get();
 
                 if ($companies->count() == 1) {
+                    
                     if ($companies[0]->contact_id == null) {
                         UserHelper::switch_company($companies[0]->secondary_id);
                     } else {
@@ -611,9 +613,8 @@ class UserController extends Controller
         $contact->type = 'Customer';
         $contact->lastName = $user->last_name;
         $contact->email = $user->email;
-        $contact->contact_id = $user->id;
         $contact->is_parent = 1;
-        $contact->status = 1;
+        $contact->status = 0;
 
         $admin_users =  DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
         $admin_users = $admin_users->toArray();
@@ -665,7 +666,7 @@ class UserController extends Controller
                         'user_notes' => 'Existing Contact in Cin7 ' . Carbon::now()->toDateTimeString()
                     ]);
                 }
-
+                
                 Auth::loginUsingId($user->id);
                 $companies = Contact::where('user_id', auth()->user()->id)->get();
                 if ($companies->count() == 1) {
