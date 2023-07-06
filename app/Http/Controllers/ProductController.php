@@ -993,10 +993,11 @@ class ProductController extends Controller
             foreach ($searchvalue as $value) {
                 $products = Product::with(['options' => function ($q) {
                     $q->where('status', '!=', 'Disabled');
-                }])->where('status', '!=', 'Inactive')
-                    ->where('name', 'LIKE', '%' . $value . '%')
-                    ->orWhere('code', 'LIKE', '%' . $value . '%')
-                    ->paginate($per_page);
+                }])
+                ->where('name', 'LIKE', '%' . $value . '%')
+                ->orWhere('code', 'LIKE', '%' . $value . '%')
+                ->where('status', '!=', 'Inactive')
+                ->paginate($per_page);
             };
         }
         $searched_value = $request->value;
