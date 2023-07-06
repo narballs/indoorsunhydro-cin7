@@ -72,6 +72,8 @@ Route::get('/my-qoutes-details/{id}', [UserController::class, 'my_qoutes_details
 Route::get('/my-qoute-edit/{id}', [UserController::class, 'my_qoute_edit'])->name('my_qoute_edit');
 Route::get('/my-account-user-addresses/', [UserController::class, 'address_user_my_account'])->name('user_addresses_my_account');
 Route::get('/user-order-detail/{id}', [UserController::class, 'user_order_detail'])->name('user-order-detail');
+Route::post('/check/email', [UserController::class, 'checkEmail'])->name('check_email');
+Route::post('/check/address', [UserController::class, 'checkAddress'])->name('check_address');
 Route::post('/register/basic/create', [UserController::class, 'process_signup'])->name('register');
 Route::post('/switch-company/', [UserController::class, 'switch_company'])->name('switch-company');
 Route::post('/switch-company-select/', [UserController::class, 'switch_company_select'])->name('switch-company-select');

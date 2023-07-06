@@ -324,6 +324,7 @@ class UserController extends Controller
                 session()->flash('message', 'Successfully Logged in');
                 $companies = Contact::where('user_id', auth()->user()->id)->get();
                 if ($companies->count() == 1) {
+                    
                     if ($companies[0]->contact_id == null) {
                         UserHelper::switch_company($companies[0]->secondary_id);
                     } else {
@@ -337,6 +338,7 @@ class UserController extends Controller
                 $companies = Contact::where('user_id', auth()->user()->id)->get();
 
                 if ($companies->count() == 1) {
+                    
                     if ($companies[0]->contact_id == null) {
                         UserHelper::switch_company($companies[0]->secondary_id);
                     } else {
@@ -383,64 +385,114 @@ class UserController extends Controller
         }
     }
 
-    public function process_signup(UserSignUpRequest $request)
-    {
-        if ($request->get('email')) {
-            $user = User::create([
-                'email' => strtolower($request->get('email'))
-            ]);
+    public function checkEmail(Request $request) {
+        $validatedData = $request->validate([
+            'email' => 'required',
+        ]);
+        $user = User::where('email', $request->get('email'))->first();
+        if (!empty($user)) {
+           
             return response()->json([
                 'success' => true,
-                'created' => true,
-                'msg' => 'Welcome, new player.'
+                'msg' => 'Email Already Exists.'
             ]);
-        } else {
-            $user = User::latest()->first();
-            $user_id = $user->id;
-            $registering_email = $user->email;
-            $existing_contacts = Contact::where('email', $registering_email)->get();
-            if ($existing_contacts->isNotEmpty()) {
-                $user_Update = User::where("id", $user_id)->update([
-                    "password" => bcrypt($request->get('password'))
-                ]);
-            } else {
-                $user_Update = User::where("id", $user_id)->update([
-                    "first_name" => $request->get('first_name'),
-                    "last_name" => $request->get('last_name'),
-                    "password" => bcrypt($request->get('password'))
-                ]);
-            }
-
-            if ($existing_contacts->isNotEmpty()) {
-                foreach ($existing_contacts as $existing_contact) {
-                    $existing_contact->user_id = $user->id;
-                    $existing_contact->save();
-                    if ($existing_contact->secondary_id) {
-                        $secondary_id = $existing_contact->secondary_id;
-                    } else {
-                        $secondary_id = '';
-                    }
-                    if ($existing_contact->contact_id || $existing_contact->secondary_id) {
-                        $user_log = UserLog::create([
-                            'user_id' => $user->id,
-                            'secondary_id' => $secondary_id,
-                            'contact_id' => $existing_contact->contact_id,
-                            'action' => 'Singup',
-                            'user_notes' => 'Existing Contact in Cin7 ' . Carbon::now()->toDateTimeString()
-                        ]);
-                    }
-                    Auth::loginUsingId($user->id);
-                }
-                return response()->json([
-                    'code' => 201,
-                    'success' => true,
-                    'updated' => true,
-                    'msg' => 'Existing contact updated'
-                ]);
-            }
         }
+    }
+    public function process_signup(UserSignUpRequest $request)
+    {
+        // $user = User::where('email', $request->get('email'))->first();
+        // if (!empty($user)) {
+           
+        //     return response()->json([
+        //         'success' => true,
+        //         'msg' => 'Email Already Exists.'
+        //     ]);
+        // }
+        
+        // if ($request->get('email')) {
+        //     $user = User::create([
+        //         'email' => strtolower($request->get('email'))
+        //     ]);
+        //     return response()->json([
+        //         'success' => true,
+        //         'created' => true,
+        //         'msg' => 'Welcome, new player.'
+        //     ]);
+        // } else {
+        //     $user = User::latest()->first();
+        //     $user_id = $user->id;
+        //     $registering_email = $user->email;
+        //     $existing_contacts = Contact::where('email', $registering_email)->get();
+        //     if ($existing_contacts->isNotEmpty()) {
+        //         $user_Update = User::where("id", $user_id)->update([
+        //             "password" => bcrypt($request->get('password'))
+        //         ]);
+        //     } else {
+        //         $user_Update = User::where("id", $user_id)->update([
+        //             "first_name" => $request->get('first_name'),
+        //             "last_name" => $request->get('last_name'),
+        //             "password" => bcrypt($request->get('password'))
+        //         ]);
+        //     }
 
-        return response()->json(['success' => true, 'created' => true, 'msg' => 'Welcome, new player.']);
+        //     if ($existing_contacts->isNotEmpty()) {
+        //         foreach ($existing_contacts as $existing_contact) {
+        //             $existing_contact->user_id = $user->id;
+        //             $existing_contact->save();
+        //             if ($existing_contact->secondary_id) {
+        //                 $secondary_id = $existing_contact->secondary_id;
+        //             } else {
+        //                 $secondary_id = '';
+        //             }
+        //             if ($existing_contact->contact_id || $existing_contact->secondary_id) {
+        //                 $user_log = UserLog::create([
+        //                     'user_id' => $user->id,
+        //                     'secondary_id' => $secondary_id,
+        //                     'contact_id' => $existing_contact->contact_id,
+        //                     'action' => 'Singup',
+        //                     'user_notes' => 'Existing Contact in Cin7 ' . Carbon::now()->toDateTimeString()
+        //                 ]);
+        //             }
+        //             Auth::loginUsingId($user->id);
+        //         }
+        //         return response()->json([
+        //             'code' => 201,
+        //             'success' => true,
+        //             'updated' => true,
+        //             'msg' => 'Existing contact updated'
+        //         ]);
+        //     }
+        // }
+
+        // return response()->json(['success' => true, 'created' => true, 'msg' => 'Welcome, new player.']);
+
+        $validatedData = $request->validate([
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'password' => 'required|min:6',
+            'confirm_password' => 'required|same:password'
+        ]);
+
+        if($validatedData) {
+            return response()->json([
+                'success' => true,
+                'msg' => $validatedData
+            ]);
+        }
+    }
+
+    public function checkAddress(Request $request) {
+    
+        $validatedData = $request->validate([
+            'company_name' => 'required',
+        ]);
+
+        if($validatedData) {
+            return response()->json([
+                'success' => true,
+                'msg' => $validatedData
+            ]);
+        }
     }
 
     public function invitation_signup(Request $request)
@@ -523,9 +575,79 @@ class UserController extends Controller
 
     public function save_contact(CompanyInfoRequest $request)
     {
+        
+        $validatedData = $request->validate([
+            'street_address' => [
+                'required'
+                // 'regex:/^[a-zA-Z0-9\s-]+$/'
+            ],
+            'state_id' => 'required',
+            'city_id' => 'required',
+            'zip' => [
+                'required',
+                'regex:/^\d{5}(?:[- ]?\d{4})?$/s'
+            ],
+            [
+                'state_id.required' => 'The state field is required.',
+            ],
+            [
+                'city_id.required' => 'The city field is required.',
+            ]
+        ]);
+        
+        $user = User::create([
+            'email' => strtolower($request->get('email')),
+            "first_name" => $request->get('first_name'),
+            "last_name" => $request->get('last_name'),
+            "password" => bcrypt($request->get('password'))
+        ]);
+        $user_id = $user->id;
+        $contact = new Contact;
+        $contact->website = $request->input('company_website');
+        $contact->company = $request->input('company_name');
+        $contact->phone = $request->input('phone');
+        $contact->status = 0;
+        $contact->priceColumn = 'RetailUSD';
+        $contact->user_id = $user_id;
+        $contact->firstName = $user->first_name;
+        $contact->type = 'Customer';
+        $contact->lastName = $user->last_name;
+        $contact->email = $user->email;
+        $contact->is_parent = 1;
+        $contact->status = 0;
+
+        $admin_users =  DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
+        $admin_users = $admin_users->toArray();
+
+        $users_with_role_admin = User::select("email")
+            ->whereIn('id', $admin_users)
+            ->get();
+
+        $user_log = UserLog::create([
+            'user_id' => $user->id,
+            'action' => 'Singup',
+            'user_notes' => 'Contact do not exist in Cin7. Awaiting approval from admin to assign role ' . Carbon::now()->toDateTimeString()
+        ]);
+        $contact->save();
+
+        $states = UsState::where('id', $request->state_id)->first();
+        $state_name = $states->state_name;
+        $cities = UsCity::where('id', $request->city_id)->first();
+        $city_name = $cities->city;
+        $contact = Contact::where('user_id', $user_id)->first()->update(
+            [
+                'postalAddress1' => $request->input('street_address'),
+                'postalState' => $state_name,
+                'postalCity' => $city_name,
+                'postalPostCode' => $request->input('zip')
+            ]
+        );
+
         $user = User::latest()->first();
+        $user_id = $user->id;
         $registering_email = $user->email;
         $existing_contacts = Contact::where('email', $registering_email)->get();
+
         if ($existing_contacts->isNotEmpty()) {
             foreach ($existing_contacts as $existing_contact) {
                 $existing_contact->user_id = $user->id;
@@ -544,63 +666,26 @@ class UserController extends Controller
                         'user_notes' => 'Existing Contact in Cin7 ' . Carbon::now()->toDateTimeString()
                     ]);
                 }
+                
                 Auth::loginUsingId($user->id);
+                $companies = Contact::where('user_id', auth()->user()->id)->get();
+                if ($companies->count() == 1) {
+                    if ($companies[0]->contact_id == null) {
+                        UserHelper::switch_company($companies[0]->secondary_id);
+                    } else {
+                        UserHelper::switch_company($companies[0]->contact_id);
+                    }
+                }
+                Session::put('companies', $companies);
             }
-            return response()->json([
-                'code' => 201,
-                'success' => true,
-                'updated' => true,
-                'msg' => 'Existing contact updated'
-            ]);
-        } else {
-            $user_id = $user->id;
-            Auth::loginUsingId($user_id);
-            if (!empty($request->input('phone'))) {
-                $contact = new Contact;
-                $contact->website = $request->input('company_website');
-                $contact->company = $request->input('company_name');
-                $contact->phone = $request->input('phone');
-                $contact->status = 0;
-                $contact->priceColumn = 'RetailUSD';
-                $contact->user_id = $user_id;
-                $contact->firstName = $user->first_name;
-                $contact->type = 'Customer';
-                $contact->lastName = $user->last_name;
-                $contact->email = $user->email;
-
-                $admin_users =  DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
-                $admin_users = $admin_users->toArray();
-
-                $users_with_role_admin = User::select("email")
-                    ->whereIn('id', $admin_users)
-                    ->get();
-
-                $user_log = UserLog::create([
-                    'user_id' => $user->id,
-                    'action' => 'Singup',
-                    'user_notes' => 'Contact do not exist in Cin7. Awaiting approval from admin to assign role ' . Carbon::now()->toDateTimeString()
-                ]);
-                $contact->save();
-            } else {
-                $states = UsState::where('id', $request->state_id)->first();
-                $state_name = $states->state_name;
-                $cities = UsCity::where('id', $request->city_id)->first();
-                $city_name = $cities->city;
-                $contact = Contact::where('user_id', $user_id)->first()->update(
-                    [
-                        'postalAddress1' => $request->input('street_address'),
-                        'postalState' => $state_name,
-                        'postalCity' => $city_name,
-                        'postalPostCode' => $request->input('zip')
-                    ]
-                );
-            }
-            return response()->json([
-                'success' => true,
-                'created' => true,
-                'msg' => 'Welcome, new player.'
-            ]);
         }
+
+        return response()->json([
+            'success' => true,
+            'created' => true,
+            'msg' => 'Welcome, new player.'
+        ]);
+        
     }
 
     public function my_account(Request $request)
