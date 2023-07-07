@@ -486,7 +486,7 @@ class UserController extends Controller
     public function checkAddress(Request $request) {
     
         $validatedData = $request->validate([
-            'company_name' => 'required',
+            'company_name' => 'required|regex:/^[a-zA-Z0-9\s]+$/',
         ]);
 
         if($validatedData) {
