@@ -121,7 +121,7 @@
                                             <div class="card-body">
                                                 <div class="row">
                                                     <div class="col-md-7">
-                                                        @if (count($user_order->apiOrderItem) > 1)
+                                                        {{-- @if (count($user_order->apiOrderItem) > 1)
                                                             <p class="picked_up_date">Picked up
                                                                 {{ $user_order->created_at->format('M d') }} </p>
                                                         @else
@@ -138,7 +138,7 @@
                                                                 </p>
                                                                 <p class="delivery_estimate_date_my_account">Shipped</p>
                                                             @endif
-                                                        @endif
+                                                        @endif --}}
                                                         <div class="row">
                                                             @php
                                                                 $totalItems = $user_order->apiOrderItem->count();
