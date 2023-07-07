@@ -338,7 +338,8 @@ class ProductController extends Controller
             'pricing',
             'childerens',
             'childeren_id',
-            'user_buy_list_options'
+            'user_buy_list_options',
+            'contact_id'
             // 'db_price_column'
         ));
     }
@@ -426,7 +427,8 @@ class ProductController extends Controller
             'pricing',
             'location_inventories',
             'user_buy_list_options',
-            'lists'
+            'lists',
+            'contact_id'
         ));
     }
     public function showProductByCategory_slug($slug)

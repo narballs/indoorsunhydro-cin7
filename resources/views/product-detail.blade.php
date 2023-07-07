@@ -87,6 +87,7 @@
                                             <div class="col-md-11">
                                                 <h3 class="product-detail-heading">{{$productOption->products->name}}</h3>
                                             </div>
+                                            @if(!empty($contact_id))
                                             <div class="col-md-1 d-flex justify-content-center">
                                                 <a style="width:20px !important;" href="javascript:void(0);" class="subscribe">
                                                     <i class="fa-solid fav-{{ $productOption->option_id }} fa-heart {{ isset($user_buy_list_options[$productOption->option_id]) ? '' : 'text-muted' }} "
@@ -95,6 +96,7 @@
                                                     </i>
                                                 </a>
                                             </div>
+                                            @endif
                                         </div>
                                     </div>
                                     <?php //dd($productOption->products->status);?>
@@ -271,12 +273,14 @@
                                 <span class="text-danger instock-label">OUT OF STOCK</span>
                             </div>
                             @endif
+                            @if(!empty($contact_id))
                             <a style="width:20px !important;" href="javascript:void(0);" class="mx-3 subscribe">
                                 <i class="fa-solid fav-{{ $productOption->option_id }} fa-heart {{ isset($user_buy_list_options[$productOption->option_id]) ? '' : 'text-muted' }} "
                                     id="{{ $productOption->option_id }}" data-toggle="popover"
                                     onclick="addToList('{{ $productOption->product_id }}', '{{ $productOption->option_id }}', '{{ isset($user_buy_list_options[$productOption->option_id]) }}')">
                                 </i>
                             </a>
+                            @endif
                         </div>
                     </div>
                     <form id="cart">
@@ -391,12 +395,14 @@
                                     STOCK</span>
                             </div>
                             @endif
-                            <a style="width:20px !important;" href="javascript:void(0);" class="mx-3 subscribe">
-                                <i class="fa-solid fav-{{ $productOption->option_id }} fa-heart {{ isset($user_buy_list_options[$productOption->option_id]) ? '' : 'text-muted' }} "
-                                    id="{{ $productOption->option_id }}" data-toggle="popover"
-                                    onclick="addToList('{{ $productOption->product_id }}', '{{ $productOption->option_id }}', '{{ isset($user_buy_list_options[$productOption->option_id]) }}')">
-                                </i>
-                            </a>
+                            @if(!empty($contact_id))
+                                <a style="width:20px !important;" href="javascript:void(0);" class="mx-3 subscribe">
+                                    <i class="fa-solid fav-{{ $productOption->option_id }} fa-heart {{ isset($user_buy_list_options[$productOption->option_id]) ? '' : 'text-muted' }} "
+                                        id="{{ $productOption->option_id }}" data-toggle="popover"
+                                        onclick="addToList('{{ $productOption->product_id }}', '{{ $productOption->option_id }}', '{{ isset($user_buy_list_options[$productOption->option_id]) }}')">
+                                    </i>
+                                </a>
+                            @endif
                         </div>
 
                     </div>
