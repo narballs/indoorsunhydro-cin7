@@ -350,22 +350,25 @@ class ProductController extends Controller
         $location_inventories = [];
 
         try {
-            $url = 'https://api.cin7.com/api/v1/Stock?where=productId=' . $product->product_id . '&productOptionId=' . $option_id;
-            $client2 = new \GuzzleHttp\Client();
-            $res = $client2->request(
-                'GET',
-                $url,
-                [
-                    'auth' => [
-                        env('API_USER'),
-                        env('API_PASSWORD')
+            $setting = AdminSetting::where('option_name', 'check_product_stock')->first();
+            if (!empty($setting) && ($setting->option_value == 'yes')) {
+                $url = 'https://api.cin7.com/api/v1/Stock?where=productId=' . $product->product_id . '&productOptionId=' . $option_id;
+                $client2 = new \GuzzleHttp\Client();
+                $res = $client2->request(
+                    'GET',
+                    $url,
+                    [
+                        'auth' => [
+                            env('API_USER'),
+                            env('API_PASSWORD')
+                        ]
                     ]
-                ]
-            );
-            $inventory = $res->getBody()->getContents();
-            $location_inventories = json_decode($inventory);
+                );
+                $inventory = $res->getBody()->getContents();
+                $location_inventories = json_decode($inventory);
 
-            UtilHelper::saveDailyApiLog('product_stock');
+                UtilHelper::saveDailyApiLog('product_stock');
+            }
 
         } catch (Exception $ex) {
         }

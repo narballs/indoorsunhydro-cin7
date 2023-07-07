@@ -31,6 +31,7 @@ use \Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
 use App\Jobs\SalesOrders;
 use App\Models\Cart;
+use App\Models\AdminSetting;
 use Illuminate\Auth\Events\Validated;
 
 class UserController extends Controller
@@ -238,6 +239,7 @@ class UserController extends Controller
     public function userRegistration()
     {
         if (!auth()->user()) {
+            $data['setting'] = AdminSetting::where('option_name' , 'enable_sign_up')->first();
             $data['states'] = UsState::get(["state_name", "id"]);
             return view('user-registration-second',  $data);
         } else {
