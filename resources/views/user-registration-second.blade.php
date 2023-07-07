@@ -63,6 +63,7 @@
         </div>
         <div class="row ml-0 pr-0 w-100 main_image_mbl" style="background-image: url('/theme/img/img_12.png');">
             <div class="login-reg-panel col-xs-6">
+                @if(!empty($setting) && $setting->option_value == 'Yes')
                 <div class="register-info-box text-center">
                     <h2 class=" dont-have-an-account">Don't have an account?</h2>
                     <p class=" dont-have-an-account-pra">Your personal data will be used to support your experience
@@ -76,6 +77,17 @@
                        </div>
                     <input type="radio" name="active-log-panel" id="log-login-show">
                 </div>
+                @else
+                <div class="register-info-box text-center">
+                    <h2 class=" dont-have-an-account">Don't have an account?</h2>
+                    <p class=" dont-have-an-account-pra">We are not open for public at the moment. Please come back later. If you have any questions please contact us here..</p>
+                    <div class="d-flex justify-content-center">
+                        <label id="label-login" for="log-login-show" class="sing-up-label d-flex justify-content-center align-items-center w-75 mb-0 p-0">
+                            <a href="{{url('contact-us')}}"><span class="sign-up">Contact us</span></a>
+                        </label>
+                    </div>
+                </div>
+                @endif
                 <div class="white-panel" style="box-shadow: 0 0 0 0 !important;">
                     <div class="login-show">
                         <h2 class="text-center login-title">LOGIN</h2>

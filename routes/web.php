@@ -263,6 +263,17 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('admin/user-switch/{id}', [UserController::class, 'switch_user'])->name('users.switch');
     Route::get('admin/send-password/{id}', [UserController::class, 'send_password'])->name('users.send_password');
     Route::get('admin/go-back', [UserController::class, 'switch_user_back'])->name('users.switch_user_back');
+
+    //crud for admin settings
+    Route::prefix('admin')->group(function () {
+        Route::get('settings', [AdminSettingsController::class, 'settings'])->name('admin.settings');
+        Route::get('settings/create', [AdminSettingsController::class, 'create_settings'])->name('admin.settings.create');
+        Route::post('settings/store', [AdminSettingsController::class, 'store_settings'])->name('admin.settings.store');
+        Route::get('settings/edit/{id}', [AdminSettingsController::class, 'edit_settings'])->name('admin.settings.edit');
+        Route::post('settings/update/{id}', [AdminSettingsController::class, 'update_settings'])->name('admin.settings.update');
+        Route::post('settings/delete/{id}', [AdminSettingsController::class, 'delete_settings'])->name('admin.settings.delete');
+    });
+
     Route::get('admin/logout', function () {
         Auth::logout();
         return redirect()->route('user');

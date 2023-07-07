@@ -356,6 +356,11 @@ return [
         ],
 
         [
+            'text'    => 'Admin Settings',
+            'url'  => 'admin/settings',
+        ],
+
+        [
             'text'       => 'Logout',
             'icon' => 'fa fa-sign-out-alt logout_icon',
             'url'        => 'admin/logout',
