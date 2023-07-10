@@ -98,7 +98,20 @@ class AdminSettingsController extends Controller
 
     public function edit($id) {
         $setting = AdminSetting::findOrFail($id);
-        return view('admin.settings.edit', compact('setting'));
+        $option_value_text = '';
+        $option_value_number = '';
+        $option_value_boolean = '';
+        $option_value_yes_no = '';
+        if($setting->type == 'text') {
+            $option_value_text = $setting->option_value;   
+        }else if($setting->type == 'number') {
+            $option_value_number = $setting->option_value; 
+        }else if($setting->type == 'boolean') {
+            $option_value_boolean = $setting->option_value; 
+        }elseif($setting->type == 'yes/no') {
+            $option_value_yes_no = $setting->option_value;
+        }
+        return view('admin.settings.edit', compact('setting' , 'option_value_text' , 'option_value_number' , 'option_value_boolean' , 'option_value_yes_no'));
     }
 
     public function update(Request $request, $id) {

@@ -54,10 +54,10 @@
                             <div class="col-md-3  d-none" id="yes_no">
                                 <label for="option_value">Option Value</label>
                                 <div class="form-group">
-                                    <input type="hidden" value="{{$setting->option_value}}" id="option_value_hidden" name="option_value_yes_no">
+                                    <input type="hidden" value="{{$option_value_yes_no}}" id="option_value_hidden" name="option_value_yes_no">
                                     <label class="switch switch-left-right">
                                         <input class="switch-input" type="checkbox" name="" 
-                                        id="option_value_edit" value="{{$setting->option_value}}" {{$setting->option_value == 'Yes' ? 'checked' : ''}}>
+                                        id="option_value_edit" value="{{$option_value_yes_no}}" {{$option_value_yes_no == 'Yes' ? 'checked' : ''}}>
                                         <span class="switch-label" data-on="Yes" data-off="No"></span> 
                                         <span class="switch-handle"></span> 
                                     </label>
@@ -66,13 +66,13 @@
                             <div class="col-md-3 d-none" id="type_text"> 
                                 <label for="option_value">Option Value</label>
                                 <div class="form-group">
-                                    <input type="text" name="option_value_text" class="form-control" placeholder="Option Value">
+                                    <input type="text" name="option_value_text" class="form-control" value="{{$option_value_text}}" placeholder="Option Value">
                                 </div>
                             </div>
                             <div class="col-md-3 d-none" id="type_number"> 
                                 <label for="option_value">Option Value</label>
                                 <div class="form-group">
-                                    <input type="number" name="option_value_number" class="form-control" placeholder="Option Value">
+                                    <input type="number" name="option_value_number" value="{{$option_value_number}}" class="form-control" placeholder="Option Value">
                                 </div>
                             </div>
                             <div class="col-md-3 d-none" id="type_boolean"> 
@@ -80,8 +80,14 @@
                                 <div class="form-group">
                                     <select name="option_value_boolean" id="" class="form-control">
                                         <option value="">Select Option Value</option>
-                                        <option value="0">0</option>
-                                        <option value="1">1</option>
+                                        @if($option_value_boolean == '0') 
+
+                                            <option value="0" selected>0</option>
+                                            <option value="1">1</option>
+                                        @elseif($option_value_boolean == '1')
+                                            <option value="0" >0</option>
+                                            <option value="1" selected>1</option>
+                                        @endif
                                     </select>
                                 </div>
                             </div>
