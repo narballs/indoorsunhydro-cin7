@@ -51,6 +51,9 @@
             {{ Illuminate\Support\Str::limit($contact->notes, 30) }}
         </span>
     </td>
+    <td class="customer-items-row">
+        {{$contact->created_at->format('m/d/Y') }}
+    </td>
     @if ($contact && $contact->status == 1)
         <td class="customer-items-row">
             <span class="d-flex">
