@@ -87,6 +87,9 @@
                                         @elseif($option_value_boolean == '1')
                                             <option value="0" >0</option>
                                             <option value="1" selected>1</option>
+                                        @else 
+                                            <option value="0" >0</option>
+                                            <option value="1">1</option>
                                         @endif
                                     </select>
                                 </div>
