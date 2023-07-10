@@ -14,9 +14,30 @@ class SettingSeeder extends Seeder
      */
     public function run()
     {
-        $setting = AdminSetting::create([
-            'option_name' => 'auto_full_fill', 
-            'option_value' => 0,
-        ]);
+        AdminSetting::truncate();
+        $setting =  
+        [
+            [
+                'option_name' => 'auto_full_fill', 
+                'type' => 'boolean',
+                'option_value' => 0,
+            ],
+            [
+                'option_name' => 'check_product_stock', 
+                'type' => 'yes/no',
+                'option_value' => 'No',
+            ],
+            [
+                'option_name' => 'enable_sign_up', 
+                'type' => 'yes/no',
+                'option_value' => 'No',
+            ]
+            
+            
+        ];
+
+        foreach($setting as $setting) {
+            AdminSetting::create($setting);
+        }
     }
 }

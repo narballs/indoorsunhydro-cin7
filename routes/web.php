@@ -268,12 +268,12 @@ Route::group(['middleware' => ['auth']], function () {
 
     //crud for admin settings
     Route::prefix('admin')->group(function () {
-        Route::get('settings', [AdminSettingsController::class, 'settings'])->name('admin.settings');
-        Route::get('settings/create', [AdminSettingsController::class, 'create_settings'])->name('admin.settings.create');
-        Route::post('settings/store', [AdminSettingsController::class, 'store_settings'])->name('admin.settings.store');
-        Route::get('settings/edit/{id}', [AdminSettingsController::class, 'edit_settings'])->name('admin.settings.edit');
-        Route::post('settings/update/{id}', [AdminSettingsController::class, 'update_settings'])->name('admin.settings.update');
-        Route::post('settings/delete/{id}', [AdminSettingsController::class, 'delete_settings'])->name('admin.settings.delete');
+        Route::get('settings/index', [AdminSettingsController::class, 'index'])->name('admin.settings.index');
+        Route::get('settings/create', [AdminSettingsController::class, 'create'])->name('admin.settings.create');
+        Route::post('settings/store', [AdminSettingsController::class, 'store'])->name('admin.settings.store');
+        Route::get('settings/edit/{id}', [AdminSettingsController::class, 'edit'])->name('admin.settings.edit');
+        Route::post('settings/update/{id}', [AdminSettingsController::class, 'update'])->name('admin.settings.update');
+        Route::post('settings/delete/{id}', [AdminSettingsController::class, 'delete'])->name('admin.settings.delete');
     });
 
     Route::get('admin/logout', function () {

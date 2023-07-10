@@ -7,6 +7,7 @@ use Throwable;
 use App\Notifications\SlackErrorNotification;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class Handler extends ExceptionHandler
 {
@@ -39,13 +40,22 @@ class Handler extends ExceptionHandler
     public function register()
     {
         $this->reportable(function (Throwable $e) {
-            $errorLog = [
-                'Email' => auth()->user()->email,
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'code'=> $e->getCode(),
-                'trace' => $e->getTraceAsString(),
-            ];
+            if(Auth::User()) {
+                $errorLog = [
+                    'Email' => auth()->user()->email,
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'code'=> $e->getCode(),
+                    'trace' => $e->getTraceAsString(),
+                ];
+            }else {
+                $errorLog = [
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'code'=> $e->getCode(),
+                    'trace' => $e->getTraceAsString(),
+                ];
+            }
             Log::channel('slack')->error($e->getMessage(), $errorLog);
         });
     }

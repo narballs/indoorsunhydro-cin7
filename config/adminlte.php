@@ -357,7 +357,7 @@ return [
 
         [
             'text'    => 'Admin Settings',
-            'url'  => 'admin/settings',
+            'url'  => 'admin/settings/index',
         ],
 
         [
