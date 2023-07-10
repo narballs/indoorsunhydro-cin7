@@ -23,16 +23,66 @@
                                     name="option_name" value="{{$setting->option_name}}" readonly>
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="type">Type</label>
+                                    <select name="type" id="setting_type" class="form-control">
+                                        @if($setting->type == 'boolean')
+                                        <option value="boolean" selected>Boolean</option>
+                                        <option value="text">Text</option>
+                                        <option value="number">Number</option>
+                                        <option value="yes/no">Yes/No</option>
+                                        @elseif($setting->type == 'text')
+                                        <option value="boolean">Boolean</option>
+                                        <option value="text" selected >Text</option>
+                                        <option value="number">Number</option>
+                                        <option value="yes/no">Yes/No</option>
+                                        @elseif($setting->type == 'number')
+                                        <option value="boolean">Boolean</option>
+                                        <option value="text">Text</option>
+                                        <option value="number" selected>Number</option>
+                                        <option value="yes/no">Yes/No</option>
+                                        @elseif($setting->type == 'yes/no')
+                                        <option value="boolean">Boolean</option>
+                                        <option value="text">Text</option>
+                                        <option value="number">Number</option>
+                                        <option value="yes/no" selected>Yes/No</option>
+                                        @endif
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3  d-none" id="yes_no">
                                 <label for="option_value">Option Value</label>
                                 <div class="form-group">
-                                    <input type="hidden" value="{{$setting->option_value}}" id="option_value_hidden" name="option_value">
+                                    <input type="hidden" value="{{$setting->option_value}}" id="option_value_hidden" name="option_value_yes_no">
                                     <label class="switch switch-left-right">
                                         <input class="switch-input" type="checkbox" name="" 
                                         id="option_value_edit" value="{{$setting->option_value}}" {{$setting->option_value == 'Yes' ? 'checked' : ''}}>
                                         <span class="switch-label" data-on="Yes" data-off="No"></span> 
                                         <span class="switch-handle"></span> 
                                     </label>
+                                </div>
+                            </div>
+                            <div class="col-md-3 d-none" id="type_text"> 
+                                <label for="option_value">Option Value</label>
+                                <div class="form-group">
+                                    <input type="text" name="option_value_text" class="form-control" placeholder="Option Value">
+                                </div>
+                            </div>
+                            <div class="col-md-3 d-none" id="type_number"> 
+                                <label for="option_value">Option Value</label>
+                                <div class="form-group">
+                                    <input type="number" name="option_value_number" class="form-control" placeholder="Option Value">
+                                </div>
+                            </div>
+                            <div class="col-md-3 d-none" id="type_boolean"> 
+                                <label for="option_value">Option Value</label>
+                                <div class="form-group">
+                                    <select name="option_value_boolean" id="" class="form-control">
+                                        <option value="">Select Option Value</option>
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -292,6 +342,78 @@
     @section('js')
 
     <script>
+        $(document).ready(function() {
+            if($('#setting_type').val() == 'text') {
+                $('#type_text').removeClass('d-none');
+                $('#yes_no').addClass('d-none');
+                $('#type_number').addClass('d-none');
+                $('#type_boolean').addClass('d-none');
+                $('#option_value_yes_no').val('');
+                $('#option_value_number').val('');
+                $('#option_value_boolean').val('');
+            }
+            else if($('#setting_type').val() == 'yes/no') {
+                $('#yes_no').removeClass('d-none');
+                $('#type_text').addClass('d-none');
+                $('#type_number').addClass('d-none');
+                $('#type_boolean').addClass('d-none');
+                $('#option_value_text').val('');
+                $('#option_value_number').val('');
+                $('#option_value_boolean').val('');
+            }else if($('#setting_type').val() == 'number') {
+                $('#type_number').removeClass('d-none');
+                $('#yes_no').addClass('d-none');
+                $('#type_text').addClass('d-none');
+                $('#type_boolean').addClass('d-none');
+                $('#option_value_yes_no').val('');
+                $('#option_value_text').val('');
+                $('#option_value_boolean').val('');
+            }else if($('#setting_type').val() == 'boolean') {
+                $('#type_boolean').removeClass('d-none');
+                $('#type_number').addClass('d-none');
+                $('#yes_no').addClass('d-none');
+                $('#type_text').addClass('d-none');
+                $('#option_value_yes_no').val('');
+                $('#option_value_number').val('');
+                $('#option_value_text').val('');
+            }
+        });
+        $(document).on('change' ,  '#setting_type', function() {
+            if($(this).val() == 'text') {
+                $('#type_text').removeClass('d-none');
+                $('#yes_no').addClass('d-none');
+                $('#type_number').addClass('d-none');
+                $('#type_boolean').addClass('d-none');
+                $('#option_value_yes_no').val('');
+                $('#option_value_number').val('');
+                $('#option_value_boolean').val('');
+            }
+            else if($(this).val() == 'yes/no') {
+                $('#yes_no').removeClass('d-none');
+                $('#type_text').addClass('d-none');
+                $('#type_number').addClass('d-none');
+                $('#type_boolean').addClass('d-none');
+                $('#option_value_text').val('');
+                $('#option_value_number').val('');
+                $('#option_value_boolean').val('');
+            }else if($(this).val() == 'number') {
+                $('#type_number').removeClass('d-none');
+                $('#yes_no').addClass('d-none');
+                $('#type_text').addClass('d-none');
+                $('#type_boolean').addClass('d-none');
+                $('#option_value_yes_no').val('');
+                $('#option_value_text').val('');
+                $('#option_value_boolean').val('');
+            }else if($(this).val() == 'boolean') {
+                $('#type_boolean').removeClass('d-none');
+                $('#type_number').addClass('d-none');
+                $('#yes_no').addClass('d-none');
+                $('#type_text').addClass('d-none');
+                $('#option_value_yes_no').val('');
+                $('#option_value_number').val('');
+                $('#option_value_text').val('');
+            }
+        });
         $('#option_value_edit').click(function(){
             if ($('#option_value_edit').is(':checked')){
                 $('#option_value_edit').attr('checked' ,true);

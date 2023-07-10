@@ -26,6 +26,7 @@ use App\Models\ApiOrder;
 use App\Models\User;
 
 use App\Helpers\UtilHelper;
+use App\Models\ProductStock;
 
 class ProductController extends Controller
 {
@@ -368,6 +369,26 @@ class ProductController extends Controller
                 $inventory = $res->getBody()->getContents();
                 $location_inventories = json_decode($inventory);
 
+                if(!empty($location_inventories)) {
+                    foreach ($location_inventories as $location_inventory) {
+                        if($location_inventory->branchId == 174 || $location_inventory->branchId == 172 || $location_inventory->branchId == 173) {
+                            $product_stock =  ProductStock::where('branch_name' ,  $location_inventory->branchName)->first();
+                            if(empty($product_stock)) {
+                                ProductStock::create([
+                                    'stock_available' => $location_inventory->available,
+                                    'branch_name' => $location_inventory->branchName
+                                ]);
+                            }else {
+                                $product_stock->update([
+                                    'stock_available' => $location_inventory->available,
+                                    'branch_name' => $location_inventory->branchName
+                                ]);
+                            }
+                        }else {
+                            continue;
+                        }
+                    }
+                }
                 UtilHelper::saveDailyApiLog('product_stock');
             }
 
