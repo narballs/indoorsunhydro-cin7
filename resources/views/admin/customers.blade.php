@@ -101,6 +101,9 @@
                                     <span class="d-flex table-row-item"> Notes</span>
                                 </td>
                                 <td>
+                                    <span class="d-flex table-row-item"> Created Date</span>
+                                </td>
+                                <td>
                                     <span class="d-flex table-row-item"> Status</span>
                                 </td>
                                 <td>
