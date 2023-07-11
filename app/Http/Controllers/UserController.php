@@ -693,6 +693,7 @@ class UserController extends Controller
 
     public function my_account(Request $request)
     {
+        $sort_by = '';
         $user_id = auth()->id();
         if (!auth()->user()) {
             return redirect('/user/');
@@ -704,13 +705,27 @@ class UserController extends Controller
             $contact_ids = Contact::whereIn('id', $all_ids)
                 ->pluck('contact_id')
                 ->toArray();
-            $user_orders = ApiOrder::whereIn('memberId', $contact_ids)
+            $user_orders_query = ApiOrder::whereIn('memberId', $contact_ids)
                 ->with('contact' , function($query) {
                     $query->orderBy('company');
                 })
-                ->with('apiOrderItem.product')
-                // ->orderBy('id', 'desc')
-                ->paginate(10);
+                ->with('apiOrderItem.product');
+                // dd($request->get('order_sort_by'));
+            if (!empty($request->sort_by)) {
+                $sort_by = $request->sort_by;
+                if ($sort_by == 'recent') {
+
+                    $user_orders = $user_orders_query->orderBy('created_at' , 'Desc')->paginate(10);
+                }
+                if ($sort_by == 'amount') {
+
+                    $user_orders = $user_orders_query->orderBy('productTotal' , 'Desc')->paginate(10);
+                }
+
+            } else {
+                $user_orders = $user_orders_query->paginate(10);
+            }
+            
             $custom_roles_with_company = DB::table('custom_roles')
                 ->where('user_id', $user_id)
                 ->where('company', $selected_company)
@@ -744,7 +759,8 @@ class UserController extends Controller
                 'companies',
                 'user_orders',
                 'can_approve_order',
-                'order_approver_for_company'
+                'order_approver_for_company',
+                'sort_by'
             ));
         }
     }

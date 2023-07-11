@@ -1,4 +1,12 @@
 <script>
+    function handleSortBY() {
+        var sort_by = jQuery('#handle_sort_by').val();
+        var basic_url = `/my-account`;
+        if (sort_by != '') {
+            basic_url = basic_url+`?sort_by=${sort_by}`;
+        }
+        window.location.href = basic_url
+    }
     function qoute() {
         $('#my_quotes_detail_table').addClass('d-none');
         $('#my_quotes').addClass('d-none');

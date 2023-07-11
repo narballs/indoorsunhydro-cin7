@@ -14,6 +14,19 @@
                 <div class="col-md-6 pt-3">
                     @include('my-account.my-account-side-bar')
                 </div>
+                <div class="col-md-2 pt-3 d-flex align-items-center justify-content-end">
+                    <ul class="nav ">
+                        <li class="text-center">
+                            <select id="handle_sort_by" name="sort_by" class="form-select py-1" onchange="handleSortBY()">
+                                <option value="">Sort by</option>
+                                <option value="recent" {{ $sort_by }} {{ isset($sort_by) && $sort_by=='recent' ? 'selected="selected"' : ''
+                                    }}>Recent</option>
+                                <option value="amount" {{ $sort_by }} {{ isset($sort_by) && $sort_by=='amount' ? 'selected="selected"' : ''
+                                    }}>Amount</option>
+                            </select>
+                        </li>
+                    </ul>
+                </div>
                 {{-- <div class="col-md-6 py-4">
                     <div class="row search_row_my_account_page">
                         <div class="col-md-10 d-flex ">
