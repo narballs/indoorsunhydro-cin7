@@ -32,6 +32,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Jobs\SalesOrders;
 use App\Models\Cart;
 use App\Models\AdminSetting;
+use App\Models\ProductBuyList;
 use Illuminate\Auth\Events\Validated;
 
 class UserController extends Controller
@@ -751,16 +752,27 @@ class UserController extends Controller
     //get favorites in separate page
     public function myFavorites(Request $request)
     {
+        $lists = [];
+        $per_page = '';
         $user_id = Auth::id();
         if (!$user_id) {
             return redirect('/user/');
         }
         $contact_id = session()->get('contact_id');
-        $lists = BuyList::where('user_id', $user_id)
+        $lists_query = BuyList::where('user_id', $user_id)
             ->where('contact_id', $contact_id)
             ->with('list_products.product.options.price')
             ->where('title', 'My Favorites')
-            ->paginate(6);
+            ->get();
+        foreach ($lists_query as $list) {
+            $favorite_list = ProductBuyList::with('buylist','product.options.price')->where('list_id', $list->id);
+            if ($request->get('per_page')) {
+                $per_page = $request->get('per_page');
+                $lists = $favorite_list->paginate($per_page);
+            } else {
+                $lists = $favorite_list->paginate(6);
+            }
+        }
 
         $user = User::where('id', $user_id)->first();
         $all_ids = UserHelper::getAllMemberIds($user);
@@ -793,7 +805,8 @@ class UserController extends Controller
             'secondary_contacts',
             'parent',
             'companies',
-            'states'
+            'states',
+            'per_page'
         ));
         // return $images;
     }
