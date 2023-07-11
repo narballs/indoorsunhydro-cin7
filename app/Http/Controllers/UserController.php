@@ -719,7 +719,7 @@ class UserController extends Controller
                 }
                 if ($sort_by == 'amount') {
 
-                    $user_orders = $user_orders_query->orderBy('productTotal' , 'Desc')->paginate(10);
+                    $user_orders = $user_orders_query->orderBy('total' , 'Desc')->paginate(10);
                 }
 
             } else {
