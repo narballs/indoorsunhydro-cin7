@@ -18,43 +18,60 @@
             <div class="col-md-12 p-0">
                 <div class="card">
                     <div class="card-header bg-white ps-5">
-                        <p class="my_account_default_address mb-0">
-                            Favorites
-                        </p>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <p class="my_account_default_address mb-0">
+                                    Favorites
+                                </p>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="row justify-content-end">
+                                    <div class="col-md-12 mt-3 d-flex justify-content-end align-items-center">
+                                        {{-- @foreach ($lists as $list) --}}
+                                            @if (count($lists) > 0)
+                                                <button class="btn btn-success btn-sm mr-3 selection_buttons" id="add_selected"
+                                                    onclick="add_selected_to_cart()" type="button">
+                                                    Add Selected to Cart
+                                                </button>
+                
+                                                <button class="btn btn-success btn-sm selection_buttons mr-3" id="add_all_to_cart" type="button"
+                                                    onclick="add_all_to_cart()">
+                                                    Add All to Cart
+                                                </button>
+                                                <div>
+                                                    <select id="per_page_favorite" name="per_page" class="form-select py-1" onchange="handlePerPage()">
+                                                        <option value="">Per Page</option>
+                                                        <option value="10" {{ $per_page }} {{ isset($per_page) && $per_page==10 ? 'selected="selected"' : ''
+                                                           }}>10</option>
+                                                        <option value="20" {{ $per_page }} {{ isset($per_page) && $per_page==20 ? 'selected="selected"' : ''
+                                                           }}>20</option>
+                                                        <option value="50" {{ $per_page }} {{ isset($per_page) && $per_page==50 ? 'selected="selected"' : ''
+                                                           }}>50</option>
+                                                    </select>
+                                                </div>
+                                            @endif
+                                        {{-- @endforeach --}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="card-body p-0">
                         <div id="fav_content">
                             @php
                                 $i = 1;
                             @endphp
-                            @foreach ($lists as $list)
-                                @if (count($list->list_products) > 0)
-                                    <div class="row justify-content-end btn-row-selection d-none" id="Collector">
-                                        <div class="col-md-8">
-                                            <div class="col-md-6 d-flex justify-content-around">
-                                                <button class="btn btn-info btn-sm" id="add_selected"
-                                                    onclick="add_selected_to_cart()" type="button">
-                                                    Add Selected to Cart
-                                                </button>
-
-                                                <button class="btn btn-info btn-sm" id="add_all_to_cart" type="button"
-                                                    onclick="add_all_to_cart()">
-                                                    Add All to Cart
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endif
+                            {{-- @foreach ($lists as $list) --}}
                                 <div>
                                     <table class="table address-table-items-data m-0 ">
                                         <thead>
                                             <tr class="table-header-background">
                                                 <td class="d-flex table-row-item">
                                                     <div class="custom-control custom-checkbox tabel-checkbox">
-                                                        <input
+                                                        {{-- <input
                                                             class="custom-control-input custom-control-input-success checkbox-table"
                                                             type="checkbox" id="selectAll" value="">
-                                                        <label for="selectAll" class="custom-control-label"></label>
+                                                        <label for="selectAll" class="custom-control-label"></label> --}}
 
                                                         <span class="table-row-heading-order">
                                                             <i class="fas fa-arrow-up mt-1"
@@ -70,8 +87,8 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @if (count($list->list_products) > 0)
-                                                @foreach ($list->list_products as $product)
+                                            @if (count($lists) > 0)
+                                                @foreach ($lists as $product)
                                                     @foreach ($product->product->options as $option)
                                                         <div id="">
                                                             @foreach ($option->price as $price)
@@ -131,10 +148,10 @@
                                                                             class="btn favorite_remove_btn"
                                                                             onclick="remove_from_favorite('{{ $product->id }}')"
                                                                             data-option="{{ $product->option_id }}"
-                                                                            data-contact="{{ $list->contact_id }}"
-                                                                            data-user="{{ $list->user_id }}"
+                                                                            data-contact="{{ $product->buylist->contact_id }}"
+                                                                            data-user="{{ $product->buylist->user_id }}"
                                                                             data-list="{{ $product->list_id }}"
-                                                                            data-title="{{ $list->title }}">
+                                                                            data-title="{{ $product->buylist->title }}">
                                                                             Remove
                                                                         </button>
                                                                     </td>
@@ -155,7 +172,7 @@
                                         </tbody>
                                     </table>
                                 </div>
-                            @endforeach
+                            {{-- @endforeach --}}
                         </div>
                         <div class="row">
                             <div class="col-md-12">
@@ -168,7 +185,27 @@
         </div>
     </div>
 </div>
+<style>
+    .selection_buttons ,  .selection_buttons:hover{
+        background-color:#7bc533;
+        border-color: #7bc533 ;   
+    }
+    #per_page_favorite:focus {
+        box-shadow: none;
+    }
+</style>
 <script>
+
+    function handlePerPage() {
+
+        
+        var per_page = jQuery('#per_page_favorite').val();
+        var basic_url = `/my-account/my-favorites`;
+        if (per_page != '') {
+        basic_url = basic_url+`?per_page=${per_page}`;
+        }
+        window.location.href = basic_url
+    }
     //main multi function 
     function add_multi_to_cart(all_fav) {
         $.ajax({
