@@ -350,7 +350,15 @@ class ProductController extends Controller
 
         $product = Product::where('id', $id)->first();
         $location_inventories = [];
+        $available_stock = [];
         $stock = true;
+        $stock_flag = 'Unable to show accurate stock levels';
+        $productOption = [];
+        $pname = '';
+        $pricing = '';
+        $user_buy_list_options = [];
+        $lists = '';
+        $contact_id = '';
 
         try {
             $setting = AdminSetting::where('option_name', 'check_product_stock')->first();
@@ -375,11 +383,15 @@ class ProductController extends Controller
                         if ($location_inventory->branchId == 174 || $location_inventory->branchId == 172 || $location_inventory->branchId == 173) {
                             continue;
                         } else {
-                            $product_stock =  ProductStock::where(['branch_id' => $location_inventory->branchId , 'product_id' =>  $product->product_id ,'option_id' => $option_id])->first();
+                            $product_stock =  ProductStock::where('branch_id' , $location_inventory->branchId)
+                            ->where('product_id' ,  $product->product_id)
+                            ->where('option_id' , $option_id)
+                            ->first();
                             if (empty($product_stock)) {
                                 ProductStock::create([
                                     'available_stock' => $location_inventory->available,
                                     'branch_id' => $location_inventory->branchId,
+                                    'branch_name' => $location_inventory->branchName,
                                     'product_id' => $product->product_id,
                                     'option_id' => $option_id
                                 ]);
@@ -390,11 +402,21 @@ class ProductController extends Controller
                                     'available_stock' => $location_inventory->available,
                                     'branch_id' => $location_inventory->branchId,
                                     'product_id' => $product->product_id,
+                                    'branch_name' => $location_inventory->branchName,
                                     'option_id' => $option_id
                                 ]);
                             }
                         }
                     }
+                    $available_stock = ProductStock::where('product_id' ,  $product->product_id)
+                    ->where('option_id' , $option_id)
+                    ->orderBy('created_at', 'desc')
+                    ->first();
+                } else {
+                    $available_stock = ProductStock::where('product_id' ,  $product->product_id)
+                    ->where('option_id' , $option_id)
+                    ->orderBy('created_at', 'desc')
+                    ->first();
                 }
                 UtilHelper::saveDailyApiLog('product_stock');
                 
@@ -403,67 +425,69 @@ class ProductController extends Controller
                 $stock = false;
             }
 
+            if ($product) {
+                $views = $product->views;
+                $product->views = $views + 1;
+                $product->save();
+            }
+            $productOption = ProductOption::where('option_id', $option_id)->with('products.categories', 'price')->first();
+            if ($productOption->products->categories != '') {
+                $category = Category::where('category_id', $productOption->products->categories->category_id)->first();
+                $parent_category = Category::where('category_id', $category->parent_id)->first();
+                $pname = '';
+                if ($parent_category) {
+                    $pname =  $parent_category->name;
+                } else {
+                    $category = Category::where('category_id', $category->category_id)->first();
+                    $pname = $category->name;
+                }
+            } else {
+                $pname = '';
+            }
+            $user_id = Auth::id();
+            $contact = '';
+            if ($user_id != null) {
+                $contact = Contact::where('user_id', $user_id)->first();
+            }
+    
+            if ($contact) {
+                $pricing = $contact->priceColumn;
+            } else {
+                $pricing = 'RetailUSD';
+            }
+    
+            $contact_id = session()->get('contact_id');
+            $user_list = BuyList::where('user_id', $user_id)
+                ->where('contact_id', $contact_id)
+                ->first();
+            if (!empty($user_list)) {
+                $user_buy_list_options = ProductBuyList::where('list_id', $user_list->id)->pluck('option_id', 'option_id')->toArray();
+            }
+    
+            $lists = BuyList::where('user_id', $user_id)
+            ->where('contact_id', $contact_id)
+            ->with('list_products')
+            ->get();
+
+            return view('product-detail', compact(
+                'productOption',
+                'pname',
+                'pricing',
+                'location_inventories',
+                'user_buy_list_options',
+                'lists',
+                'contact_id',
+                'stock',
+                'stock_flag',
+                'available_stock'
+            ));
+
         } catch (Exception $ex) {
             $stock = false;
         }
 
-        if ($product) {
-            $views = $product->views;
-            $product->views = $views + 1;
-            $product->save();
-        }
-        $productOption = ProductOption::where('option_id', $option_id)->with('products.categories', 'price')->first();
-        if ($productOption->products->categories != '') {
-            $category = Category::where('category_id', $productOption->products->categories->category_id)->first();
-            $parent_category = Category::where('category_id', $category->parent_id)->first();
-            $pname = '';
-            if ($parent_category) {
-                $pname =  $parent_category->name;
-            } else {
-                $category = Category::where('category_id', $category->category_id)->first();
-                $pname = $category->name;
-            }
-        } else {
-            $pname = '';
-        }
-        $user_id = Auth::id();
-        $contact = '';
-        if ($user_id != null) {
-            $contact = Contact::where('user_id', $user_id)->first();
-        }
-
-        if ($contact) {
-            $pricing = $contact->priceColumn;
-        } else {
-            $pricing = 'RetailUSD';
-        }
-
-        $contact_id = session()->get('contact_id');
-        $user_list = BuyList::where('user_id', $user_id)
-            ->where('contact_id', $contact_id)
-            ->first();
-
-
-        $user_buy_list_options = [];
-
-        if (!empty($user_list)) {
-            $user_buy_list_options = ProductBuyList::where('list_id', $user_list->id)->pluck('option_id', 'option_id')->toArray();
-        }
-
-        $lists = BuyList::where('user_id', $user_id)
-            ->where('contact_id', $contact_id)
-            ->with('list_products')
-            ->get();
-        return view('product-detail', compact(
-            'productOption',
-            'pname',
-            'pricing',
-            'location_inventories',
-            'user_buy_list_options',
-            'lists',
-            'contact_id',
-            'stock'
-        ));
+        
+        
     }
     public function showProductByCategory_slug($slug)
     {
