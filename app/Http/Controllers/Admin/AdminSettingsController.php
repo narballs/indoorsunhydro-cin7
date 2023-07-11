@@ -35,9 +35,9 @@ class AdminSettingsController extends Controller
         return view('admin.settings.index', compact('settings'));
     }
 
-    public function create() {
-        return view('admin.settings.create');
-    }
+    // public function create() {
+    //     return view('admin.settings.create');
+    // }
 
     public function store(Request $request) {
         $request->validate([
@@ -116,13 +116,10 @@ class AdminSettingsController extends Controller
 
     public function update(Request $request, $id) {
         $request->validate([
-            'option_name' => 'required',
-            'type' => 'required'
+            'option_name' => 'required'
         ]);
         $setting = AdminSetting::where('id', $id)->first();
-        $setting->option_name = $request->option_name;
-        $setting->type = $request->type;
-        if($request->type == 'text') {
+        if($setting->type == 'text') {
             $request->validate(
                 [
                     'option_value_text' => 'required'
@@ -133,7 +130,7 @@ class AdminSettingsController extends Controller
             );
             $setting->option_value = $request->option_value_text;
         }
-        elseif($request->type == 'boolean') {
+        elseif($setting->type == 'boolean') {
             $request->validate(
                 [
                     'option_value_boolean' => 'required'
@@ -144,7 +141,7 @@ class AdminSettingsController extends Controller
             );
             $setting->option_value = $request->option_value_boolean;
         }
-        elseif($request->type == 'number') {
+        elseif($setting->type == 'number') {
             $request->validate(
                 [
                     'option_value_number' => 'required'
@@ -155,7 +152,7 @@ class AdminSettingsController extends Controller
             );
             $setting->option_value = $request->option_value_number;
         }
-        elseif($request->type == 'yes/no') {
+        elseif($setting->type == 'yes/no') {
             $request->validate(
                 [
                     'option_value_yes_no' => 'required'

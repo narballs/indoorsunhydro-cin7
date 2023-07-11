@@ -269,7 +269,7 @@ Route::group(['middleware' => ['auth']], function () {
     //crud for admin settings
     Route::prefix('admin')->group(function () {
         Route::get('settings/index', [AdminSettingsController::class, 'index'])->name('admin.settings.index');
-        Route::get('settings/create', [AdminSettingsController::class, 'create'])->name('admin.settings.create');
+        // Route::get('settings/create', [AdminSettingsController::class, 'create'])->name('admin.settings.create');
         Route::post('settings/store', [AdminSettingsController::class, 'store'])->name('admin.settings.store');
         Route::get('settings/edit/{id}', [AdminSettingsController::class, 'edit'])->name('admin.settings.edit');
         Route::post('settings/update/{id}', [AdminSettingsController::class, 'update'])->name('admin.settings.update');

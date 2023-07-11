@@ -28,11 +28,11 @@
                                 Settings
                             </p>
                         </div>
-                        <div class="col-md-6 text-right create_bnt">
+                        {{-- <div class="col-md-6 text-right create_bnt">
                             <a href="{{ '/admin/settings/create' }}" class="btn create-new-order-btn">
                                 Create New Settings +
                             </a>
-                        </div>
+                        </div> --}}
                     </div>
                     
                 </div>
@@ -45,7 +45,7 @@
                         <tr>
                             <th>S.No</th>
                             <th>Option Name</th>
-                            <th>Type</th>
+                            {{-- <th>Type</th> --}}
                             <th>Option Value</th>
                             <th>Actions</th>
                         </tr>
@@ -59,15 +59,15 @@
                         <tr>
                             <td>{{ $i++ }}</td>
                             <td>{{ $setting->option_name }}</td>
-                            <td>{{ $setting->type }}</td>
+                            {{-- <td>{{ $setting->type }}</td> --}}
                             <td><span class="badge badge-info">{{$setting->option_value}}</span></td>
-                            <td>
+                            <td><a href="{{url('/admin/settings/edit/' . $setting->id)}}" class="btn btn-primary text-white">Edit</a></td>
+                            {{-- <td>
                                 <form action="{{url('/admin/settings/delete/' . $setting->id)}}" method="post">
-                                    <a href="{{url('/admin/settings/edit/' . $setting->id)}}" class="btn btn-primary text-white">Edit</a>
                                     @csrf
                                     <button type="submit" class="btn btn-danger">Delete</button>
                                 </form>
-                            </td>
+                            </td> --}}
                         </tr>
                         @endforeach
                         @else
