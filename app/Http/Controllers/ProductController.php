@@ -350,10 +350,11 @@ class ProductController extends Controller
 
         $product = Product::where('id', $id)->first();
         $location_inventories = [];
+        $stock = true;
 
         try {
             $setting = AdminSetting::where('option_name', 'check_product_stock')->first();
-            if (!empty($setting) && ($setting->option_value == 'yes')) {
+            if (!empty($setting) && ($setting->option_value ==  'Yes')) {
                 $url = 'https://api.cin7.com/api/v1/Stock?where=productId=' . $product->product_id . '&productOptionId=' . $option_id;
                 $client2 = new \GuzzleHttp\Client();
                 $res = $client2->request(
@@ -369,30 +370,41 @@ class ProductController extends Controller
                 $inventory = $res->getBody()->getContents();
                 $location_inventories = json_decode($inventory);
 
-                if(!empty($location_inventories)) {
+                if (!empty($location_inventories)) {
                     foreach ($location_inventories as $location_inventory) {
-                        if($location_inventory->branchId == 174 || $location_inventory->branchId == 172 || $location_inventory->branchId == 173) {
-                            $product_stock =  ProductStock::where('branch_name' ,  $location_inventory->branchName)->first();
-                            if(empty($product_stock)) {
+                        if ($location_inventory->branchId == 174 || $location_inventory->branchId == 172 || $location_inventory->branchId == 173) {
+                            continue;
+                        } else {
+                            $product_stock =  ProductStock::where(['branch_id' => $location_inventory->branchId , 'product_id' =>  $product->product_id ,'option_id' => $option_id])->first();
+                            if (empty($product_stock)) {
                                 ProductStock::create([
-                                    'stock_available' => $location_inventory->available,
-                                    'branch_name' => $location_inventory->branchName
-                                ]);
-                            }else {
-                                $product_stock->update([
-                                    'stock_available' => $location_inventory->available,
-                                    'branch_name' => $location_inventory->branchName
+                                    'available_stock' => $location_inventory->available,
+                                    'branch_id' => $location_inventory->branchId,
+                                    'product_id' => $product->product_id,
+                                    'option_id' => $option_id
                                 ]);
                             }
-                        }else {
-                            continue;
+                            else {
+                                $product_stock->delete();
+                                ProductStock::create([
+                                    'available_stock' => $location_inventory->available,
+                                    'branch_id' => $location_inventory->branchId,
+                                    'product_id' => $product->product_id,
+                                    'option_id' => $option_id
+                                ]);
+                            }
                         }
                     }
                 }
                 UtilHelper::saveDailyApiLog('product_stock');
+                
+            }  
+            else {
+                $stock = false;
             }
 
         } catch (Exception $ex) {
+            $stock = false;
         }
 
         if ($product) {
@@ -449,7 +461,8 @@ class ProductController extends Controller
             'location_inventories',
             'user_buy_list_options',
             'lists',
-            'contact_id'
+            'contact_id',
+            'stock'
         ));
     }
     public function showProductByCategory_slug($slug)

@@ -214,24 +214,41 @@
 
 <div id="popover-form">
     <form id="myform" class="form-inline p-0 w-100" role="form">
-        @foreach($location_inventories as $inventory)
-            @if($inventory->branchId == 174 || $inventory->branchId == 172 || $inventory->branchId == 173)
-                <?php continue;?>
-            @endif
-            <div class="form-group" style="width:500px">
-                <div style="font-family: 'Poppins';
-                        font-style: normal;
-                        font-weight: 400;
-                        font-size: 14px;
-                        padding:1px;
-                        color: white;
-                        max-width:500px;
-                        z-index:9999;
-                        ">
-                    <span style="width: 500px !important">{{$inventory->available}} {{$inventory->branchName}}</span>
+        {{-- @php dd($stock); @endphp --}}
+        @if($stock == true)
+            @foreach($location_inventories as $inventory)
+                @if($inventory->branchId == 174 || $inventory->branchId == 172 || $inventory->branchId == 173)
+                    <?php continue;?>
+                @endif
+                <div class="form-group" style="width:500px">
+                    <div style="font-family: 'Poppins';
+                            font-style: normal;
+                            font-weight: 400;
+                            font-size: 14px;
+                            padding:1px;
+                            color: white;
+                            max-width:500px;
+                            z-index:9999;
+                            ">
+                        <span style="width: 500px !important">{{$inventory->available}} {{$inventory->branchName}}</span>
+                    </div>
                 </div>
+            @endforeach
+        @else
+        <div class="form-group" style="width:500px">
+            <div style="font-family: 'Poppins';
+                    font-style: normal;
+                    font-weight: 400;
+                    font-size: 14px;
+                    padding:1px;
+                    color: white;
+                    max-width:500px;
+                    z-index:9999;
+                    ">
+                <span style="width: 500px !important">Unable to show accurate stock levels</span>
             </div>
-        @endforeach
+        </div>
+        @endif
     </form>
 </div>
 {{-- mobile view start --}}
