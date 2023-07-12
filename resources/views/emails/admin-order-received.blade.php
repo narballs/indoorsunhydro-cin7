@@ -519,7 +519,7 @@
                                         </tr>
                                     </table>
                                 </td>
-                                <td width="20%" style="text-align: right;vertical-align:top;color:#000000;font-color:#000000;font-size: 12px; font-weight:400; ">{{ number_format($item->price, 2) }}</td>
+                                <td width="20%" style="text-align: right;vertical-align:top;color:#000000;font-color:#000000;font-size: 12px; font-weight:400; ">{{ '$' . ' ' . number_format($item->price, 2) }}</td>
                             </tr>
                             
                         @endforeach
@@ -541,7 +541,7 @@
                                     $sub_total += $item->price;
                                 }
                             @endphp
-                            {{ number_format($sub_total, 2) }}
+                            {{'$' . ' ' . number_format($sub_total, 2) }}
                         </td>
                     </tr>
                 </table>
@@ -567,7 +567,7 @@
                                     $tax += ($item->price * $item->order->texClasses->rate) / 100;
                                 }
                             @endphp
-                            {{ number_format($tax, 2) }}
+                            {{'$' . ' ' . number_format($tax, 2) }}
                         </td>
                     </tr>
                 </table>
@@ -587,7 +587,7 @@
                                     $total = $item['order']->total_including_tax;
                                 }
                             @endphp
-                            {{ number_format($total, 2) }}
+                            {{ '$' . ' ' .number_format($total, 2) }}
                         </td>
                     </tr>
                 </table>
