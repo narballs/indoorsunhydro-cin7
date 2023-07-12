@@ -14,7 +14,7 @@ class AddBranchNameToProductStocksTable extends Migration
     public function up()
     {
         Schema::table('product_stocks', function (Blueprint $table) {
-            $table->string('branch_name')->nullable();
+            $table->string('branch_name')->after('branch_id')->nullable();
         });
     }
 

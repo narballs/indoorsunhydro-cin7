@@ -214,53 +214,26 @@
 
 <div id="popover-form">
     <form id="myform" class="form-inline p-0 w-100" role="form">
-        {{-- @php dd($stock); @endphp --}}
-        @if($stock == true)
-           
-            @if(!empty($available_stock) && ($available_stock->branch_id != 174 || $available_stock->branch_id != 172 || $available_stock->branch_id != 173))
-            <div class="form-group" style="width:500px">
-                <div style="font-family: 'Poppins';
-                        font-style: normal;
-                        font-weight: 400;
-                        font-size: 14px;
-                        padding:1px;
-                        color: white;
-                        max-width:500px;
-                        z-index:9999;
-                        ">
-                    <span style="width: 500px !important">{{$available_stock->available_stock}} {{$available_stock->branch_name}}</span>
-                </div>
+        <div class="form-group" style="width:800px">
+            <div style="font-family: 'Poppins';
+                    font-style: normal;
+                    font-weight: 400;
+                    font-size: 14px;
+                    padding:1px;
+                    color: white;
+                    max-width:800px;
+                    z-index:9999;
+                ">
+                <span style="width: 800px !important">
+                    @if (!$stock_updated)
+                        Unable to show accurate stock levels.<br />
+                    @endif
+                    @foreach ($product_stocks as $product_stock)
+                        {{ $product_stock->branch_name }}: {{ $product_stock->available_stock }}<br />
+                    @endforeach
+                </span>
             </div>
-            @else
-            <div class="form-group" style="width:500px">
-                <div style="font-family: 'Poppins';
-                        font-style: normal;
-                        font-weight: 400;
-                        font-size: 14px;
-                        padding:1px;
-                        color: white;
-                        max-width:500px;
-                        z-index:9999;
-                        ">
-                    <span style="width: 500px !important">{{$stock_flag}}</span>
-                </div>
-            </div>
-            @endif
-        @else
-            <div class="form-group" style="width:500px">
-                <div style="font-family: 'Poppins';
-                        font-style: normal;
-                        font-weight: 400;
-                        font-size: 14px;
-                        padding:1px;
-                        color: white;
-                        max-width:500px;
-                        z-index:9999;
-                        ">
-                   <span style="width: 500px !important">{{$stock_flag}}</span>
-                </div>
-            </div>
-        @endif
+        </div>
     </form>
 </div>
 {{-- mobile view start --}}
