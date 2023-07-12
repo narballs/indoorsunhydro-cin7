@@ -11,7 +11,7 @@
     <div class="row">
         <div class="col-md-10 m-auto">
             <div class="row">
-                <div class="col-md-6 pt-3">
+                <div class="col-md-8 col-xl-6 pt-3">
                     @include('my-account.my-account-side-bar')
                 </div>
                 <div class="col-md-2 pt-3 d-flex align-items-center justify-content-end">
@@ -66,7 +66,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="row">
-                                <div class="col-md-8">
+                                <div class="col-md-10 col-xl-8">
                                     @foreach ($user_orders as $user_order)
                                         @if(!empty($user_order->apiOrderItem))
                                         <div class="card my_account_order_card my-3">
@@ -95,7 +95,7 @@
                                                             <p class="order_place_my_account">
                                                                 SHIP TO <br>
                                                                 <span class="shipping_to_my_account">
-                                                                    {{ \Illuminate\Support\Str::limit($user_order->contact->postalAddress1, 15) }}
+                                                                    {{ \Illuminate\Support\Str::limit($user_order->contact->postalAddress1, 10) }}
                                                                 </span>
                                                             </p>
                                                         </span>
@@ -103,7 +103,7 @@
                                                             <p class="order_place_my_account">
                                                                 Company <br>
                                                                 <span class="shipping_to_my_account">
-                                                                    {{ \Illuminate\Support\Str::limit($user_order->contact->company, 15) }}
+                                                                    {{ \Illuminate\Support\Str::limit($user_order->contact->company, 10) }}
                                                                 </span>
                                                             </p>
                                                         </span>
