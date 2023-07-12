@@ -604,20 +604,38 @@ class UserController extends Controller
             "last_name" => $request->get('last_name'),
             "password" => bcrypt($request->get('password'))
         ]);
+        
         $user_id = $user->id;
-        $contact = new Contact;
-        $contact->website = $request->input('company_website');
-        $contact->company = $request->input('company_name');
-        $contact->phone = $request->input('phone');
-        $contact->status = 0;
-        $contact->priceColumn = 'RetailUSD';
-        $contact->user_id = $user_id;
-        $contact->firstName = $user->first_name;
-        $contact->type = 'Customer';
-        $contact->lastName = $user->last_name;
-        $contact->email = $user->email;
-        $contact->is_parent = 1;
-        $contact->status = 0;
+
+        $already_in_cin7 = false;
+
+        $contacts = Contact::where('email', $user->email)->get();
+        if (!empty($contacts)) {
+            $already_in_cin7 = true;
+
+            foreach ($contacts as $contact) {
+                $contact->user_id = $user->id;
+                $contact->save();
+            }
+        }
+        else {
+            $contact = new Contact;
+            $contact->website = $request->input('company_website');
+            $contact->company = $request->input('company_name');
+            $contact->phone = $request->input('phone');
+            $contact->status = 0;
+            $contact->priceColumn = 'RetailUSD';
+            $contact->user_id = $user_id;
+            $contact->firstName = $user->first_name;
+            $contact->type = 'Customer';
+            $contact->lastName = $user->last_name;
+            $contact->email = $user->email;
+            $contact->is_parent = 1;
+            $contact->status = 0;
+            $contact->save();
+        }
+        
+        
 
         $admin_users =  DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
         $admin_users = $admin_users->toArray();
@@ -631,20 +649,28 @@ class UserController extends Controller
             'action' => 'Singup',
             'user_notes' => 'Contact do not exist in Cin7. Awaiting approval from admin to assign role ' . Carbon::now()->toDateTimeString()
         ]);
-        $contact->save();
+
+
+        
 
         $states = UsState::where('id', $request->state_id)->first();
         $state_name = $states->state_name;
         $cities = UsCity::where('id', $request->city_id)->first();
         $city_name = $cities->city;
-        $contact = Contact::where('user_id', $user_id)->first()->update(
-            [
-                'postalAddress1' => $request->input('street_address'),
-                'postalState' => $state_name,
-                'postalCity' => $city_name,
-                'postalPostCode' => $request->input('zip')
-            ]
-        );
+        
+        
+        if (!$already_in_cin7) {
+            $contact = Contact::where('user_id', $user_id)->first()->update(
+                [
+                    'postalAddress1' => $request->input('street_address'),
+                    'postalState' => $state_name,
+                    'postalCity' => $city_name,
+                    'postalPostCode' => $request->input('zip')
+                ]
+            );
+        }
+        
+        
 
         $user = User::latest()->first();
         $user_id = $user->id;
