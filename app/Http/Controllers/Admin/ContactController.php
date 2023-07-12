@@ -39,6 +39,7 @@ class ContactController extends Controller
         $perPage = $request->get('perPage');
         $search = $request->get('search');
         $activeCustomer = $request->get('active-customer');
+        $pendingApproval = $request->get('pending-approval');
         $contact_query = Contact::where('type', 'Customer');
         if (!empty($activeCustomer)) {
             if ($activeCustomer == 'active-customer') {
@@ -47,6 +48,14 @@ class ContactController extends Controller
             if ($activeCustomer == 'disable-customer') {
                 $contact_query = Contact::where('contact_id', NULL);
             }
+            if ($activeCustomer == 'pending-approval') {
+                $contact_query = Contact::where('contact_id', NULL)
+                ->where('user_id', '!=', NULL);
+            }
+        }
+        if ($pendingApproval == 'pending-approval') {
+            $contact_query = Contact::where('contact_id', NULL)
+            ->where('user_id', '!=', NULL);
         }
         if (!empty($search)) {
             $contact_query = $contact_query->where('firstName', 'LIKE', '%' . $search . '%')
