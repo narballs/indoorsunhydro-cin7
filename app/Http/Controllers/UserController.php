@@ -578,7 +578,6 @@ class UserController extends Controller
 
     public function save_contact(CompanyInfoRequest $request)
     {
-        
         $validatedData = $request->validate([
             'street_address' => [
                 'required'
@@ -610,7 +609,7 @@ class UserController extends Controller
         $already_in_cin7 = false;
 
         $contacts = Contact::where('email', $user->email)->get();
-        if (!empty($contacts)) {
+        if (!empty($contacts) && count($contacts) > 0) {
             $already_in_cin7 = true;
 
             foreach ($contacts as $contact) {
@@ -619,19 +618,21 @@ class UserController extends Controller
             }
         }
         else {
-            $contact = new Contact;
-            $contact->website = $request->input('company_website');
-            $contact->company = $request->input('company_name');
-            $contact->phone = $request->input('phone');
-            $contact->status = 0;
-            $contact->priceColumn = 'RetailUSD';
-            $contact->user_id = $user_id;
-            $contact->firstName = $user->first_name;
-            $contact->type = 'Customer';
-            $contact->lastName = $user->last_name;
-            $contact->email = $user->email;
-            $contact->is_parent = 1;
-            $contact->status = 0;
+            $contact = new Contact([
+                'website' => $request->input('company_website'),
+                'company' => $request->input('company_name'),
+                'phone' => $request->input('phone'),
+                'status' => 0,
+                'priceColumn' => 'RetailUSD',
+                'user_id' => $user_id,
+                'firstName' => $user->first_name,
+                'type' => 'Customer',
+                'lastName' => $user->last_name,
+                'email' => $user->email,
+                'is_parent' => 1,
+                'status' => 0,
+            ]);
+
             $contact->save();
         }
         
