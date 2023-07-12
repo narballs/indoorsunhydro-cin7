@@ -17,7 +17,7 @@
                 <div class="col-md-2 pt-3 d-flex align-items-center justify-content-end">
                     <ul class="nav ">
                         <li class="text-center">
-                            <select id="handle_sort_by" name="sort_by" class="form-select py-1" onchange="handleSortBY()">
+                            <select id="handle_sort_by" name="sort_by" class="py-1" onchange="handleSortBY()">
                                 <option value="">Sort by</option>
                                 <option value="recent" {{ $sort_by }} {{ isset($sort_by) && $sort_by=='recent' ? 'selected="selected"' : ''
                                     }}>Recent</option>
@@ -271,6 +271,41 @@
         </div>
     </div>
 </div>
+<style>
+    #handle_sort_by {
+        border-radius: 6px;
+        border: 1px solid #E1E1E1;
+        background-color: #fffffF;
+        padding: 4px 4px 4px 12px;
+        display: inline-flex;
+        height: 38px;
+        color:#252C32;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 24px;
+        letter-spacing: -0.084px;
+        font-family:'poppins';
+    }
+    #handle_sort_by:focus-visible {
+        border-radius: 6px;
+        border: 1px solid #E1E1E1;
+    }
+    #handle_sort_by::after{
+        border-radius: 6px;
+        border: 1px solid #E1E1E1;
+        color:red;
+    }
+    #handle_sort_by::-ms-expand {
+        color:#989898;
+    }
+    #handle_sort_by::-webkit-appearance {
+        color:#989898;
+    }
+    #handle_sort_by::-moz-appearance {
+        color:#989898;
+    }
+</style>
 @include('my-account.my-account-scripts')
 @include('partials.product-footer')
 @include('partials.footer')
