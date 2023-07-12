@@ -24,7 +24,7 @@
     </td>
 
     <td class="customer-items-row">
-        @if ($contact->contact_id == '')
+        @if ($contact->contact_id == '' || $contact->user_id == '')
             <span class="badge badge-danger">Unmerged</span>
         @else
             <span class="badge badge-success">Merged</span>

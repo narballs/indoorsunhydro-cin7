@@ -150,8 +150,8 @@
                                             </td>
                                         </tr>
                                     @else
-                                        @if(!empty($order_detail['apiOrderItem'][0]['product']) && !empty($order_detail['apiOrderItem'][0]['option']))
                                         <tr>
+                                            @if(!empty($order_detail['apiOrderItem'][0]['product']) && !empty($order_detail['apiOrderItem'][0]['option']))
                                             <td class="order_detail_page_product_name">
                                                 <a class="btn order_detail_page_product_name "
                                                     href="{{ url('product-detail/' . $order_detail['apiOrderItem'][0]['product_id'] . '/' . $order_detail['apiOrderItem'][0]['option_id'] . '/' . $order_detail['apiOrderItem'][0]['product']->slug) }}">
@@ -160,6 +160,7 @@
                                             <td class="my_account_all_items">
                                                 {{ $order_detail['apiOrderItem'][0]['quantity'] }}
                                             </td>
+                                            @endif
                                             <td class="my_account_all_items">
                                                 {{ $order_detail->productTotal }}
                                             </td>
@@ -197,7 +198,6 @@
                                                 {{ $order_detail->total_including_tax }}
                                             </td>
                                         </tr>
-                                        @endif
                                     @endif
                                 </tbody>
                             </table>
