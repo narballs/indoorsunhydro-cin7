@@ -51,14 +51,21 @@
                                         #{{ $order_detail->id }}
                                     </span>
                                 </div>
-                                {{-- <div class="col-md-2">
+                                
+                                <div class="col-md-2">
                                     <span class="my_account_order_details_page_date_order_id_title">
-                                        ORDER
+                                        Status
                                     </span><br>
-                                    <span class="my_account_order_details_page_date_item">
-                                        {{ $order_detail->status }}
+                                    <span class="shipping_to_my_account">
+                                        @if($order_detail->order_id != null && $order_detail->isApproved == 1)
+                                            <span class="badge badge-success">FullFilled</span>
+                                        @elseif($order_detail->order_id == null && $order_detail->isApproved == 0)
+                                            <span class="badge badge-primary">New</span>
+                                        @elseif($order_detail->order_id == null && $order_detail->isApproved == 2)
+                                            <span class="badge badge-danger">Cacelled</span>
+                                        @endif
                                     </span>
-                                </div> --}}
+                                </div>
                             </div>
 
                         </div>
