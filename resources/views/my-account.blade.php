@@ -198,9 +198,11 @@
                                                                         </div>
                                                                     </div>
                                                                     <div class="my-2" style="width:75% !important">
+                                                                        @if (!empty($orderItem->product->name))
                                                                         <p class="my_account_product_name">
                                                                             {{ $orderItem->product->name }}
                                                                         </p>
+                                                                        @endif
                                                                         <p>
                                                                             {{-- <button type="button"
                                                                                 class="btn my_account_buy_it_again">
