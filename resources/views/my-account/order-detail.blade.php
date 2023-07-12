@@ -150,6 +150,7 @@
                                             </td>
                                         </tr>
                                     @else
+                                        @if(!empty($order_detail['apiOrderItem'][0]['product']) && !empty($order_detail['apiOrderItem'][0]['option']))
                                         <tr>
                                             <td class="order_detail_page_product_name">
                                                 <a class="btn order_detail_page_product_name "
@@ -196,6 +197,7 @@
                                                 {{ $order_detail->total_including_tax }}
                                             </td>
                                         </tr>
+                                        @endif
                                     @endif
                                 </tbody>
                             </table>
