@@ -51,12 +51,19 @@
                                         #{{ $order_detail->id }}
                                     </span>
                                 </div>
+                                
                                 <div class="col-md-2">
                                     <span class="my_account_order_details_page_date_order_id_title">
-                                        ORDER
+                                        Status
                                     </span><br>
-                                    <span class="my_account_order_details_page_date_item">
-                                        {{ $order_detail->status }}
+                                    <span class="shipping_to_my_account">
+                                        @if($order_detail->order_id != null && $order_detail->isApproved == 1)
+                                            <span class="badge badge-success">FullFilled</span>
+                                        @elseif($order_detail->order_id == null && $order_detail->isApproved == 0)
+                                            <span class="badge badge-primary">New</span>
+                                        @elseif($order_detail->order_id == null && $order_detail->isApproved == 2)
+                                            <span class="badge badge-danger">Cancelled</span>
+                                        @endif
                                     </span>
                                 </div>
                             </div>
@@ -94,7 +101,7 @@
                                                     {{ $orderItem->quantity }}
                                                 </td>
                                                 <td class="my_account_all_items">
-                                                    {{ $orderItem->price }}
+                                                    {{'$' . '' . $orderItem->price }}
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -106,7 +113,7 @@
 
                                             </td>
                                             <td class="my_account_all_items">
-                                                {{ $total }}
+                                                {{ '$' .''. $total }}
                                             </td>
                                         </tr>
                                         <tr>
@@ -139,10 +146,11 @@
 
                                             </td>
                                             <td class="my_account_all_items">
-                                                {{ $order_detail->total_including_tax }}
+                                                {{'$' .''. round($order_detail->total_including_tax , 2)}}
                                             </td>
                                         </tr>
                                     @else
+                                        @if(!empty($order_detail['apiOrderItem'][0]['product']) && !empty($order_detail['apiOrderItem'][0]['option']))
                                         <tr>
                                             <td class="order_detail_page_product_name">
                                                 <a class="btn order_detail_page_product_name "
@@ -189,6 +197,7 @@
                                                 {{ $order_detail->total_including_tax }}
                                             </td>
                                         </tr>
+                                        @endif
                                     @endif
                                 </tbody>
                             </table>

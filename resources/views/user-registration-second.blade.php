@@ -18,6 +18,76 @@
         border-radius: 2px !important;
         height: 49px;
     }
+    .sign-up-fields:focus-visible {
+        outline: none;
+    }
+    .sign-up-fields {
+        border: 1px solid #EBEBEB;
+        background: #F5F5F5;
+        width: 100%;
+        color: #9A9A9A;
+        font-size: 18px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+    }
+    .sign-up-fields::placeholder {
+        color: #9A9A9A;
+        font-size: 18px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+    }
+    .step-btn-signup:focus-visible {
+        outline: none;
+    }
+    .continue_sign_up_shopping:hover {
+        text-decoration: none;
+    }
+    @media only screen and (min-width:280px) and (max-width:425px) {
+        .sing-up-label {
+            font-family: 'Poppins';
+            font-style: normal;
+            font-weight: 600 !important;
+            font-size: 24px !important;
+            line-height: 36px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: #131313;
+        }
+        .sign-up-fields {
+            padding:0.5rem !important;
+        }
+        .register_first_step {
+            margin-top: 10px !important;
+        }
+        .margin-adjust-mbl {
+            margin-top: 0.25rem !important;
+        }
+        #user_last_name {
+            margin-top: 1rem !important;
+        }
+        .step-btn-signup-div {
+            margin-top:0.75rem !important;
+        }
+        #business-row {
+            left:8.5%;
+            height: 410px !important;
+        }
+        #address_info_sidebar {
+            top:75% !important;
+        }
+        .margin-top-adjust-address {
+            margin-top: 0.75rem !important;
+        }
+        .continue-shoping-mbl {
+            height: 50% !important;
+            width: 100% !important;
+        }
+        .continue_sign_up_shopping:hover {
+            text-decoration: none !important;
+        }
+    }
 </style>
 
 <div class="container-fluid pl-0 pr-0">
@@ -63,6 +133,7 @@
         </div>
         <div class="row ml-0 pr-0 w-100 main_image_mbl" style="background-image: url('/theme/img/img_12.png');">
             <div class="login-reg-panel col-xs-6">
+                @if(!empty($setting) && $setting->option_value == 'Yes')
                 <div class="register-info-box text-center">
                     <h2 class=" dont-have-an-account">Don't have an account?</h2>
                     <p class=" dont-have-an-account-pra">Your personal data will be used to support your experience
@@ -76,12 +147,23 @@
                        </div>
                     <input type="radio" name="active-log-panel" id="log-login-show">
                 </div>
-                <div class="white-panel" style="box-shadow: 0 0 0 0 !important;">
+                @else
+                <div class="register-info-box text-center">
+                    <h2 class=" dont-have-an-account">Don't have an account?</h2>
+                    <p class=" dont-have-an-account-pra">We are not open for public at the moment. Please come back later. If you have any questions please contact us here..</p>
+                    <div class="d-flex justify-content-center">
+                        <label id="label-login" for="log-login-show" class="sing-up-label d-flex justify-content-center align-items-center w-75 mb-0 p-0">
+                            <a href="{{url('contact-us')}}"><span class="sign-up">Contact us</span></a>
+                        </label>
+                    </div>
+                </div>
+                @endif
+                <div class="white-panel" style="box-shadow: 0 0 0 0 !important;" id="main-white-panel">
                     <div class="login-show">
                         <h2 class="text-center login-title">LOGIN</h2>
                         <form method="POST" action="{{ route('login') }}">
                             @csrf
-                            <div class=" form-login">
+                            <div class="form-login">
                                 <div class="input-placeholder">
                                     <input type="text" name="email" required class="login-inputMbl">
                                     <div class="placeholder pl-3 fontAwesome top_placeholder_style " style="background: none !important;left:0px !important;">
@@ -117,29 +199,14 @@
 
                             </div>
                         </form>
-                        {{-- <div class="row mt-3 mb-1 align-items-center justify-content-between">
-                            <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-xs-12 remember-me">
-                                <div class="form-check form-login  pl-4 d-flex align-items-center">
-                                    <input class="mb-0 mt-0 form-check-input desktop-login align-items-center justify-conent-center d-flex"
-                                        type="checkbox" value="" id="checkbox-2"
-                                        style="background-color:none !important; width:20px !important; height:20px !important;" />
-                                    <label class="ml-2 formemail-registration-check-label mb-0" for="checkbox-2" style="color:#9A9A9A !important;">Remember
-                                        me</label>
-                                </div>
-                            </div>
-                            <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-xs-12 lost_pas_div">
-                                <a href="{{ route('lost.password') }}" class="btn-lost-password p-0">Lost your
-                                    password?</a>
-                            </div>
-                        </div> --}}
-                        {{-- <hr/ style="border: 0px solid #EBEBEB; !important;"> --}}
+                        
                         <div class="row mt-2">
                             <div class=" col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
                                 <p class="required-field" style="color:#9A9A9A !important ;font-weight:400;"><span class="req">*</span> Required field</p>
                             </div>
                         </div>
                     </div>
-                    <div class="register-show" style="margin-top: 56px;">
+                    <div class="register-show" style="margin-top: 56px;" id="register_first_step">
                         <form id="email-registration" class="form-signup">
                             @csrf
                             <h2 class="d-flex justify-content-center align-items-center sing-up-label">SIGN UP</h2>
@@ -160,7 +227,7 @@
                         <div id="signup_error" class="text-danger"></div>
                     </div>
                 </div>
-                <div class="login-info-box text-white">
+                <div class="login-info-box text-white" id="login_sidebar">
                     <h2 class=" dont-have-an-account text-center">Have an account?</h2>
                     <p class=" dont-have-an-account-pra" id="account">Your
                         personal data will be used to support
@@ -170,134 +237,145 @@
                         policy.
                     </p>
                     <div class="d-flex justify-content-center">
-                        <label id="label-register" for="log-reg-show" class="d-flex justify-content-center align-items-center w-75 mb-0 p-0 sing-up-label">LOGIN</label>
+                        <label onclick="hidesignup()" id="label-register" for="log-reg-show" class="d-flex justify-content-center align-items-center w-75 mb-0 p-0 sing-up-label login_for_web">LOGIN</label>
                     </div>
                     <input type="radio" name="active-log-panel" id="log-reg-show" checked="checked">
                 </div>
 
+                <div class="login-info-box text-white d-none" id="company_info_sidebar">
+                    <h2 class=" dont-have-an-account text-center">Company Info</h2>
+                    <p class=" dont-have-an-account-pra" id="account">Your
+                        Please tell us some information about your company and website
+                    </p>
+                </div>
+
+                <div class="login-info-box text-white d-none" id="address_info_sidebar">
+                    <h2 class=" dont-have-an-account text-center">Address Info</h2>
+                    <p class=" dont-have-an-account-pra" id="account">Your
+                        Knowing where you are located is also helpful to approve your
+                            account
+                            faster.
+                    </p>
+                </div>
+
                 <div class="row company-row bg-light">
-                    <div class="col-md-12 d-none company-detail" id="company-detail"
-                        style="margin: auto; height: 504px;">
-                        <div class="col-md-12 bg-light text-center">
-                            <h2 class="text-center mt-5" style="color:#25529F; font-size:30px">
-                                Company
-                                Detail</h2>
-                        </div>
-                        <p class="d-flex justify-content-center align-items-center text-dark"
-                            class="signup-intro mt-2">
-                            Please
-                            tell us some information about
-                            your
-                            company and website</p>
-                        <div class="form-signup-secondary">
-                            <div class="row col-md-12 user-info mt-3">
-                                <div class="col-md-12 mt-5">
-                                    <input type="text" placeholder="&#xf1ad; Company Name" id="company_name"
-                                        name="company_name" class="form-control mt-2 company-info fontAwesome">
-                                    <div class="text-danger" id="company_name_errors"></div>
-                                </div>
-                                <div class="col-md-12 mt-3">
-                                    <input type="text" placeholder="&#xf0ac; Company Website" id="company_website"
-                                        name="company_website" class="form-control mt-2 company-info fontAwesome"
-                                        required width="520px">
-                                    <div class="text-danger" id="company_website_errors"></div>
-                                </div>
-                                <div class="col-md-12 mt-3">
-                                    <input type="text" placeholder="&#xf095;  Phone" id="phone"
-                                        name="phone" class="form-control mt-2 company-info fontAwesome">
-                                    <div class="text-danger" id="phone_errors"></div>
-                                </div>
+                    <div class="white-panel d-none company-detail" id="company-detail"
+                    style="box-shadow: 0 0 0px 0px;">
+                        <div class="mt-5 margin-adjust-mbl">
+                            <h2 class="text-center login-title" style="color: #393939;">
+                                Company Detail
+                            </h2>
+                            <div class="">
+                                <form action="">
+                                    <div class="row justify-content-center">
+                                        <div class="col-md-10">
+                                            <div class="row">
+                                                <div class="col-md-12 mt-3">
+                                                    <input type="text" placeholder="&#xf1ad; Company Name" id="company_name"
+                                                        name="company_name" class="sign-up-fields p-3 company-info fontAwesome">
+                                                    <div class="text-danger" id="company_name_errors"></div>
+                                                </div>
+                                                <div class="col-md-12 mt-3">
+                                                    <input type="text" placeholder="&#xf0ac; Company Website" id="company_website"
+                                                        name="company_website" class="sign-up-fields p-3 company-info fontAwesome"
+                                                        required>
+                                                    <div class="text-danger" id="company_website_errors"></div>
+                                                </div>
+                                                <div class="col-md-12 mt-3">
+                                                    <input type="text" placeholder="&#xf095;  Phone" id="phone"
+                                                        name="phone" class="sign-up-fields p-3 company-info fontAwesome">
+                                                    <div class="text-danger" id="phone_errors"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
                         </div>
-                        <div class="col-md-12 mb-5 mt-5">
-                            <input type="submit" value="SAVE AND CONTINUE" style="width:15rem"
-                                class="btn-login mb-5" onclick="loadAddress()">
+                        <div class="row justify-content-center">
+                            <div class="col-md-10 mb-5 mt-5">
+                                <input type="submit" value="SAVE AND CONTINUE"
+                                    class="btn-login mb-5 w-100 step-btn-signup" onclick="loadAddress()">
+                            </div>
                         </div>
                     </div>
 
-                    <div class="col-md-12 ms-2 company-loc d-none login-form-section" id="login-form-section">
-                        <div class="col-md-12 bg-light text-center">
-                            <h2 style="color:#25529F; font-size:30px" class="text-center pt-5">SIGN
-                                UP
-                            </h2>
-                        </div>
-                        <div class="col-md-12 signup-intro p-0 ">
-                            <p class="please-tell-us d-flex justify-content-center align-items-center">Please tell us
-                                about
-                                yourself so we can get to know your better.
-                                Your data will be used to create an
-                                account so that you can make purchases through our system.</p>
-                        </div>
-                        <div class="form-signup-secondary">
-                            <div class="user-info">
-                                <div class="row mt-3">
-
-                                    <div class="col-md-6">
-                                        <input type="text" placeholder="&#xf007;  First Name" id="user_first_name"
-                                            name="first_name" class="form-control mt-3 fontAwesome">
-                                        <div class="text-danger" id="first_name_errors"></div>
+                    <div class="white-panel d-none" id="login-form-section" style="box-shadow: 0 0 0px 0px;">
+                       <div class="mt-5 margin-adjust-mbl">
+                            <h2 class="text-center login-title" style="color: #393939;">SIGN UP</h2>
+                            <form action="">
+                                <div class="row justify-content-center">
+                                    <div class="col-md-10">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <input type="text" placeholder="&#xf007;  First Name" id="user_first_name"
+                                                    name="first_name" class="fontAwesome p-3 sign-up-fields" >
+                                                <div class="text-danger" id="first_name_errors"></div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <input type="text" placeholder="&#xf007;  Last Name" id="user_last_name"
+                                                    name="last_name" class="fontAwesome p-3 sign-up-fields" >
+                                                <div class="text-danger" id="last_name_errors"></div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12 mt-3">
+                                                <input type="password" placeholder="&#xf023;  Password" id="company_name"
+                                                    name="password" class="user_password_signup company-info fontAwesome p-3 sign-up-fields" >
+                                                <div class="text-danger" id="password_errors"></div>
+                                            </div>
+                                            <div class="col-md-12 mt-3">
+                                                <input type="password" placeholder="&#xf023;  Confirm Password"
+                                                    id="confirm_password" name="confirm_password"
+                                                    class="company-info fontAwesome p-3 sign-up-fields" required >
+                                            </div>
+                                            <div class="text-danger" id="confirm_password_errors"></div>
+                                            
+                                        </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <input type="text" placeholder="&#xf007;  Last Name" id="user_last_name"
-                                            name="last_name" class="form-control fontAwesome mt-3">
-                                        <div class="text-danger" id="last_name_errors"></div>
+                                </div>
+                            </form>
+                            <div id="user-info-error" class="text-danger"></div>
+                            <div id="signup_error" class="text-danger"></div>
+                            <div class="row justify-content-center">
+                                <div class="col-md-10">
+                                    <div class="row">
+                                        <div class="col-md-12 mt-5 text-center step-btn-signup-div">
+                                            <button type="submit" value="" class="step-btn-signup w-100 btn-login"
+                                                onclick="signup()">
+                                                SIGN UP & CONTINUE</button>
+                                        </div>
                                     </div>
-
-                                    <div class="col-md-12">
-                                        <input type="password" placeholder="&#xf023;  Password" id="company_name"
-                                            name="password" class="form-control mt-2 company-info fontAwesome mt-3">
-                                        <div class="text-danger" id="password_errors"></div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <input type="password" placeholder="&#xf023;  Confirm Password"
-                                            id="confirm_password" name="confirm_password"
-                                            class="form-control mt-3 company-info fontAwesome" required>
-                                    </div>
-                                    <div class="text-danger" id="confirm_password_errors"></div>
                                 </div>
                             </div>
-                        </div>
-                        <div id="user-info-error" class="text-danger"></div>
-                        <div class="col-md-12 mb-5 mt-5 text-center">
-                            <button type="submit" value="" class="btn-login sing-up-continue"
-                                onclick="signup()">
-                                SIGN UP & CONTINUE</button>
                         </div>
                     </div>
                 </div>
 
-                <div class="row business-row bg-light d-none" id="business-row" style="margin-top: -100px">
-                    <div class="col-md-12 text-center">
-                        <h2 style="color:#25529F; font-size:30px" class="text-center pt-5">Your Business Location</h2>
-                    </div>
-                    <div class="col-md-12 signup-intro">
-                        <p class="text-center text-dark">Knowing where you are located is also helpful to approve your
-                            account
-                            faster.
-                        </p>
-                    </div>
-                    <div class="col-md-12 company-address" id="address-form-section">
-                        @csrf
-                        <div class="ms-4">
-                            <div class="form-signup-secondary">
-                                <div class="row user-info mt-3">
-                                    <div class="col-md-12 mt-3">
+                <div class="row white-panel bg-light d-none" id="business-row">
+                    <div class="mt-4 margin-adjust-mbl">
+                        <h2 class="text-center login-title" style="color: #393939;">Address info</h2>
+                    
+                        <div class="row company-address justify-content-center" id="address-form-section">
+                            <div class="col-md-10">
+                                <div class="row">
+                                    <div class="col-md-12 margin-top-adjust-address mt-3">
                                         <input type="text"
                                             placeholder="&#xf601;  Street Address, House no, Street Name"
                                             id="street_address" name="street_address"
-                                            class="form-control mt-2 company-info fontAwesome" required>
+                                            class="sign-up-fields p-3  company-info fontAwesome" required>
                                         <div class="text-danger" id="street_address_errors"></div>
                                     </div>
-                                    <div class="col-md-12 mt-3">
+                                    <div class="col-md-12 margin-top-adjust-address mt-3">
                                         <input type="text" placeholder="&#xf015;  Apartment, Suit, unit etc"
                                             id="street_address" name="suit_apartment"
-                                            class="form-control mt-2 company-info fontAwesome" required>
+                                            class="sign-up-fields p-3  company-info fontAwesome" required>
                                         <div class="text-danger" id="suit_apartment_errors"></div>
                                     </div>
-                                    <div class="col-md-12 mt-3">
+                                    <div class="col-md-12 margin-top-adjust-address mt-3">
                                         <select id="state-dd" placeholder="&#xf276;   State" name="state"
-                                            class="form-control mt-1 fontAwesome">
-                                            <option value="" class="form-control mt-2 company-info fontAwesome"
+                                            class="sign-up-fields p-3  fontAwesome">
+                                            <option value="" class="sign-up-fields p-3  company-info fontAwesome"
                                                 placeholder=" &#xf276;   State"> &#xf276; State</option>
                                             @if (!empty($states))
                                                 @foreach ($states as $data)
@@ -309,54 +387,49 @@
                                                 <option value="">No State Found</option>
                                             @endif
                                         </select>
-                                        {{-- <input type="text" placeholder="&#xf5a0;  Town/City" name="town_city"
-											class="form-control mt-2 company-info fontAwesome" required>
-										<div class="text-danger" id="town_city_errors"></div> --}}
+                                        <div class="text-danger" id="state_errors"></div>
                                     </div>
-                                    <div class="col-md-6 mt-3">
+                                    <div class="col-md-6 margin-top-adjust-address mt-3">
                                         <select id="city-dd" placeholder="&#xf5a0;  Town/City" name="city"
-                                            class="form-control mt-2 company-info fontAwesome"> &#xf5a0;
+                                            class="sign-up-fields p-3  company-info fontAwesome"> &#xf5a0;
                                             Town/City
                                             <option value="" placeholder="&#xf5a0;  Town/City" name="town_city"
-                                                class="form-control mt-2 company-info fontAwesome"> &#xf5a0; Town/City
+                                                class="sign-up-fields p-3  company-info fontAwesome"> &#xf5a0; Town/City
                                             </option>
                                         </select>
-                                        {{-- <input type="text" placeholder="&#xf276;   State" id="company_website"
-											name="state" class="form-control mt-1 fontAwesome" required>
-										<div class="text-danger" id="state_errors"></div> --}}
+                                        <div class="text-danger" id="town_city_errors"></div>
                                     </div>
-                                    <div class="col-md-6 mt-3">
+                                    <div class="col-md-6 margin-top-adjust-address mt-3">
                                         <input type="text" placeholder="&#xf041;  Zip" id="company_website"
-                                            name="zip" class="form-control mt-1 fontAwesome" required>
+                                            name="zip" class="sign-up-fields p-3 fontAwesome" required>
                                         <div class="text-danger" id="zip_errors"></div>
                                     </div>
+                                    <div id="address-info-error" class="text-danger"></div>
+                                    <div class="col-md-12 margin-top-adjust-address mt-3">
+                                        <input type="button" value="SAVE AND CONTINUE"
+                                            class="step-btn-signup btn-login  w-100" onclick="thankYou()">
+                                    </div>
                                 </div>
-                            </div>
-                            <div id="address-info-error" class="text-danger"></div>
-                            <div class="col-md-12 mt-5 m-2">
-                                <input type="button" value="SAVE AND CONTINUE" style="width:15rem; height: 44px;"
-                                    class="btn-login mb-5" onclick="thankYou()">
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="d-none thankyou row bg-light" id="thanks">
+                <div class="d-none mt-5 pt-5" id="thanks">
                     <div class="col-md-12 text-center">
-                        <h2 style="color:#25529F; font-size:30px" class="text-center pt-5">Finish</h2>
+                        <h2 class=" dont-have-an-account text-center">Thank You!</h2>
                     </div>
-                    <div class="col-md-12">
-                        <p class="text-center col-md-12 pb-2 text-dark">Thank you for registering, please allow us
-                            sometime
-                            to
-                            review your subbmission.</p>
+                    <div class="row justify-content-center">
+                        <div class="col-md-8">
+                            <p class="text-center col-md-12 pb-2  dont-have-an-account-pra">Thank you for registering, please allow us
+                                sometime
+                                to
+                                review your subbmission. Please continue to build a cart while you wait for account approval.</p>
+                        </div>
                     </div>
-                    <div>
-                        <img class="img-fluid" src="/theme/img/thanksyou.png">
-                    </div>
+                    
                     <div class="col-md-12 text-center mt-5">
-                        <a href="{{ url('/') }}">
-                            <input type="button" value="CONTINUE SHOPPING" style="width:15rem; height:50px"
-                                class="btn-login mb-5"></a>
+                        <a href="{{ url('/') }}" class="continue_sign_up_shopping d-flex justify-content-center">
+                            <input style="color: #7BC533;" type="button" value="CONTINUE SHOPPING" class="continue-shoping-mbl border-0 sing-up-label d-flex justify-content-center align-items-center w-50 mb-0 p-0"></a>
                     </div>
                 </div>
             </div>
@@ -376,14 +449,20 @@
         }
     });
 
+    function hidesignup() {
+        // alert('hi');
+        $('#login-form-section').addClass('d-none');
+        $('#main-white-panel').removeClass('d-none');
+    }
+
     function signUp2() {
 
-        $("#icons").removeClass('d-none');
+        // $("#icons").removeClass('d-none');
         $('#sigup-bold').css('font-weight', '700');
         var email = $('#email').val();
         jQuery.ajax({
             method: 'post',
-            url: "{{ url('/register/basic/create') }}",
+            url: "{{ url('/check/email') }}",
             data: {
                 "_token": "{{ csrf_token() }}",
                 "email": email,
@@ -391,15 +470,20 @@
             success: function(response) {
                 console.log(response.success);
                 if (response.success == true) {
-                    $(".login-info-box").addClass('d-none');
-                    $(".white-panel").remove();
+                    // $(".login-info-box").addClass('d-none');
+                    // $(".white-panel").remove();
+                    
+                    // $('#user_first_name').addClass('d-none');
+                    // $('#user_last_name').addClass('d-none');
+                    $('#signup_error').html(response.msg);
+
+                }else{
+                    
+                    
                     $(".company").show();
                     $(".white-panel").add();
                     $("#login-form-section").removeClass('d-none');
                     $("#company").removeClass('d-none');
-                    $('#user_first_name').addClass('d-none');
-                    $('#user_last_name').addClass('d-none');
-
                 }
             },
             error: function(response) {
@@ -441,18 +525,22 @@
         return _messages.replace('The given data was invalid.', '')
     }
 
+   
+
     function signup() {
         $('#sigup-bold').css('font-weight', 'normal');
         $('#company-bold').css('font-weight', '700');
         var first_name = $('input[name=first_name]').val();
         var last_name = $('input[name=last_name]').val();
-        var password = $('input[name=password]').val();
+        var password = $('.user_password_signup').val();
+        var email = $('#email').val();
         var confirm_password = $('input[name=confirm_password]').val();
         jQuery.ajax({
             method: 'post',
             url: "{{ url('/register/basic/create') }}",
             data: {
                 "_token": "{{ csrf_token() }}",
+                // "email": email,
                 "first_name": first_name,
                 "last_name": last_name,
                 "password": password,
@@ -460,21 +548,65 @@
 
             },
             success: function(response) {
-                console.log(response.msg);
-                if (response.msg == 'Existing contact updated') {
-                    console.log(response.code);
-                    $("#thanks").removeClass('d-none');
-                    $(".address").hide();
-                    $(".company-row").addClass('d-none');
-                    $(".company-row").hide();
-                }
+                console.log(response);
+                // if (response.msg == 'Existing contact updated') {
+                //     console.log(response.code);
+                //     $("#thanks").removeClass('d-none');
+                //     $(".address").hide();
+                //     $(".company-row").addClass('d-none');
+                //     $(".company-row").hide();
+                // }
                 if (response.success == true) {
                     $('#sign-up').attr('src', '/theme/img/round-border.png');
                     $('#arrow').attr('src', '/theme/img/arrow.png');
                     $('#company-round').attr('src', '/theme/img/round-solid.png');
                     $('#building').attr('src', '/theme/img/building-white.png');
+                    $('#login-form-section').addClass('d-none');
+                    $('#register_first_step').addClass('d-none');
+                    $('#main-white-panel').addClass('d-none');
                     $(".company-loc").hide();
                     $("#company-detail").removeClass('d-none');
+                    $('#login_sidebar').addClass('d-none');
+                    $('#company_info_sidebar').removeClass('d-none');
+
+                    // $("#thanks").removeClass('d-none');
+                    // $(".address").hide();
+                    // $(".company-row").addClass('d-none');
+                    // $(".company-row").hide();
+                    
+                }else{
+                    console.log(response.msg);
+                    var error_message = response.responseJSON;
+
+                    var error_text = '';
+                    //error_text += error_message.message;
+                    if (typeof error_message.errors.first_name != 'undefined') {
+                        error_text = error_message.errors.first_name;
+                        $('#first_name_errors').html(error_text);
+                    } else {
+                        error_text = '';
+                        $('#first_name_errors').html(error_text);
+                    }
+                    if (typeof error_message.errors.last_name != 'undefined') {
+                        var error_text2 = error_message.errors.last_name;
+                        $('#last_name_errors').html(error_text2);
+                    } else {
+                        error_text2 = '';
+                        $('#last_name_errors').html(error_text2);
+                    }
+                    if (typeof error_message.errors.password != 'undefined') {
+                        var error_text3 = error_message.errors.password;
+                        $('#password_errors').html(error_text3);
+                    } else {
+                        error_text3 = ''
+                        $('#password_errors').html(error_text3);
+                    }
+                    if (typeof error_message.errors.confirm_password != 'undefined') {
+                        var error_text4 = error_message.errors.confirm_password;
+                        $('#confirm_password_errors').html(error_text4);
+                    } else {
+                        $('#confirm_password_errors').html(error_text4);
+                    }
                 }
             },
             error: function(response) {
@@ -530,7 +662,7 @@
 
         jQuery.ajax({
             method: 'post',
-            url: "{{ url('/user-contact/') }}",
+            url: "{{ url('/check/address/') }}",
             data: {
                 "_token": "{{ csrf_token() }}",
                 "company_website": company_website,
@@ -538,21 +670,43 @@
                 "phone": phone
             },
             success: function(response) {
-                if (response.code == 201) {
-                    $("#thanks").removeClass('d-none');
-                    $(".address").hide();
-                    $("#company-detail").addClass('d-none');
+                // if (response.code == 201) {
+                //     $("#thanks").removeClass('d-none');
+                //     $(".address").hide();
+                //     $("#company-detail").addClass('d-none');
 
-                } else if (response.success == true) {
+                // } else 
+                if (response.success == true) {
                     $('#company-round').attr('src', '/theme/img/round-border.png');
                     $('#building').attr('src', '/theme/img/building.png');
                     $('#timer').attr('src', '/theme/img/round-solid.png');
                     $('#timer-main').attr('src', '/theme/img/timer-white.png');
                     $(".company-detail").hide();
-                    $(".login-form-section").hide();
-                    $(".white-panel").removeClass();
-
                     $("#business-row").removeClass('d-none');
+                    $('#login-form-section').addClass('d-none');
+                    $('#company_info_sidebar').addClass('d-none');
+                    $('#address_info_sidebar').removeClass('d-none');
+
+                    // $("#thanks").removeClass('d-none');
+                    $(".address").hide();
+                    $("#company-detail").addClass('d-none');
+                }else{
+                    var error_message = response.responseJSON;
+                    var error_text = '';
+                    if (typeof error_message.errors.company_name != 'undefined') {
+                        error_text = error_message.errors.company_name;
+                        $('#company_name_errors').html(error_text);
+                    } else {
+                        error_text = '';
+                        $('#company_name_errors').html(error_text);
+                    }
+                    if (typeof error_message.errors.phone != 'undefined') {
+                        var error_text3 = error_message.errors.phone;
+                        $('#phone_errors').html(error_text3)
+                    } else {
+                        error_text3 = '';
+                    }
+                    $('#company-info-error').html(error_text);
                 }
             },
             error: function(response) {
@@ -587,16 +741,32 @@
         var state = $('#state-dd').val();
         var town_city_address = $('#city-dd').val();
         var zip = $('input[name=zip]').val();
+        var company_website = $('input[name=company_website]').val();
+        var company_name = $('input[name=company_name]').val();
+        var phone = $('input[name=phone]').val();
+        var first_name = $('input[name=first_name]').val();
+        var last_name = $('input[name=last_name]').val();
+        var password = $('.user_password_signup').val();
+        var email = $('#email').val();
+        var confirm_password = $('input[name=confirm_password]').val();
         jQuery.ajax({
             method: 'post',
             url: "{{ url('/user-contact/') }}",
             data: {
                 "_token": "{{ csrf_token() }}",
+                "email": email,
+                "first_name": first_name,
+                "last_name": last_name,
+                "password": password,
+                "confirm_password": confirm_password,
+                "company_website": company_website,
+                "company_name": company_name,
+                "phone": phone,
                 "street_address": street_address,
                 "suit_apartment": suit_apartment,
                 "city_id": town_city_address,
                 "state_id": state,
-                "zip": zip
+                "zip": zip,
             },
             success: function(response) {
                 if (response.success == true) {
@@ -608,10 +778,55 @@
                     $("#thanks").removeClass('d-none');
                     $(".address").hide();
                     $(".company-address").hide();
-                    $(".white-panel").removeClass();
+                    $(".white-panel").addClass('d-none');
                     $("#thanks").removeClass('d-none');
                     $('#user_first_name').removeClass('d-none');
                     $('#user_last_name').removeClass('d-none');
+                    $('login-form-section').addClass('d-none');
+                    $('#company_info_sidebar').addClass('d-none');
+                    $('#address_info_sidebar').addClass('d-none');
+                }else{
+                    var error_message = response.responseJSON;
+                    console.log(error_message);
+                    var error_text = '';
+                    error_text += error_message.message;
+                    if (typeof error_message.errors.street_address != 'undefined') {
+                        error_text = error_message.errors.street_address;
+                        $('#street_address_errors').html(error_text);
+                    } else {
+                        error_text = '';
+                        $('#street_address_errors').html(error_text);
+                    }
+                    if (typeof error_message.errors.suit_apartment != 'undefined') {
+                        var error_text2 = error_message.errors.suit_apartment;
+                        $('#suit_apartment_errors').html(error_text2);
+                    } else {
+                        error_text2 = '';
+                        $('#suit_apartment_errors').html(error_text2);
+                    }
+
+                    if (typeof error_message.errors.town_city != 'undefined') {
+                        var error_text3 = error_message.errors.town_city;
+                        $('#town_city_errors').html(error_text3);
+                    } else {
+                        error_text3 = '';
+                        $('#town_city_errors').html(error_text3);
+                    }
+                    if (typeof error_message.errors.state != 'undefined') {
+                        var error_text4 = error_message.errors.state;
+                        $('#state_errors').html(error_text4);
+                    } else {
+                        error_text4 = '';
+                        $('#state_errors').html(error_text4);
+                    }
+                    if (typeof error_message.errors.zip != 'undefined') {
+                        var error_text5 = error_message.errors.zip;
+                        $('#zip_errors').html(error_text5);
+                    } else {
+                        error_text5 = '';
+                        $('#zip_errors').html(error_text5);
+                    }
+
                 }
 
             },

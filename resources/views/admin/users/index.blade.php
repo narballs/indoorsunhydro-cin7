@@ -104,6 +104,9 @@
                                         <span class="d-flex table-row-item"> Type</span>
                                     </td>
                                     <td>
+                                        <span class="d-flex table-row-item"> Created Date</span>
+                                    </td>
+                                    <td>
                                         <span class="d-flex table-row-item"> Roles</span>
                                     </td>
                                     <td>
@@ -191,6 +194,9 @@
                                                             class="badge badge-secondary  background_secondary_1">secondary</span>
                                                     @endif
                                                 @endif
+                                            </td>
+                                            <td class="user_table_items"> 
+                                                {{$contact->created_at->format('m/d/Y') }}
                                             </td>
                                             <td class="background_success user_table_items">
                                                 @if (!empty($user->getRoleNames()))

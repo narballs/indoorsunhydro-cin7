@@ -72,6 +72,8 @@ Route::get('/my-qoutes-details/{id}', [UserController::class, 'my_qoutes_details
 Route::get('/my-qoute-edit/{id}', [UserController::class, 'my_qoute_edit'])->name('my_qoute_edit');
 Route::get('/my-account-user-addresses/', [UserController::class, 'address_user_my_account'])->name('user_addresses_my_account');
 Route::get('/user-order-detail/{id}', [UserController::class, 'user_order_detail'])->name('user-order-detail');
+Route::post('/check/email', [UserController::class, 'checkEmail'])->name('check_email');
+Route::post('/check/address', [UserController::class, 'checkAddress'])->name('check_address');
 Route::post('/register/basic/create', [UserController::class, 'process_signup'])->name('register');
 Route::post('/switch-company/', [UserController::class, 'switch_company'])->name('switch-company');
 Route::post('/switch-company-select/', [UserController::class, 'switch_company_select'])->name('switch-company-select');
@@ -263,6 +265,17 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('admin/user-switch/{id}', [UserController::class, 'switch_user'])->name('users.switch');
     Route::get('admin/send-password/{id}', [UserController::class, 'send_password'])->name('users.send_password');
     Route::get('admin/go-back', [UserController::class, 'switch_user_back'])->name('users.switch_user_back');
+
+    //crud for admin settings
+    Route::prefix('admin')->group(function () {
+        Route::get('settings/index', [AdminSettingsController::class, 'index'])->name('admin.settings.index');
+        // Route::get('settings/create', [AdminSettingsController::class, 'create'])->name('admin.settings.create');
+        Route::post('settings/store', [AdminSettingsController::class, 'store'])->name('admin.settings.store');
+        Route::get('settings/edit/{id}', [AdminSettingsController::class, 'edit'])->name('admin.settings.edit');
+        Route::post('settings/update/{id}', [AdminSettingsController::class, 'update'])->name('admin.settings.update');
+        Route::post('settings/delete/{id}', [AdminSettingsController::class, 'delete'])->name('admin.settings.delete');
+    });
+
     Route::get('admin/logout', function () {
         Auth::logout();
         return redirect()->route('user');

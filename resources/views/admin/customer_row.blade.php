@@ -1,7 +1,7 @@
 <tr id="row-{{ $contact->id }}" class="customer-row border-bottom">
     <td class="d-flex table-items">
         <div class="custom-control custom-checkbox tabel-checkbox">
-            <input class="custom-control-input custom-control-input-success sub_chk" data-id="{{ $contact->id }}"
+            <input class="custom-control-input custom-control-input-success sub_chk all_checkboxes" data-id="{{ $contact->id }}"
                 type="checkbox" id="separate_check_{{ $contact->id }}">
             <label for="separate_check_{{ $contact->id }}" class="custom-control-label ml-4"></label>
         </div>
@@ -24,7 +24,7 @@
     </td>
 
     <td class="customer-items-row">
-        @if ($contact->user_id == '')
+        @if ($contact->contact_id == '')
             <span class="badge badge-danger">Unmerged</span>
         @else
             <span class="badge badge-success">Merged</span>
@@ -50,6 +50,9 @@
         <span>
             {{ Illuminate\Support\Str::limit($contact->notes, 30) }}
         </span>
+    </td>
+    <td class="customer-items-row">
+        {{$contact->created_at->format('m/d/Y') }}
     </td>
     @if ($contact && $contact->status == 1)
         <td class="customer-items-row">

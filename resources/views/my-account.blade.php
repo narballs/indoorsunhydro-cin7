@@ -14,6 +14,19 @@
                 <div class="col-md-6 pt-3">
                     @include('my-account.my-account-side-bar')
                 </div>
+                <div class="col-md-2 pt-3 d-flex align-items-center justify-content-end">
+                    <ul class="nav ">
+                        <li class="text-center">
+                            <select id="handle_sort_by" name="sort_by" class="py-1" onchange="handleSortBY()">
+                                <option value="">Sort by</option>
+                                <option value="recent" {{ $sort_by }} {{ isset($sort_by) && $sort_by=='recent' ? 'selected="selected"' : ''
+                                    }}>Recent</option>
+                                <option value="amount" {{ $sort_by }} {{ isset($sort_by) && $sort_by=='amount' ? 'selected="selected"' : ''
+                                    }}>Amount</option>
+                            </select>
+                        </li>
+                    </ul>
+                </div>
                 {{-- <div class="col-md-6 py-4">
                     <div class="row search_row_my_account_page">
                         <div class="col-md-10 d-flex ">
@@ -55,6 +68,7 @@
                             <div class="row">
                                 <div class="col-md-8">
                                     @foreach ($user_orders as $user_order)
+                                        @if(!empty($user_order->apiOrderItem))
                                         <div class="card my_account_order_card my-3">
                                             <div class="card-header my_account_order_card_header">
                                                 <div class="row">
@@ -102,9 +116,18 @@
                                                                     @elseif($user_order->order_id == null && $user_order->isApproved == 0)
                                                                         <span class="badge badge-primary">New</span>
                                                                     @elseif($user_order->order_id == null && $user_order->isApproved == 2)
-                                                                        <span class="badge badge-danger">Cacelled</span>
+                                                                        <span class="badge badge-danger">Cancelled</span>
                                                                     @endif
                                                                     
+                                                                </span>
+                                                            </p>
+                                                        </span>
+                                                        <span>
+                                                            <p class="order_place_my_account">
+                                                                Submitter <br>
+                                                                <span class="shipping_to_my_account">
+                                                                   @if(!empty($user_order->contact->firstName)){{$user_order->contact->firstName}}@endif 
+                                                                   @if(!empty($user_order->contact->lastName)){{$user_order->contact->lastName}}@endif 
                                                                 </span>
                                                             </p>
                                                         </span>
@@ -121,7 +144,7 @@
                                             <div class="card-body">
                                                 <div class="row">
                                                     <div class="col-md-7">
-                                                        @if (count($user_order->apiOrderItem) > 1)
+                                                        {{-- @if (count($user_order->apiOrderItem) > 1)
                                                             <p class="picked_up_date">Picked up
                                                                 {{ $user_order->created_at->format('M d') }} </p>
                                                         @else
@@ -138,7 +161,7 @@
                                                                 </p>
                                                                 <p class="delivery_estimate_date_my_account">Shipped</p>
                                                             @endif
-                                                        @endif
+                                                        @endif --}}
                                                         <div class="row">
                                                             @php
                                                                 $totalItems = $user_order->apiOrderItem->count();
@@ -175,9 +198,11 @@
                                                                         </div>
                                                                     </div>
                                                                     <div class="my-2" style="width:75% !important">
+                                                                        @if (!empty($orderItem->product->name))
                                                                         <p class="my_account_product_name">
                                                                             {{ $orderItem->product->name }}
                                                                         </p>
+                                                                        @endif
                                                                         <p>
                                                                             {{-- <button type="button"
                                                                                 class="btn my_account_buy_it_again">
@@ -234,6 +259,7 @@
                                                 </p>
                                             </div>
                                         </div>
+                                        @endif
                                     @endforeach
                                     {{ $user_orders->appends(Request::all())->links() }}
                                 </div>
@@ -245,6 +271,41 @@
         </div>
     </div>
 </div>
+<style>
+    #handle_sort_by {
+        border-radius: 6px;
+        border: 1px solid #E1E1E1;
+        background-color: #fffffF;
+        padding: 4px 4px 4px 12px;
+        display: inline-flex;
+        height: 38px;
+        color:#252C32;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 24px;
+        letter-spacing: -0.084px;
+        font-family:'poppins';
+    }
+    #handle_sort_by:focus-visible {
+        border-radius: 6px;
+        border: 1px solid #E1E1E1;
+    }
+    #handle_sort_by::after{
+        border-radius: 6px;
+        border: 1px solid #E1E1E1;
+        color:red;
+    }
+    #handle_sort_by::-ms-expand {
+        color:#989898;
+    }
+    #handle_sort_by::-webkit-appearance {
+        color:#989898;
+    }
+    #handle_sort_by::-moz-appearance {
+        color:#989898;
+    }
+</style>
 @include('my-account.my-account-scripts')
 @include('partials.product-footer')
 @include('partials.footer')

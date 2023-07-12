@@ -60,27 +60,40 @@ class UserHelper
     }
 
     public static function switch_company($contact_id) {
-        $contact = Contact::where('contact_id', $contact_id)->where('status', '!=', 0)->first();
-        if (!empty($contact)) {
-            $active_contact_id = $contact->contact_id;
-            $active_company = $contact->company;
+        $new_register_contact = Contact::where(['contact_id' => null , 'user_id' => auth()->user()->id])->first();
+        // dd($new_register_contact);
+        if (!empty($new_register_contact)) {
+            // $active_contact_id = $new_register_contact->contact_id;
+            $active_company = $new_register_contact->company;
             Session::put([
-                'contact_id' => $active_contact_id,
+                // 'contact_id' => $active_contact_id,
                 'company' => $active_company
             ]);
 
-        } 
-        else {
-            $contact = Contact::where('secondary_id', $contact_id)->where('status', '!=', 0)->first();
+        }else{
+            $contact = Contact::where('contact_id', $contact_id)->where('status', '!=', 0)->first();
             if (!empty($contact)) {
-                $active_contact_id = $contact->secondary_id;
+                $active_contact_id = $contact->contact_id;
                 $active_company = $contact->company;
                 Session::put([
                     'contact_id' => $active_contact_id,
                     'company' => $active_company
                 ]);
+
+            } 
+            else {
+                $contact = Contact::where('secondary_id', $contact_id)->where('status', '!=', 0)->first();
+                if (!empty($contact)) {
+                    $active_contact_id = $contact->secondary_id;
+                    $active_company = $contact->company;
+                    Session::put([
+                        'contact_id' => $active_contact_id,
+                        'company' => $active_company
+                    ]);
+                }
             }
         }
+        
 
         return response()->json([
             'status' => '204',

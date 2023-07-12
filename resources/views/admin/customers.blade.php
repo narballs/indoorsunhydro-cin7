@@ -39,6 +39,10 @@
                                 </form>
                             </div>
                         </div>
+                        <div class="col-md-2">
+                            <input type="hidden" value="pending-approval" id="pending_approval" name="pending_approval">
+                            <button class="btn-sm btn-primary border-0 p-1 px-2 rounded-pill" type="button" onclick="pending_approval()">New User Pending Approval</button>
+                        </div>
                         <div class="col-md-5">
                             <div class="row filter-row-mobile-secreen">
                                 <div class="col-md-6">
@@ -53,6 +57,9 @@
                                         <option value="disable-customer" class="form-control"
                                             {{ isset($activeCustomer) && $activeCustomer == 'disable-customer' ? 'selected="selected"' : '' }}>
                                             Disabled </option>
+                                        <option value="pending-approval" class="form-control"
+                                            {{ isset($activeCustomer) && $activeCustomer == 'pending-approval' ? 'selected="selected"' : '' }}>
+                                            Pending Approval </option>
                                     </select>
                                 </div>
                             </div>
@@ -99,6 +106,9 @@
                                 </td>
                                 <td>
                                     <span class="d-flex table-row-item"> Notes</span>
+                                </td>
+                                <td>
+                                    <span class="d-flex table-row-item"> Created Date</span>
                                 </td>
                                 <td>
                                     <span class="d-flex table-row-item"> Status</span>
@@ -398,15 +408,24 @@
             var perPage = $('#per_page').val();
             var search = $('#search').val();
             var activeCustomer = $('#active_customer').val();
-
             if (perPage != '') {
                 var basic_url = 'customers?&search=' + search;
             }
-
             if (activeCustomer != '') {
                 basic_url = basic_url + `&active-customer=${activeCustomer}`;
             }
-
+            window.location.href = basic_url;
+        }
+        function pending_approval() {
+            var perPage = $('#per_page').val();
+            var search = $('#search').val();
+            var pending_approval = $('#pending_approval').val();
+            if (perPage != '') {
+                var basic_url = 'customers?&search=' + search;
+            }
+            if (pending_approval != '') {
+                basic_url = basic_url + `&pending-approval=${pending_approval}`;
+            }
             window.location.href = basic_url;
         }
 
@@ -452,8 +471,9 @@
         }
 
         $(document).on('click', '#selectAll', function(e) {
-            var table = $(e.target).closest('table');
-            $('td input:checkbox', table).prop('checked', this.checked);
+            // var table = $(e.target).closest('table');
+            // $('td input[class="all_checkboxes"]', table).prop('checked', this.checked);
+            $('.all_checkboxes').prop('checked', this.checked);
         });
 
         function disableSecondary(secondary_id) {

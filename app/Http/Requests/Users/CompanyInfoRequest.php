@@ -33,7 +33,7 @@ class CompanyInfoRequest extends FormRequest
                 //     'required',
                 //     'regex:/(?:https?:\/\/)?(?:[a-zA-Z0-9.-]+?\.(?:[a-zA-Z])|\d+\.\d+\.\d+\.\d+)/'
                 // ],
-                'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10'
+                // 'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10'
             ];
         } else {
             return [

@@ -26,6 +26,7 @@ use App\Models\ApiOrder;
 use App\Models\User;
 
 use App\Helpers\UtilHelper;
+use App\Models\ProductStock;
 
 class ProductController extends Controller
 {
@@ -338,7 +339,8 @@ class ProductController extends Controller
             'pricing',
             'childerens',
             'childeren_id',
-            'user_buy_list_options'
+            'user_buy_list_options',
+            'contact_id'
             // 'db_price_column'
         ));
     }
@@ -348,33 +350,30 @@ class ProductController extends Controller
 
         $product = Product::where('id', $id)->first();
         $location_inventories = [];
+        $available_stock = [];
+        $stock = true;
+        $productOption = [];
+        $pname = '';
+        $pricing = '';
+        $user_buy_list_options = [];
+        $lists = '';
+        $contact_id = '';
 
-        try {
-            $url = 'https://api.cin7.com/api/v1/Stock?where=productId=' . $product->product_id . '&productOptionId=' . $option_id;
-            $client2 = new \GuzzleHttp\Client();
-            $res = $client2->request(
-                'GET',
-                $url,
-                [
-                    'auth' => [
-                        env('API_USER'),
-                        env('API_PASSWORD')
-                    ]
-                ]
-            );
-            $inventory = $res->getBody()->getContents();
-            $location_inventories = json_decode($inventory);
+            
+        // Fetch stock from API
+        $stock_updated = UtilHelper::updateProductStock($product, $option_id);
 
-            UtilHelper::saveDailyApiLog('product_stock');
-
-        } catch (Exception $ex) {
-        }
+        $product_stocks = ProductStock::where('product_id' ,  $product->product_id)
+            ->where('option_id' , $option_id)
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         if ($product) {
             $views = $product->views;
             $product->views = $views + 1;
             $product->save();
         }
+        
         $productOption = ProductOption::where('option_id', $option_id)->with('products.categories', 'price')->first();
         if ($productOption->products->categories != '') {
             $category = Category::where('category_id', $productOption->products->categories->category_id)->first();
@@ -389,6 +388,7 @@ class ProductController extends Controller
         } else {
             $pname = '';
         }
+
         $user_id = Auth::id();
         $contact = '';
         if ($user_id != null) {
@@ -405,10 +405,6 @@ class ProductController extends Controller
         $user_list = BuyList::where('user_id', $user_id)
             ->where('contact_id', $contact_id)
             ->first();
-
-
-        $user_buy_list_options = [];
-
         if (!empty($user_list)) {
             $user_buy_list_options = ProductBuyList::where('list_id', $user_list->id)->pluck('option_id', 'option_id')->toArray();
         }
@@ -417,14 +413,21 @@ class ProductController extends Controller
             ->where('contact_id', $contact_id)
             ->with('list_products')
             ->get();
+
         return view('product-detail', compact(
             'productOption',
             'pname',
             'pricing',
             'location_inventories',
             'user_buy_list_options',
-            'lists'
+            'lists',
+            'contact_id',
+            'stock_updated',
+            'product_stocks'
         ));
+
+        
+        
     }
     public function showProductByCategory_slug($slug)
     {
@@ -759,6 +762,8 @@ class ProductController extends Controller
         }
         if (!empty($user_id) && !empty($contact_id)) {
             $contact = Contact::where('user_id', $user_id)->where('contact_id', $contact_id)->orWhere('secondary_id', $contact_id)->first();
+        }else {
+            $contact = Contact::where('user_id', $user_id)->first();
         }
 
         $tax_class = TaxClass::where('is_default', 1)->first();
