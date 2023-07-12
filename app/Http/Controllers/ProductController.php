@@ -151,6 +151,7 @@ class ProductController extends Controller
             'lists',
             'childerens',
             'childeren_id',
+            'contact_id',
             'pricing',
             'user_buy_list_options'
             // 'product_buy_list'
@@ -1021,8 +1022,12 @@ class ProductController extends Controller
             $contact = Contact::where('user_id', $user_id)->first();
         }
         //$db_price_column = 'retailUSD';
+
+        $contact_id = '';
+
         if ($contact) {
             $pricing = $contact->priceColumn;
+            $contact_id = $contact->contact_id;
         } else {
             $pricing = 'RetailUSD';
         }
@@ -1038,8 +1043,8 @@ class ProductController extends Controller
             'per_page',
             'searched_value',
             'lists',
+            'contact_id',
             'pricing'
-            //'db_price_column'
         ));
     }
 
