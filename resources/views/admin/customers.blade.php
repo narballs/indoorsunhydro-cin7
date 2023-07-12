@@ -471,8 +471,9 @@
         }
 
         $(document).on('click', '#selectAll', function(e) {
-            var table = $(e.target).closest('table');
-            $('td input:checkbox', table).prop('checked', this.checked);
+            // var table = $(e.target).closest('table');
+            // $('td input[class="all_checkboxes"]', table).prop('checked', this.checked);
+            $('.all_checkboxes').prop('checked', this.checked);
         });
 
         function disableSecondary(secondary_id) {

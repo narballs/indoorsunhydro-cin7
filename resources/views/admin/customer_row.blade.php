@@ -1,7 +1,7 @@
 <tr id="row-{{ $contact->id }}" class="customer-row border-bottom">
     <td class="d-flex table-items">
         <div class="custom-control custom-checkbox tabel-checkbox">
-            <input class="custom-control-input custom-control-input-success sub_chk" data-id="{{ $contact->id }}"
+            <input class="custom-control-input custom-control-input-success sub_chk all_checkboxes" data-id="{{ $contact->id }}"
                 type="checkbox" id="separate_check_{{ $contact->id }}">
             <label for="separate_check_{{ $contact->id }}" class="custom-control-label ml-4"></label>
         </div>
