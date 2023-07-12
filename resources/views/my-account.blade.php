@@ -68,6 +68,7 @@
                             <div class="row">
                                 <div class="col-md-8">
                                     @foreach ($user_orders as $user_order)
+                                        @if(!empty($user_order->apiOrderItem))
                                         <div class="card my_account_order_card my-3">
                                             <div class="card-header my_account_order_card_header">
                                                 <div class="row">
@@ -256,6 +257,7 @@
                                                 </p>
                                             </div>
                                         </div>
+                                        @endif
                                     @endforeach
                                     {{ $user_orders->appends(Request::all())->links() }}
                                 </div>
