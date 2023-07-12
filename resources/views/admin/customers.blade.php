@@ -39,6 +39,10 @@
                                 </form>
                             </div>
                         </div>
+                        <div class="col-md-2">
+                            <input type="hidden" value="pending-approval" id="pending_approval" name="pending_approval">
+                            <button class="btn-sm btn-primary border-0 p-1 px-2 rounded-pill" type="button" onclick="pending_approval()">New User Pending Approval</button>
+                        </div>
                         <div class="col-md-5">
                             <div class="row filter-row-mobile-secreen">
                                 <div class="col-md-6">
@@ -53,6 +57,9 @@
                                         <option value="disable-customer" class="form-control"
                                             {{ isset($activeCustomer) && $activeCustomer == 'disable-customer' ? 'selected="selected"' : '' }}>
                                             Disabled </option>
+                                        <option value="pending-approval" class="form-control"
+                                            {{ isset($activeCustomer) && $activeCustomer == 'pending-approval' ? 'selected="selected"' : '' }}>
+                                            Pending Approval </option>
                                     </select>
                                 </div>
                             </div>
@@ -401,15 +408,24 @@
             var perPage = $('#per_page').val();
             var search = $('#search').val();
             var activeCustomer = $('#active_customer').val();
-
             if (perPage != '') {
                 var basic_url = 'customers?&search=' + search;
             }
-
             if (activeCustomer != '') {
                 basic_url = basic_url + `&active-customer=${activeCustomer}`;
             }
-
+            window.location.href = basic_url;
+        }
+        function pending_approval() {
+            var perPage = $('#per_page').val();
+            var search = $('#search').val();
+            var pending_approval = $('#pending_approval').val();
+            if (perPage != '') {
+                var basic_url = 'customers?&search=' + search;
+            }
+            if (pending_approval != '') {
+                basic_url = basic_url + `&pending-approval=${pending_approval}`;
+            }
             window.location.href = basic_url;
         }
 
