@@ -62,7 +62,7 @@
                                         @elseif($order_detail->order_id == null && $order_detail->isApproved == 0)
                                             <span class="badge badge-primary">New</span>
                                         @elseif($order_detail->order_id == null && $order_detail->isApproved == 2)
-                                            <span class="badge badge-danger">Cacelled</span>
+                                            <span class="badge badge-danger">Cancelled</span>
                                         @endif
                                     </span>
                                 </div>
