@@ -121,6 +121,15 @@
                                                                 </span>
                                                             </p>
                                                         </span>
+                                                        <span>
+                                                            <p class="order_place_my_account">
+                                                                Submitter <br>
+                                                                <span class="shipping_to_my_account">
+                                                                   @if(!empty($user_order->contact->firstName)){{$user_order->contact->firstName}}@endif 
+                                                                   @if(!empty($user_order->contact->lastName)){{$user_order->contact->lastName}}@endif 
+                                                                </span>
+                                                            </p>
+                                                        </span>
                                                     </div>
                                                     <div class="col-md-4 text-right">
                                                         <p class="order_place_my_account">
