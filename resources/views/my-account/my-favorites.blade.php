@@ -176,7 +176,9 @@
                         </div>
                         <div class="row">
                             <div class="col-md-12">
-                                {{ $lists->links('pagination.custom_pagination') }}
+                                @if (!empty($lists))
+                                    {{ $lists->links('pagination.custom_pagination') }}
+                                @endif
                             </div>
                         </div>
                     </div>
