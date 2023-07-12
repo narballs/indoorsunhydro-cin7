@@ -583,8 +583,13 @@ $cart_price = 0;
                                                                     </div>
                                                                 @endforeach
                                                         @endforeach
-                                                        <div class="w-100 text-center">
+                                                        {{-- <div class="w-100 text-center">
                                                             <button type="button" class="ml-2 mt-4 button-cards w-75"
+                                                                id="proceed_to_checkout" onclick="validate()">
+                                                                Place Order</button>
+                                                        </div> --}}
+                                                        <div class="w-100 text-center">
+                                                            <button type="button" class="procedd-to-checkout mt-4 w-100"
                                                                 id="proceed_to_checkout" onclick="validate()">
                                                                 Place Order</button>
                                                         </div>
