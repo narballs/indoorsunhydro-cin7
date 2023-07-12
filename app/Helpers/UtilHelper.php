@@ -5,6 +5,8 @@ namespace App\Helpers;
 use GuzzleHttp\Client;
 
 use App\Models\DailyApiLog;
+use App\Models\AdminSetting;
+use App\Models\ProductStock;
 
 class UtilHelper
 {
@@ -84,5 +86,84 @@ class UtilHelper
         }
 
         return true;
+    }
+
+    public static function updateProductStock($product, $option_id) {
+        $setting = AdminSetting::where('option_name', 'check_product_stock')->first();
+
+        $stock_updated = false;
+
+        if (empty($setting) || ($setting->option_value !=  'Yes')) {
+            return $stock_updated;
+        }
+
+        try {
+            $url = 'https://api.cin7.com/api/v1/Stock?where=productId=' . $product->product_id . '&productOptionId=' . $option_id;
+            $client2 = new \GuzzleHttp\Client();
+            $res = $client2->request(
+                'GET',
+                $url,
+                [
+                    'auth' => [
+                        env('API_USER'),
+                        env('API_PASSWORD')
+                    ]
+                ]
+            );
+
+            $inventory = $res->getBody()->getContents();
+            $location_inventories = json_decode($inventory);
+
+            if (empty($location_inventories)) {
+                return $stock_updated;
+            }
+
+            $skip_branches = [172, 173, 174];
+            $branch_ids = [];
+
+            foreach ($location_inventories as $location_inventory) {
+                if (in_array($location_inventory->branchId, $skip_branches)) {
+                    continue;
+                }
+
+                $product_stock = ProductStock::where('branch_id' , $location_inventory->branchId)
+                    ->where('product_id' ,  $product->product_id)
+                    ->where('option_id' , $option_id)
+                    ->first();
+                
+                if (!empty($product_stock)) {
+                    $product_stock->available_stock = $location_inventory->available;
+                    $product_stock->save();
+
+                    $branch_ids[] = $location_inventory->branchId;
+                }
+                else {
+                    ProductStock::create([
+                        'available_stock' => $location_inventory->available,
+                        'branch_id' => $location_inventory->branchId,
+                        'product_id' => $product->product_id,
+                        'branch_name' => $location_inventory->branchName,
+                        'option_id' => $option_id
+                    ]);
+                }
+
+                $stock_updated = true;
+            }
+
+            if (!empty($branch_ids)) {
+                ProductStock::where('product_id' ,  $product->product_id)
+                    ->where('option_id' , $option_id)
+                    ->whereNotIn('branch_id', $branch_ids)
+                    ->delete();
+            }
+                
+            self::saveDailyApiLog('product_stock');
+        }
+        catch (\Exception $e) {
+            self::saveDailyApiLog('product_stock');
+            return $stock_updated;
+        }
+
+        return $stock_updated;
     }
 }
