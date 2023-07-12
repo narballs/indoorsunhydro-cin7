@@ -73,7 +73,7 @@
                                             <div class="card-header my_account_order_card_header">
                                                 <div class="row">
                                                     <div
-                                                        class="col-md-8 d-flex justify-content-between align-items-center">
+                                                        class="col-md-10 d-flex justify-content-between align-items-center">
                                                         <span>
                                                             <p class="order_place_my_account">
                                                                 ORDER PLACED <br>
@@ -95,7 +95,7 @@
                                                             <p class="order_place_my_account">
                                                                 SHIP TO <br>
                                                                 <span class="shipping_to_my_account">
-                                                                    {{ \Illuminate\Support\Str::limit($user_order->contact->postalAddress1, 20) }}
+                                                                    {{ \Illuminate\Support\Str::limit($user_order->contact->postalAddress1, 15) }}
                                                                 </span>
                                                             </p>
                                                         </span>
@@ -103,7 +103,7 @@
                                                             <p class="order_place_my_account">
                                                                 Company <br>
                                                                 <span class="shipping_to_my_account">
-                                                                     {{$user_order->contact->company}}
+                                                                    {{ \Illuminate\Support\Str::limit($user_order->contact->company, 15) }}
                                                                 </span>
                                                             </p>
                                                         </span>
@@ -126,13 +126,13 @@
                                                             <p class="order_place_my_account">
                                                                 Submitter <br>
                                                                 <span class="shipping_to_my_account">
-                                                                   @if(!empty($user_order->contact->firstName)){{$user_order->contact->firstName}}@endif 
-                                                                   @if(!empty($user_order->contact->lastName)){{$user_order->contact->lastName}}@endif 
+                                                                    @if(!empty($user_order->contact->firstName)){{$user_order->contact->firstName}}@endif 
+                                                                    @if(!empty($user_order->contact->lastName)){{ \Illuminate\Support\Str::limit($user_order->contact->lastName, 6) }}@endif 
                                                                 </span>
                                                             </p>
                                                         </span>
                                                     </div>
-                                                    <div class="col-md-4 text-right">
+                                                    <div class="col-md-2 text-right">
                                                         <p class="order_place_my_account">
                                                             ORDER <br>
                                                             <span class="order_number_my_account">
