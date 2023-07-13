@@ -101,7 +101,7 @@
                                                     {{ $orderItem->quantity }}
                                                 </td>
                                                 <td class="my_account_all_items">
-                                                    {{'$' . '' . $orderItem->price }}
+                                                    ${{ number_format($orderItem->price, 2) }}
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -113,7 +113,7 @@
 
                                             </td>
                                             <td class="my_account_all_items">
-                                                {{ '$' .''. $total }}
+                                                ${{ number_format($total, 2) }}
                                             </td>
                                         </tr>
                                         <tr>
@@ -146,7 +146,7 @@
 
                                             </td>
                                             <td class="my_account_all_items">
-                                                {{'$' .''. round($order_detail->total_including_tax , 2)}}
+                                                ${{number_format($order_detail->total_including_tax , 2)}}
                                             </td>
                                         </tr>
                                     @else
