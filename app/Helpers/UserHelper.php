@@ -60,7 +60,8 @@ class UserHelper
     }
 
     public static function switch_company($contact_id) {
-        $new_register_contact = Contact::where('contact_id' , $contact_id )->where('user_id' , auth()->user()->id)->first();
+        // dd($contact_id);
+        $new_register_contact = Contact::where('contact_id' , null)->where('user_id' , auth()->user()->id)->first();
         if (!empty($new_register_contact)) {
             $active_company = $new_register_contact->company;
             Session::put([
