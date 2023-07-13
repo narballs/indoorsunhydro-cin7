@@ -86,7 +86,7 @@
                                                             <p class="order_place_my_account">
                                                                 TOTAL <br>
                                                                 <span class="total_price_my_account">
-                                                                    ${{ $user_order->total }}
+                                                                    ${{ number_format($user_order->total, 2) }}
                                                                 </span>
                                                             </p>
 
