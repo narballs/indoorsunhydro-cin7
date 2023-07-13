@@ -103,8 +103,6 @@ class ProductController extends Controller
             $products = $products_query->with('options.price', 'brand')->paginate($per_page);
 
             $queries = DB::getQueryLog();
-
-            //echo '<pre>'; var_export($queries); echo '</pre>';
         }
 
         $brands = Brand::orderBy('name', 'ASC')->whereIn('id', $brand_ids)->pluck('name', 'id')->toArray();
@@ -115,7 +113,6 @@ class ProductController extends Controller
         }
 
         if ($contact) {
-
             $pricing = $contact->priceColumn;
         } else {
             $pricing = 'RetailUSD';
@@ -351,7 +348,13 @@ class ProductController extends Controller
     public function showProductDetail($id, $option_id)
     {
 
-        $product = Product::where('id', $id)->first();
+        $product = Product::where('id', $id)->where('status', '!=', 'Inactive')->first();
+        if (empty($product)) {
+            session()->flash('error', 'This product is not available! Please search another product.');
+            return redirect('/products');
+        }
+
+
         $location_inventories = [];
         $available_stock = [];
         $stock = true;
