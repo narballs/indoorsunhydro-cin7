@@ -252,10 +252,11 @@ class SyncAPiData extends Command
                                 $brand->save();
                             }
                         }
-                        if ($product->brand) {
-                            $product->brand =  $api_product->brand;
+                        if ($api_product->brand) {
                             $brand = Brand::where('name', $api_product->brand)->first();
-                            $product->brand_id = $brand->id;
+                            if ($brand) {
+                                $product->brand_id = $brand->id;
+                            }
                         }
                         $product->save();
                     if ($api_product->productOptions) {
