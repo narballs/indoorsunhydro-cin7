@@ -12,6 +12,8 @@ use App\Models\Pricingnew;
 use Illuminate\Support\Str;
 use App\Models\ApiErrorLog;
 use App\Models\ApiSyncLog;
+use App\Models\AdminSetting;
+
 use Carbon\Carbon;
 
 use App\Helpers\UtilHelper;
@@ -51,7 +53,13 @@ class SyncAPiData extends Command
      */
     public function handle()
     {
+        $admin_setting = AdminSetting::where('option_name', 'sync_api_data')->first();
+        if (empty($admin_setting) || $admin_setting->option_value != 'Yes') {
+            $this->error('Api sync data setting is off');
+            return false;
+        }
 
+        
         $current_date = Carbon::now()->setTimezone('UTC')->format('Y-m-d H:i:s');
         $sync_log = ApiSyncLog::where('end_point', 'https://api.cin7.com/api/v1/Products')->first();
         if (empty($sync_log)) {
