@@ -39,9 +39,15 @@ class SettingSeeder extends Seeder
         ];
 
         foreach($setting as $setting) {
-            $setting = AdminSetting::updateOrCreate(
-                ['option_name' => $setting['option_name']],
-                $setting
+
+            $admin_setting = AdminSetting::firstOrCreate(
+                [
+                    'option_name' => $setting['option_name']
+                ],
+                [
+                    'type' => $setting['type'], 
+                    'option_value' => $setting['option_value']
+                ]
             );
         }
     }
