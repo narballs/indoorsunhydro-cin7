@@ -14,7 +14,6 @@ class SettingSeeder extends Seeder
      */
     public function run()
     {
-        AdminSetting::truncate();
         $setting =  
         [
             [
@@ -31,13 +30,19 @@ class SettingSeeder extends Seeder
                 'option_name' => 'enable_sign_up', 
                 'type' => 'yes/no',
                 'option_value' => 'No',
+            ],
+            [
+                'option_name' => 'sync_api_data', 
+                'type' => 'yes/no',
+                'option_value' => 'No',
             ]
-            
-            
         ];
 
         foreach($setting as $setting) {
-            AdminSetting::create($setting);
+            $setting = AdminSetting::updateOrCreate(
+                ['option_name' => $setting['option_name']],
+                $setting
+            );
         }
     }
 }
