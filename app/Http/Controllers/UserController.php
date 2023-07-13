@@ -1346,9 +1346,10 @@ class UserController extends Controller
     {
         $contact_id = $request->companyId;
 
-        return UserHelper::switch_company($contact_id);
+        // return UserHelper::switch_company($contact_id);
 
         $contact = Contact::where('contact_id', $contact_id)->first();
+        // dd($contact->contact_id);
 
         if (!empty($contact)) {
             $active_contact_id = $contact->contact_id;
