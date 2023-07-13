@@ -7,7 +7,8 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\Subscribe;
 
 use App\Models\Contact;
-use Illuminate\Support\Facades\Session;
+
+use Session;
 
 class UserHelper
 {
@@ -59,12 +60,15 @@ class UserHelper
     }
 
     public static function switch_company($contact_id) {
-        $new_register_contact = Contact::where('contact_id' , $contact_id)->where('user_id' , auth()->user()->id)->first();
+        $new_register_contact = Contact::where(['contact_id' => null , 'user_id' => auth()->user()->id])->first();
         // dd($new_register_contact);
         if (!empty($new_register_contact)) {
             // $active_contact_id = $new_register_contact->contact_id;
             $active_company = $new_register_contact->company;
-            Session::put(['company' => $active_company]);
+            Session::put([
+                // 'contact_id' => $active_contact_id,
+                'company' => $active_company
+            ]);
 
         }else{
             $contact = Contact::where('contact_id', $contact_id)->where('status', '!=', 0)->first();

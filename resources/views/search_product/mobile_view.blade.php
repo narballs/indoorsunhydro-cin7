@@ -99,12 +99,10 @@
          </div>
       @endif
       @foreach ($products as $key => $product)
-      @if($product->status != 'Inactive')
       @foreach($product->options as $option)
       <?php $count ++; ?>
       @include('product_row')
       @endforeach
-      @endif
       @endforeach
       <div class=" w-100 justify-content-center p-2 mt-3">
          {{ $products->appends(Request::all())->onEachSide(1)->links('pagination.front_custom_pagination') }}
