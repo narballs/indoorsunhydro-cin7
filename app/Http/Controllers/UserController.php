@@ -1345,7 +1345,6 @@ class UserController extends Controller
     public function switch_company(Request $request)
     {
         $contact_id = $request->companyId;
-
         return UserHelper::switch_company($contact_id);
 
         $contact = Contact::where('contact_id', $contact_id)->first();
