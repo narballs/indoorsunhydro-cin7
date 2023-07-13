@@ -140,14 +140,14 @@
                                                 </div>
                                             </td>
                                             <td class="ms-2">{{ $item->quantity }}</td>
-                                            <td class="text-end">${{ $item->price }}</td>
+                                            <td class="text-end">${{ number_format($item->price, 2) }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
                                 <tfoot>
                                     <tr>
                                         <td colspan="2">Subtotal</td>
-                                        <td class="text-end">${{ $order->total }}</td>
+                                        <td class="text-end">${{ number_format($order->total, 2) }}</td>
                                     </tr>
                                     <tr>
                                         <td colspan="2">Shipping</td>
