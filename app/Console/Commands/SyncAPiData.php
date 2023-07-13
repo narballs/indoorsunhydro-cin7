@@ -239,25 +239,21 @@ class SyncAPiData extends Command
                         $product->code =  $api_product->productOptions[0]->code;
                         $product->retail_price =  $api_product->productOptions[0]->priceColumns->sacramentoUSD;
                         $product->stockAvailable =  $api_product->productOptions[0]->stockAvailable;
-                        if ($product->brand) {
-                            $brand = Brand::where('name', $product->brand)->first();
+                        
+                        if (isset($api_product->brand)) {
+                            $brand = Brand::where('name', $api_product->brand)->first();
                             if (empty($brand)) {
                                 $brand = new Brand([
-                                    'name' => $product->brand
+                                    'name' => $api_product->brand
                                 ]);
                                 $brand->save();
+                                $product->brand_id = $brand->id;
                             }
                             else {
-                                $brand->name = $product->brand;
-                                $brand->save();
-                            }
-                        }
-                        if ($api_product->brand) {
-                            $brand = Brand::where('name', $api_product->brand)->first();
-                            if ($brand) {
                                 $product->brand_id = $brand->id;
                             }
                         }
+                        
                         $product->save();
                     if ($api_product->productOptions) {
 
