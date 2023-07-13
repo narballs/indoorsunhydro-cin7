@@ -22,9 +22,14 @@
                 <div class="h-100 py-5">
                     <div class="row">
                         <div class="col-md-12">
-
-
-                            @if (Auth::check() == true && $contact->status == 0)
+                            @if(!empty($contact))
+                                @if (Auth::check() == true && $contact->status == 0)
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        Checkout has been disabled.
+                                    </div>
+                                @endif
+                                
+                                @else
                                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                     Checkout has been disabled.
                                 </div>
@@ -325,13 +330,35 @@
                 </tfoot> --}}
             </table>
             <div>
-                @if (Auth::check() == true && $contact->status == 1 && !empty($contact->contact_id))
-                    <a href="{{ url('/checkout') }}">
-                        <button class="procedd-to-checkout mt-3 w-100 mb-4">
-                            PROCEED TO CHECKOUT
-                        </button>
-                    </a>
-                @elseif (Auth::check() == true && $contact->status == 0)
+                @if(!empty($contact))
+                    @if (Auth::check() == true && $contact->status == 1 && !empty($contact->contact_id))
+                        <a href="{{ url('/checkout') }}">
+                            <button class="procedd-to-checkout mt-3 w-100 mb-4">
+                                PROCEED TO CHECKOUT
+                            </button>
+                        </a>
+                    @elseif (Auth::check() == true && $contact->status == 0)
+                        <div class="alert alert-danger alert-dismissible fade show py-2" role="alert">
+                            <span class="d-flex justify-content-center align-items-center">
+                                Checkout has been disabled for this email address, please contact your
+                                account
+                                manager to re-enable checkout.
+                            </span>
+                        </div>
+                    @elseif(Auth::check() == true && empty($contact->contact_id))
+                        <a href="{{ url('/checkout/') }}">
+                            <button class="procedd-to-checkout mt-3 w-100 mb-4">
+                                PROCEED TO CHECKOUT
+                            </button>
+                        </a>
+                    @else
+                        <a href="{{ url('/user/') }}">
+                            <button class="procedd-to-checkout mt-3 w-100 mb-4">
+                                Login or Register
+                            </button>
+                        </a>
+                    @endif
+                @else
                     <div class="alert alert-danger alert-dismissible fade show py-2" role="alert">
                         <span class="d-flex justify-content-center align-items-center">
                             Checkout has been disabled for this email address, please contact your
@@ -339,18 +366,6 @@
                             manager to re-enable checkout.
                         </span>
                     </div>
-                @elseif(Auth::check() == true && empty($contact->contact_id))
-                    <a href="{{ url('/checkout/') }}">
-                        <button class="procedd-to-checkout mt-3 w-100 mb-4">
-                            PROCEED TO CHECKOUT
-                        </button>
-                    </a>
-                @else
-                    <a href="{{ url('/user/') }}">
-                        <button class="procedd-to-checkout mt-3 w-100 mb-4">
-                            Login or Register
-                        </button>
-                    </a>
                 @endif
             </div>
         </div>
@@ -365,10 +380,18 @@
             <div class="card border-0 px-0">
                 <div class="row">
                     <div class="col-md-12 mx-0">
-                        @if (Auth::check() == true && $contact->status == 0)
+                        @if(!empty($contact))
+                            @if (Auth::check() == true && $contact->status == 0)
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    Checkout has been disabled.
+                                </div>
+                            @endif
+                            
+                            @else
                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                 Checkout has been disabled.
                             </div>
+
                         @endif
                         @if (session('message'))
                             <div class="alert alert-danger">
@@ -546,6 +569,7 @@
                                                         <p id="mbl_total_p" class="cart-total-checkout-page mt-0 mb-0 text-right" style="color:#E74B3B;">${{ number_format($total_including_tax, 2) }}</p>
                                                     </div>
                                                 </div>
+                                                @if(!empty($contact))
                                                 @if (Auth::check() == true && $contact->status == 1 && !empty($contact->contact_id))
                                                     <div class="row">
                                                         <a href="{{ url('/checkout') }}">
@@ -578,6 +602,15 @@
                                                             </button>
                                                         </a>
                                                     </div>
+                                                @endif
+                                                @else
+                                                <div class="alert alert-danger alert-dismissible fade show py-2" role="alert">
+                                                    <span class="d-flex justify-content-center align-items-center">
+                                                        Checkout has been disabled for this email address, please contact your
+                                                        account
+                                                        manager to re-enable checkout.
+                                                    </span>
+                                                </div>
                                                 @endif
                                             </div>
                                         </div>
@@ -772,6 +805,7 @@
                                     </div>
                                 </div>
                             </div>
+                            @if(!empty($contact))
                             @if (Auth::check() == true && !empty($contact->contact_id))
                                 <div class="row">
                                     <a href="{{ url('/checkout') }}">
@@ -796,6 +830,15 @@
                                         </button>
                                     </a>
                                 </div>
+                            @endif
+                            @else
+                            <div class="alert alert-danger alert-dismissible fade show py-2" role="alert">
+                                <span class="d-flex justify-content-center align-items-center">
+                                    Checkout has been disabled for this email address, please contact your
+                                    account
+                                    manager to re-enable checkout.
+                                </span>
+                            </div>
                             @endif
 
                         </fieldset>
@@ -831,6 +874,7 @@
                                         <tfoot class="border-0">
                                             <tr>
                                                 <td style="border-bottom: none">
+                                                    @if(!empty($contact))
                                                     @if (Auth::check() == true && !empty($contact->contact_id))
                                                         <a href="{{ url('/checkout') }}">
                                                             <button class="procedd-to-checkout mt-2 ps-3">
@@ -849,6 +893,15 @@
                                                                 Login or Register
                                                             </button>
                                                         </a>
+                                                    @endif
+                                                    @else
+                                                    <div class="alert alert-danger alert-dismissible fade show py-2" role="alert">
+                                                        <span class="d-flex justify-content-center align-items-center">
+                                                            Checkout has been disabled for this email address, please contact your
+                                                            account
+                                                            manager to re-enable checkout.
+                                                        </span>
+                                                    </div>
                                                     @endif
 
                                                 </td>

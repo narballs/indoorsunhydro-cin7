@@ -778,7 +778,8 @@ class ProductController extends Controller
         return view($view, compact(
             'cart_items',
             'contact',
-            'tax_class'
+            'tax_class',
+            'contact'
         ));
     }
 

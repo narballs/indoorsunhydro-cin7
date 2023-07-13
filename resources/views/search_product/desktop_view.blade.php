@@ -89,10 +89,12 @@
          </div>
       @endif
       @foreach ($products as $key => $product)
+      @if($product->status != 'Inactive')
       @foreach($product->options as $option)
       <?php $count ++; ?>
       @include('product_row')
       @endforeach
+      @endif
       @endforeach
    </div>
    <div class="row">
