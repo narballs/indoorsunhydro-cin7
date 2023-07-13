@@ -98,7 +98,7 @@ class SyncAPiData extends Command
             // try {
                 $res = $client->request(
                     'GET', 
-                    'https://api.cin7.com/api/v1/ProductCategories?page'.$i, 
+                    'https://api.cin7.com/api/v1/ProductCategories?page='.$i, 
                     [
                          'auth' => [
                                 'IndoorSunHydroUS',
@@ -126,6 +126,7 @@ class SyncAPiData extends Command
             $this->info('Found ' . count($api_categories) . ' from API');
 
             foreach($api_categories as $api_category) {
+
                 $this->info($api_category->id);
                 $category = Category::where('category_id', $api_category->id)->first();
                 if (!empty($category)) {
@@ -149,7 +150,7 @@ class SyncAPiData extends Command
 
                     $category->name = $api_category->name;
                     $category->slug = Str::slug($api_category->name);
-                    $category->is_active = $api_category->isActive;
+                    $category->is_active = ($api_category->isActive == 1 || $api_category->isActive == '1') ? 1 : 0;
                     $category->parent_id = $api_category->parentId;
                     $category->save();
                 }
@@ -160,15 +161,13 @@ class SyncAPiData extends Command
                         'slug' => Str::slug($api_category->name),
                         'category_id' => $api_category->id,
                         'parent_id' => $api_category->parentId,
-                        'is_active' => $api_category->isActive,
+                        'is_active' => ($api_category->isActive == 1 || $api_category->isActive == '1') ? 1 : 0,
                         'sort' => $api_category->sort
                     ]);
                     $category->save();
                 }
             }
         }
-        
-          
 
             $client2 = new \GuzzleHttp\Client();
 
