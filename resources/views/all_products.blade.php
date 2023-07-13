@@ -12,9 +12,13 @@
        PRODUCTS
     </p>
 </div>
-<?php //dd($category_id);
-?>
+
 <div class="container desktop-view">
+    @if (session('error'))
+        <div class="alert alert-danger mt-2">
+            {{ session('error') }}
+        </div>
+    @endif
     <form id="form-filter">
         <div class="col-md-12">
             <div class="row pl-5 pr-5 pb-4 pt-3" style="border: 1px solid rgba(0,0,0,.125);">

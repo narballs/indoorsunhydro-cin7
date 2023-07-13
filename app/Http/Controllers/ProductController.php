@@ -28,6 +28,8 @@ use App\Models\User;
 use App\Helpers\UtilHelper;
 use App\Models\ProductStock;
 
+use Illuminate\Database\Eloquent\Builder;
+
 class ProductController extends Controller
 {
     public function showProductByCategory(Request $request, $category_id)
@@ -101,8 +103,6 @@ class ProductController extends Controller
             $products = $products_query->with('options.price', 'brand')->paginate($per_page);
 
             $queries = DB::getQueryLog();
-
-            //echo '<pre>'; var_export($queries); echo '</pre>';
         }
 
         $brands = Brand::orderBy('name', 'ASC')->whereIn('id', $brand_ids)->pluck('name', 'id')->toArray();
@@ -113,7 +113,6 @@ class ProductController extends Controller
         }
 
         if ($contact) {
-
             $pricing = $contact->priceColumn;
         } else {
             $pricing = 'RetailUSD';
@@ -349,7 +348,13 @@ class ProductController extends Controller
     public function showProductDetail($id, $option_id)
     {
 
-        $product = Product::where('id', $id)->first();
+        $product = Product::where('id', $id)->where('status', '!=', 'Inactive')->first();
+        if (empty($product)) {
+            session()->flash('error', 'This product is not available! Please search another product.');
+            return redirect('/products');
+        }
+
+
         $location_inventories = [];
         $available_stock = [];
         $stock = true;
@@ -851,9 +856,6 @@ class ProductController extends Controller
 
         $search_queries = $request->all();
 
-        //$db_price_column = 'retailUSD';
-
-
 
         $products_query  = Product::with('options', 'brand', 'categories')->where('status', '!=', 'Inactive');
         $selected_category_id = $request->get('selected_category');
@@ -863,9 +865,9 @@ class ProductController extends Controller
         if (empty($brand_ids) && !empty($search_queries)) {
             $sub_category_ids = Category::where('parent_id', $selected_category_id)->pluck('id', 'id')->toArray();
             $brand_ids = Product::whereIn('category_id', $sub_category_ids)->pluck('brand_id', 'brand_id')->toArray();
-            $products_query = Product::whereIn('category_id', $sub_category_ids);
+            $products_query = Product::whereIn('category_id', $sub_category_ids)->where('status', '!=', 'Inactive');
         } elseif (!empty($selected_category_id)) {
-            $products_query = Product::where('category_id', $selected_category_id)->with('brand', 'options');
+            $products_query = Product::where('category_id', $selected_category_id)->where('status', '!=', 'Inactive')->with('brand', 'options');
         }
         $brand_id = $request->get('brand_id');
         if (!empty($brand_id)) {
@@ -985,27 +987,22 @@ class ProductController extends Controller
 
         $searchvalue = $request->value;
         $value = $searchvalue;
-        //dd($value);
-        // $products = Product::with(['options' => function ($q) {
-        //     $q->where('status', '!=', 'Disabled');
-        // }])->where('status', '!=', 'Inactive')
-        //     ->where('name', 'LIKE', '%' . $value . '%')
-        //     ->whereRaw('LOWER(`name`) like ?', ['%'.strtolower($value).'%'])
-        //     ->orWhere('code', 'LIKE', '%' . $value . '%')
-        //     ->paginate($per_page);
+
 
         $searchvalue = preg_split('/\s+/', $searchvalue, -1, PREG_SPLIT_NO_EMPTY);
         if (!empty($is_search)) {
             foreach ($searchvalue as $value) {
                 $products = Product::with(['options' => function ($q) {
                     $q->where('status', '!=', 'Disabled');
-                }])
-                ->where('name', 'LIKE', '%' . $value . '%')
-                ->orWhere('code', 'LIKE', '%' . $value . '%')
+                }])->orWhere(function (Builder $query) use ($value) {
+                    $query->where('name', 'LIKE', '%' . $value . '%')
+                    ->orWhere('code', 'LIKE', '%' . $value . '%');
+                })
                 ->where('status', '!=', 'Inactive')
                 ->paginate($per_page);
             };
         }
+        
         $searched_value = $request->value;
 
         $category_id = $selected_category_id;
@@ -1021,7 +1018,6 @@ class ProductController extends Controller
         if ($user_id != null) {
             $contact = Contact::where('user_id', $user_id)->first();
         }
-        //$db_price_column = 'retailUSD';
 
         $contact_id = '';
 
