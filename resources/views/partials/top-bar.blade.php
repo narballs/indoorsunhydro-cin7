@@ -56,8 +56,10 @@
                                 @endif
                             </div>
                             <div class="mt-2">
-                                @if(auth()->user()->hasRole('Admin'))
-                                    <a href="{{ url('admin/dashboard') }}" class="top-bar-logout mt-3 top-header-items">Return to Admin</a>
+                                @if(auth()->user())
+                                    @if(auth()->user()->hasRole('Admin'))
+                                        <a href="{{ url('admin/dashboard') }}" class="top-bar-logout mt-3 top-header-items">Return to Admin</a>
+                                    @endif
                                 @endif
                             </div>
                         </div>
