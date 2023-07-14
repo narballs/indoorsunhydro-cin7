@@ -291,11 +291,12 @@ return [
 
     'menu' => [
         // Navbar items:
-        // [
-        //     'type'         => 'navbar-search',
-        //     'text'         => 'search',
-        //     'topnav_right' => true,
-        // ],
+        [
+            'text' => 'Go to site',
+            'url'  => '/',
+            'topnav_right' => true,
+            'classes' => 'text-primary',
+        ],
         // [
         //     'type'         => 'fullscreen-widget',
         //     'topnav_right' => true,

@@ -44,15 +44,20 @@
                             </a>
                 </div>
             </div> --}}
-            <div class="col-md-6"></div>
-            <div class="col-md-6">
+            <div class="col-md-5"></div>
+            <div class="col-md-7">
                 <div class="col-md-12">
                     <div class="row mx-1">
-                        <div class="col-xl-3 col-lg-3 d-flex justify-content-end">
+                        <div class="col-xl-3 col-lg-3 d-flex justify-content-around">
                             <div class="mt-2">
                                 @if (session('logged_in_as_another_user'))
                                     <a href="{{ url('admin/go-back') }}" class="top-bar-logout mt-3 top-header-items">Go
                                         Back</a>
+                                @endif
+                            </div>
+                            <div class="mt-2">
+                                @if(auth()->user()->hasRole('Admin'))
+                                    <a href="{{ url('admin/dashboard') }}" class="top-bar-logout mt-3 top-header-items">Return to Admin</a>
                                 @endif
                             </div>
                         </div>
