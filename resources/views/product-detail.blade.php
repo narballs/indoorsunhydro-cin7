@@ -40,6 +40,7 @@
                                 <div class="d-flex row">
 
                                     <?php 
+                                        $retail_price = 0;
                                         foreach($productOption->price as $price)
                                             {
                                             switch ($pricing) {
@@ -614,11 +615,11 @@
                     Swal.fire({
                         toast: true,
                         icon: 'success',
-                        title: jQuery('.mobile_qty').val() + ' X ' + product_name + '<div class="text-dark fw-bold fs-5">'+ product_price +'</div>'+ '<br>' + 'added to your cart',
-                        timer: 3000,
-                        imageUrl: $src,
+                        // title: jQuery('.mobile_qty').val() + ' X ' + product_name + '<div class="text-dark fw-bold fs-5">'+ product_price +'</div>'+ '<br>' + 'added to your cart',
+                        timer: 2000,
+                        text: 'Product added to cart',
+                        // imageUrl: "{{asset('theme/img/add_to_cart_gif.gif')}}",
                         showConfirmButton: false,
-                        position: 'top',
                         timerProgressBar: true
                     });
                 }
