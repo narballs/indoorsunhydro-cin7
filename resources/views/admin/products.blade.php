@@ -33,7 +33,7 @@
                         <div class="col-md-4 order-search">
                             <div class="has-search ">
                                 <span class="fa fa-search form-control-feedback"></span>
-                                <form method="get" action="/admin/orders" class="mb-2">
+                                <form method="get" action="/admin/products" class="mb-2">
                                     <input type="text" class="form-control" id="search" name="search"
                                         placeholder="Search" value="{{ isset($search) ? $search : '' }}" />
                                 </form>
