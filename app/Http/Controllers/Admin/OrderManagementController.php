@@ -438,7 +438,7 @@ class OrderManagementController extends Controller
                 "memberCostCenter" => "sample string 6",
                 "memberAlternativeTaxRate" => "",
                 "costCenter" => null,
-                "alternativeTaxRate" => $currentOrder->texClasses->name,
+                "alternativeTaxRate" => $currentOrder->texClasses->rate,
                 // "estimatedDeliveryDate" => "2022-07-13T15:21:16.1946848+12:00",
                 "estimatedDeliveryDate" => $currentOrder->date,
                 "salesPersonId" => 10,
