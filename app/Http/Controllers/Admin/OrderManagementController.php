@@ -80,7 +80,7 @@ class OrderManagementController extends Controller
         }
         $statuses = OrderStatus::all();
         $order = ApiOrder::where('id', $id)->with('texClasses')->first();
-        $tax_class = TaxClass::where('is_default', 1)->first();
+        // $tax_class = TaxClass::where('is_default', 1)->first();
         $createdDate = $order->created_at;
         $formatedDate = $createdDate->format('jS \of F Y h:i:s A');
         $orderCreatedDate = Carbon::createFromFormat('Y-m-d H:i:s', $createdDate, 'America/Los_Angeles');
@@ -100,7 +100,7 @@ class OrderManagementController extends Controller
             $q->whereIn('option_id', $this->option_ids);
         }])->where('order_id', $id)->get();
 
-
+        $tax_class = TaxClass::where('name', $customer->tax_class)->first();
         $orderComment = OrderComment::where('order_id', $id)->with('comment')->get();
         return view('admin/order-details', compact(
             'order',
@@ -329,7 +329,6 @@ class OrderManagementController extends Controller
     {
         $order_id = $request->input('order_id');
         $currentOrder = ApiOrder::where('id', $order_id)->with('user.contact')->first();
-
         if (!empty($currentOrder->user['contact'])) {
             foreach ($currentOrder->user['contact'] as $contact) {
                 $userSubmiter  =   $contact->email . ',' . $contact->firstName . ',' . $contact->lastName;
@@ -427,8 +426,8 @@ class OrderManagementController extends Controller
                 "currencyCode" => "USD",
                 "currencyRate" => 59.0,
                 "currencySymbol" => "$",
-                "taxStatus" => "Excl",
-                "taxRate" => 8.75,
+                "taxStatus" => $currentOrder->texClasses->name,
+                "taxRate" => $currentOrder->texClasses->name,
                 "source" => "sample string 62",
                 "accountingAttributes" =>
                 [
@@ -439,7 +438,7 @@ class OrderManagementController extends Controller
                 "memberCostCenter" => "sample string 6",
                 "memberAlternativeTaxRate" => "",
                 "costCenter" => null,
-                "alternativeTaxRate" => "8.75%",
+                "alternativeTaxRate" => $currentOrder->texClasses->name,
                 // "estimatedDeliveryDate" => "2022-07-13T15:21:16.1946848+12:00",
                 "estimatedDeliveryDate" => $currentOrder->date,
                 "salesPersonId" => 10,

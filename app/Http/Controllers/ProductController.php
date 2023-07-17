@@ -772,7 +772,8 @@ class ProductController extends Controller
             $contact = Contact::where('user_id', $user_id)->first();
         }
 
-        $tax_class = TaxClass::where('is_default', 1)->first();
+        // $tax_class = TaxClass::where('is_default', 1)->first();
+        $tax_class = TaxClass::where('name', $contact->tax_class)->first();
 
 
         if (!empty($cart_items)) {

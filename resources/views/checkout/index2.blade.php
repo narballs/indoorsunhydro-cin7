@@ -280,11 +280,18 @@ $cart_price = 0;
             </div>
             <div class="row mt-5">
                 <?php
-                $tax = $cart_total * ($tax_class->rate / 100);
+                 $tax=0;
+                if (!empty($tax_class)) {
+                    $tax = $cart_total * ($tax_class->rate / 100);
+                }
                 $total_including_tax = $tax + $cart_total;
                 ?>
                 <input type="hidden" name="incl_tax" id="incl_tax" value="{{ $total_including_tax }}">
+                @if(!empty($tax_class))
                 <input type="hidden" name="tax_class_id" id="tax_class_id" value="{{ $tax_class->id }}">
+                @else
+                <input type="hidden" name="tax_class_id" id="tax_class_id" value="{{$tax_class_none->id}}">
+                @endif
                 <div class="col-md-12 mt-3 py-3" style="background: #F7F7F7; border-radius: 5px;">
                     <p class="thank-you-page-product-imtes-total-cart">Total</p>
                     <div class="row">
@@ -295,7 +302,12 @@ $cart_price = 0;
                             </p>
                             <p class="thank-you-page-product-items-subtotal-cart">
                                 {{-- <img class=" img-fluid" src="/theme/img/tax_icon_check_out_page.png"> --}}
-                                <span>Rate</span> ({{ $tax_class->rate }}%)
+                                <span>Rate</span> 
+                                 @if(!empty($tax_class))
+                                    ({{ number_format($tax_class->rate  , 2)}}%)
+                                @else 
+                                    ({{ number_format(0  , 2)}})
+                                @endif
                             </p>
                             <p class="thank-you-page-product-items-subtotal-cart mt-4">
                                 {{-- <img class=" img-fluid" src="/theme/img/sub_total_icon_check_out_page.png"> --}}
@@ -543,7 +555,13 @@ $cart_price = 0;
                                                         <div class="d-flex justify-content-between">
                                                             <span>
                                                                 <img src="/theme/img/text-rate-icon.png" alt="" width=" 22px">
-                                                                <span id="mbl_tax_rate">Rate({{ $tax_class->rate }}%)</span>
+                                                                <span id="mbl_tax_rate">Rate
+                                                                        @if(!empty($tax_class))
+                                                                            ({{ number_format($tax_class->rate  , 2)}}%)
+                                                                        @else 
+                                                                                ({{ number_format(0  , 2)}})
+                                                                        @endif
+                                                                </span>
                                                             </span>
                                                             <p id="mbl_tax_price">${{ number_format($tax, 2) }}</p>
                                                         </div>
@@ -918,7 +936,13 @@ $cart_price = 0;
                                                         <div class="d-flex justify-content-between">
                                                             <span>
                                                                 <img src="/theme/img/text-rate-icon.png" alt="" width=" 22px">
-                                                                <span id="ipad_tax_rate">Rate({{ $tax_class->rate }}%)</span>
+                                                                <span id="ipad_tax_rate">Rate
+                                                                    @if(!empty($tax_class))
+                                                                        ({{ number_format($tax_class->rate  , 2)}}%)
+                                                                    @else 
+                                                                        ({{ number_format(0  , 2)}})
+                                                                    @endif
+                                                                </span>
                                                             </span>
                                                             <p id="ipad_tax_price">${{ number_format($tax, 2) }}</p>
                                                         </div>

@@ -18,6 +18,11 @@ class TaxClassSeeder extends Seeder
         $tax_classes =  
         [
             [
+                'name' => 'none', 
+                'rate' => '0.00', 
+                'is_default' => 0
+            ],
+            [
                 'name' => 'Exempt', 
                 'rate' => '0.00', 
                 'is_default' => 0
