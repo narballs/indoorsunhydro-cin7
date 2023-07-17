@@ -46,7 +46,7 @@ class CheckoutController extends Controller
             $isApproved = $contact->contact_id;
         }
         if (Auth::check() && (!empty($contact->contact_id) || !empty($contact->secondary_id)) && $contact->status == 1) {
-            $tax_class = TaxClass::where('is_default', 1)->first();
+            // $tax_class = TaxClass::where('is_default', 1)->first();
             $states = UsState::all();
             $payment_methods = PaymentMethod::with('options')->get();
             $contact_id = session()->get('contact_id');
@@ -57,12 +57,15 @@ class CheckoutController extends Controller
             } else {
                 $user_address = Contact::where('user_id', $user_id)->where('contact_id', $contact_id)->first();
             }
+            $tax_class = TaxClass::where('name', $user_address->tax_class)->first();
+            $tax_class_none = TaxClass::where('name', 'none')->first();
             return view('checkout/index2', compact(
                 'user_address',
                 'states',
                 'payment_methods',
                 'tax_class',
-                'contact_id'
+                'contact_id',
+                'tax_class_none'
             ));
         } else {
             return redirect()->back()->with('message', 'Your account is disabled. You can not proceed with checkout. Please contact us.');

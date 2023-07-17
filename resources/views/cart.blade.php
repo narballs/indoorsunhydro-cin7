@@ -215,8 +215,11 @@
     <div class="col-md-3 p-0  mt-5">
         <div class="table-responsive" style="padding-top:3px !important;">
             <?php
-            $tax = $cart_total * ($tax_class->rate / 100);
-            $total_including_tax = $tax + $cart_total;
+            $tax=0;
+                if (!empty($tax_class)) {
+                    $tax = $cart_total * ($tax_class->rate / 100);
+                }
+                $total_including_tax = $tax + $cart_total;
             ?>
             <table class="table mt-4">
                 <thead>
@@ -250,7 +253,12 @@
                                 <span>
                                     <img class=" img-fluid" src="/theme/img/text-rate-icon.png">
                                     <span> <strong class="cart-total" id="tax_rate">Tax
-                                            {{ $tax_class->rate }}%</strong>
+                                            @if(!empty($tax_class->rate))
+                                                {{ number_format($tax_class->rate, 2) }}%
+                                            @else
+                                                {{number_format(0, 2)}}
+                                            @endif
+                                        </strong>
                                     </span>
                                 </span>
                                 <span id="cart_grand_total" class="tax_cart">
@@ -529,10 +537,19 @@
                                                         <span>
                                                             <img src="/theme/img/text-rate-icon.png" alt=""  width="25px" height="30">
                                                         </span>
-                                                        <span id="mbl_tax_rate" class="ml-2 cart-sub-total-checkout-page text-dark">Rate({{ $tax_class->rate }}%)</span>
+                                                        <span id="mbl_tax_rate" class="ml-2 cart-sub-total-checkout-page text-dark">Rate
+                                                            @if(!empty($tax_class->rate))
+                                                {{ number_format($tax_class->rate, 2) }}%
+                                            @else
+                                                {{number_format(0, 2)}}
+                                            @endif</span>
                                                     </div>
                                                     <div class="w-50 d-flex align-items-center justify-content-end">
-                                                        <p class="sub-total-checkout-page mbl_cart_subtotal mt-0 mb-0 text-right text-dark" id="mbl_tax_price">${{ number_format($tax, 2) }}</p>
+                                                        <p class="sub-total-checkout-page mbl_cart_subtotal mt-0 mb-0 text-right text-dark" id="mbl_tax_price">@if(!empty($tax_class->rate))
+                                                {{ number_format($tax_class->rate, 2) }}%
+                                            @else
+                                                {{number_format(0, 2)}}
+                                            @endif</p>
                                                     </div>
                                                 </div>
                                                 <div class="d-flex pb-3 mb-3" style="border-bottom:1px solid #dee2e6;">
