@@ -36,13 +36,16 @@
                                     {{ $address_user->contact[0]['lastName'] }}
                                 </p>
                                 <p class="my_account_address_items">
-                                    {{ $address_user->contact[0]['postalAddress1'] }}
+                                    {{ $address_user->contact[0]['address1'] }}
                                 </p>
                                 <p class="my_account_address_items">
-                                    {{ $address_user->contact[0]['postalAddress2'] }}
+                                    {{ $address_user->contact[0]['address2'] }}
                                 </p>
                                 <p class="my_account_address_items">
-                                    {{ $address_user->contact[0]['postalState'] }}
+                                    {{ $address_user->contact[0]['city'] }}
+                                </p>
+                                <p class="my_account_address_items">
+                                    {{ $address_user->contact[0]['state'] }}
                                 </p>
                                 <p class="my_account_address_items">
                                     <span class="my_account_address_items">
@@ -73,13 +76,16 @@
                                     {{ $address_user->contact[0]['lastName'] }}
                                 </p>
                                 <p class="my_account_address_items">
-                                    {{ $address_user->contact[0]['postalAddress1'] }}
+                                    {{ $address_user->contact[0]['address1'] }}
                                 </p>
                                 <p class="my_account_address_items">
-                                    {{ $address_user->contact[0]['postalAddress2'] }}
+                                    {{ $address_user->contact[0]['address2'] }}
                                 </p>
                                 <p class="my_account_address_items">
-                                    {{ $address_user->contact[0]['postalState'] }}
+                                    {{ $address_user->contact[0]['state'] }}
+                                </p>
+                                <p class="my_account_address_items">
+                                    {{ $address_user->contact[0]['city'] }}
                                 </p>
                                 <p class="my_account_address_items">
                                     <span class="my_account_address_items">

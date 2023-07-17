@@ -438,6 +438,7 @@
     // }
 
     function updateContact(user_id) {
+        $('#address_loader').removeClass('d-none');
         var first_name = $('input[name=firstName]').val();
         var last_name = $('input[name=lastName]').val();
         var company_name = $('input[name=company]').val();
@@ -448,13 +449,13 @@
         var state = document.getElementById("state").value;
         var zip = $('input[name=zip]').val();
         var email = $('input[name=email]').val();
+        var contact_id = $('#contact_id_val').val();
 
 
         jQuery.ajax({
             method: 'GET',
+            url: "{{ url('/my-account-user-addresses/') }}",
             data: {
-                url: "{{ url('/my-account-user-addresses/') }}",
-
                 "_token": "{{ csrf_token() }}",
                 "user_id": user_id,
                 "first_name": first_name,
@@ -466,17 +467,22 @@
                 "town_city": town_city,
                 "state": state,
                 "zip": zip,
-                "email": email
+                "email": email,
+                'contact_id': contact_id,
             },
             success: function(response) {
                 if (response.success == true) {
+                    $('#address_loader').addClass('d-none');
                     $('.modal-backdrop').remove()
                     $('#success_msg').removeClass('d-none');
                     $('#success_msg').html(response.msg);
                     window.location.reload();
+                }else {
+                    $('#address_loader').addClass('d-none');
                 }
             },
             error: function(response) {
+                $('#address_loader').addClass('d-none');
                 var error_message = response.responseJSON;
                 var error_text = '';
                 if (typeof error_message.errors.first_name != 'undefined') {
@@ -932,8 +938,10 @@
                 <div class="update-address-section" id="address-form-update">
 
                     <form class="needs-validation mt-4 novalidate" action="{{ url('order') }}" method="POST">
+                        <input type="hidden" value="{{$contact_id}}" name="contact_id" id="contact_id_val">
                         @csrf
                         <div class="alert alert-success mt-3 d-none" id="success_msg"></div>
+                        
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="firstName">First name</label>
@@ -975,7 +983,7 @@
                         <div class="mb-3">
                             <label for="address">Street Address</label>
                             <input type="text" class="form-control bg-light" name="address"
-                                value="{{ $user_address->postalAddress1 }}" placeholder="House number and street name"
+                                value="{{ $user_address->address1 }}" placeholder="House number and street name"
                                 required>
 
                         </div>
@@ -986,7 +994,7 @@
                         <div class="mb-3">
                             <label for="address2">Address 2 <span class="text-muted">(Optional)</span></label>
                             <input type="text" class="form-control bg-light" name="address2"
-                                value="{{ $user_address->postalAddress2 }}"
+                                value="{{ $user_address->address2 }}"
                                 placeholder="Apartment, suite, unit etc (optional)">
                         </div>
                         <div id="error_address2" class="text-danger">
@@ -995,7 +1003,7 @@
                         <div class="mb-3">
                             <label for="town">Town/City <span class="text-muted">(Optional)</span></label>
                             <input type="text" class="form-control bg-light" name="town_city"
-                                value="{{ $user_address->postalCity }}" placeholder="Enter your town">
+                                value="{{ $user_address->city }}" placeholder="Enter your town">
                         </div>
                         <div id="error_city" class="text-danger">
 
@@ -1007,14 +1015,14 @@
                                 <select class="form-control bg-light" name="state" id="state">
                                     @foreach ($states as $state)
                                         <?php
-                                        if ($user_address->postalState == $state->name) {
+                                        if ($user_address->state == $state->state_name) {
                                             $selected = 'selected';
                                         } else {
                                             $selected = '';
                                         }
                                         
                                         ?>
-                                        <option value="{{ $state->name }}" <?php echo $selected; ?>>{{ $state->name }}
+                                        <option value="{{ $state->state_name }}" <?php echo $selected; ?>>{{ $state->state_name }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -1026,7 +1034,7 @@
                             <div class="col-md-6 mb-3">
                                 <label for="zip">Zip</label>
                                 <input type="text" class="form-control bg-light" name="zip"
-                                    placeholder="Enter zip code" value="{{ $user_address->postalPostCode }}"
+                                    placeholder="Enter zip code" value="{{ $user_address->postCode }}"
                                     required>
                                 <div id="error_zip" class="text-danger">
 
@@ -1056,6 +1064,9 @@
 
             </div>
             <div class="modal-footer">
+                <div class="spinner-border text-primary d-none" role="status" id="address_loader">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
                 <button type="button" class="btn button-cards primary"
                     onclick="updateContact('{{ auth()->user()->id }}')">Update</button>
             </div>

@@ -721,6 +721,7 @@ class UserController extends Controller
     public function my_account(Request $request)
     {
         $sort_by = '';
+        $contact_id = session()->get('contact_id');
         $user_id = auth()->id();
         if (!auth()->user()) {
             return redirect('/user/');
@@ -787,7 +788,8 @@ class UserController extends Controller
                 'user_orders',
                 'can_approve_order',
                 'order_approver_for_company',
-                'sort_by'
+                'sort_by',
+                'contact_id'
             ));
         }
     }
@@ -991,7 +993,8 @@ class UserController extends Controller
             'parent',
             'companies',
             'states',
-            'address_user'
+            'address_user',
+            'contact_id'
         ));
     }
 
@@ -1062,7 +1065,8 @@ class UserController extends Controller
             'secondary_contacts',
             'parent',
             'companies',
-            'states'
+            'states',
+            'contact_id'
         ));
     }
 
@@ -1116,6 +1120,7 @@ class UserController extends Controller
 
     public function address_user_my_account(Request $request)
     {
+        // dd($request->all());
         $user_id = auth()->id();
         $contact_id = $request->contact_id;
         $contact = Contact::where('user_id', $user_id)
@@ -1125,22 +1130,22 @@ class UserController extends Controller
 
         if ($contact->secondary_id) {
             $parent_id = Contact::where('secondary_id', $contact->secondary_id)
-                ->first()->parent_id;
+                ->first();
             $contact_id = $parent_id;
         } else {
             $user_address = Contact::where('user_id', $user_id)
                 ->where('contact_id', $contact_id)->first();
         }
-        $request->validate([
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'company_name' => 'required',
-            'address1' => 'required',
-            'town_city' => 'required|alpha',
-            'state' => 'required|alpha',
-            'phone' => 'required',
-            'zip' => 'required'
-        ]);
+        // $request->validate([
+        //     'first_name' => 'required',
+        //     'last_name' => 'required',
+        //     'company_name' => 'required',
+        //     'address1' => 'required',
+        //     'town_city' => 'required|alpha',
+        //     'state' => 'required|alpha',
+        //     'phone' => 'required',
+        //     'zip' => 'required'
+        // ]);
         $authHeaders = [
             'headers' => ['Content-type' => 'application/json'],
             'auth' => [
@@ -1154,7 +1159,7 @@ class UserController extends Controller
                 'firstName' => $request->first_name,
                 'type' => 'Customer',
                 'lastName' => $request->last_name,
-                'address1' => $request->address1,
+                'address1' => $request->address,
                 'address2' => $request->address2,
                 'company' => $request->company_name,
                 'state' => $request->state,
@@ -1176,11 +1181,12 @@ class UserController extends Controller
         if ($response[0]->success == true) {
             $user_id = auth()->id();
             $contact = Contact::where('user_id', $user_id)->where('contact_id', $contact_id)->first();
+            // dd($contact);
             if ($contact) {
 
                 $contact->firstName = $request->first_name;
                 $contact->lastName = $request->last_name;
-                $contact->address1 = $request->address1;
+                $contact->address1 = $request->address;
                 $contact->address2 = $request->address2;
                 $contact->company = $request->company_name;
                 $contact->state = $request->state;
@@ -1190,6 +1196,7 @@ class UserController extends Controller
 
                 $contact->save();
             }
+            // dd($contact);
             return response()->json(['success' => true, 'created' => true, 'msg' => 'Address updated Successfully']);
         } else {
             return response()->json(['success' => false, 'created' => false, 'msg' => 'Unable to update address please try again later']);
