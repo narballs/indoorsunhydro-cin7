@@ -162,36 +162,42 @@
                                                 @if (!empty($contact['firstName'] && $contact['lastName']))
                                                     {{ $contact['firstName'] . ' ' . $contact['lastName'] }}
                                                 @else
+                                                {{ $contact['first_name'] . ' ' . $contact['last_name'] }}
                                                 @endif
                                             </td>
                                             <td class="my_account_all_items">
                                                 @if (!empty($contact['postalAddress1']))
                                                     {{ $contact['postalAddress1'] }}
                                                 @else
+                                                    {{ $contact['address1'] }}
                                                 @endif
                                             </td>
                                             <td class="my_account_all_items">
                                                 @if (!empty($contact['postalCity']))
                                                     {{ $contact['postalCity'] }}
                                                 @else
+                                                {{ $contact['city'] }}
                                                 @endif
                                             </td>
                                             <td class="my_account_all_items">
                                                 @if (!empty($contact['Country']))
                                                     {{ $contact['Country'] }}
                                                 @else
+                                                {{ $contact['Country'] }}
                                                 @endif
                                             </td>
                                             <td class="my_account_all_items">
                                                 @if (!empty($contact['postalState']))
                                                     {{ $contact['postalState'] }}
                                                 @else
+                                                {{ $contact['state'] }}
                                                 @endif
                                             </td>
                                             <td class="my_account_all_items">
-                                                @if (!empty($contact['postalCode']))
-                                                    {{ $contact['postalCode'] }}
+                                                @if (!empty($contact['postalPostCode']))
+                                                    {{ $contact['postalPostCode'] }}
                                                 @else
+                                                {{ $contact['postCode'] }}
                                                 @endif
                                             </td>
                                             <td class="my_account_all_items">

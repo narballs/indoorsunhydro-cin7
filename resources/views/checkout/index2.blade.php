@@ -91,34 +91,33 @@ $cart_price = 0;
                         </div>
                         <div class="row">
                             <div class="col-md-12">
-                                <p class="user-first-name-thank-you-page"> {{ $user_address->firstName }}
-                                    {{ $user_address->lastName }}
+                                <p class="user-first-name-thank-you-page"> {{ $user_address->first_name ? $user_address->first_name : $user_address->firstName }}{{ $user_address->last_name ? $user_address->last_name : $user_address->lastName }}
                                 </p>
                             </div>
                             <div class="col-md-6">
                                 <p class="user-address-thank-you-page-title">Address line 1</p>
-                                <p class="user-address-thank-you-page-item">{{ $user_address->address1 }}</p>
+                                <p class="user-address-thank-you-page-item">{{ $user_address->address1 ? $user_address->address1 :  $user_address->postalAddress1}}</p>
                                 <div class="row">
                                     <div class="col-md-4">
                                         <p class="user-address-thank-you-page-title">City</p>
-                                        <p class="user-address-thank-you-page-item">{{ $user_address->city }}
+                                        <p class="user-address-thank-you-page-item">{{ $user_address->city ? $user_address->city : $user_address->postalCity }}
                                         </p>
                                     </div>
                                     <div class="col-md-4">
                                         <p class="user-address-thank-you-page-title">State</p>
-                                        <p class="user-address-thank-you-page-item">{{ $user_address->state }}
+                                        <p class="user-address-thank-you-page-item">{{ $user_address->state ? $user_address->state : $user_address->postalState }}
                                         </p>
                                     </div>
                                     <div class="col-md-4">
                                         <p class="user-address-thank-you-page-title">Zip</p>
-                                        <p class="user-address-thank-you-page-item">{{ $user_address->postCode }}
+                                        <p class="user-address-thank-you-page-item">{{ $user_address->postCode ? $user_address->postCode : $user_address->postalPostCode }}
                                         </p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <p class="user-address-thank-you-page-title">Address line 2</p>
-                                <p class="user-address-thank-you-page-item">{{ $user_address->address2 }}</p>
+                                <p class="user-address-thank-you-page-item">{{ $user_address->address2 ? $user_address->address2 : $user_address->postalAddress2 }}</p>
                             </div>
                         </div>
                     </div>
@@ -127,34 +126,33 @@ $cart_price = 0;
                         <p class="billing-address-thank-you-page-heading billing-border">Billing Address</p>
                         <div class="row">
                             <div class="col-md-12">
-                                <p class="user-first-name-thank-you-page"> {{ $user_address->firstName }}
-                                    {{ $user_address->lastName }}
+                                <p class="user-first-name-thank-you-page"> {{ $user_address->first_name ? $user_address->first_name : $user_address->firstName }}{{ $user_address->last_name ? $user_address->last_name : $user_address->lastName }}
                                 </p>
                             </div>
                             <div class="col-md-6">
                                 <p class="user-address-thank-you-page-title">Address line 1</p>
-                                <p class="user-address-thank-you-page-item">{{ $user_address->postalAddress1 }}</p>
+                                <p class="user-address-thank-you-page-item">{{ $user_address->address1 ? $user_address->address1 :  $user_address->postalAddress1}}</p>
                                 <div class="row">
                                     <div class="col-md-4">
                                         <p class="user-address-thank-you-page-title">City</p>
-                                        <p class="user-address-thank-you-page-item">{{ $user_address->postalCity }}
+                                        <p class="user-address-thank-you-page-item">{{ $user_address->city ? $user_address->city : $user_address->postalCity }}
                                         </p>
                                     </div>
                                     <div class="col-md-4">
                                         <p class="user-address-thank-you-page-title">State</p>
-                                        <p class="user-address-thank-you-page-item">{{ $user_address->postalState }}
+                                        <p class="user-address-thank-you-page-item">{{ $user_address->state ? $user_address->state : $user_address->postalState }}
                                         </p>
                                     </div>
                                     <div class="col-md-4">
                                         <p class="user-address-thank-you-page-title">Zip</p>
-                                        <p class="user-address-thank-you-page-item">{{ $user_address->postalPostCode }}
+                                        <p class="user-address-thank-you-page-item">{{ $user_address->postCode ? $user_address->postCode : $user_address->postalPostCode }}
                                         </p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <p class="user-address-thank-you-page-title">Address line 2</p>
-                                <p class="user-address-thank-you-page-item">{{ $user_address->postalAddress2 }}</p>
+                                <p class="user-address-thank-you-page-item">{{ $user_address->address2 ? $user_address->address2 : $user_address->postalAddress2 }}</p>
                             </div>
                         </div>
                     </div>
@@ -380,7 +378,7 @@ $cart_price = 0;
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text" placeholder="Enter your first name"
                                                                 id="firstName" name="firstName"
-                                                                value="{{ $user_address->firstName }}"
+                                                                value="{{ $user_address->first_name ? $user_address->first_name : $user_address->firstName }}"
                                                                 class="form-control mt-0fontAwesome">
                                                         </div>
                                                         <div class="col-md-6">
@@ -390,7 +388,7 @@ $cart_price = 0;
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text" placeholder="Enter your last"
                                                                 id="lastName" name="lastName"
-                                                                value="{{ $user_address->lastName }}"
+                                                                value="{{ $user_address->last_name ? $user_address->last_name : $user_address->lastName }}"
                                                                 class="form-control fontAwesome ">
                                                         </div>
                                                         <div class="col-md-12 ">
@@ -413,14 +411,14 @@ $cart_price = 0;
                                                             <input type="text"
                                                                 placeholder="House number and street name"
                                                                 id="postalAddress1" name="postalAddress1"
-                                                                value="{{ $user_address->postalAddress1 }}"
+                                                                value="{{ $user_address->address1 ? $user_address->address1 : $user_address->postalAddress1 }}"
                                                                 class="form-control  company-info fontAwesome ">
                                                         </div>
                                                         <div class="col-md-12">
                                                             <input type="text"
                                                                 placeholder="Aprtmant, suit, unit, etc.(optional)"
                                                                 id="postalAddress2" name="postalAddress2"
-                                                                value="{{ $user_address->postalAddress2 }}"
+                                                                value="{{ $user_address->address2 ? $user_address->address2 : $user_address->postalAddress2 }}"
                                                                 class="form-control  company-info fontAwesome ">
                                                         </div>
 
@@ -431,7 +429,7 @@ $cart_price = 0;
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text" placeholder="Enter your town"
                                                                 id="postalCity" name="postalCity"
-                                                                value="{{ $user_address->postalCity }}"
+                                                                value="{{ $user_address->city ? $user_address->city : $user_address->postalCity }}"
                                                                 class="form-control  company-info fontAwesome ">
                                                         </div>
                                                         <div class="col-md-12">
@@ -440,7 +438,7 @@ $cart_price = 0;
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text" placeholder="Enter your state"
                                                                 id="postalState" name="postalState"
-                                                                value="{{ $user_address->postalState }}"
+                                                                value="{{ $user_address->state ? $user_address->state : $user_address->postalState }}"
                                                                 class="form-control  company-info fontAwesome ">
                                                         </div>
                                                         <div class="col-md-12">
@@ -449,7 +447,7 @@ $cart_price = 0;
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text" placeholder="Enter your zip"
                                                                 id="postalPostCode" name="postalPostCode"
-                                                                value="{{ $user_address->postalPostCode }}"
+                                                                value="{{ $user_address->postCode ? $user_address->postCode : $user_address->postalPostCode }}"
                                                                 class="form-control  company-info fontAwesome ">
                                                         </div>
                                                         <div class="col-md-12">
@@ -737,7 +735,7 @@ $cart_price = 0;
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text" placeholder="Enter your first name"
                                                                 id="company_website" name="firstName"
-                                                                value="{{ $user_address->firstName }}"
+                                                                value="{{ $user_address->first_name ?  $user_address->first_name : $user_address->firstName}}"
                                                                 class="form-control mt-0fontAwesome">
                                                         </div>
                                                         <div class="col-md-12">
@@ -747,7 +745,7 @@ $cart_price = 0;
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text" placeholder="Enter your last"
                                                                 id="company_website" name="lastName"
-                                                                value="{{ $user_address->lastName }}"
+                                                                value="{{ $user_address->last_name ?  $user_address->last_name : $user_address->lastName}}"
                                                                 class="form-control fontAwesome ">
                                                         </div>
                                                         <div class="col-md-12 ">
@@ -770,14 +768,14 @@ $cart_price = 0;
                                                             <input type="text"
                                                                 placeholder="House number and street name"
                                                                 id="postalAddress1" name="postalAddress1"
-                                                                value="{{ $user_address->postalAddress1 }}"
+                                                                value="{{ $user_address->address1 ?  $user_address->address1 : $user_address->postalAddress1}}"
                                                                 class="form-control  company-info fontAwesome ">
                                                         </div>
                                                         <div class="col-md-12">
                                                             <input type="text"
                                                                 placeholder="Aprtmant, suit, unit, etc.(optional)"
                                                                 id="postalAddress2" name="postalAddress2"
-                                                                value="{{ $user_address->postalAddress2 }}"
+                                                                value="{{ $user_address->address2 ?  $user_address->address2 : $user_address->postalAddress2}}"
                                                                 class="form-control  company-info fontAwesome ">
                                                         </div>
 
@@ -788,7 +786,7 @@ $cart_price = 0;
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text" placeholder="Enter your town"
                                                                 id="postalCity" name="postalCity"
-                                                                value="{{ $user_address->postalCity }}"
+                                                                value="{{ $user_address->city ?  $user_address->city : $user_address->postalCity}}"
                                                                 class="form-control  company-info fontAwesome ">
                                                         </div>
                                                         <div class="col-md-12">
@@ -797,7 +795,7 @@ $cart_price = 0;
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text" placeholder="Enter your state"
                                                                 id="postalState" name="postalState"
-                                                                value="{{ $user_address->postalState }}"
+                                                                value="{{ $user_address->state ?  $user_address->state : $user_address->postalState}}"
                                                                 class="form-control  company-info fontAwesome ">
                                                         </div>
                                                         <div class="col-md-12">
@@ -806,7 +804,7 @@ $cart_price = 0;
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text" placeholder="Enter your zip"
                                                                 id="postalPostCode" name="postalPostCode"
-                                                                value="{{ $user_address->postalPostCode }}"
+                                                                value="{{$user_address->postCode ? $user_address->postCode : $user_address->postalPostCode }}"
                                                                 class="form-control  company-info fontAwesome ">
                                                         </div>
                                                         <div class="col-md-12">
@@ -1102,7 +1100,7 @@ $cart_price = 0;
                 </div>
             </div>
             <div class="modal-footer border-0 p-0 mt-2 d-flex justify-content-center align-items-center">
-                <button type="button" class="btn btn-primary w-75 applay-coupon-code-modal-btn">applay
+                <button type="button" class="btn btn-primary w-75 applay-coupon-code-modal-btn">Apply
                     coupon</button>
             </div>
         </div>
@@ -1128,7 +1126,7 @@ $cart_price = 0;
                         <div class="alert alert-danger mt-3 d-none" id="failure_msg"></div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="firstName">Waqas</label>
+                                <label for="firstName">First Name</label>
                                 <input type="text" class="form-control bg-light" id="first_name" name="firstName"
                                     placeholder="First name" value="{{ $user_address->firstName }}" disabled>
                                 <div id="error_first_name" class="text-danger">
@@ -1226,6 +1224,9 @@ $cart_price = 0;
                 </div>
             </div>
             <div class="modal-footer">
+                <div class="spinner-border text-primary d-none" role="status" id="address_loader">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
                 <button type="button" class="btn button-cards primary"
                     onclick="updateContact('{{ $contact_id }}')">Update</button>
             </div>
@@ -1239,7 +1240,7 @@ $cart_price = 0;
     <div class="row">
         <div class="col-md-6 mb-3">
             <label for="firstName">First name</label>
-            <input type="text" class="form-control bg-light" name="firstName" placeholder="First name"
+            <input type="text" class="form-control bg-light" name="first_name" placeholder="First name"
                 value="{{ $user_address->firstName }}" required>
             <div id="error_first_name" class="text-danger">
 
@@ -1247,7 +1248,7 @@ $cart_price = 0;
         </div>
         <div class="col-md-6 mb-3">
             <label for="lastName">Last name</label>
-            <input type="text" class="form-control bg-light" name="lastName" placeholder=""
+            <input type="text" class="form-control bg-light" name="last_name" placeholder=""
                 value="{{ $user_address->lastName }}" required>
             <div id="error_last_name" class="text-danger">
             </div>
@@ -1268,22 +1269,22 @@ $cart_price = 0;
     <div class="mb-3">
         <label for="address">Street Address</label>
         <input type="text" class="form-control bg-light" name="address"
-            value="{{ $user_address->postalAddress1 }}" placeholder="House number and street name" required>
+            value="{{ $user_address->address1 }}" placeholder="House number and street name" required>
+        <div id="error_address1" class="text-danger"></div>
     </div>
-    <div id="error_address1" class="text-danger"></div>
 
     <div class="mb-3">
         <label for="address2">Address 2 <span class="text-muted">(Optional)</span></label>
         <input type="text" class="form-control bg-light" name="address2"
-            value="{{ $user_address->postalAddress2 }}" placeholder="Apartment, suite, unit etc (optional)">
+            value="{{ $user_address->address2 }}" placeholder="Apartment, suite, unit etc (optional)">
+            <div id="error_address2" class="text-danger"></div>
     </div>
-    <div id="error_address2" class="text-danger"></div>
     <div class="mb-3">
         <label for="town">Town/City <span class="text-muted">(Optional)</span></label>
         <input type="text" class="form-control bg-light" name="town_city"
-            value="{{ $user_address->postalCity }}" placeholder="Enter your town">
+            value="{{ $user_address->city }}" placeholder="Enter your town">
+            <div id="error_city" class="text-danger"></div>
     </div>
-    <div id="error_city" class="text-danger"></div>
 
     <div class="row">
         <div class="col-md-6 mb-3">
@@ -1292,13 +1293,13 @@ $cart_price = 0;
             <select class="form-control bg-light" name="state" id="state">
                 @foreach ($states as $state)
                     <?php
-                    if ($user_address->postalState == $state->name) {
+                    if ($user_address->state == $state->state_name) {
                         $selected = 'selected';
                     } else {
                         $selected = '';
                     }
                     ?>
-                    <option value="{{ $state->name }}" <?php echo $selected; ?>>{{ $state->name }}</option>
+                    <option value="{{ $state->state_name }}" <?php echo $selected; ?>>{{ $state->state_name }}</option>
                 @endforeach
             </select>
             <div class="invalid-feedback">
@@ -1465,6 +1466,7 @@ $cart_price = 0;
                 }
 
                 function updateContact(contact_id) {
+                    $('#address_loader').removeClass('d-none');
                     var state = document.getElementById("state").value;
                     var first_name = $('#first_name').val();
                     var last_name = $('#last_name').val();
@@ -1479,7 +1481,7 @@ $cart_price = 0;
 
                     jQuery.ajax({
                         method: 'GET',
-                        url: "{{ url('/user-addresses/') }}",
+                        url: "{{ url('/my-account-user-addresses/') }}",
 
                         data: {
                             "_token": "{{ csrf_token() }}",
@@ -1488,7 +1490,7 @@ $cart_price = 0;
                             "last_name": last_name,
                             "company_name": company_name,
                             "phone": phone,
-                            "address1": address1,
+                            "address": address1,
                             "address2": address2,
                             "town_city": town_city,
                             "state": state,
@@ -1497,14 +1499,17 @@ $cart_price = 0;
                         },
                         success: function(response) {
                             if (response.success == true) {
+                                $('#address_loader').addClass('d-none');
                                 $('.modal-backdrop').remove()
                                 $('#success_msg').removeClass('d-none');
                                 $('#success_msg').html(response.msg);
                                 window.location.reload();
                             } else {
+                                $('#address_loader').addClass('d-none');
                                 $('.modal-backdrop').remove()
                                 $('#failure_msg').removeClass('d-none');
                                 $('#failure_msg').html(response.msg);
+                                window.location.reload();
 
                             }
                         },

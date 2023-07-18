@@ -1120,70 +1120,67 @@ class UserController extends Controller
 
     public function address_user_my_account(Request $request)
     {
-        // dd($request->all());
         $user_id = auth()->id();
         $contact_id = $request->contact_id;
         $contact = Contact::where('user_id', $user_id)
             ->where('contact_id', $contact_id)
             ->orWhere('secondary_id', $contact_id)
             ->first();
-
         if ($contact->secondary_id) {
-            $parent_id = Contact::where('secondary_id', $contact->secondary_id)
-                ->first();
-            $contact_id = $parent_id;
+            $contact_id = $contact->secondary_id;
         } else {
             $user_address = Contact::where('user_id', $user_id)
                 ->where('contact_id', $contact_id)->first();
+            $contact_id = $user_address->contact_id;
+            // dd($contact_id);
         }
-        // $request->validate([
-        //     'first_name' => 'required',
-        //     'last_name' => 'required',
-        //     'company_name' => 'required',
-        //     'address1' => 'required',
-        //     'town_city' => 'required|alpha',
-        //     'state' => 'required|alpha',
-        //     'phone' => 'required',
-        //     'zip' => 'required'
-        // ]);
-        $authHeaders = [
-            'headers' => ['Content-type' => 'application/json'],
-            'auth' => [
-                env('API_USER'),
-                env('API_PASSWORD')
-            ]
-        ];
-        $contact = [
-            [
-                'id' => $contact_id,
-                'firstName' => $request->first_name,
-                'type' => 'Customer',
-                'lastName' => $request->last_name,
-                'address1' => $request->address,
-                'address2' => $request->address2,
-                'company' => $request->company_name,
-                'state' => $request->state,
-                'phone' => $request->phone,
-                'city' => $request->town_city,
-                'postCode' => $request->zip,
-                //'email' => request('email')
+        $request->validate([
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'company_name' => 'required',
+            'address' => 'required',
+            // 'town_city' => 'required|alpha',
+            'state' => 'required|alpha',
+            'phone' => 'required',
+            'zip' => 'required'
+        ]);
+        // $authHeaders = [
+        //     'headers' => ['Content-type' => 'application/json'],
+        //     'auth' => [
+        //         env('API_USER'),
+        //         env('API_PASSWORD')
+        //     ]
+        // ];
+        // $contact = [
+        //     [
+        //         'id' => $contact_id,
+        //         'firstName' => $request->first_name,
+        //         'type' => 'Customer',
+        //         'lastName' => $request->last_name,
+        //         'address1' => $request->address,
+        //         'address2' => $request->address2,
+        //         'company' => $request->company_name,
+        //         'state' => $request->state,
+        //         'phone' => $request->phone,
+        //         'city' => $request->town_city,
+        //         'postCode' => $request->zip,
+        //         //'email' => request('email')
 
-            ]
-        ];
-        $authHeaders['json'] = $contact;
-        $client = new \GuzzleHttp\Client();
-        $url = 'https://api.cin7.com/api/v1/Contacts/';
+        //     ]
+        // ];
+        // $authHeaders['json'] = $contact;
+        // $client = new \GuzzleHttp\Client();
+        // $url = 'https://api.cin7.com/api/v1/Contacts/';
 
-        $res = $client->put($url, $authHeaders);
-        $api_response = $res->getBody()->getContents();
-        $response = json_decode($api_response);
+        // $res = $client->put($url, $authHeaders);
+        // $api_response = $res->getBody()->getContents();
+        // $response = json_decode($api_response);
 
-        if ($response[0]->success == true) {
+        // if ($response[0]->success == true) {
             $user_id = auth()->id();
             $contact = Contact::where('user_id', $user_id)->where('contact_id', $contact_id)->first();
             // dd($contact);
             if ($contact) {
-
                 $contact->firstName = $request->first_name;
                 $contact->lastName = $request->last_name;
                 $contact->address1 = $request->address;
@@ -1195,12 +1192,14 @@ class UserController extends Controller
                 $contact->postCode = $request->zip;
 
                 $contact->save();
+                return response()->json(['success' => true, 'created' => true, 'msg' => 'Address updated Successfully']);
+            }else {
+                return response()->json(['success' => false, 'created' => false, 'msg' => 'You Cannot update your primary contact']);
             }
             // dd($contact);
-            return response()->json(['success' => true, 'created' => true, 'msg' => 'Address updated Successfully']);
-        } else {
-            return response()->json(['success' => false, 'created' => false, 'msg' => 'Unable to update address please try again later']);
-        }
+        // } else {
+        //     return response()->json(['success' => false, 'created' => false, 'msg' => 'Unable to update address please try again later']);
+        // }
     }
 
     public function adminUsers(Request $request)
