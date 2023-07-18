@@ -360,6 +360,10 @@ return [
             'text'    => 'Admin Settings',
             'url'  => 'admin/settings/index',
         ],
+        [
+            'text'    => 'Tax Classes',
+            'url'  => 'admin/tax_classes',
+        ],
 
         [
             'text'       => 'Logout',

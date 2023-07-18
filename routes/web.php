@@ -22,7 +22,8 @@ use App\Http\Controllers\Admin\AdminBuyListController;
 use App\Http\Controllers\Admin\AdminShareListController;
 use App\Http\Controllers\Admin\LogsController;
 use App\Http\Controllers\Admin\DailyApiLogController;
-
+use App\Http\Controllers\Admin\TaxClassController;
+use App\Models\TaxClass;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
@@ -113,6 +114,7 @@ Route::group(['prefix' => 'my-account/'], function () {
 
 Route::group(['middleware' => ['auth']], function () {
     Route::resource('admin/roles', RoleController::class);
+    Route::resource('admin/tax_classes', TaxClassController::class);
     Route::resource('admin/users', UserController::class);
     Route::get('admin/dashboard', [DashboardController::class, 'index'])->name('admin.view');
     Route::get('admin/orders', [OrderManagementController::class, 'index'])->name('admin.orders');
