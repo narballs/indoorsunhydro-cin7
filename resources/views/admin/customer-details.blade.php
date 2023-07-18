@@ -184,13 +184,13 @@
                                                 <h3>Billing Address</h3>
                                                 <div class="col-md-10 bg-light">
                                                     <div>
-                                                        {{ $customer->postalAddress1 }}
+                                                        {{$customer->address1 ? $customer->address1  : $customer->postalAddress1 }}
                                                     </div>
                                                     <div>
-                                                        {{ $customer->postalAddress2 }}
+                                                        {{$customer->address2 ? $customer->address2  : $customer->postalAddress2 }}
                                                     </div>
                                                     <div>
-                                                        {{ $customer->postalPostCode }}, {{ $customer->postalState }}
+                                                        {{ $customer->postCode ? $customer->postCode :$customer->postalPostCode }}, {{ $customer->state ? $customer->state : $customer->postalState }}
                                                     </div>
                                                 </div>
                                             </div>
@@ -198,13 +198,13 @@
                                                 <h3>Delivery Address</h3>
                                                 <div class="col-md-10 bg-light">
                                                     <div>
-                                                        {{ $customer->postalAddress1 }}
+                                                        {{$customer->address1 ? $customer->address1  : $customer->postalAddress1 }}
                                                     </div>
                                                     <div>
-                                                        {{ $customer->postalAddress2 }}
+                                                        {{$customer->address2 ? $customer->address2  : $customer->postalAddress2 }}
                                                     </div>
                                                     <div>
-                                                        {{ $customer->postalPostCode }}, {{ $customer->postalState }}
+                                                        {{ $customer->postCode ? $customer->postCode :$customer->postalPostCode }}, {{ $customer->state ? $customer->state : $customer->postalState }}
                                                     </div>
                                                 </div>
                                             </div>

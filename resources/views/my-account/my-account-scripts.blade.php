@@ -479,6 +479,10 @@
                     window.location.reload();
                 }else {
                     $('#address_loader').addClass('d-none');
+                    $('.modal-backdrop').remove()
+                    $('#error_msg').removeClass('d-none');
+                    $('#error_msg').html(response.msg);
+                    window.location.reload();
                 }
             },
             error: function(response) {
@@ -938,9 +942,12 @@
                 <div class="update-address-section" id="address-form-update">
 
                     <form class="needs-validation mt-4 novalidate" action="{{ url('order') }}" method="POST">
+                        @if(!empty($contact_id))
                         <input type="hidden" value="{{$contact_id}}" name="contact_id" id="contact_id_val">
+                        @endif
                         @csrf
                         <div class="alert alert-success mt-3 d-none" id="success_msg"></div>
+                        <div class="alert alert-danger mt-3 d-none" id="error_msg"></div>
                         
                         <div class="row">
                             <div class="col-md-6 mb-3">
@@ -982,32 +989,26 @@
 
                         <div class="mb-3">
                             <label for="address">Street Address</label>
-                            <input type="text" class="form-control bg-light" name="address"
-                                value="{{ $user_address->address1 }}" placeholder="House number and street name"
-                                required>
-
+                            <input type="text" class="form-control bg-light" name="address" id="address1"
+                            value="{{ $user_address->address1 }}" placeholder="House number and street name"
+                            required>
+                            <div id="error_address1" class="text-danger"></div>
                         </div>
-                        <div id="error_address1" class="text-danger">
-
-                        </div>
-
                         <div class="mb-3">
                             <label for="address2">Address 2 <span class="text-muted">(Optional)</span></label>
                             <input type="text" class="form-control bg-light" name="address2"
                                 value="{{ $user_address->address2 }}"
                                 placeholder="Apartment, suite, unit etc (optional)">
+                                <div id="error_address2" class="text-danger"></div>
                         </div>
-                        <div id="error_address2" class="text-danger">
-
-                        </div>
+                       
                         <div class="mb-3">
                             <label for="town">Town/City <span class="text-muted">(Optional)</span></label>
                             <input type="text" class="form-control bg-light" name="town_city"
                                 value="{{ $user_address->city }}" placeholder="Enter your town">
+                                <div id="error_city" class="text-danger"></div>
                         </div>
-                        <div id="error_city" class="text-danger">
-
-                        </div>
+                        
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="state">State</label>
