@@ -61,29 +61,42 @@ class SyncAPiData extends Command
 
         
         $current_date = Carbon::now()->setTimezone('UTC')->format('Y-m-d H:i:s');
-        $sync_log = ApiSyncLog::where('end_point', 'https://api.cin7.com/api/v1/Products')->first();
-        if (empty($sync_log)) {
-            $sync_log = new ApiSyncLog();
-            $sync_log->end_point = 'https://api.cin7.com/api/v1/Products';
-            $sync_log->desription = 'Products Sync';
-            $sync_log->record_count = 0;
-            $sync_log->last_synced = $current_date;
-            $sync_log->save();
+        $product_sync_log = ApiSyncLog::where('end_point', 'https://api.cin7.com/api/v1/Products')->first();
+        if (empty($product_sync_log)) {
+            $product_sync_log = new ApiSyncLog();
+            $product_sync_log->end_point = 'https://api.cin7.com/api/v1/Products';
+            $product_sync_log->desription = 'Products Sync';
+            $product_sync_log->record_count = 0;
+            $product_sync_log->last_synced = $current_date;
+            $product_sync_log->save();
         }
 
-        $last_synced_date = $sync_log->last_synced;
-        
-        
-        $this->info('Last updated time#--------------------------' . $last_synced_date);
-        $this->info('Current time#--------------------------' . $current_date);
+        $last_product_synced_date = $product_sync_log->last_synced;
 
-        $rawDate = Carbon::parse($last_synced_date);
+        $product_sync_raw_date = Carbon::parse($last_product_synced_date);
+        $product_sync_date = $product_sync_raw_date->format('Y-m-d');
+        $product_sync_time = $product_sync_raw_date->format('H:i:s');
+        $api_formatted_product_sync_date = $product_sync_date . 'T' . $product_sync_time . 'Z';
+
+        // get category sync date
+        $category_sync_log = ApiSyncLog::where('end_point', 'categories')->first();
+        if (empty($category_sync_log)) {
+            $category_sync_log = new ApiSyncLog();
+            $category_sync_log->end_point = 'categories';
+            $category_sync_log->desription = 'Categories Sync';
+            $category_sync_log->record_count = 0;
+            $category_sync_log->last_synced = $current_date;
+            $category_sync_log->save();
+        }
+
+        $last_category_synced_date = $category_sync_log->last_synced;
+
+        $category_sync_raw_date = Carbon::parse($last_category_synced_date);
+        $category_sync_date = $category_sync_raw_date->format('Y-m-d');
+        $category_sync_time = $category_sync_raw_date->format('H:i:s');
+        $api_formatted_category_sync_date = $category_sync_date . 'T' . $category_sync_time . 'Z';
         
-        $getdate = $rawDate->format('Y-m-d');
-        $getTime = $rawDate->format('H:i:s');
 
-
-        $formattedDateSting = $getdate . 'T' . $getTime . 'Z';
         $client2 = new \GuzzleHttp\Client();
         $total_record_count = 0;
 
@@ -94,59 +107,37 @@ class SyncAPiData extends Command
         $total_category_pages = 9;
 
         for ($i = 1; $i <= $total_category_pages; $i++) {
-            $this->info('Processing page#' . $i);
-            // try {
-                $res = $client->request(
-                    'GET', 
-                    'https://api.cin7.com/api/v1/ProductCategories?page='.$i, 
-                    [
-                         'auth' => [
-                                'IndoorSunHydroUS',
-                                'faada8a7a5ef4f90abaabb63e078b5c1'
-                            //env('API_USER'),
-                            //env('API_PASSWORD')
-                        ]
-                     
-                    ]
-                );
-            //}
-            // catch (\Exception $e) {
-                // $msg = $e->getMessage();
-                // $errorlog = new ApiErrorLog();
-                // $errorlog->payload = $e->getMessage();
-                // $errorlog->exception = $e->getCode();
-                // $errorlog->save();
-
-            //}
+            $this->error('Categories: Processing page#' . $i);
+            
+            $res = $client->request(
+                'GET', 
+                'https://api.cin7.com/api/v1/ProductCategories?rows=250&page=' . $i,
+                [
+                    'auth' => [
+                        'IndoorSunHydroUS',
+                        'faada8a7a5ef4f90abaabb63e078b5c1'
+                    ]                    
+                ]
+            );
+            
 
             $api_categories = $res->getBody()->getContents();
-            //dd($api_categories);
             $api_categories = json_decode($api_categories);
 
-            $this->info('Found ' . count($api_categories) . ' from API');
+            $record_count = count($api_categories);
+            $this->info('Categories: Record Count per page #--------------------------' . $record_count);
+            
+            if ($record_count < 1 || empty($record_count)) {
+                $this->info('----------------break-----------------');
+                break;
+            }
 
-            foreach($api_categories as $api_category) {
-
-                $this->info($api_category->id);
+            foreach ($api_categories as $api_category) {
                 $category = Category::where('category_id', $api_category->id)->first();
                 if (!empty($category)) {
                     $this->info('---------------------------------------');
-                    $this->info('Processing Category ' . $api_category->name);
+                    $this->info('Processing Category ' . $api_category->name . ', ID: ' . $api_category->id);
                     $this->info('---------------------------------------');
-                        //old one 
-                        // $category_data = [
-                        //     'id' => $api_category->id,
-                        //     'name' => $api_category->name,
-                        //     'category_id' => $api_category->id,
-                        //     'parent_id' => $api_category->parentId,
-                        //     'is_active' => $api_category->isActive,
-                        //     'sort' => $api_category->sort,
-                        // ];
-
-                        // $category = Category::firstOrCreate(
-                        //     ['id' => $api_category->id],
-                        //     $category_data
-                        // );
 
                     $category->name = $api_category->name;
                     $category->slug = Str::slug($api_category->name);
@@ -169,6 +160,7 @@ class SyncAPiData extends Command
             }
         }
 
+
             $client2 = new \GuzzleHttp\Client();
 
 
@@ -182,7 +174,7 @@ class SyncAPiData extends Command
 
                     $res = $client2->request(
                         'GET', 
-                        'https://api.cin7.com/api/v1/Products?where=modifieddate>='. $formattedDateSting . '&page=' . $i . '&rows=250', 
+                        'https://api.cin7.com/api/v1/Products?where=modifieddate>='. $api_formatted_product_sync_date . '&page=' . $i . '&rows=250', 
                         [
                             'auth' => [
                                'IndoorSunHydroUS',
@@ -430,9 +422,9 @@ class SyncAPiData extends Command
             
         }
 
-        $sync_log->last_synced = $current_date;
-        $sync_log->record_count = $total_record_count;
-        $sync_log->save();
+        $product_sync_log->last_synced = $current_date;
+        $product_sync_log->record_count = $total_record_count;
+        $product_sync_log->save();
 
         $this->info('Total Record Count#' . $total_record_count);
         $this->info('------------------------------');
