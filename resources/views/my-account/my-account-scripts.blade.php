@@ -450,7 +450,8 @@
         var zip = $('input[name=zip]').val();
         var email = $('input[name=email]').val();
         var contact_id = $('#contact_id_val').val();
-
+        var secondary_id = $('input[name=secondary_id]').val();
+        console.log(secondary_id)
 
         jQuery.ajax({
             method: 'GET',
@@ -469,6 +470,7 @@
                 "zip": zip,
                 "email": email,
                 'contact_id': contact_id,
+                'secondary_id': secondary_id,
             },
             success: function(response) {
                 if (response.success == true) {
@@ -934,6 +936,7 @@
     aria-labelledby="exampleModalToggleLabel" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
+            
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalToggleLabel">Update Address</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -942,8 +945,10 @@
                 <div class="update-address-section" id="address-form-update">
 
                     <form class="needs-validation mt-4 novalidate" action="{{ url('order') }}" method="POST">
-                        @if(!empty($contact_id))
-                        <input type="hidden" value="{{$contact_id}}" name="contact_id" id="contact_id_val">
+                        @if(!empty($user_address->contact_id))
+                        <input type="hidden" value="{{$user_address->contact_id}}" name="contact_id" id="contact_id_val">
+                        @elseif(!empty($user_address->secondary_id))
+                        <input type="hidden" value="{{$user_address->secondary_id}}" name="secondary_id" id="secondary_id_val">
                         @endif
                         @csrf
                         <div class="alert alert-success mt-3 d-none" id="success_msg"></div>
