@@ -617,7 +617,7 @@ $cart_price = 0;
                                             </tfoot>
                                         </table>
                                     </div>
-                                    <div class="d-flex justify-content-center align-items-center">
+                                    {{-- <div class="d-flex justify-content-center align-items-center">
                                         <div>
                                             <img class="img-fluid coupon-code-modal-btn"
                                                 src="/theme/img/modal-icon1.png" alt="">
@@ -627,10 +627,9 @@ $cart_price = 0;
                                             data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                                             Apply Coupon
                                         </button>
-                                    </div>
+                                    </div> --}}
                                 </div>
-                                <input type="button" name="previous" class="previous action-button-previous"
-                                    value="Previous" />
+                                {{-- <input type="button" name="previous" class="previous action-button-previous prev_btn_mbl" value="Previous" /> --}}
                                 {{-- <input type="button" name="next" class="next action-button" value="Next Step" /> --}}
                             </fieldset>
                             {{-- <fieldset>
@@ -992,7 +991,7 @@ $cart_price = 0;
                                             </tfoot>
                                         </table>
                                     </div>
-                                    <div class="d-flex justify-content-center align-items-center">
+                                    {{-- <div class="d-flex justify-content-center align-items-center">
                                         <div>
                                             <img class="img-fluid coupon-code-modal-btn"
                                                 src="/theme/img/modal-icon1.png" alt="">
@@ -1002,10 +1001,9 @@ $cart_price = 0;
                                             data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                                             Apply Coupon
                                         </button>
-                                    </div>
+                                    </div> --}}
                                 </div>
-                                <input type="button" name="previous" class="previous action-button-previous"
-                                    value="Previous" />
+                                {{-- <input type="button" name="previous" class="previous action-button-previous" value="Previous" /> --}}
                                 {{-- <input type="button" name="next" class="next action-button" value="Next Step" /> --}}
                             </fieldset>
                             {{-- <fieldset>
@@ -1653,3 +1651,4 @@ $cart_price = 0;
 
                 });
             </script>
+
