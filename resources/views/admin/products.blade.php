@@ -75,8 +75,11 @@
                                 </td>
                             </tr>
                         </thead>
+                        @if(count($products) > 0)
                         <tbody id="searched">
-                            <?php $count = 0; ?>
+                            @php
+                            $count = 0;
+                            @endphp
                             @foreach ($products as $key => $product)
                                 <?php $count++; ?>
                                 <tr id="row-{{ $product->id }}" class="product-row border-bottom">
@@ -149,6 +152,18 @@
                                 </td>
                             </tr>
                         </tfoot>
+                        @else
+                        <tbody id="searched">
+                            <tr>
+                                <td colspan="10">
+                                    <div class="alert alert-danger alert-dismissible text-center">
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                        No products found with your search criteria.
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                        @endif
                     </table>
                 </div>
             </div>
