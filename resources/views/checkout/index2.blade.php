@@ -1122,6 +1122,11 @@ $cart_price = 0;
                 <div class="update-address-section" id="address-form-update">
                     <form class="needs-validation mt-4 novalidate" action="{{ url('order') }}" method="POST">
                         @csrf
+                        @if(!empty($user_address->contact_id))
+                        <input type="hidden" value="{{$user_address->contact_id}}" name="contact_id" id="contact_id_val">
+                        @elseif(!empty($user_address->secondary_id))
+                        <input type="hidden" value="{{$user_address->secondary_id}}" name="secondary_id" id="secondary_id_val">
+                        @endif
                         <div class="alert alert-success mt-3 d-none" id="success_msg"></div>
                         <div class="alert alert-danger mt-3 d-none" id="failure_msg"></div>
                         <div class="row">
@@ -1477,6 +1482,8 @@ $cart_price = 0;
                     var town_city = $('input[name=town_city]').val();
 
                     var zip = $('input[name=zip]').val();
+                    var contact_id = $('input[name=contact_id]').val();
+                    var secondary_id = $('input[name=secondary_id]').val();
                     //var email = $('input[name=email]').val();
 
                     jQuery.ajax({
@@ -1486,6 +1493,7 @@ $cart_price = 0;
                         data: {
                             "_token": "{{ csrf_token() }}",
                             "contact_id": contact_id,
+                            "secondary_id": secondary_id,
                             "first_name": first_name,
                             "last_name": last_name,
                             "company_name": company_name,

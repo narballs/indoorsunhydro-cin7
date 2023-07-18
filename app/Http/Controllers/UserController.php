@@ -1121,19 +1121,31 @@ class UserController extends Controller
     public function address_user_my_account(Request $request)
     {
         $user_id = auth()->id();
+        $secondary_id = $request->secondary_id;
         $contact_id = $request->contact_id;
-        $contact = Contact::where('user_id', $user_id)
+
+        if (!empty($request->contact_id)) {
+            $contact = Contact::where('user_id', $user_id)
             ->where('contact_id', $contact_id)
-            ->orWhere('secondary_id', $contact_id)
             ->first();
-        if ($contact->secondary_id) {
-            $contact_id = $contact->secondary_id;
-        } else {
-            $user_address = Contact::where('user_id', $user_id)
-                ->where('contact_id', $contact_id)->first();
-            $contact_id = $user_address->contact_id;
-            // dd($contact_id);
+            $contact_id = $contact->contact_id;
         }
+
+        if (!empty($secondary_id)) {
+            $contact = Contact::where('user_id', $user_id)
+            ->where('secondary_id', $secondary_id)
+            ->first();
+            $contact_id = $contact->secondary_id;
+        }
+
+        // if ($contact->secondary_id) {
+        //     $contact_id = $contact->secondary_id;
+        // } else {
+        //     $user_address = Contact::where('user_id', $user_id)
+        //         ->where('contact_id', $contact_id)->first();
+        //     $contact_id = $user_address->contact_id;
+        //     // dd($contact_id);
+        // }
         $request->validate([
             'first_name' => 'required',
             'last_name' => 'required',
@@ -1178,7 +1190,10 @@ class UserController extends Controller
 
         // if ($response[0]->success == true) {
             $user_id = auth()->id();
-            $contact = Contact::where('user_id', $user_id)->where('contact_id', $contact_id)->first();
+            $contact = Contact::where('user_id', $user_id)
+                ->where('contact_id', $contact_id)
+                ->orWhere('secondary_id' , $contact_id)
+                ->first();
             // dd($contact);
             if ($contact) {
                 $contact->firstName = $request->first_name;
