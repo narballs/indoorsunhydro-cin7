@@ -176,7 +176,7 @@
                                         <div class="w-100 d-flex mt-4">
                                             <div class="col-md-8 coupon-code ps-0">
                                                 <div class=" align-items-center d-flex">
-                                                    <div>
+                                                    {{-- <div>
                                                         <span class="coupon-code-label"><img class="img-fluid"
                                                                 src="/theme/img/Vector.png"
                                                                 class="img-fluid">&nbsp;&nbsp;Coupon
@@ -195,7 +195,7 @@
                                                                 Apply Coupon
                                                             </button>
                                                         </span>
-                                                    </div>
+                                                    </div> --}}
                                                 </div>
                                             </div>
                                             <div class="col-md-4 p-0">
