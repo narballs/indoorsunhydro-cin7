@@ -229,7 +229,7 @@
                                                             class="edit a_class" title="" data-toggle="tooltip"
                                                             data-original-title="Edit">Edit
                                                         </a>
-                                                        @if ($contact->status != 0)
+                                                        @if ($contact->status != 0 && ($contact->contact_id != null || $contact->secondary_id != null))
                                                             <a class="dropdown-item"href="{{ url('admin/user-switch/' . $user->id . '/' . $contact_switch_id) }}"
                                                                 class="edit a_class" title="" data-toggle="tooltip"
                                                                 data-original-title="Edit">Switch User
