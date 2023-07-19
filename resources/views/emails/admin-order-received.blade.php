@@ -376,228 +376,230 @@
     </table>
 </body> --}}
 
-<body padding="2" bgcolor="#000000" style="background-color: #000000;padding-top:2rem;padding:2rem;">
+<body padding="2" bgcolor="#000000" style="background-color: #000000;padding-top:2rem;padding:2rem;width:100%;">
     <table padding="2" bgcolor="#FFFFFF" style="background-color:#FFFFFF;border-radius:5px;" width="60%" border="0" align="center" cellpadding="7">
-        <tr>
-            <td>
-                <table width="100%" border="0" align="center">
-                    <tr>
-                        <td align="" style="text-align: center;">
-                            <img class="img-fluid "
-                                src="{{ asset('https://stage.indoorsunhydro.com/theme/img/email/approve_icon.png') }}">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td align="" style="text-align: center;color:#000000;font-color:#000000;font-size: 18px;font-weight:bold;">
-                            We received your order!
-                        </td>
-                    </tr>
-                    <tr>
-                        <td align="" style="text-align: center;color:#000000;font-color:#000000;font-size: 11px;font-weight:400;">
-                            Your order #{{ $addresses['order_id'] }} is completed and ready to ship
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        
-        <tr>
-            <td>
-                <table width="100%" align="left" border="0">
-                    <tr>
-                        <td width="60%">
-                            <table border="0" width="100%">
-                                <thead>
-                                    <tr>
-                                        <td style="color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
-                                            SHIPPING ADDRESS
-                                        </td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
-                                            {{ $addresses['billing_address']['firstName'] .' ' . ' '.$addresses['billing_address']['lastName'] }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
-                                            @if ($addresses['billing_address']['address1'] != null)
-                                            {{$addresses['billing_address']['address1']}}
-                                            @endif
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
-                                            @if ($addresses['billing_address']['address2'] != null)
-                                            {{$addresses['billing_address']['address2']}}
-                                            @endif
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
-                                            @if ($addresses['billing_address']['city'] != null)
-                                            {{$addresses['billing_address']['city']}}
-                                            @endif
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
-                                            @if ($addresses['billing_address']['state'] != null)
-                                            {{$addresses['billing_address']['state']}}
-                                            @endif
-                                        </td>
-                                    </tr>
-                                    <tr style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
-                                        <td>
-                                            @if ($addresses['billing_address']['zip'] != null)
-                                            {{$addresses['billing_address']['zip']}}
-                                            @endif
-                                        </td>
-                                    </tr>
-                                    <tr style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
-                                        <td>
-                                            @if ($addresses['billing_address']['mobile'] != null)
-                                            {{$addresses['billing_address']['mobile']}}
-                                            @endif
-                                        </td>
-                                    </tr>
-                                    <tr style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
-                                        <td>
-                                            @if ($addresses['billing_address']['phone'] != null)
-                                            {{$addresses['billing_address']['phone']}}
-                                            @endif
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </td>
-                        <td align="right" width="20" style="vertical-align:top;">
-                            <table border="0" width="100%">
-                                <thead>
-                                    <tr>
-                                        <td style="color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
-                                            PAYMENT INFO
-                                        </td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
-                                            {{ $addresses['currentOrder']['paymentTerms'] }}
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        
-        <tr>
-            <td style="color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
-                Order Items
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <table width="100%" align="left" border="0">
-                    @foreach ($order_items as $item)
-                        @foreach ($item['product']->options as $option)
-                            <tr>
-                                <td width="20%">
-                                    <img src="{{ asset($option->image) }}" width="55" height="49" alt="" style="border:5px solid #d9d9d9;border-radius:2px;">
-                                </td>
-                                <td>
-                                    <table width="100%" align="left" border="0">
+        <tbody>
+            <tr>
+                <td>
+                    <table width="100%" border="0" align="center">
+                        <tr>
+                            <td align="" style="text-align: center;">
+                                <img class="img-fluid "
+                                    src="{{ asset('https://stage.indoorsunhydro.com/theme/img/email/approve_icon.png') }}">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="" style="text-align: center;color:#000000;font-color:#000000;font-size: 18px;font-weight:bold;">
+                                We received your order!
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="" style="text-align: center;color:#000000;font-color:#000000;font-size: 11px;font-weight:400;">
+                                Your order #{{ $addresses['order_id'] }} is completed and ready to ship
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            
+            <tr>
+                <td>
+                    <table width="100%" align="left" border="0">
+                        <tr>
+                            <td width="60%">
+                                <table border="0" width="100%">
+                                    <thead>
                                         <tr>
-                                            <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">{{ $item['product']->name }}</td>
+                                            <td style="color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
+                                                SHIPPING ADDRESS
+                                            </td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
+                                                {{ $addresses['billing_address']['firstName'] .' ' . ' '.$addresses['billing_address']['lastName'] }}
+                                            </td>
                                         </tr>
                                         <tr>
-                                            <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">SKU: {{ $item['product']->code }}</span></td>
+                                            <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
+                                                @if ($addresses['billing_address']['address1'] != null)
+                                                {{$addresses['billing_address']['address1']}}
+                                                @endif
+                                            </td>
                                         </tr>
-                                    </table>
-                                </td>
-                                <td width="20%" style="text-align: right;vertical-align:top;color:#000000;font-color:#000000;font-size: 12px; font-weight:400; ">{{ '$'. number_format($item->price, 2) }}</td>
-                            </tr>
-                            
+                                        <tr>
+                                            <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
+                                                @if ($addresses['billing_address']['address2'] != null)
+                                                {{$addresses['billing_address']['address2']}}
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
+                                                @if ($addresses['billing_address']['city'] != null)
+                                                {{$addresses['billing_address']['city']}}
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
+                                                @if ($addresses['billing_address']['state'] != null)
+                                                {{$addresses['billing_address']['state']}}
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        <tr style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
+                                            <td>
+                                                @if ($addresses['billing_address']['zip'] != null)
+                                                {{$addresses['billing_address']['zip']}}
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        <tr style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
+                                            <td>
+                                                @if ($addresses['billing_address']['mobile'] != null)
+                                                {{$addresses['billing_address']['mobile']}}
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        <tr style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
+                                            <td>
+                                                @if ($addresses['billing_address']['phone'] != null)
+                                                {{$addresses['billing_address']['phone']}}
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                            <td align="right" width="20" style="vertical-align:top;">
+                                <table border="0" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <td style="color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
+                                                PAYMENT INFO
+                                            </td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
+                                                {{ $addresses['currentOrder']['paymentTerms'] }}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            
+            <tr>
+                <td style="color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
+                    Order Items
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table width="100%" align="left" border="0">
+                        @foreach ($order_items as $item)
+                            @foreach ($item['product']->options as $option)
+                                <tr>
+                                    <td width="20%">
+                                        <img src="{{ asset($option->image) }}" width="55" height="49" alt="" style="border:5px solid #d9d9d9;border-radius:2px;">
+                                    </td>
+                                    <td>
+                                        <table width="100%" align="left" border="0">
+                                            <tr>
+                                                <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">{{ $item['product']->name }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">SKU: {{ $item['product']->code }}</span></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td width="20%" style="text-align: right;vertical-align:top;color:#000000;font-color:#000000;font-size: 12px; font-weight:400; ">{{ '$'. number_format($item->price, 2) }}</td>
+                                </tr>
+                                
+                            @endforeach
                         @endforeach
-                    @endforeach
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <table width="100%" border="0">
-                    <tr>
-                        <td width="50%" style="color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
-                            Sub Total
-                        </td>
-                        <td align="right" style="text-align: right;color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
-                            @php
-                                $sub_total = 0;
-                                foreach ($order_items as $item) {
-                                    $sub_total += $item->price;
-                                }
-                            @endphp
-                            {{'$'. number_format($sub_total, 2) }}
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <table width="100%" border="0">
-                    <tr>
-                        <td width="50%" style="color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
-                            @php
-                                $taxt_rate = 0;
-                                foreach ($order_items as $order_item) {
-                                    $taxt_rate = $order_item->order->texClasses->name;
-                                }
-                            @endphp
-                            Tax ({{ $taxt_rate }})
-                        </td>
-                        <td align="right" style="text-align: right;color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
-                            @php
-                                $tax = 0;
-                                foreach ($order_items as $item) {
-                                    $tax += ($item->price * $item->order->texClasses->rate) / 100;
-                                }
-                            @endphp
-                            {{'$'. number_format($tax, 2) }}
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <table width="100%" border="0">
-                    <tr>
-                        <td width="50%" style="color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
-                            Total
-                        </td>
-                        <td align="right" style="text-align: right;color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
-                            @php
-                                $total = 0;
-                                foreach ($order_items as $item) {
-                                    $total = $item['order']->total_including_tax;
-                                }
-                            @endphp
-                            {{ '$'.number_format($total, 2) }}
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td align="center">
-                <img src="{{ asset('https://stage.indoorsunhydro.com/theme/img/email/email_template.png') }}" alt="">
-            </td>
-        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table width="100%" border="0">
+                        <tr>
+                            <td width="50%" style="color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
+                                Sub Total
+                            </td>
+                            <td align="right" style="text-align: right;color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
+                                @php
+                                    $sub_total = 0;
+                                    foreach ($order_items as $item) {
+                                        $sub_total += $item->price;
+                                    }
+                                @endphp
+                                {{'$'. number_format($sub_total, 2) }}
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table width="100%" border="0">
+                        <tr>
+                            <td width="50%" style="color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
+                                @php
+                                    $taxt_rate = 0;
+                                    foreach ($order_items as $order_item) {
+                                        $taxt_rate = $order_item->order->texClasses->name;
+                                    }
+                                @endphp
+                                Tax ({{ $taxt_rate }})
+                            </td>
+                            <td align="right" style="text-align: right;color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
+                                @php
+                                    $tax = 0;
+                                    foreach ($order_items as $item) {
+                                        $tax += ($item->price * $item->order->texClasses->rate) / 100;
+                                    }
+                                @endphp
+                                {{'$'. number_format($tax, 2) }}
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table width="100%" border="0">
+                        <tr>
+                            <td width="50%" style="color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
+                                Total
+                            </td>
+                            <td align="right" style="text-align: right;color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
+                                @php
+                                    $total = 0;
+                                    foreach ($order_items as $item) {
+                                        $total = $item['order']->total_including_tax;
+                                    }
+                                @endphp
+                                {{ '$'.number_format($total, 2) }}
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td align="center">
+                    <img src="{{ asset('https://stage.indoorsunhydro.com/theme/img/email/email_template.png') }}" alt="">
+                </td>
+            </tr>
+        </tbody>
     </table>
 </body>
 
