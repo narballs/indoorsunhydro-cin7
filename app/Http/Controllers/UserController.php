@@ -733,7 +733,7 @@ class UserController extends Controller
             $contact_ids = Contact::whereIn('id', $all_ids)
                 ->pluck('contact_id')
                 ->toArray();
-            $user_orders_query = ApiOrder::whereIn('memberId', $contact_ids)
+            $user_orders_query = ApiOrder::with(['createdby'])->whereIn('memberId', $contact_ids)
                 ->with('contact' , function($query) {
                     $query->orderBy('company');
                 })
@@ -751,7 +751,7 @@ class UserController extends Controller
                 }
 
             } else {
-                $user_orders = $user_orders_query->paginate(10);
+                $user_orders = $user_orders_query->orderBy('created_at' , 'Desc')->paginate(10);
             }
             
             $custom_roles_with_company = DB::table('custom_roles')
