@@ -26,6 +26,7 @@ use App\Models\ApiOrder;
 use App\Models\User;
 
 use App\Helpers\UtilHelper;
+use App\Models\ApiOrderItem;
 use App\Models\ProductStock;
 
 use Illuminate\Database\Eloquent\Builder;
@@ -1308,6 +1309,134 @@ class ProductController extends Controller
                         "product_id" => $productOption->products->product_id,
                         "name" => $productOption->products->name,
                         "quantity" => $request->quantity,
+                        "price" => $price,
+                        "code" => $productOption->code,
+                        "image" => $productOption->image,
+                        'option_id' => $productOption->option_id,
+                        "slug" => $productOption->products->slug,
+                        "cart_hash" => session()->get('cart_hash')
+                    ];
+                    $cart[$id]['user_id'] = $user_id;
+                    $cart[$id]['is_active'] = 1;
+                    $cart[$id]['qoute_id'] = $id;
+
+                    $qoute = Cart::create($cart[$id]);
+                }
+
+                $request->session()->put('cart', $cart);
+                $cart_items = session()->get('cart');
+            }
+            return response()->json([
+                'status' => 'success',
+                'cart_items' => $cart_items,
+                'cart' => $cart,
+            ]);
+        }
+    }
+
+    // order buyed items again 
+    public function order_items(Request $request , $id) {
+        $order_items = ApiOrder::with('apiOrderItem' , 'apiOrderItem.product')->where('id' , $id)->first();
+        return response()->json([
+            'status' => 'success',
+            'order_items' => $order_items
+        ],200);  
+    }
+
+    //buy again items to cart and checkout
+
+    public function buy_again_order_items(Request $request)
+    {
+        if (!empty($request->ordered_products)) {
+            foreach ($request->ordered_products as $orderProducts) {
+                $id = $orderProducts['product_id'];
+                $option_id = $orderProducts['option_id'];
+                $quantity = $orderProducts['quantity'];
+
+                $productOption = ProductOption::where('option_id', $option_id)->with('products.options.price')->first();
+                $cart = session()->get('cart');
+                if (Auth::id() !== null) {
+                    $user_id = Auth::id();
+                } else {
+                    $user_id = '';
+                }
+
+                $contact_id = '';
+                $secondary_id = '';
+
+                if ($user_id) {
+                    $contact = Contact::where('user_id', $user_id)->first();
+                    $contact_id = $contact->contact_id;
+                    $secondary_id = $contact->secondary_id;
+                }
+
+                if ($contact_id || $secondary_id) {
+                    $pricing = $contact->priceColumn;
+                }
+
+                if (!empty($user_id) && !empty($contact_id || $secondary_id)) {
+                    foreach ($productOption->products->options as $option) {
+                        foreach ($option->price as $price) {
+
+                            if ($pricing == 'RetailUSD') {
+
+                                $price = $price['retailUSD'];
+                            } elseif ($pricing == 'WholesaleUSD') {
+                                $price = $price['wholesaleUSD'];
+                            } elseif ($pricing == 'TerraInternUSD') {
+                                $price = $price['terraInternUSD'];
+                            } elseif ($pricing == 'SacramentoUSD') {
+                                $price = $price['sacramentoUSD'];
+                            } elseif ($pricing == 'OklahomaUSD') {
+                                $price = $price['oklahomaUSD'];
+                            } elseif ($pricing == 'CalaverasUSD') {
+                                $price = $price['calaverasUSD'];
+                            } elseif ($pricing == 'Tier1USD') {
+                                $price = $price['tier1USD'];
+                            } elseif ($pricing == 'Tier2USD') {
+                                $price = $price['tier2USD'];
+                            } elseif ($pricing == 'Tier3USD') {
+                                $price = $price['tier3USD'];
+                            } elseif ($pricing == 'ComercialOkUSD') {
+                                $price = $price['commercialOKUSD'];
+                            } elseif ($pricing == 'CostUSD') {
+                                $price = $price['costUSD'];
+                            } else {
+                                $price = $price['retailUSD'];
+                            }
+                        }
+                    }
+                } else {
+                    foreach ($productOption->products->options as $option) {
+                        foreach ($option->price as $price) {
+                            $price = $price['retailUSD'];
+                        }
+                    }
+                }
+
+                if (isset($cart[$id])) {
+                    $hash_cart = session()->get('cart_hash');
+                    $product_in_active_cart = Cart::where('qoute_id', $id)->first();
+                    if ($product_in_active_cart) {
+                        $current_quantity = $product_in_active_cart->quantity;
+                        $product_in_active_cart->quantity = $current_quantity + $quantity;
+                        $product_in_active_cart->save();
+                    }
+                    $cart[$id]['quantity'] += $quantity;
+                } else {
+
+                    $hash_cart = $request->session()->get('cart_hash');
+                    $cart_hash_exist = session()->has('cart_hash');
+
+
+                    if ($cart_hash_exist == false) {
+                        $request->session()->put('cart_hash', Str::random(10));
+                    }
+
+                    $cart[$id] = [
+                        "product_id" => $productOption->products->product_id,
+                        "name" => $productOption->products->name,
+                        "quantity" => $quantity,
                         "price" => $price,
                         "code" => $productOption->code,
                         "image" => $productOption->image,
