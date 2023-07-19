@@ -85,7 +85,7 @@
                                                             <p class="order_place_my_account">
                                                                 TOTAL <br>
                                                                 <span class="total_price_my_account">
-                                                                    ${{ number_format($user_order->total, 2) }}
+                                                                    ${{ number_format($user_order->total_including_tax, 2) }}
                                                                 </span>
                                                             </p>
 
@@ -228,13 +228,13 @@
                                                     </div>
                                                     @if (count($user_order->apiOrderItem) > 1)
                                                         <div class="col-md-5 text-right">
-                                                            {{-- <button type="button" class="btn all_items_to_cart_btn ">
+                                                            <button type="button" class="btn all_items_to_cart_btn" onclick="add_products_to_cart({{$user_order->id}})">
                                                                 Add
                                                                 all
                                                                 items
                                                                 to
                                                                 Cart
-                                                            </button> --}}
+                                                            </button>
                                                             <br>
                                                             <a href="{{ url('my-account/my-order-detail/' . $user_order->id) }}"
                                                                 class="btn my_account_view_order_btn my-1">View
@@ -251,6 +251,14 @@
                                                             <button type="button"
                                                                 class="btn return_or_replace_items_btn my-1">Return
                                                                 or replace items</button> <br> --}}
+                                                            <button type="button" class="btn all_items_to_cart_btn" onclick="add_products_to_cart({{$user_order->id}})">
+                                                                Add
+                                                                all
+                                                                items
+                                                                to
+                                                                Cart
+                                                            </button>
+                                                            <br>
                                                             <a href="{{ url('my-account/my-order-detail/' . $user_order->id) }}"
                                                                 class="btn return_or_replace_items_btn my-1">View
                                                                 Order Details</a>

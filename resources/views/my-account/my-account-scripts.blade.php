@@ -929,6 +929,268 @@
         }
 
     }
+    //main multi function 
+    function handlePerPage() {
+        var per_page = jQuery('#per_page_favorite').val();
+        var basic_url = `/my-account/my-favorites`;
+        if (per_page != '') {
+        basic_url = basic_url+`?per_page=${per_page}`;
+        }
+        window.location.href = basic_url
+    }
+    //main multi function 
+    function add_multi_to_cart(all_fav) {
+        $.ajax({
+            url: "{{ url('/multi-favorites-to-cart/') }}",
+            method: 'post',
+            data: {
+                "_token": "{{ csrf_token() }}",
+                all_fav: all_fav,
+                quantity: 1
+            },
+            success: function(response) {
+                if (response.status == 'success') {
+                    var cart_items = response.cart_items;
+                    var cart_total = 0;
+                    var total_cart_quantity = 0;
+
+                    for (var key in cart_items) {
+                        var item = cart_items[key];
+
+                        var product_id = item.prd_id;
+                        var price = parseFloat(item.price);
+                        var quantity = parseFloat(item.quantity);
+
+                        var subtotal = parseFloat(price * quantity);
+                        var cart_total = cart_total + subtotal;
+                        var total_cart_quantity = total_cart_quantity + quantity;
+                        $('#subtotal_' + product_id).html('$' + subtotal);
+                    }
+                    $('#top_cart_quantity').html(total_cart_quantity);
+                    $('#cart_items_quantity').html(total_cart_quantity);
+                    $('#topbar_cart_total').html('$' + parseFloat(cart_total).toFixed(2));
+                    var total = document.getElementById('#top_cart_quantity');
+                    Swal.fire({
+                        toast: true,
+                        icon: 'success',
+                        title: 'Product(s) added to cart successfully',
+                        timer: 2000,
+                        showConfirmButton: false,
+                        position: 'top',
+                        timerProgressBar: true
+                    });
+                }
+            }
+        });
+    }
+    //add all favorites to cart
+    function add_all_to_cart() {
+        var all_fav = [];
+        var all_check = $('.single_fav_check');
+        all_check.each(function() {
+            var id = $(this).attr('id');
+            var id = id.split('_');
+            var product_id = id[1];
+            var option_id = id[2];
+            all_fav.push({
+                product_id: product_id,
+                option_id: option_id
+            });
+        });
+        add_multi_to_cart(all_fav);
+    }
+    //add selected favorites to cart
+    function add_selected_to_cart() {
+        var selected_check = $('.single_fav_check:checked');
+        if (selected_check.length == 0) {
+            Swal.fire({
+                toast: true,
+                icon: 'error',
+                title: 'Please select at least one product to add it into your cart.',
+                timer: 1000,
+                showConfirmButton: false,
+                position: 'top',
+                timerProgressBar: true
+            });
+        } else {
+            var all_fav = [];
+            selected_check.each(function() {
+                if ($(this).is(':checked')) {
+                    var id = $(this).attr('id');
+                    var id = id.split('_');
+                    var product_id = id[1];
+                    var option_id = id[2];
+                    all_fav.push({
+                        product_id: product_id,
+                        option_id: option_id
+                    });
+                }
+            });
+            add_multi_to_cart(all_fav);
+            setTimeout(() => {
+                selected_check.prop('checked', false);
+            }, 1000);
+        }
+    }
+
+    function remove_from_favorite(id) {
+        var product_buy_list_id = id;
+        var option_id = $(this).attr('data-option');
+        var contact_id = $(this).attr('data-contact');
+        var user_id = $(this).attr('data-user');
+        var list_id = $(this).attr('data-list');
+        var title = $(this).attr('data-title');
+        $.ajax({
+            url: "{{ url('/delete/favorite/product') }}",
+            method: 'post',
+            data: {
+                "_token": "{{ csrf_token() }}",
+                product_buy_list_id,
+                option_id,
+                contact_id,
+                user_id,
+                list_id,
+                title
+            },
+            success: function(response) {
+                if (response.status == 'success') {
+                    wishLists();
+                    Swal.fire('Success!', 'Product removed from your favorites.');
+                }
+            }
+        });
+    }
+
+    function add_favorite_to_cart(id, option_id) {
+        jQuery.ajax({
+            url: "{{ url('/add-to-cart/') }}",
+            method: 'post',
+            data: {
+                "_token": "{{ csrf_token() }}",
+                p_id: id,
+                option_id: option_id,
+                quantity: 1,
+            },
+            success: function(response) {
+                if (response.status == 'success') {
+                    var cart_items = response.cart_items;
+                    var cart_total = 0;
+                    var total_cart_quantity = 0;
+
+                    for (var key in cart_items) {
+                        var item = cart_items[key];
+
+                        var product_id = item.prd_id;
+                        var price = parseFloat(item.price);
+                        var quantity = parseFloat(item.quantity);
+
+                        var subtotal = parseFloat(price * quantity);
+                        var cart_total = cart_total + subtotal;
+                        var total_cart_quantity = total_cart_quantity + quantity;
+                        $('#subtotal_' + product_id).html('$' + subtotal);
+                        var product_name = document.getElementById('prd_name_' + id).value;
+                    }
+
+                    Swal.fire({
+                        toast: true,
+                        icon: 'success',
+                        title: quantity + ' X ' + document.getElementById('prd_name_' + id).value +
+                            ' added to your cart',
+                        timer: 3000,
+                        showConfirmButton: false,
+                        position: 'top',
+                        timerProgressBar: true
+                    });
+                }
+                $('#top_cart_quantity').html(total_cart_quantity);
+
+                $('#cart_items_quantity').html(total_cart_quantity);
+                $('#topbar_cart_total').html('$' + parseFloat(cart_total).toFixed(2));
+                var total = document.getElementById('#top_cart_quantity');
+            }
+        });
+    }
+    // buy again functionality 
+    function add_products_to_cart(order_id) {
+        $.ajax({
+            url: '/order/items/' + order_id,
+            method: 'get',
+            success: function(response) {
+                if(response.status == 'success') {
+                    if(response.order_items != null) {
+                        var ordered_products = [];
+                        response.order_items.api_order_item.forEach(function(item) {
+                            console.log(item);
+                            ordered_products.push({
+                                product_id: item.product.id,
+                                option_id: item.option_id,
+                                quantity: item.quantity
+                            });
+                        });
+                        buy_items_again(ordered_products);
+                    } else {
+                        Swal.fire({
+                            toast: true,
+                            icon: 'error',
+                            title: 'Something went wrong',
+                            timer: 2000,
+                            showConfirmButton: false,
+                            position: 'top',
+                            timerProgressBar: true
+                        });
+                    }
+                    
+                }
+            }
+        });
+    }
+
+    function buy_items_again(ordered_products) {
+        $.ajax({
+            url: "{{ url('/buy/order/items/') }}",
+            method: 'post',
+            data: {
+                "_token": "{{ csrf_token() }}",
+                ordered_products: ordered_products,
+                // quantity: 1
+            },
+            success: function(response) {
+                if (response.status == 'success') {
+                    var cart_items = response.cart_items;
+                    var cart_total = 0;
+                    var total_cart_quantity = 0;
+
+                    for (var key in cart_items) {
+                        var item = cart_items[key];
+
+                        var product_id = item.prd_id;
+                        var price = parseFloat(item.price);
+                        var quantity = parseFloat(item.quantity);
+
+                        var subtotal = parseFloat(price * quantity);
+                        var cart_total = cart_total + subtotal;
+                        var total_cart_quantity = total_cart_quantity + quantity;
+                        $('#subtotal_' + product_id).html('$' + subtotal);
+                    }
+                    $('#top_cart_quantity').html(total_cart_quantity);
+                    $('#cart_items_quantity').html(total_cart_quantity);
+                    $('#topbar_cart_total').html('$' + parseFloat(cart_total).toFixed(2));
+                    var total = document.getElementById('#top_cart_quantity');
+                    Swal.fire({
+                        toast: true,
+                        icon: 'success',
+                        title: 'Product(s) added to cart successfully',
+                        timer: 2000,
+                        showConfirmButton: false,
+                        position: 'top',
+                        timerProgressBar: true
+                    });
+                    window.location.href = '/checkout';
+                }
+            }
+        });
+    }
+   
 </script>
 
 
