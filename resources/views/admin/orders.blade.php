@@ -128,8 +128,12 @@
                                     <td>
                                         <span class="d-flex table-row-item"> Primary Account Email</span>
                                     </td>
+                                    
                                     <td>
                                         <span class="d-flex table-row-item"> Order Total </span>
+                                    </td>
+                                    <td>
+                                        <span class="d-flex table-row-item"> Tax </span>
                                     </td>
                                     <td>
                                         <span class="d-flex table-row-item"> Company Name </span>
@@ -206,8 +210,8 @@
                                                     {{ $order->contact->email }}
                                                 @endif
                                             </td>
-                                            <td class="created_by_order_total td_padding_row">
-                                                ${{ number_format($order->total, 2) }}</td>
+                                            <td class="created_by_order_total td_padding_row">${{ number_format($order->total_including_tax, 2) }}</td>
+                                            <td class="created_by_order_total td_padding_row">{{ number_format($order->texClasses->rate, 2) }}% </td>
                                             <td class="td_padding_row">
                                                 @if ($order->contact)
                                                     @if ($order->contact->company)

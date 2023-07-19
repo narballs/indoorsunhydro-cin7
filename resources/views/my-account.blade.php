@@ -18,7 +18,6 @@
                     <ul class="nav ">
                         <li class="text-center">
                             <select id="handle_sort_by" name="sort_by" class="py-1" onchange="handleSortBY()">
-                                <option value="">Sort by</option>
                                 <option value="recent" {{ $sort_by }} {{ isset($sort_by) && $sort_by=='recent' ? 'selected="selected"' : ''
                                     }}>Recent</option>
                                 <option value="amount" {{ $sort_by }} {{ isset($sort_by) && $sort_by=='amount' ? 'selected="selected"' : ''
@@ -126,8 +125,16 @@
                                                             <p class="order_place_my_account">
                                                                 Submitter <br>
                                                                 <span class="shipping_to_my_account">
-                                                                    @if(!empty($user_order->contact->firstName)){{$user_order->contact->firstName}}@endif 
-                                                                    @if(!empty($user_order->contact->lastName)){{ \Illuminate\Support\Str::limit($user_order->contact->lastName, 6) }}@endif 
+                                                                    @if (!empty($user_order->primaryId) && !empty($user_order->primary_contact))
+                                                                        {{ $user_order->primary_contact->firstName }}
+                                                                        {{ \Illuminate\Support\Str::limit($user_order->primary_contact->lastName, 6) }}
+                                                                    @elseif (!empty($user_order->secondaryId) && !empty($user_order->secondary_contact))
+                                                                        {{ $user_order->secondary_contact->firstName }}
+                                                                        {{ \Illuminate\Support\Str::limit($user_order->secondary_contact->lastName, 6) }}
+                                                                    @elseif (!empty($user_order->contact))
+                                                                        {{ $user_order->contact->firstName }}
+                                                                        {{ \Illuminate\Support\Str::limit($user_order->contact->lastName, 6) }}
+                                                                    @endif
                                                                 </span>
                                                             </p>
                                                         </span>
