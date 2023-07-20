@@ -84,8 +84,7 @@ class SyncSuppliers extends Command
             try {
                 $res = $client2->request(
                     'GET',
-                    'https://api.cin7.com/api/v1/Contacts?rows=250&page=' . $i,
-                    //'https://api.cin7.com/api/v1/Contacts?rows=250&where=modifieddate>='.$formattedDateSting.'&page='.$i,
+                    'https://api.cin7.com/api/v1/Contacts?rows=250&where=modifieddate>=' . $formattedDateSting . '&page=' . $i,
 
                     [
                         'auth' => [
