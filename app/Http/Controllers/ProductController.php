@@ -628,7 +628,6 @@ class ProductController extends Controller
 
     public function addToCart(Request $request)
     {
-
         $id = $request->p_id;
         $option_id = $request->option_id;
 
@@ -640,56 +639,10 @@ class ProductController extends Controller
             $user_id = '';
         }
 
-        $contact_id = '';
-        $secondary_id = '';
-
-        if ($user_id) {
-            $contact = Contact::where('user_id', $user_id)->first();
-            $contact_id = $contact->contact_id;
-            $secondary_id = $contact->secondary_id;
-        }
-
-        if ($contact_id || $secondary_id) {
-            $pricing = $contact->priceColumn;
-        }
-
-        if (!empty($user_id) && !empty($contact_id || $secondary_id)) {
-            foreach ($productOption->products->options as $option) {
-                foreach ($option->price as $price) {
-
-                    if ($pricing == 'RetailUSD') {
-
-                        $price = $price['retailUSD'];
-                    } elseif ($pricing == 'WholesaleUSD') {
-                        $price = $price['wholesaleUSD'];
-                    } elseif ($pricing == 'TerraInternUSD') {
-                        $price = $price['terraInternUSD'];
-                    } elseif ($pricing == 'SacramentoUSD') {
-                        $price = $price['sacramentoUSD'];
-                    } elseif ($pricing == 'OklahomaUSD') {
-                        $price = $price['oklahomaUSD'];
-                    } elseif ($pricing == 'CalaverasUSD') {
-                        $price = $price['calaverasUSD'];
-                    } elseif ($pricing == 'Tier1USD') {
-                        $price = $price['tier1USD'];
-                    } elseif ($pricing == 'Tier2USD') {
-                        $price = $price['tier2USD'];
-                    } elseif ($pricing == 'Tier3USD') {
-                        $price = $price['tier3USD'];
-                    } elseif ($pricing == 'ComercialOkUSD') {
-                        $price = $price['commercialOKUSD'];
-                    } elseif ($pricing == 'CostUSD') {
-                        $price = $price['costUSD'];
-                    } else {
-                        $price = $price['retailUSD'];
-                    }
-                }
-            }
-        } else {
-            foreach ($productOption->products->options as $option) {
-                foreach ($option->price as $price) {
-                    $price = $price['retailUSD'];
-                }
+        $user_price_column = UserHelper::getUserPriceColumn();
+        foreach ($productOption->products->options as $option) {
+            foreach ($option->price as $price) {
+                $price = isset($price[$user_price_column]) ? $price[$user_price_column] : 0;
             }
         }
 
@@ -762,20 +715,23 @@ class ProductController extends Controller
         $cart_items = $request->session()->get('cart');
         $user_id = auth()->id();
 
-        $company  = session()->get('company');
+        $company = session()->get('company');
         $contact_id = session()->get('contact_id');
-        if (!empty($user_id)) {
-            $contact = Contact::where('user_id', $user_id)->first();
-        }
+        
         if (!empty($user_id) && !empty($contact_id)) {
-            $contact = Contact::where('user_id', $user_id)->where('contact_id', $contact_id)->orWhere('secondary_id', $contact_id)->first();
+            $contact = Contact::where('user_id', $user_id)->where('contact_id', $contact_id)
+                ->orWhere('secondary_id', $contact_id)
+                ->first();
+            
         }else {
             $contact = Contact::where('user_id', $user_id)->first();
         }
+        
+        if (empty($contact)) {
+            abort(404);
+        }
 
-        // $tax_class = TaxClass::where('is_default', 1)->first();
         $tax_class = TaxClass::where('name', $contact->tax_class)->first();
-
 
         if (!empty($cart_items)) {
             $view = 'cart';
@@ -1246,43 +1202,10 @@ class ProductController extends Controller
                     $pricing = $contact->priceColumn;
                 }
 
-                if (!empty($user_id) && !empty($contact_id || $secondary_id)) {
-                    foreach ($productOption->products->options as $option) {
-                        foreach ($option->price as $price) {
-
-                            if ($pricing == 'RetailUSD') {
-
-                                $price = $price['retailUSD'];
-                            } elseif ($pricing == 'WholesaleUSD') {
-                                $price = $price['wholesaleUSD'];
-                            } elseif ($pricing == 'TerraInternUSD') {
-                                $price = $price['terraInternUSD'];
-                            } elseif ($pricing == 'SacramentoUSD') {
-                                $price = $price['sacramentoUSD'];
-                            } elseif ($pricing == 'OklahomaUSD') {
-                                $price = $price['oklahomaUSD'];
-                            } elseif ($pricing == 'CalaverasUSD') {
-                                $price = $price['calaverasUSD'];
-                            } elseif ($pricing == 'Tier1USD') {
-                                $price = $price['tier1USD'];
-                            } elseif ($pricing == 'Tier2USD') {
-                                $price = $price['tier2USD'];
-                            } elseif ($pricing == 'Tier3USD') {
-                                $price = $price['tier3USD'];
-                            } elseif ($pricing == 'ComercialOkUSD') {
-                                $price = $price['commercialOKUSD'];
-                            } elseif ($pricing == 'CostUSD') {
-                                $price = $price['costUSD'];
-                            } else {
-                                $price = $price['retailUSD'];
-                            }
-                        }
-                    }
-                } else {
-                    foreach ($productOption->products->options as $option) {
-                        foreach ($option->price as $price) {
-                            $price = $price['retailUSD'];
-                        }
+                $user_price_column = UserHelper::getUserPriceColumn();
+                foreach ($productOption->products->options as $option) {
+                    foreach ($option->price as $price) {
+                        $price = isset($price[$user_price_column]) ? $price[$user_price_column] : 0;
                     }
                 }
 
@@ -1374,43 +1297,10 @@ class ProductController extends Controller
                     $pricing = $contact->priceColumn;
                 }
 
-                if (!empty($user_id) && !empty($contact_id || $secondary_id)) {
-                    foreach ($productOption->products->options as $option) {
-                        foreach ($option->price as $price) {
-
-                            if ($pricing == 'RetailUSD') {
-
-                                $price = $price['retailUSD'];
-                            } elseif ($pricing == 'WholesaleUSD') {
-                                $price = $price['wholesaleUSD'];
-                            } elseif ($pricing == 'TerraInternUSD') {
-                                $price = $price['terraInternUSD'];
-                            } elseif ($pricing == 'SacramentoUSD') {
-                                $price = $price['sacramentoUSD'];
-                            } elseif ($pricing == 'OklahomaUSD') {
-                                $price = $price['oklahomaUSD'];
-                            } elseif ($pricing == 'CalaverasUSD') {
-                                $price = $price['calaverasUSD'];
-                            } elseif ($pricing == 'Tier1USD') {
-                                $price = $price['tier1USD'];
-                            } elseif ($pricing == 'Tier2USD') {
-                                $price = $price['tier2USD'];
-                            } elseif ($pricing == 'Tier3USD') {
-                                $price = $price['tier3USD'];
-                            } elseif ($pricing == 'ComercialOkUSD') {
-                                $price = $price['commercialOKUSD'];
-                            } elseif ($pricing == 'CostUSD') {
-                                $price = $price['costUSD'];
-                            } else {
-                                $price = $price['retailUSD'];
-                            }
-                        }
-                    }
-                } else {
-                    foreach ($productOption->products->options as $option) {
-                        foreach ($option->price as $price) {
-                            $price = $price['retailUSD'];
-                        }
+                $user_price_column = UserHelper::getUserPriceColumn();
+                foreach ($productOption->products->options as $option) {
+                    foreach ($option->price as $price) {
+                        $price = isset($price[$user_price_column]) ? $price[$user_price_column] : 0;
                     }
                 }
 

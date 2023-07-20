@@ -566,13 +566,16 @@ class UserController extends Controller
 
     public function logout()
     {
-        Auth::logout();
+        
         Session::forget('contact_id');
         Session::forget('company');
         Session::forget('companies');
         Session::forget('cart');
         Session::forget('logged_in_as_another_user');
         Session::flush();
+
+        Auth::logout();
+
         return redirect()->route('user');
     }
 
