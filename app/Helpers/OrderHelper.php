@@ -114,7 +114,7 @@ class OrderHelper {
                 "currencyRate" => 59.0,
                 "currencySymbol" => "$",
                 
-                "taxStatus" => $order->texClasses->name,
+                "taxStatus" => 1,
                 "taxRate" => $order->texClasses->rate,
 
                 "source" => "sample string 62",
@@ -125,9 +125,9 @@ class OrderHelper {
                 ],
                 "memberEmail" => "wqszeeshan@gmail.com",
                 "memberCostCenter" => "sample string 6",
-                "memberAlternativeTaxRate" => "",
+                "memberAlternativeTaxRate" => $order->texClasses->name,
                 "costCenter" => null,
-                "alternativeTaxRate" => $order->texClasses->rate,
+                "alternativeTaxRate" => $order->texClasses->name,
                 "estimatedDeliveryDate" => $order->date,
                 "salesPersonId" => 10,
                 "salesPersonEmail" => "wqszeeshan@gmail.com",
