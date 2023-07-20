@@ -262,7 +262,7 @@ $cart_price = 0;
                 </div>
                 <div class="col-md-12 mt-1">
                     <p class="thank-you-page-select-date-options mb-1">Please Select Date</p>
-                    <input type="date" name="date" class="form-control " id="date">
+                    <input type="date" name="date" class="form-control" min="{{ now()->toDateString('Y-m-d') }}" id="date">
                 </div>
                 <div class="col-md-12">
                     <p class="thank-you-page-select-date-options mb-1">Phone Number</p>
@@ -635,7 +635,7 @@ $cart_price = 0;
                                                             <div class="ps-1">
                                                                 <div class=" mt-1">
                                                                     <p class="payment-option">Please Select Date</p>
-                                                                    <input type="date" name="date" class="form-control " id="date">
+                                                                    <input type="date" name="date" class="form-control" min="{{ now()->toDateString('Y-m-d') }}" id="date">
                                                                 </div>
                                                                 <div class="">
                                                                     <p class="payment-option">Phone Number</p>
@@ -1036,7 +1036,7 @@ $cart_price = 0;
                                                             <div class="ps-1">
                                                                 <div class=" mt-1">
                                                                     <p class="cart-total-checkout-page">Please Select Date</p>
-                                                                    <input type="date" name="date" class="form-control " id="date">
+                                                                    <input type="date" name="date" class="form-control " min="{{ now()->toDateString('Y-m-d') }}" id="date">
                                                                 </div>
                                                                 <div class="">
                                                                     <p class="cart-total-checkout-page">Phone Number</p>
