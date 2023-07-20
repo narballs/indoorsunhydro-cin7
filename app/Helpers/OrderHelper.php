@@ -114,7 +114,7 @@ class OrderHelper {
                 "currencyRate" => 59.0,
                 "currencySymbol" => "$",
                 
-                "taxStatus" => 1,
+                "taxStatus" => 2, //(1 = Tax inclusive, 2 = Tax exclusive, 3 = Tax exempt)
                 "taxRate" => $order->texClasses->rate,
 
                 "source" => "sample string 62",
