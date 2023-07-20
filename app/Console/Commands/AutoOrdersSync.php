@@ -63,6 +63,7 @@ class AutoOrdersSync extends Command
             ->where('order_id', null)
             ->where('isApproved', '<>', 2)
             ->with('user.contact')
+            ->with('texClasses')
             ->get();
             
         if (empty($orders)) {

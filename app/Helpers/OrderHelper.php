@@ -113,8 +113,10 @@ class OrderHelper {
                 "currencyCode" => "USD",
                 "currencyRate" => 59.0,
                 "currencySymbol" => "$",
-                "taxStatus" => "Excl",
-                "taxRate" => 8.75,
+                
+                "taxStatus" => $order->texClasses->name,
+                "taxRate" => $order->texClasses->rate,
+
                 "source" => "sample string 62",
                 "accountingAttributes" =>
                 [
@@ -125,15 +127,14 @@ class OrderHelper {
                 "memberCostCenter" => "sample string 6",
                 "memberAlternativeTaxRate" => "",
                 "costCenter" => null,
-                "alternativeTaxRate" => "8.75%",
-                // "estimatedDeliveryDate" => "2022-07-13T15:21:16.1946848+12:00",
+                "alternativeTaxRate" => $order->texClasses->rate,
                 "estimatedDeliveryDate" => $order->date,
                 "salesPersonId" => 10,
                 "salesPersonEmail" => "wqszeeshan@gmail.com",
                 "paymentTerms" => "",
                 "customerOrderNo" => $order->po_number,
                 "voucherCode" => "sample string 14",
-                "deliveryInstructions" =>  $order->memo,
+                "deliveryInstructions" => $order->memo,
                 "status" => "VOID",
                 "invoiceDate" => null,
                 "invoiceNumber" => 4232,
