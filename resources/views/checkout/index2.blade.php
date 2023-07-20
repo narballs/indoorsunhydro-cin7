@@ -360,8 +360,7 @@ $cart_price = 0;
                             </ul> --}}
                             <!-- fieldsets -->
                             <fieldset>
-                                <input type="button" value="Next" name="next"
-                                    class="next action-button next-btn-mobile" style="background:#7bc533 !important;">
+                                {{-- <input type="button" value="Next" name="next" class="next action-button next-btn-mobile" style="background:#7bc533 !important;"> --}}
                                 <button class="text-white billing-div-mobile" style="">
                                     Billing Details
                                 </button>
@@ -376,10 +375,11 @@ $cart_price = 0;
                                                                 class="label custom_label_style mt-5 text-uppercase fw-bold">First
                                                                 Name</label><span
                                                                 class="text-danger fw-bold pl-1">*</span>
-                                                            <input type="text" placeholder="Enter your first name"
-                                                                id="firstName" name="firstName"
+                                                            <input type="text" required placeholder="Enter your first name"
+                                                                id="f_name" name="first_name"
                                                                 value="{{ $user_address->first_name ? $user_address->first_name : $user_address->firstName }}"
-                                                                class="form-control mt-0fontAwesome">
+                                                                class="form-control mt-0fontAwesome ">
+                                                                <div id="error_first_name" class="text-danger"></div>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label
@@ -387,21 +387,22 @@ $cart_price = 0;
                                                                 Name</label><span
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text" placeholder="Enter your last"
-                                                                id="lastName" name="lastName"
+                                                                id="l_name" name="last_name"
                                                                 value="{{ $user_address->last_name ? $user_address->last_name : $user_address->lastName }}"
-                                                                class="form-control fontAwesome ">
+                                                                class="form-control fontAwesome  ">
+                                                                <div id="error_last_name" class="text-danger"></div>
                                                         </div>
                                                         <div class="col-md-12 ">
                                                             <label
                                                                 class="label custom_label_style fw-bold text-uppercase ">company
                                                                 name
-                                                                (optional)</label><span
-                                                                class="text-danger fw-bold pl-1">*</span>
+                                                                (optional)</label>
                                                             <input type="text"
                                                                 placeholder="Enter your company name"
-                                                                value="{{ $user_address->company }}" id="company"
+                                                                value="{{ $user_address->company }}" id="u_company"
                                                                 name="company"
-                                                                class="form-control  company-info fontAwesome ">
+                                                                class="form-control  company-info fontAwesome  ">
+                                                                <div id="error_company" class="text-danger"></div>
                                                         </div>
                                                         <div class="col-md-12">
                                                             <label
@@ -410,57 +411,74 @@ $cart_price = 0;
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text"
                                                                 placeholder="House number and street name"
-                                                                id="postalAddress1" name="postalAddress1"
+                                                                id="add_1" name="address"
                                                                 value="{{ $user_address->address1 ? $user_address->address1 : $user_address->postalAddress1 }}"
-                                                                class="form-control  company-info fontAwesome ">
+                                                                class="form-control  company-info fontAwesome  ">
+                                                                <div id="error_address1" class="text-danger"></div>
                                                         </div>
                                                         <div class="col-md-12">
                                                             <input type="text"
                                                                 placeholder="Aprtmant, suit, unit, etc.(optional)"
-                                                                id="postalAddress2" name="postalAddress2"
+                                                                id="add_2" name="address2"
                                                                 value="{{ $user_address->address2 ? $user_address->address2 : $user_address->postalAddress2 }}"
-                                                                class="form-control  company-info fontAwesome ">
+                                                                class="form-control  company-info fontAwesome  ">
                                                         </div>
 
                                                         <div class="col-md-12">
                                                             <label
                                                                 class="label custom_label_style fw-bold text-uppercase ">town
-                                                                / city</label><span
-                                                                class="text-danger fw-bold pl-1">*</span>
+                                                                / city</label>
                                                             <input type="text" placeholder="Enter your town"
-                                                                id="postalCity" name="postalCity"
+                                                                id="t_city" name="city"
                                                                 value="{{ $user_address->city ? $user_address->city : $user_address->postalCity }}"
-                                                                class="form-control  company-info fontAwesome ">
+                                                                class="form-control  company-info fontAwesome  ">
                                                         </div>
                                                         <div class="col-md-12">
                                                             <label
                                                                 class="label custom_label_style fw-bold text-uppercase ">state</label><span
                                                                 class="text-danger fw-bold pl-1">*</span>
-                                                            <input type="text" placeholder="Enter your state"
+                                                            {{-- <input type="text" placeholder="Enter your state"
                                                                 id="postalState" name="postalState"
                                                                 value="{{ $user_address->state ? $user_address->state : $user_address->postalState }}"
-                                                                class="form-control  company-info fontAwesome ">
+                                                                class="form-control  company-info fontAwesome  "> --}}
+
+
+                                                                <select class="form-control bg-light" name="state" id="state">
+                                                                    @foreach ($states as $state)
+                                                                        <?php
+                                                                        if ($user_address->state == $state->state_name) {
+                                                                            $selected = 'selected';
+                                                                        } else {
+                                                                            $selected = '';
+                                                                        }
+                                                                        ?>
+                                                                        <option value="{{ $state->state_name }}" <?php echo $selected; ?>>
+                                                                            {{ $state->state_name }}
+                                                                        </option>
+                                                                    @endforeach
+                                                                </select>
                                                         </div>
                                                         <div class="col-md-12">
                                                             <label
                                                                 class="label custom_label_style fw-bold text-uppercase ">zip</label><span
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text" placeholder="Enter your zip"
-                                                                id="postalPostCode" name="postalPostCode"
+                                                                id="p_code" name="zip"
                                                                 value="{{ $user_address->postCode ? $user_address->postCode : $user_address->postalPostCode }}"
-                                                                class="form-control  company-info fontAwesome ">
+                                                                class="form-control  company-info fontAwesome  ">
+                                                                <div id="error_zip" class="text-danger"></div>
                                                         </div>
                                                         <div class="col-md-12">
                                                             <label
                                                                 class="label custom_label_style fw-bold text-uppercase ">phone</label><span
                                                                 class="text-danger fw-bold pl-1">*</span>
                                                             <input type="text" placeholder="Enter your phone"
-                                                                id="phone" name="phone"
+                                                                id="d_phone" name="phone"
                                                                 value="{{ $user_address->phone }}"
-                                                                class="form-control  company-info fontAwesome ">
-                                                            <div class="text-danger" id="password_errors"></div>
+                                                                class="form-control  company-info fontAwesome  ">
+                                                                <div id="error_phone" class="text-danger"></div>
                                                         </div>
-                                                        <div class="col-md-12">
+                                                        {{-- <div class="col-md-12">
                                                             <label
                                                                 class="label custom_label_style fw-bold text-uppercase ">email
                                                                 address</label><span
@@ -468,8 +486,8 @@ $cart_price = 0;
                                                             <input type="text"
                                                                 placeholder="Enter your email adress"
                                                                 id="emailAddress" name="password"
-                                                                class="form-control  company-info fontAwesome ">
-                                                        </div>
+                                                                class="form-control  company-info fontAwesome  ">
+                                                        </div> --}}
 
                                                     </div>
                                                 </div>
@@ -477,9 +495,11 @@ $cart_price = 0;
                                         </div>
                                     </div>
                                 </div>
-                                <button
-                                    class="next action-button btn btn-success w-100 text-white mt-4 mx-auto mob_next_btn_footer"
+                                {{-- <button type="button" class="btn button-cards primary" onclick="updateContact('{{ $contact_id }}')">Update</button> --}}
+                                <button onclick="updateContact_mbl('{{ $contact_id }}')"
+                                    class=" action-button btn btn-success w-100 text-white mt-4 mx-auto mob_next_btn_footer"
                                     style="background:#7bc533 !important;"> NEXT STEP </button>
+                                <input type="hidden" class="" id="next_step">
                             </fieldset>
                             <fieldset>
                                 <div class="form-card">
@@ -581,8 +601,9 @@ $cart_price = 0;
                                                         <div class="payment-option">Delivery Options</div>
                                                         @foreach ($payment_methods as $payment_method)
                                                             <form class="p-2" action="{{ url('order') }}"
-                                                                method="POST" id="order_form" name="order_form">
+                                                                method="POST" id="order_form_mbl" class="order_form" name="order_form">
                                                                 @csrf
+
                                                                 @foreach ($payment_method->options as $payment_option)
                                                                     <div class="row">
                                                                         <div class="ps-1">
@@ -599,14 +620,39 @@ $cart_price = 0;
                                                                     </div>
                                                                 @endforeach
                                                         @endforeach
+                                                        <input type="hidden" name="incl_tax" id="incl_tax" value="{{ $total_including_tax }}">
+                                                        @if(!empty($tax_class))
+                                                        <input type="hidden" name="tax_class_id" id="tax_class_id" value="{{ $tax_class->id }}">
+                                                        @else
+                                                        <input type="hidden" name="tax_class_id" id="tax_class_id" value="{{$tax_class_none->id}}">
+                                                        @endif
                                                         {{-- <div class="w-100 text-center">
                                                             <button type="button" class="ml-2 mt-4 button-cards w-75"
                                                                 id="proceed_to_checkout" onclick="validate()">
                                                                 Place Order</button>
                                                         </div> --}}
+                                                        <div class="row mt-2">
+                                                            <div class="ps-1">
+                                                                <div class=" mt-1">
+                                                                    <p class="payment-option">Please Select Date</p>
+                                                                    <input type="date" name="date" class="form-control " id="date">
+                                                                </div>
+                                                                <div class="">
+                                                                    <p class="payment-option">Phone Number</p>
+                                                                    <input type="text" name="po_number" placeholder="Enter your phone number" id="po_number"
+                                                                        class="form-control fontAwesome">
+                                                                </div>
+                                                                <div class="">
+                                                                    <p class="payment-option">Memo</p>
+                                                                    <textarea type="text" name="memo" cols="20" rows="5" placeholder="Enter your Message"
+                                                                        id="memo" class="form-control fontAwesome">
+                                                                        </textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                         <div class="w-100 text-center">
                                                             <button type="button" class="procedd-to-checkout mt-4 w-100"
-                                                                id="proceed_to_checkout" onclick="validate()">
+                                                                id="proceed_to_checkout" onclick="validate_mbl()">
                                                                 Place Order</button>
                                                         </div>
                                                         </form>
@@ -631,7 +677,7 @@ $cart_price = 0;
                                 {{-- <input type="button" name="next" class="next action-button" value="Next Step" /> --}}
                             </fieldset>
                             {{-- <fieldset>
-                                <div class="form-card form-signup-secondary">
+                                <div class="form-card form-signup-secondary"></div>
                                     <div class="d-flex justify-content-center aling-items-center">
                                         <img class="img-fluid" src="/theme/img/payment-img.png" alt="">
                                     </div>
@@ -845,7 +891,7 @@ $cart_price = 0;
                                         </div>
                                     </div>
                                 </div>
-                                <button class="btn btn-success next action-button text-white ipad_next_btn_footer"
+                                <button type="button" onclick="updateContact_ipad({{$contact_id}})" class="btn btn-success  action-button text-white ipad_next_btn_footer"
                                     style="background:#7bc533 !important;"> NEXT STEP </button>
                                 {{-- <div class="d-flex justify-content-center align-items-center">
                                     <div>
@@ -959,10 +1005,10 @@ $cart_price = 0;
                                             <tfoot class="border-0">
                                                 <tr>
                                                     <td style="border-bottom:none !important;">
-                                                        <div class="payment-option ps-3">Delivery Options</div>
+                                                        <div class="cart-total-checkout-page ps-3">Delivery Options</div>
                                                         @foreach ($payment_methods as $payment_method)
                                                             <form class="p-2" action="{{ url('order') }}"
-                                                                method="POST" id="order_form" name="order_form">
+                                                                method="POST" id="order_form_ipad" name="order_form">
                                                                 @csrf
                                                                 @foreach ($payment_method->options as $payment_option)
                                                                     <div class="row">
@@ -980,8 +1026,33 @@ $cart_price = 0;
                                                                     </div>
                                                                 @endforeach
                                                         @endforeach
+                                                        <input type="hidden" name="incl_tax" id="incl_tax" value="{{ $total_including_tax }}">
+                                                        @if(!empty($tax_class))
+                                                        <input type="hidden" name="tax_class_id" id="tax_class_id" value="{{ $tax_class->id }}">
+                                                        @else
+                                                        <input type="hidden" name="tax_class_id" id="tax_class_id" value="{{$tax_class_none->id}}">
+                                                        @endif
+                                                        <div class="row mt-2">
+                                                            <div class="ps-1">
+                                                                <div class=" mt-1">
+                                                                    <p class="cart-total-checkout-page">Please Select Date</p>
+                                                                    <input type="date" name="date" class="form-control " id="date">
+                                                                </div>
+                                                                <div class="">
+                                                                    <p class="cart-total-checkout-page">Phone Number</p>
+                                                                    <input type="text" name="po_number" placeholder="Enter your phone number" id="po_number"
+                                                                        class="form-control fontAwesome">
+                                                                </div>
+                                                                <div class="">
+                                                                    <p class="cart-total-checkout-page">Memo</p>
+                                                                    <textarea type="text" name="memo" cols="20" rows="5" placeholder="Enter your Message"
+                                                                        id="memo" class="form-control fontAwesome">
+                                                                        </textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                         <div class="d-flex justify-content-center">
-                                                            <button type="button" class="button-cards w-50" id="proceed_to_checkout" onclick="validate()"> Place Order</button>
+                                                            <button type="button" class="button-cards w-50" id="proceed_to_checkout" onclick="validate_ipad()"> Place Order</button>
                                                         </div>
                                                         </form>
                                                     </td>
@@ -1462,6 +1533,308 @@ $cart_price = 0;
                         }
                     }
                 }
+                function validate_mbl() {
+                    $('#progress_spinner').removeClass('d-none');
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("#progress_spinner").offset().top
+                    }, 2000);
+
+                    $('#proceed_to_checkout').prop('disabled', true);
+                    $('#proceed_to_checkout').addClass('text-muted');
+                    if (!$("input[name=method_option]").is(':checked')) {
+                        const inputOptions = new Promise((resolve) => {
+                            setTimeout(() => {
+                                resolve({
+                                    'C.O.D': 'C.O.D',
+                                    'Pickup Order': 'Pickup Order'
+                                })
+                            }, 1000)
+                        })
+                        Swal.fire({
+                            imageUrl: "theme/img/delivery-icon.png",
+                            title: 'Please choose delivery option',
+                            input: 'radio',
+                            inputOptions: inputOptions,
+                            showCancelButton: false,
+                            confirmButtonColor: '#8282ff',
+                            confirmButtonText: 'Continue',
+                            allowOutsideClick: false,
+                            allowEscapeKey: false
+                        }).then((result) => {
+                            if (result.value !== null) {
+                                var sessionContact_id = '{{ Session::get('contact_id') }}';
+                                if (sessionContact_id == '') {
+                                    var companiesData = {}
+                                    jQuery.ajax({
+                                        method: 'GET',
+                                        url: "{{ url('/select-companiens-to-order/') }}",
+                                        success: function(response) {
+                                            console.log(response.companies);
+                                            $.each(response.companies, function(index, value) {
+                                                let companyID = null;
+                                                if (value.contact_id) {
+                                                    companyID = value.contact_id + "-P";
+                                                }
+                                                if (value.secondary_id) {
+                                                    companyID = value.secondary_id + "-S";;
+                                                }
+                                                if (value.status == 1) {
+                                                    companiesData[companyID] = value.company;
+                                                }
+                                            });
+                                        }
+                                    });
+                                    const companiesDate = new Promise((resolve) => {
+                                        setTimeout(() => {
+                                            resolve(companiesData)
+                                        }, 1000)
+                                    })
+                                    Swal.fire({
+                                        title: 'Please choose the Company',
+                                        showCancelButton: false,
+                                        input: 'radio',
+                                        inputOptions: companiesDate,
+                                        confirmButtonColor: '#8282ff',
+                                        confirmButtonText: 'Continue',
+                                        allowOutsideClick: false,
+                                        allowEscapeKey: false
+                                    }).then((result) => {
+                                        if (result.value !== null) {
+                                            var contact_id = result.value;
+                                            $.ajax({
+                                                url: "{{ url('/switch-company-select/') }}",
+                                                method: 'POST',
+                                                data: {
+                                                    "_token": "{{ csrf_token() }}",
+                                                    contact_id: contact_id,
+                                                },
+                                                success: function(response) {
+                                                    $("#order_form_mbl").submit();
+                                                }
+                                            });
+                                        }
+                                    });
+                                    if (result.value == 'C.O.D') {
+                                        $("#local_delivery_1").attr('checked', 'checked');
+                                    } else {
+                                        $("#local_delivery_2").attr('checked', 'checked');
+                                    }
+                                } else {
+                                    if (result.value == 'C.O.D') {
+                                        $("#local_delivery_1").attr('checked', 'checked');
+                                    } else {
+                                        $("#local_delivery_2").attr('checked', 'checked');
+                                    }
+                                    $("#order_form_mbl").submit();
+                                }
+                            }
+                        });
+                    } else {
+                        var sessionContact_id = '{{ Session::get('contact_id') }}';
+                        if (sessionContact_id == '') {
+                            var companiesData = {}
+                            jQuery.ajax({
+                                method: 'GET',
+                                url: "{{ url('/select-companiens-to-order') }}",
+                                success: function(response) {
+                                    $.each(response.companies, function(index, value) {
+                                        let companyID = null;
+                                        if (value.contact_id) {
+                                            companyID = value.contact_id + "-P";
+                                        }
+                                        if (value.secondary_id) {
+                                            companyID = value.secondary_id + "-S";;
+                                        }
+                                        companiesData[companyID] = value.company
+                                    });
+                                }
+                            });
+                            const companiesDate = new Promise((resolve) => {
+                                setTimeout(() => {
+                                    resolve(companiesData)
+                                }, 1000)
+                            })
+                            Swal.fire({
+                                title: 'Please choose the Company',
+                                showCancelButton: false,
+                                input: 'radio',
+                                inputOptions: companiesDate,
+                                confirmButtonColor: '#8282ff',
+                                confirmButtonText: 'Continue',
+                                allowOutsideClick: false,
+                                allowEscapeKey: false
+                            }).then((result) => {
+                                if (result.value !== null) {
+                                    var contact_id = result.value;
+                                    $.ajax({
+                                        url: "{{ url('/switch-company-select/') }}",
+                                        method: 'POST',
+                                        data: {
+                                            "_token": "{{ csrf_token() }}",
+                                            contact_id: contact_id,
+                                        },
+                                        success: function(response) {
+                                            $("#order_form_mbl").submit();
+                                        }
+                                    });
+                                }
+                            });
+                        } else {
+                            $("#order_form_mbl").submit();
+                        }
+                    }
+                }
+                function validate_ipad() {
+                    $('#progress_spinner').removeClass('d-none');
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("#progress_spinner").offset().top
+                    }, 2000);
+
+                    $('#proceed_to_checkout').prop('disabled', true);
+                    $('#proceed_to_checkout').addClass('text-muted');
+                    if (!$("input[name=method_option]").is(':checked')) {
+                        const inputOptions = new Promise((resolve) => {
+                            setTimeout(() => {
+                                resolve({
+                                    'C.O.D': 'C.O.D',
+                                    'Pickup Order': 'Pickup Order'
+                                })
+                            }, 1000)
+                        })
+                        Swal.fire({
+                            imageUrl: "theme/img/delivery-icon.png",
+                            title: 'Please choose delivery option',
+                            input: 'radio',
+                            inputOptions: inputOptions,
+                            showCancelButton: false,
+                            confirmButtonColor: '#8282ff',
+                            confirmButtonText: 'Continue',
+                            allowOutsideClick: false,
+                            allowEscapeKey: false
+                        }).then((result) => {
+                            if (result.value !== null) {
+                                var sessionContact_id = '{{ Session::get('contact_id') }}';
+                                if (sessionContact_id == '') {
+                                    var companiesData = {}
+                                    jQuery.ajax({
+                                        method: 'GET',
+                                        url: "{{ url('/select-companiens-to-order/') }}",
+                                        success: function(response) {
+                                            console.log(response.companies);
+                                            $.each(response.companies, function(index, value) {
+                                                let companyID = null;
+                                                if (value.contact_id) {
+                                                    companyID = value.contact_id + "-P";
+                                                }
+                                                if (value.secondary_id) {
+                                                    companyID = value.secondary_id + "-S";;
+                                                }
+                                                if (value.status == 1) {
+                                                    companiesData[companyID] = value.company;
+                                                }
+                                            });
+                                        }
+                                    });
+                                    const companiesDate = new Promise((resolve) => {
+                                        setTimeout(() => {
+                                            resolve(companiesData)
+                                        }, 1000)
+                                    })
+                                    Swal.fire({
+                                        title: 'Please choose the Company',
+                                        showCancelButton: false,
+                                        input: 'radio',
+                                        inputOptions: companiesDate,
+                                        confirmButtonColor: '#8282ff',
+                                        confirmButtonText: 'Continue',
+                                        allowOutsideClick: false,
+                                        allowEscapeKey: false
+                                    }).then((result) => {
+                                        if (result.value !== null) {
+                                            var contact_id = result.value;
+                                            $.ajax({
+                                                url: "{{ url('/switch-company-select/') }}",
+                                                method: 'POST',
+                                                data: {
+                                                    "_token": "{{ csrf_token() }}",
+                                                    contact_id: contact_id,
+                                                },
+                                                success: function(response) {
+                                                    $("#order_form_ipad").submit();
+                                                }
+                                            });
+                                        }
+                                    });
+                                    if (result.value == 'C.O.D') {
+                                        $("#local_delivery_1").attr('checked', 'checked');
+                                    } else {
+                                        $("#local_delivery_2").attr('checked', 'checked');
+                                    }
+                                } else {
+                                    if (result.value == 'C.O.D') {
+                                        $("#local_delivery_1").attr('checked', 'checked');
+                                    } else {
+                                        $("#local_delivery_2").attr('checked', 'checked');
+                                    }
+                                    $("#order_form_ipad").submit();
+                                }
+                            }
+                        });
+                    } else {
+                        var sessionContact_id = '{{ Session::get('contact_id') }}';
+                        if (sessionContact_id == '') {
+                            var companiesData = {}
+                            jQuery.ajax({
+                                method: 'GET',
+                                url: "{{ url('/select-companiens-to-order') }}",
+                                success: function(response) {
+                                    $.each(response.companies, function(index, value) {
+                                        let companyID = null;
+                                        if (value.contact_id) {
+                                            companyID = value.contact_id + "-P";
+                                        }
+                                        if (value.secondary_id) {
+                                            companyID = value.secondary_id + "-S";;
+                                        }
+                                        companiesData[companyID] = value.company
+                                    });
+                                }
+                            });
+                            const companiesDate = new Promise((resolve) => {
+                                setTimeout(() => {
+                                    resolve(companiesData)
+                                }, 1000)
+                            })
+                            Swal.fire({
+                                title: 'Please choose the Company',
+                                showCancelButton: false,
+                                input: 'radio',
+                                inputOptions: companiesDate,
+                                confirmButtonColor: '#8282ff',
+                                confirmButtonText: 'Continue',
+                                allowOutsideClick: false,
+                                allowEscapeKey: false
+                            }).then((result) => {
+                                if (result.value !== null) {
+                                    var contact_id = result.value;
+                                    $.ajax({
+                                        url: "{{ url('/switch-company-select/') }}",
+                                        method: 'POST',
+                                        data: {
+                                            "_token": "{{ csrf_token() }}",
+                                            contact_id: contact_id,
+                                        },
+                                        success: function(response) {
+                                            $("#order_form_ipad").submit();
+                                        }
+                                    });
+                                }
+                            });
+                        } else {
+                            $("#order_form_ipad").submit();
+                        }
+                    }
+                }
 
 
                 function updateAddress() {
@@ -1586,6 +1959,154 @@ $cart_price = 0;
                         }
                     });
                 }
+                function updateContact_mbl(contact_id) {
+                    $('#address_loader').removeClass('d-none');
+                    var state = document.getElementById("state").value;
+                    var first_name = $('#f_name').val();
+                    var last_name = $('#l_name').val();
+                    var company_name = $('#u_company').val();
+                    var phone = $('#d_phone').val();
+                    var address1 = $('#add_1').val();
+                    var address2 = $('#add_2').val();
+                    var town_city = $('#t_city').val();
+
+                    var zip = $('#p_code').val();
+                    var contact_id = $('input[name=contact_id]').val();
+                    var secondary_id = $('input[name=secondary_id]').val();
+                    //var email = $('input[name=email]').val();
+
+                    jQuery.ajax({
+                        method: 'GET',
+                        url: "{{ url('/my-account-user-addresses/') }}",
+
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                            "contact_id": contact_id,
+                            "secondary_id": secondary_id,
+                            "first_name": first_name,
+                            "last_name": last_name,
+                            "company_name": company_name,
+                            "phone": phone,
+                            "address": address1,
+                            "address2": address2,
+                            "town_city": town_city,
+                            "state": state,
+                            "zip": zip,
+                            // "email": email
+                        },
+                        success: function(response) {
+                            if (response.success == true) {
+                                $('#address_loader').addClass('d-none');
+                                $('.modal-backdrop').remove()
+                                $('#success_msg').removeClass('d-none');
+                                $('#success_msg').html(response.msg);
+                                next_btn_mbl();
+                                // window.location.reload();
+                            } else {
+                                $('#address_loader').addClass('d-none');
+                                $('.modal-backdrop').remove()
+                                $('#failure_msg').removeClass('d-none');
+                                $('#failure_msg').html(response.msg);
+                                // window.location.reload();
+
+                            }
+                        },
+                        error: function(response) {
+                            var error_message = response.responseJSON;
+                            console.log(error_message);
+                            var error_text = '';
+                            if (typeof error_message.errors.first_name != 'undefined') {
+                                error_text = error_message.errors.first_name;
+                                $('#error_first_name').html(error_text);
+                            } else {
+                                error_text = '';
+                                $('#error_first_name').html(error_text);
+                            }
+                            if (typeof error_message.errors.last_name != 'undefined') {
+                                var error_text = error_message.errors.last_name;
+                                $('#error_last_name').html(error_text);
+                            } else {
+                                error_text = '';
+                                $('#error_last_name').html(error_text);
+                            }
+                            if (typeof error_message.errors.company_name != 'undefined') {
+                                var error_text = error_message.errors.company_name;
+                                $('#error_company').html(error_text);
+                            } else {
+                                error_text = '';
+                                $('#error_company').html(error_text);
+                            }
+                            if (typeof error_message.errors.address != 'undefined') {
+                                var error_text = error_message.errors.address;
+                                $('#error_address1').html(error_text);
+                            } else {
+                                error_text = '';
+                                $('#error_address1').html(error_text);
+                            }
+
+                            if (typeof error_message.errors.zip != 'undefined') {
+                                var error_text = error_message.errors.zip;
+                                $('#error_zip').html(error_text);
+                            } else {
+                                error_text = '';
+                                $('#error_zip').html(error_text);
+                            }
+                            if (typeof error_message.errors.town_city != 'undefined') {
+                                var error_text = error_message.errors.town_city;
+                                $('#error_city').html(error_text);
+                            } else {
+                                error_text = '';
+                                $('#error_city').html(error_text);
+                            }
+                            if (typeof error_message.errors.zip != 'undefined') {
+                                var error_text = error_message.zip;
+                                $('#error_zip').html(error_text);
+                            } else {
+                                error_text = '';
+                                $('#error_zip').html(error_text);
+                            }
+                            if (typeof error_message.errors.phone != 'undefined') {
+                                var error_text = error_message.errors.phone;
+                                $('#error_phone').html(error_text);
+                            } else {
+                                error_text = '';
+                                $('#error_phone').html(error_text);
+                            }
+
+                        }
+                    });
+                }
+                function next_btn_mbl () {
+                        var next = $('#next_step');
+                        // $(".next").click(function() {
+                        // updateContact_mbl($contact_id);
+                            current_fs = next.parent();
+                            next_fs = next.parent().next();
+
+                            //Add Class Active
+                            $("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
+
+                            //show the next fieldset
+                            next_fs.show();
+                            //hide the current fieldset with style
+                            current_fs.animate({
+                                opacity: 0
+                            }, {
+                                step: function(now) {
+                                    // for making fielset appear animation
+                                    opacity = 1 - now;
+                                    current_fs.css({
+                                        'display': 'none',
+                                        'position': 'relative'
+                                    });
+                                    next_fs.css({
+                                        'opacity': opacity
+                                    });
+                                },
+                                duration: 600
+                            });
+                        // });
+                    }
             </script>
             @include('partials.footer')
             <script>
@@ -1593,34 +2114,37 @@ $cart_price = 0;
                     var current_fs, next_fs, previous_fs; //fieldsets
                     var opacity;
 
-                    $(".next").click(function() {
+                    function next_btn () {
+                        var next = $('#next_step');
+                        // $(".next").click(function() {
+                        // updateContact_mbl($contact_id);
+                            current_fs = next.parent();
+                            next_fs = next.parent().next();
 
-                        current_fs = $(this).parent();
-                        next_fs = $(this).parent().next();
+                            //Add Class Active
+                            $("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
 
-                        //Add Class Active
-                        $("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
-
-                        //show the next fieldset
-                        next_fs.show();
-                        //hide the current fieldset with style
-                        current_fs.animate({
-                            opacity: 0
-                        }, {
-                            step: function(now) {
-                                // for making fielset appear animation
-                                opacity = 1 - now;
-                                current_fs.css({
-                                    'display': 'none',
-                                    'position': 'relative'
-                                });
-                                next_fs.css({
-                                    'opacity': opacity
-                                });
-                            },
-                            duration: 600
-                        });
-                    });
+                            //show the next fieldset
+                            next_fs.show();
+                            //hide the current fieldset with style
+                            current_fs.animate({
+                                opacity: 0
+                            }, {
+                                step: function(now) {
+                                    // for making fielset appear animation
+                                    opacity = 1 - now;
+                                    current_fs.css({
+                                        'display': 'none',
+                                        'position': 'relative'
+                                    });
+                                    next_fs.css({
+                                        'opacity': opacity
+                                    });
+                                },
+                                duration: 600
+                            });
+                        // });
+                    }
 
                     $(".previous").click(function() {
 
