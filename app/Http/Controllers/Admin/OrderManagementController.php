@@ -427,7 +427,7 @@ class OrderManagementController extends Controller
                 "currencyRate" => 59.0,
                 "currencySymbol" => "$",
                 "taxStatus" => $currentOrder->texClasses->name,
-                "taxRate" => $currentOrder->texClasses->name,
+                "taxRate" => $currentOrder->texClasses->rate,
                 "source" => "sample string 62",
                 "accountingAttributes" =>
                 [
