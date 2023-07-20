@@ -679,34 +679,25 @@
 									<div class="row">
 										<div class="col-md-12">
 											<p class="order-confirmation-page-first-name-last-name-user-name pt-3">
-												{{$order_contact->firstName}}
-												{{$order_contact->lastName}}
+												{{$order_contact->first_name ? $order_contact->first_name : $order_contact->firstName}}
+												{{$order_contact->last_name ? $order_contact->last_name : $order_contact->lastName}}
 											</p>
 											<div class="row">
 												<div class="col-md-6">
 													<p class="order-confirmation-page-address-line-one-title">
 														Address line 1
 													</p>
-													@if (!$order_contact->address1)
+													
 													<p class="order-confirmation-page-address-line-one-item">
-														Addressline1 empty
+														{{$order_contact->address1 ? $order_contact->address1 : $order_contact->postalAddress1}}
 													</p>
-													@else
-													<p class="order-confirmation-page-address-line-one-item">
-														{{$order_contact->address1}}
-													</p>
-													@endif
-
+													
 													<p class="order-confirmation-page-address-line-tow-title">
 														Address line 2
 													</p>
-													@if ($order_contact->address2)
+													
 													<p class="order-confirmation-page-address-line-tow-item">
-														{{$order_contact->address2}}
-													</p>
-													@endif
-													<p class="order-confirmation-page-address-line-tow-item">
-														Addressline2 empty
+														{{$order_contact->address2 ? $order_contact->address2 : $order_contact->postalAddress2}}
 													</p>
 													
 												</div>
@@ -714,42 +705,28 @@
 													<div class="row">
 														<div class="col-xl-4 col-lg-6 col-md-12 col-sm-12">
 															<p class="order-confirmation-page-city-name-title">City</p>
-															@if (!$order_contact->city)
+															
 															<p class="order-confirmation-page-city-name-item">
-																City empty
+																{{$order_contact->city ? $order_contact->city : $order_contact->postalCity}}
 															</p>
-															@else
-															<p class="order-confirmation-page-city-name-item">
-																{{$order_contact->city}}
-															</p>
-															@endif
+															
 														</div>
 														<div class="col-xl-4 col-lg-6 col-md-12 col-sm-12">
 															<p class="order-confirmation-page-state-name-title">State
 															</p>
-															@if (!$order_contact->state)
+															
 															<p class="order-confirmation-page-state-name-item">
-																State empty
+																{{$order_contact->state ? $order_contact->state : $order_contact->postalState}}
 															</p>
-															@else
-															<p class="order-confirmation-page-state-name-item">
-																{{$order_contact->state}}
-															</p>
-															@endif
 														</div>
 														<div class="col-xl-4 col-lg-6 col-md-12 col-sm-12">
 															<p class="order-confirmation-page-zip-name-title">Zip</p>
 
-															@if (!$order_contact->postCode)
-															<p class="order-confirmation-page-zip-name-item">
-																zip empty
-															</p>
-															@else
+															
 															<p class="order-confirmation-page-zip-name-item">
 
-																{{$order_contact->postCode}}
+																{{$order_contact->postCode ? $order_contact->postCode : $order_contact->postalPostCode}}
 															</p>
-															@endif
 														</div>
 													</div>
 												</div>
@@ -764,61 +741,41 @@
 									<div class="row">
 										<div class="col-md-12">
 											<p class="order-confirmation-page-first-name-last-name-user-name pt-3">
-												{{$order_contact->firstName}}
-												{{$order_contact->lastName}}
+												{{$order_contact->first_name ? $order_contact->first_name : $order_contact->firstName}}
+												{{$order_contact->last_name ? $order_contact->last_name : $order_contact->lastName}}
 											</p>
 											<div class="row">
 												<div class="col-md-6">
 													<p class="order-confirmation-page-address-line-one-title">
 														Address line 1
 													</p>
-													@if (!$order_contact->postalAddress1)
+													
 													<p class="order-confirmation-page-address-line-one-item">
-														Address Line 1 Empty
+														{{$order_contact->address1 ? $order_contact->address1 : $order_contact->postalAddress1}}
 													</p>
-													@else
-													<p class="order-confirmation-page-address-line-one-item">
-														{{$order_contact->postalAddress1}}
-													</p>
-													@endif
 
 													<div class="row mt-4">
 														<div class="col-xl-4 col-lg-6 col-md-12 col-sm-12">
 															<p class="order-confirmation-page-city-name-title">City</p>
-															@if (!$order_contact->postalCity)
+															
 															<p class="order-confirmation-page-city-name-item">
-																City empty
+																{{$order_contact->city ? $order_contact->city : $order_contact->postalCity}}
 															</p>
-															@else
-															<p class="order-confirmation-page-city-name-item">
-																{{$order_contact->postalCity}}
-															</p>
-															@endif
 														</div>
 														<div class="col-xl-4 col-lg-6 col-md-12 col-sm-12">
 															<p class="order-confirmation-page-state-name-title">State
 															</p>
-															@if (!$order_contact->postalState)
+															
 															<p class="order-confirmation-page-state-name-item">
-																State empty
+																{{$order_contact->state ? $order_contact->state : $order_contact->postalState}}
 															</p>
-															@else
-															<p class="order-confirmation-page-state-name-item">
-																{{$order_contact->postalState}}
-															</p>
-															@endif
 														</div>
 														<div class="col-xl-4 col-lg-6 col-md-12 col-sm-12">
 															<p class="order-confirmation-page-zip-name-title">Zip</p>
-															@if (!$order_contact->postalPostCode)
+															
 															<p class="order-confirmation-page-zip-name-item">
-																zip empty
+																{{$order_contact->postCode ?  $order_contact->postCode  :$order_contact->postalPostCode}}
 															</p>
-															@else
-															<p class="order-confirmation-page-zip-name-item">
-																{{$order_contact->postalPostCode}}
-															</p>
-															@endif
 														</div>
 													</div>
 												</div>
@@ -826,15 +783,10 @@
 													<p class="order-confirmation-page-address-line-tow-title">
 														Address line 2
 													</p>
-													@if (!$order_contact->postalAddress2)
+													
 													<p class="order-confirmation-page-address-line-tow-item">
-														Address Line 2 Empty
+														{{$order_contact->address2 ? $order_contact->address2 : $order_contact->postalAddress2}}
 													</p>
-													@else
-													<p class="order-confirmation-page-address-line-tow-item">
-														{{$order_contact->postalAddress2}}
-													</p>
-													@endif
 
 												</div>
 											</div>

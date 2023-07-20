@@ -36,13 +36,16 @@
                                     {{ $address_user->contact[0]['lastName'] }}
                                 </p>
                                 <p class="my_account_address_items">
-                                    {{ $address_user->contact[0]['postalAddress1'] }}
+                                    {{ $address_user->contact[0]['address1'] }}
                                 </p>
                                 <p class="my_account_address_items">
-                                    {{ $address_user->contact[0]['postalAddress2'] }}
+                                    {{ $address_user->contact[0]['address2'] }}
                                 </p>
                                 <p class="my_account_address_items">
-                                    {{ $address_user->contact[0]['postalState'] }}
+                                    {{ $address_user->contact[0]['city'] }}
+                                </p>
+                                <p class="my_account_address_items">
+                                    {{ $address_user->contact[0]['state'] }}
                                 </p>
                                 <p class="my_account_address_items">
                                     <span class="my_account_address_items">
@@ -73,13 +76,16 @@
                                     {{ $address_user->contact[0]['lastName'] }}
                                 </p>
                                 <p class="my_account_address_items">
-                                    {{ $address_user->contact[0]['postalAddress1'] }}
+                                    {{ $address_user->contact[0]['address1'] }}
                                 </p>
                                 <p class="my_account_address_items">
-                                    {{ $address_user->contact[0]['postalAddress2'] }}
+                                    {{ $address_user->contact[0]['address2'] }}
                                 </p>
                                 <p class="my_account_address_items">
-                                    {{ $address_user->contact[0]['postalState'] }}
+                                    {{ $address_user->contact[0]['state'] }}
+                                </p>
+                                <p class="my_account_address_items">
+                                    {{ $address_user->contact[0]['city'] }}
                                 </p>
                                 <p class="my_account_address_items">
                                     <span class="my_account_address_items">
@@ -156,36 +162,42 @@
                                                 @if (!empty($contact['firstName'] && $contact['lastName']))
                                                     {{ $contact['firstName'] . ' ' . $contact['lastName'] }}
                                                 @else
+                                                {{ $contact['first_name'] . ' ' . $contact['last_name'] }}
                                                 @endif
                                             </td>
                                             <td class="my_account_all_items">
                                                 @if (!empty($contact['postalAddress1']))
                                                     {{ $contact['postalAddress1'] }}
                                                 @else
+                                                    {{ $contact['address1'] }}
                                                 @endif
                                             </td>
                                             <td class="my_account_all_items">
                                                 @if (!empty($contact['postalCity']))
                                                     {{ $contact['postalCity'] }}
                                                 @else
+                                                {{ $contact['city'] }}
                                                 @endif
                                             </td>
                                             <td class="my_account_all_items">
                                                 @if (!empty($contact['Country']))
                                                     {{ $contact['Country'] }}
                                                 @else
+                                                {{ $contact['Country'] }}
                                                 @endif
                                             </td>
                                             <td class="my_account_all_items">
                                                 @if (!empty($contact['postalState']))
                                                     {{ $contact['postalState'] }}
                                                 @else
+                                                {{ $contact['state'] }}
                                                 @endif
                                             </td>
                                             <td class="my_account_all_items">
-                                                @if (!empty($contact['postalCode']))
-                                                    {{ $contact['postalCode'] }}
+                                                @if (!empty($contact['postalPostCode']))
+                                                    {{ $contact['postalPostCode'] }}
                                                 @else
+                                                {{ $contact['postCode'] }}
                                                 @endif
                                             </td>
                                             <td class="my_account_all_items">

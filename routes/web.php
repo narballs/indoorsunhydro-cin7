@@ -22,7 +22,8 @@ use App\Http\Controllers\Admin\AdminBuyListController;
 use App\Http\Controllers\Admin\AdminShareListController;
 use App\Http\Controllers\Admin\LogsController;
 use App\Http\Controllers\Admin\DailyApiLogController;
-
+use App\Http\Controllers\Admin\TaxClassController;
+use App\Models\TaxClass;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
@@ -113,6 +114,7 @@ Route::group(['prefix' => 'my-account/'], function () {
 
 Route::group(['middleware' => ['auth']], function () {
     Route::resource('admin/roles', RoleController::class);
+    Route::resource('admin/tax_classes', TaxClassController::class);
     Route::resource('admin/users', UserController::class);
     Route::get('admin/dashboard', [DashboardController::class, 'index'])->name('admin.view');
     Route::get('admin/orders', [OrderManagementController::class, 'index'])->name('admin.orders');
@@ -220,6 +222,8 @@ Route::get('/get-wish-lists/', [ProductController::class, 'getWishLists']);
 Route::get('/get-lists-names/', [ProductController::class, 'getListNames']);
 Route::post('/create-list/', [ProductController::class, 'createList']);
 Route::post('/multi-favorites-to-cart/', [ProductController::class, 'multi_favorites_to_cart']);
+Route::get('/order/items/{id}', [ProductController::class, 'order_items']);
+Route::post('/buy/order/items', [ProductController::class, 'buy_again_order_items']);
 
 Route::group(['middleware' => ['auth']], function () {
     Route::resource('admin/roles', RoleController::class);
@@ -277,6 +281,13 @@ Route::group(['middleware' => ['auth']], function () {
     });
 
     Route::get('admin/logout', function () {
+        Session::forget('contact_id');
+        Session::forget('company');
+        Session::forget('companies');
+        Session::forget('cart');
+        Session::forget('logged_in_as_another_user');
+        Session::flush();
+
         Auth::logout();
         return redirect()->route('user');
     });

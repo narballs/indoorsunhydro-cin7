@@ -39,46 +39,11 @@
                             <div class="product pt-4 product-detail-content1">
                                 <div class="d-flex row">
 
-                                    <?php 
-                                        foreach($productOption->price as $price)
-                                            {
-                                            switch ($pricing) {
-                                                case "RetailUSD":
-                                                    $retail_price = $price->retailUSD;
-                                                    break;
-                                                case "WholesaleUSD":
-                                                    $retail_price = $price->wholesaleUSD;
-                                                    break;
-                                                case "TerraInternUSD":
-                                                    $retail_price = $price->terraInternUSD;
-                                                    break;
-                                                case "SacramentoUSD":
-                                                    $retail_price = $price->sacramentoUSD;
-                                                    break;
-                                                case "OklahomaUSD":
-                                                    $retail_price = $price->oklahomaUSD;
-                                                    break;
-                                                case "CalaverasUSD":
-                                                    $retail_price = $price->calaverasUSD;
-                                                break;
-                                                case "Tier1USD":
-                                                    $retail_price = $price->tier1USD;
-                                                break;
-                                                case "Tier2USD":
-                                                    $retail_price = $price->tier2USD;
-                                                break;
-                                                case "Tier3USD":
-                                                    $retail_price = $price->tier3USD;
-                                                break;
-                                                case "ComercialOkUSD":
-                                                    $retail_price = $price->commercialOKUSD;
-                                                break;
-                                                case "CostUSD":
-                                                    $retail_price = $price->costUSD;
-                                                    default:
-                                                    $retail_price = $price->retailUSD;
-                                                break;
-                                            }
+                                    <?php
+                                        $user_price_column = App\Helpers\UserHelper::getUserPriceColumn();
+                                        $retail_price = 0;
+                                        foreach($productOption->price as $price) {
+                                            $retail_price = $price->$user_price_column;
                                         }
                                     ?>
                                     <div class="product-detail-heading col-xl-12 col-lg-12 col-md-12 col-xs-12"
@@ -87,7 +52,7 @@
                                             <div class="col-md-11">
                                                 <h3 class="product-detail-heading">{{$productOption->products->name}}</h3>
                                             </div>
-                                            @if(!empty($contact_id))
+                                            @if (!empty($contact_id))
                                             <div class="col-md-1 d-flex justify-content-center">
                                                 <a style="width:20px !important;" href="javascript:void(0);" class="subscribe">
                                                     <i class="fa-solid fav-{{ $productOption->option_id }} fa-heart {{ isset($user_buy_list_options[$productOption->option_id]) ? '' : 'text-muted' }} "
@@ -102,7 +67,7 @@
                                     <?php //dd($productOption->products->status);?>
                                     <div class="col-md-12 d-flex">
                                         <span class="text-danger product-detail-price" id="product_price">
-                                            ${{number_format($retail_price,2)}}
+                                            ${{number_format($retail_price, 2)}}
                                         </span>
                                     </div>
                                 </div>
@@ -614,11 +579,11 @@
                     Swal.fire({
                         toast: true,
                         icon: 'success',
-                        title: jQuery('.mobile_qty').val() + ' X ' + product_name + '<div class="text-dark fw-bold fs-5">'+ product_price +'</div>'+ '<br>' + 'added to your cart',
-                        timer: 3000,
-                        imageUrl: $src,
+                        // title: jQuery('.mobile_qty').val() + ' X ' + product_name + '<div class="text-dark fw-bold fs-5">'+ product_price +'</div>'+ '<br>' + 'added to your cart',
+                        timer: 2000,
+                        text: 'Product added to cart',
+                        // imageUrl: "{{asset('theme/img/add_to_cart_gif.gif')}}",
                         showConfirmButton: false,
-                        position: 'top',
                         timerProgressBar: true
                     });
                 }

@@ -74,8 +74,10 @@
                                 <thead>
                                     <tr class="table-header-background">
                                         <td class="my_account_order_detail_page_table_title">PRODUCT</td>
+                                        <td class="my_account_order_detail_page_table_title">SKU</td>
                                         <td class="my_account_order_detail_page_table_title">Quantity</td>
-                                        <td class="my_account_order_detail_page_table_title">Price</td>
+                                        <td class="my_account_order_detail_page_table_title">Item Price</td>
+                                        <td class="my_account_order_detail_page_table_title">SubTotal</td>
                                     </tr>
                                 </thead>
                                 @php
@@ -92,10 +94,13 @@
                                             {{-- {{ dd($orderItem) }} --}}
                                             <tr>
                                                 <td class="order_detail_page_product_name">
-                                                    <a href="{{ url('product-detail/' . $orderItem->product_id . '/' . $orderItem->option_id . '/' . $orderItem->product->slug) }}"
+                                                    <a href="{{ url('product-detail/' . $orderItem->product->id . '/' . $orderItem->option_id . '/' . $orderItem->product->slug) }}"
                                                         class="btn order_detail_page_product_name">
                                                         {{ $orderItem->product->name }}
                                                     </a>
+                                                </td>
+                                                <td class="my_account_all_items">
+                                                    {{ $orderItem->product->code }}
                                                 </td>
                                                 <td class="my_account_all_items">
                                                     {{ $orderItem->quantity }}
@@ -103,11 +108,20 @@
                                                 <td class="my_account_all_items">
                                                     ${{ number_format($orderItem->price, 2) }}
                                                 </td>
+                                                <td class="my_account_all_items">
+                                                    ${{ number_format($orderItem->quantity * $orderItem->price , 2) }}
+                                                </td>
                                             </tr>
                                         @endforeach
                                         <tr>
                                             <td class="order_detail_page_prices">
                                                 Subtotal
+                                            </td>
+                                            <td class="my_account_all_items">
+
+                                            </td>
+                                            <td class="my_account_all_items">
+
                                             </td>
                                             <td class="my_account_all_items">
 
@@ -124,12 +138,24 @@
 
                                             </td>
                                             <td class="my_account_all_items">
+
+                                            </td>
+                                            <td class="my_account_all_items">
+
+                                            </td>
+                                            <td class="my_account_all_items">
                                                 {{ $order_detail['texClasses']->name }}
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="order_detail_page_prices">
                                                 Delivery Method
+                                            </td>
+                                            <td class="my_account_all_items">
+
+                                            </td>
+                                            <td class="my_account_all_items">
+
                                             </td>
                                             <td class="my_account_all_items">
 
@@ -146,6 +172,12 @@
 
                                             </td>
                                             <td class="my_account_all_items">
+
+                                            </td>
+                                            <td class="my_account_all_items">
+
+                                            </td>
+                                            <td class="my_account_all_items">
                                                 ${{number_format($order_detail->total_including_tax , 2)}}
                                             </td>
                                         </tr>
@@ -154,11 +186,17 @@
                                         <tr>
                                             <td class="order_detail_page_product_name">
                                                 <a class="btn order_detail_page_product_name "
-                                                    href="{{ url('product-detail/' . $order_detail['apiOrderItem'][0]['product_id'] . '/' . $order_detail['apiOrderItem'][0]['option_id'] . '/' . $order_detail['apiOrderItem'][0]['product']->slug) }}">
+                                                    href="{{ url('product-detail/' . $order_detail['apiOrderItem'][0]['product']->id . '/' . $order_detail['apiOrderItem'][0]['option_id'] . '/' . $order_detail['apiOrderItem'][0]['product']->slug) }}">
                                                     {{ $order_detail['apiOrderItem'][0]['product']->name }}
                                             </td>
                                             <td class="my_account_all_items">
+                                                {{ $order_detail['apiOrderItem'][0]['product']->code }}
+                                            </td>
+                                            <td class="my_account_all_items">
                                                 {{ $order_detail['apiOrderItem'][0]['quantity'] }}
+                                            </td>
+                                            <td class="my_account_all_items">
+                                                {{ $order_detail['apiOrderItem'][0]['product']->price }}
                                             </td>
                                             <td class="my_account_all_items">
                                                 {{ $order_detail->productTotal }}
@@ -167,6 +205,12 @@
                                         <tr>
                                             <td class="my_account_address_items">
                                                 Subtotal
+                                            </td>
+                                            <td class="my_account_all_items">
+
+                                            </td>
+                                            <td class="my_account_all_items">
+
                                             </td>
                                             <td class="my_account_all_items">
 
@@ -183,12 +227,24 @@
 
                                             </td>
                                             <td class="my_account_all_items">
+
+                                            </td>
+                                            <td class="my_account_all_items">
+
+                                            </td>
+                                            <td class="my_account_all_items">
                                                 {{ $order_detail['texClasses']->name }}
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="my_account_address_items">
                                                 Total
+                                            </td>
+                                            <td class="my_account_all_items">
+
+                                            </td>
+                                            <td class="my_account_all_items">
+
                                             </td>
                                             <td class="my_account_all_items">
 

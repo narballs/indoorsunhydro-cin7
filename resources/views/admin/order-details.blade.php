@@ -122,7 +122,10 @@
                                 </tr>
                                 <tbody>
                                     @php
-                                        $tax = $order->total * ($tax_class->rate / 100);
+                                        $tax=0;
+                                        if (!empty($tax_class)) {
+                                            $tax = $order->total * ($tax_class->rate / 100);
+                                        }
                                         $total_including_tax = $tax + $order->total;
                                     @endphp
                                     @foreach ($orderitems as $item)

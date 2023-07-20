@@ -9,6 +9,7 @@ use App\Mail\Subscribe;
 use App\Models\Contact;
 
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
 
 class UserHelper
 {
@@ -60,12 +61,14 @@ class UserHelper
     }
 
     public static function switch_company($contact_id) {
-        // dd($contact_id);
-        $new_register_contact = Contact::where('contact_id' , null)->where('user_id' , auth()->user()->id)->first();
+        $user_id = Auth::id();
+
+        $new_register_contact = Contact::where('contact_id' , null)->where('user_id' , $user_id)->first();
         if (!empty($new_register_contact)) {
             $active_company = $new_register_contact->company;
             Session::put([
-                'company' => $active_company
+                'contact_id' => null,
+                'company' => $active_company,
             ]);
 
         } else {
@@ -75,9 +78,8 @@ class UserHelper
                 $active_company = $contact->company;
                 Session::put([
                     'contact_id' => $active_contact_id,
-                    'company' => $active_company
+                    'company' => $active_company,
                 ]);
-
             } 
             else {
                 $contact = Contact::where('secondary_id', $contact_id)->where('status', '!=', 0)->first();
@@ -86,7 +88,7 @@ class UserHelper
                     $active_company = $contact->company;
                     Session::put([
                         'contact_id' => $active_contact_id,
-                        'company' => $active_company
+                        'company' => $active_company,
                     ]);
                 }
             }
@@ -97,5 +99,40 @@ class UserHelper
             'status' => '204',
             'message' => 'Company Switch Successfully !'
         ]);
+    }
+
+    public static function getUserPriceColumn() {
+        $user_id = Auth::id();
+        $price_column = 'retailUSD';
+
+        if (empty($user_id)) {
+            return $price_column;
+        }
+
+        $company = Session::get('company');
+        if (!empty($company)) {
+            $contact = Contact::where('user_id', $user_id)
+                ->where('company', $company)
+                ->first();
+
+            if (!empty($contact)) {
+                // if it's parent-id and secondary-id both exists then get price column from parent contact
+                if (!empty($contact->parent_id) && !empty($contact->secondary_id)) {
+                    $parent_contact = Contact::where('contact_id', $contact->parent_id)
+                        ->where('status', '!=', 0)
+                        ->first();
+
+                    if (!empty($parent_contact->priceColumn)) {
+                        $price_column = $parent_contact->priceColumn;
+                    }
+                }
+                else {
+                    $price_column = $contact->priceColumn;
+                }
+            }    
+        }
+
+
+        return lcfirst($price_column);
     }
 }

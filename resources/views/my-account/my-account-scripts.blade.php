@@ -438,6 +438,7 @@
     // }
 
     function updateContact(user_id) {
+        $('#address_loader').removeClass('d-none');
         var first_name = $('input[name=firstName]').val();
         var last_name = $('input[name=lastName]').val();
         var company_name = $('input[name=company]').val();
@@ -448,13 +449,14 @@
         var state = document.getElementById("state").value;
         var zip = $('input[name=zip]').val();
         var email = $('input[name=email]').val();
-
+        var contact_id = $('#contact_id_val').val();
+        var secondary_id = $('input[name=secondary_id]').val();
+        console.log(secondary_id)
 
         jQuery.ajax({
             method: 'GET',
+            url: "{{ url('/my-account-user-addresses/') }}",
             data: {
-                url: "{{ url('/my-account-user-addresses/') }}",
-
                 "_token": "{{ csrf_token() }}",
                 "user_id": user_id,
                 "first_name": first_name,
@@ -466,17 +468,27 @@
                 "town_city": town_city,
                 "state": state,
                 "zip": zip,
-                "email": email
+                "email": email,
+                'contact_id': contact_id,
+                'secondary_id': secondary_id,
             },
             success: function(response) {
                 if (response.success == true) {
+                    $('#address_loader').addClass('d-none');
                     $('.modal-backdrop').remove()
                     $('#success_msg').removeClass('d-none');
                     $('#success_msg').html(response.msg);
                     window.location.reload();
+                }else {
+                    $('#address_loader').addClass('d-none');
+                    $('.modal-backdrop').remove()
+                    $('#error_msg').removeClass('d-none');
+                    $('#error_msg').html(response.msg);
+                    window.location.reload();
                 }
             },
             error: function(response) {
+                $('#address_loader').addClass('d-none');
                 var error_message = response.responseJSON;
                 var error_text = '';
                 if (typeof error_message.errors.first_name != 'undefined') {
@@ -917,6 +929,268 @@
         }
 
     }
+    //main multi function 
+    function handlePerPage() {
+        var per_page = jQuery('#per_page_favorite').val();
+        var basic_url = `/my-account/my-favorites`;
+        if (per_page != '') {
+        basic_url = basic_url+`?per_page=${per_page}`;
+        }
+        window.location.href = basic_url
+    }
+    //main multi function 
+    function add_multi_to_cart(all_fav) {
+        $.ajax({
+            url: "{{ url('/multi-favorites-to-cart/') }}",
+            method: 'post',
+            data: {
+                "_token": "{{ csrf_token() }}",
+                all_fav: all_fav,
+                quantity: 1
+            },
+            success: function(response) {
+                if (response.status == 'success') {
+                    var cart_items = response.cart_items;
+                    var cart_total = 0;
+                    var total_cart_quantity = 0;
+
+                    for (var key in cart_items) {
+                        var item = cart_items[key];
+
+                        var product_id = item.prd_id;
+                        var price = parseFloat(item.price);
+                        var quantity = parseFloat(item.quantity);
+
+                        var subtotal = parseFloat(price * quantity);
+                        var cart_total = cart_total + subtotal;
+                        var total_cart_quantity = total_cart_quantity + quantity;
+                        $('#subtotal_' + product_id).html('$' + subtotal);
+                    }
+                    $('#top_cart_quantity').html(total_cart_quantity);
+                    $('#cart_items_quantity').html(total_cart_quantity);
+                    $('#topbar_cart_total').html('$' + parseFloat(cart_total).toFixed(2));
+                    var total = document.getElementById('#top_cart_quantity');
+                    Swal.fire({
+                        toast: true,
+                        icon: 'success',
+                        title: 'Product(s) added to cart successfully',
+                        timer: 2000,
+                        showConfirmButton: false,
+                        position: 'top',
+                        timerProgressBar: true
+                    });
+                }
+            }
+        });
+    }
+    //add all favorites to cart
+    function add_all_to_cart() {
+        var all_fav = [];
+        var all_check = $('.single_fav_check');
+        all_check.each(function() {
+            var id = $(this).attr('id');
+            var id = id.split('_');
+            var product_id = id[1];
+            var option_id = id[2];
+            all_fav.push({
+                product_id: product_id,
+                option_id: option_id
+            });
+        });
+        add_multi_to_cart(all_fav);
+    }
+    //add selected favorites to cart
+    function add_selected_to_cart() {
+        var selected_check = $('.single_fav_check:checked');
+        if (selected_check.length == 0) {
+            Swal.fire({
+                toast: true,
+                icon: 'error',
+                title: 'Please select at least one product to add it into your cart.',
+                timer: 1000,
+                showConfirmButton: false,
+                position: 'top',
+                timerProgressBar: true
+            });
+        } else {
+            var all_fav = [];
+            selected_check.each(function() {
+                if ($(this).is(':checked')) {
+                    var id = $(this).attr('id');
+                    var id = id.split('_');
+                    var product_id = id[1];
+                    var option_id = id[2];
+                    all_fav.push({
+                        product_id: product_id,
+                        option_id: option_id
+                    });
+                }
+            });
+            add_multi_to_cart(all_fav);
+            setTimeout(() => {
+                selected_check.prop('checked', false);
+            }, 1000);
+        }
+    }
+
+    function remove_from_favorite(id) {
+        var product_buy_list_id = id;
+        var option_id = $(this).attr('data-option');
+        var contact_id = $(this).attr('data-contact');
+        var user_id = $(this).attr('data-user');
+        var list_id = $(this).attr('data-list');
+        var title = $(this).attr('data-title');
+        $.ajax({
+            url: "{{ url('/delete/favorite/product') }}",
+            method: 'post',
+            data: {
+                "_token": "{{ csrf_token() }}",
+                product_buy_list_id,
+                option_id,
+                contact_id,
+                user_id,
+                list_id,
+                title
+            },
+            success: function(response) {
+                if (response.status == 'success') {
+                    wishLists();
+                    Swal.fire('Success!', 'Product removed from your favorites.');
+                }
+            }
+        });
+    }
+
+    function add_favorite_to_cart(id, option_id) {
+        jQuery.ajax({
+            url: "{{ url('/add-to-cart/') }}",
+            method: 'post',
+            data: {
+                "_token": "{{ csrf_token() }}",
+                p_id: id,
+                option_id: option_id,
+                quantity: 1,
+            },
+            success: function(response) {
+                if (response.status == 'success') {
+                    var cart_items = response.cart_items;
+                    var cart_total = 0;
+                    var total_cart_quantity = 0;
+
+                    for (var key in cart_items) {
+                        var item = cart_items[key];
+
+                        var product_id = item.prd_id;
+                        var price = parseFloat(item.price);
+                        var quantity = parseFloat(item.quantity);
+
+                        var subtotal = parseFloat(price * quantity);
+                        var cart_total = cart_total + subtotal;
+                        var total_cart_quantity = total_cart_quantity + quantity;
+                        $('#subtotal_' + product_id).html('$' + subtotal);
+                        var product_name = document.getElementById('prd_name_' + id).value;
+                    }
+
+                    Swal.fire({
+                        toast: true,
+                        icon: 'success',
+                        title: quantity + ' X ' + document.getElementById('prd_name_' + id).value +
+                            ' added to your cart',
+                        timer: 3000,
+                        showConfirmButton: false,
+                        position: 'top',
+                        timerProgressBar: true
+                    });
+                }
+                $('#top_cart_quantity').html(total_cart_quantity);
+
+                $('#cart_items_quantity').html(total_cart_quantity);
+                $('#topbar_cart_total').html('$' + parseFloat(cart_total).toFixed(2));
+                var total = document.getElementById('#top_cart_quantity');
+            }
+        });
+    }
+    // buy again functionality 
+    function add_products_to_cart(order_id) {
+        $.ajax({
+            url: '/order/items/' + order_id,
+            method: 'get',
+            success: function(response) {
+                if(response.status == 'success') {
+                    if(response.order_items != null) {
+                        var ordered_products = [];
+                        response.order_items.api_order_item.forEach(function(item) {
+                            console.log(item);
+                            ordered_products.push({
+                                product_id: item.product.id,
+                                option_id: item.option_id,
+                                quantity: item.quantity
+                            });
+                        });
+                        buy_items_again(ordered_products);
+                    } else {
+                        Swal.fire({
+                            toast: true,
+                            icon: 'error',
+                            title: 'Something went wrong',
+                            timer: 2000,
+                            showConfirmButton: false,
+                            position: 'top',
+                            timerProgressBar: true
+                        });
+                    }
+                    
+                }
+            }
+        });
+    }
+
+    function buy_items_again(ordered_products) {
+        $.ajax({
+            url: "{{ url('/buy/order/items/') }}",
+            method: 'post',
+            data: {
+                "_token": "{{ csrf_token() }}",
+                ordered_products: ordered_products,
+                // quantity: 1
+            },
+            success: function(response) {
+                if (response.status == 'success') {
+                    var cart_items = response.cart_items;
+                    var cart_total = 0;
+                    var total_cart_quantity = 0;
+
+                    for (var key in cart_items) {
+                        var item = cart_items[key];
+
+                        var product_id = item.prd_id;
+                        var price = parseFloat(item.price);
+                        var quantity = parseFloat(item.quantity);
+
+                        var subtotal = parseFloat(price * quantity);
+                        var cart_total = cart_total + subtotal;
+                        var total_cart_quantity = total_cart_quantity + quantity;
+                        $('#subtotal_' + product_id).html('$' + subtotal);
+                    }
+                    $('#top_cart_quantity').html(total_cart_quantity);
+                    $('#cart_items_quantity').html(total_cart_quantity);
+                    $('#topbar_cart_total').html('$' + parseFloat(cart_total).toFixed(2));
+                    var total = document.getElementById('#top_cart_quantity');
+                    Swal.fire({
+                        toast: true,
+                        icon: 'success',
+                        title: 'Product(s) added to cart successfully',
+                        timer: 2000,
+                        showConfirmButton: false,
+                        position: 'top',
+                        timerProgressBar: true
+                    });
+                    window.location.href = '/checkout';
+                }
+            }
+        });
+    }
+   
 </script>
 
 
@@ -924,6 +1198,7 @@
     aria-labelledby="exampleModalToggleLabel" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
+            
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalToggleLabel">Update Address</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -932,8 +1207,15 @@
                 <div class="update-address-section" id="address-form-update">
 
                     <form class="needs-validation mt-4 novalidate" action="{{ url('order') }}" method="POST">
+                        @if(!empty($user_address->contact_id))
+                        <input type="hidden" value="{{$user_address->contact_id}}" name="contact_id" id="contact_id_val">
+                        @elseif(!empty($user_address->secondary_id))
+                        <input type="hidden" value="{{$user_address->secondary_id}}" name="secondary_id" id="secondary_id_val">
+                        @endif
                         @csrf
                         <div class="alert alert-success mt-3 d-none" id="success_msg"></div>
+                        <div class="alert alert-danger mt-3 d-none" id="error_msg"></div>
+                        
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="firstName">First name</label>
@@ -974,32 +1256,26 @@
 
                         <div class="mb-3">
                             <label for="address">Street Address</label>
-                            <input type="text" class="form-control bg-light" name="address"
-                                value="{{ $user_address->postalAddress1 }}" placeholder="House number and street name"
-                                required>
-
+                            <input type="text" class="form-control bg-light" name="address" id="address1"
+                            value="{{ $user_address->address1 }}" placeholder="House number and street name"
+                            required>
+                            <div id="error_address1" class="text-danger"></div>
                         </div>
-                        <div id="error_address1" class="text-danger">
-
-                        </div>
-
                         <div class="mb-3">
                             <label for="address2">Address 2 <span class="text-muted">(Optional)</span></label>
                             <input type="text" class="form-control bg-light" name="address2"
-                                value="{{ $user_address->postalAddress2 }}"
+                                value="{{ $user_address->address2 }}"
                                 placeholder="Apartment, suite, unit etc (optional)">
+                                <div id="error_address2" class="text-danger"></div>
                         </div>
-                        <div id="error_address2" class="text-danger">
-
-                        </div>
+                       
                         <div class="mb-3">
                             <label for="town">Town/City <span class="text-muted">(Optional)</span></label>
                             <input type="text" class="form-control bg-light" name="town_city"
-                                value="{{ $user_address->postalCity }}" placeholder="Enter your town">
+                                value="{{ $user_address->city }}" placeholder="Enter your town">
+                                <div id="error_city" class="text-danger"></div>
                         </div>
-                        <div id="error_city" class="text-danger">
-
-                        </div>
+                        
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="state">State</label>
@@ -1007,14 +1283,14 @@
                                 <select class="form-control bg-light" name="state" id="state">
                                     @foreach ($states as $state)
                                         <?php
-                                        if ($user_address->postalState == $state->name) {
+                                        if ($user_address->state == $state->state_name) {
                                             $selected = 'selected';
                                         } else {
                                             $selected = '';
                                         }
                                         
                                         ?>
-                                        <option value="{{ $state->name }}" <?php echo $selected; ?>>{{ $state->name }}
+                                        <option value="{{ $state->state_name }}" <?php echo $selected; ?>>{{ $state->state_name }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -1026,7 +1302,7 @@
                             <div class="col-md-6 mb-3">
                                 <label for="zip">Zip</label>
                                 <input type="text" class="form-control bg-light" name="zip"
-                                    placeholder="Enter zip code" value="{{ $user_address->postalPostCode }}"
+                                    placeholder="Enter zip code" value="{{ $user_address->postCode }}"
                                     required>
                                 <div id="error_zip" class="text-danger">
 
@@ -1056,6 +1332,9 @@
 
             </div>
             <div class="modal-footer">
+                <div class="spinner-border text-primary d-none" role="status" id="address_loader">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
                 <button type="button" class="btn button-cards primary"
                     onclick="updateContact('{{ auth()->user()->id }}')">Update</button>
             </div>
