@@ -41,52 +41,15 @@
             <div class="col-md-12 p-1">
                 <?php
                 $retail_price = 0;
+                $user_price_column = App\Helpers\UserHelper::getUserPriceColumn();
                 foreach ($option->price as $price) {
-                    switch ($pricing) {
-                        case 'RetailUSD':
-                            $retail_price = $price->retailUSD;
-                            break;
-                        case 'WholesaleUSD':
-                            $retail_price = $price->wholesaleUSD;
-                            break;
-                        case 'TerraInternUSD':
-                            $retail_price = $price->terraInternUSD;
-                            break;
-                        case 'SacramentoUSD':
-                            $retail_price = $price->sacramentoUSD;
-                            break;
-                        case 'OklahomaUSD':
-                            $retail_price = $price->oklahomaUSD;
-                            break;
-                        case 'CalaverasUSD':
-                            $retail_price = $price->calaverasUSD;
-                            break;
-                        case 'Tier1USD':
-                            $retail_price = $price->tier1USD;
-                            break;
-                        case 'Tier2USD':
-                            $retail_price = $price->tier2USD;
-                            break;
-                        case 'Tier3USD':
-                            $retail_price = $price->tier3USD;
-                            break;
-                        case 'CommercialOKUSD':
-                            $retail_price = $price->commercialOKUSD;
-                            break;
-                        case 'CostUSD':
-                            $retail_price = $price->costUSD;
-                            break;
-                        default:
-                            $retail_price = $price->retailUSD;
-                            break;
-                    }
+                    $retail_price = $price->$user_price_column;
                 }
                 ?>
                 <h4 text="{{ $retail_price }}" class="text-uppercase mb-0 text-center p_price_resp mt-0">
                     ${{ number_format($retail_price, 2) }}</h4>
                 @if ($product->categories)
                     <p class="category-cart-page  mt-2 mb-2" title="{{$product->categories->name}}">
-                        
                         Category:&nbsp;&nbsp;{{ \Illuminate\Support\Str::limit($product->categories->name, 4) }}
                     </p>
                 @else
