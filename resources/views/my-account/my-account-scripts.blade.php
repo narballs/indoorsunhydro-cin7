@@ -1062,6 +1062,7 @@
     }
 
     function add_favorite_to_cart(id, option_id) {
+        alert('hi');
         jQuery.ajax({
             url: "{{ url('/add-to-cart/') }}",
             method: 'post',

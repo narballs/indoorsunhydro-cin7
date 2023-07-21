@@ -14,58 +14,68 @@
                 <div class="col-md-8 col-xl-6 pt-3">
                     @include('my-account.my-account-side-bar')
                 </div>
-                <div class="col-md-2 pt-3 d-flex align-items-center justify-content-end">
-                    <ul class="nav ">
-                        <li class="text-center">
-                            <select id="handle_sort_by" name="sort_by" class="py-1" onchange="handleSortBY()">
-                                <option value="recent" {{ $sort_by }} {{ isset($sort_by) && $sort_by=='recent' ? 'selected="selected"' : ''
-                                    }}>Recent</option>
-                                <option value="amount" {{ $sort_by }} {{ isset($sort_by) && $sort_by=='amount' ? 'selected="selected"' : ''
-                                    }}>Amount</option>
-                            </select>
-                        </li>
-                    </ul>
-                </div>
-                {{-- <div class="col-md-6 py-4">
+                
+                <div class="col-md-3 col-xl-5 pt-3">
                     <div class="row search_row_my_account_page">
-                        <div class="col-md-10 d-flex ">
-                            <div class="has-search my_account_search w-100 ">
+                        <div class="col-md-12 d-flex mx-3">
+                            <div class="has-search my_account_search w-100 mt-0">
                                 <span class="fa fa-search form-control-feedback"></span>
                                 <form method="get" action="#" class="mb-2">
-                                    <input type="text" class="form-control border-0" id="search" name="search"
+                                    <input type="text" class="form-control border-0" id="order_search" name="search"
                                         placeholder="Search all orders" value="{{ isset($search) ? $search : '' }}" />
                             </div>
                             <div class="ps-3">
-                                <button type="button" class="btn my_account_search_btn">Search</button>
+                                <button type="button" class="btn my_account_search_btn" onclick="search_orders()">Search</button>
                             </div>
                         </div>
                         </form>
                     </div>
-                </div> --}}
+                </div>
                 <div class="col-md-12">
-                    {{-- <div class="row">
-                        <div class="col-md-12 d-flex ps-4">
-                            <span>
-                                <p class="total_order_my_account">12 orders
-                                    <span class="placed_in_my_account">
-                                        &nbsp; placed in
-                                    </span>
-                                </p>
-                            </span>
-                            <span class="select_months_my_account">
-                                <select class="custom-select" id="inputGroupSelect01">
-                                    <option selected>Past 3 months</option>
-                                    <option value="1">Past 2 months</option>
-                                    <option value="2">Past 1 months</option>
-                                    <option value="3">Past 4 months</option>
-                                </select>
-                            </span>
-                        </div>
-                    </div> --}}
                     <div class="row">
                         <div class="col-md-12">
                             <div class="row">
                                 <div class="col-md-10 col-xl-8">
+                                    <div class="row mt-4">
+                                        <div class="col-md-9 d-flex ps-4">
+                                            <span>
+                                                <p class="total_order_my_account mt-2">@if(!empty($date_filter)) {{$user_orders->total()}} @else {{$user_orders->total()}} @endif orders
+                                                    <span class="placed_in_my_account">
+                                                        &nbsp; placed in
+                                                    </span>
+                                                </p>
+                                            </span>
+                                            <span class="select_months_my_account" style="margin-top: 0px !important;">
+                                                <select class="custom-select date_filter" id="inputGroupSelect01" name="date_filter" onchange="date_filter()">
+                                                    <option value="past 3 months" {{ $date_filter }} {{ isset($date_filter) && $date_filter =='past 3 months' ? 'selected="selected"' : ''
+                                                }}>Past 3 Months</option>
+                                                    <option value="past 5 months" {{ $date_filter }} {{ isset($date_filter) && $date_filter =='past 5 months' ? 'selected="selected"' : ''
+                                                }}>Past 5 Months</option>
+                                                    <option value="this month" {{ $date_filter }} {{ isset($date_filter) && $date_filter =='this month' ? 'selected="selected"' : ''
+                                                }}>This Month</option>
+                                                    <option value="last month" {{ $date_filter }} {{ isset($date_filter) && $date_filter =='last month' ? 'selected="selected"' : ''
+                                                }}>Past 1 Month</option>
+                                                    <option value="last year" {{ $date_filter }} {{ isset($date_filter) && $date_filter =='last year' ? 'selected="selected"' : ''
+                                                }}>Past 1 Year</option>
+                                                    
+                                                </select>
+                                            </span>
+                                        </div>
+                                        <div class="col-md-3 d-flex justify-content-end">
+                                            <ul class="nav ">
+                                                <li class="text-center">
+                                                    <select id="handle_sort_by" name="sort_by" class="py-1" onchange="handleSortBY()">
+                                                        <option value="recent" {{ $sort_by }} {{ isset($sort_by) && $sort_by=='recent' ? 'selected="selected"' : ''
+                                                            }}>Recent</option>
+                                                        <option value="amount" {{ $sort_by }} {{ isset($sort_by) && $sort_by=='amount' ? 'selected="selected"' : ''
+                                                            }}>Amount</option>
+                                                    </select>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-9 col-xl-8">
                                     @foreach ($user_orders as $user_order)
                                         @if(!empty($user_order->apiOrderItem))
                                         <div class="card my_account_order_card my-3">
@@ -93,17 +103,25 @@
                                                         <span>
                                                             <p class="order_place_my_account">
                                                                 SHIP TO <br>
-                                                                <span class="shipping_to_my_account">
-                                                                    {{ \Illuminate\Support\Str::limit($user_order->contact->postalAddress1, 10) }}
-                                                                </span>
+                                                                @if(!empty($user_order->contact->address1))
+                                                                    <span class="shipping_to_my_account" title="{{$user_order->contact->address1}}">
+                                                                        {{ \Illuminate\Support\Str::limit($user_order->contact->address1, 10) }}
+                                                                    </span>
+                                                                @elseif(!empty($user_order->contact->postalAddress1))
+                                                                    <span class="shipping_to_my_account" title="{{$user_order->contact->postalAddress1}}">
+                                                                        {{ \Illuminate\Support\Str::limit($user_order->contact->postalAddress1, 10) }}
+                                                                    </span>
+                                                                @endif
                                                             </p>
                                                         </span>
                                                         <span>
                                                             <p class="order_place_my_account">
                                                                 Company <br>
+                                                                @if(!empty($user_order->contact->company))
                                                                 <span class="shipping_to_my_account">
                                                                     {{ \Illuminate\Support\Str::limit($user_order->contact->company, 10) }}
                                                                 </span>
+                                                                @endif
                                                             </p>
                                                         </span>
                                                         <span>
@@ -117,7 +135,6 @@
                                                                     @elseif($user_order->order_id == null && $user_order->isApproved == 2)
                                                                         <span class="badge badge-danger">Cancelled</span>
                                                                     @endif
-                                                                    
                                                                 </span>
                                                             </p>
                                                         </span>
@@ -278,6 +295,76 @@
                                     @endforeach
                                     {{ $user_orders->appends(Request::all())->links() }}
                                 </div>
+                                <div class="col-md-3 col-xl-3 p-3 mt-3 rounded h-50 buy_again_div">
+                                    @if(!empty($frequent_products))
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <p class="buy_again_heading">Buy Again</p>
+                                            </div>
+                                        </div>
+                                        @foreach($frequent_products as $frequent_product)
+                                            @if(!empty($frequent_product))
+                                                <div class="row mt-4 mb-3">
+                                                    <div class="col-md-12">
+                                                        <div class="row">
+                                                            <div class="col-md-4 image-div d-flex justify-content-center">
+                                                                @if(!empty($frequent_product->product->images))
+                                                                    <img src="{{ $frequent_product->product->images }}" alt="" class="buy_again_product_image">
+                                                                @else
+                                                                    <img src="{{ asset('/theme/img/image_not_available.png') }}" alt="" class="buy_again_product_image">
+                                                                @endif
+                                                            </div>
+                                                            <div class="col-md-8 data-div">
+                                                                <div class="row">
+                                                                    <div class="col-md-10">
+                                                                        
+                                                                        <p class="product_name">
+                                                                            @if(!empty($frequent_product->product->name))
+                                                                                <a class="product_name" id="prd_name_{{$frequent_product->product->id }}" href="{{ url('product-detail/' . $frequent_product->product->id . '/' . $frequent_product->option_id . '/' . $frequent_product->product->slug) }}">{{ $frequent_product->product->name }}</a>
+                                                                            @endif
+                                                                        </p>
+                                                                        
+                                                                    </div>
+                                                                    <div class="col-md-10">
+                                                                    <p class="product_price">
+                                                                            @if(!empty($frequent_product->price))
+                                                                                ${{ number_format($frequent_product->price, 2) }}
+                                                                            @endif
+                                                                        </p>
+                                                                    </div>
+                                                                    <div class="col-md-10">
+                                                                        <p class="category_name">Category:
+                                                                            @if(!empty($frequent_product->product->categories))
+                                                                            <a class="category_name" href="{{ url('products/' . $frequent_product->product->categories->id . '/' .$frequent_product->product->categories->slug) }}"> 
+                                                                                {{$frequent_product->product->categories->name}}
+                                                                            </a> 
+                                                                            @endif
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row justify-content-center">
+                                                            <div class="col-md-10">
+                                                                <button type="button" class="buy_frequent_again_btn border-0 w-100 p-2" onclick="add_to_cart('{{ $frequent_product->product->id }}', '{{ $frequent_product->option_id }}')">Add to Cart</button>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row justify-content-center mt-4">
+                                                            <div class="col-md-10 border-div"></div>
+                                                        </div>
+                                                        
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        @endforeach
+                                    @else
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <p class="buy_again_heading">No Frequently buyed products to show</p>
+                                            </div>
+                                        </div>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -320,7 +407,137 @@
     #handle_sort_by::-moz-appearance {
         color:#989898;
     }
+    .buy_again_heading {
+        color: #242424;
+        font-family: 'Poppins';
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+    }
+    .product_name {
+        color: #000;
+        font-family: 'Poppins';
+        font-size: 14.669px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+    }
+    .product_price {
+        color: #DC4E41;
+        font-family: 'Poppins';
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: normal;
+    }
+    .category_name {
+        color: #8A8A8A;
+        font-family: 'Poppins';
+        font-size: 11.002px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+        letter-spacing: 0.55px;
+        text-transform: uppercase;
+    }
+    .buy_frequent_again_btn {
+        flex-shrink: 0;
+        border-radius: 6px;
+        background: #7BC533;
+        box-shadow: 0px 2.474916458129883px 3.712374687194824px 0px rgba(0, 0, 0, 0.08);
+        color: #FFF;
+        text-align: center;
+        font-family: 'Poppins';
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 21.037px; /* 150.263% */
+    }
+    .border-div {
+        width: 300px;
+        height: 1.237px;
+        background: #E1E1E1;
+    }
+    .buy_again_div {
+        border:1px solid rgb(234 236 240);
+    }
+    .search_row_my_account_page {
+        margin-top: 0px !important;
+    }
+    .buy_again_product_image {
+        height: 80px;
+        width: 80px;
+    }
 </style>
+<script>
+    function search_orders() {
+        var search = jQuery('#order_search').val();
+        var basic_url = `/my-account`;
+        if (search != '') {
+            basic_url = basic_url+`?search=${search}`;
+        }
+        window.location.href = basic_url
+    }
+    function date_filter() {
+        var date_filter = jQuery('.date_filter').val();
+        var basic_url = `/my-account`;
+        if (date_filter != '') {
+            basic_url = basic_url+`?date_filter=${date_filter}`;
+        }
+        window.location.href = basic_url
+    }
+    function add_to_cart(id, option_id) {
+        jQuery.ajax({
+            url: "{{ url('/add-to-cart/') }}",
+            method: 'post',
+            data: {
+                "_token": "{{ csrf_token() }}",
+                p_id: id,
+                option_id: option_id,
+                quantity: 1,
+            },
+            success: function(response) {
+                console.log(response);
+                if (response.status == 'success') {
+                    var cart_items = response.cart_items;
+                    var cart_total = 0;
+                    var total_cart_quantity = 0;
+
+                    for (var key in cart_items) {
+                        var item = cart_items[key];
+
+                        var product_id = item.prd_id;
+                        var price = parseFloat(item.price);
+                        var quantity = parseFloat(item.quantity);
+
+                        var subtotal = parseFloat(price * quantity);
+                        var cart_total = cart_total + subtotal;
+                        var total_cart_quantity = total_cart_quantity + quantity;
+                        jQuery('#subtotal_' + product_id).html('$' + subtotal);
+                        var product_name = jQuery('#prd_name_' + id).html();
+                    }
+
+                    Swal.fire({
+                        toast: true,
+                        icon: 'success',
+                        title: 1 + ' X ' + product_name +
+                            ' added to your cart',
+                        timer: 3000,
+                        showConfirmButton: false,
+                        position: 'top',
+                        timerProgressBar: true
+                    });
+                }
+                $('#top_cart_quantity').html(total_cart_quantity);
+
+                $('#cart_items_quantity').html(total_cart_quantity);
+                $('#topbar_cart_total').html('$' + parseFloat(cart_total).toFixed(2));
+                var total = document.getElementById('#top_cart_quantity');
+            }
+        });
+    }
+</script>
 @include('my-account.my-account-scripts')
 @include('partials.product-footer')
 @include('partials.footer')
