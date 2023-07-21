@@ -267,12 +267,15 @@
                                     </strong>
                                 </span>
                             </div>
-                            <div>
+                            @if(!empty($tax_class->name))
+                                <div class="mx-2"><span><strong class="cart-total" >{{$tax_class->name}}</strong></span></div>
+                            @endif
+                            {{-- <div>
                                 <span class="tax-calculater">
                                     (Tax is calculated when order is invoiced, could be 0% based
                                     on your account setup)
                                 </span>
-                            </div>
+                            </div> --}}
                         </td>
                     </tr>
                     <tr>
@@ -541,17 +544,26 @@
                                                             @if(!empty($tax_class->rate))
                                                 {{ number_format($tax_class->rate, 2) }}%
                                             @else
-                                                {{number_format(0, 2)}}
+                                                {{number_format(0, 2)}}%
                                             @endif</span>
                                                     </div>
                                                     <div class="w-50 d-flex align-items-center justify-content-end">
                                                         <p class="sub-total-checkout-page mbl_cart_subtotal mt-0 mb-0 text-right text-dark" id="mbl_tax_price">@if(!empty($tax_class->rate))
-                                                {{ number_format($tax_class->rate, 2) }}%
+                                                
+                                                ${{ number_format($tax, 2) }}
                                             @else
-                                                {{number_format(0, 2)}}
+                                                ${{number_format(0, 2)}}
                                             @endif</p>
                                                     </div>
+                                                    
                                                 </div>
+                                                @if(!empty($tax_class->name))
+                                                <div class="d-flex pb-3 mb-3" style="border-bottom:1px solid #dee2e6;">
+                                                    
+                                                    <div class="w-100 d-flex align-items-center "><p class="sub-total-checkout-page  mt-0 mb-0 ml-0 text-dark">{{$tax_class->name}}</p></div>
+                                                    
+                                                </div> 
+                                                @endif
                                                 <div class="d-flex pb-3 mb-3" style="border-bottom:1px solid #dee2e6;">
                                                     <div class="w-50 d-flex align-items-center">
                                                         <span>
