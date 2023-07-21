@@ -741,7 +741,8 @@ class UserController extends Controller
                     $query->orderBy('company');
                 })
                 ->with('apiOrderItem.product');
-                // dd($request->get('order_sort_by'));
+            
+            
             if (!empty($request->sort_by)) {
                 $sort_by = $request->sort_by;
                 if ($sort_by == 'recent') {
@@ -756,11 +757,75 @@ class UserController extends Controller
             } else {
                 $user_orders = $user_orders_query->orderBy('created_at' , 'Desc')->paginate(10);
             }
+
+            // main order search
+            $search = $request->search;
+            if (!empty($search)) {
+                $user_orders = $user_orders_query->with('apiOrderItem')
+                ->where('branchEmail' , 'like' , '%'.$search.'%')
+                ->orwhereHas('apiOrderItem.product' , function($query) use ($search) {
+                    $query->where('code' , 'like' , '%'.$search.'%')
+                    ->orWhere('name' , 'like' , '%'.$search.'%');
+                })
+                ->paginate(10);
+            }
+
+            //filter date search
             
+            $date_filter = $request->date_filter;
+            $this_month = Carbon::now()->month;
+            $last_month = [Carbon::now()->subMonth(1) , Carbon::now()];
+            $last_3_months = [Carbon::now()->subMonth(3) , Carbon::now()];
+            $last_5_months = [Carbon::now()->subMonth(5) , Carbon::now()];
+            $past_year = [Carbon::now()->subYear(1) , Carbon::now()];
+
+            if (!empty($date_filter)) {
+                
+                if ($date_filter == 'this month') {
+                    $user_orders = $user_orders_query
+                    ->whereMonth('created_at', $this_month)
+                    ->orderBy('created_at' , 'Desc')
+                    ->paginate(10);
+                }
+                
+                if ($date_filter == 'last month') {
+                    $user_orders = $user_orders_query
+                    ->whereBetween('created_at', $last_month)
+                    ->orderBy('created_at' , 'Desc')
+                    ->paginate(10);
+                }
+
+                if ($date_filter == 'past 3 months') {
+                    $user_orders = $user_orders_query
+                    ->whereBetween('created_at', $last_3_months)
+                    ->orderBy('created_at' , 'Desc')
+                    ->paginate(10);
+                }
+                
+                if ($date_filter == 'past 5 months') {
+                    $user_orders = $user_orders_query
+                    ->whereBetween('created_at', $last_5_months)
+                    ->orderBy('created_at' , 'Desc')
+                    ->paginate(10);
+                }
+                
+                if($date_filter == 'last year') {
+                    $user_orders = $user_orders_query
+                    ->whereBetween('created_at', $past_year)
+                    ->orderBy('created_at' , 'Desc')
+                    ->paginate(10);
+                }
+            }   else {
+                $user_orders = $user_orders_query
+                ->whereBetween('created_at', $last_3_months)
+                ->orderBy('created_at' , 'Desc')
+                ->paginate(10);
+            }
             $custom_roles_with_company = DB::table('custom_roles')
                 ->where('user_id', $user_id)
                 ->where('company', $selected_company)
                 ->first();
+                
             if (!empty($custom_roles_with_company) && $custom_roles_with_company->company == $selected_company) {
                 $order_approver_for_company = true;
             } else {
@@ -781,6 +846,18 @@ class UserController extends Controller
 
             $states = UsState::all();
             $wishlist = BuyList::with('list_products')->where('user_id', $user_id)->first();
+
+            $frequent_products = ApiOrderItem::with('product' , 'product.categories')
+            ->whereHas('product' , function($query){
+                $query->where('status' , '!=' , 'Inactive')
+                ->where('stockAvailable' , '>' , 0);
+            })
+            ->whereHas('product.categories' , function($query){
+                $query->where('is_active' , 1);
+            })
+            ->groupBy('product_id')
+            ->take(5)
+            ->get();
             return view('my-account', compact(
                 'user',
                 'user_address',
@@ -792,7 +869,10 @@ class UserController extends Controller
                 'can_approve_order',
                 'order_approver_for_company',
                 'sort_by',
-                'contact_id'
+                'contact_id',
+                'search',
+                'date_filter',
+                'frequent_products'
             ));
         }
     }

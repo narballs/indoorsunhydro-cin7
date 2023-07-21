@@ -144,7 +144,9 @@
 
                                             </td>
                                             <td class="my_account_all_items">
-                                                {{ $order_detail['texClasses']->name }}
+                                                @if(!empty($order_detail['texClasses']))
+                                                    {{ $order_detail['texClasses']->name }}
+                                                 @endif
                                             </td>
                                         </tr>
                                         <tr>
