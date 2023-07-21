@@ -76,7 +76,7 @@
                                     <div class="price d-flex flex-row align-items-center">
                                         @if ($productOption->products->status != 'Inactive')
                                             @php
-                                                $stock_available = '$productOption->stockAvailable';
+                                                $stock_available = $productOption->stockAvailable;
                                             @endphp
                                             @if (settype($stock_available  , 'integer') > 0)
                                                 <span
@@ -132,7 +132,7 @@
                                         </div>
                                         <div class="col-md-9 d-flex justify-content-end" style="">
                                             @php
-                                                $stock_available = '$productOption->stockAvailable';
+                                                $stock_available = $productOption->stockAvailable;
                                             @endphp
                                             @if (settype($stock_available  , 'integer') > 0 || $productOption->products->status != 'Inactive')
                                             <button class=" button-cards product-detail-button-cards text-uppercase"
@@ -235,7 +235,7 @@
 
                         <div class="price d-flex flex-row align-items-center">
                             @php
-                                $stock_available = '$productOption->stockAvailable';
+                                $stock_available = $productOption->stockAvailable;
                             @endphp
                             @if (settype($stock_available  , 'integer') > 0)
                             <span class="rounded-pill product-detail-quantity d-flex justify-content-center align-items-center">
@@ -282,7 +282,7 @@
                             <div class="mt-3 p_detail_cart_row">
                                 <div style="">
                                     @php
-                                        $stock_available = '$productOption->stockAvailable';
+                                        $stock_available = $productOption->stockAvailable;
                                     @endphp
                                     @if (settype($stock_available  , 'integer') > 0)
                                     <button class="button-cards product-detail-button-cards text-uppercase ajaxSubmit_mbl w-100" type="button" id="ajaxSubmit_mbl">
@@ -361,7 +361,7 @@
 
                         <div class="price d-flex flex-row align-items-center mt-4">
                             @php
-                                $stock_available = '$productOption->stockAvailable';
+                                $stock_available = $productOption->stockAvailable;
                             @endphp
                             @if (settype($stock_available  , 'integer') > 0)
                             <span
@@ -406,7 +406,7 @@
                             </div>
                             <div class="w-50" style="">
                                 @php
-                                    $stock_available = '$productOption->stockAvailable';
+                                    $stock_available = $productOption->stockAvailable;
                                 @endphp
                                 @if (settype($stock_available  , 'integer') > 0)
                                 <button class=" button-cards product-detail-button-cards text-uppercase" style="font-size: 16px !important;
