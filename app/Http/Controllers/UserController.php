@@ -849,11 +849,13 @@ class UserController extends Controller
 
             $frequent_products = ApiOrderItem::with('product' , 'product.categories' , 'product.options')
             ->whereHas('product' , function($query){
-                $query->where('status' , '!=' , 'Inactive')
-                ->where('stockAvailable' , '>' , 0);
+                $query->where('status' , '!=' , 'Inactive');
             })
             ->whereHas('product.categories' , function($query){
                 $query->where('is_active' , 1);
+            })
+            ->whereHas('product.product_options' , function($query){
+                $query->where('stockAvailable' , '>' , 0);
             })
             ->groupBy('product_id')
             ->take(5)
