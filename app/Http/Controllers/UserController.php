@@ -847,7 +847,7 @@ class UserController extends Controller
             $states = UsState::all();
             $wishlist = BuyList::with('list_products')->where('user_id', $user_id)->first();
 
-            $frequent_products = ApiOrderItem::with('product' , 'product.categories')
+            $frequent_products = ApiOrderItem::with('product' , 'product.categories' , 'product.options')
             ->whereHas('product' , function($query){
                 $query->where('status' , '!=' , 'Inactive')
                 ->where('stockAvailable' , '>' , 0);

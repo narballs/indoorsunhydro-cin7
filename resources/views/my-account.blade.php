@@ -320,7 +320,7 @@
                                                                         
                                                                         <p class="product_name">
                                                                             @if(!empty($frequent_product->product->name))
-                                                                                <a class="product_name" id="prd_name_{{$frequent_product->product->id }}" href="{{ url('product-detail/' . $frequent_product->product->id . '/' . $frequent_product->option_id . '/' . $frequent_product->product->slug) }}">{{ $frequent_product->product->name }}</a>
+                                                                                <a class="product_name" id="prd_name_{{$frequent_product->product->id }}" href="{{ url('product-detail/' . $frequent_product->product->id . '/' . $frequent_product->product->options[0]->option_id . '/' . $frequent_product->product->slug) }}">{{ $frequent_product->product->name }}</a>
                                                                             @endif
                                                                         </p>
                                                                         
@@ -346,7 +346,7 @@
                                                         </div>
                                                         <div class="row justify-content-center">
                                                             <div class="col-md-10">
-                                                                <button type="button" class="buy_frequent_again_btn border-0 w-100 p-2" onclick="add_to_cart('{{ $frequent_product->product->id }}', '{{ $frequent_product->option_id }}')">Add to Cart</button>
+                                                                <button type="button" class="buy_frequent_again_btn border-0 w-100 p-2" onclick="add_to_cart('{{ $frequent_product->product->id }}', '{{ $frequent_product->product->options[0]->option_id }}')">Add to Cart</button>
                                                             </div>
                                                         </div>
                                                         <div class="row justify-content-center mt-4">
