@@ -243,7 +243,7 @@
                                                             @endif
                                                         </div>
                                                     </div>
-                                                    @if (count($user_order->apiOrderItem) > 1)
+                                                    @if (count($user_order->apiOrderItem) > 0)
                                                         <div class="col-md-5 text-right">
                                                             <button type="button" class="btn all_items_to_cart_btn" onclick="add_products_to_cart({{$user_order->id}})">
                                                                 Add
