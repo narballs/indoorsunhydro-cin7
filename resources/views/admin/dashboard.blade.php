@@ -87,6 +87,11 @@
     <link rel="stylesheet" href="{{ asset('admin/admin_lte.css?v2') }}">
     <style>
         @media(min-width:280px) and (max-width: 425px) {
+            .go_to_site{
+                position: absolute;
+                top: -0.3rem;
+                width: 7rem;
+            }
             .main-header {
                 border-bottom: none;
                 width: 25%;

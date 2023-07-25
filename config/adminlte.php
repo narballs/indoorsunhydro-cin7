@@ -295,7 +295,7 @@ return [
             'text' => 'Go to site',
             'url'  => '/',
             'topnav_right' => true,
-            'classes' => 'text-primary',
+            'classes' => 'text-primary go_to_site',
         ],
         // [
         //     'type'         => 'fullscreen-widget',
