@@ -91,7 +91,6 @@
                                 <tbody>
                                     @if (count($order_detail->apiOrderItem) > 0)
                                         @foreach ($order_detail->apiOrderItem as $orderItem)
-                                            {{-- {{ dd($orderItem) }} --}}
                                             <tr>
                                                 <td class="order_detail_page_product_name">
                                                     <a href="{{ url('product-detail/' . $orderItem->product->id . '/' . $orderItem->option_id . '/' . $orderItem->product->slug) }}"
