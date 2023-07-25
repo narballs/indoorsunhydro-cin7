@@ -89,7 +89,7 @@
                                     
                                 @endphp
                                 <tbody>
-                                    @if (count($order_detail->apiOrderItem) > 1)
+                                    @if (count($order_detail->apiOrderItem) > 0)
                                         @foreach ($order_detail->apiOrderItem as $orderItem)
                                             {{-- {{ dd($orderItem) }} --}}
                                             <tr>

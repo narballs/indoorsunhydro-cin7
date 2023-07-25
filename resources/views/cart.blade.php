@@ -136,7 +136,7 @@
                                     <div class="quantity">
                                         <input type="number" name="quantity" id={{ 'row_quantity_' . $pk_product_id }}
                                             min="1" max="20" step="1"
-                                            value="{{ $cart['quantity'] }}">
+                                            value="{{ $cart['quantity'] }}" onchange="update_cart_products({{ $pk_product_id }})">
                                         <input type="hidden" name="p_id" id="p_id"
                                             value="{{ $cart['product_id'] }}">
                                         <input type="hidden" name="p_id" id="option_id"
@@ -221,6 +221,11 @@
                 }
                 $total_including_tax = $tax + $cart_total;
             ?>
+            @if(!empty($tax_class->rate))
+            <input type="hidden" value="{{$tax_class->rate}}" id="tax_rate_number">
+            @else
+            <input type="hidden" value="0" id="tax_rate_number">
+            @endif
             <table class="table mt-4">
                 <thead>
                     <tr>
@@ -479,7 +484,7 @@
                                                                                                 <i class="fa fa-angle-left text-dark align-middle" style="font-size: 8px;"></i>
                                                                                             </button>
                                                                                             <div class="">
-                                                                                                <input type="number" class="py-1 text-center mb-0 qtyMob_input bg-white"  min="0" class="itm_qty" id="itm_qty{{ $pk_product_id }}" 
+                                                                                                <input type="number" class="py-1 text-center mb-0 qtyMob_input bg-white"  min="0" class="itm_qty" id="itm_qty{{ $pk_product_id }}"
                                                                                                 data-type="{{ $pk_product_id }}" value="{{ $cart['quantity'] }}" style="width: 31px;font-weight: 600;font-size: 10px !important;
                                                                                                 color: #7CC633;background-color: #ffffff !important;border-top:0.485995px solid #EBEBEB !important;border-bottom:0.485995px solid #EBEBEB !important;line-height: 15px !important;border-left:0px !important;border-right:0px !important;">
                                                                                             </div>
@@ -1223,7 +1228,8 @@
 
 
                 var tax = 0;
-                var tax = grand_total.toFixed(2) * (8.75 / 100);
+                var tax_rate = parseInt($('#tax_rate_number').val());
+                var tax = grand_total.toFixed(2) * (tax_rate / 100);
                 $('.tax_cart').children().html('$' + tax.toFixed(2));
                 $('.grandTotal').children().html('$' + (tax + grand_total).toFixed(2));
 
@@ -1288,7 +1294,8 @@
                 $('.ipad_cart_subtotal').html('$' + grand_total.toFixed(2));
 
                 var tax = 0;
-                var tax = grand_total.toFixed(2) * (8.75 / 100);
+                var tax_rate = parseInt($('#tax_rate_number').val());
+                var tax = grand_total.toFixed(2) * (tax_rate / 100);
                 $('.tax_cart').children().html('$' + tax.toFixed(2));
                 $('.grandTotal').children().html('$' + (tax + grand_total).toFixed(2));
 
@@ -1300,6 +1307,135 @@
             }
         });
     }
+
+    // on change update cart
+    function update_cart_products(pk_product_id) {
+        var qty_input = parseFloat($('#row_quantity_' + pk_product_id).val());
+        var new_qty = parseFloat(qty_input);
+        var product_id = pk_product_id;
+
+        jQuery.ajax({
+            url: "{{ url('update-cart') }}",
+            method: 'post',
+            data: {
+                "_token": "{{ csrf_token() }}",
+                "items_quantity": new_qty,
+                "product_id": product_id
+            },
+            success: function(response) {
+                var row_price = response.cart_items[product_id].price;
+                var new_quantity = response.cart_items[product_id].quantity;
+                var new_row_price = parseFloat(row_price) * parseInt(new_quantity);
+                new_row_price = parseFloat(new_row_price).toFixed(2);
+                $('#row_quantity_' + product_id).val(new_quantity);
+                $('#subtotal_' + product_id).html('$' + new_row_price);
+
+                $('#itm_qty' + product_id).val(new_quantity);
+                $('#itm_qty_ipad' + product_id).val(new_quantity);
+
+                var grand_total = 0;
+                var total_cart_quantity = 0;
+                Object.keys(response.cart_items).forEach(function(key) {
+                    row_total = parseFloat(response.cart_items[key].price) * response.cart_items[
+                        key].quantity;
+                    grand_total += parseFloat(row_total);
+                    total_cart_quantity += parseInt(response.cart_items[key].quantity);
+
+                });
+                $('#cart_grand_total').children().html('$' + grand_total.toFixed(2));
+                $('#topbar_cart_total').html('$' + grand_total.toFixed(2));
+                $('#top_cart_quantity').html(total_cart_quantity);
+                $('.topbar_cart_total_ipad').html('$' + grand_total.toFixed(2));
+
+
+                $('.cartQtymbl').html(total_cart_quantity);
+                $('.mbl_cart_subtotal').html('$' + grand_total.toFixed(2));
+
+                $('.cartQtyipad').html(total_cart_quantity);
+                $('.ipad_cart_subtotal').html('$' + grand_total.toFixed(2));
+
+
+
+                var tax = 0;
+                var tax_rate = parseInt($('#tax_rate_number').val());
+                var tax = grand_total.toFixed(2) * (tax_rate / 100);
+                $('.tax_cart').children().html('$' + tax.toFixed(2));
+                $('.grandTotal').children().html('$' + (tax + grand_total).toFixed(2));
+
+
+                $('#mbl_tax_price').html('$' + tax.toFixed(2));
+                $('#mbl_total_p').html('$' + (tax + grand_total).toFixed(2));
+
+                $('#ipad_tax_price').html('$' + tax.toFixed(2));
+                $('#ipad_total_p').html('$' + (tax + grand_total).toFixed(2));
+            }
+        });
+    }
+    
+
+    function update_cart_products_mbl(pk_product_id) {
+        var qty_input = parseFloat($('#itm_qty' + product_id).val());
+        var new_qty = parseFloat(qty_input);
+        var product_id = pk_product_id;
+
+        jQuery.ajax({
+            url: "{{ url('update-cart') }}",
+            method: 'post',
+            data: {
+                "_token": "{{ csrf_token() }}",
+                "items_quantity": new_qty,
+                "product_id": product_id
+            },
+            success: function(response) {
+                var row_price = response.cart_items[product_id].price;
+                var new_quantity = response.cart_items[product_id].quantity;
+                var new_row_price = parseFloat(row_price) * parseInt(new_quantity);
+                new_row_price = parseFloat(new_row_price).toFixed(2);
+                $('#row_quantity_' + product_id).val(new_quantity);
+                $('#subtotal_' + product_id).html('$' + new_row_price);
+
+                $('#itm_qty' + product_id).val(new_quantity);
+                $('#itm_qty_ipad' + product_id).val(new_quantity);
+
+                var grand_total = 0;
+                var total_cart_quantity = 0;
+                Object.keys(response.cart_items).forEach(function(key) {
+                    row_total = parseFloat(response.cart_items[key].price) * response.cart_items[
+                        key].quantity;
+                    grand_total += parseFloat(row_total);
+                    total_cart_quantity += parseInt(response.cart_items[key].quantity);
+
+                });
+                $('#cart_grand_total').children().html('$' + grand_total.toFixed(2));
+                $('#topbar_cart_total').html('$' + grand_total.toFixed(2));
+                $('#top_cart_quantity').html(total_cart_quantity);
+                $('.topbar_cart_total_ipad').html('$' + grand_total.toFixed(2));
+
+
+                $('.cartQtymbl').html(total_cart_quantity);
+                $('.mbl_cart_subtotal').html('$' + grand_total.toFixed(2));
+
+                $('.cartQtyipad').html(total_cart_quantity);
+                $('.ipad_cart_subtotal').html('$' + grand_total.toFixed(2));
+
+
+
+                var tax = 0;
+                var tax_rate = parseInt($('#tax_rate_number').val());
+                var tax = grand_total.toFixed(2) * (tax_rate / 100);
+                $('.tax_cart').children().html('$' + tax.toFixed(2));
+                $('.grandTotal').children().html('$' + (tax + grand_total).toFixed(2));
+
+
+                $('#mbl_tax_price').html('$' + tax.toFixed(2));
+                $('#mbl_total_p').html('$' + (tax + grand_total).toFixed(2));
+
+                $('#ipad_tax_price').html('$' + tax.toFixed(2));
+                $('#ipad_total_p').html('$' + (tax + grand_total).toFixed(2));
+            }
+        });
+    }
+    
 </script>
 <style>
 
