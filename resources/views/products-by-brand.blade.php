@@ -47,18 +47,14 @@
                </select>
             </div>
             <div class="col">
-               <?php //dd($category_id);?>
                <label>Categories</label>
 
                <select class="form-select" id="selected_cat" name="selected_cat"
                   onchange="handleSelectChange('category')">
                   <option>Select Category</option>
                   @foreach($categories as $category)
-                     @if($category->name != 'Not visable')
                      <option value="{{$category->id}}/{{$category->slug}}" {{ isset($category_id) &&
-                        $category_id==$category->id ? 'selected="selected"' : '' }}>{{ $category->name }}</option>
-                     <!-- <option value="{{$category->id}}/{{$category->slug}}" {{ isset($selected_category_id) && $selected_category_id == $selected_category_id ? 'selected="selected"' : '' }}>{{ $category->name }}</option> -->
-                     @endif
+                        $category_id == $category->id ? 'selected="selected"' : '' }}>{{ $category->name }}</option>
                   @endforeach
 
                   <!-- @foreach($products as $key=>$product)
@@ -71,15 +67,10 @@
                <label>Brand</label>
                <select class="form-select" id="brand" name="brands[]" onchange="handleSelectChange('brand')">
                   <option>Select Brand</option>
-                  @foreach($brands as $_brand_id => $brand_name)
-
-                  <option value="{{ $_brand_id }}" {{ isset($brand_id) && $brand_id==$_brand_id ? 'selected="selected"'
+                  @foreach ($brands as $_brand_id => $brand_name)
+                  <option value="{{ $_brand_id }}" {{ isset($brand_id) && $brand_id == $_brand_id ? 'selected="selected"'
                      : '' }}>{{ $brand_name }}</option>
                   @endforeach
-
-                  <!-- @foreach($products as $key=>$product)
-                        <option value="{{$product->brand_id}}" >{{$product->brand}}</option>
-                  @endforeach -->
                </select>
             </div>
 
@@ -309,8 +300,13 @@
                         id="product_name_{{$product->id}}">{{ \Illuminate\Support\Str::limit($product->name, 10) }}</a></h5>
                   <div class="mt-auto">
                      <p class="text-uppercase mb-0 text-center text-danger">${{$product->retail_price}}</p>
-                     <button class="button-cards col w-100 mt-2" style="max-height: 46px;"
-                        onclick="updateCart({{$product->id}},{{$option->option_id}})">Add to cart</button>
+                     <button 
+                        class="button-cards col w-100 mt-2" 
+                        style="max-height: 46px;"
+                        onclick="updateCart({{$product->id}},{{$option->option_id}})"
+                     >
+                        Add to cart
+                     </button>
                   </div>
                </div>
             </div>
@@ -438,7 +434,9 @@
                <a href="{{ url('product-detail/'.$product->id.'/'.$option->option_id.'/'.$product->slug) }}"><img src="{{$option['image']}}"
                      class="col-md-10 offset-1" /></a>
                @else
-               <img src="{{ asset('theme/img/image_not_available.png') }}" class="w-100 img-fluid h-75 w-75"
+               <img 
+                  src="{{ asset('theme/img/image_not_available.png') }}" 
+                  class="w-100 img-fluid h-75 w-75"
                   onclick="showdetails({{$product->id}})" />
                @endif
                <div class="card-body d-flex flex-column text-center">

@@ -35,6 +35,16 @@ class SettingSeeder extends Seeder
                 'option_name' => 'sync_api_data', 
                 'type' => 'yes/no',
                 'option_value' => 'No',
+            ],
+            [
+                'option_name' => 'allow_order_without_stock', 
+                'type' => 'yes/no',
+                'option_value' => 'no',
+            ],
+            [
+                'option_name' => 'out_of_stock_label', 
+                'type' => 'text',
+                'option_value' => 'OUT OF STOCK',
             ]
         ];
 
