@@ -83,29 +83,19 @@
                                                     style=" cursor: pointer;"><span class="">
                                                         {{$productOption->stockAvailable}}</span></span>
                                                 <div>
-
-                                                    <!--   <a style="width:20px !important;" href="#" data-toggle="popover-click" data-placement="top" class="subscribe">
-                                                        <i class="fa-solid fa-heart" id="test" 
-                                                             data-toggle="popover" data-placement="top"
-                                                             ></i>
-
-                                                    </a> -->
-
-
-                                                    <small class="dis-price">&nbsp;</small> <span class="instock-label">IN
-                                                        STOCK</span>
+                                                    <small class="dis-price">&nbsp;</small> 
+                                                    <span class="instock-label">IN STOCK</span>
                                                 </div>
-
                                                 @else
-                                                <div>
-                                                    <small class="dis-price">&nbsp;</small><span class="text-danger">OUT OF
-                                                        STOCK</span>
-                                                </div>
+                                                    <div>
+                                                        <small class="dis-price">&nbsp;</small>
+                                                        <span class="text-danger">{{ App\Helpers\SettingHelper::getSetting('out_of_stock_label', 'OUT OF STOCK'); }}</span>
+                                                    </div>
                                             @endif
                                         @else 
                                             <div>
-                                                    <small class="dis-price">&nbsp;</small><span class="text-danger">NOT AVAILABLE FOR SALE</span>
-                                                </div>
+                                                <small class="dis-price">&nbsp;</small><span class="text-danger">NOT AVAILABLE FOR SALE</span>
+                                            </div>
 
                                         @endif
                                     </div>
@@ -128,16 +118,21 @@
                                             </div>
                                         </div>
                                         <div class="col-md-9 d-flex justify-content-end" style="">
-                                            @if($productOption->stockAvailable > 0 && $productOption->products->status != 'Inactive')
-                                            <button class=" button-cards product-detail-button-cards text-uppercase"
-                                                style="" type="button" id="ajaxSubmit">
-                                                <a class="text-white">Add to cart
-                                                </a>
-                                            </button>
+                                            <?php $enable_add_to_cart = App\Helpers\SettingHelper::enableAddToCart($productOption); ?>
+                                            @if ($enable_add_to_cart)
+                                                <button 
+                                                    class="button-cards product-detail-button-cards text-uppercase"
+                                                    type="button" id="ajaxSubmit"
+                                                >
+                                                    <a class="text-white">Add to cart </a>
+                                                </button>
                                             @else
-                                            <button
-                                                class="button-cards product-detail-button-cards opacity-50 text-uppercase"
-                                                type="submit"><a class="text-white">Add to cart</a></button>
+                                                <button 
+                                                    class="button-cards product-detail-button-cards opacity-50 text-uppercase" 
+                                                    type="submit"
+                                                >
+                                                    <a class="text-white">Add to cart</a>
+                                                </button>
                                             @endif
                                         </div>
                                     </div>
@@ -237,7 +232,9 @@
                             </div>
                             @else
                             <div class="ml-2">
-                                <span class="text-danger instock-label">OUT OF STOCK</span>
+                                <span class="text-danger instock-label">
+                                    {{ App\Helpers\SettingHelper::getSetting('out_of_stock_label', 'OUT OF STOCK'); }}
+                                </span>
                             </div>
                             @endif
                             @if(!empty($contact_id))
@@ -272,14 +269,15 @@
                             </div>
                             <div class="mt-3 p_detail_cart_row">
                                 <div style="">
-                                    @if($productOption->stockAvailable > 0)
-                                    <button class="button-cards product-detail-button-cards text-uppercase ajaxSubmit_mbl w-100" type="button" id="ajaxSubmit_mbl">
-                                        <a class="text-white">Add to cart</a>
-                                    </button>
+                                    <?php $enable_add_to_cart = App\Helpers\SettingHelper::enableAddToCart($productOption); ?>
+                                    @if ($enable_add_to_cart)
+                                        <button class="button-cards product-detail-button-cards text-uppercase ajaxSubmit_mbl w-100" type="button" id="ajaxSubmit_mbl">
+                                            <a class="text-white">Add to cart</a>
+                                        </button>
                                     @else
-                                    <button class="button-cards product-detail-button-cards opacity-50 text-uppercase w-100" type="submit">
-                                        <a class="text-white">Add to cart</a>
-                                    </button>
+                                        <button class="button-cards product-detail-button-cards opacity-50 text-uppercase w-100" type="submit">
+                                            <a class="text-white">Add to cart</a>
+                                        </button>
                                     @endif
                                 </div>
                             </div>
@@ -349,18 +347,20 @@
 
                         <div class="price d-flex flex-row align-items-center mt-4">
                             @if ($productOption->stockAvailable > 0)
-                            <span
-                                class="rounded-pill product-detail-quantity d-flex justify-content-center align-items-center"><span
-                                    class="">{{$productOption->stockAvailable}}</span></span>
-                            <div>
-                                <small class="dis-price">&nbsp;</small> <span class="instock-label">IN
-                                    STOCK</span>
-                            </div>
+                                <span
+                                    class="rounded-pill product-detail-quantity d-flex justify-content-center align-items-center"><span
+                                        class="">{{$productOption->stockAvailable}}</span></span>
+                                <div>
+                                    <small class="dis-price">&nbsp;</small>
+                                    <span class="instock-label">IN STOCK</span>
+                                </div>
                             @else
-                            <div>
-                                <small class="dis-price">&nbsp;</small><span class="text-danger">OUT OF
-                                    STOCK</span>
-                            </div>
+                                <div>
+                                    <small class="dis-price">&nbsp;</small>
+                                    <span class="text-danger">
+                                        {{ App\Helpers\SettingHelper::getSetting('out_of_stock_label', 'OUT OF STOCK'); }}
+                                    </span>
+                                </div>
                             @endif
                             @if(!empty($contact_id))
                                 <a style="width:20px !important;" href="javascript:void(0);" class="mx-3 subscribe">
@@ -371,7 +371,6 @@
                                 </a>
                             @endif
                         </div>
-
                     </div>
                     <form id="cart">
                         @csrf
@@ -390,16 +389,22 @@
                                 </div>
                             </div>
                             <div class="w-50" style="">
-                                @if($productOption->stockAvailable > 0)
-                                <button class=" button-cards product-detail-button-cards text-uppercase" style="font-size: 16px !important;
-                                    width: 252px !important;" type="button" id="ajaxSubmit"><a class="text-white">Add
-                                        to
-                                        cart</a></button>
+                                <?php $enable_add_to_cart = App\Helpers\SettingHelper::enableAddToCart($productOption); ?>
+                                @if ($enable_add_to_cart)
+                                    <button 
+                                        class="button-cards product-detail-button-cards text-uppercase" 
+                                        style="font-size: 16px !important; width: 252px !important;" 
+                                        type="button" 
+                                        id="ajaxSubmit"
+                                    >
+                                    <a class="text-white">Add to cart</a></button>
                                 @else
-                                <button class="button-cards product-detail-button-cards opacity-50 text-uppercase"
-                                    type="submit" style="font-size: 16px !important;;
-                                    width: 130px  !important;"><a class="text-white">Add to
-                                        cart</a></button>
+                                    <button 
+                                        class="button-cards product-detail-button-cards opacity-50 text-uppercase"
+                                        type="submit" 
+                                        style="font-size: 16px !important; width: 130px  !important;">
+                                        <a class="text-white">Add to cart</a>
+                                    </button>
                                 @endif
                             </div>
                         </div>
