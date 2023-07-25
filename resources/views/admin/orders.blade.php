@@ -211,7 +211,11 @@
                                                 @endif
                                             </td>
                                             <td class="created_by_order_total td_padding_row">${{ number_format($order->total_including_tax, 2) }}</td>
+                                            @if(!empty($order->texClasses))
                                             <td class="created_by_order_total td_padding_row">{{ number_format($order->texClasses->rate, 2) }}% </td>
+                                            @else
+                                            <td class="created_by_order_total td_padding_row">{{ number_format(0 ,2) }}% </td>
+                                            @endif
                                             <td class="td_padding_row">
                                                 @if ($order->contact)
                                                     @if ($order->contact->company)

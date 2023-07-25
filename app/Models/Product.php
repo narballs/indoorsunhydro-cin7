@@ -44,6 +44,10 @@ class Product extends Model
     {
         return $this->hasMany('App\Models\ProductOption', 'product_id', 'product_id');
     }
+    public function product_options()
+    {
+        return $this->hasMany('App\Models\ProductOption', 'product_id', 'product_id');
+    }
     public function brand()
     {
         return $this->hasMany('App\Models\Brand', 'id', 'brand_id');

@@ -92,6 +92,7 @@
                                         $cart_price = 0;
                                         ?>
                                         @if ($cart_items)
+                                       
                                             @foreach ($cart_items as $pk_product_id => $cart)
                                                 <?php
                                                 $total_quatity = $cart['quantity'];
@@ -102,7 +103,7 @@
                                                     <td class="align-middle">
                                                         <span class="mb-0" style="font-weight: 500;">
                                                             <a class="cart-page-items"
-                                                                href="{{ url('product-detail/' . $cart['product_id'] . '/' . $cart['option_id'] . '/' . $cart['slug']) }}" ">{{ $cart['code'] }}
+                                                                href="{{ url('product-detail/' . $pk_product_id . '/' . $cart['option_id'] . '/' . $cart['slug']) }}" ">{{ $cart['code'] }}
                                                             </a>
                                                         </span>
                                                     </td>
@@ -120,7 +121,7 @@
                                             <div class="flex-column ms-4">
                                                 <span class="mb-2">
                                                     <a class=" pe-3 cart-page-items"
-                                                        href="{{ url('product-detail/' . $cart['product_id'] . '/' . $cart['option_id'] . '/' . $cart['slug']) }}">{{ $cart['name'] }}
+                                                        href="{{ url('product-detail/' . $pk_product_id . '/' . $cart['option_id'] . '/' . $cart['slug']) }}">{{ $cart['name'] }}
                                                     </a>
                                                 </span>
                                             </div>
@@ -136,7 +137,7 @@
                                     <div class="quantity">
                                         <input type="number" name="quantity" id={{ 'row_quantity_' . $pk_product_id }}
                                             min="1" max="20" step="1"
-                                            value="{{ $cart['quantity'] }}">
+                                            value="{{ $cart['quantity'] }}" onchange="update_cart_products({{ $pk_product_id }})">
                                         <input type="hidden" name="p_id" id="p_id"
                                             value="{{ $cart['product_id'] }}">
                                         <input type="hidden" name="p_id" id="option_id"
@@ -221,6 +222,11 @@
                 }
                 $total_including_tax = $tax + $cart_total;
             ?>
+            @if(!empty($tax_class->rate))
+            <input type="hidden" value="{{$tax_class->rate}}" id="tax_rate_number">
+            @else
+            <input type="hidden" value="0" id="tax_rate_number">
+            @endif
             <table class="table mt-4">
                 <thead>
                     <tr>
@@ -267,12 +273,15 @@
                                     </strong>
                                 </span>
                             </div>
-                            <div>
+                            @if(!empty($tax_class->name))
+                                <div class="mx-2"><span><strong class="cart-total" >{{$tax_class->name}}</strong></span></div>
+                            @endif
+                            {{-- <div>
                                 <span class="tax-calculater">
                                     (Tax is calculated when order is invoiced, could be 0% based
                                     on your account setup)
                                 </span>
-                            </div>
+                            </div> --}}
                         </td>
                     </tr>
                     <tr>
@@ -476,7 +485,7 @@
                                                                                                 <i class="fa fa-angle-left text-dark align-middle" style="font-size: 8px;"></i>
                                                                                             </button>
                                                                                             <div class="">
-                                                                                                <input type="number" class="py-1 text-center mb-0 qtyMob_input bg-white"  min="0" class="itm_qty" id="itm_qty{{ $pk_product_id }}" 
+                                                                                                <input type="number" class="py-1 text-center mb-0 qtyMob_input bg-white"  min="0" class="itm_qty" id="itm_qty{{ $pk_product_id }}"
                                                                                                 data-type="{{ $pk_product_id }}" value="{{ $cart['quantity'] }}" style="width: 31px;font-weight: 600;font-size: 10px !important;
                                                                                                 color: #7CC633;background-color: #ffffff !important;border-top:0.485995px solid #EBEBEB !important;border-bottom:0.485995px solid #EBEBEB !important;line-height: 15px !important;border-left:0px !important;border-right:0px !important;">
                                                                                             </div>
@@ -541,17 +550,26 @@
                                                             @if(!empty($tax_class->rate))
                                                 {{ number_format($tax_class->rate, 2) }}%
                                             @else
-                                                {{number_format(0, 2)}}
+                                                {{number_format(0, 2)}}%
                                             @endif</span>
                                                     </div>
                                                     <div class="w-50 d-flex align-items-center justify-content-end">
                                                         <p class="sub-total-checkout-page mbl_cart_subtotal mt-0 mb-0 text-right text-dark" id="mbl_tax_price">@if(!empty($tax_class->rate))
-                                                {{ number_format($tax_class->rate, 2) }}%
+                                                
+                                                ${{ number_format($tax, 2) }}
                                             @else
-                                                {{number_format(0, 2)}}
+                                                ${{number_format(0, 2)}}
                                             @endif</p>
                                                     </div>
+                                                    
                                                 </div>
+                                                @if(!empty($tax_class->name))
+                                                <div class="d-flex pb-3 mb-3" style="border-bottom:1px solid #dee2e6;">
+                                                    
+                                                    <div class="w-100 d-flex align-items-center "><p class="sub-total-checkout-page  mt-0 mb-0 ml-0 text-dark">{{$tax_class->name}}</p></div>
+                                                    
+                                                </div> 
+                                                @endif
                                                 <div class="d-flex pb-3 mb-3" style="border-bottom:1px solid #dee2e6;">
                                                     <div class="w-50 d-flex align-items-center">
                                                         <span>
@@ -1211,7 +1229,8 @@
 
 
                 var tax = 0;
-                var tax = grand_total.toFixed(2) * (8.75 / 100);
+                var tax_rate = parseInt($('#tax_rate_number').val());
+                var tax = grand_total.toFixed(2) * (tax_rate / 100);
                 $('.tax_cart').children().html('$' + tax.toFixed(2));
                 $('.grandTotal').children().html('$' + (tax + grand_total).toFixed(2));
 
@@ -1276,7 +1295,8 @@
                 $('.ipad_cart_subtotal').html('$' + grand_total.toFixed(2));
 
                 var tax = 0;
-                var tax = grand_total.toFixed(2) * (8.75 / 100);
+                var tax_rate = parseInt($('#tax_rate_number').val());
+                var tax = grand_total.toFixed(2) * (tax_rate / 100);
                 $('.tax_cart').children().html('$' + tax.toFixed(2));
                 $('.grandTotal').children().html('$' + (tax + grand_total).toFixed(2));
 
@@ -1288,6 +1308,135 @@
             }
         });
     }
+
+    // on change update cart
+    function update_cart_products(pk_product_id) {
+        var qty_input = parseFloat($('#row_quantity_' + pk_product_id).val());
+        var new_qty = parseFloat(qty_input);
+        var product_id = pk_product_id;
+
+        jQuery.ajax({
+            url: "{{ url('update-cart') }}",
+            method: 'post',
+            data: {
+                "_token": "{{ csrf_token() }}",
+                "items_quantity": new_qty,
+                "product_id": product_id
+            },
+            success: function(response) {
+                var row_price = response.cart_items[product_id].price;
+                var new_quantity = response.cart_items[product_id].quantity;
+                var new_row_price = parseFloat(row_price) * parseInt(new_quantity);
+                new_row_price = parseFloat(new_row_price).toFixed(2);
+                $('#row_quantity_' + product_id).val(new_quantity);
+                $('#subtotal_' + product_id).html('$' + new_row_price);
+
+                $('#itm_qty' + product_id).val(new_quantity);
+                $('#itm_qty_ipad' + product_id).val(new_quantity);
+
+                var grand_total = 0;
+                var total_cart_quantity = 0;
+                Object.keys(response.cart_items).forEach(function(key) {
+                    row_total = parseFloat(response.cart_items[key].price) * response.cart_items[
+                        key].quantity;
+                    grand_total += parseFloat(row_total);
+                    total_cart_quantity += parseInt(response.cart_items[key].quantity);
+
+                });
+                $('#cart_grand_total').children().html('$' + grand_total.toFixed(2));
+                $('#topbar_cart_total').html('$' + grand_total.toFixed(2));
+                $('#top_cart_quantity').html(total_cart_quantity);
+                $('.topbar_cart_total_ipad').html('$' + grand_total.toFixed(2));
+
+
+                $('.cartQtymbl').html(total_cart_quantity);
+                $('.mbl_cart_subtotal').html('$' + grand_total.toFixed(2));
+
+                $('.cartQtyipad').html(total_cart_quantity);
+                $('.ipad_cart_subtotal').html('$' + grand_total.toFixed(2));
+
+
+
+                var tax = 0;
+                var tax_rate = parseInt($('#tax_rate_number').val());
+                var tax = grand_total.toFixed(2) * (tax_rate / 100);
+                $('.tax_cart').children().html('$' + tax.toFixed(2));
+                $('.grandTotal').children().html('$' + (tax + grand_total).toFixed(2));
+
+
+                $('#mbl_tax_price').html('$' + tax.toFixed(2));
+                $('#mbl_total_p').html('$' + (tax + grand_total).toFixed(2));
+
+                $('#ipad_tax_price').html('$' + tax.toFixed(2));
+                $('#ipad_total_p').html('$' + (tax + grand_total).toFixed(2));
+            }
+        });
+    }
+    
+
+    function update_cart_products_mbl(pk_product_id) {
+        var qty_input = parseFloat($('#itm_qty' + product_id).val());
+        var new_qty = parseFloat(qty_input);
+        var product_id = pk_product_id;
+
+        jQuery.ajax({
+            url: "{{ url('update-cart') }}",
+            method: 'post',
+            data: {
+                "_token": "{{ csrf_token() }}",
+                "items_quantity": new_qty,
+                "product_id": product_id
+            },
+            success: function(response) {
+                var row_price = response.cart_items[product_id].price;
+                var new_quantity = response.cart_items[product_id].quantity;
+                var new_row_price = parseFloat(row_price) * parseInt(new_quantity);
+                new_row_price = parseFloat(new_row_price).toFixed(2);
+                $('#row_quantity_' + product_id).val(new_quantity);
+                $('#subtotal_' + product_id).html('$' + new_row_price);
+
+                $('#itm_qty' + product_id).val(new_quantity);
+                $('#itm_qty_ipad' + product_id).val(new_quantity);
+
+                var grand_total = 0;
+                var total_cart_quantity = 0;
+                Object.keys(response.cart_items).forEach(function(key) {
+                    row_total = parseFloat(response.cart_items[key].price) * response.cart_items[
+                        key].quantity;
+                    grand_total += parseFloat(row_total);
+                    total_cart_quantity += parseInt(response.cart_items[key].quantity);
+
+                });
+                $('#cart_grand_total').children().html('$' + grand_total.toFixed(2));
+                $('#topbar_cart_total').html('$' + grand_total.toFixed(2));
+                $('#top_cart_quantity').html(total_cart_quantity);
+                $('.topbar_cart_total_ipad').html('$' + grand_total.toFixed(2));
+
+
+                $('.cartQtymbl').html(total_cart_quantity);
+                $('.mbl_cart_subtotal').html('$' + grand_total.toFixed(2));
+
+                $('.cartQtyipad').html(total_cart_quantity);
+                $('.ipad_cart_subtotal').html('$' + grand_total.toFixed(2));
+
+
+
+                var tax = 0;
+                var tax_rate = parseInt($('#tax_rate_number').val());
+                var tax = grand_total.toFixed(2) * (tax_rate / 100);
+                $('.tax_cart').children().html('$' + tax.toFixed(2));
+                $('.grandTotal').children().html('$' + (tax + grand_total).toFixed(2));
+
+
+                $('#mbl_tax_price').html('$' + tax.toFixed(2));
+                $('#mbl_total_p').html('$' + (tax + grand_total).toFixed(2));
+
+                $('#ipad_tax_price').html('$' + tax.toFixed(2));
+                $('#ipad_total_p').html('$' + (tax + grand_total).toFixed(2));
+            }
+        });
+    }
+    
 </script>
 <style>
 

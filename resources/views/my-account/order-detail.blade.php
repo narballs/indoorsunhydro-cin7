@@ -89,9 +89,8 @@
                                     
                                 @endphp
                                 <tbody>
-                                    @if (count($order_detail->apiOrderItem) > 1)
+                                    @if (count($order_detail->apiOrderItem) > 0)
                                         @foreach ($order_detail->apiOrderItem as $orderItem)
-                                            {{-- {{ dd($orderItem) }} --}}
                                             <tr>
                                                 <td class="order_detail_page_product_name">
                                                     <a href="{{ url('product-detail/' . $orderItem->product->id . '/' . $orderItem->option_id . '/' . $orderItem->product->slug) }}"
@@ -144,7 +143,9 @@
 
                                             </td>
                                             <td class="my_account_all_items">
-                                                {{ $order_detail['texClasses']->name }}
+                                                @if(!empty($order_detail['texClasses']))
+                                                    {{ $order_detail['texClasses']->name }}
+                                                 @endif
                                             </td>
                                         </tr>
                                         <tr>

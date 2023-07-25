@@ -180,7 +180,8 @@ $cart_price = 0;
                     $cart_price = 0;
                     ?>
                     @if (Session::get('cart'))
-                        @foreach (Session::get('cart') as $cart)
+        
+                        @foreach (Session::get('cart') as $product_id => $cart)
                             <?php
                             $total_quatity = $cart['quantity'];
                             $total_price = $cart['price'] * $total_quatity;
@@ -200,7 +201,7 @@ $cart_price = 0;
                                         </div>
                                         <div class="col-md-8 py-2 ps-0">
                                             <a class="category-name-thank-you-page pb-3"
-                                                href="{{ url('product-detail/' . $cart['product_id'] . '/' . $cart['option_id'] . '/' . $cart['slug']) }}">
+                                                href="{{ url('product-detail/' .$product_id . '/' . $cart['option_id'] . '/' . $cart['slug']) }}">
                                                 {{ $cart['name'] }}
                                             </a>
                                             <br>
