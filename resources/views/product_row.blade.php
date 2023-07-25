@@ -57,14 +57,26 @@
                         Category:&nbsp;&nbsp;Unassigned
                     </p>
                 @endif
-                @if ($product->stockAvailable > 0 || $option->stockAvailable > 0)
-                    <button class="prd_btn_resp ajaxSubmit button-cards col w-100 mt-2 mb-1" type="submit" style="max-height: 46px;"
-                        id="ajaxSubmit_{{ $product->id }}"
-                        onclick="updateCart('{{ $product->id }}', '{{ $option->option_id }}')">Add to cart</button>
+
+                <?php $enable_add_to_cart = App\Helpers\SettingHelper::enableAddToCart($option); ?>
+                @if ($enable_add_to_cart)
+                    <button 
+                        class="prd_btn_resp ajaxSubmit button-cards col w-100 mt-2 mb-1" 
+                        type="submit" 
+                        style="max-height: 46px;" id="ajaxSubmit_{{ $product->id }}"
+                        onclick="updateCart('{{ $product->id }}', '{{ $option->option_id }}')"
+                    >
+                        Add to cart
+                    </button>
                 @else
-                    <button class="prd_btn_resp ajaxSubmit mb-2 text-white bg-danger bg-gradient button-cards col w-100 autocomplete=off"
-                        tabindex="-1" type="submit" style="max-height: 46px;" id="ajaxSubmit_{{ $product->id }}"
-                        disabled onclick="return updateCart('{{ $product->id }}')">Out of Stock</button>
+                    <button 
+                        class="prd_btn_resp ajaxSubmit mb-2 text-white bg-danger bg-gradient button-cards col w-100 autocomplete=off"
+                        tabindex="-1" 
+                        type="submit" 
+                        style="max-height: 46px;" 
+                        id="ajaxSubmit_{{ $product->id }}"
+                        disabled 
+                        onclick="return updateCart('{{ $product->id }}')">Out of Stock</button>
                 @endif
             </div>
         </div>
