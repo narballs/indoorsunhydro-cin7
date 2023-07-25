@@ -92,6 +92,7 @@
                                         $cart_price = 0;
                                         ?>
                                         @if ($cart_items)
+                                       
                                             @foreach ($cart_items as $pk_product_id => $cart)
                                                 <?php
                                                 $total_quatity = $cart['quantity'];
@@ -102,7 +103,7 @@
                                                     <td class="align-middle">
                                                         <span class="mb-0" style="font-weight: 500;">
                                                             <a class="cart-page-items"
-                                                                href="{{ url('product-detail/' . $cart['product_id'] . '/' . $cart['option_id'] . '/' . $cart['slug']) }}" ">{{ $cart['code'] }}
+                                                                href="{{ url('product-detail/' . $pk_product_id . '/' . $cart['option_id'] . '/' . $cart['slug']) }}" ">{{ $cart['code'] }}
                                                             </a>
                                                         </span>
                                                     </td>
@@ -120,7 +121,7 @@
                                             <div class="flex-column ms-4">
                                                 <span class="mb-2">
                                                     <a class=" pe-3 cart-page-items"
-                                                        href="{{ url('product-detail/' . $cart['product_id'] . '/' . $cart['option_id'] . '/' . $cart['slug']) }}">{{ $cart['name'] }}
+                                                        href="{{ url('product-detail/' . $pk_product_id . '/' . $cart['option_id'] . '/' . $cart['slug']) }}">{{ $cart['name'] }}
                                                     </a>
                                                 </span>
                                             </div>
