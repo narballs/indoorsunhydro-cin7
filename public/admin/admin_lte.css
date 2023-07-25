@@ -870,3 +870,11 @@ ul.pager>.main-row>.pagination>li {
 /* order page :end */
 
 /* media query screen for */
+
+@media(min-width:280px) and (max-width: 425px) {
+    .go_to_site{
+        top: -0.3rem;
+        width: 7rem;
+        left: -2rem;
+    }
+}

@@ -129,7 +129,7 @@
          <div class="col-sm-12 col-md-6 col-lg-3 d-flex align-self-stretch">
             <div class="card shadow-sm mb-4 w-100">
                @if($option->image != '')
-               <a href="{{ url('product-detail/'.$product->id.'/'.$option->option_id) }}"><img src="{{$option['image']}}"
+               <a href="{{ url('product-detail/'.$product->id.'/'.$option->option_id.'/'.$product->slug) }}"><img src="{{$option['image']}}"
                      class="col-md-10 offset-1" /></a>
                @else
                <img src="{{ asset('theme/img/image_not_available.png') }}" class="w-100 img-fluid h-75 w-75"
@@ -294,7 +294,7 @@
             <div class="p-2 shadow-sm  w-100 h-100" style="background-color: #fff;background-clip: border-box;border: 1px solid rgba(0,0,0,.125);
             border-radius: 0.25rem;">
                @if($option->image != '')
-               <a href="{{ url('product-detail/'.$product->id.'/'.$option->option_id) }}"><img src="{{$option['image']}}"
+               <a href="{{ url('product-detail/'.$product->id.'/'.$option->option_id.'/'.$product->slug) }}"><img src="{{$option['image']}}"
                      class="col-md-10 offset-1 img_responsive_mbl" /></a>
                @else
                <img src="{{ asset('theme/img/image_not_available.png') }}" class="img_responsive_mbl w-100 img-fluid h-75 w-75"
@@ -435,7 +435,7 @@
          <div class="col-sm-12 col-md-6 col-lg-3 d-flex align-self-stretch">
             <div class="card shadow-sm mb-4 w-100">
                @if($option->image != '')
-               <a href="{{ url('product-detail/'.$product->id.'/'.$option->option_id) }}"><img src="{{$option['image']}}"
+               <a href="{{ url('product-detail/'.$product->id.'/'.$option->option_id.'/'.$product->slug) }}"><img src="{{$option['image']}}"
                      class="col-md-10 offset-1" /></a>
                @else
                <img src="{{ asset('theme/img/image_not_available.png') }}" class="w-100 img-fluid h-75 w-75"
