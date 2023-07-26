@@ -3,7 +3,7 @@
 @include('partials.search-bar')
 @section('my-favorites-active', 'active')
 <div class="col-md-12 p-0">
-    <p style="line-height: 95px;" class="fw-bold fs-2 product-btn my-auto border-0 text-white text-center align-middle">
+    <p style="line-height: 95px;" class="fw-bold fs-2 product-btn my-auto border-0 text-white text-center align-middle my-account-main-heading">
         MY ACCOUNT
     </p>
 </div>
@@ -62,7 +62,7 @@
                                 $i = 1;
                             @endphp
                             {{-- @foreach ($lists as $list) --}}
-                                <div>
+                                <div class="table-responsive">
                                     <table class="table address-table-items-data m-0 ">
                                         <thead>
                                             <tr class="table-header-background">
