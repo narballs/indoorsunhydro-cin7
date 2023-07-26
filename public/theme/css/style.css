@@ -4791,13 +4791,143 @@ select.list-dt:focus {
 
 
 
-
-
-
-
+.my-account-table-desktop {
+    width: 100%;
+}
+.button-div-my-account {
+    text-align: right;
+}
+.my-account-image-div-mbl {
+    width: 25%;
+}
+.my-account-name-div-mbl {
+    width: 75%;
+}
+.img_my_account_order {
+   text-align: center;
+}
+/* .account-header-mbl {
+    display:flex;
+    justify-content: space-between;
+} */
 /* mobile css */
 
 @media only screen and (max-width: 425px) and (min-width: 280px) {
+    .my-account-card-body {
+        padding-bottom: 0px !important;
+        margin-bottom: 0px !important;
+
+    }
+    .mbl-my-account-add-btn {
+        width: 100% !important;
+    }
+    .img_my_account_order {
+        width: 125%;
+        border-radius: 7.748px;
+    }
+    .button-div-my-account {
+        text-align: center;
+    }
+    .my-account-table-desktop {
+        width: 200%;
+    }
+    .hide-scroll::-webkit-scrollbar {
+        display: none;
+    }
+    .hide-scroll {
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+    }
+    .header-row-mbl-my-account {
+        font-size: 12px !important;
+        line-height: 20px !important;
+    }
+    .order_place_my_account {
+        font-size: 12px !important;
+        line-height: 20px !important;
+    }
+    .filter-div-mbl-account {
+        margin-top: 1rem !important;
+    }
+    .date_filter_mbl {
+        color: #131313 !important;
+        font-family: 'poppins' !important;
+        font-size: 10px !important;
+        font-style: normal !important;
+        font-weight: 400 !important;
+        line-height: 15.947px !important; /* 159.468% */
+        letter-spacing: -0.06px !important;
+        height: 25px !important;
+        padding: 5px 24.053px 3.527px 10px !important;
+        margin-top: 5px;
+    }
+    #handle_sort_by {
+        height: 25px !important;
+        padding: 3px 24.053px 3.527px 10px !important;
+        margin-top: 5px;
+        line-height: 15.947px !important;
+        font-family: 'poppins' !important;
+        font-size: 10px !important;
+        font-style: normal !important;
+        font-weight: 400 !important;
+        border-radius: 0.25rem !important;
+    }
+    .total_order_my_account {
+        font-size: 12px !important;
+        line-height: normal !important;
+    }
+    .placed_in_my_account {
+        font-weight: 600 !important;
+    }
+    .my_account_search {
+        height: 35px !important;
+    }
+    .has-search .form-control-feedback {
+        height: 0rem !important;
+        line-height: 0rem !important;
+        top: 50%;
+    }
+    .has-search .form-control {
+        padding-bottom: 0rem !important;
+        padding-top: 0.2rem;
+    }
+    .my_account_search_btn_mbl {
+        font-size: 12px !important;
+        font-weight: 500 !important;
+        line-height: 15.77px !important; /* 131.415% */
+        padding: 7.885px 12.616px !important;
+    }
+    .my-account-main-heading {
+        line-height:55px !important;
+    }
+    .search_row_my_account_page {
+        margin-top: 10px !important
+    }
+    .order_detail_tabs .nav-link {
+        font-size: 11.737px !important;
+        font-style: normal !important;
+        font-weight: 400 !important;
+        line-height: 16.842px !important; /* 143.488% */
+        padding: 0.5rem 0rem;
+    }
+    
+    .order_detail_tabs .nav-link.order_left_border {
+        border-left: 0px !important;
+    }
+    
+    .order_detail_tabs .nav-link.active {
+        font-size: 11.737px!important;
+        font-style: normal!important;
+        font-weight: 500!important;
+        line-height: 16.842px!important; /* 143.488% */
+    }
+    .order_detail_tabs {
+        width: 100% !important;
+    }
+    .my-account-list-items-li {
+        width: 20% !important;
+    }
+    
     .image-height-mbl {
         height: auto !important;
     }
@@ -6094,8 +6224,8 @@ select.list-dt:focus {
     font-family: 'Poppins' !important;
     font-style: normal !important;
     font-weight: 400 !important;
-    font-size: 18px !important;
-    line-height: 26px !important;
+    font-size: 18px ;
+    line-height: 26px ;
     color: #989898 !important;
     text-align: center;
     border-left: 1.29139px solid #E1E1E1 !important;
@@ -6111,8 +6241,8 @@ select.list-dt:focus {
     font-family: 'Poppins' !important;
     font-style: normal !important;
     font-weight: 500 !important;
-    font-size: 18px !important;
-    line-height: 26px !important;
+    font-size: 18px ;
+    line-height: 26px ;
     color: #242424;
 }
 
@@ -6122,7 +6252,6 @@ select.list-dt:focus {
     height: 49px !important;
     display: flex;
     justify-content: space-between;
-    margin-top: 12px !important;
     align-items: center !important;
 
 }
@@ -6131,7 +6260,7 @@ select.list-dt:focus {
     background: #FFFFFF;
     border: 1.29139px solid #E1E1E1;
     border-radius: 6px !important;
-    height: 40px !important;
+    height: 40px;
     margin-top: 4px !important;
 }
 
@@ -6158,8 +6287,8 @@ select.list-dt:focus {
     font-family: 'Poppins' !important;
     font-style: normal !important;
     font-weight: 500 !important;
-    font-size: 18px !important;
-    line-height: 26px !important;
+    font-size: 18px;
+    line-height: 26px ;
     color: #FFFFFF !important;
 }
 
@@ -6200,8 +6329,8 @@ select.list-dt:focus {
     font-family: 'Poppins' !important;
     font-style: normal !important;
     font-weight: 400 !important;
-    font-size: 14.8469px !important;
-    line-height: 25px !important;
+    font-size: 14.8469px ;
+    line-height: 25px ;
     color: #7D7D7D !important;
 }
 
@@ -6284,7 +6413,7 @@ select.list-dt:focus {
     align-items: center !important;
     text-align: center !important;
     color: #FFFFFF !important;
-    width: 201px !important;
+    width: 201px;
 }
 
 .my_account_view_order_btn {
@@ -6300,7 +6429,7 @@ select.list-dt:focus {
     align-items: center !important;
     text-align: center !important;
     color: #000000 !important;
-    width: 201px !important;
+    width: 201px;
 }
 
 .track_package_cart_btn {
@@ -6771,9 +6900,9 @@ ul.pager>.main-row>.pagination>li {
     color: #DC4E41 !important;
 }
 
-.my_account_order_card_header {
+/* .my_account_order_card_header {
     height: 4.331rem !important;
-}
+} */
 
 .my_account_order_details_heading {
     font-family: 'Poppins' !important;
@@ -6880,7 +7009,7 @@ ul.pager>.main-row>.pagination>li {
 }
 
 .order_detail_tabs {
-    width: 561.62px !important;
+    width: 561.62px;
     border-radius: 6px !important;
     border: 1.29139px solid #E1E1E1;
 }
