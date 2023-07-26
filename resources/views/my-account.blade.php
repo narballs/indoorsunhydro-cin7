@@ -376,7 +376,7 @@
                                                 </div>
                                             </div>
                                             <div class="border-top">
-                                                <p class="my_account_total_items_listing">
+                                                <p class="my_account_total_items_listing d-flex align-items-center mb-0 p-2 pl-3">
                                                     {{ $totalItems }} items
                                                     in
                                                     the order
@@ -387,75 +387,77 @@
                                     @endforeach
                                     {{ $user_orders->appends(Request::all())->links() }}
                                 </div>
-                                <div class="col-md-3 col-xl-3 p-3 mt-3 rounded h-50 buy_again_div">
-                                    @if(!empty($frequent_products))
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <p class="buy_again_heading">Buy Again</p>
-                                            </div>
-                                        </div>
-                                        @foreach($frequent_products as $frequent_product)
-                                            @if(!empty($frequent_product))
-                                                <div class="row mt-4 mb-3">
+                                <div class="col-md-3 col-xl-4 p-3 h-50">
+                                    <div class="card rounded buy_again_div">
+                                        <div class="card-body">
+                                            @if(!empty($frequent_products))
+                                                <div class="row">
                                                     <div class="col-md-12">
-                                                        <div class="row">
-                                                            <div class="col-md-4 image-div d-flex justify-content-center">
-                                                                @if(!empty($frequent_product->product->images))
-                                                                    <img src="{{ $frequent_product->product->images }}" alt="" class="buy_again_product_image">
-                                                                @else
-                                                                    <img src="{{ asset('/theme/img/image_not_available.png') }}" alt="" class="buy_again_product_image">
-                                                                @endif
-                                                            </div>
-                                                            <div class="col-md-8 data-div">
+                                                        <p class="buy_again_heading">Buy Again</p>
+                                                    </div>
+                                                </div>
+                                                @foreach($frequent_products as $frequent_product)
+                                                    @if(!empty($frequent_product))
+                                                        <div class="row mt-4 mb-3">
+                                                            <div class="col-md-12">
                                                                 <div class="row">
-                                                                    <div class="col-md-10">
-                                                                        
-                                                                        <p class="product_name">
-                                                                            @if(!empty($frequent_product->product->name))
-                                                                                <a class="product_name" id="prd_name_{{$frequent_product->product->id }}" href="{{ url('product-detail/' . $frequent_product->product->id . '/' . $frequent_product->product->options[0]->option_id . '/' . $frequent_product->product->slug) }}">{{ $frequent_product->product->name }}</a>
-                                                                            @endif
-                                                                        </p>
-                                                                        
+                                                                    <div class="col-md-4 image-div image-div-account d-flex justify-content-center">
+                                                                        @if(!empty($frequent_product->product->images))
+                                                                            <img src="{{ $frequent_product->product->images }}" alt="" class="buy_again_product_image">
+                                                                        @else
+                                                                            <img src="{{ asset('/theme/img/image_not_available.png') }}" alt="" class="buy_again_product_image">
+                                                                        @endif
                                                                     </div>
-                                                                    <div class="col-md-10">
-                                                                    <p class="product_price">
-                                                                            @if(!empty($frequent_product->price))
-                                                                                ${{ number_format($frequent_product->price, 2) }}
-                                                                            @endif
-                                                                        </p>
-                                                                    </div>
-                                                                    <div class="col-md-10">
-                                                                        <p class="category_name">Category:
-                                                                            @if(!empty($frequent_product->product->categories))
-                                                                            <a class="category_name" href="{{ url('products/' . $frequent_product->product->categories->id . '/' .$frequent_product->product->categories->slug) }}"> 
-                                                                                {{$frequent_product->product->categories->name}}
-                                                                            </a> 
-                                                                            @endif
-                                                                        </p>
+                                                                    <div class="col-md-8 data-div data-div-account">
+                                                                        <div class="row">
+                                                                            <div class="col-md-10">
+                                                                                
+                                                                                <p class="product_name mb-1">
+                                                                                    @if(!empty($frequent_product->product->name))
+                                                                                        <a class="product_name" id="prd_name_{{$frequent_product->product->id }}" href="{{ url('product-detail/' . $frequent_product->product->id . '/' . $frequent_product->product->options[0]->option_id . '/' . $frequent_product->product->slug) }}">{{ $frequent_product->product->name }}</a>
+                                                                                    @endif
+                                                                                </p>
+                                                                                
+                                                                            </div>
+                                                                            <div class="col-md-10">
+                                                                            <p class="product_price mb-1">
+                                                                                    @if(!empty($frequent_product->price))
+                                                                                        ${{ number_format($frequent_product->price, 2) }}
+                                                                                    @endif
+                                                                                </p>
+                                                                            </div>
+                                                                            <div class="col-md-10">
+                                                                                <p class="category_name mb-1">Category:
+                                                                                    @if(!empty($frequent_product->product->categories))
+                                                                                    <a class="category_name" href="{{ url('products/' . $frequent_product->product->categories->id . '/' .$frequent_product->product->categories->slug) }}"> 
+                                                                                        {{$frequent_product->product->categories->name}}
+                                                                                    </a> 
+                                                                                    @endif
+                                                                                </p>
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
+                                                                <div class="row justify-content-center mt-4">
+                                                                    <div class="col-md-10">
+                                                                        <button type="button" class="buy_frequent_again_btn border-0 w-100 p-2" onclick="add_to_cart('{{ $frequent_product->product->id }}', '{{ $frequent_product->product->options[0]->option_id }}')">Add to Cart</button>
+                                                                    </div>
+                                                                    <div class="col-md-10 mt-4 border-div d-flex align-items-center align-self-center"></div>
+                                                                </div>
                                                             </div>
+                                                            
                                                         </div>
-                                                        <div class="row justify-content-center">
-                                                            <div class="col-md-10">
-                                                                <button type="button" class="buy_frequent_again_btn border-0 w-100 p-2" onclick="add_to_cart('{{ $frequent_product->product->id }}', '{{ $frequent_product->product->options[0]->option_id }}')">Add to Cart</button>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row justify-content-center mt-4">
-                                                            <div class="col-md-10 border-div"></div>
-                                                        </div>
-                                                        
+                                                    @endif
+                                                @endforeach
+                                            @else
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <p class="buy_again_heading">No Frequently buyed products to show</p>
                                                     </div>
                                                 </div>
                                             @endif
-                                        @endforeach
-                                    @else
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <p class="buy_again_heading">No Frequently buyed products to show</p>
-                                            </div>
                                         </div>
-                                    @endif
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -547,9 +549,9 @@
         line-height: 21.037px; /* 150.263% */
     }
     .border-div {
-        width: 300px;
         height: 1.237px;
         background: #E1E1E1;
+        width: 90% !important;
     }
     .buy_again_div {
         border:1px solid rgb(234 236 240);
