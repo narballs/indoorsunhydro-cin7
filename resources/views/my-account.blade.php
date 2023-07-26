@@ -3,21 +3,21 @@
 @include('partials.search-bar')
 @section('order-active', 'active')
 <div class="col-md-12 p-0">
-    <p style="line-height: 95px;" class="fw-bold fs-2 product-btn my-auto border-0 text-white text-center align-middle">
+    <p style="line-height: 95px;" class="fw-bold fs-2 product-btn my-auto border-0 text-white text-center align-middle my-account-main-heading">
         MY ACCOUNT
     </p>
 </div>
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-10 m-auto">
-            <div class="row">
-                <div class="col-md-8 col-xl-6 pt-3">
+            <div class="row mt-3">
+                <div class="col-md-8 col-xl-6">
                     @include('my-account.my-account-side-bar')
                 </div>
                 
-                <div class="col-md-3 col-xl-5 pt-3">
+                <div class="col-md-4 col-xl-6">
                     <div class="row search_row_my_account_page">
-                        <div class="col-md-12 d-flex mx-3">
+                        <div class="col-md-12 d-flex">
                             <div class="has-search my_account_search w-100 mt-0">
                                 <span class="fa fa-search form-control-feedback"></span>
                                 <form method="get" action="#" class="mb-2">
@@ -25,7 +25,7 @@
                                         placeholder="Search all orders" value="{{ isset($search) ? $search : '' }}" />
                             </div>
                             <div class="ps-3">
-                                <button type="button" class="btn my_account_search_btn" onclick="search_orders()">Search</button>
+                                <button type="button" class="btn my_account_search_btn my_account_search_btn_mbl" onclick="search_orders()">Search</button>
                             </div>
                         </div>
                         </form>
@@ -36,8 +36,8 @@
                         <div class="col-md-12">
                             <div class="row">
                                 <div class="col-md-10 col-xl-8">
-                                    <div class="row mt-4">
-                                        <div class="col-md-9 d-flex ps-4">
+                                    <div class="row mt-3 filter-div-mbl-account">
+                                        <div class="col-md-9 d-flex ps-4 w-75">
                                             <span>
                                                 <p class="total_order_my_account mt-2">@if(!empty($date_filter)) {{$user_orders->total()}} @else {{$user_orders->total()}} @endif orders
                                                     <span class="placed_in_my_account">
@@ -46,7 +46,7 @@
                                                 </p>
                                             </span>
                                             <span class="select_months_my_account" style="margin-top: 0px !important;">
-                                                <select class="custom-select date_filter" id="inputGroupSelect01" name="date_filter" onchange="date_filter()">
+                                                <select class="custom-select date_filter date_filter_mbl" id="inputGroupSelect01" name="date_filter" onchange="date_filter()">
                                                     <option value="past 3 months" {{ $date_filter }} {{ isset($date_filter) && $date_filter =='past 3 months' ? 'selected="selected"' : ''
                                                 }}>Past 3 Months</option>
                                                     <option value="past 5 months" {{ $date_filter }} {{ isset($date_filter) && $date_filter =='past 5 months' ? 'selected="selected"' : ''
@@ -61,7 +61,7 @@
                                                 </select>
                                             </span>
                                         </div>
-                                        <div class="col-md-3 d-flex justify-content-end">
+                                        <div class="col-md-3 d-flex justify-content-end w-25">
                                             <ul class="nav ">
                                                 <li class="text-center">
                                                     <select id="handle_sort_by" name="sort_by" class="py-1" onchange="handleSortBY()">
@@ -80,92 +80,184 @@
                                         @if(!empty($user_order->apiOrderItem))
                                         <div class="card my_account_order_card my-3">
                                             <div class="card-header my_account_order_card_header">
-                                                <div class="row">
-                                                    <div
-                                                        class="col-md-10 d-flex justify-content-between align-items-center">
-                                                        <span>
-                                                            <p class="order_place_my_account">
-                                                                ORDER PLACED <br>
-                                                                <span class="order_date_my_account">
-                                                                    {{ $user_order->created_at->format('M d, Y') }}
-                                                                </span>
-                                                            </p>
-                                                        </span>
-                                                        <span>
-                                                            <p class="order_place_my_account">
-                                                                TOTAL <br>
-                                                                <span class="total_price_my_account">
-                                                                    ${{ number_format($user_order->total_including_tax, 2) }}
-                                                                </span>
-                                                            </p>
+                                                <div class="table-responsive hide-scroll">
+                                                    <table class="my-account-table-desktop">
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="" width="">
+                                                                    <p class="order_place_my_account mb-0">
+                                                                        ORDER PLACED
+                                                                    </p>
+                                                                </th>
+                                                                <th class="" width="">
+                                                                    <p class="order_place_my_account mb-0">
+                                                                        TOTAL
+                                                                    </p>
+                                                                </th>
+                                                                <th class="" width="">
+                                                                    <p class="order_place_my_account mb-0">
+                                                                        SHIP TO
+                                                                    </p>
+                                                                </th>
+                                                                <th class="" width="">
+                                                                    <p class="order_place_my_account mb-0">
+                                                                        COMPANY
+                                                                    </p>
 
-                                                        </span>
-                                                        <span>
-                                                            <p class="order_place_my_account">
-                                                                SHIP TO <br>
-                                                                @if(!empty($user_order->contact->address1))
-                                                                    <span class="shipping_to_my_account" title="{{$user_order->contact->address1}}">
-                                                                        {{ \Illuminate\Support\Str::limit($user_order->contact->address1, 10) }}
+                                                                </th>
+                                                                <th class="" width="">
+                                                                    <p class="order_place_my_account mb-0">
+                                                                        Status
+                                                                    </p>
+                                                                </th>
+                                                                <th class="" width="">
+                                                                    <p class="order_place_my_account mb-0">Submitter</p>
+                                                                </th>
+                                                                <th class="" width="">
+                                                                    <p class="order_place_my_account mb-0">ORDER</p>
+                                                                </th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>
+                                                                    <span class="header-row-mbl-my-account order_date_my_account">
+                                                                        {{ $user_order->created_at->format('M d, Y') }}
                                                                     </span>
-                                                                @elseif(!empty($user_order->contact->postalAddress1))
-                                                                    <span class="shipping_to_my_account" title="{{$user_order->contact->postalAddress1}}">
-                                                                        {{ \Illuminate\Support\Str::limit($user_order->contact->postalAddress1, 10) }}
+                                                                </td>
+                                                                <td>
+                                                                    <span class="header-row-mbl-my-account total_price_my_account">
+                                                                        ${{ number_format($user_order->total_including_tax, 2) }}
                                                                     </span>
-                                                                @endif
-                                                            </p>
-                                                        </span>
-                                                        <span>
-                                                            <p class="order_place_my_account">
-                                                                Company <br>
-                                                                @if(!empty($user_order->contact->company))
-                                                                <span class="shipping_to_my_account">
-                                                                    {{ \Illuminate\Support\Str::limit($user_order->contact->company, 10) }}
-                                                                </span>
-                                                                @endif
-                                                            </p>
-                                                        </span>
-                                                        <span>
-                                                            <p class="order_place_my_account">
-                                                                Status <br>
-                                                                <span class="shipping_to_my_account">
-                                                                    @if($user_order->order_id != null && $user_order->isApproved == 1)
-                                                                        <span class="badge badge-success">FullFilled</span>
-                                                                    @elseif($user_order->order_id == null && $user_order->isApproved == 0)
-                                                                        <span class="badge badge-primary">New</span>
-                                                                    @elseif($user_order->order_id == null && $user_order->isApproved == 2)
-                                                                        <span class="badge badge-danger">Cancelled</span>
+                                                                </td>
+                                                                <td>
+                                                                    @if(!empty($user_order->contact->address1))
+                                                                        <span class="header-row-mbl-my-account shipping_to_my_account" title="{{$user_order->contact->address1}}">
+                                                                            {{ \Illuminate\Support\Str::limit($user_order->contact->address1, 10) }}
+                                                                        </span>
+                                                                    @elseif(!empty($user_order->contact->postalAddress1))
+                                                                        <span class="header-row-mbl-my-account shipping_to_my_account" title="{{$user_order->contact->postalAddress1}}">
+                                                                            {{ \Illuminate\Support\Str::limit($user_order->contact->postalAddress1, 10) }}
+                                                                        </span>
                                                                     @endif
-                                                                </span>
-                                                            </p>
-                                                        </span>
-                                                        <span>
-                                                            <p class="order_place_my_account">
-                                                                Submitter <br>
-                                                                <span class="shipping_to_my_account">
-                                                                    @if (!empty($user_order->primaryId) && !empty($user_order->primary_contact))
-                                                                        {{ $user_order->primary_contact->firstName }}
-                                                                        {{ \Illuminate\Support\Str::limit($user_order->primary_contact->lastName, 6) }}
-                                                                    @elseif (!empty($user_order->secondaryId) && !empty($user_order->secondary_contact))
-                                                                        {{ $user_order->secondary_contact->firstName }}
-                                                                        {{ \Illuminate\Support\Str::limit($user_order->secondary_contact->lastName, 6) }}
-                                                                    @elseif (!empty($user_order->contact))
-                                                                        {{ $user_order->contact->firstName }}
-                                                                        {{ \Illuminate\Support\Str::limit($user_order->contact->lastName, 6) }}
+                                                                </td>
+                                                                <td>
+                                                                    @if(!empty($user_order->contact->company))
+                                                                        <span class="header-row-mbl-my-account shipping_to_my_account">
+                                                                            {{ \Illuminate\Support\Str::limit($user_order->contact->company, 10) }}
+                                                                        </span>
                                                                     @endif
+                                                                </td>
+                                                                <td>
+                                                                    <span class="header-row-mbl-my-account shipping_to_my_account">
+                                                                        @if($user_order->order_id != null && $user_order->isApproved == 1)
+                                                                            <span class="badge badge-success">FullFilled</span>
+                                                                        @elseif($user_order->order_id == null && $user_order->isApproved == 0)
+                                                                            <span class="badge badge-primary">New</span>
+                                                                        @elseif($user_order->order_id == null && $user_order->isApproved == 2)
+                                                                            <span class="badge badge-danger">Cancelled</span>
+                                                                        @endif
+                                                                    </span>
+                                                                </td>
+                                                                <td>
+                                                                    <span class="header-row-mbl-my-account shipping_to_my_account">
+                                                                        @if (!empty($user_order->primaryId) && !empty($user_order->primary_contact))
+                                                                            {{ \Illuminate\Support\Str::limit($user_order->primary_contact->firstName.' '.$user_order->primary_contact->lastName, 10) }}
+                                                                        @elseif (!empty($user_order->secondaryId) && !empty($user_order->secondary_contact))
+                                                                            {{ \Illuminate\Support\Str::limit($user_order->secondary_contact->firstName.' '.$user_order->secondary_contact->lastName, 10) }}
+                                                                        @elseif (!empty($user_order->contact))
+                                                                            {{ \Illuminate\Support\Str::limit($user_order->contact->firstName.' '.$user_order->contact->lastName , 10) }}
+                                                                        @endif
+                                                                    </span>
+                                                                </td>
+                                                                <td>
+                                                                    <span class="header-row-mbl-my-account order_number_my_account">
+                                                                        #{{ $user_order->id }}</span>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                {{-- <div class="account-header-mbl d-flex">
+                                                    <span class="account-header-items-mbl border-bottom-my-account-mbl">
+                                                        <p class="order_place_my_account mb-0">
+                                                            ORDER PLACED <br>
+                                                            <span class="order_date_my_account">
+                                                                {{ $user_order->created_at->format('M d, Y') }}
+                                                            </span>
+                                                        </p>
+                                                    </span>
+                                                    <span class="account-header-items-mbl">
+                                                        <p class="order_place_my_account mb-0">
+                                                            TOTAL <br>
+                                                            <span class="total_price_my_account">
+                                                                ${{ number_format($user_order->total_including_tax, 2) }}
+                                                            </span>
+                                                        </p>
+
+                                                    </span>
+                                                    <span class="account-header-items-mbl">
+                                                        <p class="order_place_my_account mb-0">
+                                                            SHIP TO <br>
+                                                            @if(!empty($user_order->contact->address1))
+                                                                <span class="shipping_to_my_account" title="{{$user_order->contact->address1}}">
+                                                                    {{ \Illuminate\Support\Str::limit($user_order->contact->address1, 10) }}
                                                                 </span>
-                                                            </p>
-                                                        </span>
-                                                    </div>
-                                                    <div class="col-md-2 text-right">
-                                                        <p class="order_place_my_account">
+                                                            @elseif(!empty($user_order->contact->postalAddress1))
+                                                                <span class="shipping_to_my_account" title="{{$user_order->contact->postalAddress1}}">
+                                                                    {{ \Illuminate\Support\Str::limit($user_order->contact->postalAddress1, 10) }}
+                                                                </span>
+                                                            @endif
+                                                        </p>
+                                                    </span>
+                                                    <span class="account-header-items-mbl border-bottom-my-account-mbl">
+                                                        <p class="order_place_my_account mb-0">
+                                                            Company <br>
+                                                            @if(!empty($user_order->contact->company))
+                                                            <span class="shipping_to_my_account">
+                                                                {{ \Illuminate\Support\Str::limit($user_order->contact->company, 10) }}
+                                                            </span>
+                                                            @endif
+                                                        </p>
+                                                    </span>
+                                                    <span class="account-header-items-mbl">
+                                                        <p class="order_place_my_account mb-0">
+                                                            Status <br>
+                                                            <span class="shipping_to_my_account">
+                                                                @if($user_order->order_id != null && $user_order->isApproved == 1)
+                                                                    <span class="badge badge-success">FullFilled</span>
+                                                                @elseif($user_order->order_id == null && $user_order->isApproved == 0)
+                                                                    <span class="badge badge-primary">New</span>
+                                                                @elseif($user_order->order_id == null && $user_order->isApproved == 2)
+                                                                    <span class="badge badge-danger">Cancelled</span>
+                                                                @endif
+                                                            </span>
+                                                        </p>
+                                                    </span>
+                                                    <span class="account-header-items-mbl">
+                                                        <p class="order_place_my_account mb-0">
+                                                            Submitter <br>
+                                                            <span class="shipping_to_my_account">
+                                                                @if (!empty($user_order->primaryId) && !empty($user_order->primary_contact))
+                                                                    {{ \Illuminate\Support\Str::limit($user_order->primary_contact->firstName.' '.$user_order->primary_contact->lastName, 10) }}
+                                                                @elseif (!empty($user_order->secondaryId) && !empty($user_order->secondary_contact))
+                                                                    {{ \Illuminate\Support\Str::limit($user_order->secondary_contact->firstName.' '.$user_order->secondary_contact->lastName, 10) }}
+                                                                @elseif (!empty($user_order->contact))
+                                                                    {{ \Illuminate\Support\Str::limit($user_order->contact->firstName.' '.$user_order->contact->lastName , 10) }}
+                                                                @endif
+                                                            </span>
+                                                        </p>
+                                                    </span>
+                                                    <span class="account-header-items-mbl">
+                                                        <p class="order_place_my_account mb-0">
                                                             ORDER <br>
                                                             <span class="order_number_my_account">
                                                                 #{{ $user_order->id }}</span>
                                                         </p>
-                                                    </div>
-                                                </div>
+                                                    </span>
+                                                </div> --}}
                                             </div>
-                                            <div class="card-body">
+                                            <div class="card-body my-account-card-body">
                                                 <div class="row">
                                                     <div class="col-md-7">
                                                         {{-- @if (count($user_order->apiOrderItem) > 1)
@@ -192,7 +284,7 @@
                                                             @endphp
                                                             @if (count($user_order->apiOrderItem) > 1)
                                                                 @foreach ($user_order->apiOrderItem as $orderItem)
-                                                                    <div class="my-2" style="width:20% !important">
+                                                                    <div class="my-2 my-account-image-div-mbl">
                                                                         <div class="img_my_account_order p-2">
                                                                             @if (!empty($orderItem->product->images))
                                                                                 <img src="{{ $orderItem->product->images }}"
@@ -208,7 +300,7 @@
                                                                 @endforeach
                                                             @else
                                                                 @foreach ($user_order->apiOrderItem as $orderItem)
-                                                                    <div class="my-2" style="width:20% !important">
+                                                                    <div class="my-2 my-account-image-div-mbl">
                                                                         <div class="img_my_account_order p-2">
                                                                             @if (!empty($orderItem->product->images))
                                                                                 <img src="{{ $orderItem->product->images }}"
@@ -221,7 +313,7 @@
                                                                             @endif
                                                                         </div>
                                                                     </div>
-                                                                    <div class="my-2" style="width:75% !important">
+                                                                    <div class="my-2  my-account-name-div-mbl">
                                                                         @if (!empty($orderItem->product->name))
                                                                         <p class="my_account_product_name">
                                                                             {{ $orderItem->product->name }}
@@ -244,8 +336,8 @@
                                                         </div>
                                                     </div>
                                                     @if (count($user_order->apiOrderItem) > 0)
-                                                        <div class="col-md-5 text-right">
-                                                            <button type="button" class="btn all_items_to_cart_btn" onclick="add_products_to_cart({{$user_order->id}})">
+                                                        <div class="col-md-5 button-div-my-account">
+                                                            <button type="button" class="btn all_items_to_cart_btn mbl-my-account-add-btn" onclick="add_products_to_cart({{$user_order->id}})">
                                                                 Add
                                                                 all
                                                                 items
@@ -254,7 +346,7 @@
                                                             </button>
                                                             <br>
                                                             <a href="{{ url('my-account/my-order-detail/' . $user_order->id) }}"
-                                                                class="btn my_account_view_order_btn my-1">View
+                                                                class="btn my_account_view_order_btn my-1 mbl-my-account-add-btn">View
                                                                 order</a>
                                                         </div>
                                                     @else
@@ -268,7 +360,7 @@
                                                             <button type="button"
                                                                 class="btn return_or_replace_items_btn my-1">Return
                                                                 or replace items</button> <br> --}}
-                                                            <button type="button" class="btn all_items_to_cart_btn" onclick="add_products_to_cart({{$user_order->id}})">
+                                                            <button type="button" class="btn all_items_to_cart_btn mbl-my-account-add-btn" onclick="add_products_to_cart({{$user_order->id}})">
                                                                 Add
                                                                 all
                                                                 items
@@ -277,7 +369,7 @@
                                                             </button>
                                                             <br>
                                                             <a href="{{ url('my-account/my-order-detail/' . $user_order->id) }}"
-                                                                class="btn return_or_replace_items_btn my-1">View
+                                                                class="btn return_or_replace_items_btn my-1 mbl-my-account-add-btn">View
                                                                 Order Details</a>
                                                         </div>
                                                     @endif
@@ -463,7 +555,7 @@
         border:1px solid rgb(234 236 240);
     }
     .search_row_my_account_page {
-        margin-top: 0px !important;
+        margin-top: 0px;
     }
     .buy_again_product_image {
         height: 80px;
