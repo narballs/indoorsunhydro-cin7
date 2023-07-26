@@ -4812,11 +4812,40 @@ select.list-dt:focus {
 } */
 /* mobile css */
 
+@media only screen and (min-width:769px) {
+    .my_profile_form_label  , .my_profile_form::placeholder , .my_profile_form , .profile_save_changes{
+        font-size:18px !important;
+        line-height:24px !important;
+    }
+}
+
 @media only screen and (max-width: 425px) and (min-width: 280px) {
+    .my_profile_form_label , .my_profile_form::placeholder , .my_profile_form , .profile_save_changes {
+        font-size:12px !important;
+        line-height:15px !important;
+    }
+    .account_detais_profile {
+        font-size:14px !important;
+        line-height:normal !important;
+    }
+    .data-div-account {
+        width: 75% !important;
+    }
+    .image-div-account {
+        width: 25% !important;
+    }
+    .my_account_total_items_listing {
+        font-size: 14px !important;
+    }
+    .my_account_product_name {
+        font-size: 14px !important;
+        line-height: normal !important;
+        margin-top: 0.5rem !important;
+        margin-bottom:0rem !important;
+    }
     .my-account-card-body {
         padding-bottom: 0px !important;
         margin-bottom: 0px !important;
-
     }
     .mbl-my-account-add-btn {
         width: 100% !important;
@@ -4827,6 +4856,7 @@ select.list-dt:focus {
     }
     .button-div-my-account {
         text-align: center;
+        margin-top: 1rem !important;
     }
     .my-account-table-desktop {
         width: 200%;
@@ -6397,8 +6427,6 @@ select.list-dt:focus {
     font-size: 20px;
     line-height: 25px;
     color: #242424;
-    padding-left: 18px !important;
-    padding-top: 11px !important;
 }
 
 .all_items_to_cart_btn {
@@ -6584,8 +6612,8 @@ select.list-dt:focus {
     font-family: 'Poppins' !important;
     font-style: normal !important;
     font-weight: 400 !important;
-    font-size: 18px !important;
-    line-height: 24px !important;
+    font-size: 18px ;
+    line-height: 24px ;
     color: #828282 !important;
 }
 
@@ -6593,8 +6621,8 @@ select.list-dt:focus {
     font-family: 'Poppins' !important;
     font-style: normal !important;
     font-weight: 400 !important;
-    font-size: 18px !important;
-    line-height: 24px !important;
+    font-size: 18px;
+    line-height: 24px;
     color: #242424 !important;
 }
 
@@ -6602,8 +6630,8 @@ select.list-dt:focus {
     font-family: 'Poppins' !important;
     font-style: normal !important;
     font-weight: 400 !important;
-    font-size: 18px !important;
-    line-height: 24px !important;
+    font-size: 18px ;
+    line-height: 24px;
     color: #828282 !important;
 }
 
@@ -6615,8 +6643,8 @@ select.list-dt:focus {
     font-family: 'Poppins' !important;
     font-style: normal !important;
     font-weight: 500 !important;
-    font-size: 18px !important;
-    line-height: 24px !important;
+    font-size: 18px;
+    line-height: 24px;
     color: #FFFFFF !important;
 }
 
