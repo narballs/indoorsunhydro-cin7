@@ -4820,6 +4820,15 @@ select.list-dt:focus {
 }
 
 @media only screen and (max-width: 425px) and (min-width: 280px) {
+    .mobile_screen_Previous_btn {
+        width: 25% !important;
+    }
+    .mobile_screen_pagination_number {
+        width: 50% !important;
+    }
+    .mobile_screen_Previous_next {
+        width: 25% !important;
+    }
     .my_profile_form_label , .my_profile_form::placeholder , .my_profile_form , .profile_save_changes {
         font-size:12px !important;
         line-height:15px !important;

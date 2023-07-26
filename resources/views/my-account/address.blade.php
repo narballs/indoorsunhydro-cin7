@@ -3,7 +3,7 @@
 @include('partials.search-bar')
 @section('addresses-active', 'active')
 <div class="col-md-12 p-0">
-    <p style="line-height: 95px;" class="fw-bold fs-2 product-btn my-auto border-0 text-white text-center align-middle">
+    <p style="line-height: 95px;" class="fw-bold fs-2 product-btn my-auto border-0 text-white text-center align-middle my-account-main-heading">
         MY ACCOUNT
     </p>
 </div>
@@ -117,104 +117,106 @@
                     </p>
                     <div class="row">
                         <div class="col-md-12">
-                            <table class="table address-table-items-data m-0 ">
-                                <thead>
-                                    <tr class="table-header-background">
-                                        <td class="table-row-item">
-                                            <div class="custom-control custom-checkbox tabel-checkbox">
-                                                <input
-                                                    class="custom-control-input custom-control-input-success checkbox-table"
-                                                    type="checkbox" id="selectAll" value="">
-                                                <label for="selectAll" class="custom-control-label"></label>
-
-                                                <span class="table-row-heading-order">
-                                                    <i class="fas fa-arrow-up mt-1" style="font-size:14.5px ;"></i>
-                                                </span>
-                                            </div>
-                                        </td>
-                                        <td class="my_account_addresses">Name</td>
-                                        <td class="my_account_addresses">Address</td>
-                                        <td class="my_account_addresses">City</td>
-                                        <td class="my_account_addresses">Country</td>
-                                        <td class="my_account_addresses">State</td>
-                                        <td class="my_account_addresses">Zip Code</td>
-                                        <td class="my_account_addresses">Phone Number</td>
-                                        <td></td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($secondary_contacts as $key => $contact)
-                                        <tr class="py-5">
-                                            <td class="table-items">
+                            <div class="table-responsive">
+                                <table class="table address-table-items-data m-0 ">
+                                    <thead>
+                                        <tr class="table-header-background">
+                                            <td class="table-row-item">
                                                 <div class="custom-control custom-checkbox tabel-checkbox">
                                                     <input
-                                                        class="custom-control-input custom-control-input-success sub_chk"
-                                                        data-id="{{ $contact->id }}" type="checkbox"
-                                                        id="separate_check_{{ $contact->id }}">
-                                                    <label for="separate_check_{{ $contact->id }}"
-                                                        class="custom-control-label"></label>
-                                                    <span>
-                                                        {{ $key + 1 }}
+                                                        class="custom-control-input custom-control-input-success checkbox-table"
+                                                        type="checkbox" id="selectAll" value="">
+                                                    <label for="selectAll" class="custom-control-label"></label>
+    
+                                                    <span class="table-row-heading-order">
+                                                        <i class="fas fa-arrow-up mt-1" style="font-size:14.5px ;"></i>
                                                     </span>
                                                 </div>
                                             </td>
-                                            <td class="my_account_address_items">
-                                                @if (!empty($contact['firstName'] && $contact['lastName']))
-                                                    {{ $contact['firstName'] . ' ' . $contact['lastName'] }}
-                                                @else
-                                                {{ $contact['first_name'] . ' ' . $contact['last_name'] }}
-                                                @endif
-                                            </td>
-                                            <td class="my_account_all_items">
-                                                @if (!empty($contact['postalAddress1']))
-                                                    {{ $contact['postalAddress1'] }}
-                                                @else
-                                                    {{ $contact['address1'] }}
-                                                @endif
-                                            </td>
-                                            <td class="my_account_all_items">
-                                                @if (!empty($contact['postalCity']))
-                                                    {{ $contact['postalCity'] }}
-                                                @else
-                                                {{ $contact['city'] }}
-                                                @endif
-                                            </td>
-                                            <td class="my_account_all_items">
-                                                @if (!empty($contact['Country']))
-                                                    {{ $contact['Country'] }}
-                                                @else
-                                                {{ $contact['Country'] }}
-                                                @endif
-                                            </td>
-                                            <td class="my_account_all_items">
-                                                @if (!empty($contact['postalState']))
-                                                    {{ $contact['postalState'] }}
-                                                @else
-                                                {{ $contact['state'] }}
-                                                @endif
-                                            </td>
-                                            <td class="my_account_all_items">
-                                                @if (!empty($contact['postalPostCode']))
-                                                    {{ $contact['postalPostCode'] }}
-                                                @else
-                                                {{ $contact['postCode'] }}
-                                                @endif
-                                            </td>
-                                            <td class="my_account_all_items">
-                                                @if (!empty($contact['phone']))
-                                                    {{ $contact['phone'] }}
-                                                @elseif(!empty($contact['mobile']))
-                                                    {{ $contact['mobile'] }}
-                                                @else
-                                                @endif
-                                            </td>
-                                            <td>
-                                                <img src="/theme/img/dots_icons.png" alt="">
-                                            </td>
+                                            <td class="my_account_addresses">Name</td>
+                                            <td class="my_account_addresses">Address</td>
+                                            <td class="my_account_addresses">City</td>
+                                            <td class="my_account_addresses">Country</td>
+                                            <td class="my_account_addresses">State</td>
+                                            <td class="my_account_addresses">Zip Code</td>
+                                            <td class="my_account_addresses">Phone Number</td>
+                                            <td></td>
                                         </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($secondary_contacts as $key => $contact)
+                                            <tr class="py-5">
+                                                <td class="table-items">
+                                                    <div class="custom-control custom-checkbox tabel-checkbox">
+                                                        <input
+                                                            class="custom-control-input custom-control-input-success sub_chk"
+                                                            data-id="{{ $contact->id }}" type="checkbox"
+                                                            id="separate_check_{{ $contact->id }}">
+                                                        <label for="separate_check_{{ $contact->id }}"
+                                                            class="custom-control-label"></label>
+                                                        <span>
+                                                            {{ $key + 1 }}
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                                <td class="my_account_address_items">
+                                                    @if (!empty($contact['firstName'] && $contact['lastName']))
+                                                        {{ $contact['firstName'] . ' ' . $contact['lastName'] }}
+                                                    @else
+                                                    {{ $contact['first_name'] . ' ' . $contact['last_name'] }}
+                                                    @endif
+                                                </td>
+                                                <td class="my_account_all_items">
+                                                    @if (!empty($contact['postalAddress1']))
+                                                        {{ $contact['postalAddress1'] }}
+                                                    @else
+                                                        {{ $contact['address1'] }}
+                                                    @endif
+                                                </td>
+                                                <td class="my_account_all_items">
+                                                    @if (!empty($contact['postalCity']))
+                                                        {{ $contact['postalCity'] }}
+                                                    @else
+                                                    {{ $contact['city'] }}
+                                                    @endif
+                                                </td>
+                                                <td class="my_account_all_items">
+                                                    @if (!empty($contact['Country']))
+                                                        {{ $contact['Country'] }}
+                                                    @else
+                                                    {{ $contact['Country'] }}
+                                                    @endif
+                                                </td>
+                                                <td class="my_account_all_items">
+                                                    @if (!empty($contact['postalState']))
+                                                        {{ $contact['postalState'] }}
+                                                    @else
+                                                    {{ $contact['state'] }}
+                                                    @endif
+                                                </td>
+                                                <td class="my_account_all_items">
+                                                    @if (!empty($contact['postalPostCode']))
+                                                        {{ $contact['postalPostCode'] }}
+                                                    @else
+                                                    {{ $contact['postCode'] }}
+                                                    @endif
+                                                </td>
+                                                <td class="my_account_all_items">
+                                                    @if (!empty($contact['phone']))
+                                                        {{ $contact['phone'] }}
+                                                    @elseif(!empty($contact['mobile']))
+                                                        {{ $contact['mobile'] }}
+                                                    @else
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <img src="/theme/img/dots_icons.png" alt="">
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
                             <tfoot>
                                 <tr>
                                     <td colspan="12">

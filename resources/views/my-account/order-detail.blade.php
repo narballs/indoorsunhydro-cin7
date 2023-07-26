@@ -3,7 +3,7 @@
 @include('partials.search-bar')
 
 <div class="col-md-12 p-0">
-    <p style="line-height: 95px;" class="fw-bold fs-2 product-btn my-auto border-0 text-white text-center align-middle">
+    <p style="line-height: 95px;" class="fw-bold fs-2 product-btn my-auto border-0 text-white text-center align-middle my-account-main-heading">
         MY ACCOUNT
     </p>
 </div>
