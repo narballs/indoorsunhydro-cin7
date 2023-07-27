@@ -385,7 +385,7 @@
                         <tr>
                             <td align="" style="text-align: center;">
                                 <img class="img-fluid "
-                                    src="{{ asset('https://stage.indoorsunhydro.com/theme/img/email/approve_icon.png') }}">
+                                    src="{{ asset('https://stage.indoorsunhydro.com/theme/img/email/approve_email_icon.png') }}">
                             </td>
                         </tr>
                         <tr>

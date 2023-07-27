@@ -781,35 +781,35 @@ class UserController extends Controller
 
             if (!empty($date_filter)) {
                 
-                if ($date_filter == 'this month') {
+                if ($date_filter == 'this-month') {
                     $user_orders = $user_orders_query
                     ->whereMonth('created_at', $this_month)
                     ->orderBy('created_at' , 'Desc')
                     ->paginate(10);
                 }
                 
-                if ($date_filter == 'last month') {
+                if ($date_filter == 'last-month') {
                     $user_orders = $user_orders_query
                     ->whereBetween('created_at', $last_month)
                     ->orderBy('created_at' , 'Desc')
                     ->paginate(10);
                 }
 
-                if ($date_filter == 'past 3 months') {
+                if ($date_filter == 'last-3-months') {
                     $user_orders = $user_orders_query
                     ->whereBetween('created_at', $last_3_months)
                     ->orderBy('created_at' , 'Desc')
                     ->paginate(10);
                 }
                 
-                if ($date_filter == 'past 5 months') {
+                if ($date_filter == 'last-5-months') {
                     $user_orders = $user_orders_query
                     ->whereBetween('created_at', $last_5_months)
                     ->orderBy('created_at' , 'Desc')
                     ->paginate(10);
                 }
                 
-                if($date_filter == 'last year') {
+                if($date_filter == 'last-year') {
                     $user_orders = $user_orders_query
                     ->whereBetween('created_at', $past_year)
                     ->orderBy('created_at' , 'Desc')
