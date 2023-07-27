@@ -20,13 +20,13 @@
             </div>
             <div class="col-md-12 p-0">
                 <div class="card">
-                    <div class="card-header bg-white ps-5">
-                        <p class="my_account_default_address">
+                    <div class="card-header bg-white">
+                        <p class="my_account_default_address mb-0">
                             Default Addresses
                         </p>
                     </div>
-                    <div class="card-boday">
-                        <div class="row ps-5 my-5">
+                    <div class="card-body">
+                        <div class="row my-5">
                             <div class="col-md-6">
                                 <p class="default_billing_address">
                                     Default Billing Address
@@ -112,9 +112,11 @@
             </div>
             <div class="col-md-12 my-4 p-0">
                 <div class="card">
-                    <p class="additional_address_entries px-5 py-4 mb-0">
-                        Additional Address Entries
-                    </p>
+                    <div class="card-header">
+                        <p class="additional_address_entries py-4 mb-0">
+                            Additional Address Entries
+                        </p>
+                    </div>
                     <div class="row">
                         <div class="col-md-12">
                             <div class="table-responsive">

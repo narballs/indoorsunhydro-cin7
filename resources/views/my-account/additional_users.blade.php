@@ -36,9 +36,9 @@
                 <div class="col-md-12 my-3">
                     <div class="card">
                         <div class="card-header bg-white">
-                            <p class="my_account_users_heading mb-0">Users</p>
+                            <p class="my_account_users_heading mb-0 mx-2">Users</p>
                         </div>
-                        <div class="card-boday">
+                        <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table address-table-items-data m-0 ">
                                     <thead class="border-bottom-0 border-bottom-0">
@@ -69,7 +69,7 @@
                                         @foreach ($secondary_contacts as $key => $contact)
                                         <?php //dd($contact);?>
                                             <tr>
-                                                <td class="table-items justify-content-start align-items-lg-center">
+                                                <td class="table-items justify-content-start align-items-lg-center user_table_items">
                                                     <div class="custom-control custom-checkbox tabel-checkbox">
                                                         <input
                                                             class="custom-control-input custom-control-input-success sub_chk"

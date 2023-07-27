@@ -1105,7 +1105,7 @@ label {
     line-height: 19px;
     color: #000000;
     border-bottom: 1px solid #dee2e6 !important;
-    padding-left: 25px !important;
+    padding-left: 25px;
     padding-bottom: 0px !important;
     padding-top: 20px !important;
 }
@@ -4819,7 +4819,56 @@ select.list-dt:focus {
     }
 }
 
+.filter2_mbl {
+    justify-content: end;
+}
+
+@media only screen and (min-width:356px) { 
+    .filter2_mbl {
+        width: 25% !important;
+    }
+    .filter1_mbl {
+        width: 75% !important;
+    }
+}
+@media only screen and (max-width: 355px) and (min-width: 280px) {
+    .filter2_mbl {
+        width: 100% !important;
+    }
+    .filter1_mbl {
+        width: 100% !important;
+    }
+    .order_detail_tabs .nav-link  , .order_detail_tabs .nav-link.active {
+        font-size: 9px !important;
+    }
+}
+
 @media only screen and (max-width: 425px) and (min-width: 280px) {
+    .my_account_order_detail_page_table_title , .order_detail_page_prices , .order_detail_page_product_name ,  
+    .my_account_all_items , .my_account_order_details_page_date_title , 
+    .my_account_order_details_page_date_item , .my_account_order_details_page_date_order_id_title , 
+    .my_account_order_details_page_date_order_id_item , .my_account_add_a_new_address , 
+    .my_account_default_address , .default_billing_address , .my_account_address_items , 
+    .additional_address_entries , .my_account_addresses , .change_billing_address_btn , 
+    .mobileFormat , .favorite_product_name_slug , .favorite_product_price , .favorite_remove_btn , #per_page_favorite
+    .selection_buttons , .my_account_users_heading
+    {
+        font-size: 14px !important;
+        line-height: 23.5px !important;
+    }
+    .my_account_order_details_heading {
+        font-size: 14px !important;
+        line-height: normal !important;
+    }
+    .filter2_mbl {
+        justify-content: start !important;
+    }
+    #handle_sort_by {
+        padding: 0px !important;
+    }
+    #order_search {
+        font-size:12px;
+    }
     .mobile_screen_Previous_btn {
         width: 25% !important;
     }
@@ -4902,7 +4951,7 @@ select.list-dt:focus {
     }
     #handle_sort_by {
         height: 25px !important;
-        padding: 3px 24.053px 3.527px 10px !important;
+        /* padding: 3px 24.053px 3.527px 10px !important; */
         margin-top: 5px;
         line-height: 15.947px !important;
         font-family: 'poppins' !important;
@@ -4927,8 +4976,7 @@ select.list-dt:focus {
         top: 50%;
     }
     .has-search .form-control {
-        padding-bottom: 0rem !important;
-        padding-top: 0.2rem;
+        padding-top: 0.5rem;
     }
     .my_account_search_btn_mbl {
         font-size: 12px !important;
@@ -6348,7 +6396,6 @@ select.list-dt:focus {
 
 .select_months_my_account {
     margin-top: -7px !important;
-    margin-left: 13px !important;
     font-style: normal !important;
     font-weight: 400 !important;
     font-size: 14px !important;
@@ -6661,8 +6708,8 @@ select.list-dt:focus {
     font-family: 'Poppins' !important;
     font-style: normal !important;
     font-weight: 500 !important;
-    font-size: 27.2886px !important;
-    line-height: 65px !important;
+    font-size: 27.2886px;
+    line-height: 65px;
     letter-spacing: -0.022em !important;
     color: #242424 !important;
 }
@@ -6671,8 +6718,8 @@ select.list-dt:focus {
     font-family: 'Poppins' !important;
     font-style: normal !important;
     font-weight: 500 !important;
-    font-size: 20.4664px !important;
-    line-height: 31px !important;
+    font-size: 20.4664px;
+    line-height: 31px;
     color: #242424 !important;
 }
 
@@ -6680,8 +6727,8 @@ select.list-dt:focus {
     font-family: 'Poppins' !important;
     font-style: normal !important;
     font-weight: 400 !important;
-    font-size: 19px !important;
-    line-height: 34px !important;
+    font-size: 19px;
+    line-height: 34px;
     color: #242424 !important;
     margin-bottom: 0px !important;
 }
@@ -6690,7 +6737,7 @@ select.list-dt:focus {
     font-family: 'Poppins' !important;
     font-style: normal !important;
     font-weight: 400 !important;
-    font-size: 19px !important;
+    font-size: 19px;
     align-items: center !important;
     color: #006FBE !important;
 }
@@ -6704,8 +6751,8 @@ select.list-dt:focus {
     font-family: 'Poppins' !important;
     font-style: normal !important;
     font-weight: 400 !important;
-    font-size: 19px !important;
-    line-height: 34px !important;
+    font-size: 19px;
+    line-height: 34px;
     color: #006FBE !important;
 }
 
@@ -6713,8 +6760,8 @@ select.list-dt:focus {
     font-family: 'Poppins' !important;
     font-style: normal !important;
     font-weight: 400 !important;
-    font-size: 18px !important;
-    line-height: 27px !important;
+    font-size: 18px;
+    line-height: 27px;
     letter-spacing: -0.006em;
     color: #525252 !important;
     background: #FBFBFB !important;
@@ -6726,8 +6773,8 @@ select.list-dt:focus {
     font-family: 'Poppins' !important;
     font-style: normal !important;
     font-weight: 500 !important;
-    font-size: 27.2886px !important;
-    line-height: 65px !important;
+    font-size: 27.2886px;
+    line-height: 65px;
     letter-spacing: -0.022em !important;
     color: #242424 !important;
 }
@@ -6768,8 +6815,8 @@ select.list-dt:focus {
     font-family: 'Poppins' !important;
     font-style: normal !important;
     font-weight: 400 !important;
-    font-size: 18px !important;
-    line-height: 23px !important;
+    font-size: 18px;
+    line-height: 23px;
     color: #242424 !important;
 }
 
@@ -6777,8 +6824,8 @@ select.list-dt:focus {
     font-family: 'Poppins' !important;
     font-style: normal !important;
     font-weight: 400 !important;
-    font-size: 18px !important;
-    line-height: 26px !important;
+    font-size: 18px;
+    line-height: 26px;
     color: #828282 !important;
 }
 
@@ -6867,9 +6914,11 @@ ul.pager>.main-row>.pagination>li {
 }
 
 .table-row-item {
-    padding-left: 25px !important;
+    padding-left: 10px !important;
 }
-
+.user_table_items {
+    padding-left: 10px !important;
+}
 .address-table-items-data>tbody {
     border-top: none !important;
     padding: 10px !important;
@@ -6879,8 +6928,8 @@ ul.pager>.main-row>.pagination>li {
     font-family: 'Poppins' !important;
     font-style: normal !important;
     font-weight: 500 !important;
-    font-size: 27.0833px !important;
-    line-height: 65px !important;
+    font-size: 27.0833px;
+    line-height: 65px;
     letter-spacing: -0.022em !important;
     color: #242424 !important;
 }
@@ -6895,8 +6944,8 @@ ul.pager>.main-row>.pagination>li {
     font-family: 'Poppins' !important;
     font-style: normal !important;
     font-weight: 500 !important;
-    font-size: 1.125rem !important;
-    line-height: 1.688rem !important;
+    font-size: 1.125rem;
+    line-height: 1.688rem;
     color: #008BD3 !important;
 }
 
@@ -6904,8 +6953,8 @@ ul.pager>.main-row>.pagination>li {
     font-family: 'Poppins' !important;
     font-style: normal;
     font-weight: 400;
-    font-size: 1.194rem !important;
-    line-height: 1.625rem !important;
+    font-size: 1.194rem;
+    line-height: 1.625rem;
     text-align: center;
     color: #828282 !important;
 }
@@ -6914,8 +6963,8 @@ ul.pager>.main-row>.pagination>li {
     font-family: 'Poppins';
     font-style: normal;
     font-weight: 400;
-    font-size: 1.194rem !important;
-    line-height: 1.625rem !important;
+    font-size: 1.194rem;
+    line-height: 1.625rem;
     text-align: center;
     color: #DC4E41 !important;
 }
@@ -6945,8 +6994,8 @@ ul.pager>.main-row>.pagination>li {
     font-family: 'Poppins' !important;
     font-style: normal !important;
     font-weight: 500 !important;
-    font-size: 27.2886px !important;
-    line-height: 4.063rem !important;
+    font-size: 27.2886px;
+    line-height: 4.063rem;
     letter-spacing: -0.022em;
     color: #242424 !important;
 }
@@ -6955,17 +7004,17 @@ ul.pager>.main-row>.pagination>li {
     font-family: 'Poppins' !important;
     font-style: normal !important;
     font-weight: 400 !important;
-    font-size: 0.928rem !important;
-    line-height: 1.563rem !important;
+    font-size: 0.928rem;
+    line-height: 1.563rem;
     color: #7D7D7D !important;
 }
 
-.my_account_order_details_page_date_item {
+.my_account_order_details_page_date_item  {
     font-family: 'Poppins' !important;
-    font-style: normal 1important;
+    font-style: normal !important;
     font-weight: 500 !important;
-    font-size: 0.928rem !important;
-    line-height: 1.563rem !important;
+    font-size: 0.928rem;
+    line-height: 1.563rem;
     color: #7D7D7D !important;
 }
 
@@ -6974,7 +7023,7 @@ ul.pager>.main-row>.pagination>li {
     font-style: normal;
     font-weight: 400;
     font-size: 0.928em;
-    line-height: 1.563rem !important;
+    line-height: 1.563rem;
     color: #7D7D7D !important;
 }
 
@@ -6983,7 +7032,7 @@ ul.pager>.main-row>.pagination>li {
     font-style: normal;
     font-weight: 500;
     font-size: 0.928em;
-    line-height: 1.563rem !important;
+    line-height: 1.563rem;
     color: #008BD3 !important;
 
 }
@@ -6992,8 +7041,8 @@ ul.pager>.main-row>.pagination>li {
     font-family: 'Poppins';
     font-style: normal;
     font-weight: 600;
-    font-size: 1.125rem !important;
-    line-height: 1.563rem !important;
+    font-size: 1.125rem;
+    line-height: 1.563rem;
     color: #7D7D7D !important;
 }
 
@@ -7001,8 +7050,8 @@ ul.pager>.main-row>.pagination>li {
     font-family: 'Poppins';
     font-style: normal;
     font-weight: 500;
-    font-size: 1.125rem !important;
-    line-height: 1.563rem !important;
+    font-size: 1.125rem;
+    line-height: 1.563rem;
     color: #008BD3 !important;
 }
 
@@ -7016,8 +7065,8 @@ ul.pager>.main-row>.pagination>li {
     font-family: 'Poppins' !important;
     font-style: normal !important;
     font-weight: 500 !important;
-    font-size: 1.125rem !important;
-    line-height: 1.563rem !important;
+    font-size: 1.125rem;
+    line-height: 1.563rem;
     color: #242424 !important;
 }
 

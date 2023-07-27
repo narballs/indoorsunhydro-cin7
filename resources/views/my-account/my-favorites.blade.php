@@ -17,7 +17,7 @@
             </div>
             <div class="col-md-12 p-0">
                 <div class="card">
-                    <div class="card-header bg-white ps-5">
+                    <div class="card-header bg-white">
                         <div class="row">
                             <div class="col-md-4">
                                 <p class="my_account_default_address mb-0">
