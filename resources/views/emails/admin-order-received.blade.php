@@ -376,7 +376,7 @@
     </table>
 </body> --}}
 
-<body bgcolor="#000000" style="background-color: #000000;padding-top:5px;padding-bottom:5px;padding-right:5px;" width="100%">
+<body bgcolor="#000000" style="background-color: #000000;padding-top:5px;padding-bottom:5px;" width="100%">
     <table padding="0" bgcolor="#FFFFFF" style="background-color:#FFFFFF;border-radius:5px;" width="50%" border="0" align="center" cellpadding="0">
         <tbody>
             <tr>
