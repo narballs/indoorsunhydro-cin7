@@ -274,7 +274,7 @@
                                 </span>
                             </div>
                             @if(!empty($tax_class->name))
-                                <div class="mx-2"><span><strong class="cart-total" >{{$tax_class->name}}</strong></span></div>
+                                <div class="mx-2"><span><strong class="cart-total mx-3 px-3" >{{'Tax Class:' . $tax_class->name}}</strong></span></div>
                             @endif
                             {{-- <div>
                                 <span class="tax-calculater">
@@ -566,7 +566,7 @@
                                                 @if(!empty($tax_class->name))
                                                 <div class="d-flex pb-3 mb-3" style="border-bottom:1px solid #dee2e6;">
                                                     
-                                                    <div class="w-100 d-flex align-items-center "><p class="sub-total-checkout-page  mt-0 mb-0 ml-0 text-dark">{{$tax_class->name}}</p></div>
+                                                    <div class="w-100 d-flex align-items-center "><p class="sub-total-checkout-page  mt-0 mb-0 ml-0 text-dark mx-3 px-3">{{'Tax Class :' . $tax_class->name}}</p></div>
                                                     
                                                 </div> 
                                                 @endif
