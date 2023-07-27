@@ -37,7 +37,7 @@
                             <div class="row">
                                 <div class="col-md-10 col-xl-8">
                                     <div class="row mt-3 filter-div-mbl-account">
-                                        <div class="col-md-9 d-flex ps-4 w-75">
+                                        <div class="col-md-9 d-flex filter1_mbl">
                                             <span>
                                                 <p class="total_order_my_account mt-2">@if(!empty($date_filter)) {{$user_orders->total()}} @else {{$user_orders->total()}} @endif orders
                                                     <span class="placed_in_my_account">
@@ -45,7 +45,7 @@
                                                     </span>
                                                 </p>
                                             </span>
-                                            <span class="select_months_my_account" style="margin-top: 0px !important;">
+                                            <span class="select_months_my_account mx-2" style="margin-top: 0px !important;">
                                                 <select class="custom-select date_filter date_filter_mbl" id="inputGroupSelect01" name="date_filter" onchange="date_filter()">
                                                     <option value="past 3 months" {{ $date_filter }} {{ isset($date_filter) && $date_filter =='past 3 months' ? 'selected="selected"' : ''
                                                 }}>Past 3 Months</option>
@@ -61,7 +61,7 @@
                                                 </select>
                                             </span>
                                         </div>
-                                        <div class="col-md-3 d-flex justify-content-end w-25">
+                                        <div class="col-md-3 d-flex filter2_mbl">
                                             <ul class="nav ">
                                                 <li class="text-center">
                                                     <select id="handle_sort_by" name="sort_by" class="py-1" onchange="handleSortBY()">
