@@ -47,16 +47,18 @@
                                             </span>
                                             <span class="select_months_my_account mx-2" style="margin-top: 0px !important;">
                                                 <select class="custom-select date_filter date_filter_mbl" id="inputGroupSelect01" name="date_filter" onchange="date_filter()">
-                                                    <option value="past 3 months" {{ $date_filter }} {{ isset($date_filter) && $date_filter =='past 3 months' ? 'selected="selected"' : ''
-                                                }}>Past 3 Months</option>
-                                                    <option value="past 5 months" {{ $date_filter }} {{ isset($date_filter) && $date_filter =='past 5 months' ? 'selected="selected"' : ''
-                                                }}>Past 5 Months</option>
-                                                    <option value="this month" {{ $date_filter }} {{ isset($date_filter) && $date_filter =='this month' ? 'selected="selected"' : ''
-                                                }}>This Month</option>
-                                                    <option value="last month" {{ $date_filter }} {{ isset($date_filter) && $date_filter =='last month' ? 'selected="selected"' : ''
-                                                }}>Past 1 Month</option>
-                                                    <option value="last year" {{ $date_filter }} {{ isset($date_filter) && $date_filter =='last year' ? 'selected="selected"' : ''
-                                                }}>Past 1 Year</option>
+                                                        
+                                                    <option value="last-3-months" {{ $date_filter }} {{ isset($date_filter) && $date_filter =='last-3-months' ? 'selected="selected"' : ''
+                                                    }}>Last 3 Months</option>
+                                                    <option value="this-month" {{ $date_filter }} {{ isset($date_filter) && $date_filter =='this-month' ? 'selected="selected"' : ''
+                                                    }}>This Month</option>
+                                                    <option value="last-5-months" {{ $date_filter }} {{ isset($date_filter) && $date_filter =='last-5-months' ? 'selected="selected"' : ''
+                                                    }}>Last 5 Months</option>
+                                                        
+                                                    <option value="last-month" {{ $date_filter }} {{ isset($date_filter) && $date_filter =='last-month' ? 'selected="selected"' : ''
+                                                    }}>Last Month</option>
+                                                    <option value="last-year" {{ $date_filter }} {{ isset($date_filter) && $date_filter =='last-year' ? 'selected="selected"' : ''
+                                                    }}>Last Year</option>
                                                     
                                                 </select>
                                             </span>
