@@ -230,9 +230,16 @@
             <table class="table mt-4">
                 <thead>
                     <tr>
-                        <th colspan="2" scope="col" class="th-lg">
+                        <th colspan="" scope="col" class="th-lg">
                             <span class=" cart-total p-1">
                                 Cart Totals
+                            </span>
+                        </th>
+                        <th scope="col" class="th-lg">
+                            <span class="d-flex align-items-center justify-content-end">
+                                <button onclick="showZendesk()" class="bg-transparent border-0">
+                                    <img src="{{asset('theme/img/icons/zendesk_launcher.png')}}" alt="" class="zendesk_img">
+                                </button>
                             </span>
                         </th>
                     </tr>
@@ -520,9 +527,14 @@
                                                 </div>
                                             </div>
                                             <div class="w-100 p-3" style="border: 0.793792px solid #DFDFDF;box-shadow: 0px 3.17517px 3.17517px rgba(231, 231, 231, 0.25);">
-                                                <div class="w-100 mb-3 pb-3" style="border-bottom:1px solid #dee2e6;">
-                                                    <span class="mb-2 cart-total-checkout-page text-dark mb-2">
+                                                <div class="w-100 mb-3 pb-3 d-flex" style="border-bottom:1px solid #dee2e6;">
+                                                    <span class="mb-2 cart-total-checkout-page text-dark mb-2 w-50">
                                                         Cart totals
+                                                    </span>
+                                                    <span class="ml-2 cart-sub-total-checkout-page text-dark mt-0 w-50 text-right">
+                                                        <button onclick="showZendesk()" class="bg-transparent border-0">
+                                                            <img src="{{asset('theme/img/icons/zendesk_launcher.png')}}" alt="" class="zendesk_img">
+                                                        </button>
                                                     </span>
                                                 </div>
                                                 <div class="d-flex pb-3 mb-3" style="border-bottom:1px solid #dee2e6;">
@@ -1582,11 +1594,17 @@
         border-radius: 0 0 4px 0;
         margin-bottom: 25px;
     }
+    .zendesk_img {
+        width: 25px;
+        height: 25px;
+    }
 </style>
 
 <script>
+    function showZendesk() {
+        zE('webWidget', 'open');
+    }
     $(document).ready(function() {
-
         var current_fs, next_fs, previous_fs; //fieldsets
         var opacity;
 
