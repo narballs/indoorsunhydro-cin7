@@ -26,15 +26,15 @@
                             </div>
                             <div class="col-md-8">
                                 <div class="row justify-content-end">
-                                    <div class="col-md-12 mt-3 d-flex justify-content-end align-items-center">
+                                    <div class="col-md-12 mt-3 d-flex justify-content-end align-items-center selection_button_div">
                                         {{-- @foreach ($lists as $list) --}}
                                             @if (count($lists) > 0)
-                                                <button class="btn btn-success btn-sm mr-3 selection_buttons" id="add_selected"
+                                                <button class="btn btn-success btn-sm selection_buttons" id="add_selected"
                                                     onclick="add_selected_to_cart()" type="button">
                                                     Add Selected to Cart
                                                 </button>
                 
-                                                <button class="btn btn-success btn-sm selection_buttons mr-3" id="add_all_to_cart" type="button"
+                                                <button class="btn btn-success btn-sm selection_buttons " id="add_all_to_cart" type="button"
                                                     onclick="add_all_to_cart()">
                                                     Add All to Cart
                                                 </button>
