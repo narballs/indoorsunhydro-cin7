@@ -4789,7 +4789,9 @@ select.list-dt:focus {
     box-shadow: none !important;
 }
 
-
+.selection_buttons {
+    margin-right: 1rem;
+}
 
 .my-account-table-desktop {
     width: 100%;
@@ -4850,11 +4852,27 @@ select.list-dt:focus {
     .my_account_order_details_page_date_order_id_item , .my_account_add_a_new_address , 
     .my_account_default_address , .default_billing_address , .my_account_address_items , 
     .additional_address_entries , .my_account_addresses , .change_billing_address_btn , 
-    .mobileFormat , .favorite_product_name_slug , .favorite_product_price , .favorite_remove_btn , #per_page_favorite
-    .selection_buttons , .my_account_users_heading
-    {
+    .mobileFormat , .favorite_product_name_slug , .favorite_product_price , .favorite_remove_btn ,.my_account_users_heading {
         font-size: 14px !important;
         line-height: 23.5px !important;
+    }
+    .selection_button_div {
+        padding: 0rem !important;
+    }
+    .selection_buttons {
+        margin-right: 0.25rem !important;
+    }
+    #per_page_favorite , .selection_buttons {
+        font-size: 12px !important; 
+    }
+    #per_page_favorite {
+        width: 17% !important;
+    }
+    #add_selected {
+        width: 45% !important;
+    }
+    #add_all_to_cart {
+        width: 38% !important;
     }
     .my_account_order_details_heading {
         font-size: 14px !important;
