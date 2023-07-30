@@ -5,6 +5,8 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Models\SecondaryContact;
 
+use App\Helpers\SettingHelper;
+
 class SecondaryContacts extends Command
 {
     /**
@@ -41,6 +43,9 @@ class SecondaryContacts extends Command
         $total_contact_pages = 35;
         $client2 = new \GuzzleHttp\Client();
 
+        $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
+        $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
+
         for ($i = 1; $i <= $total_contact_pages; $i++) {
             $this->info('Processing page#' . $i);
             sleep(3);
@@ -49,11 +54,13 @@ class SecondaryContacts extends Command
                 'https://api.cin7.com/api/v1/Contacts/?page=' . $i,
                 [
                     'auth' => [
-                       env('API_USER'),
-                        env('API_PASSWORD')
+                        $cin7_auth_username,
+                        $cin7_auth_password
                     ]
                 ]
             );
+
+
             $contacts = $res->getBody()->getContents();
             $contacts = json_decode($contacts);
             

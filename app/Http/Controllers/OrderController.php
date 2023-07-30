@@ -19,6 +19,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Str;
 
+use App\Helpers\SettingHelper;
+
 class OrderController extends Controller
 {
     public function store(Request $request)
@@ -185,7 +187,7 @@ class OrderController extends Controller
                     'user_email' => $user_email,
                     '$currentOrder' => $currentOrder,
                     'count' => $count,
-                    'from' => 'noreply@indoorsunhydro.com'
+                    'from' => SettingHelper::getSetting('noreply_email_address'),
                 ];
 
                 if (!empty($users_with_role_admin)) {
@@ -286,21 +288,17 @@ class OrderController extends Controller
                 return \Redirect::route('thankyou', $order_id);
             }
         }
-        // else {
-        //     return redirect('my-account')->with('success', 'Please Select Company Then Place Over Order Thanks !');
-        // }
+        
 
-        //print_r($order);exit;
         $client = new \GuzzleHttp\Client();
         $url = "https://api.cin7.com/api/v1/SalesOrders/";
         $response = $client->post($url, [
             'headers' => ['Content-type' => 'application/json'],
             'auth' => [
-                env('API_USER'),
-                env('API_PASSWORD')
+                SettingHelper::getSetting('cin7_auth_username'),
+                SettingHelper::getSetting('cin7_auth_password')
             ],
-            'json' =>
-            $order,
+            'json' => $order,
         ]);
 
 

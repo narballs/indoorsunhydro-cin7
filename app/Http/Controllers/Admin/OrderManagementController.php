@@ -28,6 +28,8 @@ use Illuminate\Support\Carbon as SupportCarbon;
 use Illuminate\Support\Facades\Auth;
 use DateTime;
 
+use App\Helpers\SettingHelper;
+
 class OrderManagementController extends Controller
 {
     function __construct()
@@ -305,8 +307,8 @@ class OrderManagementController extends Controller
         $response = $client->post($url, [
             'headers' => ['Content-type' => 'application/json'],
             'auth' => [
-                env('API_USER'),
-                env('API_PASSWORD')
+                SettingHelper::getSetting('cin7_auth_username'),
+                SettingHelper::getSetting('cin7_auth_password')
             ],
             'json' =>
             $order,

@@ -12,6 +12,7 @@ use App\Models\ApiSyncLog;
 use Illuminate\Http\Request;
 
 use App\Helpers\UtilHelper;
+use App\Helpers\SettingHelper;
 
 
 class SyncSuppliers extends Command
@@ -77,6 +78,9 @@ class SyncSuppliers extends Command
         $total_contact_pages = 150;
         $api_contact_ids = [];
 
+        $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
+        $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
+
         for ($i = 1; $i <= $total_contact_pages; $i++) {
 
             $this->info('Processing page#--------------------------' . $i);
@@ -88,8 +92,8 @@ class SyncSuppliers extends Command
 
                     [
                         'auth' => [
-                            env('API_USER'),
-                            env('API_PASSWORD')
+                            $cin7_auth_username,
+                            $cin7_auth_password
                         ]
                     ]
                 );

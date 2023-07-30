@@ -8,6 +8,8 @@ use App\Models\DailyApiLog;
 use App\Models\AdminSetting;
 use App\Models\ProductStock;
 
+use App\Helpers\SettingHelper;
+
 class UtilHelper
 {
     /**
@@ -21,20 +23,16 @@ class UtilHelper
     public static function sendRequest($method, $url, $body = [], $extra = [])
     {
         
+        $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
+        $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
+
         $authHeaders = [
             'headers' => ['Content-type' => 'application/json'],
             'auth' => [
-                env('API_USER'),
-                env('API_PASSWORD')
+                $cin7_auth_username,
+                $cin7_auth_password
             ]
         ];
-        // $authHeaders = [
-        //     'headers' => ['Content-type' => 'application/json'],
-        //     'auth' => [
-        //         'IndoorSunHydro2US',
-        //         '625ab949593e4cd4908b9f42758009f5'
-        //     ],
-        // ];
 
         if (!empty($body)) {
             $authHeaders['json'] = $body;
@@ -97,6 +95,9 @@ class UtilHelper
             return $stock_updated;
         }
 
+        $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
+        $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
+
         try {
             $url = 'https://api.cin7.com/api/v1/Stock?where=productId=' . $product->product_id . '&productOptionId=' . $option_id;
             $client2 = new \GuzzleHttp\Client();
@@ -105,8 +106,8 @@ class UtilHelper
                 $url,
                 [
                     'auth' => [
-                        env('API_USER'),
-                        env('API_PASSWORD')
+                        $cin7_auth_username,
+                        $cin7_auth_password
                     ]
                 ]
             );

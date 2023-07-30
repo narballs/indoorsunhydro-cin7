@@ -45,6 +45,21 @@ class SettingSeeder extends Seeder
                 'option_name' => 'out_of_stock_label', 
                 'type' => 'text',
                 'option_value' => 'OUT OF STOCK',
+            ],
+            [
+                'option_name' => 'cin7_auth_username', 
+                'type' => 'text',
+                'option_value' => '',
+            ],
+            [
+                'option_name' => 'cin7_auth_password', 
+                'type' => 'text',
+                'option_value' => '',
+            ],
+            [
+                'option_name' => 'noreply_email_address', 
+                'type' => 'text',
+                'option_value' => 'noreply@indoorsunhydro.com',
             ]
         ];
 

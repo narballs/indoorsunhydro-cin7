@@ -19,6 +19,8 @@ use Illuminate\Support\Facades\URL;
 use App\Models\UserLog;
 use Illuminate\Support\Str;
 
+use App\Helpers\SettingHelper;
+
 class ContactController extends Controller
 {
 
@@ -140,8 +142,8 @@ class ContactController extends Controller
         $response = $client->post($url, [
             'headers' => ['Content-type' => 'application/json'],
             'auth' => [
-                'IndoorSunHydro2US',
-                '764c3409324f4c14b5eadf8dcdd7dd2f'
+                SettingHelper::getSetting('cin7_auth_username'),
+                SettingHelper::getSetting('cin7_auth_password')
             ],
             'json' => [
                 $api_contact
@@ -492,6 +494,9 @@ class ContactController extends Controller
 
     public function refreshContact(Request $request)
     {
+        $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
+        $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
+
         $contact_id  = $request->contactId;
         if ($request->type == 'primary') {
             $contact = Contact::where('contact_id', $contact_id)->first();
@@ -502,8 +507,8 @@ class ContactController extends Controller
                 'https://api.cin7.com/api/v1/Contacts/' . $contact_id,
                 [
                     'auth' => [
-                        env('API_USER'),
-                        env('API_PASSWORD')
+                        $cin7_auth_username,
+                        $cin7_auth_password
                     ]
                 ]
             );
@@ -606,8 +611,8 @@ class ContactController extends Controller
                 'https://api.cin7.com/api/v1/Contacts/' . $parent_id,
                 [
                     'auth' => [
-                        env('API_USER'),
-                        env('API_PASSWORD')
+                        $cin7_auth_username,
+                        $cin7_auth_password
                     ]
                 ]
             );

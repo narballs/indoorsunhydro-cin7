@@ -103,9 +103,9 @@ class SalesOrders implements ShouldQueue
                 'email' => 'wqszeeshan@gmail.com',
                 'contact_email' => 'stageindoorsun@stage.indoorsunhydro.com',
                 'reference' => $reference,
-                'subject' => 'Order fullfilled',
+                'subject' => 'Order fulfilled',
                 'from' => 'noreply@indoorsunhydro.com',
-                'content' => 'Order fullfilled has been fullfilled.'
+                'content' => 'Order fulfilled has been fulfilled.'
             ];
             foreach ($users_with_role_admin as $role_admin) {
                 $data['email'] = $role_admin->email;

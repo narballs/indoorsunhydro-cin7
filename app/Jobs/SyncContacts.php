@@ -13,8 +13,9 @@ use DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\Contact;
 use App\Models\ApiOrder;
-
 use App\Models\SecondaryContact;
+
+use App\Helpers\SettingHelper;
 
 class SyncContacts implements ShouldQueue
 {
@@ -114,8 +115,8 @@ class SyncContacts implements ShouldQueue
                 'https://api.cin7.com/api/v1/Contacts/'. $contact_id, 
                 [
                     'auth' => [
-                        env('API_USER'),
-                        env('API_PASSWORD')
+                        SettingHelper::getSetting('cin7_auth_username'),
+                        SettingHelper::getSetting('cin7_auth_password')
                     ]
                  
                 ]

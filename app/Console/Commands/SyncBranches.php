@@ -4,6 +4,9 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Models\Branch;
+
+use App\Helpers\SettingHelper;
+
 class SyncBranches extends Command
 {
     /**
@@ -41,6 +44,9 @@ class SyncBranches extends Command
         $total_branch_pages = 1;
         $client2 = new \GuzzleHttp\Client();
 
+        $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
+        $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
+
         for ($i = 1; $i <= $total_branch_pages; $i++) {
             $this->info('Processing page#' . $i);
             sleep(3);
@@ -49,8 +55,8 @@ class SyncBranches extends Command
                 'https://api.cin7.com/api/v1/Branches/?page=' . $i,
                 [
                     'auth' => [
-                       env('API_USER'),
-                    env('API_PASSWORD')
+                        $cin7_auth_username,
+                        $cin7_auth_password
                     ]
                 ]
             );
@@ -58,7 +64,7 @@ class SyncBranches extends Command
             $branches = $res->getBody()->getContents();
             $branches = json_decode($branches);
         
-                foreach($branches as $branch) {
+                foreach ($branches as $branch) {
                         $branch = new Branch([
                             'branchId' => $branch->id,
                             'secondaryContactId' => "",

@@ -29,7 +29,7 @@ class AdminShareListController extends Controller
             'name' =>  'Stageindoor',
             'email' => $request->email,
             'subject' => 'Buy List shared',
-            'link' => $base_url.'/create-cart/'.$request->list_id,
+            'link' => $base_url.'/create-cart/' . $request->list_id,
             'from' => 'stageindoorsun@stage.indoorsunhydro.com',
             'list' => $list
         ];
@@ -37,8 +37,8 @@ class AdminShareListController extends Controller
         MailHelper::sendMailNotification('emails.admin-share', $data);
 
        return response()->json([
-                'success' => true, 
-                'msg' => 'List Shared Successully !'
-            ]);
+            'success' => true, 
+            'msg' => 'List Shared Successfully !'
+        ]);
     }
 }

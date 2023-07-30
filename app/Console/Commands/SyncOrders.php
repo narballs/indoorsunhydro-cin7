@@ -6,6 +6,8 @@ use Illuminate\Console\Command;
 use App\Models\ApiOrder;
 use App\Models\ApiOrderItem;
 
+use App\Helpers\SettingHelper;
+
 class SyncOrders extends Command
 {
     /**
@@ -41,13 +43,17 @@ class SyncOrders extends Command
     {
         $total_order_pages = 3;
         $client = new \GuzzleHttp\Client();
+
+        $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
+        $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
+
         $res = $client->request(
             'GET',
             "https://api.cin7.com/api/v1/SalesOrders?where=status='Void'",
             [
                 'auth' => [
-                    env('API_USER'),
-                    env('API_PASSWORD')
+                    $cin7_auth_username,
+                    $cin7_auth_password
                 ]
             ]
         );

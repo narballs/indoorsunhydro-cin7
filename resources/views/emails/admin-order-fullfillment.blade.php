@@ -41,7 +41,7 @@
                         <img src="{{ url('/theme/img/indoor_sun.png') }}" width="200">
                     </div>
                     <div style="margin-top:100px; border-bottom: 1px solid gray">
-                        <h2>Order Fullfilled</h2>
+                        <h2>Order Fulfilled</h2>
                     </div>
                     <br><br>
                 </td>

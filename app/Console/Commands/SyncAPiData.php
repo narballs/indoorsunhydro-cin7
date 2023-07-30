@@ -17,6 +17,7 @@ use App\Models\AdminSetting;
 use Carbon\Carbon;
 
 use App\Helpers\UtilHelper;
+use App\Helpers\SettingHelper;
 
 
 
@@ -102,6 +103,9 @@ class SyncAPiData extends Command
 
         $client = new \GuzzleHttp\Client();
 
+        $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
+        $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
+
 
         // Find total category pages
         $total_category_pages = 9;
@@ -114,12 +118,13 @@ class SyncAPiData extends Command
                 'https://api.cin7.com/api/v1/ProductCategories?rows=250&page=' . $i,
                 [
                     'auth' => [
-                        'IndoorSunHydroUS',
-                        'faada8a7a5ef4f90abaabb63e078b5c1'
+                        $cin7_auth_username,
+                        $cin7_auth_password
                     ]                    
                 ]
             );
             
+
 
             $api_categories = $res->getBody()->getContents();
             $api_categories = json_decode($api_categories);
@@ -177,8 +182,8 @@ class SyncAPiData extends Command
                         'https://api.cin7.com/api/v1/Products?where=modifieddate>='. $api_formatted_product_sync_date . '&page=' . $i . '&rows=250', 
                         [
                             'auth' => [
-                               'IndoorSunHydroUS',
-                                'faada8a7a5ef4f90abaabb63e078b5c1'
+                                $cin7_auth_username,
+                                $cin7_auth_password
                             ]
                          
                         ]
