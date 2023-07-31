@@ -192,7 +192,7 @@ $categories = NavHelper::getCategories();
                     
                     <div class="mobile_menu_bar_logo">
                         <a class="navbar-brand" href="/">
-                            <img class="top-img mx-0" src="/theme/img/indoor_sun.png" style="height:35px !important;">
+                            <img class="top-img mx-0" src="/theme/img/{{ \App\Helpers\SettingHelper::getSetting('logo_name') }}" style="height:35px !important;">
                         </a>
                     </div>
                     <div class="mobile_menu_bar_cart">
@@ -432,7 +432,7 @@ $categories = NavHelper::getCategories();
         <div>
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <div class="container-fluid ipad_nav_items">
-                    <a class="navbar-brand" href="/"><img class="top-img" src="/theme/img/indoor_sun.png"
+                    <a class="navbar-brand" href="/"><img class="top-img" src="/theme/img/{{ \App\Helpers\SettingHelper::getSetting('logo_name') }}"
                             ;></a>
                     <button style="" class="navbar-toggler p-2 mt-2 text-white text-uppercase ipad_menu_btn" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"

@@ -49,18 +49,58 @@ class SettingSeeder extends Seeder
             [
                 'option_name' => 'cin7_auth_username', 
                 'type' => 'text',
-                'option_value' => '',
+                'option_value' => 'IndoorSunHydroUS',
             ],
             [
                 'option_name' => 'cin7_auth_password', 
                 'type' => 'text',
-                'option_value' => '',
+                'option_value' => 'faada8a7a5ef4f90abaabb63e078b5c1',
             ],
             [
                 'option_name' => 'noreply_email_address', 
                 'type' => 'text',
                 'option_value' => 'noreply@indoorsunhydro.com',
-            ]
+            ],
+            [
+                'option_name' => 'from_email_name', 
+                'type' => 'text',
+                'option_value' => 'IndoorSunHydro',
+            ],
+            [
+                'option_name' => 'website_name', 
+                'type' => 'text',
+                'option_value' => 'Indoor Sun Hydro',
+            ],
+            [
+                'option_name' => 'store_address_line_1', 
+                'type' => 'text',
+                'option_value' => '5671 Warehouse Way',
+            ],
+            [
+                'option_name' => 'store_address_line_2', 
+                'type' => 'text',
+                'option_value' => 'Sacramento CA 95826',
+            ],
+            [
+                'option_name' => 'store_phone_number', 
+                'type' => 'text',
+                'option_value' => '(916) 281-3090',
+            ],
+            [
+                'option_name' => 'instagram_link', 
+                'type' => 'text',
+                'option_value' => 'https://www.instagram.com/indoorsunhydro/',
+            ],
+            [
+                'option_name' => 'yelp_link', 
+                'type' => 'text',
+                'option_value' => 'https://www.yelp.com/biz/indoor-sun-hydro-sacramento-5?osq=indoorsun+hydro',
+            ],
+            [
+                'option_name' => 'logo_name', 
+                'type' => 'text',
+                'option_value' => 'indoor-sun-hydro-logo.png',
+            ],
         ];
 
         foreach($setting as $setting) {

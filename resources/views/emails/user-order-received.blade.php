@@ -40,7 +40,8 @@
             <tr>
                 <td style="text-align: center;">
                     <div>
-                        <img src="{{ url('/theme/img/indoor_sun.png') }}" width="200" style="width:200px !important">
+                        <?php $logo_name = \App\Helpers\SettingHelper::getSetting('logo_name'); ?>
+                        <img src="{{ url('/theme/img/' . $logo_name) }}" width="200" style="width:200px !important">
                     </div>
                     <div style="margin-top:100px; border-bottom: 1px solid gray">
                         <h2>ORDER CONFIRMATION</h2>
@@ -58,10 +59,6 @@
                             Hey {{$name}},<br>
                             Following order awaiting for approval please review the order!  <br>
                            <br>
-
-
-
-
                             Thanks,<br>
                             Team IndoorSunHydro
                         </p>

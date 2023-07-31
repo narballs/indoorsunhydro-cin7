@@ -1,7 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-{{-- {{ dd($order_items) }} --}}
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -41,7 +39,7 @@
            
                 <div class="container" style="width: 586px !important; margin:auto !important; background-color:#ffffff !important; margin-bottom: 12px !important; padding-bottom: 20px !important; border-radius: 10px !important;">
                 <p style=" text-align: center; margin-top:1rem;">
-                    <img class="img-fluid" src="{{ asset('https://stage.indoorsunhydro.com/theme/img/email/template_icon.png') }}" alt="" style="margin-top: 33px !important;">
+                    <img class="img-fluid" src="{{ url('theme/img/email/template_icon.png') }}" alt="" style="margin-top: 33px !important;">
                 </p>
                 <p style="text-align: center; font-family: 'Poppins'!important; font-style: normal!important; font-weight: 600!important; font-size: 18px!important; line-height: 27px!important; color: #282828!important;margin-top: 0px !important; margin-bottom: 0px !important;">
                     We received your order!
@@ -364,7 +362,7 @@
                     </div>
                     <div>
                         <span>
-                            <img src="{{ asset('https://stage.indoorsunhydro.com/theme/img/email/email_template.png') }}"
+                            <img src="{{ url('theme/img/email/email_template.png') }}"
                                 alt=""
                                 style="margin-top: 15px !important;
                             margin-left: 15px !important;">
@@ -385,7 +383,7 @@
                         <tr>
                             <td align="" style="text-align: center;">
                                 <img class="img-fluid "
-                                    src="{{ asset('https://stage.indoorsunhydro.com/theme/img/email/approve_icon.png') }}">
+                                    src="{{ url('theme/img/email/approve_icon.png') }}">
                             </td>
                         </tr>
                         <tr>
@@ -595,7 +593,7 @@
             </tr>
             <tr>
                 <td align="center">
-                    <img src="{{ asset('https://stage.indoorsunhydro.com/theme/img/email/email_template.png') }}" alt="">
+                    <img src="{{ url('theme/img/email/email_template.png') }}" alt="">
                 </td>
             </tr>
         </tbody>
