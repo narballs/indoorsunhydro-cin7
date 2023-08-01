@@ -237,8 +237,12 @@
                         </th>
                         <th scope="col" class="th-lg">
                             <span class="d-flex align-items-center justify-content-end">
-                                <button onclick="showZendesk()" class="bg-transparent border-0">
-                                    <img src="{{asset('theme/img/icons/zendesk_launcher.png')}}" alt="" class="zendesk_img">
+                                <button onclick="showZendesk()" class="bg-transparent border-0 show_zendesk_btn">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                        <path d="M4.08579 5.58579C3.71071 5.96086 3.5 6.46957 3.5 7V11C3.5 11.5304 3.71071 12.0391 4.08579 12.4142C4.46086 12.7893 4.96957 13 5.5 13H7.5V16L10.5 13H12.5C13.0304 13 13.5391 12.7893 13.9142 12.4142C14.2893 12.0391 14.5 11.5304 14.5 11V7C14.5 6.46957 14.2893 5.96086 13.9142 5.58579C13.5391 5.21071 13.0304 5 12.5 5H5.5C4.96957 5 4.46086 5.21071 4.08579 5.58579Z" fill="#A2A2A2"/>
+                                        <path d="M16.5 11V9H17.5C18.0304 9 18.5392 9.21071 18.9142 9.58579C19.2893 9.96086 19.5 10.4696 19.5 11V15C19.5 15.5304 19.2893 16.0391 18.9142 16.4142C18.5392 16.7893 18.0304 17 17.5 17H15.5V20L12.5 17H10.5C10.161 17 9.84201 16.916 9.56201 16.767L11.328 15H12.5C13.5609 15 14.5783 14.5786 15.3284 13.8284C16.0786 13.0783 16.5 12.0609 16.5 11Z" fill="#A2A2A2"/>
+                                    </svg> 
+                                    Feedback?
                                 </button>
                             </span>
                         </th>
@@ -532,8 +536,12 @@
                                                         Cart totals
                                                     </span>
                                                     <span class="ml-2 cart-sub-total-checkout-page text-dark mt-0 w-50 text-right">
-                                                        <button onclick="showZendesk()" class="bg-transparent border-0">
-                                                            <img src="{{asset('theme/img/icons/zendesk_launcher.png')}}" alt="" class="zendesk_img">
+                                                        <button onclick="showZendesk()" class="bg-transparent border-0 show_zendesk_btn">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                                <path d="M4.08579 5.58579C3.71071 5.96086 3.5 6.46957 3.5 7V11C3.5 11.5304 3.71071 12.0391 4.08579 12.4142C4.46086 12.7893 4.96957 13 5.5 13H7.5V16L10.5 13H12.5C13.0304 13 13.5391 12.7893 13.9142 12.4142C14.2893 12.0391 14.5 11.5304 14.5 11V7C14.5 6.46957 14.2893 5.96086 13.9142 5.58579C13.5391 5.21071 13.0304 5 12.5 5H5.5C4.96957 5 4.46086 5.21071 4.08579 5.58579Z" fill="#A2A2A2"/>
+                                                                <path d="M16.5 11V9H17.5C18.0304 9 18.5392 9.21071 18.9142 9.58579C19.2893 9.96086 19.5 10.4696 19.5 11V15C19.5 15.5304 19.2893 16.0391 18.9142 16.4142C18.5392 16.7893 18.0304 17 17.5 17H15.5V20L12.5 17H10.5C10.161 17 9.84201 16.916 9.56201 16.767L11.328 15H12.5C13.5609 15 14.5783 14.5786 15.3284 13.8284C16.0786 13.0783 16.5 12.0609 16.5 11Z" fill="#A2A2A2"/>
+                                                            </svg> 
+                                                            Feedback?
                                                         </button>
                                                     </span>
                                                 </div>
