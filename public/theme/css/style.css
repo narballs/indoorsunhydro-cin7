@@ -4808,6 +4808,16 @@ select.list-dt:focus {
 .img_my_account_order {
    text-align: center;
 }
+
+.show_zendesk_btn {
+    color: #707071;
+    font-family: 'Poppins';
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px; /* 171.429% */
+    letter-spacing: -0.084px;
+}
 /* .account-header-mbl {
     display:flex;
     justify-content: space-between;
