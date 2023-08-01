@@ -214,7 +214,7 @@
                                                         <i class="fas fa-ellipsis-h"
                                                             style="color: #CBCBCB !important;"></i>
                                                     </button>
-                                                    <div class="dropdown-menu dropdonwn_menu">
+                                                    <div class="dropdown-menu dropdonwn_menu drop_down_items_admin_user">
                                                         <a class="dropdown-item"
                                                             href="{{ route('users.show', $user->id) }}"
                                                             class="view a_class" title="" data-toggle="tooltip"
@@ -497,6 +497,10 @@
             font-style: normal;
             font-weight: 500;
             font-size: 11.3289px;
+        }
+        .drop_down_items_admin_user {
+            padding: 0rem !important;
+            margin: 0rem !important;
         }
     </style>
 @stop
