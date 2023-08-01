@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>IndoorSun</title>
+    <title>{{ \App\Helpers\SettingHelper::getSetting('website_name') }}</title>
     <style type="text/css">
         .main-div {
             width: 600px;
@@ -39,10 +39,8 @@
 
         <p>
             Thanks,
-            Indoor
+            {{ \App\Helpers\SettingHelper::getSetting('website_name') }}
         </p>
-
-
     </div>
 </body>
 </html>

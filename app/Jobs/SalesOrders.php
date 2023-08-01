@@ -19,6 +19,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\Subscribe;
 use App\Helpers\MailHelper;
+use App\Helpers\SettingHelper;
+
+
 
 class SalesOrders implements ShouldQueue
 {
@@ -100,11 +103,11 @@ class SalesOrders implements ShouldQueue
             $data = [
                 'order_id' => $order_id,
                 'name' =>  'Admin',
-                'email' => 'wqszeeshan@gmail.com',
-                'contact_email' => 'stageindoorsun@stage.indoorsunhydro.com',
+                'email' => '',
+                'contact_email' => '',
                 'reference' => $reference,
                 'subject' => 'Order fulfilled',
-                'from' => 'noreply@indoorsunhydro.com',
+                'from' => SettingHelper::getSetting('noreply_email_address'),
                 'content' => 'Order fulfilled has been fulfilled.'
             ];
             foreach ($users_with_role_admin as $role_admin) {

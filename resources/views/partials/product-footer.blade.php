@@ -25,17 +25,23 @@
                     </p>
                     <p class="social-media-icons-header-footer mb-0">social media</p>
                     <p>
-                        <a target="_blank" href="{{ \App\Helpers\SettingHelper::getSetting('yelp_link') }}"
-                            class="text-light pra-footer" style="text-decoration: none">
-                            <img src="/theme/img/footer-yami-icon.png" alt="" class="img-fluid"
-                                style="width: 32px;">
-
-                        </a>
-                        <a target="_blank" href="{{ \App\Helpers\SettingHelper::getSetting('instagram_link') }}" class="text-light pra-footer"
-                            style="text-decoration: none">
-                            <img src="/theme/img/footer-instagram-icon.png" alt="" class="ps-1"
-                                style="width: 38px;">
-                        </a>
+                        <?php 
+                            $yelp_link = \App\Helpers\SettingHelper::getSetting('yelp_link'); 
+                            $instagram_link = \App\Helpers\SettingHelper::getSetting('instagram_link');
+                        ?>
+                        @if (!empty($yelp_link))
+                            <a target="_blank" href="{{ \App\Helpers\SettingHelper::getSetting('yelp_link') }}"
+                                class="text-light pra-footer" style="text-decoration: none">
+                                <img src="/theme/img/footer-yami-icon.png" alt="" class="img-fluid" style="width: 32px;" />
+                            </a>
+                        @endif
+                        
+                        @if (!empty($instagram_link))
+                            <a target="_blank" href="{{ $instagram_link }}" class="text-light pra-footer"
+                                style="text-decoration: none">
+                                <img src="/theme/img/footer-instagram-icon.png" alt="" class="ps-1" style="width: 38px;" />
+                            </a>
+                        @endif
                     </p>
                 </div>
                 <div

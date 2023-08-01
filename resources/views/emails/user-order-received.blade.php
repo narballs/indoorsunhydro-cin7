@@ -3,7 +3,7 @@
 <html>
 
 <head>
-    <title>IndoorSun</title>
+    <title>{{ \App\Helpers\SettingHelper::getSetting('website_name') }}</title>
     <style type="text/css">
         .main-div {
             width: 600px;
@@ -60,7 +60,7 @@
                             Following order awaiting for approval please review the order!  <br>
                            <br>
                             Thanks,<br>
-                            Team IndoorSunHydro
+                            Team {{ \App\Helpers\SettingHelper::getSetting('website_name') }}
                         </p>
                     </div>
                 </td>
@@ -734,7 +734,7 @@
                         text-align: center;
                         color: #FFFFFF !important;
                         ">
-                                Indoorsunhydro isn’t your grandma’s gardening
+                                {{ \App\Helpers\SettingHelper::getSetting('website_name') }} isn’t your grandma’s gardening
                                 store.<br> But you can bring her along
                                 if you want. <br> Walk-ins welcome anytime — except Sunday. Even
                                 gardeners need

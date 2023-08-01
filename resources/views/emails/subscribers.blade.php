@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>IndoorSun</title>
+    <title>{{ \App\Helpers\SettingHelper::getSetting('website_name') }}</title>
 </head>
 <body>
-    Welcome<h1>asdfasw</h1>
-    <p>asdsad</p>
-    <p>We will get back to you soon.</p>
-   
+    Welcome,<br />
+    <p>We will get back to you soon.</p>   
     <p>Thank you</p>
 </body>
 </html>

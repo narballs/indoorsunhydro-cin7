@@ -1,7 +1,7 @@
 <html>
 
 <head>
-    <title>IndoorSun</title>
+    <title>{{ \App\Helpers\SettingHelper::getSetting('website_name') }}</title>
     <style type="text/css">
         .main-div {
             width: 600px;
@@ -74,7 +74,7 @@
 
                         </table>
                         Thanks,<br>
-                        Team IndoorSunHydro
+                        Team {{ \App\Helpers\SettingHelper::getSetting('website_name') }}
                         </p>
                     </div>
                 </td>
