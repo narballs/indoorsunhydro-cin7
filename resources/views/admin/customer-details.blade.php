@@ -502,15 +502,17 @@
                     "contact_id": contact_id
                 },
                 success: function(response) {
-                    console.log(response);
-                    if (response.success == true) {
-                        $('#spinner').removeClass('d-none');
-                        setInterval('location.reload()', 7000);
-                    }
-                    if (response.success == false) {
-                        console.log(response.msg);
-                        setInterval('location.reload()', 7000);
-                    }
+                    // console.log(response);
+                    // if (response.success == true) {
+                    //     $('#spinner').addClass('d-none');
+                    //     setInterval('location.reload()', 2000);
+                    // }
+                    // if (response.success == false) {
+                    //     $('#spinner').addClass('d-none');
+                    //     setInterval('location.reload()', 2000);
+                    // }
+                    $('#spinner').addClass('d-none');
+                    setInterval('location.reload()', 2000);
 
                 }
             });
@@ -632,14 +634,20 @@
                     // $('#refreshed_company').html(response.updated_company);
                     // console.log(response.updated_priceColumn);
                     // $('#pricingColumn').find('option[value="'+response.updated_priceColumn+'"]').prop('selected', true);
-                    // $('#spinner').addClass('d-none');
+                    if(response.success == true){
+                        $('#spinner').addClass('d-none');
+                        setInterval('location.reload()', 1000);
+                    }else {
+                        $('#spinner').addClass('d-none');
+                        setInterval('location.reload()', 1000);
+                    }
 
                 }
 
             })
-            setTimeout(function() {
-                window.location.reload();
-            }, 5000);
+            // setTimeout(function() {
+            //     window.location.reload();
+            // }, 5000);
         }
 
         function disableSecondary(secondary_id) {
