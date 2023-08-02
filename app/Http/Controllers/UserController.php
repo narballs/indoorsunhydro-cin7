@@ -634,6 +634,7 @@ class UserController extends Controller
                 'email' => $user->email,
                 'is_parent' => 1,
                 'status' => 0,
+                'tax_class' => 'none'
             ]);
 
             $contact->save();
@@ -856,6 +857,9 @@ class UserController extends Controller
             })
             ->whereHas('product.product_options' , function($query){
                 $query->where('stockAvailable' , '>' , 0);
+            })
+            ->whereHas('order' , function($query) use ($contact_ids){
+                $query->with(['createdby'])->whereIn('memberId', $contact_ids);
             })
             ->groupBy('product_id')
             ->take(5)

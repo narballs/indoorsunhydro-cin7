@@ -504,11 +504,12 @@
                 success: function(response) {
                     console.log(response);
                     if (response.success == true) {
-                        $('#spinner').removeClass('d-none');
+                        $('#spinner').addClass('d-none');
                         setInterval('location.reload()', 7000);
                     }
                     if (response.success == false) {
                         console.log(response.msg);
+                        $('#spinner').addClass('d-none');
                         setInterval('location.reload()', 7000);
                     }
 

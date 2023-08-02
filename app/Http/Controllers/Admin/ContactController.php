@@ -224,51 +224,53 @@ class ContactController extends Controller
         $contact = [
             $currentContact
         ];
-        SyncContacts::dispatch('create_contact', $contact)->onQueue(env('QUEUE_NAME'));
+        $request_time = date('Y-m-d H:i:s');
+        $sync_data = SyncContacts::dispatch('create_contact', $contact)->onQueue(env('QUEUE_NAME'));
         sleep(10);
-        $is_updated = Contact::where('id', $contact_id)->pluck('contact_id')->first();
+        
+        $is_updated = Contact::where('id', $contact_id)->first();
         $admin_users = DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
         $admin_users = $admin_users->toArray();
         $users_with_role_admin = User::select("email")
             ->whereIn('id', $admin_users)
             ->get();
-
+        $response_time = date('Y-m-d H:i:s');
+        $difference = strtotime($response_time) - strtotime($request_time);
         if ($is_updated) {
-            $name = $currentContact['firstName'];
-            $email = $currentContact['email'];
-            $subject = 'Account  approval';
-            $template = 'emails.approval-notifications';
+            // $name = $currentContact['firstName'];
+            // $email = $currentContact['email'];
+            // $subject = 'Account  approval';
+            // $template = 'emails.approval-notifications';
 
-            $data = [
-                'contact_name' => $name,
-                'name' =>  'Admin',
-                'email' => $email,
-                'contact_email' => $currentContact['email'],
-                'contact_id' => $is_updated,
-                'subject' => 'New Account activated',
-                'from' => env('MAIL_FROM_ADDRESS'),
-                'content' => 'New account activated.'
-            ];
+            // $data = [
+            //     'contact_name' => $name,
+            //     'name' =>  'Admin',
+            //     'email' => $email,
+            //     'contact_email' => $currentContact['email'],
+            //     'contact_id' => $is_updated ? $is_updated->contact_id : null,
+            //     'subject' => 'New Account activated',
+            //     'from' => env('MAIL_FROM_ADDRESS'),
+            //     'content' => 'New account activated.'
+            // ];
 
-            if (!empty($users_with_role_admin)) {
-                foreach ($users_with_role_admin as $role_admin) {
-                    $data['email'] = $role_admin->email;
-                    $adminTemplate = 'emails.approval-notifications';
-                    MailHelper::sendMailNotification('emails.approval-notifications', $data);
-                }
-            }
-            $data['name'] = $name;
-            $data['email'] = $email;
-            $data['content'] = 'Your account has been approved';
-            $data['subject'] = 'Your account has been approved';
-            MailHelper::sendMailNotification('emails.approval-notifications', $data);
-
-
-            MailHelper::sendMailNotification('emails.admin-order-received', $data);
+            // if (!empty($users_with_role_admin)) {
+            //     foreach ($users_with_role_admin as $role_admin) {
+            //         $data['email'] = $role_admin->email;
+            //         $adminTemplate = 'emails.approval-notifications';
+            //         MailHelper::sendMailNotification('emails.approval-notifications', $data);
+            //     }
+            // }
+            // $data['name'] = $name;
+            // $data['email'] = $email;
+            // $data['content'] = 'Your account has been approved';
+            // $data['subject'] = 'Your account has been approved';
+            // MailHelper::sendMailNotification('emails.approval-notifications', $data);
             return response()->json([
                 'success' => true,
                 'created' => true,
-                'msg' => 'Welcome, new player.'
+                'msg' => 'Welcome, new player.',
+                'data' => $sync_data,
+                'time' => $difference
             ]);
         } else {
             return response()->json([
@@ -526,7 +528,8 @@ class ContactController extends Controller
                 'postCode' => $api_contact->postCode,
                 'postalState' => $api_contact->postalState,
                 'postalCity' => $api_contact->postalCity,
-                'status' => $api_contact->isActive
+                'status' => $api_contact->isActive,
+                'tax_class' => $api_contact->taxStatus ? $api_contact->taxStatus : 'none',
             ]);
 
             if ($api_contact->secondaryContacts) {
@@ -545,6 +548,7 @@ class ContactController extends Controller
                         $secondary_contact->mobile = $apiSecondaryContact->mobile;
                         $secondary_contact->phone = $apiSecondaryContact->phone;
                         $secondary_contact->priceColumn = $api_contact->priceColumn;
+                        $secondary_contact->tax_class = $api_contact->taxStatus ? $api_contact->taxStatus : 'none';
                         $secondary_contact->save();
                     } else {
                         $secondary_contact = new Contact();
@@ -560,6 +564,7 @@ class ContactController extends Controller
                         $secondary_contact->mobile = $apiSecondaryContact->mobile;
                         $secondary_contact->phone = $apiSecondaryContact->phone;
                         $secondary_contact->priceColumn = $api_contact->priceColumn;
+                        $secondary_contact->tax_class = $api_contact->taxStatus ? $api_contact->taxStatus : 'none';
                         $secondary_contact->save();
                         $id = $secondary_contact->id;
                         $contact_info = Contact::where('id', $id)->first();
@@ -591,7 +596,8 @@ class ContactController extends Controller
                 'updated_firstName' => $api_contact->firstName,
                 'updated_lastName' => $api_contact->lastName,
                 'updated_priceColumn' => $str,
-                'updated_company' => $api_contact->company
+                'updated_company' => $api_contact->company,
+                'success' => true
             ]);
         } elseif ($request->type == 'secondary') {
 
@@ -624,7 +630,8 @@ class ContactController extends Controller
                         'lastName' => $api_secondary_contact->lastName,
                         'mobile' => $api_secondary_contact->mobile,
                         'phone' =>  $api_secondary_contact->phone,
-                        'status' => 1
+                        'status' => 1,
+                        'tax_class' => $api_secondary_contact->taxStatus ? $api_secondary_contact->taxStatus : 'none',
                     ]);
                     return response()->json([
                         'status' => '200',
@@ -632,7 +639,8 @@ class ContactController extends Controller
                         'updated_email' => $api_secondary_contact->email,
                         'updated_firstName' => $api_secondary_contact->firstName,
                         'updated_lastName' => $api_secondary_contact->lastName,
-                        'updated_company' => $api_secondary_contact->company
+                        'updated_company' => $api_secondary_contact->company,
+                        'success' => true
                     ]);
                 }
             }
