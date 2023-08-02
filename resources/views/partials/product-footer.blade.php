@@ -8,10 +8,10 @@
                     <span>
                         <img src="/theme/img/map-pin.png" class="img-fluid">
                     </span>
-                    <span class="ms-2 pra-footer fw-semibold">{{ \App\Helpers\SettingHelper::getSetting('store_address_line_1') }}
+                    <span class="ms-2 pra-footer fw-semibold">{!! \App\Helpers\SettingHelper::getSetting('store_address_line_1') !!}
                     </span>
                     <p class="ms-4 mt-3 pra-footer">&nbsp;
-                        {{ \App\Helpers\SettingHelper::getSetting('store_address_line_2') }}
+                        {!! \App\Helpers\SettingHelper::getSetting('store_address_line_2') !!}
                     </p>
                     <span>
                         <img src="/theme/img/phone-call.png" class="img-fluid">
@@ -80,7 +80,7 @@
                     <p><span>
                         <img src="/theme/img/map-pin.png" class="img-fluid">
                     </span>
-                    <span class="p-footer-mbl ms-4-footer mb-2">{{ \App\Helpers\SettingHelper::getSetting('store_address_line_1') }} {{ \App\Helpers\SettingHelper::getSetting('store_address_line_2') }}</span></p>
+                    <span class="p-footer-mbl ms-4-footer mb-2">{!! \App\Helpers\SettingHelper::getSetting('store_address_line_1') !!} {!! \App\Helpers\SettingHelper::getSetting('store_address_line_2') !!}</span></p>
                     <span>
                         <img src="/theme/img/phone-call.png" class="img-fluid">
                     </span>
