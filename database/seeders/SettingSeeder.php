@@ -135,7 +135,7 @@ class SettingSeeder extends Seeder
             [
                 'option_name' => 'timings_part2', 
                 'type' => 'text',
-                'option_value' => 'MONDAY-SUNDAY 7 Days'
+                'option_value' => '9AM-5pm'
             ],
         ];
 
