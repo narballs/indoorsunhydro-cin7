@@ -167,7 +167,7 @@ class SyncAPiData extends Command
             }
         }
 
-        
+        $retail_price_column = SettingHelper::getSetting('retail_price_column');
 
 
             $client2 = new \GuzzleHttp\Client();
@@ -236,6 +236,9 @@ class SyncAPiData extends Command
                             $category_id = 0;
                         }
 
+                        
+                        $retail_price = isset($api_product->productOptions[0]->priceColumns->$retail_price_column) ? $api_product->productOptions[0]->priceColumns->$retail_price_column : 0;
+
                         $product->name =  $api_product->name;
                         $product->slug = Str::slug($api_product->name);
                         $product->status =  $api_product->status;
@@ -243,7 +246,7 @@ class SyncAPiData extends Command
                         $product->category_id =  $category_id;
                         $product->images =  !empty($api_product->images[0]) ? $api_product->images[0]->link: '';
                         $product->code =  $api_product->productOptions[0]->code;
-                        $product->retail_price =  $api_product->productOptions[0]->priceColumns->sacramentoUSD;
+                        $product->retail_price = $retail_price;
                         $product->stockAvailable =  $api_product->productOptions[0]->stockAvailable;
                         
                         if (isset($api_product->brand)) {
@@ -267,6 +270,8 @@ class SyncAPiData extends Command
                             $product_option = ProductOption::with('price')->where('option_id',$api_productOption->id)->first();
 
                             if ($product_option) {
+                                $retail_price = isset($api_productOption->priceColumns->$retail_price_column) ? $api_productOption->priceColumns->$retail_price_column : 0;
+
                                 $product_option->option1 = $api_productOption->option1;
                                 $product_option->option_id = $api_productOption->id;
                                 $product_option->product_id = $api_productOption->productId;
@@ -278,7 +283,7 @@ class SyncAPiData extends Command
                                 $product_option->option3 = $api_productOption->option3;
                                 $product_option->optionWeight = $api_productOption->optionWeight;
                                 $product_option->size = $api_productOption->size;
-                                $product_option->retailPrice = $api_productOption->priceColumns->sacramentoUSD;
+                                $product_option->retailPrice = $retail_price;
                                 $product_option->wholesalePrice = $api_productOption->wholesalePrice;
                                 $product_option->vipPrice = $api_productOption->vipPrice;
                                 $product_option->specialPrice = $api_productOption->specialPrice;
@@ -389,7 +394,7 @@ class SyncAPiData extends Command
                         $brand_id = '';
                     }
 
-
+                    $retail_price = isset($api_product->productOptions[0]->priceColumns->$retail_price_column) ? $api_product->productOptions[0]->priceColumns->$retail_price_column : 0;
 
                     $product = new Product([
                         'product_id' => $api_product->id,
@@ -400,7 +405,7 @@ class SyncAPiData extends Command
                         'category_id' => $category_id,
                         'images' => !empty($api_product->images[0]) ? $api_product->images[0]->link: '',
                         'code' => $api_product->productOptions[0]->code,
-                        'retail_price' => $api_product->productOptions[0]->priceColumns->sacramentoUSD,
+                        'retail_price' => $retail_price,
                         'stockAvailable' => $api_product->productOptions[0]->stockAvailable,
                         'brand' => $api_product->brand,
                         'brand_id' => $brand_id
