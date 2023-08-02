@@ -127,8 +127,8 @@
                     <span>
                         <img src="/theme/img/map-pin.png" class="img-fluid ps-3">
                     </span>
-                    <span class="ms-2 pra-footer">{{ \App\Helpers\SettingHelper::getSetting('store_address_line_1') }}
-                        {{ \App\Helpers\SettingHelper::getSetting('store_address_line_2') }}<br />
+                    <span class="ms-2 pra-footer">{!! \App\Helpers\SettingHelper::getSetting('store_address_line_1') !!}
+                        {!! \App\Helpers\SettingHelper::getSetting('store_address_line_2') !!}<br />
                     </span>
                     <span>
                         <img src="/theme/img/phone-call.png" class="img-fluid ps-3">
