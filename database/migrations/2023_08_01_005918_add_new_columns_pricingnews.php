@@ -14,7 +14,7 @@ class AddNewColumnsPricingnews extends Migration
     public function up()
     {
         Schema::table('pricingnews', function (Blueprint $table) {
-             $table->double('tier0USD', 10, 2)->after('calaverasUSD')->nullable();
+             $table->double('tier0USD', 10, 2)->after('wholesaleUSD')->nullable();
              $table->double('disP1USD', 10, 2)->after('specialPrice')->nullable();
              $table->double('disP2USD', 10, 2)->after('disP1USD')->nullable();
              $table->double('comccusd', 10, 2)->after('disP2USD')->nullable();
