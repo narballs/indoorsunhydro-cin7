@@ -135,7 +135,7 @@ class SettingSeeder extends Seeder
             [
                 'option_name' => 'timings_part2', 
                 'type' => 'text',
-                'option_value' => '9AM-5pm'
+                'option_value' => '9AM-5pm',
             ],
         ];
 
@@ -148,7 +148,7 @@ class SettingSeeder extends Seeder
                 [
                     'type' => $setting['type'], 
                     'option_value' => $setting['option_value'],
-                    'is_visible' => isset($setting['is_visible']) ? $setting['is_visible'] : false
+                    'is_visible' => (isset($setting['is_visible']) && $setting['is_visible'] == false) ? false : true
                 ]
             );
         }
