@@ -107,7 +107,7 @@ class SyncAPiData extends Command
         $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
 
 
-        /*
+        
 
         // Find total category pages
         $total_category_pages = 9;
@@ -167,7 +167,7 @@ class SyncAPiData extends Command
             }
         }
 
-        */
+        
 
 
             $client2 = new \GuzzleHttp\Client();
