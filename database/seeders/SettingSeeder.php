@@ -72,6 +72,11 @@ class SettingSeeder extends Seeder
                 'option_value' => 'Indoor Sun Hydro',
             ],
             [
+                'option_name' => 'website_url', 
+                'type' => 'text',
+                'option_value' => 'https://indoorsunhydro.com',
+            ],
+            [
                 'option_name' => 'store_address_line_1', 
                 'type' => 'text',
                 'option_value' => '5671 Warehouse Way',

@@ -515,34 +515,29 @@
                         margin-top: -111px !important;
                         ">
                             <p class="thank-you-page-card-footer" style=" font-family: 'Poppins';
-                        font-style: normal;
-                        font-weight: 400;
-                        font-size: 16px;
-                        line-height: 22px;
-                        text-align: center;
-                        color: #FFFFFF !important;
-                        ">
-                                {{ \App\Helpers\SettingHelper::getSetting('website_name') }} isn’t your grandma’s gardening
+                                font-style: normal;
+                                font-weight: 400;
+                                font-size: 16px;
+                                line-height: 22px;
+                                text-align: center;
+                                color: #FFFFFF !important;
+                            ">
+                                {{ \App\Helpers\SettingHelper::getSetting('website_name') }} isn't your grandma's gardening
                                 store.<br> But you can bring her along
                                 if you want. <br> Walk-ins welcome anytime — except Sunday. Even
-                                gardeners need
-                                a day
-                                of rest.</p>
+                                gardeners need a day of rest.
+                            </p>
                             <center>
-                                <p style="display: flex !important;
-                                justify-content: center !important;
-                            padding: 3px; !important">
-                                    <img src="https://stage.indoorsunhydro.com/theme/img/thank-you-page-icon-3.png"
-                                        alt="">
+                                <p style="display: flex !important; justify-content: center !important; padding: 3px; !important">
+                                    <img src="{{ \App\Helpers\SettingHelper::getSetting('website_url') }}/theme/img/thank-you-page-icon-3.png" alt="" />
                                     <span>
-                                        <img src="https://stage.indoorsunhydro.com/theme/img/thank-you-page-icon-2.png"
-                                            alt=""></span>
+                                        <img src="{{ \App\Helpers\SettingHelper::getSetting('website_url') }}/theme/img/thank-you-page-icon-2.png" alt="" />
+                                    </span>
                                     <span>
-                                        <img src="https://stage.indoorsunhydro.com/theme/img/thank-you-page-icon-1.png"
-                                            alt=""></span>
+                                        <img src="{{ \App\Helpers\SettingHelper::getSetting('website_url') }}/theme/img/thank-you-page-icon-1.png" alt="" />
+                                    </span>
                                 </p>
                             </center>
-
                         </div>
                     </div>
                 </div>
@@ -550,5 +545,4 @@
         </div>
     </div>
 </body>
-
 </html>

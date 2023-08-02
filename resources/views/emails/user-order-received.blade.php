@@ -243,10 +243,6 @@
             <div style="width: 100%">
                 <div class="card border-0 thank-you-page-background-img" style="background-color: #F5F5F5 !important;
                 border-radius: 10px !important;
-                /* background-image: url('https://stage.indoorsunhydro.com/theme/img/thank-background.png') !important; */
-                /* background-repeat: no-repeat !important; */
-                /* width: 100% !important; */
-                /* background-size: 100% !important; */
                 padding-bottom: 146px !important;
                 padding-top: 92px !important;">
                     <div class="row" style="padding-bottom: 77px !important;">
@@ -302,7 +298,7 @@
                                                         background: #fbfbfb;
                                                         border-radius: 6px;
                                                         display: flex;">
-                                                        <img src="https://stage.indoorsunhydro.com/theme/img/thnak-page-user-icon.png"
+                                                        <img src="{{ \App\Helpers\SettingHelper::getSetting('website_url') }}/theme/img/thnak-page-user-icon.png"
                                                             class="img-fluid" alt="">
                                                         &nbsp; &nbsp;
                                                         <span class="thank-you-page-user-name pt-4 ps-2" style="font-family: 'Roboto' !important;
@@ -313,7 +309,6 @@
                                                         color: #2653A0;">
                                                             {{$addresses['billing_address']['firstName']}}
                                                             {{$addresses['billing_address']['lastName']}}
-
                                                         </span>
                                                     </div>
                                                     <p style="font-family: 'Poppins';
@@ -659,7 +654,7 @@
                                             padding-left: 47px;
                                             margin-top: 68px;"> Best Product
                                                 <span> <img
-                                                        src="https://stage.indoorsunhydro.com/theme/img/thnak-you-best-pruduct-img.png"
+                                                        src="{{ \App\Helpers\SettingHelper::getSetting('website_url') }}/theme/img/thnak-you-best-pruduct-img.png"
                                                         class="img-fluid ps-3" alt=""></span>
                                             </p>
                                             <div class="row ps-4" style="display: flex;">
@@ -718,7 +713,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div style="    background-color: #2653a0!important;
+                        <div style="background-color: #2653a0!important;
                         padding-bottom: 1px!important;
                         margin: auto!important;
                         width: 47%!important;
@@ -737,24 +732,17 @@
                                 {{ \App\Helpers\SettingHelper::getSetting('website_name') }} isn’t your grandma’s gardening
                                 store.<br> But you can bring her along
                                 if you want. <br> Walk-ins welcome anytime — except Sunday. Even
-                                gardeners need
-                                a day
-                                of rest.</p>
+                                gardeners need a day of rest.</p>
                             <center>
-                                <p style="display: flex !important;
-                                justify-content: center !important;
-                            padding: 3px; !important">
-                                    <img src="https://stage.indoorsunhydro.com/theme/img/thank-you-page-icon-3.png"
-                                        alt="">
+                                <p style="display: flex !important; justify-content: center !important; padding: 3px; !important">
+                                    <img src="{{ \App\Helpers\SettingHelper::getSetting('website_url') }}/theme/img/thank-you-page-icon-3.png" alt="" />
                                     <span>
-                                        <img src="https://stage.indoorsunhydro.com/theme/img/thank-you-page-icon-2.png"
-                                            alt=""></span>
+                                        <img src="{{ \App\Helpers\SettingHelper::getSetting('website_url') }}/theme/img/thank-you-page-icon-2.png" alt="" /></span>
                                     <span>
-                                        <img src="https://stage.indoorsunhydro.com/theme/img/thank-you-page-icon-1.png"
-                                            alt=""></span>
+                                        <img src="{{ \App\Helpers\SettingHelper::getSetting('website_url') }}/theme/img/thank-you-page-icon-1.png" alt="" />
+                                    </span>
                                 </p>
                             </center>
-
                         </div>
                     </div>
                 </div>
