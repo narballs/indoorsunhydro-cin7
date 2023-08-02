@@ -102,6 +102,11 @@ class SettingSeeder extends Seeder
                 'option_value' => 'https://www.yelp.com/biz/indoor-sun-hydro-sacramento-5?osq=indoorsun+hydro',
             ],
             [
+                'option_name' => 'facebook_link', 
+                'type' => 'text',
+                'option_value' => 'https://www.facebook.com/lagardensupply/',
+            ],
+            [
                 'option_name' => 'logo_name', 
                 'type' => 'text',
                 'option_value' => 'indoor-sun-hydro-logo.png',
