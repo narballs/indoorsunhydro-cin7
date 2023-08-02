@@ -20,8 +20,8 @@
                     </span>
                     <p class="ms-4 ms-4-footer">&nbsp;
                         <span class="text-success sm-4-footer">
-                            MONDAY-SUNDAY 7 Days
-                        </span> 9AM-5pm
+                            {!! \App\Helpers\SettingHelper::getSetting('timings_part1') !!}
+                        </span> {!! \App\Helpers\SettingHelper::getSetting('timings_part2') !!}
                     </p>
                     <p class="social-media-icons-header-footer mb-0">social media</p>
                     <p>
@@ -93,7 +93,7 @@
                         <img src="/theme/img/phone-call.png" class="img-fluid">
                     </span>
                     <span class="footer_head_mbl pra-footer">{{ \App\Helpers\SettingHelper::getSetting('store_phone_number') }}</span>
-                    <p class="p-footer-mbl ms-4-footer mx-1 ps-4"><span class="day-color-mbl">MONDAY-SUNDAY 7 Days</span> 9AM-5PM</p>
+                    <p class="p-footer-mbl ms-4-footer mx-1 ps-4"><span class="day-color-mbl">{!! \App\Helpers\SettingHelper::getSetting('timings_part1') !!}</span> {!! \App\Helpers\SettingHelper::getSetting('timings_part2') !!}</p>
 
                     <h5 class="foooter-main-head-mbl contact-us-footer mt-5 mb-4 text-uppercase">Customer Service</h5>
                     <p class="p-footer-mbl ms-4-footer mx-1">Returns</p>
@@ -145,8 +145,8 @@
                     </span>
                     <p class="ms-4 ms-4-footer">&nbsp;
                         <span class="text-success sm-4-footer">
-                            MONDAY-SUNDAY
-                        </span> 9AM-5pm
+                            {!! \App\Helpers\SettingHelper::getSetting('timings_part1') !!}
+                        </span> {!! \App\Helpers\SettingHelper::getSetting('timings_part2') !!}
                     </p>
                 </div>
                 <div class="col-md-12 mt-3 main-page-footer-section footer-section-product">

@@ -127,6 +127,16 @@ class SettingSeeder extends Seeder
                 'option_value' => '1',
                 'is_visible' => false
             ],
+            [
+                'option_name' => 'timings_part1', 
+                'type' => 'text',
+                'option_value' => 'MONDAY-SUNDAY 7 Days'
+            ],
+            [
+                'option_name' => 'timings_part2', 
+                'type' => 'text',
+                'option_value' => 'MONDAY-SUNDAY 7 Days'
+            ],
         ];
 
         foreach($setting as $setting) {
