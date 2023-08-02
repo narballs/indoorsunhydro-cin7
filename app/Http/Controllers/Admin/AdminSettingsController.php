@@ -120,14 +120,14 @@ class AdminSettingsController extends Controller
         ]);
         $setting = AdminSetting::where('id', $id)->first();
         if($setting->type == 'text') {
-            $request->validate(
-                [
-                    'option_value_text' => 'required'
-                ],
-                [
-                    'option_value_text.required' => 'Option value is required'
-                ]
-            );
+            // $request->validate(
+            //     [
+            //         'option_value_text' => 'required'
+            //     ],
+            //     [
+            //         'option_value_text.required' => 'Option value is required'
+            //     ]
+            // );
             $setting->option_value = $request->option_value_text;
         }
         elseif($setting->type == 'boolean') {

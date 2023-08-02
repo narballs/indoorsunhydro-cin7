@@ -424,7 +424,6 @@
                 $('#option_value_edit').attr('checked' ,false);
                 $('#option_value_edit').val('No');
                 $('#option_value_hidden').val('No');
-
             }
         });
     </script>
