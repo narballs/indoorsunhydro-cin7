@@ -106,6 +106,11 @@ class SettingSeeder extends Seeder
                 'type' => 'text',
                 'option_value' => 'indoor-sun-hydro-logo.png',
             ],
+            [
+                'option_name' => 'retail_price_column', 
+                'type' => 'text',
+                'option_value' => 'sacramentoUSD',
+            ],
         ];
 
         foreach($setting as $setting) {

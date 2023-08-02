@@ -323,6 +323,10 @@ class SyncAPiData extends Command
                                 }
                             }
                             else {
+
+                                $retail_price_column = SettingHelper::getSetting('retail_price_column');
+                                $retail_price = isset($api_productOption->priceColumns->$retail_price_column) ? $api_productOption->priceColumns->$retail_price_column : 0;
+
                                 $product_option = new ProductOption([
                                     'option1' => $api_productOption->option1,
                                     'option_id' => $api_productOption->id,
@@ -335,7 +339,7 @@ class SyncAPiData extends Command
                                     'option3' =>  $api_productOption->option3,
                                     'optionWeight' =>  $api_productOption->optionWeight,
                                     'size' =>  $api_productOption->size,
-                                    'retailPrice' =>  $api_productOption->priceColumns->sacramentoUSD,
+                                    'retailPrice' =>  $retail_price,
                                     'wholesalePrice' =>  $api_productOption->wholesalePrice,
                                     'vipPrice' =>  $api_productOption->vipPrice,
                                     'specialPrice' =>  $api_productOption->specialPrice,
@@ -384,6 +388,9 @@ class SyncAPiData extends Command
                     else {
                         $brand_id = '';
                     }
+
+
+
                     $product = new Product([
                         'product_id' => $api_product->id,
                         'name' => $api_product->name,
