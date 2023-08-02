@@ -11,6 +11,7 @@ class AdminSetting extends Model
     protected $table = 'settings';
     protected $fillable = [
         'option_name',
-        'option_value'
+        'option_value',
+        'is_visible',
     ];
 }

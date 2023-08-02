@@ -17,6 +17,9 @@ use App\Models\SecondaryContact;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use App\Models\UserLog;
+use App\Models\ContactPriceColumn;
+
+
 use Illuminate\Support\Str;
 
 use App\Helpers\SettingHelper;
@@ -199,6 +202,11 @@ class ContactController extends Controller
         } else {
             $invitation_url = '';
         }
+
+
+        $site_id = SettingHelper::getSetting('site_id');
+        $contact_price_columns = ContactPriceColumn::where('site_id', $site_id)->pluck('price_column')->toArray();
+
         return view('admin/customer-details', compact(
             'customer',
             'secondary_contacts',
@@ -211,6 +219,7 @@ class ContactController extends Controller
             'customer_orders',
             'invitation_url',
             'logs',
+            'contact_price_columns',
             'pricing'
         ));
     }
@@ -290,23 +299,20 @@ class ContactController extends Controller
         $pricingCol = $request->pricingCol;
         $contact = Contact::where('contact_id', $request->contact_id)->first();
         if ($pricingCol) {
-            $contact->update(
-                [
-                    'priceColumn' => $pricingCol,
-                ]
-            );
+            $contact->priceColumn = $pricingCol;
+            $contact->save();
+
             return response()->json([
                 'success' => true,
                 'created' => true,
                 'msg' => 'Pricing Column Updated'
             ]);
         } else {
-            $contact->update(
-                [
-                    'firstName' => $first_name,
-                    'lastName' => $last_name
-                ]
-            );
+
+            $contact->firstName = $first_name;
+            $contact->lastName = $last_name;
+            $contact->save();
+            
             return response()->json([
                 'success' => true,
                 'created' => true,

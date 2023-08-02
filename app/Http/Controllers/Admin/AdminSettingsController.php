@@ -31,7 +31,7 @@ class AdminSettingsController extends Controller
     }
 
     public function index() {
-        $settings = AdminSetting::all();
+        $settings = AdminSetting::where('is_visible', true)->get();
         return view('admin.settings.index', compact('settings'));
     }
 

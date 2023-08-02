@@ -116,6 +116,12 @@ class SettingSeeder extends Seeder
                 'type' => 'text',
                 'option_value' => 'sacramentoUSD',
             ],
+            [
+                'option_name' => 'site_id', 
+                'type' => 'text',
+                'option_value' => '1',
+                'is_visible' => false
+            ],
         ];
 
         foreach($setting as $setting) {
@@ -126,7 +132,8 @@ class SettingSeeder extends Seeder
                 ],
                 [
                     'type' => $setting['type'], 
-                    'option_value' => $setting['option_value']
+                    'option_value' => $setting['option_value'],
+                    'is_visible' => isset($setting['is_visible']) ? $setting['is_visible'] : false
                 ]
             );
         }
