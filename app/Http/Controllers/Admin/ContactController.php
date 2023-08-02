@@ -224,52 +224,53 @@ class ContactController extends Controller
         $contact = [
             $currentContact
         ];
+        $request_time = date('Y-m-d H:i:s');
         $sync_data = SyncContacts::dispatch('create_contact', $contact)->onQueue(env('QUEUE_NAME'));
         sleep(10);
-        $is_updated = Contact::where('id', $contact_id)->pluck('contact_id')->first();
+        
+        $is_updated = Contact::where('id', $contact_id)->first();
         $admin_users = DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
         $admin_users = $admin_users->toArray();
         $users_with_role_admin = User::select("email")
             ->whereIn('id', $admin_users)
             ->get();
-
+        $response_time = date('Y-m-d H:i:s');
+        $difference = strtotime($response_time) - strtotime($request_time);
         if ($is_updated) {
-            $name = $currentContact['firstName'];
-            $email = $currentContact['email'];
-            $subject = 'Account  approval';
-            $template = 'emails.approval-notifications';
+            // $name = $currentContact['firstName'];
+            // $email = $currentContact['email'];
+            // $subject = 'Account  approval';
+            // $template = 'emails.approval-notifications';
 
-            $data = [
-                'contact_name' => $name,
-                'name' =>  'Admin',
-                'email' => $email,
-                'contact_email' => $currentContact['email'],
-                'contact_id' => $is_updated,
-                'subject' => 'New Account activated',
-                'from' => env('MAIL_FROM_ADDRESS'),
-                'content' => 'New account activated.'
-            ];
+            // $data = [
+            //     'contact_name' => $name,
+            //     'name' =>  'Admin',
+            //     'email' => $email,
+            //     'contact_email' => $currentContact['email'],
+            //     'contact_id' => $is_updated ? $is_updated->contact_id : null,
+            //     'subject' => 'New Account activated',
+            //     'from' => env('MAIL_FROM_ADDRESS'),
+            //     'content' => 'New account activated.'
+            // ];
 
-            if (!empty($users_with_role_admin)) {
-                foreach ($users_with_role_admin as $role_admin) {
-                    $data['email'] = $role_admin->email;
-                    $adminTemplate = 'emails.approval-notifications';
-                    MailHelper::sendMailNotification('emails.approval-notifications', $data);
-                }
-            }
-            $data['name'] = $name;
-            $data['email'] = $email;
-            $data['content'] = 'Your account has been approved';
-            $data['subject'] = 'Your account has been approved';
-            MailHelper::sendMailNotification('emails.approval-notifications', $data);
-
-
-            MailHelper::sendMailNotification('emails.admin-order-received', $data);
+            // if (!empty($users_with_role_admin)) {
+            //     foreach ($users_with_role_admin as $role_admin) {
+            //         $data['email'] = $role_admin->email;
+            //         $adminTemplate = 'emails.approval-notifications';
+            //         MailHelper::sendMailNotification('emails.approval-notifications', $data);
+            //     }
+            // }
+            // $data['name'] = $name;
+            // $data['email'] = $email;
+            // $data['content'] = 'Your account has been approved';
+            // $data['subject'] = 'Your account has been approved';
+            // MailHelper::sendMailNotification('emails.approval-notifications', $data);
             return response()->json([
                 'success' => true,
                 'created' => true,
                 'msg' => 'Welcome, new player.',
-                'data' => $sync_data
+                'data' => $sync_data,
+                'time' => $difference
             ]);
         } else {
             return response()->json([
