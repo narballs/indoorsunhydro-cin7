@@ -43,7 +43,7 @@
                                             class="form-control" aria-describedby="emailHelp">
                                     </div>
                                     <div class="mb-3 col-md-6">
-                                        <label for="exampleInputPassword1" class="form-label">Website</label>
+                                        <label for="website" class="form-label">Website</label>
                                         <input type="text" name="website" value="{{ $contact->website }}"
                                             class="form-control" id="last_name">
                                     </div>
@@ -56,7 +56,7 @@
                                             aria-describedby="emailHelp">
                                     </div>
                                     <div class="mb-3 col-md-6">
-                                        <label for="exampleInputPassword1" class="form-label">Phone #</label>
+                                        <label for="phone" class="form-label">Phone #</label>
                                         <input type="text" value="{{ $contact->phone }}" name="phone"
                                             class="form-control" id="last_name">
                                     </div>
@@ -71,21 +71,33 @@
                                             class="form-control" id="address_1" aria-describedby="emailHelp">
                                     </div>
                                     <div class="mb-3 col-md-6">
-                                        <label for="exampleInputPassword1" class="form-label">Address 2</label>
+                                        <label for="address_2" class="form-label">Address 2</label>
                                         <input type="text" name="address_2" class="form-control"
                                             value="{{ $contact->postalAddress2 }}" id="address_2">
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="mb-3 col-md-6">
-                                        <label for="address_1" class="form-label">City</label>
+                                        <label for="city" class="form-label">City</label>
                                         <input type="text" name="city" value="{{ $contact->postalCity }}"
                                             class="form-control" id="address_1" aria-describedby="emailHelp">
                                     </div>
-                                    <div class="mb-3 col-md-6">
-                                        <label for="exampleInputPassword1" class="form-label">State</label>
-                                        <input type="text" name="state" value="{{ $contact->postalState }}"
-                                            class="form-control" id="state">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="state">State</label>
+                                        <select class="form-control bg-light" name="state" id="state">
+                                            @foreach ($states as $state)
+                                                <?php
+                                                if ($contact->postalState == $state->state_name) {
+                                                    $selected = 'selected';
+                                                } else {
+                                                    $selected = '';
+                                                }
+                                                
+                                                ?>
+                                                <option value="{{ $state->state_name }}" <?php echo $selected; ?>>{{ $state->state_name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="row">

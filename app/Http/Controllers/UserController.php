@@ -611,6 +611,11 @@ class UserController extends Controller
 
         $already_in_cin7 = false;
 
+        $states = UsState::where('id', $request->state_id)->first();
+        $state_name = $states->state_name;
+        $cities = UsCity::where('id', $request->city_id)->first();
+        $city_name = $cities->city;
+
         $contacts = Contact::where('email', $user->email)->get();
         if (!empty($contacts) && count($contacts) > 0) {
             $already_in_cin7 = true;
@@ -634,14 +639,12 @@ class UserController extends Controller
                 'email' => $user->email,
                 'is_parent' => 1,
                 'status' => 0,
-                'tax_class' => 'none'
+                'tax_class' => strtolower($state_name) == strtolower('California') ? '8.75' : 'Out of State'
             ]);
 
             $contact->save();
         }
         
-        
-
         $admin_users =  DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
         $admin_users = $admin_users->toArray();
 
@@ -655,15 +658,6 @@ class UserController extends Controller
             'user_notes' => 'Contact do not exist in Cin7. Awaiting approval from admin to assign role ' . Carbon::now()->toDateTimeString()
         ]);
 
-
-        
-
-        $states = UsState::where('id', $request->state_id)->first();
-        $state_name = $states->state_name;
-        $cities = UsCity::where('id', $request->city_id)->first();
-        $city_name = $cities->city;
-        
-        
         if (!$already_in_cin7) {
             $contact = Contact::where('user_id', $user_id)->first()->update(
                 [
@@ -1294,7 +1288,7 @@ class UserController extends Controller
                 $contact->phone = $request->phone;
                 $contact->city = $request->town_city;
                 $contact->postCode = $request->zip;
-
+                $contact->tax_class = strtolower($request->state) == strtolower('California') ? '8.75' : 'Out of State';
                 $contact->save();
                 return response()->json(['success' => true, 'created' => true, 'msg' => 'Address updated Successfully']);
             }else {

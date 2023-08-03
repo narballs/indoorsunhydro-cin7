@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use App\Models\UserLog;
 use Illuminate\Support\Str;
+use App\Models\UsState;
 
 class ContactController extends Controller
 {
@@ -236,6 +237,7 @@ class ContactController extends Controller
             ->get();
         $response_time = date('Y-m-d H:i:s');
         $difference = strtotime($response_time) - strtotime($request_time);
+        
         if ($is_updated) {
             // $name = $currentContact['firstName'];
             // $email = $currentContact['email'];
@@ -328,7 +330,8 @@ class ContactController extends Controller
     public function customer_edit($id)
     {
         $contact = Contact::where('id', $id)->first();
-        return view('admin/customer-edit', compact('contact'));
+        $states = UsState::all();
+        return view('admin/customer-edit', compact('contact', 'states'));
     }
 
     public function customer_update(Request $request)
@@ -345,7 +348,8 @@ class ContactController extends Controller
                 'phone' => $request->phone,
                 'postalCity' => $request->city,
                 'postalState' => $request->state,
-                'postalPostCode' => $request->zip
+                'postalPostCode' => $request->zip,
+                'tax_class' => strtolower($request->state) == strtolower('California') ? '8.75' : 'Out of State'
             ]
         );
         return redirect()->back();
@@ -529,7 +533,7 @@ class ContactController extends Controller
                 'postalState' => $api_contact->postalState,
                 'postalCity' => $api_contact->postalCity,
                 'status' => $api_contact->isActive,
-                'tax_class' => $api_contact->taxStatus ? $api_contact->taxStatus : 'none',
+                'tax_class' => $api_contact->taxStatus ? $api_contact->taxStatus : $contact->tax_class,
             ]);
 
             if ($api_contact->secondaryContacts) {
@@ -548,7 +552,7 @@ class ContactController extends Controller
                         $secondary_contact->mobile = $apiSecondaryContact->mobile;
                         $secondary_contact->phone = $apiSecondaryContact->phone;
                         $secondary_contact->priceColumn = $api_contact->priceColumn;
-                        $secondary_contact->tax_class = $api_contact->taxStatus ? $api_contact->taxStatus : 'none';
+                        $secondary_contact->tax_class = $api_contact->taxStatus ? $api_contact->taxStatus : $secondary_contact->tax_class;
                         $secondary_contact->save();
                     } else {
                         $secondary_contact = new Contact();
@@ -564,7 +568,7 @@ class ContactController extends Controller
                         $secondary_contact->mobile = $apiSecondaryContact->mobile;
                         $secondary_contact->phone = $apiSecondaryContact->phone;
                         $secondary_contact->priceColumn = $api_contact->priceColumn;
-                        $secondary_contact->tax_class = $api_contact->taxStatus ? $api_contact->taxStatus : 'none';
+                        $secondary_contact->tax_class = $api_contact->taxStatus ? $api_contact->taxStatus : $secondary_contact->tax_class;
                         $secondary_contact->save();
                         $id = $secondary_contact->id;
                         $contact_info = Contact::where('id', $id)->first();
@@ -631,7 +635,7 @@ class ContactController extends Controller
                         'mobile' => $api_secondary_contact->mobile,
                         'phone' =>  $api_secondary_contact->phone,
                         'status' => 1,
-                        'tax_class' => $api_secondary_contact->taxStatus ? $api_secondary_contact->taxStatus : 'none',
+                        'tax_class' => $api_secondary_contact->taxStatus ? $api_secondary_contact->taxStatus : $contact->tax_class,
                     ]);
                     return response()->json([
                         'status' => '200',

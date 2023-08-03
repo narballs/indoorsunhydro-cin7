@@ -60,7 +60,7 @@
                             <td>{{ $i++ }}</td>
                             <td>{{ $setting->option_name }}</td>
                             {{-- <td>{{ $setting->type }}</td> --}}
-                            <td><span class="badge badge-info">{{$setting->option_value}}</span></td>
+                            <td>{{$setting->option_value}}</span></td>
                             <td><a href="{{url('/admin/settings/edit/' . $setting->id)}}" class="btn btn-primary text-white">Edit</a></td>
                             {{-- <td>
                                 <form action="{{url('/admin/settings/delete/' . $setting->id)}}" method="post">
