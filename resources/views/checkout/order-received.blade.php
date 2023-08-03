@@ -40,7 +40,7 @@
 	}
 	@media  screen and (min-width : 1406px ) and (max-width:2194px) {
 		.media-1440 {
-			display:flex;
+			display:block;
 		}
 
 		.small-media-view  {
