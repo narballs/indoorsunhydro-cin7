@@ -730,9 +730,7 @@ class ProductController extends Controller
         if (empty($contact)) {
             abort(404);
         }
-
         $tax_class = TaxClass::where('name', $contact->tax_class)->first();
-
         if (!empty($cart_items)) {
             $view = 'cart';
         } else {

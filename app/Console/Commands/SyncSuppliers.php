@@ -158,7 +158,7 @@ class SyncSuppliers extends Command
                         if (!empty($api_contact->taxStatus)) {
                             $contact->tax_class = $api_contact->taxStatus;
                         } else {
-                            $contact->tax_class = strtolower($api_contact->postalState) == strtolower('California') ? '8.75' : 'Out of State';
+                            $contact->tax_class = strtolower($api_contact->postalState) == strtolower('California') ? '8.75%' : 'Out of State';
                         }
                         $contact->notes = $api_contact->notes;
                         $contact->save();
@@ -185,7 +185,7 @@ class SyncSuppliers extends Command
                                     if (!empty($api_contact->taxStatus)) {
                                         $secondary_contact->tax_class = $api_contact->taxStatus;
                                     } else {
-                                        $secondary_contact->tax_class = strtolower($api_contact->postalState) == strtolower('California') ? '8.75' : 'Out of State';
+                                        $secondary_contact->tax_class = strtolower($api_contact->postalState) == strtolower('California') ? '8.75%' : 'Out of State';
                                     }
                                     if ($secondary_contact->status == 0) {
                                         $secondary_contact->status = 0;
@@ -214,7 +214,7 @@ class SyncSuppliers extends Command
                                     if (!empty($api_contact->taxStatus)) {
                                         $secondary_contact->tax_class = $api_contact->taxStatus;
                                     } else {
-                                        $secondary_contact->tax_class = strtolower($api_contact->postalState) == strtolower('California') ? '8.75' : 'Out of State';
+                                        $secondary_contact->tax_class = strtolower($api_contact->postalState) == strtolower('California') ? '8.75%' : 'Out of State';
                                     }
                                     $secondary_contact->status = 1;
                                     $secondary_contact->save();
@@ -234,7 +234,7 @@ class SyncSuppliers extends Command
                         if (!empty($api_contact->taxStatus)) {
                             $tax_class = $api_contact->taxStatus;
                         } else {
-                            $tax_class = strtolower($api_contact->postalState) == strtolower('California') ? '8.75' : 'Out of State';
+                            $tax_class = strtolower($api_contact->postalState) == strtolower('California') ? '8.75%' : 'Out of State';
                         }
                         $contact = new Contact([
                             'contact_id' => $api_contact->id,
