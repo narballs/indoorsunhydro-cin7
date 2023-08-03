@@ -28,6 +28,16 @@
 		margin-left: -48px !important;
 		margin-top:3px;
 	}
+	.order-confirmation-page-shipping-address  , .order-confirmation-page-billing-address {
+		padding-bottom: 0px !important;
+	}
+	.order-confirmation-page-second-row {
+		background:#F9FAFB;
+	}
+	.order-confirmation-page-invoice-row {
+		border-radius: 6px;
+		border: 1px dashed #000;
+	}
 	@media  screen and (min-width : 1406px ) and (max-width:2194px) {
 		.media-1440 {
 			display:flex;
@@ -167,6 +177,52 @@
 		}
 		.prod-name-img {
 			margin-left: 0px !important;
+		}
+	}
+
+	@media screen and (max-width:425px) and (min-width: 376px) {
+		.logo-confirm-div-1 {
+			width: 100%;
+			display:flex;
+			justify-content: center;
+		}
+		.logo-confirm-div-2 {
+			width: 100%;
+			text-align: center;
+			margin-left: 0rem !important;
+		}
+		.main-logo-confirm-div {
+			width: 100%;
+			display: block !important;
+			margin-top: 1.5rem;
+
+		}
+		.confirmation_check {
+			position: absolute;
+			top: 10%;
+		}
+	}
+
+	@media screen and (max-width:375px) and (min-width: 280px) {
+		.logo-confirm-div-1 {
+			width: 100%;
+			display:flex;
+			justify-content: center;
+		}
+		.logo-confirm-div-2 {
+			width: 100%;
+			text-align: center;
+			margin-left: 0rem !important;
+		}
+		.main-logo-confirm-div {
+			width: 100%;
+			display: block !important;
+			margin-top: 1.5rem;
+
+		}
+		.confirmation_check {
+			position: absolute;
+			top: 10%;
 		}
 	}
 	
@@ -396,6 +452,58 @@
 		
 	}
 
+	@media only screen and (min-width: 1921px) {
+		.confirmation_check {
+			position: absolute;
+			left: 1.5%;
+			top: 18%;
+		}
+	}
+	
+	@media only screen and (max-width: 1920px) and (min-width: 1441px) {
+		.confirmation_check {
+			position: absolute;
+			top: 18%;
+			left: 2.1%;
+		}
+	}
+	@media only screen and (max-width: 1440px) and (min-width: 1025px) {
+		.confirmation_check {
+			position: absolute;
+			left: 2.8%;
+			top: 18%;
+		}
+	}
+	@media only screen and (max-width: 1024px) and (min-width: 769px) {
+		.confirmation_check {
+			position: absolute;
+			left: 4.1%;
+			top: 18%;
+		}
+	}
+	@media only screen and (max-width: 768px) and (min-width: 426px) {
+		.confirmation_check {
+			position: absolute;
+			left: 6%;
+			top: 18%;
+		}
+	}
+	.name_title {
+		padding-bottom: 0px;
+	}
+	.order-confirm-top {
+		color: #474747;
+		font-family: 'Poppins';
+		font-size: 21.538px;
+		font-style: normal;
+		font-weight: 400;
+		line-height: 32.308px; /* 150% */
+	}
+	.main-color-div {
+		background: #F9FAFB;
+		border-top-left-radius: 15px;
+		border-top-right-radius: 15px;
+	}
 	
 </style>
 {{session()->forget('cart');}}
@@ -406,122 +514,164 @@
 			<div class="card mt-5 border-0 thank-you-card">
 				<div class="card-body ps-5 mt-5  thank-you-card-body">
 					<div class="row ps-5 mobile_class">
-						<div class=" col-xl-12 col-lg-12 col-md-12 col-sm-12">
+						{{-- <div class=" col-xl-12 col-lg-12 col-md-12 col-sm-12">
 							<p class="order-confirmation-page-top-heading mobile-font">Order Confirmation</p>
+						</div> --}}
+						<div class="row mb-3">
+							<div class="col-md-12 d-flex main-logo-confirm-div">
+								<div class="logo-confirm-div-1">
+									<svg xmlns="http://www.w3.org/2000/svg" width="76" height="76" viewBox="0 0 76 76" fill="none">
+										<circle cx="37.6923" cy="37.923" r="37.6923" fill="#7CC633" fill-opacity="0.12"/>
+									</svg>
+									<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 44 44" fill="none" class="confirmation_check">
+										<path d="M22.019 3.9743C12.1292 3.9743 4.07025 12.0333 4.07025 21.923C4.07025 31.8128 12.1292 39.8717 22.019 39.8717C31.9087 39.8717 39.9677 31.8128 39.9677 21.923C39.9677 12.0333 31.9087 3.9743 22.019 3.9743ZM30.5985 17.7948L20.4215 27.9717C20.1702 28.223 19.8292 28.3666 19.4703 28.3666C19.1113 28.3666 18.7703 28.223 18.519 27.9717L13.4395 22.8923C12.919 22.3717 12.919 21.5102 13.4395 20.9897C13.96 20.4692 14.8215 20.4692 15.342 20.9897L19.4703 25.1179L28.6959 15.8923C29.2164 15.3717 30.0779 15.3717 30.5985 15.8923C31.119 16.4128 31.119 17.2564 30.5985 17.7948Z" fill="#7BC533"/>
+									</svg>
+								</div>
+								<div class="d-flex mx-4 mt-2 logo-confirm-div-2" style="flex-direction: column;">
+									<div class="">
+										<span class="order-confirmation-page-user-name mobile-font mobile-font-part order-confirm-top">Order Confirmation</span>
+									</div>
+									<div class="">
+										<p class="order-confirmation-page-title name_title">
+											{{$order_contact->firstName}}
+											{{$order_contact->lastName}}
+											{{-- <span class="order-confirmation-page-user-name mobile-font mobile-font-part">Your order has been received.</span> --}}
+										</p>
+									</div>
+								</div>
+							</div>
+							{{-- <div class="col-md-10 mt-2">
+								<div class="row">
+									<div class="col-md-12">
+										<span class="order-confirmation-page-user-name mobile-font mobile-font-part order-confirm-top">Order Confirmation</span>
+									</div>
+									<div class="col-md-12">
+										<p class="order-confirmation-page-title name_title">
+											{{$order_contact->firstName}}
+											{{$order_contact->lastName}}
+											<span class="order-confirmation-page-user-name mobile-font mobile-font-part">Your order has been received.</span>
+										</p>
+									</div>
+								</div>
+							</div> --}}
 						</div>
-						<div class="col-md-12 mt-4 thank-you-title-top">
+						{{-- <div class="col-md-12 mt-4 thank-you-title-top">
 							<p class="order-confirmation-page-title">
 								{{$order_contact->firstName}}
 								{{$order_contact->lastName}}
 								<span class="order-confirmation-page-user-name mobile-font mobile-font-part">Your order has been received.</span>
 							</p>
-						</div>
+						</div> --}}
 					</div>
-					<div class="row ms-5 p-4 me-5 order-confirmation-page-invoice-row main-view " style=" padding-top: 50px !important;">
-						<div class=" col-xl-1 col-lg-4 col-md-6 col-sm-12" style="margin-left: 32px;">
-							<p class="order-confirmation-page-order-number-title">Order Number</p>
-							<p class="order-confirmation-page-order-number-item">
-								{{$order->apiOrderItem[0]['order_id']}}
-							</p>
-						</div>
-						<div class="col-xl-2 col-lg-4 col-md-6 col-sm-12 ps-4 ms-3">
-							<p class="order-confirmation-page-date-title">Date</p>
-							<p class="order-confirmation-page-date-item">
-								{{$order->apiOrderItem[0]['created_at']->format('F '.'d, Y, '.'g:i A')}}
-							</p>
-						</div>
-						<div class="col-xl-1 col-lg-2 col-md-6 col-sm-12 pe-2 ms-3">
-							<p class="order-confirmation-page-mobile-title">
-								Mobile
-							</p>
-							<p class="order-confirmation-page-mobile-item">
-								{{$order_contact->phone}}
-							</p>
-						</div>
-						<div class="col-xl-2 col-lg-3 col-md-6 col-sm-12 ps-5">
-							<p class="order-confirmation-page-email-title">
-								Email
-							</p>
-							<p class="order-confirmation-page-email-item">
-								{{$order->user->email}}
-							</p>
-						</div>
-						<div class="col-xl-2 col-lg-3 col-md-6 col-sm-12">
-							<p class="order-confirmation-page-payment-method-title">Payment Method</p>
-							<p class="order-confirmation-page-payment-method-item">{{$order->paymentTerms}}</p>
-						</div>
-						<div class="col-xl-1 col-lg-3 col-md-6 col-sm-12 ps-0">
-							<p class="order-confirmation-page-shipping-title">Shipping</p>
-							<p class="order-confirmation-page-shipping-item">$</p>
-						</div>
-						<div class="col-xl-1 col-lg-3 col-md-6 col-sm-12 ms-4">
-							<p class="order-confirmation-page-tax-title">Tax</p>
-							<p class="order-confirmation-page-tax-item">
-								${{ number_format($order->total_including_tax - $order->productTotal, 2) }}
-							</p>
-						</div>
-						<div class="col-xl-1 col-lg-3 col-md-6 col-sm-12 ms-4">
-							<p class="order-confirmation-page-total-title">Total</p>
-							<p class="order-confirmation-page-total-item">
-								${{number_format($order->total_including_tax, 2)}}
-							</p>
+					<div class="p-3 ms-5 me-5 main-color-div main-view ">
+						<div class="row ms-1 p-4 me-1 order-confirmation-page-invoice-row " style=" padding-top: 50px !important;">
+							<div class=" col-md-3">
+								<p class="order-confirmation-page-order-number-title">Order Number</p>
+								<p class="order-confirmation-page-order-number-item">
+									{{$order->apiOrderItem[0]['order_id']}}
+								</p>
+							</div>
+							<div class="col-md-3">
+								<p class="order-confirmation-page-date-title">Date</p>
+								<p class="order-confirmation-page-date-item">
+									{{$order->apiOrderItem[0]['created_at']->format('F '.'d, Y, '.'g:i A')}}
+								</p>
+							</div>
+							<div class="col-md-3">
+								<p class="order-confirmation-page-mobile-title">
+									Mobile
+								</p>
+								<p class="order-confirmation-page-mobile-item">
+									{{$order_contact->phone}}
+								</p>
+							</div>
+							<div class="col-md-3">
+								<p class="order-confirmation-page-email-title">
+									Email
+								</p>
+								<p class="order-confirmation-page-email-item">
+									{{$order->user->email}}
+								</p>
+							</div>
+							<div class="col-md-3">
+								<p class="order-confirmation-page-payment-method-title">Payment Method</p>
+								<p class="order-confirmation-page-payment-method-item">{{$order->paymentTerms}}</p>
+							</div>
+							<div class="col-md-3">
+								<p class="order-confirmation-page-shipping-title">Shipping</p>
+								<p class="order-confirmation-page-shipping-item">$</p>
+							</div>
+							<div class="col-md-3">
+								<p class="order-confirmation-page-tax-title">Tax</p>
+								<p class="order-confirmation-page-tax-item">
+									${{ number_format($order->total_including_tax - $order->productTotal, 2) }}
+								</p>
+							</div>
+							<div class="col-md-3">
+								<p class="order-confirmation-page-total-title">Total</p>
+								<p class="order-confirmation-page-total-item">
+									${{number_format($order->total_including_tax, 2)}}
+								</p>
+							</div>
 						</div>
 					</div>
 					{{-- for media screen 1440px --}}
-					<div class="row ms-5 p-4 me-5 order-confirmation-page-invoice-row media-1440" style="padding-top: 50px !important;">
-						<div class="col-md-12">
-							<div class="row">
-								<div class="col-md-3">
-									<p class="order-confirmation-page-order-number-title">Order Number</p>
-									<p class="order-confirmation-page-order-number-item">
-										{{$order->apiOrderItem[0]['order_id']}}
-									</p>
-								</div>
-								<div class="col-md-3">
-									<p class="order-confirmation-page-date-title">Date</p>
-									<p class="order-confirmation-page-date-item">
-										{{$order->apiOrderItem[0]['created_at']->format('F '.'d, Y, '.'g:i A')}}
-									</p>
-								</div>
-								<div class="col-md-3">
-									<p class="order-confirmation-page-mobile-title">
-										Mobile
-									</p>
-									<p class="order-confirmation-page-mobile-item">
-										{{$order_contact->phone}}
-									</p>
-								</div>
-								<div class="col-md-3">
-									<p class="order-confirmation-page-email-title">
-										Email
-									</p>
-									<p class="order-confirmation-page-email-item">
-										{{$order->user->email}}
-									</p>
+					<div class="p-3 ms-5 me-5 main-color-div media-1440">
+						<div class="row ms-1 p-4 me-1 order-confirmation-page-invoice-row " style="padding-top: 50px !important;">
+							<div class="col-md-12">
+								<div class="row">
+									<div class="col-md-3">
+										<p class="order-confirmation-page-order-number-title">Order Number</p>
+										<p class="order-confirmation-page-order-number-item">
+											{{$order->apiOrderItem[0]['order_id']}}
+										</p>
+									</div>
+									<div class="col-md-3">
+										<p class="order-confirmation-page-date-title">Date</p>
+										<p class="order-confirmation-page-date-item">
+											{{$order->apiOrderItem[0]['created_at']->format('F '.'d, Y, '.'g:i A')}}
+										</p>
+									</div>
+									<div class="col-md-3">
+										<p class="order-confirmation-page-mobile-title">
+											Mobile
+										</p>
+										<p class="order-confirmation-page-mobile-item">
+											{{$order_contact->phone}}
+										</p>
+									</div>
+									<div class="col-md-3">
+										<p class="order-confirmation-page-email-title">
+											Email
+										</p>
+										<p class="order-confirmation-page-email-item">
+											{{$order->user->email}}
+										</p>
+									</div>
 								</div>
 							</div>
-						</div>
-						<div class="col-md-12">
-							<div class="row">
-								<div class="col-md-3">
-									<p class="order-confirmation-page-payment-method-title">Payment Method</p>
-									<p class="order-confirmation-page-payment-method-item">{{$order->paymentTerms}}</p>
-								</div>
-								<div class="col-md-3">
-									<p class="order-confirmation-page-shipping-title">Shipping</p>
-									<p class="order-confirmation-page-shipping-item">$</p>
-								</div>
-								<div class="col-md-3">
-									<p class="order-confirmation-page-tax-title">Tax</p>
-									<p class="order-confirmation-page-tax-item">
-										${{ number_format($order->total_including_tax - $order->productTotal, 2) }}
-									</p>
-								</div>
-								<div class="col-md-3">
-									<p class="order-confirmation-page-total-title">Total</p>
-									<p class="order-confirmation-page-total-item">
-										${{number_format($order->total_including_tax, 2)}}
-									</p>
+							<div class="col-md-12">
+								<div class="row">
+									<div class="col-md-3">
+										<p class="order-confirmation-page-payment-method-title">Payment Method</p>
+										<p class="order-confirmation-page-payment-method-item">{{$order->paymentTerms}}</p>
+									</div>
+									<div class="col-md-3">
+										<p class="order-confirmation-page-shipping-title">Shipping</p>
+										<p class="order-confirmation-page-shipping-item">$</p>
+									</div>
+									<div class="col-md-3">
+										<p class="order-confirmation-page-tax-title">Tax</p>
+										<p class="order-confirmation-page-tax-item">
+											${{ number_format($order->total_including_tax - $order->productTotal, 2) }}
+										</p>
+									</div>
+									<div class="col-md-3">
+										<p class="order-confirmation-page-total-title">Total</p>
+										<p class="order-confirmation-page-total-item">
+											${{number_format($order->total_including_tax, 2)}}
+										</p>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -678,30 +828,35 @@
 									</p>
 									<div class="row">
 										<div class="col-md-12">
-											<p class="order-confirmation-page-first-name-last-name-user-name pt-3">
+											{{-- <p class="order-confirmation-page-first-name-last-name-user-name pt-3">
 												{{$order_contact->first_name ? $order_contact->first_name : $order_contact->firstName}}
 												{{$order_contact->last_name ? $order_contact->last_name : $order_contact->lastName}}
-											</p>
+											</p> --}}
 											<div class="row">
-												<div class="col-md-6">
-													<p class="order-confirmation-page-address-line-one-title">
+												<div class="col-md-12">
+													{{-- <p class="order-confirmation-page-address-line-one-title">
 														Address line 1
+													</p> --}}
+													
+													<p class="order-confirmation-page-address-line-one-title mb-1">
+														{{$order_contact->address1 ? $order_contact->address1 : $order_contact->postalAddress1 . ','}}
 													</p>
 													
-													<p class="order-confirmation-page-address-line-one-item">
-														{{$order_contact->address1 ? $order_contact->address1 : $order_contact->postalAddress1}}
-													</p>
-													
-													<p class="order-confirmation-page-address-line-tow-title">
+													{{-- <p class="order-confirmation-page-address-line-tow-title mb-1">
 														Address line 2
-													</p>
+													</p> --}}
 													
-													<p class="order-confirmation-page-address-line-tow-item">
-														{{$order_contact->address2 ? $order_contact->address2 : $order_contact->postalAddress2}}
+													<p class="order-confirmation-page-address-line-one-title mb-1">
+														{{$order_contact->address2 ? $order_contact->address2 : $order_contact->postalAddress2 . ','}}
+													</p>
+													<p class="order-confirmation-page-address-line-one-title">
+														{{$order_contact->city ? $order_contact->city : $order_contact->postalCity . ','}}
+														{{$order_contact->state ? $order_contact->state : $order_contact->postalState . ','}}
+														{{$order_contact->postCode ? $order_contact->postCode : $order_contact->postalPostCode}}
 													</p>
 													
 												</div>
-												<div class="col-md-6">
+												{{-- <div class="col-md-6">
 													<div class="row">
 														<div class="col-xl-4 col-lg-6 col-md-12 col-sm-12">
 															<p class="order-confirmation-page-city-name-title">City</p>
@@ -729,7 +884,7 @@
 															</p>
 														</div>
 													</div>
-												</div>
+												</div> --}}
 											</div>
 										</div>
 									</div>
@@ -740,21 +895,29 @@
 									</p>
 									<div class="row">
 										<div class="col-md-12">
-											<p class="order-confirmation-page-first-name-last-name-user-name pt-3">
+											{{-- <p class="order-confirmation-page-first-name-last-name-user-name pt-3">
 												{{$order_contact->first_name ? $order_contact->first_name : $order_contact->firstName}}
 												{{$order_contact->last_name ? $order_contact->last_name : $order_contact->lastName}}
-											</p>
+											</p> --}}
 											<div class="row">
-												<div class="col-md-6">
-													<p class="order-confirmation-page-address-line-one-title">
+												<div class="col-md-12">
+													{{-- <p class="order-confirmation-page-address-line-one-title">
 														Address line 1
-													</p>
+													</p> --}}
 													
-													<p class="order-confirmation-page-address-line-one-item">
-														{{$order_contact->address1 ? $order_contact->address1 : $order_contact->postalAddress1}}
+													<p class="order-confirmation-page-address-line-one-title mb-1">
+														{{$order_contact->address1 ? $order_contact->address1 : $order_contact->postalAddress1 . ','}}
+													</p>
+													<p class="order-confirmation-page-address-line-one-title mb-1">
+														{{$order_contact->address2 ? $order_contact->address2 : $order_contact->postalAddress2 . ','}}
+													</p>
+													<p class="order-confirmation-page-address-line-one-title">
+														{{$order_contact->city ? $order_contact->city : $order_contact->postalCity . ','}}
+														{{$order_contact->state ? $order_contact->state : $order_contact->postalState . ','}}
+														{{$order_contact->postCode ? $order_contact->postCode : $order_contact->postalPostCode}}
 													</p>
 
-													<div class="row mt-4">
+													{{-- <div class="row mt-4">
 														<div class="col-xl-4 col-lg-6 col-md-12 col-sm-12">
 															<p class="order-confirmation-page-city-name-title">City</p>
 															
@@ -777,9 +940,9 @@
 																{{$order_contact->postCode ?  $order_contact->postCode  :$order_contact->postalPostCode}}
 															</p>
 														</div>
-													</div>
+													</div> --}}
 												</div>
-												<div class="col-md-6">
+												{{-- <div class="col-md-6">
 													<p class="order-confirmation-page-address-line-tow-title">
 														Address line 2
 													</p>
@@ -788,7 +951,7 @@
 														{{$order_contact->address2 ? $order_contact->address2 : $order_contact->postalAddress2}}
 													</p>
 
-												</div>
+												</div> --}}
 											</div>
 										</div>
 									</div>
