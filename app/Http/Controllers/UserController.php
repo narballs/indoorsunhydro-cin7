@@ -639,7 +639,7 @@ class UserController extends Controller
                 'email' => $user->email,
                 'is_parent' => 1,
                 'status' => 0,
-                'tax_class' => strtolower($state_name) == strtolower('California') ? '8.75' : 'Out of State'
+                'tax_class' => strtolower($state_name) == strtolower('California') ? '8.75%' : 'Out of State'
             ]);
 
             $contact->save();
@@ -1288,7 +1288,7 @@ class UserController extends Controller
                 $contact->phone = $request->phone;
                 $contact->city = $request->town_city;
                 $contact->postCode = $request->zip;
-                $contact->tax_class = strtolower($request->state) == strtolower('California') ? '8.75' : 'Out of State';
+                $contact->tax_class = strtolower($request->state) == strtolower('California') ? '8.75%' : 'Out of State';
                 $contact->save();
                 return response()->json(['success' => true, 'created' => true, 'msg' => 'Address updated Successfully']);
             }else {

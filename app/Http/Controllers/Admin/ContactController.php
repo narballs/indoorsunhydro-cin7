@@ -349,7 +349,7 @@ class ContactController extends Controller
                 'postalCity' => $request->city,
                 'postalState' => $request->state,
                 'postalPostCode' => $request->zip,
-                'tax_class' => strtolower($request->state) == strtolower('California') ? '8.75' : 'Out of State'
+                'tax_class' => strtolower($request->state) == strtolower('California') ? '8.75%' : 'Out of State'
             ]
         );
         return redirect()->back();
