@@ -4091,9 +4091,9 @@ select.list-dt:focus {
 }
 
 .order-confirmation-page-invoice-row {
-    background: #F5F5F5;
+    background: #F9FAFB;
     border: 1px dashed #000000;
-    border-radius: 6px;
+    /* border-radius: 6px; */
 }
 
 .order-confirmation-page-order-number-title {
@@ -4269,7 +4269,7 @@ select.list-dt:focus {
     font-size: 25px;
     line-height: 29px;
     color: #000000;
-    border-bottom: 2px dashed #CDCDCD;
+    /* border-bottom: 2px dashed #CDCDCD; */
     padding-bottom: 58px;
 
 }
@@ -4281,7 +4281,7 @@ select.list-dt:focus {
     font-size: 25px;
     line-height: 29px;
     color: #000000;
-    border-bottom: 2px dashed #CDCDCD;
+    /* border-bottom: 2px dashed #CDCDCD; */
     padding-bottom: 58px;
 }
 
