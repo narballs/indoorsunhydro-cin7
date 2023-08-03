@@ -155,7 +155,11 @@ class SyncSuppliers extends Command
                         $contact->email = $api_contact->email;
                         $contact->credit_limit = $api_contact->creditLimit;
                         $contact->balance_owing = $api_contact->balanceOwing;
-                        $contact->tax_class = $api_contact->taxStatus;
+                        if (!empty($api_contact->taxStatus)) {
+                            $contact->tax_class = $api_contact->taxStatus;
+                        } else {
+                            $contact->tax_class = strtolower($api_contact->postalState) == strtolower('California') ? '8.75' : 'Out of State';
+                        }
                         $contact->notes = $api_contact->notes;
                         $contact->save();
 
@@ -178,7 +182,11 @@ class SyncSuppliers extends Command
                                     $secondary_contact->priceColumn = $api_contact->priceColumn;
                                     $secondary_contact->credit_limit = $api_contact->creditLimit;
                                     $secondary_contact->balance_owing = $api_contact->balanceOwing;
-                                    $secondary_contact->tax_class = $api_contact->taxStatus;
+                                    if (!empty($api_contact->taxStatus)) {
+                                        $secondary_contact->tax_class = $api_contact->taxStatus;
+                                    } else {
+                                        $secondary_contact->tax_class = strtolower($api_contact->postalState) == strtolower('California') ? '8.75' : 'Out of State';
+                                    }
                                     if ($secondary_contact->status == 0) {
                                         $secondary_contact->status = 0;
                                     } else {
@@ -203,12 +211,14 @@ class SyncSuppliers extends Command
                                     $secondary_contact->priceColumn = $api_contact->priceColumn;
                                     $secondary_contact->credit_limit = $api_contact->creditLimit;
                                     $secondary_contact->balance_owing = $api_contact->balanceOwing;
-                                    $secondary_contact->tax_class = $api_contact->taxStatus;
+                                    if (!empty($api_contact->taxStatus)) {
+                                        $secondary_contact->tax_class = $api_contact->taxStatus;
+                                    } else {
+                                        $secondary_contact->tax_class = strtolower($api_contact->postalState) == strtolower('California') ? '8.75' : 'Out of State';
+                                    }
                                     $secondary_contact->status = 1;
                                     $secondary_contact->save();
                                 }
-
-
 
                                 $UserLog = new UserLog([
                                     'action' => 'Sync',
@@ -220,6 +230,11 @@ class SyncSuppliers extends Command
                     } else {
                         foreach ($api_contact->secondaryContacts as $secondaryContact) {
                             echo $secondaryContact->id . '---' . $secondaryContact->firstName;
+                        }
+                        if (!empty($api_contact->taxStatus)) {
+                            $tax_class = $api_contact->taxStatus;
+                        } else {
+                            $tax_class = strtolower($api_contact->postalState) == strtolower('California') ? '8.75' : 'Out of State';
                         }
                         $contact = new Contact([
                             'contact_id' => $api_contact->id,
@@ -247,7 +262,7 @@ class SyncSuppliers extends Command
                             'email' => $api_contact->email,
                             'credit_limit' => $api_contact->creditLimit,
                             'balance_owing' => $api_contact->balanceOwing,
-                            'tax_class' => $api_contact->taxStatus,
+                            'tax_class' => $tax_class,
                             'notes' => $api_contact->notes
                         ]);
                         if ($api_contact->secondaryContacts) {
@@ -266,7 +281,7 @@ class SyncSuppliers extends Command
                                     'mobile' => $secondaryContact->mobile,
                                     'email' => $secondaryContact->email,
                                     'credit_limit' => $api_contact->creditLimit,
-                                    'tax_class' => $api_contact->taxStatus,
+                                    'tax_class' => $tax_class,
 
                                 ]);
                                 $secondaryContact->save();
