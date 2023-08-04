@@ -15,6 +15,17 @@
 		border-width: 0;
 		border-color: #8C8C8C;
 	}
+	.view-inv-btn {
+		width: 311px !important;
+		border-radius: 5px !important;
+		color: #FFF !important;
+		font-family: 'poppins' !important;
+		font-size: 18px !important;
+		font-style: normal !important;
+		font-weight: 600 !important;
+		line-height: normal !important;
+		letter-spacing: 0.18px !important;
+	}
 	.media-1440 {
 		display:none;
 	}
@@ -456,14 +467,14 @@
 		.confirmation_check {
 			position: absolute;
 			left: 1.5%;
-			top: 18%;
+			top: 16%;
 		}
 	}
 	
 	@media only screen and (max-width: 1920px) and (min-width: 1441px) {
 		.confirmation_check {
 			position: absolute;
-			top: 18%;
+			top: 16%;
 			left: 2.1%;
 		}
 	}
@@ -471,14 +482,14 @@
 		.confirmation_check {
 			position: absolute;
 			left: 2.8%;
-			top: 18%;
+			top: 16%;
 		}
 	}
 	@media only screen and (max-width: 1024px) and (min-width: 769px) {
 		.confirmation_check {
 			position: absolute;
 			left: 4.1%;
-			top: 18%;
+			top: 16%;
 		}
 	}
 	@media only screen and (max-width: 768px) and (min-width: 426px) {
@@ -572,44 +583,44 @@
 								</p>
 							</div>
 							<div class="col-md-3">
-								<p class="order-confirmation-page-date-title">Date</p>
-								<p class="order-confirmation-page-date-item">
+								<p class="order-confirmation-page-order-number-title">Date</p>
+								<p class="order-confirmation-page-order-number-item">
 									{{$order->apiOrderItem[0]['created_at']->format('F '.'d, Y, '.'g:i A')}}
 								</p>
 							</div>
 							<div class="col-md-3">
-								<p class="order-confirmation-page-mobile-title">
+								<p class="order-confirmation-page-order-number-title">
 									Mobile
 								</p>
-								<p class="order-confirmation-page-mobile-item">
+								<p class="order-confirmation-page-order-number-item">
 									{{$order_contact->phone}}
 								</p>
 							</div>
 							<div class="col-md-3">
-								<p class="order-confirmation-page-email-title">
+								<p class="order-confirmation-page-order-number-title">
 									Email
 								</p>
-								<p class="order-confirmation-page-email-item">
+								<p class="order-confirmation-page-order-number-item">
 									{{$order->user->email}}
 								</p>
 							</div>
 							<div class="col-md-3">
-								<p class="order-confirmation-page-payment-method-title">Payment Method</p>
-								<p class="order-confirmation-page-payment-method-item">{{$order->paymentTerms}}</p>
+								<p class="order-confirmation-page-order-number-title">Payment Method</p>
+								<p class="order-confirmation-page-order-number-item">{{$order->paymentTerms}}</p>
 							</div>
 							<div class="col-md-3">
-								<p class="order-confirmation-page-shipping-title">Shipping</p>
-								<p class="order-confirmation-page-shipping-item">$</p>
+								<p class="order-confirmation-page-order-number-title">Shipping</p>
+								<p class="order-confirmation-page-order-number-item">$</p>
 							</div>
 							<div class="col-md-3">
-								<p class="order-confirmation-page-tax-title">Tax</p>
-								<p class="order-confirmation-page-tax-item">
+								<p class="order-confirmation-page-order-number-title">Tax</p>
+								<p class="order-confirmation-page-order-number-item">
 									${{ number_format($order->total_including_tax - $order->productTotal, 2) }}
 								</p>
 							</div>
 							<div class="col-md-3">
-								<p class="order-confirmation-page-total-title">Total</p>
-								<p class="order-confirmation-page-total-item">
+								<p class="order-confirmation-page-order-number-title">Total</p>
+								<p class="order-confirmation-page-order-number-item">
 									${{number_format($order->total_including_tax, 2)}}
 								</p>
 							</div>
@@ -627,24 +638,24 @@
 										</p>
 									</div>
 									<div class="col-md-3">
-										<p class="order-confirmation-page-date-title">Date</p>
-										<p class="order-confirmation-page-date-item">
+										<p class="order-confirmation-page-order-number-title">Date</p>
+										<p class="order-confirmation-page-order-number-item">
 											{{$order->apiOrderItem[0]['created_at']->format('F '.'d, Y, '.'g:i A')}}
 										</p>
 									</div>
 									<div class="col-md-3">
-										<p class="order-confirmation-page-mobile-title">
+										<p class="order-confirmation-page-order-number-title">
 											Mobile
 										</p>
-										<p class="order-confirmation-page-mobile-item">
+										<p class="order-confirmation-page-order-number-item">
 											{{$order_contact->phone}}
 										</p>
 									</div>
 									<div class="col-md-3">
-										<p class="order-confirmation-page-email-title">
+										<p class="order-confirmation-page-order-number-title">
 											Email
 										</p>
-										<p class="order-confirmation-page-email-item">
+										<p class="order-confirmation-page-order-number-item">
 											{{$order->user->email}}
 										</p>
 									</div>
@@ -653,22 +664,22 @@
 							<div class="col-md-12">
 								<div class="row">
 									<div class="col-md-3">
-										<p class="order-confirmation-page-payment-method-title">Payment Method</p>
-										<p class="order-confirmation-page-payment-method-item">{{$order->paymentTerms}}</p>
+										<p class="order-confirmation-page-order-number-title">Payment Method</p>
+										<p class="order-confirmation-page-order-number-item">{{$order->paymentTerms}}</p>
 									</div>
 									<div class="col-md-3">
-										<p class="order-confirmation-page-shipping-title">Shipping</p>
-										<p class="order-confirmation-page-shipping-item">$</p>
+										<p class="order-confirmation-page-order-number-title">Shipping</p>
+										<p class="order-confirmation-page-order-number-item">$</p>
 									</div>
 									<div class="col-md-3">
-										<p class="order-confirmation-page-tax-title">Tax</p>
-										<p class="order-confirmation-page-tax-item">
+										<p class="order-confirmation-page-order-number-title">Tax</p>
+										<p class="order-confirmation-page-order-number-item">
 											${{ number_format($order->total_including_tax - $order->productTotal, 2) }}
 										</p>
 									</div>
 									<div class="col-md-3">
-										<p class="order-confirmation-page-total-title">Total</p>
-										<p class="order-confirmation-page-total-item">
+										<p class="order-confirmation-page-order-number-title">Total</p>
+										<p class="order-confirmation-page-order-number-item">
 											${{number_format($order->total_including_tax, 2)}}
 										</p>
 									</div>
@@ -689,16 +700,16 @@
 									</p>
 								</div>
 								<div class="col-md-4">
-									<p class="order-confirmation-page-date-title">Date</p>
-									<p class="order-confirmation-page-date-item">
+									<p class="order-confirmation-page-order-number-title">Date</p>
+									<p class="order-confirmation-page-order-number-item">
 										{{$order->apiOrderItem[0]['created_at']->format('F '.'d, Y, '.'g:i A')}}
 									</p>
 								</div>
 								<div class="col-md-4">
-									<p class="order-confirmation-page-mobile-title">
+									<p class="order-confirmation-page-order-number-title">
 										Mobile
 									</p>
-									<p class="order-confirmation-page-mobile-item">
+									<p class="order-confirmation-page-order-number-item">
 										{{$order_contact->phone}}
 									</p>
 								</div>
@@ -708,21 +719,21 @@
 						<div class="col-md-12">
 							<div class="row">
 								<div class="col-md-4">
-									<p class="order-confirmation-page-email-title">
+									<p class="order-confirmation-page-order-number-title">
 										Email
 									</p>
-									<p class="order-confirmation-page-email-item">
+									<p class="order-confirmation-page-order-number-item">
 										{{$order->user->email}}
 									</p>
 								</div>
 
 								<div class="col-md-4">
-									<p class="order-confirmation-page-payment-method-title">Payment Method</p>
-									<p class="order-confirmation-page-payment-method-item">{{$order->paymentTerms}}</p>
+									<p class="order-confirmation-page-order-number-title">Payment Method</p>
+									<p class="order-confirmation-page-order-number-item">{{$order->paymentTerms}}</p>
 								</div>
 								<div class="col-md-4">
-									<p class="order-confirmation-page-shipping-title">Shipping</p>
-									<p class="order-confirmation-page-shipping-item">$</p>
+									<p class="order-confirmation-page-order-number-title">Shipping</p>
+									<p class="order-confirmation-page-order-number-item">$</p>
 								</div>
 								
 								
@@ -732,14 +743,14 @@
 							<div class="row">
 								
 								<div class="col-md-4">
-									<p class="order-confirmation-page-tax-title">Tax</p>
-									<p class="order-confirmation-page-tax-item">
+									<p class="order-confirmation-page-order-number-title">Tax</p>
+									<p class="order-confirmation-page-order-number-item">
 										${{ number_format($order->total_including_tax - $order->productTotal, 2) }}
 									</p>
 								</div>
 								<div class="col-md-4">
-									<p class="order-confirmation-page-total-title">Total</p>
-									<p class="order-confirmation-page-total-item">
+									<p class="order-confirmation-page-order-number-title">Total</p>
+									<p class="order-confirmation-page-order-number-item">
 										${{number_format($order->total_including_tax, 2)}}
 									</p>
 								</div>
@@ -1018,9 +1029,9 @@
 									@endforeach
 								</tbody>
 							</table>
-							<div class="row">
-								<div class="col-md-2 m-auto">
-									<a href="#" class="order-confirmation-page-view-invoice-button btn w-100">VIEW
+							<div class="row justify-content-center">
+								<div class="col-md-4 d-flex justify-content-center">
+									<a href="#" class="order-confirmation-page-view-invoice-button btn view-inv-btn">VIEW
 										INVOICE</a>
 								</div>
 							</div>
