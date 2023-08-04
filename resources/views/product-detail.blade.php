@@ -64,40 +64,56 @@
                                             @endif
                                         </div>
                                     </div>
-                                    <?php //dd($productOption->products->status);?>
-                                    <div class="col-md-12 d-flex">
-                                        <span class="text-danger product-detail-price" id="product_price">
-                                            ${{number_format($retail_price, 2)}}
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="mt-4 mb-3"> <span class="text-uppercase text-muted brand"></span>
-
-                                    <div class="price d-flex flex-row align-items-center">
-                                        @if ($productOption->products->status != 'Inactive')
-                                            @if ($productOption->stockAvailable > 0)
-                                                <span
-                                                    class="rounded-pill cursor product-detail-quantity d-flex justify-content-center align-items-center"
-                                                    data-toggle="popover-hover" data-bs-container="body" data-placement="top"
-                                                    data-bs-placement="top" data-bs-content="Top popover"
-                                                    style=" cursor: pointer;"><span class="">
-                                                        {{$productOption->stockAvailable}}</span></span>
-                                                <div>
-                                                    <small class="dis-price">&nbsp;</small> 
-                                                    <span class="instock-label">IN STOCK</span>
-                                                </div>
-                                                @else
-                                                    <div>
-                                                        <small class="dis-price">&nbsp;</small>
-                                                        <span class="text-danger">{{ App\Helpers\SettingHelper::getSetting('out_of_stock_label', 'OUT OF STOCK'); }}</span>
-                                                    </div>
-                                            @endif
-                                        @else 
-                                            <div>
-                                                <small class="dis-price">&nbsp;</small><span class="text-danger">NOT AVAILABLE FOR SALE</span>
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <span class="text-danger product-detail-price" id="product_price">
+                                                    ${{number_format($retail_price, 2)}}
+                                                </span>
                                             </div>
-
-                                        @endif
+                                            <div class="col-md-6">
+                                                <div class="mt-4 mb-3"> <span class="text-uppercase text-muted brand"></span>                                                
+                                                    <div class="price d-flex flex-row align-items-center">
+                                                        @if ($productOption->products->status != 'Inactive')
+                                                        @if ($productOption->stockAvailable > 0)
+                                                        <span class="rounded-pill cursor product-detail-quantity d-flex justify-content-center align-items-center"
+                                                            data-toggle="popover-hover" data-bs-container="body" data-placement="top" data-bs-placement="top"
+                                                            data-bs-content="Top popover" style=" cursor: pointer;"><span class="">
+                                                                {{$productOption->stockAvailable}}</span></span>
+                                                        <div>
+                                                            <small class="dis-price">&nbsp;</small>
+                                                            <span class="instock-label">IN STOCK</span>
+                                                        </div>
+                                                        @else
+                                                        <div>
+                                                            <small class="dis-price">&nbsp;</small>
+                                                            <span class="text-danger">{{ App\Helpers\SettingHelper::getSetting('out_of_stock_label', 'OUT OF STOCK');
+                                                                }}</span>
+                                                        </div>
+                                                        @endif
+                                                        @else
+                                                        <div>
+                                                            <small class="dis-price">&nbsp;</small><span class="text-danger">NOT AVAILABLE FOR SALE</span>
+                                                        </div>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                @if (!empty($productOption->option1) || !empty($productOption->option2) || !empty($productOption->option3))
+                                                    <div class="row">
+                                                        <div class="col-md-2">
+                                                            <img src="/theme/img/box_icon.png" style="max-width: 40px;" />
+                                                        </div>
+                                                        <div class="col-md-10">
+                                                        <p>{{ $productOption->option1 }}</p>
+                                                        <p>{{ $productOption->option2 }}</p>
+                                                        <p>{{ $productOption->option3 }}</p> 
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <form id="cart">
@@ -117,7 +133,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-9 d-flex justify-content-end" style="">
+                                        <div class="col-md-9 d-flex justify-content-end">
                                             <?php $enable_add_to_cart = App\Helpers\SettingHelper::enableAddToCart($productOption); ?>
                                             @if ($enable_add_to_cart)
                                                 <button 
@@ -247,6 +263,18 @@
                             @endif
                         </div>
                     </div>
+                    @if (!empty($productOption->option1) || !empty($productOption->option2) || !empty($productOption->option3))
+                        <div class="row" style="font-size: 14px;">
+                            <div class="col-sm-6">
+                                <img src="/theme/img/box_icon.png" style="max-width: 40px;" />
+                            </div>
+                            <div class="col-sm-6">
+                                <p>{{ $productOption->option1 }}</p>
+                                <p>{{ $productOption->option2 }}</p>
+                                <p>{{ $productOption->option3 }}</p>
+                            </div>
+                        </div>
+                    @endif
                     <form id="cart">
                         @csrf
                         <div class="cart d-flex  justify-content-between align-items-center">
@@ -344,7 +372,6 @@
                         </div>
                     </div>
                     <div class=""> <span class="text-uppercase text-muted brand"></span>
-
                         <div class="price d-flex flex-row align-items-center mt-4">
                             @if ($productOption->stockAvailable > 0)
                                 <span
@@ -372,6 +399,19 @@
                             @endif
                         </div>
                     </div>
+                    @if (!empty($productOption->option1) || !empty($productOption->option2) || !empty($productOption->option3))
+                        <div class="row" style="font-size: 14px;">
+                            <div class="col-md-6">
+                                
+                            </div>
+                            <div class="col-md-6">
+                                <img src="/theme/img/box_icon.png" style="max-width: 40px;" />
+                                <p>{{ $productOption->option1 }}</p>
+                                <p>{{ $productOption->option2 }}</p>
+                                <p>{{ $productOption->option3 }}</p>
+                            </div>
+                        </div>
+                    @endif
                     <form id="cart">
                         @csrf
                         <div class="cart row  align-items-center">
@@ -388,7 +428,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="w-50" style="">
+                            <div class="w-50">
                                 <?php $enable_add_to_cart = App\Helpers\SettingHelper::enableAddToCart($productOption); ?>
                                 @if ($enable_add_to_cart)
                                     <button 
