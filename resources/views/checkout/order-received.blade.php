@@ -106,7 +106,7 @@
 			font-style: normal;
 			font-weight: 600;
 			font-size: 16.7835px;
-			line-height: 20px;
+			line-height: normal;
 			color: #000000;
 
 		}
@@ -140,8 +140,8 @@
 			font-family: 'Roboto';
 			font-style: normal;
 			font-weight: 600;
-			font-size: 31.4691px;
-			line-height: 37px;
+			font-size: 24px;
+			line-height: normal;
 			color: #000000;
 		}
 		.m_chechout_image {
@@ -276,12 +276,18 @@
 		}
 
 		.add_border {
-			border:1px dashed #000 !important;
+			border:none;
  		}
 		
 	}
 
 	@media  screen and (min-width : 280px ) and (max-width:650px) {
+		.for_mobile_spacing {
+			margin-top: 1rem;
+		}
+		.add_dashed_border {
+			border-bottom: 1px dashed #DFDFDF !important;
+		}
 		.mobile-font {
 			font-weight: 600 !important;
 			font-size: 20px !important;
@@ -309,8 +315,9 @@
 		}
 		.order-confirmation-page-title {
 			margin-bottom: 0px !important;
-			font-weight: 700 !important;
-			font-size: 16px !important;
+			font-weight: 600 !important;
+			font-size: 24px !important;
+			line-height: 32px; /* 133.333% */
 		}
 		.mobile-font-part {
 			font-weight:400 !important;
@@ -342,86 +349,149 @@
 		}
 		.order-confirmation-page-order-number-title {
 			font-weight: 400 !important;
-			font-size: 10px !important;
-			margin-bottom: 5px !important;                                                                                        
+			font-size: 13px !important;
+			font-family: 'Poppins';
+			font-style: normal;                                                                                    
 		}
 		.order-confirmation-page-order-number-item {
-			font-weight: 600 !important;
-			font-size: 30px !important;
+			font-weight: 500 !important;
+			font-size: 13px !important;
+			font-family: 'Poppins';
+			font-style: normal;
+			color: #121212;
+			line-height: 18px;
+			margin-top: 0px;  
 		}
 		.order-confirmation-page-date-title {
 			font-weight: 400 !important;
-			font-size: 16px !important;
-			margin-bottom: 5px !important;
+			font-size: 13px !important;
+			color: #707070;
+			font-family: 'Poppins';
+			font-size: 13px;
+			font-style: normal;
+
 		}
 		.order-confirmation-page-date-item {
-			font-weight: 600 !important;
-			font-size: 16px !important;
+			font-weight: 500 !important;
+			font-size: 13px !important;
+			font-family: 'Poppins';
+			font-style: normal;
+			color: #121212;
+			line-height: 18px;
+			margin-top: 0px;  
 		}
 		.order-confirmation-page-mobile-title {
-			margin-bottom: 5px !important;
 			font-weight: 400 !important;
-			font-size: 16px !important;
+			font-size: 13px !important;
+			color: #707070;
+			font-family: 'Poppins';
+			font-size: 13px;
+			font-style: normal;
 		}
 		.order-confirmation-page-mobile-item {
-			font-weight: 600 !important;
-			font-size: 16px !important;
+			font-weight: 500 !important;
+			font-size: 13px !important;
+			font-family: 'Poppins';
+			font-style: normal;
+			color: #121212;
+			line-height: 18px;  
+			margin-top: 0px;
 		}
 
 		.order-confirmation-page-email-title {
-			margin-bottom: 5px !important;
 			font-weight: 400 !important;
-			font-size: 16px !important;
+			font-size: 13px !important;
+			color: #707070;
+			font-family: 'Poppins';
+			font-size: 13px;
+			font-style: normal;
 		}
 
 		.order-confirmation-page-email-item {
-			font-weight: 600 !important;
-			font-size: 16px !important;
+			font-weight: 500 !important;
+			font-size: 13px !important;
+			font-family: 'Poppins';
+			font-style: normal;
+			color: #121212;
+			line-height: 18px;  
+			margin-top: 0px;
 		}
 
 		.order-confirmation-page-payment-method-title {
-			margin-bottom: 5px !important;
 			font-weight: 400 !important;
-			font-size: 16px !important;
+			font-size: 13px !important;
+			color: #707070;
+			font-family: 'Poppins';
+			font-size: 13px;
+			font-style: normal;
 		}
 
 		.order-confirmation-page-payment-method-item {
-			font-weight: 600 !important;
-			font-size: 16px !important;
+			font-weight: 500 !important;
+			font-size: 13px !important;
+			font-family: 'Poppins';
+			font-style: normal;
+			color: #121212;
+			line-height: 18px;  
+			margin-top: 0px;
 		}
 
 
 		.order-confirmation-page-shipping-title {
-			margin-bottom: 5px !important;
 			font-weight: 400 !important;
-			font-size: 16px !important;
+			font-size: 13px !important;
+			color: #707070;
+			font-family: 'Poppins';
+			font-size: 13px;
+			font-style: normal;
 		}
 
 		.order-confirmation-page-shipping-item {
-			font-weight: 600 !important;
-			font-size: 16px !important;
+			font-weight: 500 !important;
+			font-size: 13px !important;
+			font-family: 'Poppins';
+			font-style: normal;
+			color: #121212;
+			line-height: 18px;  
+			margin-top: 0px;
 		}
 
 		.order-confirmation-page-tax-title {
-			margin-bottom: 5px !important;
 			font-weight: 400 !important;
-			font-size: 16px !important;
+			font-size: 13px !important;
+			color: #707070;
+			font-family: 'Poppins';
+			font-size: 13px;
+			font-style: normal;
 		}
 
 		.order-confirmation-page-tax-item {
-			font-weight: 600 !important;
-			font-size: 16px !important;
+			font-weight: 500 !important;
+			font-size: 13px !important;
+			font-family: 'Poppins';
+			font-style: normal;
+			color: #121212;
+			line-height: 18px;  
+			margin-top: 0px;
 		}
 
 		.order-confirmation-page-total-title {
-			font-size: 10px !important;
-			margin-bottom: 5px !important;
 			font-weight: 400 !important;
+			font-size: 13px !important;
+			color: #707070;
+			font-family: 'Poppins';
+			font-size: 13px;
+			font-style: normal;
 		}
 
 		.order-confirmation-page-total-item {
-			font-weight: 600 !important;
-			font-size: 30px !important;
+			font-weight: 500 !important;
+			font-size: 13px !important;
+			font-family: 'Poppins';
+			font-style: normal;
+			color: #121212;
+			line-height: 18px;  
+			margin-top: 0px;
 		}
 
 		.order-confirmation-page-top-heading{
@@ -761,27 +831,21 @@
 
 					{{-- for media screen mobile --}}
 					<div class="row ms-5 p-4 me-5 order-confirmation-page-invoice-row media_mobile div_increase_mobile add_border">
-						<div class="col-sm-12">
+						<div class="col-sm-12 add_dashed_border">
 							<div class="row">
-								<div class="col-sm-6">
+								<div class="d-flex justify-content-between">
 									<p class="order-confirmation-page-order-number-title">Order Number</p>
 									<p class="order-confirmation-page-order-number-item">
 										{{$order->apiOrderItem[0]['order_id']}}
 									</p>
 								</div>
-								<div class="col-sm-6">
+								<div class="d-flex justify-content-between">
 									<p class="order-confirmation-page-date-title">Date</p>
 									<p class="order-confirmation-page-date-item">
 										{{$order->apiOrderItem[0]['created_at']->format('F '.'d, Y, '.'g:i A')}}
 									</p>
 								</div>
-								
-								
-							</div>
-						</div>
-						<div class="col-sm-12">
-							<div class="row">
-								<div class="col-sm-6">
+								<div class="d-flex justify-content-between">
 									<p class="order-confirmation-page-mobile-title">
 										Mobile
 									</p>
@@ -789,7 +853,7 @@
 										{{$order_contact->phone}}
 									</p>
 								</div>
-								<div class="col-sm-6">
+								<div class="d-flex justify-content-between">
 									<p class="order-confirmation-page-email-title">
 										Email
 									</p>
@@ -797,30 +861,25 @@
 										{{$order->user->email}}
 									</p>
 								</div>
-							</div>
-						</div>
-						<div class="col-sm-12">
-							<div class="row">
-								<div class="col-sm-6">
+								<div class="d-flex justify-content-between">
 									<p class="order-confirmation-page-payment-method-title">Payment Method</p>
 									<p class="order-confirmation-page-payment-method-item">{{$order->paymentTerms}}</p>
 								</div>
-								<div class="col-sm-6">
+								<div class="d-flex justify-content-between">
 									<p class="order-confirmation-page-shipping-title">Shipping</p>
 									<p class="order-confirmation-page-shipping-item">$</p>
 								</div>
-								
-							</div>
-						</div>
-						<div class="col-sm-12">
-							<div class="row">
-								<div class="col-sm-6">
+								<div class="d-flex justify-content-between">
 									<p class="order-confirmation-page-tax-title">Tax</p>
 									<p class="order-confirmation-page-tax-item">
 										${{ number_format($order->total_including_tax - $order->productTotal, 2) }}
 									</p>
 								</div>
-								<div class="col-sm-6">
+							</div>
+						</div>
+						<div class="col-sm-12">
+							<div class="row">
+								<div class="d-flex justify-content-between">
 									<p class="order-confirmation-page-total-title">Total</p>
 									<p class="order-confirmation-page-total-item">
 										${{number_format($order->total_including_tax, 2)}}
@@ -830,7 +889,7 @@
 						</div>
 					</div>
 					{{-- for media mobile  end --}}
-					<div class="row">
+					<div class="row for_mobile_spacing">
 						<div class="col-md-12">
 							<div class="row  ms-5 p-4 me-5 order-confirmation-page-second-row div_increase_mobile" style="padding-top: 5rem!important;">
 								<div class="col-md-6">
@@ -1083,8 +1142,8 @@
 							</table>
 							
 							<div class="w-100 orderSummarymbl p-2">
-								<div class="">
-									<h3 class="delievery_options_mbl">
+								<div class="mb-2">
+									<h3 class="delievery_options_mbl mb-4">
 										Delivery Options
 									</h3>
 									<div class="d-flex">
@@ -1122,10 +1181,10 @@
 							<div class="w-100 suborderSummarymbl_main">
 								<div class="suborderSummarymbl p-2">
 									<div>
-										<h3 class="delievery_options_mbl">
+										<h3 class="delievery_options_mbl mb-3">
 											Total
 										</h3>
-										<div class="d-flex w-100">
+										<div class="d-flex w-100 mb-2">
 											<div class="w-50 p-1">
 												<span class="summary_sub_total_head">Subtotal:</span>
 											</div>
@@ -1133,7 +1192,7 @@
 												<span class="summary_sub_total_price text-right">${{ number_format($order->productTotal, 2) }}</span>
 											</div>
 										</div>
-										<div class="d-flex w-100">
+										<div class="d-flex w-100 mb-2">
 											<div class="w-50 p-1">
 												<span class="summary_sub_total_head">Rate ({{$order->texClasses->rate . '%' }}) :</span>
 											</div>
@@ -1141,7 +1200,7 @@
 												<span class="summary_sub_total_price text-right">${{ number_format($order->total_including_tax - $order->productTotal, 2) }}</span>
 											</div>
 										</div>
-										<div class="d-flex w-100">
+										<div class="d-flex w-100 mb-2">
 											<div class="w-50 p-1">
 												<span class="summary_sub_total_head">Discount:</span>
 											</div>
