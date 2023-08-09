@@ -73,13 +73,16 @@
                         <thead>
                             <tr class="table-header-background">
                                 <td class="d-flex table-row-item mt-0">
-                                    <div class="custom-control custom-checkbox tabel-checkbox">
+                                    <div class="custom-control custom-checkbox tabel-checkbox d-flex">
                                         <input class="custom-control-input custom-control-input-success checkbox-table"
                                             type="checkbox" id="selectAll" value="">
                                         <label for="selectAll" class="custom-control-label ml-4"></label>
 
-                                        <span class="table-row-heading-order">
-                                            <i class="fas fa-arrow-up mt-1 sm-d-none" style="font-size:14.5px ;"></i>
+                                        <span class="table-row-heading-order d-flex">
+                                            <input type="hidden" class="" name="sort_by_desc" id="sort_by_desc" value="Desc">
+                                            <input type="hidden" class="ml-1" name="sort_by_asc" id="sort_by_asc" value="Asc">
+                                            <i class="fas fa-arrow-up  sm-d-none" style="font-size:14.5px ;" onclick="sortbyDesc()"></i>
+                                            <i class="fas fa-arrow-down  sm-d-none ml-1" style="font-size:14.5px ;" onclick="sortbyAsc()"></i>
                                         </span>
                                     </div>
                                 </td>
@@ -384,6 +387,24 @@
 
 @section('js')
     <script>
+        function sortbyDesc() {
+            var search = $('#search').val();
+            var sort_by = $('#sort_by_desc').val();
+            var basic_url = 'customers?&search=' + search;
+            if (sort_by != '') {
+                basic_url = basic_url + `&sort_by_desc=${sort_by}`;
+            }
+            window.location.href = basic_url
+        }
+        function sortbyAsc() {
+            var search = $('#search').val();
+            var sort_by = $('#sort_by_asc').val();
+            var basic_url = 'customers?&search=' + search;
+            if (sort_by != '') {
+                basic_url = basic_url+`&sort_by_asc=${sort_by}`;
+            }
+            window.location.href = basic_url
+        }
         $('.customer-row-none').hover(function() {
             let id = $(this).attr('id');
             children = $(this).children('.customer_name').children('a').addClass('text-successs');

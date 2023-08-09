@@ -39,6 +39,8 @@ class ContactController extends Controller
     {
         $perPage = $request->get('perPage');
         $search = $request->get('search');
+        $sort_by_desc = $request->get('sort_by_desc');
+        $sort_by_asc = $request->get('sort_by_asc');
         $activeCustomer = $request->get('active-customer');
         $pendingApproval = $request->get('pending-approval');
         $contact_query = Contact::where('type', 'Customer');
@@ -71,12 +73,21 @@ class ContactController extends Controller
                 ->orWhere('notes', 'like', '%' . $search . '%');
         }
 
+        if (!empty($request->sort_by_desc)) {
+            $contact_query = $contact_query->orderBy('id' , 'Desc');
+        }
+        if (!empty($request->sort_by_asc)) {
+            $contact_query = $contact_query->orderBy('id' , 'Asc');
+        }
+
         $contacts = $contact_query->paginate($perPage);
         return view('admin/customers', compact(
             'contacts',
             'search',
             'perPage',
             'activeCustomer',
+            'sort_by_desc',
+            'sort_by_asc'
         ));
     }
 
