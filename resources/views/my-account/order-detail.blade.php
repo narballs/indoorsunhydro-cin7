@@ -163,7 +163,7 @@
     
                                                 </td>
                                                 <td class="my_account_all_items">
-                                                    {{ $order_detail->paymentTerms }}
+                                                    {{ $order_detail->logisticsCarrier }}
                                                 </td>
                                             </tr>
                                             <tr>

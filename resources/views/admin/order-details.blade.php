@@ -338,7 +338,7 @@
                                 <div class="row">
                                     <div class="col-lg-6">
                                         <h3 class="h6 summary-head">Payment Method</h3>
-                                        <span class="delievery">{{ $order->paymentTerms }}</span></p>
+                                        <span class="delievery">{{ $order->logisticsCarrier }}</span></p>
                                     </div>
                                     <div class="col-lg-6">
                                         <h3 class="h6 summary-head">Billing address</h3>

@@ -31,6 +31,7 @@ class ApiOrder extends Model
         'status',
         'stage',
         'paymentTerms',
+        'logisticsCarrier',
         'date',
         'po_number',
         'memo',

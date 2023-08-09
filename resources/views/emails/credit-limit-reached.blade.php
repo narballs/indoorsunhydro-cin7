@@ -439,7 +439,7 @@
                                                             font-size: 16px;
                                                             line-height: 19px;
                                                             color: #5C5C5C;">
-                                                                {{$addresses['currentOrder']['paymentTerms']}}
+                                                                {{$addresses['currentOrder']['logisticsCarrier']}}
                                                             </span>
                                                         </div>
                                                     </div>
