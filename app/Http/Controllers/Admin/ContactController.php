@@ -74,10 +74,10 @@ class ContactController extends Controller
         }
 
         if (!empty($request->sort_by_desc)) {
-            $contact_query = $contact_query->orderBy('created_at' , 'Desc');
+            $contact_query = $contact_query->orderBy('id' , 'Desc');
         }
         if (!empty($request->sort_by_asc)) {
-            $contact_query = $contact_query->orderBy('created_at' , 'Asc');
+            $contact_query = $contact_query->orderBy('id' , 'Asc');
         }
 
         $contacts = $contact_query->paginate($perPage);
