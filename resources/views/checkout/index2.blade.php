@@ -869,7 +869,7 @@ $cart_price = 0;
                                                 </div>
                                                 <div class="">
                                                     <p class="payment-option">Payment Terms</p>
-                                                    <select name="paymentTerms" id="pay_terms" class="form-control">
+                                                    <select name="paymentTerms" id="pay_terms" class="form-control w-75">
                                                         <option value="30 days from invoice" selected>30 days from invoice</option>
                                                     </select>
                                                 </div>
