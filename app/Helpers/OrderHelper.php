@@ -131,7 +131,7 @@ class OrderHelper {
                 "estimatedDeliveryDate" => $order->date,
                 "salesPersonId" => 10,
                 "salesPersonEmail" => "wqszeeshan@gmail.com",
-                "paymentTerms" => "",
+                "paymentTerms" => $order->paymentTerms,
                 "customerOrderNo" => $order->po_number,
                 "voucherCode" => "sample string 14",
                 "deliveryInstructions" => $order->memo,
@@ -139,7 +139,7 @@ class OrderHelper {
                 "invoiceDate" => null,
                 "invoiceNumber" => 4232,
                 "dispatchedDate" => null,
-                "logisticsCarrier" => $order->paymentTerms,
+                "logisticsCarrier" => $order->logisticsCarrier,
                 "logisticsStatus" => 1,
                 "distributionBranchId" => 0,
                 "lineItems" => $lineItems

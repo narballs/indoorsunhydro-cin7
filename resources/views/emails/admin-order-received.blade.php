@@ -172,7 +172,7 @@
                                             line-height: 16px !important;
                                             color: #282828 !important;
                                             margin-left: 37px !important;">
-                                        {{ $addresses['currentOrder']['paymentTerms'] }}
+                                        {{ $addresses['currentOrder']['logisticsCarrier'] }}
                                     </span>
                                 </div>
                             
@@ -485,7 +485,7 @@
                                     <tbody>
                                         <tr>
                                             <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
-                                                {{ $addresses['currentOrder']['paymentTerms'] }}
+                                                {{ $addresses['currentOrder']['logisticsCarrier'] }}
                                             </td>
                                         </tr>
                                     </tbody>

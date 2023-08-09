@@ -235,7 +235,7 @@
                                                 @endif
                                             </td>
                                             <td class="td_padding_row">
-                                                {{ $order->paymentTerms }}
+                                                {{ $order->logisticsCarrier }}
                                             </td>
                                             <td class="created_by toggleClass td_padding_row orders-action">
                                                 <div class="d-flex aling-items-center order-table-actions">

@@ -379,52 +379,59 @@ $cart_price = 0;
                 </tbody>
             </table>
         </div>
-        <div class="col-md-3" style="background: #FAFAFA;
-        border-radius: 5px;
-        height: 508px;">
-            <p class="thank-you-page-product-items-delivery-options">Delivery Options</p>
-            <div class="row">
-                <div class="col-md-12 mt-2">
-                    @foreach ($payment_methods as $payment_method)
-                        <form action="{{ url('order') }}" method="POST" id="order_form" name="order_form">
-                            @php
-                                $session_contact_id = Session::get('contact_id');
-                            @endphp
-                            @csrf
-                            <div class="row">
-                                @foreach ($payment_method->options as $payment_option)
-                                    <div class="col-md-6 ps-4 bg-white">
-                                        <input type="hidden" value="{{ $payment_method->name }}"
-                                            name="method_name">
-                                        <input type="radio" id="local_delivery_{{ $payment_option->id }}"
-                                            name="method_option"{{ $payment_option->option_name == 'Local Delivery' ? 'checked' : '' }}
-                                            value="{{ $payment_option->option_name }}" style="background: #008BD3;">
-                                        <label for="local_delivery payment-option-label"
-                                            class="thank-you-page-product-items-payment-method-cart">{{ $payment_option->option_name }}</label>
-                                    </div>
-                                @endforeach
-                            </div>
-                    @endforeach
+        <div class="col-md-3">
+            <div class="row" style="background: #FAFAFA;border-radius: 5px;">
+                <p class="thank-you-page-product-items-delivery-options">Delivery Options</p>
+                <div class="row">
+                    <div class="col-md-12 mt-2">
+                        @foreach ($payment_methods as $payment_method)
+                            <form action="{{ url('order') }}" method="POST" id="order_form" name="order_form" class="mx-3">
+                                @php
+                                    $session_contact_id = Session::get('contact_id');
+                                @endphp
+                                @csrf
+                                <div class="row">
+                                    @foreach ($payment_method->options as $payment_option)
+                                        <div class="col-md-6 p-0 ps-4 bg-white d-flex align-items-center">
+                                            <input type="hidden" value="{{ $payment_method->name }}"
+                                                name="method_name">
+                                            <input type="radio" id="local_delivery_{{ $payment_option->id }}"
+                                                name="method_option"{{ $payment_option->option_name == 'Local Delivery' ? 'checked' : '' }}
+                                                value="{{ $payment_option->option_name }}" style="background: #008BD3;">
+                                            <label for="local_delivery payment-option-label"
+                                                class="thank-you-page-product-items-payment-method-cart ml-2 mb-0">{{ $payment_option->option_name }}</label>
+                                        </div>
+                                    @endforeach
+                                </div>
+                        @endforeach
+                    </div>
+                    <div class="col-md-12 mt-1">
+                        <p class="thank-you-page-select-date-options mb-1">Please Select Date</p>
+                        <input type="date" name="date" class="form-control" min="{{ now()->toDateString('Y-m-d') }}" id="date">
+                    </div>
+                    <div class="col-md-12">
+                        <p class="thank-you-page-select-date-options mb-1">Phone Number</p>
+                        <input type="text" name="po_number" placeholder="Enter your phone number" id="po_number"
+                            class="form-control fontAwesome">
+                    </div>
+                    <div class="col-md-12">
+                        <p class="thank-you-page-select-date-options mb-1">Memo</p>
+                        <textarea type="text" name="memo" cols="20" rows="5" placeholder="Enter your Message"
+                            id="memo" class="form-control fontAwesome">
+                            </textarea>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <p class="thank-you-page-select-date-options mb-2">Payment Terms</p>
+                        <select name="paymentTerms" id="pay_terms" class="form-control">
+                            <option value="30 days from invoice" selected>30 days from invoice</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="col-md-12 mt-1">
-                    <p class="thank-you-page-select-date-options mb-1">Please Select Date</p>
-                    <input type="date" name="date" class="form-control" min="{{ now()->toDateString('Y-m-d') }}" id="date">
-                </div>
-                <div class="col-md-12">
-                    <p class="thank-you-page-select-date-options mb-1">Phone Number</p>
-                    <input type="text" name="po_number" placeholder="Enter your phone number" id="po_number"
-                        class="form-control fontAwesome">
-                </div>
-                <div class="col-md-12">
-                    <p class="thank-you-page-select-date-options mb-1">Memo</p>
-                    <textarea type="text" name="memo" cols="20" rows="5" placeholder="Enter your Message"
-                        id="memo" class="form-control fontAwesome">
-                        </textarea>
-                </div>
+                
             </div>
-            <div class="row mt-5">
+            <div class="row">
                 <?php
-                 $tax=0;
+                $tax=0;
                 if (!empty($tax_class)) {
                     $tax = $cart_total * ($tax_class->rate / 100);
                 }
@@ -447,7 +454,7 @@ $cart_price = 0;
                             <p class="thank-you-page-product-items-subtotal-cart">
                                 {{-- <img class=" img-fluid" src="/theme/img/tax_icon_check_out_page.png"> --}}
                                 <span>Rate</span> 
-                                 @if(!empty($tax_class))
+                                @if(!empty($tax_class))
                                     ({{ number_format($tax_class->rate  , 2)}}%)
                                 @else 
                                     ({{ number_format(0  , 2)}})
@@ -860,6 +867,12 @@ $cart_price = 0;
                                                         id="memo" class="form-control fontAwesome">
                                                         </textarea>
                                                 </div>
+                                                <div class="">
+                                                    <p class="payment-option">Payment Terms</p>
+                                                    <select name="paymentTerms" id="pay_terms" class="form-control">
+                                                        <option value="30 days from invoice" selected>30 days from invoice</option>
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="text-center">
@@ -1206,6 +1219,7 @@ $cart_price = 0;
                                 </div>
                                 <button type="button" onclick="updateContact_ipad({{$contact_id}})" class="btn btn-success  action-button text-white ipad_next_btn_footer"
                                     style="background:#7bc533 !important;"> NEXT STEP </button>
+                                <input type="hidden" class="" id="next_step">
                                 {{-- <div class="d-flex justify-content-center align-items-center">
                                     <div>
                                         <img class="img-fluid coupon-code-modal-btn" src="/theme/img/modal-icon1.png"
@@ -1361,6 +1375,12 @@ $cart_price = 0;
                                                                     <textarea type="text" name="memo" cols="20" rows="5" placeholder="Enter your Message"
                                                                         id="memo" class="form-control fontAwesome">
                                                                         </textarea>
+                                                                </div>
+                                                                <div class="">
+                                                                    <p class="cart-total-checkout-page">Payment Terms</p>
+                                                                    <select name="paymentTerms" id="pay_terms" class="form-control">
+                                                                        <option value="30 days from invoice" selected>30 days from invoice</option>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2156,7 +2176,9 @@ $cart_price = 0;
                     $('#address-form-update').removeClass('d-none');
 
                 }
-
+                function updateContact_ipad (contact_id) {
+                    next_btn_mbl();
+                }
                 function updateContact(contact_id) {
                     $('#address_loader').removeClass('d-none');
                     var state = document.getElementById("state").value;

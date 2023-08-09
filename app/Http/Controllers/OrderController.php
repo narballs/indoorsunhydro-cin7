@@ -92,11 +92,12 @@ class OrderController extends Controller
                 $order->user_id = Auth::id();
                 $order->status = "DRAFT";
                 $order->stage = "New";
-                $order->paymentTerms = $paymentMethod;
+                $order->logisticsCarrier = $paymentMethod;
                 $order->tax_class_id = $request->tax_class_id;
                 $order->user_switch = $user_switch;
                 $order->total_including_tax = $request->incl_tax;
                 $order->po_number = $request->po_number;
+                $order->paymentTerms = $request->paymentTerms;
                 $order->memo = $request->memo;
                 $order->date = $request->date;
                 $order->save();

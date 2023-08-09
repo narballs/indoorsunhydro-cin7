@@ -1681,7 +1681,7 @@ class UserController extends Controller
                 "invoiceDate" => null,
                 "invoiceNumber" => 4232,
                 "dispatchedDate" => null,
-                "logisticsCarrier" => "",
+                "logisticsCarrier" => $currentOrder->logisticsCarrier,
                 "logisticsStatus" => 1,
                 "distributionBranchId" => 0,
                 "lineItems" => $lineItems

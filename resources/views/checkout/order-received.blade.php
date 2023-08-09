@@ -676,7 +676,7 @@
 							</div>
 							<div class="col-md-3">
 								<p class="order-confirmation-page-order-number-title">Payment Method</p>
-								<p class="order-confirmation-page-order-number-item">{{$order->paymentTerms}}</p>
+								<p class="order-confirmation-page-order-number-item">{{$order->logisticsCarrier}}</p>
 							</div>
 							<div class="col-md-3">
 								<p class="order-confirmation-page-order-number-title">Shipping</p>
@@ -735,7 +735,7 @@
 								<div class="row">
 									<div class="col-md-3">
 										<p class="order-confirmation-page-order-number-title">Payment Method</p>
-										<p class="order-confirmation-page-order-number-item">{{$order->paymentTerms}}</p>
+										<p class="order-confirmation-page-order-number-item">{{$order->logisticsCarrier}}</p>
 									</div>
 									<div class="col-md-3">
 										<p class="order-confirmation-page-order-number-title">Shipping</p>
@@ -799,7 +799,7 @@
 
 								<div class="col-md-4">
 									<p class="order-confirmation-page-order-number-title">Payment Method</p>
-									<p class="order-confirmation-page-order-number-item">{{$order->paymentTerms}}</p>
+									<p class="order-confirmation-page-order-number-item">{{$order->logisticsCarrier}}</p>
 								</div>
 								<div class="col-md-4">
 									<p class="order-confirmation-page-order-number-title">Shipping</p>
@@ -863,7 +863,7 @@
 								</div>
 								<div class="d-flex justify-content-between">
 									<p class="order-confirmation-page-payment-method-title">Payment Method</p>
-									<p class="order-confirmation-page-payment-method-item">{{$order->paymentTerms}}</p>
+									<p class="order-confirmation-page-payment-method-item">{{$order->logisticsCarrier}}</p>
 								</div>
 								<div class="d-flex justify-content-between">
 									<p class="order-confirmation-page-shipping-title">Shipping</p>
@@ -1147,7 +1147,7 @@
 										Delivery Options
 									</h3>
 									<div class="d-flex">
-										@if($order->paymentTerms == 'Local Delivery')
+										@if($order->logisticsCarrier == 'Local Delivery')
 										<div class="w-50 local_order p-1 d-flex align-items-center justify-content-evenly">
 											<span class="radio_delievery radio_selected"></span>
 											<span class="label_delievery">
@@ -1161,7 +1161,7 @@
 											</span>
 										</div>
 										@endif
-										@if($order->paymentTerms == 'Pickup Order')
+										@if($order->logisticsCarrier == 'Pickup Order')
 										<div class="w-50  p-1 d-flex align-items-center justify-content-evenly">
 											<span class="radio_delievery radio_not_selected"></span>
 											<span class="label_delievery">
