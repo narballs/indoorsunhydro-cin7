@@ -1105,7 +1105,7 @@ label {
     line-height: 19px;
     color: #000000;
     border-bottom: 1px solid #dee2e6 !important;
-    padding-left: 25px !important;
+    padding-left: 25px;
     padding-bottom: 0px !important;
     padding-top: 20px !important;
 }
@@ -4072,12 +4072,12 @@ select.list-dt:focus {
 }
 
 .order-confirmation-page-title {
-    font-family: 'Roboto';
+    color: #121212;
+    font-family: 'Poppins';
+    font-size: 32.308px;
     font-style: normal;
-    font-weight: 700;
-    font-size: 25px;
-    line-height: 29px;
-    color: #000000;
+    font-weight: 600;
+    line-height: 43.077px; /* 133.333% */
     padding-bottom: 14px;
 }
 
@@ -4091,30 +4091,28 @@ select.list-dt:focus {
 }
 
 .order-confirmation-page-invoice-row {
-    background: #F5F5F5;
+    background: #F9FAFB;
     border: 1px dashed #000000;
-    border-radius: 6px;
+    /* border-radius: 6px; */
 }
 
 .order-confirmation-page-order-number-title {
-    font-family: 'Roboto';
+    color: #707070;
+    font-family: 'Poppins';
+    font-size: 20px;
     font-style: normal;
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 19px;
-    color: #000000;
-    margin: 0px;
+    font-weight: 400;
+    line-height: 18px;
 }
 
 
 .order-confirmation-page-order-number-item {
-    font-family: 'Roboto';
+    color: #121212;
+    font-family: 'Poppins';
+    font-size: 20px;
     font-style: normal;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 35px;
-    color: #000000;
-    margin-top: -10px;
+    font-weight: 500;
+    line-height: 18px;
 }
 
 .order-confirmation-page-date-title {
@@ -4196,7 +4194,6 @@ select.list-dt:focus {
     font-size: 16px;
     line-height: 19px;
     color: #000000;
-    margin: 0px;
 }
 
 .order-confirmation-page-shipping-title {
@@ -4263,25 +4260,25 @@ select.list-dt:focus {
 }
 
 .order-confirmation-page-billing-address {
-    font-family: 'Roboto';
+    color: #242424;
+    font-family: 'Poppins';
+    font-size: 20px;
     font-style: normal;
-    font-weight: 600;
-    font-size: 25px;
-    line-height: 29px;
-    color: #000000;
-    border-bottom: 2px dashed #CDCDCD;
+    font-weight: 500;
+    line-height: normal;
+    /* border-bottom: 2px dashed #CDCDCD; */
     padding-bottom: 58px;
 
 }
 
 .order-confirmation-page-shipping-address {
-    font-family: 'Roboto';
+    color: #242424;
+    font-family: 'Poppins';
+    font-size: 20px;
     font-style: normal;
-    font-weight: 600;
-    font-size: 25px;
-    line-height: 29px;
-    color: #000000;
-    border-bottom: 2px dashed #CDCDCD;
+    font-weight: 500;
+    line-height: normal;
+    /* border-bottom: 2px dashed #CDCDCD; */
     padding-bottom: 58px;
 }
 
@@ -4295,12 +4292,12 @@ select.list-dt:focus {
 }
 
 .order-confirmation-page-address-line-one-title {
-    font-family: 'Roboto';
+    color: #242424;
+    font-family: 'Poppins';
+    font-size: 19px;
     font-style: normal;
     font-weight: 400;
-    font-size: 16px;
-    line-height: 19px;
-    color: #303030;
+    line-height: 33.563px; /* 176.646% */
     margin: 0px;
 }
 
@@ -4390,69 +4387,69 @@ select.list-dt:focus {
 }
 
 .order-confirmation-page-item-purchased-title {
-    font-family: 'Roboto';
-    font-style: normal;
-    font-weight: 700;
-    font-size: 30px;
-    line-height: 35px;
     color: #000000;
+    font-family: 'Poppins';
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
 }
 
 .order-confirmation-page-table-data-heading {
-    font-family: 'Roboto';
+    font-family: 'poppins';
+    font-size: 20px;
     font-style: normal;
     font-weight: 400;
-    font-size: 16px;
-    line-height: 19px;
-    color: #303030;
+    line-height: normal;
+    color: #000000;
     border-top: none !important;
     padding-bottom: 32px !important;
 }
 
 .order-confirmation-page-product-category-name {
-    font-family: 'Roboto';
-    font-style: normal;
-    font-weight: 600;
-    font-size: 14px;
-    line-height: 16px;
     color: #0096DE;
+    font-family: 'poppins';
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 23px; /* 127.778% */
 }
 
 .order-confirmation-page-product-title {
-    font-family: 'Roboto';
+    font-family: 'poppins';
+    font-size: 16px;
     font-style: normal;
     font-weight: 600;
-    font-size: 14px;
-    line-height: 16px;
+    line-height: normal;
     color: #000000;
     padding-top: 8px;
     margin-bottom: 10px;
 }
 
 .order-confirmation-page-product-item {
-    font-family: 'Roboto';
+    font-family: 'poppins';
+    font-size: 16px;
     font-style: normal;
     font-weight: 400;
-    font-size: 14px;
-    line-height: 16px;
+    line-height: normal;
     color: #000000;
 }
 
 .order-confirmation-page-product-quantity {
-    font-family: 'Roboto';
+    font-family: 'poppins';
+    font-size: 20px;
     font-style: normal;
     font-weight: 400;
-    font-size: 16px;
-    line-height: 19px;
-    color: #303030;
+    line-height: normal;
+    color: #000000;
 }
 
 .order-confirmation-page-product-price {
-    font-family: 'Roboto';
+    font-family: 'poppins';
+    font-size: 20px;
     font-style: normal;
     font-weight: 600;
-    font-size: 20px;
-    line-height: 23px;
+    line-height: normal;
     color: #000000;
 }
 
@@ -4789,15 +4786,260 @@ select.list-dt:focus {
     box-shadow: none !important;
 }
 
+.selection_buttons {
+    margin-right: 1rem;
+}
 
+.my-account-table-desktop {
+    width: 100%;
+}
+.button-div-my-account {
+    text-align: right;
+}
+.my-account-image-div-mbl {
+    width: 24%;
+}
+.my-account-name-div-mbl {
+    width: 75%;
+}
+.img_my_account_order {
+   text-align: center;
+}
 
-
-
-
-
+.show_zendesk_btn {
+    color: #707071;
+    font-family: 'Poppins';
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px; /* 171.429% */
+    letter-spacing: -0.084px;
+}
+/* .account-header-mbl {
+    display:flex;
+    justify-content: space-between;
+} */
 /* mobile css */
 
+@media only screen and (min-width:769px) {
+    .my_profile_form_label  , .my_profile_form::placeholder , .my_profile_form , .profile_save_changes{
+        font-size:18px !important;
+        line-height:24px !important;
+    }
+}
+
+.filter2_mbl {
+    justify-content: end;
+}
+
+@media only screen and (min-width:356px) { 
+    .filter2_mbl {
+        width: 25% !important;
+    }
+    .filter1_mbl {
+        width: 75% !important;
+    }
+}
+@media only screen and (max-width: 355px) and (min-width: 280px) {
+    .filter2_mbl {
+        width: 100% !important;
+    }
+    .filter1_mbl {
+        width: 100% !important;
+    }
+    .order_detail_tabs .nav-link  , .order_detail_tabs .nav-link.active {
+        font-size: 9px !important;
+    }
+}
+
 @media only screen and (max-width: 425px) and (min-width: 280px) {
+    .my_account_order_detail_page_table_title , .order_detail_page_prices , .order_detail_page_product_name ,  
+    .my_account_all_items , .my_account_order_details_page_date_title , 
+    .my_account_order_details_page_date_item , .my_account_order_details_page_date_order_id_title , 
+    .my_account_order_details_page_date_order_id_item , .my_account_add_a_new_address , 
+    .my_account_default_address , .default_billing_address , .my_account_address_items , 
+    .additional_address_entries , .my_account_addresses , .change_billing_address_btn , 
+    .mobileFormat , .favorite_product_name_slug , .favorite_product_price , .favorite_remove_btn ,.my_account_users_heading {
+        font-size: 14px !important;
+        line-height: 23.5px !important;
+    }
+    .selection_button_div {
+        padding: 0rem !important;
+    }
+    .selection_buttons {
+        margin-right: 0.25rem !important;
+    }
+    #per_page_favorite , .selection_buttons {
+        font-size: 12px !important; 
+    }
+    #per_page_favorite {
+        width: 17% !important;
+    }
+    #add_selected {
+        width: 45% !important;
+    }
+    #add_all_to_cart {
+        width: 38% !important;
+    }
+    .my_account_order_details_heading {
+        font-size: 14px !important;
+        line-height: normal !important;
+    }
+    .filter2_mbl {
+        justify-content: start !important;
+    }
+    #handle_sort_by {
+        padding: 0px !important;
+    }
+    #order_search {
+        font-size:12px;
+    }
+    .mobile_screen_Previous_btn {
+        width: 25% !important;
+    }
+    .mobile_screen_pagination_number {
+        width: 50% !important;
+    }
+    .mobile_screen_Previous_next {
+        width: 25% !important;
+    }
+    .my_profile_form_label , .my_profile_form::placeholder , .my_profile_form , .profile_save_changes {
+        font-size:12px !important;
+        line-height:15px !important;
+    }
+    .account_detais_profile {
+        font-size:14px !important;
+        line-height:normal !important;
+    }
+    .data-div-account {
+        width: 75% !important;
+    }
+    .image-div-account {
+        width: 25% !important;
+    }
+    .my_account_total_items_listing {
+        font-size: 14px !important;
+    }
+    .my_account_product_name {
+        font-size: 14px !important;
+        line-height: normal !important;
+        margin-top: 0.5rem !important;
+        margin-bottom:0rem !important;
+    }
+    .my-account-card-body {
+        padding-bottom: 0px !important;
+        margin-bottom: 0px !important;
+    }
+    .mbl-my-account-add-btn {
+        width: 100% !important;
+    }
+    .img_my_account_order {
+        width: 125%;
+        border-radius: 7.748px;
+    }
+    .button-div-my-account {
+        text-align: center;
+        margin-top: 1rem !important;
+    }
+    .my-account-table-desktop {
+        width: 200%;
+    }
+    .hide-scroll::-webkit-scrollbar {
+        display: none;
+    }
+    .hide-scroll {
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+    }
+    .header-row-mbl-my-account {
+        font-size: 12px !important;
+        line-height: 20px !important;
+    }
+    .order_place_my_account {
+        font-size: 12px !important;
+        line-height: 20px !important;
+    }
+    .filter-div-mbl-account {
+        margin-top: 1rem !important;
+    }
+    .date_filter_mbl {
+        color: #131313 !important;
+        font-family: 'poppins' !important;
+        font-size: 10px !important;
+        font-style: normal !important;
+        font-weight: 400 !important;
+        line-height: 15.947px !important; /* 159.468% */
+        letter-spacing: -0.06px !important;
+        height: 25px !important;
+        padding: 5px 24.053px 3.527px 10px !important;
+        margin-top: 5px;
+    }
+    #handle_sort_by {
+        height: 25px !important;
+        /* padding: 3px 24.053px 3.527px 10px !important; */
+        margin-top: 5px;
+        line-height: 15.947px !important;
+        font-family: 'poppins' !important;
+        font-size: 10px !important;
+        font-style: normal !important;
+        font-weight: 400 !important;
+        border-radius: 0.25rem !important;
+    }
+    .total_order_my_account {
+        font-size: 12px !important;
+        line-height: normal !important;
+    }
+    .placed_in_my_account {
+        font-weight: 600 !important;
+    }
+    .my_account_search {
+        height: 35px !important;
+    }
+    .has-search .form-control-feedback {
+        height: 0rem !important;
+        line-height: 0rem !important;
+        top: 50%;
+    }
+    .has-search .form-control {
+        padding-top: 0.5rem;
+    }
+    .my_account_search_btn_mbl {
+        font-size: 12px !important;
+        font-weight: 500 !important;
+        line-height: 15.77px !important; /* 131.415% */
+        padding: 7.885px 12.616px !important;
+    }
+    .my-account-main-heading {
+        line-height:55px !important;
+    }
+    .search_row_my_account_page {
+        margin-top: 10px !important
+    }
+    .order_detail_tabs .nav-link {
+        font-size: 11.737px !important;
+        font-style: normal !important;
+        font-weight: 400 !important;
+        line-height: 16.842px !important; /* 143.488% */
+        padding: 0.5rem 0rem;
+    }
+    
+    .order_detail_tabs .nav-link.order_left_border {
+        border-left: 0px !important;
+    }
+    
+    .order_detail_tabs .nav-link.active {
+        font-size: 11.737px!important;
+        font-style: normal!important;
+        font-weight: 500!important;
+        line-height: 16.842px!important; /* 143.488% */
+    }
+    .order_detail_tabs {
+        width: 100% !important;
+    }
+    .my-account-list-items-li {
+        width: 20% !important;
+    }
+    
     .image-height-mbl {
         height: auto !important;
     }
@@ -6094,8 +6336,8 @@ select.list-dt:focus {
     font-family: 'Poppins' !important;
     font-style: normal !important;
     font-weight: 400 !important;
-    font-size: 18px !important;
-    line-height: 26px !important;
+    font-size: 18px ;
+    line-height: 26px ;
     color: #989898 !important;
     text-align: center;
     border-left: 1.29139px solid #E1E1E1 !important;
@@ -6111,8 +6353,8 @@ select.list-dt:focus {
     font-family: 'Poppins' !important;
     font-style: normal !important;
     font-weight: 500 !important;
-    font-size: 18px !important;
-    line-height: 26px !important;
+    font-size: 18px ;
+    line-height: 26px ;
     color: #242424;
 }
 
@@ -6122,7 +6364,6 @@ select.list-dt:focus {
     height: 49px !important;
     display: flex;
     justify-content: space-between;
-    margin-top: 12px !important;
     align-items: center !important;
 
 }
@@ -6131,7 +6372,7 @@ select.list-dt:focus {
     background: #FFFFFF;
     border: 1.29139px solid #E1E1E1;
     border-radius: 6px !important;
-    height: 40px !important;
+    height: 40px;
     margin-top: 4px !important;
 }
 
@@ -6158,8 +6399,8 @@ select.list-dt:focus {
     font-family: 'Poppins' !important;
     font-style: normal !important;
     font-weight: 500 !important;
-    font-size: 18px !important;
-    line-height: 26px !important;
+    font-size: 18px;
+    line-height: 26px ;
     color: #FFFFFF !important;
 }
 
@@ -6180,7 +6421,6 @@ select.list-dt:focus {
 
 .select_months_my_account {
     margin-top: -7px !important;
-    margin-left: 13px !important;
     font-style: normal !important;
     font-weight: 400 !important;
     font-size: 14px !important;
@@ -6200,8 +6440,8 @@ select.list-dt:focus {
     font-family: 'Poppins' !important;
     font-style: normal !important;
     font-weight: 400 !important;
-    font-size: 14.8469px !important;
-    line-height: 25px !important;
+    font-size: 14.8469px ;
+    line-height: 25px ;
     color: #7D7D7D !important;
 }
 
@@ -6268,8 +6508,6 @@ select.list-dt:focus {
     font-size: 20px;
     line-height: 25px;
     color: #242424;
-    padding-left: 18px !important;
-    padding-top: 11px !important;
 }
 
 .all_items_to_cart_btn {
@@ -6284,7 +6522,7 @@ select.list-dt:focus {
     align-items: center !important;
     text-align: center !important;
     color: #FFFFFF !important;
-    width: 201px !important;
+    width: 201px;
 }
 
 .my_account_view_order_btn {
@@ -6300,7 +6538,7 @@ select.list-dt:focus {
     align-items: center !important;
     text-align: center !important;
     color: #000000 !important;
-    width: 201px !important;
+    width: 201px;
 }
 
 .track_package_cart_btn {
@@ -6455,8 +6693,8 @@ select.list-dt:focus {
     font-family: 'Poppins' !important;
     font-style: normal !important;
     font-weight: 400 !important;
-    font-size: 18px !important;
-    line-height: 24px !important;
+    font-size: 18px ;
+    line-height: 24px ;
     color: #828282 !important;
 }
 
@@ -6464,8 +6702,8 @@ select.list-dt:focus {
     font-family: 'Poppins' !important;
     font-style: normal !important;
     font-weight: 400 !important;
-    font-size: 18px !important;
-    line-height: 24px !important;
+    font-size: 18px;
+    line-height: 24px;
     color: #242424 !important;
 }
 
@@ -6473,8 +6711,8 @@ select.list-dt:focus {
     font-family: 'Poppins' !important;
     font-style: normal !important;
     font-weight: 400 !important;
-    font-size: 18px !important;
-    line-height: 24px !important;
+    font-size: 18px ;
+    line-height: 24px;
     color: #828282 !important;
 }
 
@@ -6486,8 +6724,8 @@ select.list-dt:focus {
     font-family: 'Poppins' !important;
     font-style: normal !important;
     font-weight: 500 !important;
-    font-size: 18px !important;
-    line-height: 24px !important;
+    font-size: 18px;
+    line-height: 24px;
     color: #FFFFFF !important;
 }
 
@@ -6495,8 +6733,8 @@ select.list-dt:focus {
     font-family: 'Poppins' !important;
     font-style: normal !important;
     font-weight: 500 !important;
-    font-size: 27.2886px !important;
-    line-height: 65px !important;
+    font-size: 27.2886px;
+    line-height: 65px;
     letter-spacing: -0.022em !important;
     color: #242424 !important;
 }
@@ -6505,8 +6743,8 @@ select.list-dt:focus {
     font-family: 'Poppins' !important;
     font-style: normal !important;
     font-weight: 500 !important;
-    font-size: 20.4664px !important;
-    line-height: 31px !important;
+    font-size: 20.4664px;
+    line-height: 31px;
     color: #242424 !important;
 }
 
@@ -6514,8 +6752,8 @@ select.list-dt:focus {
     font-family: 'Poppins' !important;
     font-style: normal !important;
     font-weight: 400 !important;
-    font-size: 19px !important;
-    line-height: 34px !important;
+    font-size: 19px;
+    line-height: 34px;
     color: #242424 !important;
     margin-bottom: 0px !important;
 }
@@ -6524,7 +6762,7 @@ select.list-dt:focus {
     font-family: 'Poppins' !important;
     font-style: normal !important;
     font-weight: 400 !important;
-    font-size: 19px !important;
+    font-size: 19px;
     align-items: center !important;
     color: #006FBE !important;
 }
@@ -6538,8 +6776,8 @@ select.list-dt:focus {
     font-family: 'Poppins' !important;
     font-style: normal !important;
     font-weight: 400 !important;
-    font-size: 19px !important;
-    line-height: 34px !important;
+    font-size: 19px;
+    line-height: 34px;
     color: #006FBE !important;
 }
 
@@ -6547,8 +6785,8 @@ select.list-dt:focus {
     font-family: 'Poppins' !important;
     font-style: normal !important;
     font-weight: 400 !important;
-    font-size: 18px !important;
-    line-height: 27px !important;
+    font-size: 18px;
+    line-height: 27px;
     letter-spacing: -0.006em;
     color: #525252 !important;
     background: #FBFBFB !important;
@@ -6560,8 +6798,8 @@ select.list-dt:focus {
     font-family: 'Poppins' !important;
     font-style: normal !important;
     font-weight: 500 !important;
-    font-size: 27.2886px !important;
-    line-height: 65px !important;
+    font-size: 27.2886px;
+    line-height: 65px;
     letter-spacing: -0.022em !important;
     color: #242424 !important;
 }
@@ -6602,8 +6840,8 @@ select.list-dt:focus {
     font-family: 'Poppins' !important;
     font-style: normal !important;
     font-weight: 400 !important;
-    font-size: 18px !important;
-    line-height: 23px !important;
+    font-size: 18px;
+    line-height: 23px;
     color: #242424 !important;
 }
 
@@ -6611,8 +6849,8 @@ select.list-dt:focus {
     font-family: 'Poppins' !important;
     font-style: normal !important;
     font-weight: 400 !important;
-    font-size: 18px !important;
-    line-height: 26px !important;
+    font-size: 18px;
+    line-height: 26px;
     color: #828282 !important;
 }
 
@@ -6701,9 +6939,11 @@ ul.pager>.main-row>.pagination>li {
 }
 
 .table-row-item {
-    padding-left: 25px !important;
+    padding-left: 10px !important;
 }
-
+.user_table_items {
+    padding-left: 10px !important;
+}
 .address-table-items-data>tbody {
     border-top: none !important;
     padding: 10px !important;
@@ -6713,8 +6953,8 @@ ul.pager>.main-row>.pagination>li {
     font-family: 'Poppins' !important;
     font-style: normal !important;
     font-weight: 500 !important;
-    font-size: 27.0833px !important;
-    line-height: 65px !important;
+    font-size: 27.0833px;
+    line-height: 65px;
     letter-spacing: -0.022em !important;
     color: #242424 !important;
 }
@@ -6729,8 +6969,8 @@ ul.pager>.main-row>.pagination>li {
     font-family: 'Poppins' !important;
     font-style: normal !important;
     font-weight: 500 !important;
-    font-size: 1.125rem !important;
-    line-height: 1.688rem !important;
+    font-size: 1.125rem;
+    line-height: 1.688rem;
     color: #008BD3 !important;
 }
 
@@ -6738,8 +6978,8 @@ ul.pager>.main-row>.pagination>li {
     font-family: 'Poppins' !important;
     font-style: normal;
     font-weight: 400;
-    font-size: 1.194rem !important;
-    line-height: 1.625rem !important;
+    font-size: 1.194rem;
+    line-height: 1.625rem;
     text-align: center;
     color: #828282 !important;
 }
@@ -6748,8 +6988,8 @@ ul.pager>.main-row>.pagination>li {
     font-family: 'Poppins';
     font-style: normal;
     font-weight: 400;
-    font-size: 1.194rem !important;
-    line-height: 1.625rem !important;
+    font-size: 1.194rem;
+    line-height: 1.625rem;
     text-align: center;
     color: #DC4E41 !important;
 }
@@ -6771,16 +7011,16 @@ ul.pager>.main-row>.pagination>li {
     color: #DC4E41 !important;
 }
 
-.my_account_order_card_header {
+/* .my_account_order_card_header {
     height: 4.331rem !important;
-}
+} */
 
 .my_account_order_details_heading {
     font-family: 'Poppins' !important;
     font-style: normal !important;
     font-weight: 500 !important;
-    font-size: 27.2886px !important;
-    line-height: 4.063rem !important;
+    font-size: 27.2886px;
+    line-height: 4.063rem;
     letter-spacing: -0.022em;
     color: #242424 !important;
 }
@@ -6789,17 +7029,17 @@ ul.pager>.main-row>.pagination>li {
     font-family: 'Poppins' !important;
     font-style: normal !important;
     font-weight: 400 !important;
-    font-size: 0.928rem !important;
-    line-height: 1.563rem !important;
+    font-size: 0.928rem;
+    line-height: 1.563rem;
     color: #7D7D7D !important;
 }
 
-.my_account_order_details_page_date_item {
+.my_account_order_details_page_date_item  {
     font-family: 'Poppins' !important;
-    font-style: normal 1important;
+    font-style: normal !important;
     font-weight: 500 !important;
-    font-size: 0.928rem !important;
-    line-height: 1.563rem !important;
+    font-size: 0.928rem;
+    line-height: 1.563rem;
     color: #7D7D7D !important;
 }
 
@@ -6808,7 +7048,7 @@ ul.pager>.main-row>.pagination>li {
     font-style: normal;
     font-weight: 400;
     font-size: 0.928em;
-    line-height: 1.563rem !important;
+    line-height: 1.563rem;
     color: #7D7D7D !important;
 }
 
@@ -6817,7 +7057,7 @@ ul.pager>.main-row>.pagination>li {
     font-style: normal;
     font-weight: 500;
     font-size: 0.928em;
-    line-height: 1.563rem !important;
+    line-height: 1.563rem;
     color: #008BD3 !important;
 
 }
@@ -6826,8 +7066,8 @@ ul.pager>.main-row>.pagination>li {
     font-family: 'Poppins';
     font-style: normal;
     font-weight: 600;
-    font-size: 1.125rem !important;
-    line-height: 1.563rem !important;
+    font-size: 1.125rem;
+    line-height: 1.563rem;
     color: #7D7D7D !important;
 }
 
@@ -6835,8 +7075,8 @@ ul.pager>.main-row>.pagination>li {
     font-family: 'Poppins';
     font-style: normal;
     font-weight: 500;
-    font-size: 1.125rem !important;
-    line-height: 1.563rem !important;
+    font-size: 1.125rem;
+    line-height: 1.563rem;
     color: #008BD3 !important;
 }
 
@@ -6850,8 +7090,8 @@ ul.pager>.main-row>.pagination>li {
     font-family: 'Poppins' !important;
     font-style: normal !important;
     font-weight: 500 !important;
-    font-size: 1.125rem !important;
-    line-height: 1.563rem !important;
+    font-size: 1.125rem;
+    line-height: 1.563rem;
     color: #242424 !important;
 }
 
@@ -6880,7 +7120,7 @@ ul.pager>.main-row>.pagination>li {
 }
 
 .order_detail_tabs {
-    width: 561.62px !important;
+    width: 561.62px;
     border-radius: 6px !important;
     border: 1.29139px solid #E1E1E1;
 }

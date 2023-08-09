@@ -3,7 +3,7 @@
 @include('partials.search-bar')
 @section('my-favorites-active', 'active')
 <div class="col-md-12 p-0">
-    <p style="line-height: 95px;" class="fw-bold fs-2 product-btn my-auto border-0 text-white text-center align-middle">
+    <p style="line-height: 95px;" class="fw-bold fs-2 product-btn my-auto border-0 text-white text-center align-middle my-account-main-heading">
         MY ACCOUNT
     </p>
 </div>
@@ -17,7 +17,7 @@
             </div>
             <div class="col-md-12 p-0">
                 <div class="card">
-                    <div class="card-header bg-white ps-5">
+                    <div class="card-header bg-white">
                         <div class="row">
                             <div class="col-md-4">
                                 <p class="my_account_default_address mb-0">
@@ -26,15 +26,15 @@
                             </div>
                             <div class="col-md-8">
                                 <div class="row justify-content-end">
-                                    <div class="col-md-12 mt-3 d-flex justify-content-end align-items-center">
+                                    <div class="col-md-12 mt-3 d-flex justify-content-end align-items-center selection_button_div">
                                         {{-- @foreach ($lists as $list) --}}
                                             @if (count($lists) > 0)
-                                                <button class="btn btn-success btn-sm mr-3 selection_buttons" id="add_selected"
+                                                <button class="btn btn-success btn-sm selection_buttons" id="add_selected"
                                                     onclick="add_selected_to_cart()" type="button">
                                                     Add Selected to Cart
                                                 </button>
                 
-                                                <button class="btn btn-success btn-sm selection_buttons mr-3" id="add_all_to_cart" type="button"
+                                                <button class="btn btn-success btn-sm selection_buttons " id="add_all_to_cart" type="button"
                                                     onclick="add_all_to_cart()">
                                                     Add All to Cart
                                                 </button>
@@ -62,7 +62,7 @@
                                 $i = 1;
                             @endphp
                             {{-- @foreach ($lists as $list) --}}
-                                <div>
+                                <div class="table-responsive">
                                     <table class="table address-table-items-data m-0 ">
                                         <thead>
                                             <tr class="table-header-background">

@@ -52,6 +52,151 @@
             display: none !important;
         }
     } */
+    @media only screen and (max-width: 425px) and (min-width: 280px) {
+        .proceedCheckoutmbl {
+            border-radius: 5px;
+            background: #008BD3;
+            border-color: #008BD3;
+            color: #FFF;
+            font-family: 'Roboto';
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: normal;
+            letter-spacing: 0.16px;
+        }
+        .billing-address-thank-you-page-heading {
+            font-size: 20px;
+            line-height:normal;
+            padding-bottom:0px;
+        }
+        .shipping-body-div-mbl {
+            border-bottom: 2px dashed #CDCDCD;
+        }
+        .mbl-checkout-card {
+            background: #FAFAFA; 
+            border-radius: 6px;
+        }
+        .user-address-thank-you-page-title , .user-address-thank-you-page-item {
+            font-size:13.35px;
+            line-height:normal;
+        }
+        .cart-items-checkout {
+            color: #000;
+            font-family: 'Roboto';
+            font-size: 20.862px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: normal;
+        }
+        .border_top_mb {
+			border-top:1px solid #DFDFDF !important;
+		}
+        .m_chechout_image {
+			width: 57.08px !important;
+			height: 57.08px !important;
+		}
+        .prod-name-img {
+            margin-left: -48px !important;
+            margin-top:3px;
+        }
+        .order-confirmation-page-product-category-name {
+			font-size: 12px !important;
+		}
+        .order-confirmation-page-product-price {
+            font-size: 16px !important;
+        }
+        .order-confirmation-page-product-title {
+            padding-top:2px;
+            margin-bottom:0px;
+        }
+        .checkout-image-td-mbl {
+            width: 20% !important;
+            vertical-align:baseline;
+        }
+        .checkout-product-name-td-mbl {
+            width: 80% !important;
+            vertical-align:middle;
+        }
+        .product-title-thank-you-page , .product-title-thank-you-page-title {
+            font-size: 12px;
+            line-height: 19px;
+        }
+        .delievery_options_div_mbl{
+            border-radius: 5.245px 5.245px 0px 0px;
+            background: #FAFAFA;
+        }
+        .delievery_options_heading {
+            color: #000;
+            font-family: 'Roboto';
+            font-size: 18.881px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: normal;
+        }
+        .delievery_label {
+            color: #303030;
+            font-family: 'Poppins';
+            font-size: 14.686px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+        }
+        .suborderSummarymbl_main {
+			background: #FAFAFA;
+		}
+		.suborderSummarymbl{
+			background: #F7F7F7;
+			border-radius: 5.24485px;
+		}
+        .delievery_options_mbl {
+			font-family: 'Roboto';
+			font-style: normal;
+			font-weight: 600;
+			font-size: 18.8814px;
+			line-height: 22px;
+
+			color: #000000;
+
+		}
+        .summary_sub_total_head {
+			
+			font-family: 'Roboto';
+			font-style: normal;
+			font-weight: 400;
+			font-size: 16.7835px;
+			line-height: 20px;
+			color: #303030;
+
+		}
+		.summary_sub_total_price {
+			font-family: 'Roboto';
+			font-style: normal;
+			font-weight: 600;
+			font-size: 16.7835px;
+			line-height: normal;
+			color: #000000;
+
+		}
+        .summary_total_price {
+			font-family: 'Roboto';
+			font-style: normal;
+			font-weight: 600;
+			font-size: 24px;
+			line-height: normal;
+			color: #000000;
+		}
+        .mbl-footer-modal-address {
+            align-items: center;
+            justify-content: center
+        }
+        .mbl-btn-update-address {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 50% !important;
+        }
+    }
 </style>
 <div class="mb-5 desktop-view">
     <p style="line-height: 95px;" class="fw-bold fs-2 product-btn my-auto border-0 text-white text-center align-middle">
@@ -234,52 +379,59 @@ $cart_price = 0;
                 </tbody>
             </table>
         </div>
-        <div class="col-md-3" style="background: #FAFAFA;
-        border-radius: 5px;
-        height: 508px;">
-            <p class="thank-you-page-product-items-delivery-options">Delivery Options</p>
-            <div class="row">
-                <div class="col-md-12 mt-2">
-                    @foreach ($payment_methods as $payment_method)
-                        <form action="{{ url('order') }}" method="POST" id="order_form" name="order_form">
-                            @php
-                                $session_contact_id = Session::get('contact_id');
-                            @endphp
-                            @csrf
-                            <div class="row">
-                                @foreach ($payment_method->options as $payment_option)
-                                    <div class="col-md-6 ps-4 bg-white">
-                                        <input type="hidden" value="{{ $payment_method->name }}"
-                                            name="method_name">
-                                        <input type="radio" id="local_delivery_{{ $payment_option->id }}"
-                                            name="method_option"{{ $payment_option->option_name == 'Local Delivery' ? 'checked' : '' }}
-                                            value="{{ $payment_option->option_name }}" style="background: #008BD3;">
-                                        <label for="local_delivery payment-option-label"
-                                            class="thank-you-page-product-items-payment-method-cart">{{ $payment_option->option_name }}</label>
-                                    </div>
-                                @endforeach
-                            </div>
-                    @endforeach
+        <div class="col-md-3">
+            <div class="row" style="background: #FAFAFA;border-radius: 5px;">
+                <p class="thank-you-page-product-items-delivery-options">Delivery Options</p>
+                <div class="row">
+                    <div class="col-md-12 mt-2">
+                        @foreach ($payment_methods as $payment_method)
+                            <form action="{{ url('order') }}" method="POST" id="order_form" name="order_form" class="mx-3">
+                                @php
+                                    $session_contact_id = Session::get('contact_id');
+                                @endphp
+                                @csrf
+                                <div class="row">
+                                    @foreach ($payment_method->options as $payment_option)
+                                        <div class="col-md-6 p-0 ps-4 bg-white d-flex align-items-center">
+                                            <input type="hidden" value="{{ $payment_method->name }}"
+                                                name="method_name">
+                                            <input type="radio" id="local_delivery_{{ $payment_option->id }}"
+                                                name="method_option"{{ $payment_option->option_name == 'Local Delivery' ? 'checked' : '' }}
+                                                value="{{ $payment_option->option_name }}" style="background: #008BD3;">
+                                            <label for="local_delivery payment-option-label"
+                                                class="thank-you-page-product-items-payment-method-cart ml-2 mb-0">{{ $payment_option->option_name }}</label>
+                                        </div>
+                                    @endforeach
+                                </div>
+                        @endforeach
+                    </div>
+                    <div class="col-md-12 mt-1">
+                        <p class="thank-you-page-select-date-options mb-1">Please Select Date</p>
+                        <input type="date" name="date" class="form-control" min="{{ now()->toDateString('Y-m-d') }}" id="date">
+                    </div>
+                    <div class="col-md-12">
+                        <p class="thank-you-page-select-date-options mb-1">Phone Number</p>
+                        <input type="text" name="po_number" placeholder="Enter your phone number" id="po_number"
+                            class="form-control fontAwesome">
+                    </div>
+                    <div class="col-md-12">
+                        <p class="thank-you-page-select-date-options mb-1">Memo</p>
+                        <textarea type="text" name="memo" cols="20" rows="5" placeholder="Enter your Message"
+                            id="memo" class="form-control fontAwesome">
+                            </textarea>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <p class="thank-you-page-select-date-options mb-2">Payment Terms</p>
+                        <select name="paymentTerms" id="pay_terms" class="form-control">
+                            <option value="30 days from invoice" selected>30 days from invoice</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="col-md-12 mt-1">
-                    <p class="thank-you-page-select-date-options mb-1">Please Select Date</p>
-                    <input type="date" name="date" class="form-control" min="{{ now()->toDateString('Y-m-d') }}" id="date">
-                </div>
-                <div class="col-md-12">
-                    <p class="thank-you-page-select-date-options mb-1">Phone Number</p>
-                    <input type="text" name="po_number" placeholder="Enter your phone number" id="po_number"
-                        class="form-control fontAwesome">
-                </div>
-                <div class="col-md-12">
-                    <p class="thank-you-page-select-date-options mb-1">Memo</p>
-                    <textarea type="text" name="memo" cols="20" rows="5" placeholder="Enter your Message"
-                        id="memo" class="form-control fontAwesome">
-                        </textarea>
-                </div>
+                
             </div>
-            <div class="row mt-5">
+            <div class="row">
                 <?php
-                 $tax=0;
+                $tax=0;
                 if (!empty($tax_class)) {
                     $tax = $cart_total * ($tax_class->rate / 100);
                 }
@@ -302,7 +454,7 @@ $cart_price = 0;
                             <p class="thank-you-page-product-items-subtotal-cart">
                                 {{-- <img class=" img-fluid" src="/theme/img/tax_icon_check_out_page.png"> --}}
                                 <span>Rate</span> 
-                                 @if(!empty($tax_class))
+                                @if(!empty($tax_class))
                                     ({{ number_format($tax_class->rate  , 2)}}%)
                                 @else 
                                     ({{ number_format(0  , 2)}})
@@ -360,8 +512,7 @@ $cart_price = 0;
                                 <li id="confirm"><strong>Finish</strong></li>
                             </ul> --}}
                             <!-- fieldsets -->
-                            <fieldset>
-                                {{-- <input type="button" value="Next" name="next" class="next action-button next-btn-mobile" style="background:#7bc533 !important;"> --}}
+                            {{--<fieldset>
                                 <button class="text-white billing-div-mobile" style="">
                                     Billing Details
                                 </button>
@@ -438,12 +589,6 @@ $cart_price = 0;
                                                             <label
                                                                 class="label custom_label_style fw-bold text-uppercase ">state</label><span
                                                                 class="text-danger fw-bold pl-1">*</span>
-                                                            {{-- <input type="text" placeholder="Enter your state"
-                                                                id="postalState" name="postalState"
-                                                                value="{{ $user_address->state ? $user_address->state : $user_address->postalState }}"
-                                                                class="form-control  company-info fontAwesome  "> --}}
-
-
                                                                 <select class="form-control bg-light" name="state" id="state">
                                                                     @foreach ($states as $state)
                                                                         <?php
@@ -479,87 +624,272 @@ $cart_price = 0;
                                                                 class="form-control  company-info fontAwesome  ">
                                                                 <div id="error_phone" class="text-danger"></div>
                                                         </div>
-                                                        {{-- <div class="col-md-12">
-                                                            <label
-                                                                class="label custom_label_style fw-bold text-uppercase ">email
-                                                                address</label><span
-                                                                class="text-danger fw-bold pl-1">*</span>
-                                                            <input type="text"
-                                                                placeholder="Enter your email adress"
-                                                                id="emailAddress" name="password"
-                                                                class="form-control  company-info fontAwesome  ">
-                                                        </div> --}}
-
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                {{-- <button type="button" class="btn button-cards primary" onclick="updateContact('{{ $contact_id }}')">Update</button> --}}
                                 <button onclick="updateContact_mbl('{{ $contact_id }}')"
                                     class=" action-button btn btn-success w-100 text-white mt-4 mx-auto mob_next_btn_footer"
                                     style="background:#7bc533 !important;"> NEXT STEP </button>
                                 <input type="hidden" class="" id="next_step">
-                            </fieldset>
+                            </fieldset>--}}
                             <fieldset>
+                                <div class="card p-4 border-0 mbl-checkout-card">
+                                    <div class="row">
+                                        <div class="col-md-6 text-left">
+                                            <div class="d-flex justify-content-between shipping-body-div-mbl">
+                                                <div class="w-75">
+                                                    <p class="billing-address-thank-you-page-heading mb-0">Billing Address</p>
+                                                </div>
+                                                <div class="w-25 text-right">
+                                                    <a data-bs-toggle="modal" href="#address_modal_id" role="button">
+                                                        <img src="/theme/img/thank_you_page_edit_icon.png" alt="">
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="row billing-border-row">
+                                                <div class="col-md-12">
+                                                    <p class="user-address-thank-you-page-item mt-3"> {{ $user_address->first_name ? $user_address->first_name : $user_address->firstName }}{{ $user_address->last_name ? $user_address->last_name : $user_address->lastName }}
+                                                    </p>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <p class="user-address-thank-you-page-title mb-1">Address line 1</p>
+                                                    <p class="user-address-thank-you-page-item">{{ $user_address->address1 ? $user_address->address1 :  $user_address->postalAddress1}}</p>
+                                                    <p class="user-address-thank-you-page-title mb-1">Address line 2</p>
+                                                    <p class="user-address-thank-you-page-item">{{ $user_address->address2 ? $user_address->address2 : $user_address->postalAddress2 }}</p>
+                                                    <div class="d-flex justify-content-between">
+                                                        <div class="">
+                                                            <p class="user-address-thank-you-page-title mb-1">City</p>
+                                                            <p class="user-address-thank-you-page-item">{{ $user_address->city ? $user_address->city : $user_address->postalCity }}
+                                                            </p>
+                                                        </div>
+                                                        <div class="">
+                                                            <p class="user-address-thank-you-page-title mb-1">State</p>
+                                                            <p class="user-address-thank-you-page-item">{{ $user_address->state ? $user_address->state : $user_address->postalState }}
+                                                            </p>
+                                                        </div>
+                                                        <div class="">
+                                                            <p class="user-address-thank-you-page-title mb-1">Zip</p>
+                                                            <p class="user-address-thank-you-page-item">{{ $user_address->postCode ? $user_address->postCode : $user_address->postalPostCode }}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mt-5 text-left">
+                                            <div class="d-flex justify-content-between shipping-body-div-mbl">
+                                                <div class="w-75">
+                                                    <p class="billing-address-thank-you-page-heading mb-0">Shipping Address</p>
+                                                </div>
+                                                <div class="w-25 text-right">
+                                                    <a data-bs-toggle="modal" href="#address_modal_id" role="button">
+                                                        <img src="/theme/img/thank_you_page_edit_icon.png" alt="">
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="row billing-border-row">
+                                                <div class="col-md-12">
+                                                    <p class="user-address-thank-you-page-item mt-3"> {{ $user_address->first_name ? $user_address->first_name : $user_address->firstName }}{{ $user_address->last_name ? $user_address->last_name : $user_address->lastName }}
+                                                    </p>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <p class="user-address-thank-you-page-title mb-1">Address line 1</p>
+                                                    <p class="user-address-thank-you-page-item">{{ $user_address->address1 ? $user_address->address1 :  $user_address->postalAddress1}}</p>
+                                                    <p class="user-address-thank-you-page-title mb-1">Address line 2</p>
+                                                    <p class="user-address-thank-you-page-item">{{ $user_address->address2 ? $user_address->address2 : $user_address->postalAddress2 }}</p>
+                                                    <div class="d-flex justify-content-between">
+                                                        <div class="">
+                                                            <p class="user-address-thank-you-page-title mb-1">City</p>
+                                                            <p class="user-address-thank-you-page-item">{{ $user_address->city ? $user_address->city : $user_address->postalCity }}
+                                                            </p>
+                                                        </div>
+                                                        <div class="">
+                                                            <p class="user-address-thank-you-page-title mb-1">State</p>
+                                                            <p class="user-address-thank-you-page-item">{{ $user_address->state ? $user_address->state : $user_address->postalState }}
+                                                            </p>
+                                                        </div>
+                                                        <div class="">
+                                                            <p class="user-address-thank-you-page-title mb-1">Zip</p>
+                                                            <p class="user-address-thank-you-page-item">{{ $user_address->postCode ? $user_address->postCode : $user_address->postalPostCode }}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="form-card">
+                                    <div class="cart-items-checkout mx-4 mt-4 mb-4">Cart Items</div>
                                     <table>
-                                        <thead>
-                                            <tr>
-                                                <th class="ps-2">
-                                                    <span class="ps-1">
-                                                        <img class="img-fluid" src="/theme/img/product-iccon.png">
-                                                    </span>
-                                                    <span class="product-title">Product</span>
-                                                </th>
-                                                <th class="text-white">
-                                                    Quantity
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
+                                        <tbody class="border-0">
                                             <?php
                                             $cart_total = 0;
                                             $cart_price = 0;
                                             ?>
                                             @if (Session::get('cart'))
-                                                @foreach (Session::get('cart') as $cart)
+                                                @foreach (Session::get('cart') as  $product_id => $cart)
                                                     <?php
-                                                    $total_quatity = $cart['quantity'];
-                                                    $total_price = $cart['price'] * $total_quatity;
-                                                    $cart_total = $cart_total + $total_price;
+                                                        $total_quatity = $cart['quantity'];
+                                                        $total_price = $cart['price'] * $total_quatity;
+                                                        $cart_total = $cart_total + $total_price;
                                                     ?>
-                                                    <tr>
+                                                    {{-- <tr>
                                                         <td class="ps-3">
                                                             <div class="mt-3">
                                                                 <a class="product-name"
-                                                                    href="
-                                                        {{ url('product-detail/' . $cart['product_id'] . '/' . $cart['option_id'] . '/' . $cart['slug']) }}
-                                                        ">
+                                                                    href="{{ url('product-detail/' . $product_id . '/' . $cart['option_id'] . '/' . $cart['slug']) }}">
                                                                     {{ $cart['name'] }}
                                                                 </a>
                                                             </div>
                                                         </td>
-                                                        <td class="d-flex justify-content-end align-items-end">
-                                                            <div class="text-muted rounded-circle mt-3  product-quantity"
-                                                                id="circle">
-                                                                {{ $cart['quantity'] }}</div>
+                                                    </tr> --}}
+                                                    <tr class="border_top_mb">
+                                                        <td class="pl-4 checkout-image-td-mbl pt-3 pb-3" style="">
+                                                            <div class="py-2 mobile_thankyou_img_div">
+                                                                @if ($cart['image'])
+                                                                <img class="img-fluid img-thumbnail m_chechout_image" src="{{$cart['image']}}" alt=""
+                                                                    width="90px" style="max-height: 90px">
+                                                                @else
+                                                                <img src="/theme/img/image_not_available.png" class="m_chechout_image" alt="" width="80px">
+                                                                @endif
+                                                            </div>
+                                                        </td>
+                                                        <td class="pl-3 checkout-product-name-td-mbl pt-3 pb-3">
+                                                            <div class="ps-0 mobile_text_class" style="">
+                                                                <p class="mb-0">
+                                                                    <a class="order-confirmation-page-product-category-name pb-2"
+                                                                        href=" {{ url('product-detail/'. $product_id.'/'.$cart['option_id'].'/'.$cart['slug']) }}">
+                                                                        {{$cart['name']}}
+                                                                    </a>
+                                                                </p>
+                                                                <p class="product-title-thank-you-page mb-0">Title:<span
+                                                                    class="product-title-thank-you-page-title">
+                                                                    {{ $cart['name'] }}</span>
+                                                                </p>
+                                                                <p class=" mb-0 order-confirmation-page-product-price text-right"> ${{number_format($cart['price'],2)}}</p>
+                                                            </div>
                                                         </td>
                                                     </tr>
                                                 @endforeach
                                             @endif
                                         </tbody>
                                     </table>
+                                    <form class="" action="{{ url('order') }}" method="POST" id="order_form_mbl" class="order_form" name="order_form">
+                                        <div class="delievery_options_div_mbl p-3">
+                                            <h3 class="delievery_options_heading ml-2">Delivery Options</h3>
+                                            <div class="d-flex justify-content-between">
+                                                @csrf
+                                                @foreach ($payment_methods as $payment_method)
+                                                    @foreach ($payment_method->options as $payment_option)
+                                                        <div class="w-50 text-center d-flex align-items-center justify-content-center">
+                                                            <input type="hidden" value="{{ $payment_method->name }}" name="method_name">
+                                                            <input type="radio" class="mb-0 radio_delievery" id="local_delivery_{{ $payment_option->id }}"
+                                                            name="method_option"  {{ $payment_option->option_name == 'Local Delivery' ? 'checked' : '' }}
+                                                            value="{{ $payment_option->option_name }}">
+                                                            <label for="local_delivery payment-option-label" class="mb-0 ml-2 delievery_label">{{ $payment_option->option_name }}</label>
+                                                        </div>
+                                                    @endforeach
+                                                @endforeach
+                                                <input type="hidden" name="incl_tax" id="incl_tax" value="{{ $total_including_tax }}">
+                                                @if(!empty($tax_class))
+                                                <input type="hidden" name="tax_class_id" id="tax_class_id" value="{{ $tax_class->id }}">
+                                                @else
+                                                <input type="hidden" name="tax_class_id" id="tax_class_id" value="{{$tax_class_none->id}}">
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <div class="w-100 suborderSummarymbl_main p-3">
+                                            <div class="suborderSummarymbl p-2">
+                                                <div>
+                                                    <h3 class="delievery_options_mbl mb-3">
+                                                        Total
+                                                    </h3>
+                                                    <div class="d-flex w-100 mb-2">
+                                                        <div class="w-50 p-1">
+                                                            <span class="summary_sub_total_head">Subtotal:</span>
+                                                        </div>
+                                                        <div class="w-50 p-1 text-right">
+                                                            <span class="summary_sub_total_price text-right">${{ number_format($cart_total, 2) }}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-flex w-100 mb-2">
+                                                        <div class="w-50 p-1">
+                                                            <span class="summary_sub_total_head">Rate
+                                                                @if(!empty($tax_class))
+                                                                    ({{ number_format($tax_class->rate  , 2)}}%)
+                                                                @else 
+                                                                        ({{ number_format(0  , 2)}})
+                                                                @endif 
+                                                                :
+                                                            </span>
+                                                        </div>
+                                                        <div class="w-50 p-1 text-right">
+                                                            <p class="summary_sub_total_price text-right mb-0" id="mbl_tax_price">${{ number_format($tax, 2) }}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-flex w-100 mb-2">
+                                                        <div class="w-50 p-1">
+                                                            <span class="summary_sub_total_head">Discount:</span>
+                                                        </div>
+                                                        <div class="w-50 p-1 text-right">
+                                                            <span class="summary_sub_total_price text-right">$0</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-flex w-100">
+                                                        <div class="w-50 p-1 d-flex align-items-center">
+                                                            <span class="summary_sub_total_head">Total:</span>
+                                                        </div>
+                                                        <div class="w-50 p-1 text-right">
+                                                            <p class="summary_total_price text-right mb-0" id="mbl_total_p">${{ number_format($total_including_tax, 2) }}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-2 p-3">
+                                            <div class="ps-1">
+                                                <div class=" mt-1">
+                                                    <p class="payment-option">Please Select Date</p>
+                                                    <input type="date" name="date" class="form-control" min="{{ now()->toDateString('Y-m-d') }}" id="date">
+                                                </div>
+                                                <div class="">
+                                                    <p class="payment-option">Phone Number</p>
+                                                    <input type="text" name="po_number" placeholder="Enter your phone number" id="po_number"
+                                                        class="form-control fontAwesome">
+                                                </div>
+                                                <div class="">
+                                                    <p class="payment-option">Memo</p>
+                                                    <textarea type="text" name="memo" cols="20" rows="5" placeholder="Enter your Message"
+                                                        id="memo" class="form-control fontAwesome">
+                                                        </textarea>
+                                                </div>
+                                                <div class="">
+                                                    <p class="payment-option">Payment Terms</p>
+                                                    <select name="paymentTerms" id="pay_terms" class="form-control">
+                                                        <option value="30 days from invoice" selected>30 days from invoice</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="text-center">
+                                            <button type="button" class="proceedCheckoutmbl mt-4 w-100 p-2 border-0"
+                                                id="proceed_to_checkout" onclick="validate_mbl()">
+                                                Place Order</button>
+                                        </div>
+                                    </form>
                                     <div>
                                         <table class="table mt-5">
-                                            <thead>
+                                            {{-- <thead>
                                                 <tr>
                                                     <th style="border-top:none !important" scope="col">Cart Total
                                                     </th>
                                                 </tr>
-                                            </thead>
-                                            <tbody>
+                                            </thead> --}}
+                                            {{-- <tbody>
                                                 <tr>
                                                     <td>
                                                         <div class="d-flex justify-content-between">
@@ -595,8 +925,8 @@ $cart_price = 0;
                                                         </div>
                                                     </td>
                                                 </tr>
-                                            </tbody>
-                                            <tfoot class="border-0">
+                                            </tbody> --}}
+                                            {{-- <tfoot class="border-0">
                                                 <tr>
                                                     <td style="border-bottom:none !important;">
                                                         <div class="payment-option">Delivery Options</div>
@@ -627,11 +957,6 @@ $cart_price = 0;
                                                         @else
                                                         <input type="hidden" name="tax_class_id" id="tax_class_id" value="{{$tax_class_none->id}}">
                                                         @endif
-                                                        {{-- <div class="w-100 text-center">
-                                                            <button type="button" class="ml-2 mt-4 button-cards w-75"
-                                                                id="proceed_to_checkout" onclick="validate()">
-                                                                Place Order</button>
-                                                        </div> --}}
                                                         <div class="row mt-2">
                                                             <div class="ps-1">
                                                                 <div class=" mt-1">
@@ -659,7 +984,7 @@ $cart_price = 0;
                                                         </form>
                                                     </td>
                                                 </tr>
-                                            </tfoot>
+                                            </tfoot> --}}
                                         </table>
                                     </div>
                                     {{-- <div class="d-flex justify-content-center align-items-center">
@@ -894,6 +1219,7 @@ $cart_price = 0;
                                 </div>
                                 <button type="button" onclick="updateContact_ipad({{$contact_id}})" class="btn btn-success  action-button text-white ipad_next_btn_footer"
                                     style="background:#7bc533 !important;"> NEXT STEP </button>
+                                <input type="hidden" class="" id="next_step">
                                 {{-- <div class="d-flex justify-content-center align-items-center">
                                     <div>
                                         <img class="img-fluid coupon-code-modal-btn" src="/theme/img/modal-icon1.png"
@@ -1049,6 +1375,12 @@ $cart_price = 0;
                                                                     <textarea type="text" name="memo" cols="20" rows="5" placeholder="Enter your Message"
                                                                         id="memo" class="form-control fontAwesome">
                                                                         </textarea>
+                                                                </div>
+                                                                <div class="">
+                                                                    <p class="cart-total-checkout-page">Payment Terms</p>
+                                                                    <select name="paymentTerms" id="pay_terms" class="form-control">
+                                                                        <option value="30 days from invoice" selected>30 days from invoice</option>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1300,11 +1632,11 @@ $cart_price = 0;
                     </form>
                 </div>
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer mbl-footer-modal-address">
                 <div class="spinner-border text-primary d-none" role="status" id="address_loader">
                     <span class="visually-hidden">Loading...</span>
                 </div>
-                <button type="button" class="btn button-cards primary"
+                <button type="button" class="btn button-cards primary mbl-btn-update-address"
                     onclick="updateContact('{{ $contact_id }}')">Update</button>
             </div>
         </div>
@@ -1383,6 +1715,7 @@ $cart_price = 0;
                 Valid first name is required.
             </div>
             <script>
+                 
                 function validate() {
                     $('#progress_spinner').removeClass('d-none');
                     $([document.documentElement, document.body]).animate({
@@ -1843,7 +2176,9 @@ $cart_price = 0;
                     $('#address-form-update').removeClass('d-none');
 
                 }
-
+                function updateContact_ipad (contact_id) {
+                    next_btn_mbl();
+                }
                 function updateContact(contact_id) {
                     $('#address_loader').removeClass('d-none');
                     var state = document.getElementById("state").value;

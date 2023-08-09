@@ -92,11 +92,12 @@ class OrderController extends Controller
                 $order->user_id = Auth::id();
                 $order->status = "DRAFT";
                 $order->stage = "New";
-                $order->paymentTerms = $paymentMethod;
+                $order->logisticsCarrier = $paymentMethod;
                 $order->tax_class_id = $request->tax_class_id;
                 $order->user_switch = $user_switch;
                 $order->total_including_tax = $request->incl_tax;
                 $order->po_number = $request->po_number;
+                $order->paymentTerms = $request->paymentTerms;
                 $order->memo = $request->memo;
                 $order->date = $request->date;
                 $order->save();
@@ -308,5 +309,31 @@ class OrderController extends Controller
         exit;
 
         return \Redirect::route('thankyou', $order_id);
+    }
+
+    public function delete_order_item(Request $request) {
+        $item_id = $request->item_id;
+        $order_id = $request->order_id;
+        $tax_rate = $request->tax_rate;
+        $api_order_item_delete = ApiOrderItem::where('id', $item_id)->first();
+        if(!empty($api_order_item_delete)) {
+            
+            $update_order = ApiOrder::where('id', $order_id)->first();
+            $grand_total = $update_order->total_including_tax;
+            $currentItemprice = $api_order_item_delete->quantity * $api_order_item_delete->price;
+            $tax_value = ($tax_rate / 100) * ($currentItemprice);
+            $subtotal = $grand_total - $currentItemprice;
+            $total = $subtotal - $tax_value ;
+            $update_order->update([
+                'total' => $subtotal , 
+                'total_including_tax' => $total,
+                'productTotal' => $subtotal,
+            ]);
+            $api_order_item_delete->delete();
+
+            return response()->json(['success' => true , 'message' => 'Item deleted successfully.']);
+        } else {
+            return response()->json(['success' => false , 'message' => 'Item not found.']);
+        }
     }
 }

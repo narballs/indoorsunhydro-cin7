@@ -172,7 +172,7 @@
                                             line-height: 16px !important;
                                             color: #282828 !important;
                                             margin-left: 37px !important;">
-                                        {{ $addresses['currentOrder']['paymentTerms'] }}
+                                        {{ $addresses['currentOrder']['logisticsCarrier'] }}
                                     </span>
                                 </div>
                             
@@ -376,16 +376,16 @@
     </table>
 </body> --}}
 
-<body padding="2" bgcolor="#000000" style="background-color: #000000;padding:2rem;">
-    <table padding="2" bgcolor="#FFFFFF" style="background-color:#FFFFFF;border-radius:5px;" width="60%" border="0" align="center" cellpadding="7">
+<body bgcolor="#000000" style="background-color: #000000;padding-top:5px;padding-bottom:5px;padding-right:0px;padding-left:0px;" width="100%">
+    <table padding="0" bgcolor="#FFFFFF" style="background-color:#FFFFFF;border-radius:5px;" width="50%" border="0" align="center" cellpadding="0">
         <tbody>
             <tr>
                 <td>
-                    <table width="100%" border="0" align="center">
+                    <table width="80%" border="0" align="center">
                         <tr>
                             <td align="" style="text-align: center;">
-                                <img class="img-fluid "
-                                    src="{{ asset('https://stage.indoorsunhydro.com/theme/img/email/approve_icon.png') }}">
+                                <img class="img-fluid"
+                                    src="{{ asset('https://stage.indoorsunhydro.com/theme/img/email/approve_email_icon.png') }}">
                             </td>
                         </tr>
                         <tr>
@@ -485,7 +485,7 @@
                                     <tbody>
                                         <tr>
                                             <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
-                                                {{ $addresses['currentOrder']['paymentTerms'] }}
+                                                {{ $addresses['currentOrder']['logisticsCarrier'] }}
                                             </td>
                                         </tr>
                                     </tbody>

@@ -443,7 +443,7 @@ class OrderManagementController extends Controller
                 "estimatedDeliveryDate" => $currentOrder->date,
                 "salesPersonId" => 10,
                 "salesPersonEmail" => "wqszeeshan@gmail.com",
-                "paymentTerms" => "",
+                "paymentTerms" => $currentOrder->paymentTerms,
                 "customerOrderNo" => $currentOrder->po_number,
                 "voucherCode" => "sample string 14",
                 "deliveryInstructions" =>  $currentOrder->memo,
@@ -451,7 +451,7 @@ class OrderManagementController extends Controller
                 "invoiceDate" => null,
                 "invoiceNumber" => 4232,
                 "dispatchedDate" => null,
-                "logisticsCarrier" => $currentOrder->paymentTerms,
+                "logisticsCarrier" => $currentOrder->logisticsCarrier,
                 "logisticsStatus" => 1,
                 "distributionBranchId" => 0,
                 "lineItems" => $lineItems
