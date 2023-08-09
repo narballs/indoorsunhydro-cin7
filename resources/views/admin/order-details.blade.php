@@ -8,24 +8,159 @@
 @section('content')
     <!-- sdfkjlsdkfjsdlkfk -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <div class="row">
+        <div class="col-md-6 order-product-search">
+            <div class="form-group has-search-products">
+                <span class="fa fa-search form-control-feedback"></span>
+                <input type="text" name="search-products-to-add" class="form-control" placeholder="Search">
+            </div>
+        </div>
+        <div class="col-md-3 d-flex">
+            <form>
+                @csrf
+                <input type="hidden" value="{{ $time_diff }}" id="timeSpanToCancel">
+                <input type="hidden" value="{{ $time_difference_seconds }}" id="seconds">
+                @if ($order->isApproved == 2)
+                    <button type="button" class="btn btn-danger btn-sm" disabled>Cancel
+                        Order</button>
+                    <div class="countdown">
+                    </div>
+                @elseif($order->isApproved == 1 || $time_diff > 3)
+                    <div class="col-md-12">
+                        <button type="button" class="btn btn-secondary btn-sm" disabled>
+                            Cancel Order
+                        </button>
+                    </div>
+                @else
+                    <div class="col-md-10">
+                        <input type="hidden" value="{{ $orderitems[0]['order_id'] }}"
+                            id="order_id">
+                        <input class="btn btn-danger btn-sm" type="button" value="Cancel Order"
+                            id="cancel_order" onclick=" cancelOrder(); addComment(0);">
 
-    <div class="container-fluid">
+                    </div>
+                    <div class="countdown"></div>
+                @endif
+            </form>
+            <form>
+                @csrf
+                @if ($order->isApproved == 1 )
+                    <div class="col-md-12">
+                        <button type="button" class="btn btn-secondary btn-sm" disabled>
+                            Fullfilled
+                        </button>
+                    </div>
+                @elseif ($order->isApproved == 2)
+                    <div class="col-md-12"
+                        style="margin-left: 122px;
+                margin-top: -29px;">
+                        <button type="button" class="btn btn-danger btn-sm" disabled>
+                            Fullfilled
+                        </button>
+                    </div>
+
+                @elseif ($order->isApproved == 0 && $auto_fullfill == true )
+                    <div class="col-md-12">
+                        <input id="full_fill" class="btn btn-primary btn-sm " type="button"
+                            value="Fullfill Order" disabled>
+                    </div>
+                    <div class="spinner-border d-none" role="status" id="spinner">
+                        <span class="sr-only" style="margin-left: 227px">Activating...</span>
+                    </div>
+                 @elseif ($order->isApproved == 0 && $auto_fullfill == false )
+                    <div class="col-md-12">
+                        <input id="full_fill" class="btn btn-primary btn-sm" type="button"
+                            value="Fullfill Order" onclick="fullFillOrder()">
+                    </div>
+                    <div class="spinner-border d-none" role="status" id="spinner">
+                        <span class="sr-only" style="margin-left: 227px">Activating...</span>
+                    </div>
+                @endif
+            </form>
+        </div>
+        <div class="progress border d-none w-50" id="progress-bar">
+            <div class="progress-bar progress-bar-striped progress-bar-animated bg-info"
+                role="progressbar" aria-valuenow="100" aria-valuemin="" aria-valuemax="100"></div>
+        </div>
+    </div>
+    <div class="bg-success text-white text-center w-50" id="fullfill_success"></div>
+    <div class="bg-warning text-white text-center w-50" id="fullfill_failed"></div>
+    <div class="">
         <div class="row">
             <div class="col-md-12">
-                <div class="d-flex justify-content-between align-items-center py-3">
+                <input type="hidden" value="{{$order->id}}" name="order_id" id="orderID">
+                @if(!empty($tax_class))
+                <input type="hidden" value="{{$tax_class->rate}}" name="tax_rate" id="tax_rate">
+                @else
+                <input type="hidden" value="0" name="tax_rate" id="tax_rate">
+                @endif
+                {{-- <div class="d-flex justify-content-between align-items-center py-3">
                     <h2 class="h5 mb-0"><a href="#" class="text-muted"></a> Order #{{ $order->id }}</h2>
-                </div>
+                </div> --}}
                 <div class="row">
                     <div class="col-md-8">
                         <div class="card">
-                            <div class="mb-3 d-flex justify-content-between">
-                                <div>
-                                    <span class="me-3">{{ $formatedDate }}</span>
-                                </div>
+                            <div class="d-flex card-header">
+                               <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <span class="order-head">Order Placed</span>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <span class="">{{ $formatedDate }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <span class="order-head">Order</span>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <span class="order_number">#{{ $order->id }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <span class="order-head">Status</span>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    @if ($order->isApproved == 1 && $order->isVoid == 1)
+                                                    <span class="text-secondary">Void</span>
+                                                    @elseif ($order->isApproved == 0 && $order->isVoid == 0)
+                                                        <span class="text-warning">New</span>
+                                                    @elseif ($order->isApproved == 1)
+                                                        <span class="text-success">Fullfilled</span>
+                                                    @elseif ($order->isApproved == 2)
+                                                        <span class="text-danger">Cancelled</span>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {{-- @if($order->isApproved == 0 && $order->isVoid == 0)
+                                        <div class="col-md-4 d-flex align-items-center justify-content-end edit_order_div">
+                                            <button class="btn btn-light btn-sm edit_admin_order" type="button" onclick="edit_order('{{ $order->id }}')">
+                                                    Edit Order
+                                            </button>
+                                        </div>
+                                        @endif --}}
 
+                                        <div class="col-md-4 d-none edit-order-butttons align-items-center justify-content-end">
+                                            <button class="btn btn-light btn-sm cancel_order_changes mx-3" type="button" onclick="cancel_order_changes('{{ $order->id }}')">
+                                                   Cancel
+                                            </button>
+                                            <button class="btn btn-primary btn-sm text-white btn-sm update_order border-0" type="button" onclick="update_order('{{ $order->id }}')">
+                                                   Save
+                                            </button>
+                                        </div>
+                                </div>
+                               </div>
                                 <div class="d-flex">
-                                    <button class="btn btn-link p-0 me-3 d-none d-lg-block btn-icon-text"><i
-                                            class="bi bi-download"></i> <span class="text">Invoice</span></button>
+                                    <button class="btn btn-link p-0 me-3 d-none btn-icon-text"><i class="bi bi-download"></i> <span class="text">Invoice</span></button>
                                     <div class="dropdown">
                                         <button class="btn btn-link p-0 text-muted" type="button"
                                             data-bs-toggle="dropdown">
@@ -41,7 +176,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row mb-5">
+                            {{-- <div class="row mb-5">
                                 <div class="col-md-2">
                                     <form>
                                         @csrf
@@ -113,69 +248,100 @@
                                     role="progressbar" aria-valuenow="100" aria-valuemin="" aria-valuemax="100"></div>
                             </div>
                             <div class="bg-success text-white text-center" id="fullfill_success"></div>
-                            <div class="bg-warning text-white text-center" id="fullfill_failed"></div>
-                            <table class="table mt-3">
-                                <tr>
-                                    <th>Line Items</th>
-                                    <th>Quantity</th>
-                                    <th>Totals</th>
-                                </tr>
-                                <tbody>
-                                    @php
-                                        $tax=0;
-                                        if (!empty($tax_class)) {
-                                            $tax = $order->total * ($tax_class->rate / 100);
-                                        }
-                                        $total_including_tax = $tax + $order->total;
-                                    @endphp
-                                    @foreach ($orderitems as $item)
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex mb-2">
-                                                    <div class="flex-shrink-0 mx-4">
-                                                        <img src="{{ $item->product->images }}" alt=""
-                                                            width="35" class="img-fluid">
-                                                    </div>
-                                                    <div class="flex-lg-grow-1 ms-3">
-                                                        <h6 class="small mb-0"><a href="#"
-                                                                class="text-reset">{{ $item->Product->name }}</a></h6>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td class="ms-2">{{ $item->quantity }}</td>
-                                            <td class="text-end">${{ number_format($item->price, 2) }}</td>
+                            <div class="bg-warning text-white text-center" id="fullfill_failed"></div> --}}
+                            <div class="">
+                                <table class="table">
+                                    <thead>
+                                        <tr class="background-color">
+                                            <th class="pl-4">Line Items</th>
+                                            <th>Quantity</th>
+                                            <th id="delete_item_head" class="d-none">Delete Item</th>
+                                            <th>Totals</th>
                                         </tr>
-                                    @endforeach
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <td colspan="2">Subtotal</td>
-                                        <td class="text-end">${{ number_format($order->total, 2) }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2">Shipping</td>
-                                        <td class="text-end">$0.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2">Add Tax</td>
-                                        <td class="text-end">${{ number_format($tax, 2) }}</td>
-                                    </tr>
-                                    <tr class="fw-bold">
-                                        <td colspan="2"><strong>GRAND TOTAL</strong></td>
-                                        <td class="text-end">${{ number_format($total_including_tax, 2) }}</td>
-                                    </tr>
-                                </tfoot>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        @php
+                                            $tax=0;
+                                            if (!empty($tax_class)) {
+                                                $tax = $order->total * ($tax_class->rate / 100);
+                                            }
+                                            $total_including_tax = $tax + $order->total;
+                                        @endphp
+                                        @foreach ($orderitems as $item)
+                                            <tr class="border-bottom" id="row_{{$item->id}}">
+                                                <td class="align-middle">
+                                                    <div class="d-flex mb-2">
+                                                        <div class="flex-shrink-0">
+                                                            <img src="{{ $item->product->images }}" alt=""
+                                                                width="35" class="img-fluid">
+                                                        </div>
+                                                        <div class="d-flex align-items-center pl-3">
+                                                            <h6 class="small mb-0"><a href="#" class="p_name_order">{{ $item->Product->name }}</a></h6>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="ms-2 align-middle">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="33" class="itemQuantityText" height="32" viewBox="0 0 33 32" fill="none">
+                                                        <circle cx="16.5752" cy="15.8466" r="15.8466" fill="#E3F5F5"/>
+                                                        <text x="50%" y="50%" text-anchor="middle" class="order-item-quantity itemQuantityText" stroke="#131313" stroke-width="" dy=".3em" id="itemQuantityText_{{$item->id}}">{{ $item->quantity }}</text>
+                                                    </svg>
+                                                    <input type="text" min="1" class="itemQuantity form-control form-control-sm w-50 h-auto p-1 text-center d-none" value="{{ $item->quantity}}" id="itemQuantity_number_{{$item->id}}">
+                                                </td>
+                                                <td class="delete_item_body d-none">
+                                                    <button class="btn btn-danger btn-sm border-0 bg-transparent" onclick="deleteItem({{ $item->id }})">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                                            <g clip-path="url(#clip0_801_438)">
+                                                            <path d="M3.33301 5.83325H16.6663" stroke="#DC4E41" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                                                            <path d="M8.33301 9.16675V14.1667" stroke="#DC4E41" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                                                            <path d="M11.667 9.16675V14.1667" stroke="#DC4E41" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                                                            <path d="M4.16699 5.83325L5.00033 15.8333C5.00033 16.2753 5.17592 16.6992 5.48848 17.0118C5.80104 17.3243 6.22496 17.4999 6.66699 17.4999H13.3337C13.7757 17.4999 14.1996 17.3243 14.5122 17.0118C14.8247 16.6992 15.0003 16.2753 15.0003 15.8333L15.8337 5.83325" stroke="#DC4E41" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                                                            <path d="M7.5 5.83333V3.33333C7.5 3.11232 7.5878 2.90036 7.74408 2.74408C7.90036 2.5878 8.11232 2.5 8.33333 2.5H11.6667C11.8877 2.5 12.0996 2.5878 12.2559 2.74408C12.4122 2.90036 12.5 3.11232 12.5 3.33333V5.83333" stroke="#DC4E41" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                                                            </g>
+                                                            <defs>
+                                                            <clipPath id="clip0_801_438">
+                                                            <rect width="20" height="20" fill="white"/>
+                                                            </clipPath>
+                                                            </defs>
+                                                        </svg>
+                                                    </button>
+                                                </td>
+                                                <td class="text-end align-middle">
+                                                    <span class="order-item-price item_prices" id="itemPrice_{{$item->id}}">${{ number_format($item->price, 2) }}</span>
+                                                    <input type="text" value="{{ number_format($item->price, 2) }}" class="item_price_class form-control form-control-sm w-50 h-auto p-1 text-center d-none" id="itemPrice_number_{{$item->id}}">
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                    <tfoot>
+                                        <tr class="border-bottom">
+                                            <td colspan="2" class="add_colspan"><span class="summary-head mx-2">Subtotal</span></td>
+                                            <td class="text-end"><span class="order-item-price">${{ number_format($order->total, 2) }}</span></td>
+                                        </tr>
+                                        <tr class="border-bottom">
+                                            <td colspan="2" class="add_colspan"><span class="summary-head mx-2">Shipping</span></td>
+                                            <td class="text-end"><span class="order-item-price">$0.00</span></td>
+                                        </tr>
+                                        <tr class="border-bottom">
+                                            <td colspan="2" class="add_colspan"><span class="summary-head mx-2">Add Tax</span></td>
+                                            <td class="text-end"><span class="order-item-price">${{ number_format($tax, 2) }}</span></td>
+                                        </tr>
+                                        <tr class="fw-bold">
+                                            <td colspan="2" class="add_colspan"><span class="summary-head mx-2">GRAND TOTAL</span></td>
+                                            <td class="text-end"><span class="order-grand-total">${{ number_format($total_including_tax, 2) }}</span></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
                         </div>
                         <div class="card mb-4">
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-lg-6">
-                                        <h3 class="h6">Payment Method</h3>
-                                        <span>{{ $order->paymentTerms }}</span></p>
+                                        <h3 class="h6 summary-head">Payment Method</h3>
+                                        <span class="delievery">{{ $order->paymentTerms }}</span></p>
                                     </div>
                                     <div class="col-lg-6">
-                                        <h3 class="h6">Billing address</h3>
+                                        <h3 class="h6 summary-head">Billing address</h3>
                                         <address>
                                             @if (!empty($customer->firstName && $customer->lastName))
                                                 <strong>{{ $customer->firstName }}&nbsp;{{ $customer->lastName }}</strong><br>
@@ -265,6 +431,101 @@
     <link rel="stylesheet" href="{{ asset('admin/admin_lte.css') }}">
 
     <style type="text/css">
+        .delievery {
+            color: #242424;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 26.55px; /* 189.643% */
+        }
+        .border-bottom {
+            border-bottom: 1px solid #E1E1E1;
+        }
+        .order-head {
+            color: #7D7D7D;
+            font-size: 12px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 19.606px; /* 163.385% */
+        }
+        .background-color {
+            background-color: #FAFAFA;
+        }
+        .summary-head {
+            color: #242424;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: normal;
+        }
+        .order-grand-total {
+            color: #7BC533;
+            font-size: 15.847px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: normal;
+        }
+        .order-item-quantity {
+            color: #131313;
+            font-size: 12.677px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: normal;
+        }
+        .order-item-price {
+            color: #7D7D7D;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: normal;
+        }
+        .p_name_order {
+            color: #008BD3 !important;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: normal;
+        }
+        .order_number {
+            color: #008BD3;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: 19.606px;
+        }
+        .edit_admin_order {
+            background-color: rgba(0, 139, 211, 0.05) !important;
+            color: #008BD3;
+        }
+        
+        .edit_admin_order:hover {
+            background-color: rgba(0, 139, 211, 0.05) !important;
+            color: #008BD3;
+        }
+        .cancel_order_changes {
+            background-color: rgba(0, 139, 211, 0.05) !important;
+            color: #008BD3;
+        }
+        
+        .cancel_order_changes:hover {
+            background-color: rgba(0, 139, 211, 0.05) !important;
+            color: #008BD3;
+        }
+        .has-search-products .form-control {
+            padding-left: 2.375rem;
+        }
+
+        .has-search-products .form-control-feedback {
+            position: absolute;
+            z-index: 2;
+            display: block;
+            width: 2.375rem;
+            height: 2.375rem;
+            line-height: 2.375rem;
+            text-align: center;
+            pointer-events: none;
+            color: #aaa;
+        }
         .text-successs {
             color: #7CC633 !important;
             font-family: 'Poppins', sans-serif !important;
@@ -335,6 +596,70 @@
                 timer2 = minutes + ':' + seconds;
             }, 1000);
         });
+        //edit order
+        function edit_order(id) {
+            $('.edit_order_div').removeClass('d-flex');
+            $('.edit_order_div').addClass('d-none');
+            $('.edit-order-butttons').removeClass('d-none');
+            $('.edit-order-butttons').addClass('d-flex');
+            $('.itemQuantityText').addClass('d-none');
+            $('.item_prices').addClass('d-none');
+            $('.itemQuantity').removeClass('d-none');
+            $('.item_price_class').removeClass('d-none');
+            $('#delete_item_head').removeClass('d-none');
+            $('.delete_item_body').removeClass('d-none');
+            $('.add_colspan').attr('colspan', '3');
+        }
+        //cancel order changes
+        function cancel_order_changes(id) {
+            $('.edit-order-butttons').addClass('d-none');
+            $('.edit-order-butttons').removeClass('d-flex');
+            $('.edit_order_div').addClass('d-flex');
+            $('.edit_order_div').removeClass('d-none');
+            $('.itemQuantityText').removeClass('d-none');
+            $('.item_prices').removeClass('d-none');
+            $('.itemQuantity').addClass('d-none');
+            $('.item_price_class').addClass('d-none');
+            $('#delete_item_head').addClass('d-none');
+            $('.delete_item_body').addClass('d-none');
+            $('.add_colspan').attr('colspan', '2');
+        }
+        //prevent input from starting with 0
+        $(".itemQuantity").on("input", function() {
+            if (/^0/.test(this.value)) {
+                this.value = this.value.replace(/^0/, "1");
+            }
+        });
+
+        //delete item from order
+        function deleteItem(itemId) {
+            var item_id = itemId;
+            var order_id = $('#orderID').val();
+            var tax_rate = $('#tax_rate').val();
+            jQuery.ajax({
+                url: "{{ url('admin/order/delete-item') }}",
+                method: 'post',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "item_id": item_id,
+                    "tax_rate": tax_rate,
+                    'order_id': order_id
+
+                },
+                success: function(response) {
+                    if(response.success == true){
+                        $('#fullfill_success').removeClass('d-none');
+                        $('#fullfill_success').text(response.message);
+                        window.location.reload();
+                    }
+                    else if(response.success == false){
+                        $('#fullfill_success').removeClass('d-none');
+                        $('#fullfill_failed').text(response.message);
+                        window.location.reload();
+                    }
+                }
+            });
+        }
 
         function addComment(isUserAdded) {
             if (isUserAdded == 1) {
