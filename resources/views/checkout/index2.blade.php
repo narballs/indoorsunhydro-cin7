@@ -12,7 +12,7 @@
         border-color: inherit;
         border-style: solid;
         border-width: 0;
-        border-color: #8C8C8C;
+        border-color: #DFDFDF;
     }
 
     /*
@@ -308,7 +308,7 @@ $cart_price = 0;
     <div class="row ps-5">
         <div class="text-center d-none" id="progress_spinner"><img src="/theme/img/progress.gif" alt=""></div>
         <div class="col-md-12">
-            <p class="item-purchased-thank-you-page">Item Purchased </p>
+            <p class="item-purchased-thank-you-page">Item(s) Purchased </p>
         </div>
 
         <div class=" col-xl-9 col-lg-9 col-md-12 col-sm-12 pe-5">
