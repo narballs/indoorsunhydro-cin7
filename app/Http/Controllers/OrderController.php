@@ -12,13 +12,14 @@ use App\Models\Product;
 use App\Models\ApiOrderItem;
 use App\Models\ApiOrder;
 use App\Models\Contact;
+use App\Models\Pricingnew;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Str;
-
+use Illuminate\Database\Eloquent\Builder;
 class OrderController extends Controller
 {
     public function store(Request $request)
@@ -311,6 +312,7 @@ class OrderController extends Controller
         return \Redirect::route('thankyou', $order_id);
     }
 
+    // delete item from order by admin 
     public function delete_order_item(Request $request) {
         $item_id = $request->item_id;
         $order_id = $request->order_id;
@@ -319,21 +321,113 @@ class OrderController extends Controller
         if(!empty($api_order_item_delete)) {
             
             $update_order = ApiOrder::where('id', $order_id)->first();
-            $grand_total = $update_order->total_including_tax;
-            $currentItemprice = $api_order_item_delete->quantity * $api_order_item_delete->price;
-            $tax_value = ($tax_rate / 100) * ($currentItemprice);
-            $subtotal = $grand_total - $currentItemprice;
-            $total = $subtotal - $tax_value ;
-            $update_order->update([
-                'total' => $subtotal , 
-                'total_including_tax' => $total,
-                'productTotal' => $subtotal,
-            ]);
+            $old_subtotal = $update_order->productTotal;
+            $old_tax_value = $old_subtotal * $tax_rate / 100;
+            $new_subtotal = $old_subtotal - ($api_order_item_delete->quantity * $api_order_item_delete->price);
+            $new_tax_value = $new_subtotal * $tax_rate / 100;
+            $new_grand_total = $new_subtotal + $new_tax_value;
+            $update_order->total = $new_subtotal;
+            $update_order->productTotal = $new_subtotal;
+            $update_order->total_including_tax = $new_grand_total;
+            $update_order->save();
             $api_order_item_delete->delete();
 
             return response()->json(['success' => true , 'message' => 'Item deleted successfully.']);
         } else {
             return response()->json(['success' => false , 'message' => 'Item not found.']);
         }
+    }
+
+    //update order by admin 
+    public function update_order (Request $request) {
+        $order_id = $request->order_id;
+        $order = ApiOrder::where('id', $order_id)->first();
+        $order_items = ApiOrderItem::where('order_id', $order_id)->get();
+        $subtotal = $request->subtotal;
+        $total_including_tax = $request->total_including_tax;
+
+        $order_items_data = $request->item_data;
+        $order->update([
+            'total' => $subtotal,
+            'productTotal' => $subtotal,
+            'total_including_tax' => $total_including_tax
+        ]);
+
+
+        foreach($order_items as $order_item) {
+            foreach ($order_items_data as $item_data) {
+                if($order_item->id == $item_data['item_id']) {
+                    $order_item->update([
+                        'quantity' => $item_data['item_quantity'],
+                        'price' => $item_data['item_price']
+                    ]);
+                }
+            }
+            
+        }
+        return response()->json(['success' => true , 'message' => 'Order updated successfully.']);
+    }
+
+    // add product in the order
+
+    public function addProduct(Request $request) {
+        $product_id = $request->product_id;
+        $tax_rate = $request->tax_rate;
+        $order_id = $request->order_id;
+        $price = $request->price_col;
+        $option_id = $request->option_id;
+        $product_price = 0;
+
+        $comparePrice_column = Pricingnew::where('option_id', $option_id)->first();
+        if (!empty($price)) {
+            $product_price = $comparePrice_column->retailUSD;
+        } else {
+            $product_price = $comparePrice_column->lcfirst($price);
+        }
+
+
+        $product = Product::where('id', $product_id)->first();
+        $order = ApiOrder::where('id', $order_id)->first();
+        $old_subtotal = $order->productTotal;
+        $new_subtotal = $old_subtotal + $product_price;
+        $new_tax_value = $new_subtotal * $tax_rate / 100;
+        $new_grand_total = $new_subtotal + $new_tax_value;
+        
+        $order->total = $new_subtotal;
+        $order->productTotal = $new_subtotal;
+        $order->total_including_tax = $new_grand_total;
+        $order->save();
+        
+        $api_order_item = ApiOrderItem::where('order_id', $order_id)->where('product_id', $product_id)->first();
+        
+        if (!empty($api_order_item)) {
+            $api_order_item->quantity = $api_order_item->quantity + 1;
+            $api_order_item->save();
+            return response()->json(['success' => true , 'message' => 'Product added successfully.']);
+        } else{
+            $order_item = new ApiOrderItem();
+            $order_item->order_id = $order_id;
+            $order_item->product_id = $product_id;
+            $order_item->quantity = 1;
+            $order_item->price = $product_price;
+            $order_item->option_id = $request->option_id;
+            $order_item->save();
+
+            return response()->json(['success' => true , 'message' => 'Product added successfully.']);
+        }
+
+    }
+
+    public function searchProduct (Request $request) {
+        $search = $request->search_value;
+        $products = Product::with(['options' => function ($q) {
+            $q->where('status', '!=', 'Disabled');
+        }])->orWhere(function (Builder $query) use ($search) {
+            $query->where('name', 'LIKE', '%' . $search . '%')
+            ->orWhere('code', 'LIKE', '%' . $search . '%');
+        })
+        ->where('status', '!=', 'Inactive')
+        ->get();
+        return response()->json(['success' => true , 'data' => $products]);
     }
 }

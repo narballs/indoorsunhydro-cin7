@@ -280,6 +280,9 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('settings/update/{id}', [AdminSettingsController::class, 'update'])->name('admin.settings.update');
         Route::post('settings/delete/{id}', [AdminSettingsController::class, 'delete'])->name('admin.settings.delete');
         Route::post('/order/delete-item', [OrderController::class, 'delete_order_item'])->name('delete_order_item');
+        Route::post('/order/update', [OrderController::class, 'update_order'])->name('update_order');
+        Route::post('/order/add-product', [OrderController::class, 'addProduct'])->name('add_product');
+        Route::get('/order/search-product', [OrderController::class, 'searchProduct'])->name('search_product');
     });
 
     Route::get('admin/logout', function () {
