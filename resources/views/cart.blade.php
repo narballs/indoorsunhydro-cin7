@@ -278,7 +278,7 @@
                                         </strong>
                                     </span>
                                 </span>
-                                <span id="cart_grand_total" class="tax_cart">
+                                <span id="" class="tax_cart">
                                     <strong class=" d-flex justify-content-end cart-page-items" id="tax_amount">
                                         ${{ number_format($tax, 2) }}
                                     </strong>
@@ -1249,7 +1249,7 @@
 
 
                 var tax = 0;
-                var tax_rate = parseInt($('#tax_rate_number').val());
+                var tax_rate = parseFloat($('#tax_rate_number').val());
                 var tax = grand_total.toFixed(2) * (tax_rate / 100);
                 $('.tax_cart').children().html('$' + tax.toFixed(2));
                 $('.grandTotal').children().html('$' + (tax + grand_total).toFixed(2));
@@ -1315,7 +1315,7 @@
                 $('.ipad_cart_subtotal').html('$' + grand_total.toFixed(2));
 
                 var tax = 0;
-                var tax_rate = parseInt($('#tax_rate_number').val());
+                var tax_rate = parseFloat($('#tax_rate_number').val());
                 var tax = grand_total.toFixed(2) * (tax_rate / 100);
                 $('.tax_cart').children().html('$' + tax.toFixed(2));
                 $('.grandTotal').children().html('$' + (tax + grand_total).toFixed(2));
@@ -1378,7 +1378,7 @@
 
 
                 var tax = 0;
-                var tax_rate = parseInt($('#tax_rate_number').val());
+                var tax_rate = parseFloat($('#tax_rate_number').val());
                 var tax = grand_total.toFixed(2) * (tax_rate / 100);
                 $('.tax_cart').children().html('$' + tax.toFixed(2));
                 $('.grandTotal').children().html('$' + (tax + grand_total).toFixed(2));
@@ -1442,7 +1442,7 @@
 
 
                 var tax = 0;
-                var tax_rate = parseInt($('#tax_rate_number').val());
+                var tax_rate = parseFloat($('#tax_rate_number').val());
                 var tax = grand_total.toFixed(2) * (tax_rate / 100);
                 $('.tax_cart').children().html('$' + tax.toFixed(2));
                 $('.grandTotal').children().html('$' + (tax + grand_total).toFixed(2));
