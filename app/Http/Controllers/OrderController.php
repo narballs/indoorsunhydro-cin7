@@ -374,7 +374,7 @@ class OrderController extends Controller
         $product_id = $request->product_id;
         $tax_rate = $request->tax_rate;
         $order_id = $request->order_id;
-        $price = lcfirst($request->price);
+        $price = lcfirst($request->price_col);
         $option_id = $request->option_id;
         $product_price = 0;
 
