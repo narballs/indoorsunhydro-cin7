@@ -1031,7 +1031,7 @@
 					</div>
 					<div class="row ps-5 mt-5 pe-5 div_increase_mobile purchase-title-mobile">
 						<div class="col-md-12 mt-5 mobile_b_bottom">
-							<p class="order-confirmation-page-item-purchased-title mobile-font ">Item Purchased </p>
+							<p class="order-confirmation-page-item-purchased-title mobile-font ">Item(s) Purchased </p>
 						</div>
 						<div class="col-md-12 mt-5 for_desktop">
 							<table class="table">

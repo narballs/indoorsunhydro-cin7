@@ -374,7 +374,7 @@ class OrderController extends Controller
         $product_id = $request->product_id;
         $tax_rate = $request->tax_rate;
         $order_id = $request->order_id;
-        $price = $request->price_col;
+        $price = lcfirst($request->price);
         $option_id = $request->option_id;
         $product_price = 0;
 
@@ -382,7 +382,7 @@ class OrderController extends Controller
         if (!empty($price)) {
             $product_price = $comparePrice_column->retailUSD;
         } else {
-            $product_price = $comparePrice_column->lcfirst($price);
+            $product_price = $comparePrice_column->price;
         }
 
 
