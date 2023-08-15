@@ -95,13 +95,16 @@ class OrderManagementController extends Controller
 
 
         $customer = Contact::where('user_id', $order->user_id)->first();
+        // $option_ids = ApiOrderItem::where('order_id', $id)->pluck('option_id')->toArray();
+        // $orderitems = $this->option_ids = $option_ids;
+        // $orderitems = ApiOrderItem:with(['product.options' => function ($q) {
+        //     $q->whereIn('option_id', $this->option_ids);
+        // }])->where('order_id', $id)->get();
         $option_ids = ApiOrderItem::where('order_id', $id)->pluck('option_id')->toArray();
         $orderitems = $this->option_ids = $option_ids;
-        $orderitems = ApiOrderItem::with('order.primary_contact' , 'order.secondary_contact')
-        ->with(['product.options' => function ($q) {
+        $orderitems = ApiOrderItem::with(['product.options' => function ($q) {
             $q->whereIn('option_id', $this->option_ids);
         }])->where('order_id', $id)->get();
-
         $tax_class = TaxClass::where('name', $customer->tax_class)->first();
         $orderComment = OrderComment::where('order_id', $id)->with('comment')->get();
         // $products  = Product::with('options', 'brand', 'categories')->where('status' , '!=' , 'Inactive')->get();
@@ -116,7 +119,6 @@ class OrderManagementController extends Controller
             'time_diff',
             'time_difference_seconds',
             'auto_fullfill',
-            // 'products'
         ));
     }
 

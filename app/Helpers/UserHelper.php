@@ -101,9 +101,12 @@ class UserHelper
         ]);
     }
 
-    public static function getUserPriceColumn() {
-        $user_id = Auth::id();
+    public static function getUserPriceColumn($is_admin = false , $user_id = null) {
         $price_column = 'retailUSD';
+        if ($is_admin === false) {
+
+            $user_id = Auth::id();
+        }
 
         if (empty($user_id)) {
             return $price_column;
