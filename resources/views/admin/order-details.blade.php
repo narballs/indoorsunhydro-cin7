@@ -1,5 +1,6 @@
 @extends('adminlte::page')
-
+<link href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.33/sweetalert2.css">
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @section('title', 'Dashboard')
 
 @section('content_header')
@@ -337,11 +338,6 @@
                                         </ul>
                                     </div>
                                 </div> --}}
-                                @if(!empty($item->order->primary_contact))
-                                <input type="hidden" id="primary_contact" name="price_column" value="{{$item->order->primary_contact->priceColumn}}">
-                                @elseif(!empty($item->order->secondary_contact))
-                                <input type="hidden" id ="secondary_contact"name="price_column" value="{{$item->order->secondary_contact->priceColumn}}">
-                                @endif
                                 <div class="add_product_row dropdown-order col-md-4 d-none mx-2 mb-2">
                                     <div class="has-search ">
                                         <span class="fa fa-search form-control-feedback"></span>
@@ -516,6 +512,11 @@
         .delete-item-button:hover {
             background: rgba(220, 78, 65, 0.13);
         }
+
+        .delete-item-button:active {
+            background-color: rgba(220, 78, 65, 0.13) !important;
+        }
+
         .delievery {
             color: #242424;
             font-size: 14px;
@@ -645,6 +646,7 @@
             font-size: 11.3289px;
         }
     </style>
+    
 @stop
 
 @section('js')
@@ -772,14 +774,6 @@
         function add_product(productId , option_id) {
             var order_id = $('#orderID').val();
             var tax_rate = $('#tax_rate').val();
-            var price_col = '';
-            if($('#primary_contact').val() != '' || $('#primary_contact').val() != null) {
-                price_col = $('#primary_contact').val();
-            }
-            if($('#secondary_contact').val() != '' || $('#secondary_contact').val() != null) {
-                price_col = $('#secondary_contact').val();
-            }
-
             var product_id = productId;
             var option_id = option_id;
             jQuery.ajax({
@@ -790,7 +784,6 @@
                     "product_id": product_id,
                     "tax_rate": tax_rate,
                     'order_id': order_id,
-                    'price_col': price_col,
                     'option_id': option_id
 
                 },
@@ -820,15 +813,52 @@
 
                 },
                 success: function(response) {
-                    if(response.success == true){
-                        $('#fullfill_success').removeClass('d-none');
-                        $('#fullfill_success').text(response.message);
-                        window.location.reload();
-                    }
-                    else if(response.success == false){
-                        $('#fullfill_success').removeClass('d-none');
-                        $('#fullfill_failed').text(response.message);
-                        window.location.reload();
+                    console.log(response);
+                    if (response.item_count > 1) {
+                        if(response.success == true){
+                            $('#fullfill_success').removeClass('d-none');
+                            $('#fullfill_success').text(response.message);
+                            window.location.reload();
+                        }
+                        else if(response.success == false){
+                            $('#fullfill_success').removeClass('d-none');
+                            $('#fullfill_failed').text(response.message);
+                            window.location.reload();
+                        }
+                    } else {
+
+                        Swal.fire({
+                                toast: true,
+                                icon: 'warning',
+                                title: response.message,
+                                showConfirmButton: true,
+                                confirmButtonText: 'Yes',
+                                showCancelButton: true,
+                                position: 'top',
+                                
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                jQuery.ajax({
+                                    url: "{{ url('admin/order/item/delete') }}",
+                                    method: 'post',
+                                    data: {
+                                        "_token": "{{ csrf_token() }}",
+                                        "item_id": item_id,
+                                        "tax_rate": tax_rate,
+                                        'order_id': order_id
+        
+                                    },
+                                    success: function(response) {
+                                        if(response.success == true){
+                                            $('#fullfill_success').removeClass('d-none');
+                                            $('#fullfill_success').text(response.message);
+                                            window.location = '/admin/orders';
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                        
                     }
                 }
             });
