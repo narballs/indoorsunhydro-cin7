@@ -69,6 +69,9 @@
                                                 <option class="form-group" value="CalaverasUSD" {{ $pricing }}
                                                     {{ isset($pricing) && $pricing == 'CalaverasUSD' ? 'selected="selected"' : '' }}>
                                                     Calaveras</option>
+                                                <option class="form-group" value="Tier0USD" {{ $pricing }}
+                                                    {{ isset($pricing) && $pricing == 'Tier0USD' ? 'selected="selected"' : '' }}>
+                                                    Tier0</option>
                                                 <option class="form-group" value="Tier1USD" {{ $pricing }}
                                                     {{ isset($pricing) && $pricing == 'Tier1USD' ? 'selected="selected"' : '' }}>
                                                     Tier1</option>

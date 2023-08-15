@@ -203,6 +203,12 @@
                                                 <td class="text-center"><b>specialPrice</b></td>
                                                 <td class="text-center">${{ $price->specialPrice }}</td>
                                             </tr>
+                                            <tr>
+                                                <td class="text-center"><b>tier0USD</b></td>
+                                                <td class="text-center">
+                                                    ${{ $price->tier0USD }}
+                                                </td>
+                                            </tr>
                                         @endforeach
                                     @endif
                                 @endforeach

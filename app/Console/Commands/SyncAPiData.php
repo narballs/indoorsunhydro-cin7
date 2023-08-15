@@ -290,6 +290,7 @@ class SyncAPiData extends Command
                                         'sacramentoUSD' => $api_productOption->priceColumns->sacramentoUSD,
                                         'wholesaleUSD' => $api_productOption->priceColumns->wholesaleUSD,
                                         'oklahomaUSD' => $api_productOption->priceColumns->oklahomaUSD,
+                                        'tier0USD' => $api_productOption->priceColumns->tier0USD,
                                         'tier1USD' => $api_productOption->priceColumns->tier1USD,
                                         'calaverasUSD' => $api_productOption->priceColumns->calaverasUSD,
                                         'tier2USD' => $api_productOption->priceColumns->tier2USD,
@@ -306,6 +307,7 @@ class SyncAPiData extends Command
                                     $priceColumn->terraInternUSD = $api_productOption->priceColumns->terraInternUSD;
                                     $priceColumn->sacramentoUSD = $api_productOption->priceColumns->sacramentoUSD;
                                     $priceColumn->calaverasUSD = $api_productOption->priceColumns->calaverasUSD;
+                                    $priceColumn->tier0USD = $api_productOption->priceColumns->tier0USD;
                                     $priceColumn->tier1USD = $api_productOption->priceColumns->tier1USD;
                                     $priceColumn->tier2USD = $api_productOption->priceColumns->tier2USD;
                                     $priceColumn->tier3USD = $api_productOption->priceColumns->tier3USD;
@@ -347,6 +349,7 @@ class SyncAPiData extends Command
                                     'terraInternUSD' => $api_productOption->priceColumns->terraInternUSD,
                                     'sacramentoUSD' => $api_productOption->priceColumns->sacramentoUSD,
                                     'oklahomaUSD' => $api_productOption->priceColumns->oklahomaUSD,
+                                    'tier0USD' => $api_productOption->priceColumns->tier0USD,
                                     'tier1USD' => $api_productOption->priceColumns->tier1USD,
                                     'calaverasUSD' => $api_productOption->priceColumns->calaverasUSD,
                                     'tier2USD' => $api_productOption->priceColumns->tier2USD,

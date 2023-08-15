@@ -17,6 +17,7 @@ class Pricingnew extends Model
         'tier1USD',
         'tier2USD',
         'tier3USD',
+        'tier0USD',
         'commercialOKUSD',
         'costUSD',
         'specialPrice'

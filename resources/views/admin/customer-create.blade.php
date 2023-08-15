@@ -102,9 +102,10 @@
                                 <option value="Sacramanto">Sacramanto</option>
                                 <option value="Oklahoma">Oklahoma</option>
                                 <option value="Calaveras">Calaveras</option>
+                                <option value="Tier0">Tier0</option>
                                 <option value="Tier1">Tier1</option>
                                 <option value="Tier2">Tier2</option>
-                                <option value="Tier2">Tier3</option>
+                                <option value="Tier3">Tier3</option>
                                 <option value="CommercialOK">CommercialOK</option>
                                 <option value="Cost">Cost</option>
                             </select>
