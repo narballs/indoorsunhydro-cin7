@@ -44,7 +44,8 @@ class Contact extends Model
         'hashUsed',
         'credit_limit',
         'balance_owing',
-        'tax_class'
+        'tax_class',
+        'paymentTerms'
     ];
 
     public function orders()

@@ -155,6 +155,7 @@ class SyncSuppliers extends Command
                         $contact->email = $api_contact->email;
                         $contact->credit_limit = $api_contact->creditLimit;
                         $contact->balance_owing = $api_contact->balanceOwing;
+                        $contact->paymentTerms = $api_contact->paymentTerms;
                         if (!empty($api_contact->taxStatus)) {
                             $contact->tax_class = $api_contact->taxStatus;
                         } else {
@@ -182,6 +183,7 @@ class SyncSuppliers extends Command
                                     $secondary_contact->priceColumn = $api_contact->priceColumn;
                                     $secondary_contact->credit_limit = $api_contact->creditLimit;
                                     $secondary_contact->balance_owing = $api_contact->balanceOwing;
+                                    $secondary_contact->paymentTerms = $api_contact->paymentTerms;
                                     if (!empty($api_contact->taxStatus)) {
                                         $secondary_contact->tax_class = $api_contact->taxStatus;
                                     } else {
@@ -211,6 +213,7 @@ class SyncSuppliers extends Command
                                     $secondary_contact->priceColumn = $api_contact->priceColumn;
                                     $secondary_contact->credit_limit = $api_contact->creditLimit;
                                     $secondary_contact->balance_owing = $api_contact->balanceOwing;
+                                    $secondary_contact->paymentTerms = $api_contact->paymentTerms;
                                     if (!empty($api_contact->taxStatus)) {
                                         $secondary_contact->tax_class = $api_contact->taxStatus;
                                     } else {
@@ -263,6 +266,7 @@ class SyncSuppliers extends Command
                             'credit_limit' => $api_contact->creditLimit,
                             'balance_owing' => $api_contact->balanceOwing,
                             'tax_class' => $tax_class,
+                            'paymentTerms' => $api_contact->paymentTerms,
                             'notes' => $api_contact->notes
                         ]);
                         if ($api_contact->secondaryContacts) {
@@ -281,6 +285,7 @@ class SyncSuppliers extends Command
                                     'mobile' => $secondaryContact->mobile,
                                     'email' => $secondaryContact->email,
                                     'credit_limit' => $api_contact->creditLimit,
+                                    'paymentTerms' => $api_contact->paymentTerms,
                                     'tax_class' => $tax_class,
 
                                 ]);

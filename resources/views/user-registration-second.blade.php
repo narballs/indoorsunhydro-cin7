@@ -267,6 +267,7 @@
                             </h2>
                             <div class="">
                                 <form action="">
+                                    <input type="hidden" value="Pay in Advanced" id="paymentTerms">
                                     <div class="row justify-content-center">
                                         <div class="col-md-10">
                                             <div class="row">
@@ -749,6 +750,7 @@
         var password = $('.user_password_signup').val();
         var email = $('#email').val();
         var confirm_password = $('input[name=confirm_password]').val();
+        var paymentTerms = $('#paymentTerms').val();
         jQuery.ajax({
             method: 'post',
             url: "{{ url('/user-contact/') }}",
@@ -767,6 +769,7 @@
                 "city_id": town_city_address,
                 "state_id": state,
                 "zip": zip,
+                'paymentTerms':paymentTerms
             },
             success: function(response) {
                 if (response.success == true) {
