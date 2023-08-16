@@ -43,10 +43,7 @@ class OrderController extends Controller
                 $active_contact_id = $contact->parent_id;
             }
             if ($active_contact_id) {
-
-                $order = new ApiOrder;
                 $cart_items = session()->get('cart');
-
                 $user_switch = "";
                 if (!empty(session()->get('logged_in_as_another_user'))) {
                     $user_switch = "order placed by user switch ";
@@ -65,227 +62,492 @@ class OrderController extends Controller
                 } else {
                     return redirect('/');
                 }
-                $session_contact_id = Session::get('contact_id');
 
                 $is_primary = Contact::where('contact_id', $session_contact_id)->first();
-                if ($is_primary == null) {
-                    $order->secondaryId = $session_contact_id;
-                } else {
-                    $order->primaryId = $session_contact_id;
-                }
-                $dateCreated = Carbon::now();
-                $createdDate = Carbon::now();
-                $order->createdDate = $createdDate;
-                $order->modifiedDate = $createdDate;
-                $order->createdBy = 79914;
-                $order->processedBy = 79914;
-                $order->isApproved = false;
-                $order->memberId = $active_contact_id;
-                $order->branchId = "none";
-                $order->distributionBranchId = 0;
-                $order->branchEmail = 'wqszeeshan@gmail.com';
-                $order->productTotal = $cart_total;
-                $order->total = $cart_total;
-                $order->currencyCode = 'USD';
-                $order->currencyRate = 59.0;
-                $order->currencySymbol = '$';
 
-                $order->user_id = Auth::id();
-                $order->status = "DRAFT";
-                $order->stage = "New";
-                $order->logisticsCarrier = $paymentMethod;
-                $order->tax_class_id = $request->tax_class_id;
-                $order->user_switch = $user_switch;
-                $order->total_including_tax = $request->incl_tax;
-                $order->po_number = $request->po_number;
-                $order->paymentTerms = $request->paymentTerms;
-                $order->memo = $request->memo;
-                $order->date = $request->date;
-                $order->save();
-
-                $order_id =  $order->id;
-                $currentOrder = ApiOrder::where('id', $order->id)->first();
-                $apiApproval = $currentOrder->apiApproval;
-                $random_string = Str::random(10);
-                $currentOrder->reference = 'DEV4' . '-QCOM-' .$random_string . '-' .$order_id;
-
-                $currentOrder->save();
-                $currentOrder = ApiOrder::where('id', $order->id)->with('contact')->first();
-
-                $reference = $currentOrder->reference;
-                if (session()->has('cart')) {
-                    foreach ($cart_items as $cart_item) {
-                        $OrderItem = new ApiOrderItem;
-                        $OrderItem->order_id = $order_id;
-                        $OrderItem->product_id = $cart_item['product_id'];
-                        $OrderItem->quantity =  $cart_item['quantity'];
-                        $OrderItem->price = $cart_item['price'];
-                        $OrderItem->option_id = $cart_item['option_id'];
-                        $OrderItem->save();
-                    }
-                } else {
-                    session()->forget('cart');
-                    return redirect('/');
-                }
-
-                $order_items = ApiOrderItem::with('order.texClasses', 'product.options')
-                    ->where('order_id', $order_id)
-                    ->get();
-
-                $contact = Contact::where('user_id', auth()->id())->first();
-                $user_email = Auth::user();
-                $count = $order_items->count();
-                $best_products = Product::where('status', '!=', 'Inactive')->orderBy('views', 'DESC')->limit(4)->get();
-                $addresses = [
-                    'billing_address' => [
-                        'firstName' => $contact->firstName,
-                        'lastName' => $contact->lastName,
-                        'address1' => $contact->address1,
-                        'address2' => $contact->address2,
-                        'city' => $contact->city,
-                        'state' => $contact->state,
-                        'zip' => $contact->postCode,
-                        'mobile' => $contact->mobile,
-                        'phone' => $contact->phone,
-                    ],
-                    'shipping_address' => [
-                        'postalAddress1' => $contact->postalAddress1,
-                        'postalAddress2' => $contact->postalAddress2,
-                        'phone' => $contact->postalCity,
-                        'postalCity' => $contact->postalState,
-                        'postalState' => $contact->postalPostCode,
-                        'postalPostCode' => $contact->postalPostCode
-                    ],
-                    'best_product' => $best_products,
-                    'user_email' =>   $user_email,
-                    'currentOrder' => $currentOrder,
-                    'count' => $count,
-                    'order_id' => $order_id,
-                ];
-
-                $name = $contact->firstName;
-                $email =  $contact->email;
-                $reference  =  $currentOrder->reference;
-                $template = 'emails.admin-order-received';
-                $admin_users = DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
-
-                $admin_users = $admin_users->toArray();
-
-                $users_with_role_admin = User::select("email")
-                    ->whereIn('id', $admin_users)
-                    ->get();
-
-                $data = [
-                    'name' =>  $name,
-                    'email' => $email,
-                    'subject' => 'New order received',
-                    'reference' => $reference,
-                    'order_items' => $order_items,
-                    'dateCreated' => $dateCreated,
-                    'addresses' => $addresses,
-                    'best_product' => $best_products,
-                    'user_email' => $user_email,
-                    '$currentOrder' => $currentOrder,
-                    'count' => $count,
-                    'from' => 'noreply@indoorsunhydro.com'
-                ];
-
-                if (!empty($users_with_role_admin)) {
-                    foreach ($users_with_role_admin as $role_admin) {
-                        $subject = 'New order received';
-                        $adminTemplate = 'emails.admin-order-received';
-                        $data['email'] = $role_admin->email;
-                        MailHelper::sendMailNotification('emails.admin-order-received', $data);
-                    }
-                }
-                $credit_limit = $contact->credit_limit;
-                $parent_email = Contact::where('contact_id', $active_contact_id)->first();
-
-                if ($credit_limit < $cart_total) {
+                if ($request->paymentTerms == 'Pay in Advanced') {
+                    $order = new ApiOrder;
+                    
                     if ($is_primary == null) {
-                        $data['subject'] = 'Credit limit reached';
-                        $data['email'] = $parent_email->email;
-
-                        MailHelper::sendMailNotification('emails.credit-limit-reached', $data);
+                        $order->secondaryId = $session_contact_id;
+                    } else {
+                        $order->primaryId = $session_contact_id;
                     }
-                } else {
-                    $data['subject'] = 'Your order has been received';
-                    $data['email'] = $email;
-                }
-                MailHelper::sendMailNotification('emails.admin-order-received', $data);
+                    $dateCreated = Carbon::now();
+                    $createdDate = Carbon::now();
+                    $order->createdDate = $createdDate;
+                    $order->modifiedDate = $createdDate;
+                    $order->createdBy = 79914;
+                    $order->processedBy = 79914;
+                    $order->isApproved = false;
+                    $order->memberId = $active_contact_id;
+                    $order->branchId = "none";
+                    $order->distributionBranchId = 0;
+                    $order->branchEmail = 'wqszeeshan@gmail.com';
+                    $order->productTotal = $cart_total;
+                    $order->total = $cart_total;
+                    $order->currencyCode = 'USD';
+                    $order->currencyRate = 59.0;
+                    $order->currencySymbol = '$';
 
+                    $order->user_id = Auth::id();
+                    $order->status = "DRAFT";
+                    $order->stage = "New";
+                    $order->logisticsCarrier = $paymentMethod;
+                    $order->tax_class_id = $request->tax_class_id;
+                    $order->user_switch = $user_switch;
+                    $order->total_including_tax = $request->incl_tax;
+                    $order->po_number = $request->po_number;
+                    $order->paymentTerms = $request->paymentTerms;
+                    $order->memo = $request->memo;
+                    $order->date = $request->date;
+                    $order->save();
 
-                $email_sent_to_users = [];
-                $user = User::where('id',  Auth::id())->first();
-                $all_ids = UserHelper::getAllMemberIds($user);
-                $all_members = Contact::whereIn('id', $all_ids)->get();
-                foreach ($all_members as $member) {
-                    $member_user = User::find($member->user_id);
-                    if (!empty($member_user) && $member_user->hasRole(['Order Approver'])) {
-                        if (isset($email_sent_to_users[$member_user->id])) {
-                            continue;
+                    $order_id =  $order->id;
+                    $currentOrder = ApiOrder::where('id', $order->id)->first();
+                    $apiApproval = $currentOrder->apiApproval;
+                    $random_string = Str::random(10);
+                    $currentOrder->reference = 'DEV4' . '-QCOM-' .$random_string . '-' .$order_id;
+
+                    $currentOrder->save();
+                    $currentOrder = ApiOrder::where('id', $order->id)->with('contact')->first();
+                    $product_prices = [];
+                    $reference = $currentOrder->reference;
+                    if (session()->has('cart')) {
+                        foreach ($cart_items as $cart_item) {
+                            $OrderItem = new ApiOrderItem;
+                            $OrderItem->order_id = $order_id;
+                            $OrderItem->product_id = $cart_item['product_id'];
+                            $OrderItem->quantity =  $cart_item['quantity'];
+                            $OrderItem->price = $cart_item['price'];
+                            $OrderItem->option_id = $cart_item['option_id'];
+                            $OrderItem->save();
+
+                            $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
+                            $products = $stripe->products->create([
+                                'name' => $cart_item['name'],
+                            ]);
+                            
+                            $productPrice = $stripe->prices->create([
+                                'unit_amount' => $cart_item['price'] * 100,
+                                'currency' => 'usd',
+                                'product' => $products->id,
+                            ]);
+                            array_push($product_prices, $productPrice);
                         }
 
-                        $email_sent_to_users[$member_user->id] = $member_user;
-                        $data['name'] = $member_user->firstName;
-                        $data['subject'] = 'New order awaiting approval';
-                        $data['email'] = $member_user->email;
-                        MailHelper::sendMailNotification('emails.user-order-received', $data);
-                    }
-                }
-
-                $lineItems = [];
-                foreach ($order_items as $order_item) {
-                    $lineItems[] = [
-                        "id" => $order_item->product_id,
-                        "createdDate" => '2022-07-31T23:43:38Z',
-                        "transaction" => '12',
-                        "parentId" => 1,
-                        "productId" => $order_item->product_id,
-                        "productOptionId" => null,
-                        "integrationRef" => "sample string 15",
-                        "sort" => 16,
-                        "code" => $order_item->code,
-                        "name" => $order_item->name,
-                        "option1" => "sample string 19",
-                        "option2" => "sample string 20",
-                        "option3" => "sample string 21",
-                        "qty" => $order_item->quantity,
-                        "styleCode" => "sample string 1",
-                        "barcode" => "sample string 2",
-                        "sizeCodes" => "sample string 4",
-                        "lineComments" => null,
-                        "unitCost" => $order_item->price,
-                        "unitPrice" => $order_item->price,
-                        "discount" => null,
-                        "qtyShipped" => 7,
-                        "holdingQty" => 8,
-                        "accountCode" => null,
-                        "stockControl" => "Undefined",
-                        "stockMovements" => [
+                        for ($i = 0; $i <= count($product_prices) - 1; $i++){
+                            $items[] = [
+                                'price' => $product_prices[$i]->id,
+                                'quantity' => 1,
+                            ];  
+                        }
+                        $line_items = [
+                            'line_items' => 
                             [
-                                "batch" => "sample string 1",
-                                "quantity" => 2.0,
-                                "serial" => "sample string 3"
-                            ],
-                            [
-                                "batch" => "sample string 1",
-                                "quantity" => 2.0,
-                                "serial" => "sample string 3"
-                            ],
-                        ],
-                        "sizes" => [
-                            [
-                                "name" => "sample string 1",
-                                "code" => "sample string 2",
-                                "barcode" => "sample string 3",
-                                "qty" => 4.0
+                                $items
                             ]
+                        ];
+                        
+                        $checkout_session = $stripe->checkout->sessions->create([
+                            'success_url' => url('/thankyou/' . $order_id) . '?session_id={CHECKOUT_SESSION_ID}',
+                            'cancel_url' => url('/checkout'),
+                            $line_items,
+                            'mode' => 'payment',
+                            'payment_intent_data'=> [
+                                "metadata" => [
+                                    "order_id"=> $order_id,  # Add your order_id here
+                                ]
+                            ]
+                            
+                        ]);
+
+                    } else {
+                        session()->forget('cart');
+                        return redirect('/');
+                    }
+
+                    $order_items = ApiOrderItem::with('order.texClasses', 'product.options')
+                        ->where('order_id', $order_id)
+                        ->get();
+
+                    $contact = Contact::where('user_id', auth()->id())->first();
+                    $user_email = Auth::user();
+                    $count = $order_items->count();
+                    $best_products = Product::where('status', '!=', 'Inactive')->orderBy('views', 'DESC')->limit(4)->get();
+                    $addresses = [
+                        'billing_address' => [
+                            'firstName' => $contact->firstName,
+                            'lastName' => $contact->lastName,
+                            'address1' => $contact->address1,
+                            'address2' => $contact->address2,
+                            'city' => $contact->city,
+                            'state' => $contact->state,
+                            'zip' => $contact->postCode,
+                            'mobile' => $contact->mobile,
+                            'phone' => $contact->phone,
                         ],
+                        'shipping_address' => [
+                            'postalAddress1' => $contact->postalAddress1,
+                            'postalAddress2' => $contact->postalAddress2,
+                            'phone' => $contact->postalCity,
+                            'postalCity' => $contact->postalState,
+                            'postalState' => $contact->postalPostCode,
+                            'postalPostCode' => $contact->postalPostCode
+                        ],
+                        'best_product' => $best_products,
+                        'user_email' =>   $user_email,
+                        'currentOrder' => $currentOrder,
+                        'count' => $count,
+                        'order_id' => $order_id,
                     ];
+
+                    $name = $contact->firstName;
+                    $email =  $contact->email;
+                    $reference  =  $currentOrder->reference;
+                    $template = 'emails.admin-order-received';
+                    $admin_users = DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
+
+                    $admin_users = $admin_users->toArray();
+
+                    $users_with_role_admin = User::select("email")
+                        ->whereIn('id', $admin_users)
+                        ->get();
+
+                    $data = [
+                        'name' =>  $name,
+                        'email' => $email,
+                        'subject' => 'New order received',
+                        'reference' => $reference,
+                        'order_items' => $order_items,
+                        'dateCreated' => $dateCreated,
+                        'addresses' => $addresses,
+                        'best_product' => $best_products,
+                        'user_email' => $user_email,
+                        'currentOrder' => $currentOrder,
+                        'count' => $count,
+                        'from' => 'noreply@indoorsunhydro.com'
+                    ];
+
+                    if (!empty($users_with_role_admin)) {
+                        foreach ($users_with_role_admin as $role_admin) {
+                            $subject = 'New order received';
+                            $adminTemplate = 'emails.admin-order-received';
+                            $data['email'] = $role_admin->email;
+                            MailHelper::sendMailNotification('emails.admin-order-received', $data);
+                        }
+                    }
+                    $credit_limit = $contact->credit_limit;
+                    $parent_email = Contact::where('contact_id', $active_contact_id)->first();
+
+                    if ($credit_limit < $cart_total) {
+                        if ($is_primary == null) {
+                            $data['subject'] = 'Credit limit reached';
+                            $data['email'] = $parent_email->email;
+
+                            MailHelper::sendMailNotification('emails.credit-limit-reached', $data);
+                        }
+                    } else {
+                        $data['subject'] = 'Your order has been received';
+                        $data['email'] = $email;
+                    }
+                    MailHelper::sendMailNotification('emails.admin-order-received', $data);
+
+
+                    $email_sent_to_users = [];
+                    $user = User::where('id',  Auth::id())->first();
+                    $all_ids = UserHelper::getAllMemberIds($user);
+                    $all_members = Contact::whereIn('id', $all_ids)->get();
+                    foreach ($all_members as $member) {
+                        $member_user = User::find($member->user_id);
+                        if (!empty($member_user) && $member_user->hasRole(['Order Approver'])) {
+                            if (isset($email_sent_to_users[$member_user->id])) {
+                                continue;
+                            }
+
+                            $email_sent_to_users[$member_user->id] = $member_user;
+                            $data['name'] = $member_user->firstName;
+                            $data['subject'] = 'New order awaiting approval';
+                            $data['email'] = $member_user->email;
+                            MailHelper::sendMailNotification('emails.user-order-received', $data);
+                        }
+                    }
+
+                    $lineItems = [];
+                    foreach ($order_items as $order_item) {
+                        $lineItems[] = [
+                            "id" => $order_item->product_id,
+                            "createdDate" => '2022-07-31T23:43:38Z',
+                            "transaction" => '12',
+                            "parentId" => 1,
+                            "productId" => $order_item->product_id,
+                            "productOptionId" => null,
+                            "integrationRef" => "sample string 15",
+                            "sort" => 16,
+                            "code" => $order_item->code,
+                            "name" => $order_item->name,
+                            "option1" => "sample string 19",
+                            "option2" => "sample string 20",
+                            "option3" => "sample string 21",
+                            "qty" => $order_item->quantity,
+                            "styleCode" => "sample string 1",
+                            "barcode" => "sample string 2",
+                            "sizeCodes" => "sample string 4",
+                            "lineComments" => null,
+                            "unitCost" => $order_item->price,
+                            "unitPrice" => $order_item->price,
+                            "discount" => null,
+                            "qtyShipped" => 7,
+                            "holdingQty" => 8,
+                            "accountCode" => null,
+                            "stockControl" => "Undefined",
+                            "stockMovements" => [
+                                [
+                                    "batch" => "sample string 1",
+                                    "quantity" => 2.0,
+                                    "serial" => "sample string 3"
+                                ],
+                                [
+                                    "batch" => "sample string 1",
+                                    "quantity" => 2.0,
+                                    "serial" => "sample string 3"
+                                ],
+                            ],
+                            "sizes" => [
+                                [
+                                    "name" => "sample string 1",
+                                    "code" => "sample string 2",
+                                    "barcode" => "sample string 3",
+                                    "qty" => 4.0
+                                ]
+                            ],
+                        ];
+                    }
+                    session()->forget('cart');
+                    
+                    return redirect($checkout_session->url);
                 }
-                session()->forget('cart');
-                return \Redirect::route('thankyou', $order_id);
+                else {
+                    $order = new ApiOrder;
+                    if ($is_primary == null) {
+                        $order->secondaryId = $session_contact_id;
+                    } else {
+                        $order->primaryId = $session_contact_id;
+                    }
+                    $dateCreated = Carbon::now();
+                    $createdDate = Carbon::now();
+                    $order->createdDate = $createdDate;
+                    $order->modifiedDate = $createdDate;
+                    $order->createdBy = 79914;
+                    $order->processedBy = 79914;
+                    $order->isApproved = false;
+                    $order->memberId = $active_contact_id;
+                    $order->branchId = "none";
+                    $order->distributionBranchId = 0;
+                    $order->branchEmail = 'wqszeeshan@gmail.com';
+                    $order->productTotal = $cart_total;
+                    $order->total = $cart_total;
+                    $order->currencyCode = 'USD';
+                    $order->currencyRate = 59.0;
+                    $order->currencySymbol = '$';
+
+                    $order->user_id = Auth::id();
+                    $order->status = "DRAFT";
+                    $order->stage = "New";
+                    $order->logisticsCarrier = $paymentMethod;
+                    $order->tax_class_id = $request->tax_class_id;
+                    $order->user_switch = $user_switch;
+                    $order->total_including_tax = $request->incl_tax;
+                    $order->po_number = $request->po_number;
+                    $order->paymentTerms = $request->paymentTerms;
+                    $order->memo = $request->memo;
+                    $order->date = $request->date;
+                    $order->save();
+
+                    $order_id =  $order->id;
+                    $currentOrder = ApiOrder::where('id', $order->id)->first();
+                    $apiApproval = $currentOrder->apiApproval;
+                    $random_string = Str::random(10);
+                    $currentOrder->reference = 'DEV4' . '-QCOM-' .$random_string . '-' .$order_id;
+
+                    $currentOrder->save();
+                    $currentOrder = ApiOrder::where('id', $order->id)->with('contact')->first();
+                    $reference = $currentOrder->reference;
+                    if (session()->has('cart')) {
+                        foreach ($cart_items as $cart_item) {
+                            $OrderItem = new ApiOrderItem;
+                            $OrderItem->order_id = $order_id;
+                            $OrderItem->product_id = $cart_item['product_id'];
+                            $OrderItem->quantity =  $cart_item['quantity'];
+                            $OrderItem->price = $cart_item['price'];
+                            $OrderItem->option_id = $cart_item['option_id'];
+                            $OrderItem->save();
+                        }
+                    } else {
+                        session()->forget('cart');
+                        return redirect('/');
+                    }
+
+                    $order_items = ApiOrderItem::with('order.texClasses', 'product.options')
+                        ->where('order_id', $order_id)
+                        ->get();
+
+                    $contact = Contact::where('user_id', auth()->id())->first();
+                    $user_email = Auth::user();
+                    $count = $order_items->count();
+                    $best_products = Product::where('status', '!=', 'Inactive')->orderBy('views', 'DESC')->limit(4)->get();
+                    $addresses = [
+                        'billing_address' => [
+                            'firstName' => $contact->firstName,
+                            'lastName' => $contact->lastName,
+                            'address1' => $contact->address1,
+                            'address2' => $contact->address2,
+                            'city' => $contact->city,
+                            'state' => $contact->state,
+                            'zip' => $contact->postCode,
+                            'mobile' => $contact->mobile,
+                            'phone' => $contact->phone,
+                        ],
+                        'shipping_address' => [
+                            'postalAddress1' => $contact->postalAddress1,
+                            'postalAddress2' => $contact->postalAddress2,
+                            'phone' => $contact->postalCity,
+                            'postalCity' => $contact->postalState,
+                            'postalState' => $contact->postalPostCode,
+                            'postalPostCode' => $contact->postalPostCode
+                        ],
+                        'best_product' => $best_products,
+                        'user_email' =>   $user_email,
+                        'currentOrder' => $currentOrder,
+                        'count' => $count,
+                        'order_id' => $order_id,
+                    ];
+
+                    $name = $contact->firstName;
+                    $email =  $contact->email;
+                    $reference  =  $currentOrder->reference;
+                    $template = 'emails.admin-order-received';
+                    $admin_users = DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
+
+                    $admin_users = $admin_users->toArray();
+
+                    $users_with_role_admin = User::select("email")
+                        ->whereIn('id', $admin_users)
+                        ->get();
+
+                    $data = [
+                        'name' =>  $name,
+                        'email' => $email,
+                        'subject' => 'New order received',
+                        'reference' => $reference,
+                        'order_items' => $order_items,
+                        'dateCreated' => $dateCreated,
+                        'addresses' => $addresses,
+                        'best_product' => $best_products,
+                        'user_email' => $user_email,
+                        'currentOrder' => $currentOrder,
+                        'count' => $count,
+                        'from' => 'noreply@indoorsunhydro.com'
+                    ];
+
+                    if (!empty($users_with_role_admin)) {
+                        foreach ($users_with_role_admin as $role_admin) {
+                            $subject = 'New order received';
+                            $adminTemplate = 'emails.admin-order-received';
+                            $data['email'] = $role_admin->email;
+                            MailHelper::sendMailNotification('emails.admin-order-received', $data);
+                        }
+                    }
+                    $credit_limit = $contact->credit_limit;
+                    $parent_email = Contact::where('contact_id', $active_contact_id)->first();
+
+                    if ($credit_limit < $cart_total) {
+                        if ($is_primary == null) {
+                            $data['subject'] = 'Credit limit reached';
+                            $data['email'] = $parent_email->email;
+
+                            MailHelper::sendMailNotification('emails.credit-limit-reached', $data);
+                        }
+                    } else {
+                        $data['subject'] = 'Your order has been received';
+                        $data['email'] = $email;
+                    }
+                    MailHelper::sendMailNotification('emails.admin-order-received', $data);
+
+
+                    $email_sent_to_users = [];
+                    $user = User::where('id',  Auth::id())->first();
+                    $all_ids = UserHelper::getAllMemberIds($user);
+                    $all_members = Contact::whereIn('id', $all_ids)->get();
+                    foreach ($all_members as $member) {
+                        $member_user = User::find($member->user_id);
+                        if (!empty($member_user) && $member_user->hasRole(['Order Approver'])) {
+                            if (isset($email_sent_to_users[$member_user->id])) {
+                                continue;
+                            }
+
+                            $email_sent_to_users[$member_user->id] = $member_user;
+                            $data['name'] = $member_user->firstName;
+                            $data['subject'] = 'New order awaiting approval';
+                            $data['email'] = $member_user->email;
+                            MailHelper::sendMailNotification('emails.user-order-received', $data);
+                        }
+                    }
+
+                    $lineItems = [];
+                    foreach ($order_items as $order_item) {
+                        $lineItems[] = [
+                            "id" => $order_item->product_id,
+                            "createdDate" => '2022-07-31T23:43:38Z',
+                            "transaction" => '12',
+                            "parentId" => 1,
+                            "productId" => $order_item->product_id,
+                            "productOptionId" => null,
+                            "integrationRef" => "sample string 15",
+                            "sort" => 16,
+                            "code" => $order_item->code,
+                            "name" => $order_item->name,
+                            "option1" => "sample string 19",
+                            "option2" => "sample string 20",
+                            "option3" => "sample string 21",
+                            "qty" => $order_item->quantity,
+                            "styleCode" => "sample string 1",
+                            "barcode" => "sample string 2",
+                            "sizeCodes" => "sample string 4",
+                            "lineComments" => null,
+                            "unitCost" => $order_item->price,
+                            "unitPrice" => $order_item->price,
+                            "discount" => null,
+                            "qtyShipped" => 7,
+                            "holdingQty" => 8,
+                            "accountCode" => null,
+                            "stockControl" => "Undefined",
+                            "stockMovements" => [
+                                [
+                                    "batch" => "sample string 1",
+                                    "quantity" => 2.0,
+                                    "serial" => "sample string 3"
+                                ],
+                                [
+                                    "batch" => "sample string 1",
+                                    "quantity" => 2.0,
+                                    "serial" => "sample string 3"
+                                ],
+                            ],
+                            "sizes" => [
+                                [
+                                    "name" => "sample string 1",
+                                    "code" => "sample string 2",
+                                    "barcode" => "sample string 3",
+                                    "qty" => 4.0
+                                ]
+                            ],
+                        ];
+                    }
+                    session()->forget('cart');
+                    
+                    return \Redirect::route('thankyou', $order_id);
+                }
             }
         }
         // else {

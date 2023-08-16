@@ -18,10 +18,12 @@ use Illuminate\Support\Facades\Auth;
 use App\User;
 use Illuminate\Support\Facades\Session;
 use App\Helpers\MailHelper;
+use Stripe\Event;
+use Stripe\StripeObject;
 
 class CheckoutController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user_id = auth()->id();
         $selected_company = Session::get('company');
@@ -73,7 +75,7 @@ class CheckoutController extends Controller
     }
 
 
-    public function thankyou($id)
+    public function thankyou(Request $request , $id)
     {
 
         $order = ApiOrder::where('id', $id)
@@ -109,5 +111,15 @@ class CheckoutController extends Controller
                 'pricing'
             )
         );
+    }
+    public function webhook(Request $request) {
+        $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
+        $event = $stripe->events->retrieve(
+            'evt_1Nfh9kGNTgOo1VJWYONFRSqw',
+            []
+        );
+        $order_id = $event->data->object->metadata->order_id;
+        dd($order_id);
+        return response()->json($event);
     }
 }
