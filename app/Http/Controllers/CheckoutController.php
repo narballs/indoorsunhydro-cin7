@@ -59,7 +59,6 @@ class CheckoutController extends Controller
             } else {
                 $user_address = Contact::where('user_id', $user_id)->where('contact_id', $contact_id)->first();
             }
-            dd($user_address);
             $tax_class = TaxClass::where('name', $user_address->tax_class)->first();
             $tax_class_none = TaxClass::where('name', 'none')->first();
             return view('checkout/index2', compact(
