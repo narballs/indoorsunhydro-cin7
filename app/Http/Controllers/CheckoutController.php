@@ -52,7 +52,7 @@ class CheckoutController extends Controller
             $states = UsState::all();
             $payment_methods = PaymentMethod::with('options')->get();
             $contact_id = session()->get('contact_id');
-
+            $user_address = null;
             if ($contact->secondary_id) {
                 $parent_id = Contact::where('secondary_id', $contact->secondary_id)->first();
                 $user_address = Contact::where('user_id', $user_id)->where('secondary_id', $parent_id->secondary_id)->first();
