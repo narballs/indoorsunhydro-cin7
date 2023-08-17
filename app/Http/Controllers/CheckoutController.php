@@ -80,12 +80,21 @@ class CheckoutController extends Controller
     {
 
         $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
-        $session = $stripe->checkout->sessions->retrieve(
+        $checkout_session = $stripe->checkout->sessions->retrieve(
             $request->session_id,
             []
         );
-        dd($session);
-        
+        if (!empty($checkout_session)) {
+            if ($checkout_session->payment_status == 'paid') {
+                $update_order = ApiOrder::where('id', $id)->update([
+                    'stage' => 'Paid',
+                ]);
+            } else {
+                $update_order = ApiOrder::where('id', $id)->update([
+                    'stage' => $checkout_session->payment_status,
+                ]);
+            }
+        }
         $order = ApiOrder::where('id', $id)
             ->with(
                 'user.contact',
