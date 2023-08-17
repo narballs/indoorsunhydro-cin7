@@ -57,7 +57,7 @@ class CheckoutController extends Controller
                 $parent_id = Contact::where('secondary_id', $contact->secondary_id)->first();
                 $user_address = Contact::where('user_id', $user_id)->where('secondary_id', $parent_id->secondary_id)->first();
             } else {
-                $user_address = Contact::where('user_id', $user_id)->where('contact_id', $contact_id)->first();
+                $user_address = Contact::where('user_id', $user_id)->where('contact_id', $contact_id)->orWhere('contac_id' , $contact->contact_id)->first();
             }
             $tax_class = TaxClass::where('name', $user_address->tax_class)->first();
             $tax_class_none = TaxClass::where('name', 'none')->first();
