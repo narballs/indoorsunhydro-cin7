@@ -13,6 +13,7 @@ use App\Models\ApiOrderItem;
 use App\Models\ApiOrder;
 use App\Models\Contact;
 use App\Models\Pricingnew;
+use App\Models\OrderComment;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
@@ -163,6 +164,11 @@ class OrderController extends Controller
                             ]
                             
                         ]);
+
+                        $order_comment = new OrderComment;
+                        $order_comment->order_id = $order_id;
+                        $order_comment->comment = 'Order Placed through Stripe';
+                        $order_comment->save();
 
                     } else {
                         session()->forget('cart');

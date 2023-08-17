@@ -85,14 +85,13 @@ class CheckoutController extends Controller
             []
         );
         if (!empty($checkout_session)) {
+            $get_order = ApiOrder::where('id', $id)->first();
             if ($checkout_session->payment_status == 'paid') {
-                $update_order = ApiOrder::where('id', $id)->update([
-                    'stage' => 'Paid',
-                ]);
+                $get_order->stage = 'paid';
+                $get_order->save();
             } else {
-                $update_order = ApiOrder::where('id', $id)->update([
-                    'stage' => $checkout_session->payment_status,
-                ]);
+                $get_order->stage =  $checkout_session->payment_status;
+                $get_order->save();
             }
         }
         $order = ApiOrder::where('id', $id)
