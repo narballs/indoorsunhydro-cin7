@@ -143,7 +143,7 @@
                                                 </div>
                                                 <div class="col-md-12">
                                                     @if ($order->stage != 'New')
-                                                        <span class="text-success">{{$order->stage}}</span>
+                                                        <span class="text-success">{{strtoupper($order->stage)}}</span>
                                                     @endif
                                                 </div>
                                             </div>
