@@ -962,7 +962,8 @@ class ProductController extends Controller
                         $q->where('status', '!=', 'Disabled');
                     }])->orWhere(function (Builder $query) use ($searchvalue) {
                         $query->where('name', 'LIKE', '%' . $searchvalue . '%')
-                        ->orWhere('code', 'LIKE', '%' . $searchvalue . '%');
+                        ->orWhere('code', 'LIKE', '%' . $searchvalue . '%')
+                        ->orWhere('description', 'LIKE', '%' . $searchvalue . '%');
                     })
                     ->where('status', '!=', 'Inactive')
                     ->paginate($per_page);
