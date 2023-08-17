@@ -66,8 +66,8 @@
                                     <table class="table address-table-items-data m-0 ">
                                         <thead>
                                             <tr class="table-header-background">
-                                                <td class="d-flex table-row-item">
-                                                    <div class="custom-control custom-checkbox tabel-checkbox">
+                                                <td class="d-flex table-row-item border-0">
+                                                    <div class="custom-control custom-checkbox tabel-checkbox pl-0">
                                                         {{-- <input
                                                             class="custom-control-input custom-control-input-success checkbox-table"
                                                             type="checkbox" id="selectAll" value="">
@@ -101,14 +101,14 @@
                                                                     id="p_{{ $product->id }}">
                                                                     <td>
                                                                         <div
-                                                                            class="custom-checkbox-input tabel-checkbox">
+                                                                            class="custom-checkbox-input tabel-checkbox d-flex pl-0">
                                                                             <input type="checkbox"
                                                                                 class="single_fav_check" name=""
                                                                                 product-id="{{ $product->id }}"
                                                                                 option-id="{{ $product->option_id }}"
                                                                                 id="check_{{ $product->id }}_{{ $product->option_id }}"
                                                                                 class="single_fav_check mt-1">
-                                                                            {{ $i++ }}
+                                                                            <span class="ml-2">{{ $i++ }}</span>
                                                                     </td>
                                                                     <td
                                                                         style="border:none; vertical-align: middle; width: 26rem">
@@ -116,7 +116,7 @@
                                                                             class="favorite_product_name_slug">{{ $product->product->name }}
                                                                         </a>
                                                                     </td>
-                                                                    <td style="border:none">
+                                                                    <td class="border-0 align-middle">
                                                                         <div class="my_favorite_product_img p-1"
                                                                             style="width:67px">
                                                                             @if ($product->product->images)
