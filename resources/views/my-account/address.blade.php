@@ -124,14 +124,14 @@
                                     <thead>
                                         <tr class="table-header-background">
                                             <td class="table-row-item">
-                                                <div class="custom-control custom-checkbox tabel-checkbox">
+                                                <div class="custom-control custom-checkbox tabel-checkbox d-flex align-items-center">
                                                     <input
                                                         class="custom-control-input custom-control-input-success checkbox-table"
                                                         type="checkbox" id="selectAll" value="">
                                                     <label for="selectAll" class="custom-control-label"></label>
     
                                                     <span class="table-row-heading-order">
-                                                        <i class="fas fa-arrow-up mt-1" style="font-size:14.5px ;"></i>
+                                                        <i class="fas fa-arrow-up" style="font-size:14.5px ;"></i>
                                                     </span>
                                                 </div>
                                             </td>
@@ -149,7 +149,7 @@
                                         @foreach ($secondary_contacts as $key => $contact)
                                             <tr class="py-5">
                                                 <td class="table-items">
-                                                    <div class="custom-control custom-checkbox tabel-checkbox">
+                                                    <div class="custom-control custom-checkbox tabel-checkbox d-flex align-items-center">
                                                         <input
                                                             class="custom-control-input custom-control-input-success sub_chk"
                                                             data-id="{{ $contact->id }}" type="checkbox"
