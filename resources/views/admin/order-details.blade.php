@@ -118,7 +118,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-2">
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <span class="order-head">Status</span>
@@ -136,8 +136,20 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="col-md-2">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <span class="order-head">Payment Status</span>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    @if ($order->stage != 'New')
+                                                        <span class="text-success">{{$order->stage}}</span>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
                                         @if($order->isApproved == 0 && $order->isVoid == 0)
-                                        <div class="col-md-4 d-flex align-items-center justify-content-end edit_order_div">
+                                        <div class="col-md-3 d-flex align-items-center justify-content-end edit_order_div">
                                             <button class="btn btn-light btn-sm edit_admin_order" type="button" onclick="edit_order('{{ $order->id }}')">
                                                     Edit Order
                                             </button>
