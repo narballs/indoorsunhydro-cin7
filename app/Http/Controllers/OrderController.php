@@ -733,7 +733,7 @@ class OrderController extends Controller
 
         try {
             $event = Webhook::constructEvent($payload, $signature, config('services.stripe.webhook_secret'));
-            dd($event);
+            // dd($event);
             // Handle the event based on its type
             switch ($event->type) {
                 case 'checkout.session.completed':

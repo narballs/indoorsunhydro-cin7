@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Session;
 use App\Helpers\MailHelper;
 use Stripe\Event;
 use Stripe\StripeObject;
+use Stripe\Webhook;
 
 class CheckoutController extends Controller
 {
@@ -77,6 +78,19 @@ class CheckoutController extends Controller
 
     public function thankyou(Request $request , $id)
     {
+
+        // $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
+        // // $session = $stripe->checkout->sessions->retrieve(
+        // //     $request->session_id,
+        // //     []
+        // // );
+        $payload = $request->getContent();
+        $signature = $request->header('Stripe-Signature');
+        $event = Webhook::constructEvent($payload, $signature, config('services.stripe.webhook_secret'));
+        if ($event->type === 'checkout.session.completed') {
+            $session = $event->data->object;
+            $sessionId = $session->id;
+        }
 
         $order = ApiOrder::where('id', $id)
             ->with(
