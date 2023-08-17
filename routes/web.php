@@ -174,6 +174,7 @@ Route::group(['middleware' => ['auth']], function () {
         return redirect()->route('user');
     });
 });
+Route::post('/stripe/webhook', [OrderController::class, 'webhook']);
 Route::get('product/search', [ProductController::class, 'productSearch'])->name('product_search');
 Route::post('admin/send-invitation-email', [ContactController::class, 'send_invitation_email'])->name('admin.send_invitation_email');
 Route::post('create/secondary/user', [UserController::class, 'create_secondary_user']);

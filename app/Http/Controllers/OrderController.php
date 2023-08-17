@@ -20,6 +20,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Str;
 use Illuminate\Database\Eloquent\Builder;
+use Stripe\Webhook;
+use Symfony\Component\HttpFoundation\Response;
 class OrderController extends Controller
 {
     public function store(Request $request)
@@ -723,5 +725,29 @@ class OrderController extends Controller
         ->where('status', '!=', 'Inactive')
         ->get();
         return response()->json(['success' => true , 'data' => $products]);
+    }
+
+    public function webhook(Request $request) {
+        $payload = $request->getContent();
+        $signature = $request->header('Stripe-Signature');
+
+        try {
+            $event = Webhook::constructEvent($payload, $signature, config('services.stripe.webhook_secret'));
+            dd($event);
+            // Handle the event based on its type
+            switch ($event->type) {
+                case 'checkout.session.completed':
+                    // Handle checkout session completed event
+                    break;
+                case 'payment_intent.succeeded':
+                    // Handle payment intent succeeded event
+                    break;
+                // Add more cases for other event types
+            }
+
+            return response()->json(['status' => 'success'], Response::HTTP_OK);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
+        }
     }
 }
