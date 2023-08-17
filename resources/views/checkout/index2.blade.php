@@ -385,14 +385,14 @@ $cart_price = 0;
                 <div class="row">
                     <div class="col-md-12 mt-2">
                         @foreach ($payment_methods as $payment_method)
-                            <form action="{{ url('order') }}" method="POST" id="order_form" name="order_form" class="mx-3">
+                            <form action="{{ url('order') }}" method="POST" id="order_form" name="order_form" class="mx-3 w-100">
                                 @php
                                     $session_contact_id = Session::get('contact_id');
                                 @endphp
                                 @csrf
                                 <div class="row">
                                     @foreach ($payment_method->options as $payment_option)
-                                        <div class="col-md-6 p-0 ps-4 bg-white d-flex align-items-center">
+                                        <div class="col-md-6 p-0 ps-4 d-flex align-items-center">
                                             <input type="hidden" value="{{ $payment_method->name }}"
                                                 name="method_name">
                                             <input type="radio" id="local_delivery_{{ $payment_option->id }}"
