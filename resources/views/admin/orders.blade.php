@@ -239,7 +239,7 @@
                                             </td>
                                             <td class="td_padding_row">
                                                 @if($order->stage != 'New') 
-                                                    <span class="badge badge-success">{{ $order->stage }}</span>
+                                                    <span class="badge badge-success">{{ strtoupper($order->stage) }}</span>
                                                 @endif 
                                             </td>
                                             <td class="td_padding_row">
