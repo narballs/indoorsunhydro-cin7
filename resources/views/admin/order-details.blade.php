@@ -156,7 +156,7 @@
                                         </div>
                                         @endif
 
-                                        <div class="col-md-4 d-none edit-order-butttons align-items-center justify-content-end">
+                                        <div class="col-md-3 d-none edit-order-butttons align-items-center justify-content-end">
                                             <button class="btn btn-light btn-sm cancel_order_changes mx-3" type="button" onclick="cancel_order_changes('{{ $order->id }}')">
                                                    Cancel
                                             </button>
