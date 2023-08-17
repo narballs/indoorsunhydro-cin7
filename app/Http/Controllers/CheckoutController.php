@@ -79,24 +79,13 @@ class CheckoutController extends Controller
     public function thankyou(Request $request , $id)
     {
 
-        // $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
-        // // $session = $stripe->checkout->sessions->retrieve(
-        // //     $request->session_id,
-        // //     []
-        // // );
-        $payload = $request->getContent();
-        $signature = $request->header('Stripe-Signature');
-        $timestamp = $request->header('Stripe-Signature-Timestamp');
-        $webhookSecret = config('services.stripe.webhook_secret');
-        $event = Webhook::constructEvent($payload, $signature, $webhookSecret, $timestamp);
-        dd($event);
-        if ($event->type === 'checkout.session.completed') {
-            $session = $event->data->object;
-            $sessionId = $session->id;
-            
-        }
-
-
+        $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
+        $session = $stripe->checkout->sessions->retrieve(
+            $request->session_id,
+            []
+        );
+        dd($session);
+        
         $order = ApiOrder::where('id', $id)
             ->with(
                 'user.contact',
