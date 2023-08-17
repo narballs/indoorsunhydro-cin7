@@ -17,18 +17,18 @@
             </div>
         </div>
     @endif
-    <div>
+    <div class="table-responsive">
         <table class="table address-table-items-data m-0 ">
             <thead>
                 <tr class="table-header-background">
-                    <td class="d-flex table-row-item">
-                        <div class="custom-control custom-checkbox tabel-checkbox">
-                            <input class="custom-control-input custom-control-input-success checkbox-table"
+                    <td class="d-flex table-row-item border-0">
+                        <div class="custom-control custom-checkbox tabel-checkbox d-flex align-items-center pl-0">
+                            {{-- <input class="custom-control-input custom-control-input-success checkbox-table"
                                 type="checkbox" id="selectAll" value="">
-                            <label for="selectAll" class="custom-control-label"></label>
+                            <label for="selectAll" class="custom-control-label"></label> --}}
 
                             <span class="table-row-heading-order">
-                                <i class="fas fa-arrow-up mt-1" style="font-size:14.5px ;"></i>
+                                <i class="fas fa-arrow-up" style="font-size:14.5px ;"></i>
                             </span>
                         </div>
                     </td>
@@ -50,20 +50,20 @@
                                         id="prd_name_{{ $product->id }}">
                                     <tr style="border-bottom :1px solid lightgray;" id="p_{{ $product->id }}">
                                         <td>
-                                            <div class="custom-checkbox-input tabel-checkbox">
+                                            <div class="custom-checkbox-input tabel-checkbox d-flex pl-0">
                                                 <input type="checkbox" class="single_fav_check" name=""
                                                     product-id="{{ $product->id }}"
                                                     option-id="{{ $product->option_id }}"
                                                     id="check_{{ $product->id }}_{{ $product->option_id }}"
                                                     class="single_fav_check mt-1">
-                                                {{ $i++ }}
+                                                    <span class="ml-2">{{ $i++ }}</span>
                                         </td>
                                         <td style="border:none; vertical-align: middle; width: 26rem">
                                             <a href="{{ url('product-detail/' . $product->id . '/' . $product->option_id . '/' . $product->product->slug) }}"
                                                 class="favorite_product_name_slug">{{ $product->product->name }}
                                             </a>
                                         </td>
-                                        <td style="border:none">
+                                        <td class="border-0 align-middle">
                                             <div class="my_favorite_product_img p-1" style="width:67px">
                                                 @if ($product->product->images)
                                                     <img src="{{ $option->image }}" class="" height="50px"
