@@ -86,11 +86,16 @@ class CheckoutController extends Controller
         // // );
         $payload = $request->getContent();
         $signature = $request->header('Stripe-Signature');
-        $event = Webhook::constructEvent($payload, $signature, config('services.stripe.webhook_secret'));
+        $timestamp = $request->header('Stripe-Signature-Timestamp');
+        $webhookSecret = config('services.stripe.webhook_secret');
+        $event = Webhook::constructEvent($payload, $signature, $webhookSecret, $timestamp);
+        dd($event);
         if ($event->type === 'checkout.session.completed') {
             $session = $event->data->object;
             $sessionId = $session->id;
+            
         }
+
 
         $order = ApiOrder::where('id', $id)
             ->with(
