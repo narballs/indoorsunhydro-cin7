@@ -148,7 +148,7 @@
                                     <tbody>
                                         @foreach ($secondary_contacts as $key => $contact)
                                             <tr class="py-5">
-                                                <td class="table-items">
+                                                <td class="table-items align-middle pt-0 pb-0">
                                                     <div class="custom-control custom-checkbox tabel-checkbox d-flex align-items-center">
                                                         <input
                                                             class="custom-control-input custom-control-input-success sub_chk"
