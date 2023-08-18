@@ -277,62 +277,64 @@
                                             $total_including_tax = $tax + $order->total;
                                         @endphp
                                         @foreach ($orderitems as $item)
-                                            <tr class="border-bottom order_items_row" id="row_{{$item->id}}">
-                                                <td class="align-middle">
-                                                    <div class="d-flex mb-2">
-                                                        <div class="flex-shrink-0">
-                                                            <img src="{{ $item->product->images }}" alt=""
-                                                                width="35" class="img-fluid">
+                                            @foreach($item->product->options as $option)
+                                                <tr class="border-bottom order_items_row" id="row_{{$item->id}}">
+                                                    <td class="align-middle">
+                                                        <div class="d-flex mb-2">
+                                                            <div class="flex-shrink-0">
+                                                                <img src="{{ $item->product->images }}" alt=""
+                                                                    width="35" class="img-fluid">
+                                                            </div>
+                                                            <div class="d-flex align-items-center pl-3">
+                                                                <h6 class="small mb-0"><a href="{{url('product-detail/'.$item->product->id.'/'.$option->option_id.'/'.$item->product->slug)}}" class="p_name_order">{{ $item->Product->name }}</a></h6>
+                                                            </div>
                                                         </div>
-                                                        <div class="d-flex align-items-center pl-3">
-                                                            <h6 class="small mb-0"><a href="#" class="p_name_order">{{ $item->Product->name }}</a></h6>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td class="align-middle">
-                                                    <span class="sku">{{ $item->product->code }}</span>
-                                                </td>
-                                                <td class="ms-2 align-middle d-flex justify-content-center">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="33" class="itemQuantityText mt-2" height="32" viewBox="0 0 33 32" fill="none">
-                                                        <circle cx="16.5752" cy="15.8466" r="15.8466" fill="#E3F5F5"/>
-                                                        <text x="50%" y="50%" text-anchor="middle" class="order-item-quantity itemQuantityText" stroke="#131313" stroke-width="" dy=".3em" id="itemQuantityText_{{$item->id}}">{{ $item->quantity }}</text>
-                                                    </svg>
-                                                    <div class="itemQuantityDiv d-none">
-                                                        <button class="border-add mt-1 border-right-btn" type="button" onclick="increaseQuantity('{{ $item->id }}')">
-                                                            <i class="fa fa-angle-up"></i>
-                                                        </button>
-                                                        <input type="text" min="1" class="itemQuantity form-control form-control-sm w-25 h-auto p-1 mt-1 input_qty text-center" value="{{ $item->quantity}}" data-id="{{$item->id}}" id="itemQuantity_number_{{$item->id}}" onchange="change_quantity('{{$item->id}}')">
-                                                        <button class="border-add mt-1 border-left-btn" type="button" onclick="decreaseQuantity('{{ $item->id }}')">
-                                                            <i class="fa fa-angle-down"></i>
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                                <td class="delete_item_body d-none text-center align-middle">
-                                                    <button class="btn btn-danger btn-sm border-0 rounded-circle delete-item-button" onclick="deleteItem({{ $item->id }})">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                                            <g clip-path="url(#clip0_801_438)">
-                                                            <path d="M3.33301 5.83325H16.6663" stroke="#DC4E41" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
-                                                            <path d="M8.33301 9.16675V14.1667" stroke="#DC4E41" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
-                                                            <path d="M11.667 9.16675V14.1667" stroke="#DC4E41" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
-                                                            <path d="M4.16699 5.83325L5.00033 15.8333C5.00033 16.2753 5.17592 16.6992 5.48848 17.0118C5.80104 17.3243 6.22496 17.4999 6.66699 17.4999H13.3337C13.7757 17.4999 14.1996 17.3243 14.5122 17.0118C14.8247 16.6992 15.0003 16.2753 15.0003 15.8333L15.8337 5.83325" stroke="#DC4E41" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
-                                                            <path d="M7.5 5.83333V3.33333C7.5 3.11232 7.5878 2.90036 7.74408 2.74408C7.90036 2.5878 8.11232 2.5 8.33333 2.5H11.6667C11.8877 2.5 12.0996 2.5878 12.2559 2.74408C12.4122 2.90036 12.5 3.11232 12.5 3.33333V5.83333" stroke="#DC4E41" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
-                                                            </g>
-                                                            <defs>
-                                                            <clipPath id="clip0_801_438">
-                                                            <rect width="20" height="20" fill="white"/>
-                                                            </clipPath>
-                                                            </defs>
+                                                    </td>
+                                                    <td class="align-middle">
+                                                        <span class="sku">{{ $item->product->code }}</span>
+                                                    </td>
+                                                    <td class="ms-2 align-middle d-flex justify-content-center">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="33" class="itemQuantityText mt-2" height="32" viewBox="0 0 33 32" fill="none">
+                                                            <circle cx="16.5752" cy="15.8466" r="15.8466" fill="#E3F5F5"/>
+                                                            <text x="50%" y="50%" text-anchor="middle" class="order-item-quantity itemQuantityText" stroke="#131313" stroke-width="" dy=".3em" id="itemQuantityText_{{$item->id}}">{{ $item->quantity }}</text>
                                                         </svg>
-                                                    </button>
-                                                </td>
-                                                <td class="text-center align-middle">
-                                                    <span class="order-item-price item_prices" id="itemPrice_{{$item->id}}">${{ number_format($item->price, 2) }}</span>
-                                                    <input type="text" value="{{ number_format($item->price , 2) }}" class="item_price_class form-control form-control-sm mx-auto w-75 h-auto p-1 text-center d-none" id="itemPrice_number_{{$item->id}}">
-                                                </td>
-                                                <td class="align-middle text-center">
-                                                    <span class="item_total" id="itemTotal_{{$item->id}}">${{number_format($item->price * $item->quantity , 2)}} </span>
-                                                </td>
-                                            </tr>
+                                                        <div class="itemQuantityDiv d-none">
+                                                            <button class="border-add mt-1 border-right-btn" type="button" onclick="increaseQuantity('{{ $item->id }}')">
+                                                                <i class="fa fa-angle-up"></i>
+                                                            </button>
+                                                            <input type="text" min="1" class="itemQuantity form-control form-control-sm w-25 h-auto p-1 mt-1 input_qty text-center" value="{{ $item->quantity}}" data-id="{{$item->id}}" id="itemQuantity_number_{{$item->id}}" onchange="change_quantity('{{$item->id}}')">
+                                                            <button class="border-add mt-1 border-left-btn" type="button" onclick="decreaseQuantity('{{ $item->id }}')">
+                                                                <i class="fa fa-angle-down"></i>
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                    <td class="delete_item_body d-none text-center align-middle">
+                                                        <button class="btn btn-danger btn-sm border-0 rounded-circle delete-item-button" onclick="deleteItem({{ $item->id }})">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                                                <g clip-path="url(#clip0_801_438)">
+                                                                <path d="M3.33301 5.83325H16.6663" stroke="#DC4E41" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                                                                <path d="M8.33301 9.16675V14.1667" stroke="#DC4E41" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                                                                <path d="M11.667 9.16675V14.1667" stroke="#DC4E41" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                                                                <path d="M4.16699 5.83325L5.00033 15.8333C5.00033 16.2753 5.17592 16.6992 5.48848 17.0118C5.80104 17.3243 6.22496 17.4999 6.66699 17.4999H13.3337C13.7757 17.4999 14.1996 17.3243 14.5122 17.0118C14.8247 16.6992 15.0003 16.2753 15.0003 15.8333L15.8337 5.83325" stroke="#DC4E41" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                                                                <path d="M7.5 5.83333V3.33333C7.5 3.11232 7.5878 2.90036 7.74408 2.74408C7.90036 2.5878 8.11232 2.5 8.33333 2.5H11.6667C11.8877 2.5 12.0996 2.5878 12.2559 2.74408C12.4122 2.90036 12.5 3.11232 12.5 3.33333V5.83333" stroke="#DC4E41" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                                                                </g>
+                                                                <defs>
+                                                                <clipPath id="clip0_801_438">
+                                                                <rect width="20" height="20" fill="white"/>
+                                                                </clipPath>
+                                                                </defs>
+                                                            </svg>
+                                                        </button>
+                                                    </td>
+                                                    <td class="text-center align-middle">
+                                                        <span class="order-item-price item_prices" id="itemPrice_{{$item->id}}">${{ number_format($item->price, 2) }}</span>
+                                                        <input type="text" value="{{ number_format($item->price , 2) }}" class="item_price_class form-control form-control-sm mx-auto w-75 h-auto p-1 text-center d-none" id="itemPrice_number_{{$item->id}}">
+                                                    </td>
+                                                    <td class="align-middle text-center">
+                                                        <span class="item_total" id="itemTotal_{{$item->id}}">${{number_format($item->price * $item->quantity , 2)}} </span>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
                                         @endforeach
                                     </tbody>
                                     <tfoot>
