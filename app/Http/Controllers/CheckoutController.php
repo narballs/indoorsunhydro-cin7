@@ -78,20 +78,21 @@ class CheckoutController extends Controller
 
     public function thankyou(Request $request , $id)
     {
-
-        $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
-        $checkout_session = $stripe->checkout->sessions->retrieve(
-            $request->session_id,
-            []
-        );
-        if (!empty($checkout_session)) {
-            $get_order = ApiOrder::where('id', $id)->first();
-            if ($checkout_session->payment_status == 'paid') {
-                $get_order->stage = 'paid';
-                $get_order->save();
-            } else {
-                $get_order->stage =  $checkout_session->payment_status;
-                $get_order->save();
+        if (!empty($request->session_id)) {
+            $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
+            $checkout_session = $stripe->checkout->sessions->retrieve(
+                $request->session_id,
+                []
+            );
+            if (!empty($checkout_session)) {
+                $get_order = ApiOrder::where('id', $id)->first();
+                if ($checkout_session->payment_status == 'paid') {
+                    $get_order->stage = 'paid';
+                    $get_order->save();
+                } else {
+                    $get_order->stage =  $checkout_session->payment_status;
+                    $get_order->save();
+                }
             }
         }
         $order = ApiOrder::where('id', $id)
