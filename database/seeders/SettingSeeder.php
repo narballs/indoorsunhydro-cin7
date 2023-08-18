@@ -44,7 +44,7 @@ class SettingSeeder extends Seeder
             [
                 'option_name' => 'out_of_stock_label', 
                 'type' => 'text',
-                'option_value' => 'OUT OF STOCK',
+                'option_value' => 'On Back Order',
             ],
             [
                 'option_name' => 'enable_stripe_chekout', 
