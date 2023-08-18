@@ -1,21 +1,16 @@
 @extends('adminlte::page')
-
+<link href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.33/sweetalert2.css">
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @section('title', 'Dashboard')
 
 @section('content_header')
-    <h1>Dashboard</h1>
+    <h1>Order Detail</h1>
 @stop
 @section('content')
     <!-- sdfkjlsdkfjsdlkfk -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <div class="row">
-        <div class="col-md-6 order-product-search">
-            <div class="form-group has-search-products">
-                <span class="fa fa-search form-control-feedback"></span>
-                <input type="text" name="search-products-to-add" class="form-control" placeholder="Search">
-            </div>
-        </div>
-        <div class="col-md-3 d-flex">
+        <div class="col-md-8 d-flex justify-content-end mb-3">
             <form>
                 @csrf
                 <input type="hidden" value="{{ $time_diff }}" id="timeSpanToCancel">
@@ -78,13 +73,13 @@
                 @endif
             </form>
         </div>
-        <div class="progress border d-none w-50" id="progress-bar">
+        <div class="progress border d-none w-50 mb-2" id="progress-bar">
             <div class="progress-bar progress-bar-striped progress-bar-animated bg-info"
                 role="progressbar" aria-valuenow="100" aria-valuemin="" aria-valuemax="100"></div>
         </div>
     </div>
-    <div class="bg-success text-white text-center w-50" id="fullfill_success"></div>
-    <div class="bg-warning text-white text-center w-50" id="fullfill_failed"></div>
+    <div class="bg-success text-white text-center w-50 mb-2" id="fullfill_success"></div>
+    <div class="bg-warning text-white text-center w-50 mb-2" id="fullfill_failed"></div>
     <div class="">
         <div class="row">
             <div class="col-md-12">
@@ -123,7 +118,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-2">
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <span class="order-head">Status</span>
@@ -141,15 +136,27 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        {{-- @if($order->isApproved == 0 && $order->isVoid == 0)
-                                        <div class="col-md-4 d-flex align-items-center justify-content-end edit_order_div">
+                                        <div class="col-md-2">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <span class="order-head">Payment Status</span>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    @if ($order->stage != 'New')
+                                                        <span class="text-success">{{strtoupper($order->stage)}}</span>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @if($order->isApproved == 0 && $order->isVoid == 0)
+                                        <div class="col-md-3 d-flex align-items-center justify-content-end edit_order_div">
                                             <button class="btn btn-light btn-sm edit_admin_order" type="button" onclick="edit_order('{{ $order->id }}')">
                                                     Edit Order
                                             </button>
                                         </div>
-                                        @endif --}}
+                                        @endif
 
-                                        <div class="col-md-4 d-none edit-order-butttons align-items-center justify-content-end">
+                                        <div class="col-md-3 d-none edit-order-butttons align-items-center justify-content-end">
                                             <button class="btn btn-light btn-sm cancel_order_changes mx-3" type="button" onclick="cancel_order_changes('{{ $order->id }}')">
                                                    Cancel
                                             </button>
@@ -254,12 +261,14 @@
                                     <thead>
                                         <tr class="background-color">
                                             <th class="pl-4">Line Items</th>
-                                            <th>Quantity</th>
-                                            <th id="delete_item_head" class="d-none">Delete Item</th>
-                                            <th>Totals</th>
+                                            <th class="pl-4">Sku</th>
+                                            <th class="text-center">Quantity</th>
+                                            <th id="delete_item_head" class="d-none text-center">Delete Item</th>
+                                            <th class="text-center">Item Price</th>
+                                            <th class="text-center">Sub Total</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody class="order-detail-tbody">
                                         @php
                                             $tax=0;
                                             if (!empty($tax_class)) {
@@ -268,7 +277,7 @@
                                             $total_including_tax = $tax + $order->total;
                                         @endphp
                                         @foreach ($orderitems as $item)
-                                            <tr class="border-bottom" id="row_{{$item->id}}">
+                                            <tr class="border-bottom order_items_row" id="row_{{$item->id}}">
                                                 <td class="align-middle">
                                                     <div class="d-flex mb-2">
                                                         <div class="flex-shrink-0">
@@ -280,15 +289,26 @@
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td class="ms-2 align-middle">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="33" class="itemQuantityText" height="32" viewBox="0 0 33 32" fill="none">
+                                                <td class="align-middle">
+                                                    <span class="sku">{{ $item->product->code }}</span>
+                                                </td>
+                                                <td class="ms-2 align-middle d-flex justify-content-center">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="33" class="itemQuantityText mt-2" height="32" viewBox="0 0 33 32" fill="none">
                                                         <circle cx="16.5752" cy="15.8466" r="15.8466" fill="#E3F5F5"/>
                                                         <text x="50%" y="50%" text-anchor="middle" class="order-item-quantity itemQuantityText" stroke="#131313" stroke-width="" dy=".3em" id="itemQuantityText_{{$item->id}}">{{ $item->quantity }}</text>
                                                     </svg>
-                                                    <input type="text" min="1" class="itemQuantity form-control form-control-sm w-50 h-auto p-1 text-center d-none" value="{{ $item->quantity}}" id="itemQuantity_number_{{$item->id}}">
+                                                    <div class="itemQuantityDiv d-none">
+                                                        <button class="border-add mt-1 border-right-btn" type="button" onclick="increaseQuantity('{{ $item->id }}')">
+                                                            <i class="fa fa-angle-up"></i>
+                                                        </button>
+                                                        <input type="text" min="1" class="itemQuantity form-control form-control-sm w-25 h-auto p-1 mt-1 input_qty text-center" value="{{ $item->quantity}}" data-id="{{$item->id}}" id="itemQuantity_number_{{$item->id}}" onchange="change_quantity('{{$item->id}}')">
+                                                        <button class="border-add mt-1 border-left-btn" type="button" onclick="decreaseQuantity('{{ $item->id }}')">
+                                                            <i class="fa fa-angle-down"></i>
+                                                        </button>
+                                                    </div>
                                                 </td>
-                                                <td class="delete_item_body d-none">
-                                                    <button class="btn btn-danger btn-sm border-0 bg-transparent" onclick="deleteItem({{ $item->id }})">
+                                                <td class="delete_item_body d-none text-center align-middle">
+                                                    <button class="btn btn-danger btn-sm border-0 rounded-circle delete-item-button" onclick="deleteItem({{ $item->id }})">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                                                             <g clip-path="url(#clip0_801_438)">
                                                             <path d="M3.33301 5.83325H16.6663" stroke="#DC4E41" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -305,32 +325,57 @@
                                                         </svg>
                                                     </button>
                                                 </td>
-                                                <td class="text-end align-middle">
+                                                <td class="text-center align-middle">
                                                     <span class="order-item-price item_prices" id="itemPrice_{{$item->id}}">${{ number_format($item->price, 2) }}</span>
-                                                    <input type="text" value="{{ number_format($item->price, 2) }}" class="item_price_class form-control form-control-sm w-50 h-auto p-1 text-center d-none" id="itemPrice_number_{{$item->id}}">
+                                                    <input type="text" value="{{ number_format($item->price , 2) }}" class="item_price_class form-control form-control-sm mx-auto w-75 h-auto p-1 text-center d-none" id="itemPrice_number_{{$item->id}}">
+                                                </td>
+                                                <td class="align-middle text-center">
+                                                    <span class="item_total" id="itemTotal_{{$item->id}}">${{number_format($item->price * $item->quantity , 2)}} </span>
                                                 </td>
                                             </tr>
                                         @endforeach
                                     </tbody>
                                     <tfoot>
                                         <tr class="border-bottom">
-                                            <td colspan="2" class="add_colspan"><span class="summary-head mx-2">Subtotal</span></td>
-                                            <td class="text-end"><span class="order-item-price">${{ number_format($order->total, 2) }}</span></td>
+                                            <td colspan="4" class="add_colspan"><span class="summary-head mx-2">Subtotal</span></td>
+                                            <td class="text-center"><span class="order-item-price" id="subtotal_text">${{ number_format($order->total, 2) }}</span>
+                                            </td>
                                         </tr>
                                         <tr class="border-bottom">
-                                            <td colspan="2" class="add_colspan"><span class="summary-head mx-2">Shipping</span></td>
-                                            <td class="text-end"><span class="order-item-price">$0.00</span></td>
+                                            <td colspan="4" class="add_colspan"><span class="summary-head mx-2">Shipping</span></td>
+                                            <td class="text-center"><span class="order-item-price">$0.00</span></td>
                                         </tr>
                                         <tr class="border-bottom">
-                                            <td colspan="2" class="add_colspan"><span class="summary-head mx-2">Add Tax</span></td>
-                                            <td class="text-end"><span class="order-item-price">${{ number_format($tax, 2) }}</span></td>
+                                            <td colspan="4" class="add_colspan"><span class="summary-head mx-2">Add Tax</span></td>
+                                            <td class="text-center"><span class="order-item-price" id="tax_text">${{ number_format($tax, 2) }}</span>
+                                            </td>
                                         </tr>
                                         <tr class="fw-bold">
-                                            <td colspan="2" class="add_colspan"><span class="summary-head mx-2">GRAND TOTAL</span></td>
-                                            <td class="text-end"><span class="order-grand-total">${{ number_format($total_including_tax, 2) }}</span></td>
+                                            <td colspan="4" class="add_colspan"><span class="summary-head mx-2">GRAND TOTAL</span></td>
+                                            <td class="text-center"><span class="order-grand-total" id="grand_total_text">${{ number_format($total_including_tax, 2) }}</span></td>
                                         </tr>
                                     </tfoot>
                                 </table>
+                            </div>
+                            <div class="row">
+                                {{-- <div class="add_product_row dropdown-order col-md-4 d-none">
+                                    <input type="text" placeholder="Add Products" id="myInput-order" name="search_products" onkeyup="searchProducts()">
+                                    <div class="product-list">
+                                        <ul class="prd_ul">
+
+                                        </ul>
+                                    </div>
+                                </div> --}}
+                                <div class="add_product_row dropdown-order col-md-4 d-none mx-2 mb-2">
+                                    <div class="has-search ">
+                                        <span class="fa fa-search form-control-feedback"></span>
+                                            <input type="text" class="form-control" id="myInput-order" name="search_products"
+                                                placeholder="Add Products" onkeyup="searchProducts()" />
+                                            <ul class="prd_ul p-0 d-none">
+    
+                                            </ul>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="card mb-4">
@@ -431,6 +476,95 @@
     <link rel="stylesheet" href="{{ asset('admin/admin_lte.css') }}">
 
     <style type="text/css">
+         
+        .itemQuantityDiv {
+            display: flex;
+            justify-content: center;
+        }
+        .input_qty {
+            border-radius: 0px !important;
+        }
+        .border-add {
+            border: 1px solid #DDE2E4 !important;
+        }
+        .border-left-btn {
+            border-left: none !important;
+            border-top-right-radius:4px !important;
+            border-bottom-right-radius:4px !important;
+        }
+        .border-right-btn {
+            border-right: none !important;
+            border-top-left-radius:4px !important;
+            border-bottom-left-radius:4px !important;
+        }
+       .all-products {
+            cursor: pointer;
+       }
+        /* The search field */
+        #myInput-order {
+        box-sizing: border-box;
+        background-position: 14px 12px;
+        background-repeat: no-repeat;
+        font-size: 16px;
+        padding: 0.5rem 2rem;
+        border: none;
+        border-bottom: 1px solid #ddd;
+        width: 100%;
+        }
+
+        /* The search field when it gets focus/clicked on */
+        #myInput-order:focus {outline: 3px solid #ddd;}
+
+        /* The container <div> - needed to position the dropdown content */
+        .dropdown-order {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Dropdown Content (Hidden by Default) */
+        .prd_ul {
+            background-color: #f6f6f6;
+            min-width: 230px;
+            border: 1px solid #ddd;
+            z-index: 1;
+            left: 35%;
+            top: 1%;
+            overflow-y: auto;
+            max-height: 15rem;
+        }
+
+        /* Links inside the dropdown */
+        .prd_ul li{
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+           
+        }
+
+        /* Change color of dropdown links on hover */
+        .prd_ul li:hover {background-color: #f1f1f1}
+
+        /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+        .show-order-result {display:block;}
+        #search_product_result {
+            border: 1px solid #ced4da;
+        }
+        .suggestion_box {
+            list-style: none;
+            text-decoration: none
+        }
+        .delete-item-button {
+            background: rgba(220, 78, 65, 0.13);
+        }
+        .delete-item-button:hover {
+            background: rgba(220, 78, 65, 0.13);
+        }
+
+        .delete-item-button:active {
+            background-color: rgba(220, 78, 65, 0.13) !important;
+        }
+
         .delievery {
             color: #242424;
             font-size: 14px;
@@ -473,6 +607,13 @@
             line-height: normal;
         }
         .order-item-price {
+            color: #7D7D7D;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: normal;
+        }
+        .sku {
             color: #7D7D7D;
             font-size: 14px;
             font-style: normal;
@@ -560,10 +701,13 @@
             font-size: 11.3289px;
         }
     </style>
+    
 @stop
 
 @section('js')
     <script>
+        // on click increase qty 
+
         $(document).ready(function() {
             console.log(time_left);
             var time_left = $('#timeSpanToCancel').val();
@@ -591,24 +735,59 @@
                     minutes = 0;
                     seconds = 0;
                     timer.lap();
-                    console.log('finsih');
                 }
                 timer2 = minutes + ':' + seconds;
             }, 1000);
         });
+        //on click increase quantity
+        function increaseQuantity(item_id) {
+            var quantity = parseInt($('#itemQuantity_number_' + item_id).val());
+            var itemPrice = parseFloat($('#itemPrice_number_' + item_id).val());
+            var qty_value = $('#itemQuantity_number_' + item_id).val(quantity + 1);
+            var quantityValue = parseInt($('#itemQuantity_number_' + item_id).val());
+            var itemTotal = quantityValue * itemPrice;
+            $('#itemTotal_' + item_id).html('');
+            $('#itemTotal_' + item_id).html('$' + itemTotal.toFixed(2));
+        }
+        // on click descrease quantity
+        function decreaseQuantity(item_id) {
+            var quantity = parseInt($('#itemQuantity_number_' + item_id).val());
+            if (quantity > 1) {
+                var itemPrice = parseFloat($('#itemPrice_number_' + item_id).val());
+                var qty_value = $('#itemQuantity_number_' + item_id).val(quantity - 1);
+                var quantityValue = parseInt($('#itemQuantity_number_' + item_id).val());
+                var itemTotal = quantityValue * itemPrice;
+                $('#itemTotal_' + item_id).html('');
+                $('#itemTotal_' + item_id).html('$' + itemTotal.toFixed(2));
+            }
+        } 
+
+        // onchange qutantity update item price
+        function change_quantity(item_id) {
+            var quantity = parseInt($('#itemQuantity_number_' + item_id).val());
+            var itemPrice = parseFloat($('#itemPrice_number_' + item_id).val());
+            var qty_value = $('#itemQuantity_number_' + item_id).val(quantity);
+            var quantityValue = parseInt($('#itemQuantity_number_' + item_id).val());
+            var itemTotal = quantityValue * itemPrice;
+            $('#itemTotal_' + item_id).html('');
+            $('#itemTotal_' + item_id).html(itemTotal.toFixed(2));
+        }
+
         //edit order
         function edit_order(id) {
+            var order_items  = $('.itemQuantity');
             $('.edit_order_div').removeClass('d-flex');
             $('.edit_order_div').addClass('d-none');
             $('.edit-order-butttons').removeClass('d-none');
             $('.edit-order-butttons').addClass('d-flex');
             $('.itemQuantityText').addClass('d-none');
             $('.item_prices').addClass('d-none');
-            $('.itemQuantity').removeClass('d-none');
+            $('.itemQuantityDiv').removeClass('d-none');
             $('.item_price_class').removeClass('d-none');
             $('#delete_item_head').removeClass('d-none');
             $('.delete_item_body').removeClass('d-none');
-            $('.add_colspan').attr('colspan', '3');
+            $('.add_product_row').removeClass('d-none');
+            $('.add_colspan').attr('colspan', '5');
         }
         //cancel order changes
         function cancel_order_changes(id) {
@@ -618,11 +797,12 @@
             $('.edit_order_div').removeClass('d-none');
             $('.itemQuantityText').removeClass('d-none');
             $('.item_prices').removeClass('d-none');
-            $('.itemQuantity').addClass('d-none');
+            $('.itemQuantityDiv').addClass('d-none');
             $('.item_price_class').addClass('d-none');
             $('#delete_item_head').addClass('d-none');
             $('.delete_item_body').addClass('d-none');
-            $('.add_colspan').attr('colspan', '2');
+            $('.add_colspan').attr('colspan', '4');
+            $('.add_product_row').addClass('d-none');
         }
         //prevent input from starting with 0
         $(".itemQuantity").on("input", function() {
@@ -630,6 +810,83 @@
                 this.value = this.value.replace(/^0/, "1");
             }
         });
+
+        
+        function searchProducts() {
+            
+            var order_id = $('#orderID').val();
+            var tax_rate = $('#tax_rate').val();
+            var search_value = $('#myInput-order').val();
+            console.log(search_value);
+            jQuery.ajax({
+                url: "{{ url('admin/order/search-product') }}",
+                method: 'get',
+                data: {
+                    order_id: order_id,
+                    search_value: search_value,
+                    tax_rate: tax_rate
+                },
+                
+                success: function(response) {
+                    if(response.success == true && response.data.length > 0){
+                        $('.prd_ul').removeClass('d-none');
+                        var stringify = JSON.stringify(response.data);
+                        data = JSON.parse(stringify);
+                        data.forEach(function(product, element , value) {
+                            product.options.forEach(function(index , value) {
+                                var span = '<li class="all-products" onclick="add_product(' + index.product_id + ' , ' + index.option_id + ')">'+product.name+'</li>';
+                                $(".prd_ul").append(span);
+                            });
+                        })
+                    }
+                }
+            });
+
+        }
+
+        // function filterFunction() {
+        //     var input, filter, ul, li, a, i;
+        //     input = document.getElementById("myInput-order");
+        //     filter = input.value.toUpperCase();
+        //     div = document.getElementById("product_dropdown");
+        //     a = div.getElementsByTagName("span");
+        //     var p = div.getElementsByTagName("p");
+        //     for (i = 0; i < a.length; i++) {
+        //         txtValue = a[i].textContent || a[i].innerText;
+        //         if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        //         a[i].style.display = "";
+        //         } else {
+        //             a[i].style.display = "none";
+        //         }
+        //     }
+        // }
+        
+
+        function add_product(productId , option_id) {
+            var order_id = $('#orderID').val();
+            var tax_rate = $('#tax_rate').val();
+            var product_id = productId;
+            var option_id = option_id;
+            jQuery.ajax({
+                url: "{{ url('admin/order/add-product') }}",
+                method: 'post',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "product_id": product_id,
+                    "tax_rate": tax_rate,
+                    'order_id': order_id,
+                    'option_id': option_id
+
+                },
+                success: function(response) {
+                    if(response.success == true){
+                        $('#fullfill_success').removeClass('d-none');
+                        $('#fullfill_success').text(response.message);
+                        window.location.reload();
+                    }
+                }
+            });
+        }
 
         //delete item from order
         function deleteItem(itemId) {
@@ -647,14 +904,107 @@
 
                 },
                 success: function(response) {
+                    console.log(response);
+                    if (response.item_count > 1) {
+                        if(response.success == true){
+                            $('#fullfill_success').removeClass('d-none');
+                            $('#fullfill_success').text(response.message);
+                            window.location.reload();
+                        }
+                        else if(response.success == false){
+                            $('#fullfill_success').removeClass('d-none');
+                            $('#fullfill_failed').text(response.message);
+                            window.location.reload();
+                        }
+                    } else {
+
+                        Swal.fire({
+                                toast: true,
+                                icon: 'warning',
+                                title: response.message,
+                                showConfirmButton: true,
+                                confirmButtonText: 'Yes',
+                                showCancelButton: true,
+                                position: 'top',
+                                
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                jQuery.ajax({
+                                    url: "{{ url('admin/order/item/delete') }}",
+                                    method: 'post',
+                                    data: {
+                                        "_token": "{{ csrf_token() }}",
+                                        "item_id": item_id,
+                                        "tax_rate": tax_rate,
+                                        'order_id': order_id
+        
+                                    },
+                                    success: function(response) {
+                                        if(response.success == true){
+                                            $('#fullfill_success').removeClass('d-none');
+                                            $('#fullfill_success').text(response.message);
+                                            window.location = '/admin/orders';
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                        
+                    }
+                }
+            });
+        }
+
+        // update order 
+        function update_order(order_id) {
+            var tax_rate = $('#tax_rate').val();
+            var itemsqtys =  $('.itemQuantity');
+            var itemsprices =  $('.item_price_class');
+            var product_total = 0;
+            var total_qty = 0;
+            var join_id_qty_price = '';
+            var item_data = [];
+            itemsqtys.each(function (index, element) {
+                var itemPrice = parseFloat(itemsprices[index].value);
+                var itemQty = parseInt(element.value);
+                product_total += itemPrice * itemQty;
+                total_qty += itemQty;
+                
+                item_data[index] = {
+                    item_id : $(this).attr('data-id'), 
+                    item_quantity : itemQty, 
+                    item_price : itemPrice
+                };
+
+            });
+            var calculated_tax = tax_rate /100 * product_total;
+            var total_included_tax = product_total + calculated_tax;
+            $('#subtotal_text').text('$'+product_total.toFixed(2));
+            $('#tax_text').text('$'+calculated_tax.toFixed(2));
+            $('#grand_total_text').text('$'+total_included_tax.toFixed(2));
+            var orderID = order_id;
+           
+            jQuery.ajax({
+                url: "{{ url('admin/order/update') }}",
+                method: 'post',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    'order_id': orderID,
+                    "tax_rate": tax_rate,
+                    'item_data': item_data,
+                    'subtotal' : product_total,
+                    'total_including_tax':total_included_tax
+
+                },
+                success: function(response) {
                     if(response.success == true){
                         $('#fullfill_success').removeClass('d-none');
                         $('#fullfill_success').text(response.message);
                         window.location.reload();
                     }
-                    else if(response.success == false){
-                        $('#fullfill_success').removeClass('d-none');
-                        $('#fullfill_failed').text(response.message);
+                    else{
+                        $('#fullfill_failed').removeClass('d-none');
+                        $('#fullfill_failed').text('Something went wrong!');
                         window.location.reload();
                     }
                 }

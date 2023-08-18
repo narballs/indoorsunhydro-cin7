@@ -45,7 +45,13 @@ class SettingSeeder extends Seeder
                 'option_name' => 'out_of_stock_label', 
                 'type' => 'text',
                 'option_value' => 'OUT OF STOCK',
+            ],
+            [
+                'option_name' => 'enable_stripe_chekout', 
+                'type' => 'yes/no',
+                'option_value' => 'no',
             ]
+
         ];
 
         foreach($setting as $setting) {

@@ -12,7 +12,7 @@
         border-color: inherit;
         border-style: solid;
         border-width: 0;
-        border-color: #8C8C8C;
+        border-color: #DFDFDF;
     }
 
     /*
@@ -308,7 +308,7 @@ $cart_price = 0;
     <div class="row ps-5">
         <div class="text-center d-none" id="progress_spinner"><img src="/theme/img/progress.gif" alt=""></div>
         <div class="col-md-12">
-            <p class="item-purchased-thank-you-page">Item Purchased </p>
+            <p class="item-purchased-thank-you-page">Item(s) Purchased </p>
         </div>
 
         <div class=" col-xl-9 col-lg-9 col-md-12 col-sm-12 pe-5">
@@ -385,14 +385,14 @@ $cart_price = 0;
                 <div class="row">
                     <div class="col-md-12 mt-2">
                         @foreach ($payment_methods as $payment_method)
-                            <form action="{{ url('order') }}" method="POST" id="order_form" name="order_form" class="mx-3">
+                            <form action="{{ url('order') }}" method="POST" id="order_form" name="order_form" class="mx-3 w-100">
                                 @php
                                     $session_contact_id = Session::get('contact_id');
                                 @endphp
                                 @csrf
                                 <div class="row">
                                     @foreach ($payment_method->options as $payment_option)
-                                        <div class="col-md-6 p-0 ps-4 bg-white d-flex align-items-center">
+                                        <div class="col-md-6 p-0 ps-4 d-flex align-items-center">
                                             <input type="hidden" value="{{ $payment_method->name }}"
                                                 name="method_name">
                                             <input type="radio" id="local_delivery_{{ $payment_option->id }}"
@@ -423,7 +423,11 @@ $cart_price = 0;
                     <div class="col-md-12 mb-3">
                         <p class="thank-you-page-select-date-options mb-2">Payment Terms</p>
                         <select name="paymentTerms" id="pay_terms" class="form-control">
-                            <option value="30 days from invoice" selected>30 days from invoice</option>
+                            @if($user_address->paymentTerms == "Pay in Advanced" )
+                                <option value="Pay in Advanced" selected>Pay in Advanced</option>
+                            @else
+                                <option value="30 days from invoice" selected>30 days from invoice</option>
+                            @endif
                         </select>
                     </div>
                 </div>
@@ -486,7 +490,7 @@ $cart_price = 0;
     <div class="row">
         <div class="col-md-4 m-auto"
             style="margin-top: 192px !important;margin:auto; !important; max-width:600px !important;">
-            <button type="button" class="button-cards w-100" id="proceed_to_checkout" onclick="validate()"
+            <button type="button" class="button-cards w-100 proceed_checkout_desktop" id="proceed_to_checkout" onclick="validate()"
                 style="background: #008BD3 ;
             border-radius: 5px;">Place order</button>
         </div>
@@ -869,8 +873,13 @@ $cart_price = 0;
                                                 </div>
                                                 <div class="">
                                                     <p class="payment-option">Payment Terms</p>
+                                                    
                                                     <select name="paymentTerms" id="pay_terms" class="form-control w-75">
-                                                        <option value="30 days from invoice" selected>30 days from invoice</option>
+                                                        @if($user_address->paymentTerms == "Pay in Advanced" )
+                                                            <option value="Pay in Advanced" selected>Pay in Advanced</option>
+                                                        @else
+                                                            <option value="30 days from invoice" selected>30 days from invoice</option>
+                                                        @endif
                                                     </select>
                                                 </div>
                                             </div>
@@ -1379,13 +1388,17 @@ $cart_price = 0;
                                                                 <div class="">
                                                                     <p class="cart-total-checkout-page">Payment Terms</p>
                                                                     <select name="paymentTerms" id="pay_terms" class="form-control">
-                                                                        <option value="30 days from invoice" selected>30 days from invoice</option>
+                                                                        @if($user_address->paymentTerms == "Pay in Advanced" )
+                                                                            <option value="Pay in Advanced" selected>Pay in Advanced</option>
+                                                                        @else
+                                                                            <option value="30 days from invoice" selected>30 days from invoice</option>
+                                                                        @endif
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="d-flex justify-content-center">
-                                                            <button type="button" class="button-cards w-50" id="proceed_to_checkout" onclick="validate_ipad()"> Place Order</button>
+                                                        <div class="d-flex justify-content-center mt-3">
+                                                            <button type="button" class="button-cards w-50 proceed_checkout_ipad" id="proceed_to_checkout" onclick="validate_ipad()"> Place Order</button>
                                                         </div>
                                                         </form>
                                                     </td>
@@ -1715,7 +1728,6 @@ $cart_price = 0;
                 Valid first name is required.
             </div>
             <script>
-                 
                 function validate() {
                     $('#progress_spinner').removeClass('d-none');
                     $([document.documentElement, document.body]).animate({
@@ -2447,6 +2459,7 @@ $cart_price = 0;
             @include('partials.footer')
             <script>
                 $(document).ready(function() {
+
                     var current_fs, next_fs, previous_fs; //fieldsets
                     var opacity;
 

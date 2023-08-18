@@ -124,14 +124,14 @@
                                     <thead>
                                         <tr class="table-header-background">
                                             <td class="table-row-item">
-                                                <div class="custom-control custom-checkbox tabel-checkbox">
+                                                <div class="custom-control custom-checkbox tabel-checkbox d-flex align-items-center">
                                                     <input
                                                         class="custom-control-input custom-control-input-success checkbox-table"
                                                         type="checkbox" id="selectAll" value="">
                                                     <label for="selectAll" class="custom-control-label"></label>
     
                                                     <span class="table-row-heading-order">
-                                                        <i class="fas fa-arrow-up mt-1" style="font-size:14.5px ;"></i>
+                                                        <i class="fas fa-arrow-up" style="font-size:14.5px ;"></i>
                                                     </span>
                                                 </div>
                                             </td>
@@ -148,8 +148,8 @@
                                     <tbody>
                                         @foreach ($secondary_contacts as $key => $contact)
                                             <tr class="py-5">
-                                                <td class="table-items">
-                                                    <div class="custom-control custom-checkbox tabel-checkbox">
+                                                <td class="table-items align-middle pt-0 pb-0">
+                                                    <div class="custom-control custom-checkbox tabel-checkbox d-flex align-items-center">
                                                         <input
                                                             class="custom-control-input custom-control-input-success sub_chk"
                                                             data-id="{{ $contact->id }}" type="checkbox"
@@ -161,49 +161,49 @@
                                                         </span>
                                                     </div>
                                                 </td>
-                                                <td class="my_account_address_items">
+                                                <td class="my_account_address_items align-middle">
                                                     @if (!empty($contact['firstName'] && $contact['lastName']))
                                                         {{ $contact['firstName'] . ' ' . $contact['lastName'] }}
                                                     @else
                                                     {{ $contact['first_name'] . ' ' . $contact['last_name'] }}
                                                     @endif
                                                 </td>
-                                                <td class="my_account_all_items">
+                                                <td class="my_account_all_items align-middle">
                                                     @if (!empty($contact['postalAddress1']))
                                                         {{ $contact['postalAddress1'] }}
                                                     @else
                                                         {{ $contact['address1'] }}
                                                     @endif
                                                 </td>
-                                                <td class="my_account_all_items">
+                                                <td class="my_account_all_items align-middle">
                                                     @if (!empty($contact['postalCity']))
                                                         {{ $contact['postalCity'] }}
                                                     @else
                                                     {{ $contact['city'] }}
                                                     @endif
                                                 </td>
-                                                <td class="my_account_all_items">
+                                                <td class="my_account_all_items align-middle">
                                                     @if (!empty($contact['Country']))
                                                         {{ $contact['Country'] }}
                                                     @else
                                                     {{ $contact['Country'] }}
                                                     @endif
                                                 </td>
-                                                <td class="my_account_all_items">
+                                                <td class="my_account_all_items align-middle">
                                                     @if (!empty($contact['postalState']))
                                                         {{ $contact['postalState'] }}
                                                     @else
                                                     {{ $contact['state'] }}
                                                     @endif
                                                 </td>
-                                                <td class="my_account_all_items">
+                                                <td class="my_account_all_items align-middle">
                                                     @if (!empty($contact['postalPostCode']))
                                                         {{ $contact['postalPostCode'] }}
                                                     @else
                                                     {{ $contact['postCode'] }}
                                                     @endif
                                                 </td>
-                                                <td class="my_account_all_items">
+                                                <td class="my_account_all_items align-middle">
                                                     @if (!empty($contact['phone']))
                                                         {{ $contact['phone'] }}
                                                     @elseif(!empty($contact['mobile']))

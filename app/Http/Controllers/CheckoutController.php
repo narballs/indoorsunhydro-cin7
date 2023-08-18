@@ -18,10 +18,13 @@ use Illuminate\Support\Facades\Auth;
 use App\User;
 use Illuminate\Support\Facades\Session;
 use App\Helpers\MailHelper;
+use Stripe\Event;
+use Stripe\StripeObject;
+use Stripe\Webhook;
 
 class CheckoutController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user_id = auth()->id();
         $selected_company = Session::get('company');
@@ -50,12 +53,12 @@ class CheckoutController extends Controller
             $states = UsState::all();
             $payment_methods = PaymentMethod::with('options')->get();
             $contact_id = session()->get('contact_id');
-
+            $user_address = null;
             if ($contact->secondary_id) {
                 $parent_id = Contact::where('secondary_id', $contact->secondary_id)->first();
                 $user_address = Contact::where('user_id', $user_id)->where('secondary_id', $parent_id->secondary_id)->first();
             } else {
-                $user_address = Contact::where('user_id', $user_id)->where('contact_id', $contact_id)->first();
+                $user_address = Contact::where('user_id', $user_id)->where('contact_id', $contact_id)->orWhere('contact_id' , $contact->contact_id)->first();
             }
             $tax_class = TaxClass::where('name', $user_address->tax_class)->first();
             $tax_class_none = TaxClass::where('name', 'none')->first();
@@ -73,9 +76,25 @@ class CheckoutController extends Controller
     }
 
 
-    public function thankyou($id)
+    public function thankyou(Request $request , $id)
     {
-
+        if (!empty($request->session_id)) {
+            $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
+            $checkout_session = $stripe->checkout->sessions->retrieve(
+                $request->session_id,
+                []
+            );
+            if (!empty($checkout_session)) {
+                $get_order = ApiOrder::where('id', $id)->first();
+                if ($checkout_session->payment_status == 'paid') {
+                    $get_order->stage = 'paid';
+                    $get_order->save();
+                } else {
+                    $get_order->stage =  $checkout_session->payment_status;
+                    $get_order->save();
+                }
+            }
+        }
         $order = ApiOrder::where('id', $id)
             ->with(
                 'user.contact',
@@ -109,5 +128,15 @@ class CheckoutController extends Controller
                 'pricing'
             )
         );
+    }
+    public function webhook(Request $request) {
+        $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
+        $event = $stripe->events->retrieve(
+            'evt_1Nfh9kGNTgOo1VJWYONFRSqw',
+            []
+        );
+        $order_id = $event->data->object->metadata->order_id;
+        dd($order_id);
+        return response()->json($event);
     }
 }

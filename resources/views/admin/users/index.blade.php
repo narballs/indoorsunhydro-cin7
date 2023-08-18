@@ -215,22 +215,22 @@
                                                             style="color: #CBCBCB !important;"></i>
                                                     </button>
                                                     <div class="dropdown-menu dropdonwn_menu drop_down_items_user">
-                                                        <a class="dropdown-item"
+                                                        <a class="dropdown-item remove_padding"
                                                             href="{{ route('users.show', $user->id) }}"
                                                             class="view a_class" title="" data-toggle="tooltip"
                                                             data-original-title="View">Previews
                                                         </a>
-                                                        <a class="dropdown-item delete deleteIcon a_class"
+                                                        <a class="dropdown-item remove_padding delete deleteIcon a_class"
                                                             href="{{ route('users.destroy', $user->id) }}" class=""
                                                             id="{{ $user->id }}" title=""
                                                             data-toggle="tooltip" data-original-title="Delete">Delete
                                                         </a>
-                                                        <a class="dropdown-item"href="{{ route('users.edit', $user->id) }}"
+                                                        <a class="dropdown-item remove_padding"href="{{ route('users.edit', $user->id) }}"
                                                             class="edit a_class" title="" data-toggle="tooltip"
                                                             data-original-title="Edit">Edit
                                                         </a>
                                                         @if ($contact->status != 0 && ($contact->contact_id != null || $contact->secondary_id != null))
-                                                            <a class="dropdown-item"href="{{ url('admin/user-switch/' . $user->id . '/' . $contact_switch_id) }}"
+                                                            <a class="dropdown-item remove_padding"href="{{ url('admin/user-switch/' . $user->id . '/' . $contact_switch_id) }}"
                                                                 class="edit a_class" title="" data-toggle="tooltip"
                                                                 data-original-title="Edit">Switch User
                                                             </a>
@@ -246,12 +246,12 @@
                                                             @endif
                                                         @endif
                                                         @if ($user->is_updated == 0)
-                                                            <a class="dropdown-item"href="{{ url('admin/send-password/' . $user->id) }}"
+                                                            <a class="dropdown-item remove_padding"href="{{ url('admin/send-password/' . $user->id) }}"
                                                                 class="edit a_class" title="" data-toggle="tooltip"
                                                                 data-original-title="Edit">Send Password
                                                             </a>
                                                         @else
-                                                            <a class="dropdown-item disabled"href="{{ url('admin/send-password/' . $user->id) }}"
+                                                            <a class="dropdown-item remove_padding disabled"href="{{ url('admin/send-password/' . $user->id) }}"
                                                                 class="edit a_class" title="" data-toggle="tooltip"
                                                                 data-original-title="Edit">Send Password
                                                             </a>
@@ -314,6 +314,9 @@
     <link rel="stylesheet" href="/theme/css/admin_custom.css">
     <link rel="stylesheet" href="{{ asset('admin/admin_lte.css') }}">
     <style>
+        .remove_padding {
+            padding: 0.05rem 1rem;
+        }
         @media(min-width:280px) and (max-width: 425px) {
             .main-header {
                 border-bottom: none;

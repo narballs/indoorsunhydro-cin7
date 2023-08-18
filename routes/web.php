@@ -174,6 +174,7 @@ Route::group(['middleware' => ['auth']], function () {
         return redirect()->route('user');
     });
 });
+Route::post('/stripe/webhook', [OrderController::class, 'webhook']);
 Route::get('product/search', [ProductController::class, 'productSearch'])->name('product_search');
 Route::post('admin/send-invitation-email', [ContactController::class, 'send_invitation_email'])->name('admin.send_invitation_email');
 Route::post('create/secondary/user', [UserController::class, 'create_secondary_user']);
@@ -280,6 +281,10 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('settings/update/{id}', [AdminSettingsController::class, 'update'])->name('admin.settings.update');
         Route::post('settings/delete/{id}', [AdminSettingsController::class, 'delete'])->name('admin.settings.delete');
         Route::post('/order/delete-item', [OrderController::class, 'delete_order_item'])->name('delete_order_item');
+        Route::post('/order/item/delete', [OrderController::class, 'delete_order'])->name('delete_order');
+        Route::post('/order/update', [OrderController::class, 'update_order'])->name('update_order');
+        Route::post('/order/add-product', [OrderController::class, 'addProduct'])->name('add_product');
+        Route::get('/order/search-product', [OrderController::class, 'searchProduct'])->name('search_product');
     });
 
     Route::get('admin/logout', function () {

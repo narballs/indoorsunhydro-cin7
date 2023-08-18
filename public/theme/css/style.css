@@ -4852,6 +4852,11 @@ select.list-dt:focus {
     }
 }
 
+@media only screen and (max-width: 375px) and (min-width: 280px) {
+    .my-account-image-div-mbl {
+        width: 32%;
+    }
+ }
 @media only screen and (max-width: 425px) and (min-width: 280px) {
     .my_account_order_detail_page_table_title , .order_detail_page_prices , .order_detail_page_product_name ,  
     .my_account_all_items , .my_account_order_details_page_date_title , 

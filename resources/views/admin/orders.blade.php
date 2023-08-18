@@ -142,6 +142,9 @@
                                         <span class="d-flex table-row-item"> Stage</span>
                                     </td>
                                     <td>
+                                        <span class="d-flex table-row-item"> Payment Status</span>
+                                    </td>
+                                    <td>
                                         <span class="d-flex table-row-item"> Payment Term</span>
                                     </td>
                                     <td>
@@ -233,6 +236,11 @@
                                                 @elseif ($order->isApproved == 2)
                                                     <span class="badge badge-danger is_approded_2">Cancelled</span>
                                                 @endif
+                                            </td>
+                                            <td class="td_padding_row">
+                                                @if($order->stage != 'New') 
+                                                    <span class="badge badge-success">{{ strtoupper($order->stage) }}</span>
+                                                @endif 
                                             </td>
                                             <td class="td_padding_row">
                                                 {{ $order->logisticsCarrier }}
