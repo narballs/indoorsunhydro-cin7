@@ -34,6 +34,8 @@ class OrderController extends Controller
         $request->validate([
             'method_name' => 'required'
         ]);
+
+
         $setting = AdminSetting::where('option_name', 'enable_stripe_checkout')->first();
         $paymentMethod = $request->input('method_name');
         $paymentMethodOption = $request->input('method_option');
@@ -62,8 +64,8 @@ class OrderController extends Controller
                 $cart_price = 0;
                 if ($cart_items) {
                     foreach ($cart_items as $cart_item) {
-                        $total_quatity =  $cart_item['quantity'];
-                        $total_price = $cart_item['price'] * $total_quatity;
+                        $total_quantity =  $cart_item['quantity'];
+                        $total_price = $cart_item['price'] * $total_quantity;
                         $cart_total  = $cart_total + $total_price;
                     }
                 } else {
