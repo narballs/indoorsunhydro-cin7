@@ -416,6 +416,9 @@
             font-weight: 500;
             font-size: 11.3289px;
         }
+        .text-dark {
+            color: #000 !important;
+        }
     </style>
 
 @stop

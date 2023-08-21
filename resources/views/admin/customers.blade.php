@@ -93,7 +93,14 @@
                                     <span class="d-flex table-row-item"> Cin7ID</span>
                                 </td>
                                 <td>
-                                    <span class="d-flex table-row-item"> Full Name </span>
+                                    <span class="d-flex table-row-item"> Full Name 
+                                        <span class="ml-1">
+                                            <input type="hidden" class="" name="sort_by_name" id="sort_name_by_desc" value="Desc">
+                                            <input type="hidden" class="ml-1" name="sort_by_name" id="sort_name_by_asc" value="Asc">
+                                            <i class="fas fa-arrow-up  sm-d-none text-dark" style="font-size:14.5px ;" onclick="sortnamebyDesc()"></i>
+                                            <i class="fas fa-arrow-down  sm-d-none text-dark ml-1" style="font-size:14.5px ;" onclick="sortnamebyAsc()"></i>
+                                        </span>
+                                    </span>
                                 </td>
                                 <td>
                                     <span class="d-flex table-row-item"> Merged</span>
@@ -105,7 +112,14 @@
                                     <span class="d-flex table-row-item"> Company</span>
                                 </td>
                                 <td>
-                                    <span class="d-flex table-row-item"> Email</span>
+                                    <span class="d-flex table-row-item"> Email
+                                        <span class="ml-1">
+                                            <input type="hidden" class="" name="sort_by_email" id="sort_email_by_desc" value="Desc">
+                                            <input type="hidden" class="ml-1" name="sort_by_email" id="sort_email_by_asc" value="Asc">
+                                            <i class="fas fa-arrow-up  sm-d-none text-dark" style="font-size:14.5px ;" onclick="sortemailbyDesc()"></i>
+                                            <i class="fas fa-arrow-down  sm-d-none text-dark ml-1" style="font-size:14.5px ;" onclick="sortemailbyAsc()"></i>
+                                        </span>
+                                    </span>
                                 </td>
                                 <td>
                                     <span class="d-flex table-row-item"> Notes</span>
@@ -280,7 +294,9 @@
                 top: -21px !important;
             }
         }
-
+        .text-dark {
+            color: #000000 !important;
+        }
         .custom-checkbox {
             min-height: 1rem;
             padding-left: 0;
@@ -387,6 +403,7 @@
 
 @section('js')
     <script>
+        // main sorting
         function sortbyDesc() {
             var search = $('#search').val();
             var sort_by = $('#sort_by_desc').val();
@@ -405,6 +422,46 @@
             }
             window.location.href = basic_url
         }
+        // sort by name
+        function sortnamebyDesc() {
+            var search = $('#search').val();
+            var sort_by = $('#sort_name_by_desc').val();
+            var basic_url = 'customers?&search=' + search;
+            if (sort_by != '') {
+                basic_url = basic_url + `&sort_by_name=${sort_by}`;
+            }
+            window.location.href = basic_url
+        }
+        function sortnamebyAsc() {
+            var search = $('#search').val();
+            var sort_by = $('#sort_name_by_asc').val();
+            var basic_url = 'customers?&search=' + search;
+            if (sort_by != '') {
+                basic_url = basic_url+`&sort_by_name=${sort_by}`;
+            }
+            window.location.href = basic_url
+        }
+        // sort by email
+        function sortemailbyDesc() {
+            var search = $('#search').val();
+            var sort_by = $('#sort_email_by_desc').val();
+            var basic_url = 'customers?&search=' + search;
+            if (sort_by != '') {
+                basic_url = basic_url + `&sort_by_email=${sort_by}`;
+            }
+            window.location.href = basic_url
+        }
+        function sortemailbyAsc() {
+            var search = $('#search').val();
+            var sort_by = $('#sort_email_by_asc').val();
+            var basic_url = 'customers?&search=' + search;
+            if (sort_by != '') {
+                basic_url = basic_url+`&sort_by_email=${sort_by}`;
+            }
+            window.location.href = basic_url
+        }
+
+
         $('.customer-row-none').hover(function() {
             let id = $(this).attr('id');
             children = $(this).children('.customer_name').children('a').addClass('text-successs');
