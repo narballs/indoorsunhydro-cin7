@@ -31,7 +31,7 @@ class ContactController extends Controller
 
     function __construct()
     {
-        $this->middleware(['role:Admin'])->except('contomer_invitation', 'send_invitation_email');
+        $this->middleware(['role:Admin'])->except('customer_invitation', 'send_invitation_email');
     }
 
     public function supplier()
@@ -430,7 +430,7 @@ class ContactController extends Controller
         }
     }
 
-    public function contomer_invitation(Request $request, $hash)
+    public function customer_invitation(Request $request, $hash)
     {
         if ($request->is_secondary) {
             $secondary = true;
