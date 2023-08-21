@@ -47,9 +47,13 @@ class OrderManagementController extends Controller
         } else {
             $auto_fullfill = false;
         }
+
+        $sort_by_desc = $request->get('sort_by_desc');
+        $sort_by_asc = $request->get('sort_by_asc');
+        $sort_by_created_at = $request->get('sort_by_date');
+
         $search = $request->get('search');
-        $orders_query = ApiOrder::with(['createdby', 'processedby', 'contact'])
-            ->orderBy('id', 'DESC');
+        $orders_query = ApiOrder::with(['createdby', 'processedby', 'contact']);
         $option = AdminSetting::where('option_name', 'auto_full_fill')->first();
         $auto_fulfill = $option->option_value;
         if (!empty($search)) {
@@ -66,10 +70,29 @@ class OrderManagementController extends Controller
                         ->orWhere('company', 'like', '%' . $search . '%');
                 });
         }
-        $orders =  $orders_query->paginate(10);
+        
+        if (!empty($request->sort_by_desc)) {
+            $orders_query = $orders_query->orderBy('id' , 'Desc');
+        }
+        if (!empty($request->sort_by_asc)) {
+            $orders_query = $orders_query->orderBy('id' , 'Asc');
+        }
 
 
-        return view('admin/orders', compact('orders', 'search', 'auto_fulfill', 'auto_fullfill'));
+        if (!empty($request->sort_by_created_at)) {
+            if ($sort_by_created_at == 'Asc') {
+                $orders_query = $orders_query->orderBy('created_at' , 'Asc');
+            }
+            if ($sort_by_created_at == 'Desc') {
+                $orders_query = $orders_query->orderBy('created_at' , 'Desc');
+            }
+        }
+
+        
+        $orders =  $orders_query->orderBy('id' , 'Desc')->paginate(10);
+
+
+        return view('admin/orders', compact('orders', 'search', 'auto_fulfill', 'auto_fullfill', 'sort_by_desc', 'sort_by_asc' , 'sort_by_created_at'));
     }
 
     public function show($id)
