@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 class InvitationController extends Controller
 {
-    public function contomer_invitation($hash) 
+    public function customer_invitation($hash) 
     {
         
     }

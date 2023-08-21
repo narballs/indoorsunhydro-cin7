@@ -1712,7 +1712,7 @@ class UserController extends Controller
         MailHelper::sendMailNotification('emails.order-approver-email', $data);
     }
 
-    public function chooise_companie(Request $request)
+    public function choose_company(Request $request)
     {
         if ($request->ajax()) {
             $companies = Contact::where('user_id', auth()->user()->id)->get();

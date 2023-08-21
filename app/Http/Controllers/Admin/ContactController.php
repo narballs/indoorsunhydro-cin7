@@ -442,20 +442,20 @@ class ContactController extends Controller
         if ($contact) {
             if ($contact->hashUsed == 1) {
 
-                return view('contomer_invitation-error', compact('msg'));
+                return view('customer-invitation-error', compact('msg'));
             } else {
 
-                return view('contomer_invitation', compact('contact'));
+                return view('customer-invitation', compact('contact'));
             }
 
-            return view('contomer_invitation', compact('contact'));
+            return view('customer-invitation', compact('contact'));
         } else {
             $contact = Contact::where('hashKey', $hash)->first();
             if ($contact->hashUsed == 1) {
 
-                return view('contomer_invitation-error', compact('msg'));
+                return view('customer-invitation-error', compact('msg'));
             } else {
-                return view('contomer_invitation', compact('contact', 'secondary'));
+                return view('customer-invitation', compact('contact', 'secondary'));
             }
         }
     }

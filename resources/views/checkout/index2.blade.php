@@ -1762,7 +1762,7 @@ $cart_price = 0;
                                     var companiesData = {}
                                     jQuery.ajax({
                                         method: 'GET',
-                                        url: "{{ url('/select-companiens-to-order/') }}",
+                                        url: "{{ url('/select-companies-to-order/') }}",
                                         success: function(response) {
                                             console.log(response.companies);
                                             $.each(response.companies, function(index, value) {
@@ -1830,7 +1830,7 @@ $cart_price = 0;
                             var companiesData = {}
                             jQuery.ajax({
                                 method: 'GET',
-                                url: "{{ url('/select-companiens-to-order') }}",
+                                url: "{{ url('/select-companies-to-order') }}",
                                 success: function(response) {
                                     $.each(response.companies, function(index, value) {
                                         let companyID = null;
@@ -1913,7 +1913,7 @@ $cart_price = 0;
                                     var companiesData = {}
                                     jQuery.ajax({
                                         method: 'GET',
-                                        url: "{{ url('/select-companiens-to-order/') }}",
+                                        url: "{{ url('/select-companies-to-order/') }}",
                                         success: function(response) {
                                             console.log(response.companies);
                                             $.each(response.companies, function(index, value) {
@@ -1981,7 +1981,7 @@ $cart_price = 0;
                             var companiesData = {}
                             jQuery.ajax({
                                 method: 'GET',
-                                url: "{{ url('/select-companiens-to-order') }}",
+                                url: "{{ url('/select-companies-to-order') }}",
                                 success: function(response) {
                                     $.each(response.companies, function(index, value) {
                                         let companyID = null;
@@ -2064,7 +2064,7 @@ $cart_price = 0;
                                     var companiesData = {}
                                     jQuery.ajax({
                                         method: 'GET',
-                                        url: "{{ url('/select-companiens-to-order/') }}",
+                                        url: "{{ url('/select-companies-to-order/') }}",
                                         success: function(response) {
                                             console.log(response.companies);
                                             $.each(response.companies, function(index, value) {
@@ -2132,7 +2132,7 @@ $cart_price = 0;
                             var companiesData = {}
                             jQuery.ajax({
                                 method: 'GET',
-                                url: "{{ url('/select-companiens-to-order') }}",
+                                url: "{{ url('/select-companies-to-order') }}",
                                 success: function(response) {
                                     $.each(response.companies, function(index, value) {
                                         let companyID = null;
