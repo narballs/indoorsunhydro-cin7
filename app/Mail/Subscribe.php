@@ -7,6 +7,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
+use App\Helpers\SettingHelper;
+
 class Subscribe extends Mailable
 {
     use Queueable, SerializesModels;
@@ -28,8 +30,8 @@ class Subscribe extends Mailable
      */
     public function build()
     {
-        return $this->subject('Mail from IndoorSunHydro.com')
+        $website_name = SettingHelper::getSetting('website_name');
+        return $this->subject('Mail from ' . $website_name)
                     ->view('emails.subscribers');
-        //return $this->markdown('emails.subscribers');
     }
 }

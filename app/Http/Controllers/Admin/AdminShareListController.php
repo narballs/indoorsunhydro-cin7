@@ -10,6 +10,7 @@ use App\Models\BuyList;
 use App\Models\ProductBuyList;
 use Redirect;
 use App\Helpers\MailHelper;
+use App\Helpers\SettingHelper;
 
 
 
@@ -26,19 +27,19 @@ class AdminShareListController extends Controller
         $list = BuyList::where('id', $request->list_id)->with('list_products.product.options')->first();
         $base_url = url('/');
         $data = [
-            'name' =>  'Stageindoor',
+            'name' =>  SettingHelper::getSetting('from_email_name'),
             'email' => $request->email,
             'subject' => 'Buy List shared',
-            'link' => $base_url.'/create-cart/'.$request->list_id,
-            'from' => 'stageindoorsun@stage.indoorsunhydro.com',
+            'link' => $base_url.'/create-cart/' . $request->list_id,
+            'from' => SettingHelper::getSetting('noreply_email_address'),
             'list' => $list
         ];
         $subject = '';
         MailHelper::sendMailNotification('emails.admin-share', $data);
 
        return response()->json([
-                'success' => true, 
-                'msg' => 'List Shared Successully !'
-            ]);
+            'success' => true, 
+            'msg' => 'List Shared Successfully !'
+        ]);
     }
 }

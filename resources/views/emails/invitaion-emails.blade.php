@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>IndoorSun</title>
+    <title>{{ \App\Helpers\SettingHelper::getSetting('website_name') }}</title>
 </head>
 <body>
     Welcome<h1></h1>

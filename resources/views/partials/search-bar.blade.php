@@ -2,7 +2,7 @@
     <div class="row header-top justify-content-center align-items-center">
         <div class="col-md-4 d-flex align-items-center justify-content-center">
             <a class="navbar-brand d-flex justify-content-center" href="/">
-                <img class="w-50" src="{{ url('/theme/img/indoor_sun.png') }}" ;>
+                <img class="w-50" src="{{ url('/theme/img/' . \App\Helpers\SettingHelper::getSetting('logo_name')) }}" ;>
             </a>
         </div>
         {{-- <div class="col-xl-5 col-lg-6 col-md-12 col-sm-6 col-xs-6 mt-2 top-header-navigation p-0">

@@ -17,6 +17,7 @@ use App\Models\AdminSetting;
 use Carbon\Carbon;
 
 use App\Helpers\UtilHelper;
+use App\Helpers\SettingHelper;
 
 
 
@@ -102,6 +103,11 @@ class SyncAPiData extends Command
 
         $client = new \GuzzleHttp\Client();
 
+        $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
+        $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
+
+
+        
 
         // Find total category pages
         $total_category_pages = 9;
@@ -114,12 +120,13 @@ class SyncAPiData extends Command
                 'https://api.cin7.com/api/v1/ProductCategories?rows=250&page=' . $i,
                 [
                     'auth' => [
-                        'IndoorSunHydroUS',
-                        'faada8a7a5ef4f90abaabb63e078b5c1'
+                        $cin7_auth_username,
+                        $cin7_auth_password
                     ]                    
                 ]
             );
             
+
 
             $api_categories = $res->getBody()->getContents();
             $api_categories = json_decode($api_categories);
@@ -160,13 +167,13 @@ class SyncAPiData extends Command
             }
         }
 
+        $retail_price_column = SettingHelper::getSetting('retail_price_column');
+
 
             $client2 = new \GuzzleHttp\Client();
 
-
             // Find total category pages
             $total_products_pages = 150;
-
 
             for ($i = 1; $i <= $total_products_pages; $i++) {
                 $this->info('Processing page#' . $i);
@@ -177,8 +184,8 @@ class SyncAPiData extends Command
                         'https://api.cin7.com/api/v1/Products?where=modifieddate>='. $api_formatted_product_sync_date . '&page=' . $i . '&rows=250', 
                         [
                             'auth' => [
-                               'IndoorSunHydroUS',
-                                'faada8a7a5ef4f90abaabb63e078b5c1'
+                                $cin7_auth_username,
+                                $cin7_auth_password
                             ]
                          
                         ]
@@ -229,6 +236,9 @@ class SyncAPiData extends Command
                             $category_id = 0;
                         }
 
+                        
+                        $retail_price = isset($api_product->productOptions[0]->priceColumns->$retail_price_column) ? $api_product->productOptions[0]->priceColumns->$retail_price_column : 0;
+
                         $product->name =  $api_product->name;
                         $product->slug = Str::slug($api_product->name);
                         $product->status =  $api_product->status;
@@ -236,7 +246,7 @@ class SyncAPiData extends Command
                         $product->category_id =  $category_id;
                         $product->images =  !empty($api_product->images[0]) ? $api_product->images[0]->link: '';
                         $product->code =  $api_product->productOptions[0]->code;
-                        $product->retail_price =  $api_product->productOptions[0]->priceColumns->sacramentoUSD;
+                        $product->retail_price = $retail_price;
                         $product->stockAvailable =  $api_product->productOptions[0]->stockAvailable;
                         
                         if (isset($api_product->brand)) {
@@ -260,6 +270,8 @@ class SyncAPiData extends Command
                             $product_option = ProductOption::with('price')->where('option_id',$api_productOption->id)->first();
 
                             if ($product_option) {
+                                $retail_price = isset($api_productOption->priceColumns->$retail_price_column) ? $api_productOption->priceColumns->$retail_price_column : 0;
+
                                 $product_option->option1 = $api_productOption->option1;
                                 $product_option->option_id = $api_productOption->id;
                                 $product_option->product_id = $api_productOption->productId;
@@ -271,7 +283,7 @@ class SyncAPiData extends Command
                                 $product_option->option3 = $api_productOption->option3;
                                 $product_option->optionWeight = $api_productOption->optionWeight;
                                 $product_option->size = $api_productOption->size;
-                                $product_option->retailPrice =$api_productOption->priceColumns->sacramentoUSD;
+                                $product_option->retailPrice = $retail_price;
                                 $product_option->wholesalePrice = $api_productOption->wholesalePrice;
                                 $product_option->vipPrice = $api_productOption->vipPrice;
                                 $product_option->specialPrice = $api_productOption->specialPrice;
@@ -281,44 +293,45 @@ class SyncAPiData extends Command
                                 $product_option->specialDays = $api_productOption->specialDays;
                                 $product_option->image =  !empty($api_productOption->image) ? $api_productOption->image->link: '';
                                 $product_option->save();
+
+                                $price_columns = $api_productOption->priceColumns;
+                                $column_keys = array_keys(get_object_vars($price_columns));
+                                $table_columns = $this->getPriceColumns();
+
                                 $priceColumn = Pricingnew::where('option_id', $product_option->option_id)->first();
                                 if (empty($priceColumn)) {
-                                    $priceColumn = new Pricingnew([
+
+                                    $prices_array = [
                                         'option_id' => $api_productOption->id,
-                                        'retailUSD' => $api_productOption->priceColumns->retailUSD,
-                                        'terraInternUSD' => $api_productOption->priceColumns->terraInternUSD,
-                                        'sacramentoUSD' => $api_productOption->priceColumns->sacramentoUSD,
-                                        'wholesaleUSD' => $api_productOption->priceColumns->wholesaleUSD,
-                                        'oklahomaUSD' => $api_productOption->priceColumns->oklahomaUSD,
-                                        'tier0USD' => $api_productOption->priceColumns->tier0USD,
-                                        'tier1USD' => $api_productOption->priceColumns->tier1USD,
-                                        'calaverasUSD' => $api_productOption->priceColumns->calaverasUSD,
-                                        'tier2USD' => $api_productOption->priceColumns->tier2USD,
-                                        'tier3USD' => $api_productOption->priceColumns->tier3USD,
-                                        'commercialOKUSD' => $api_productOption->priceColumns->commercialOKUSD,
-                                        'costUSD' => $api_productOption->priceColumns->costUSD,
-                                        'specialPrice' => $api_productOption->priceColumns->specialPrice
-                                    ]);
-                                    $priceColumn->save();
+                                    ];
+
+                                    if (!empty($column_keys)) {
+                                        foreach ($column_keys as $column_key) {
+                                            if (isset($table_columns[$column_key])) {
+                                                $prices_array[$column_key] = $price_columns->$column_key;
+                                            }
+                                        }
+                                    }
+                                    $pricingnew = new Pricingnew($prices_array);
+                                    $pricingnew->save();
                                 }
                                 else {
-                                    $priceColumn->retailUSD = $api_productOption->priceColumns->retailUSD;
-                                    $priceColumn->wholesaleUSD = $api_productOption->priceColumns->wholesaleUSD;
-                                    $priceColumn->terraInternUSD = $api_productOption->priceColumns->terraInternUSD;
-                                    $priceColumn->sacramentoUSD = $api_productOption->priceColumns->sacramentoUSD;
-                                    $priceColumn->calaverasUSD = $api_productOption->priceColumns->calaverasUSD;
-                                    $priceColumn->tier0USD = $api_productOption->priceColumns->tier0USD;
-                                    $priceColumn->tier1USD = $api_productOption->priceColumns->tier1USD;
-                                    $priceColumn->tier2USD = $api_productOption->priceColumns->tier2USD;
-                                    $priceColumn->tier3USD = $api_productOption->priceColumns->tier3USD;
-                                    $priceColumn->commercialOKUSD = $api_productOption->priceColumns->commercialOKUSD;
-                                    $priceColumn->costUSD = $api_productOption->priceColumns->costUSD;
-                                    $priceColumn->specialPrice = $api_productOption->priceColumns->specialPrice;
+                                    if (!empty($column_keys)) {
+                                        foreach ($column_keys as $column_key) {
+                                            if (isset($table_columns[$column_key])) {
+                                                $priceColumn->$column_key = $api_productOption->priceColumns->$column_key;
+                                            }
+                                        }
+                                    }
+                                    
                                     $priceColumn->save();
-
                                 }
                             }
                             else {
+
+                                $retail_price_column = SettingHelper::getSetting('retail_price_column');
+                                $retail_price = isset($api_productOption->priceColumns->$retail_price_column) ? $api_productOption->priceColumns->$retail_price_column : 0;
+
                                 $product_option = new ProductOption([
                                     'option1' => $api_productOption->option1,
                                     'option_id' => $api_productOption->id,
@@ -331,7 +344,7 @@ class SyncAPiData extends Command
                                     'option3' =>  $api_productOption->option3,
                                     'optionWeight' =>  $api_productOption->optionWeight,
                                     'size' =>  $api_productOption->size,
-                                    'retailPrice' =>  $api_productOption->priceColumns->sacramentoUSD,
+                                    'retailPrice' =>  $retail_price,
                                     'wholesalePrice' =>  $api_productOption->wholesalePrice,
                                     'vipPrice' =>  $api_productOption->vipPrice,
                                     'specialPrice' =>  $api_productOption->specialPrice,
@@ -342,22 +355,24 @@ class SyncAPiData extends Command
                                     'image' =>  !empty($api_productOption->image) ? $api_productOption->image->link: ''
                                 ]);
                                 $product_option->save();
-                                $priceColumn = new Pricingnew([
+
+                                $price_columns = $api_productOption->priceColumns;
+                                $column_keys = array_keys(get_object_vars($price_columns));
+                                $table_columns = $this->getPriceColumns();
+
+                                $prices_array = [
                                     'option_id' => $api_productOption->id,
-                                    'retailUSD' => $api_productOption->priceColumns->retailUSD,
-                                    'wholesaleUSD' => $api_productOption->priceColumns->wholesaleUSD,
-                                    'terraInternUSD' => $api_productOption->priceColumns->terraInternUSD,
-                                    'sacramentoUSD' => $api_productOption->priceColumns->sacramentoUSD,
-                                    'oklahomaUSD' => $api_productOption->priceColumns->oklahomaUSD,
-                                    'tier0USD' => $api_productOption->priceColumns->tier0USD,
-                                    'tier1USD' => $api_productOption->priceColumns->tier1USD,
-                                    'calaverasUSD' => $api_productOption->priceColumns->calaverasUSD,
-                                    'tier2USD' => $api_productOption->priceColumns->tier2USD,
-                                    'tier3USD' => $api_productOption->priceColumns->tier3USD,
-                                    'commercialOKUSD' => $api_productOption->priceColumns->commercialOKUSD,
-                                    'costUSD' => $api_productOption->priceColumns->costUSD,
-                                    'specialPrice' => $api_productOption->priceColumns->specialPrice
-                                ]);
+                                ];
+
+                                if (!empty($column_keys)) {
+                                    foreach ($column_keys as $column_key) {
+                                        if (isset($table_columns[$column_key])) {
+                                            $prices_array[$column_key] = $price_columns->$column_key;
+                                        }
+                                    }
+                                }
+
+                                $priceColumn = new Pricingnew($prices_array);
                                 $priceColumn->save();
                             }
                         }
@@ -378,6 +393,9 @@ class SyncAPiData extends Command
                     else {
                         $brand_id = '';
                     }
+
+                    $retail_price = isset($api_product->productOptions[0]->priceColumns->$retail_price_column) ? $api_product->productOptions[0]->priceColumns->$retail_price_column : 0;
+
                     $product = new Product([
                         'product_id' => $api_product->id,
                         'name' => $api_product->name,
@@ -387,7 +405,7 @@ class SyncAPiData extends Command
                         'category_id' => $category_id,
                         'images' => !empty($api_product->images[0]) ? $api_product->images[0]->link: '',
                         'code' => $api_product->productOptions[0]->code,
-                        'retail_price' => $api_product->productOptions[0]->priceColumns->sacramentoUSD,
+                        'retail_price' => $retail_price,
                         'stockAvailable' => $api_product->productOptions[0]->stockAvailable,
                         'brand' => $api_product->brand,
                         'brand_id' => $brand_id
@@ -432,6 +450,29 @@ class SyncAPiData extends Command
         $this->info('Total Record Count#' . $total_record_count);
         $this->info('------------------------------');
         $this->info('-------------Finished------------------');
+    }
+
+    private function getPriceColumns() {
+        return [
+            'retailUSD' => true,
+            'terraInternUSD' => true,
+            'sacramentoUSD' => true,
+            'wholesaleUSD' => true,
+            'oklahomaUSD' => true,
+            'calaverasUSD' => true,
+            'tier0USD' => true,
+            'tier1USD' => true,
+            'tier2USD' => true,
+            'tier3USD' => true,
+            'commercialOKUSD' => true,
+            'costUSD' => true,
+            'specialPrice' => true,
+            'disP1USD' => true,
+            'disP2USD' => true,
+            'comccusd' => true,
+            'com1USD' => true,
+            'msrpusd' => true
+        ];
     }
 }
 

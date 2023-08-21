@@ -39,18 +39,28 @@ class UserToContacts extends Command
      * @return int
      */
     public function handle()
-        {
+    {
       
-            $users = User::all();
-            foreach($users as $user) {
+        $this->counter = 0;
+        User::chunk(100, function($users) {
+            foreach ($users as $user) {
+
+                $this->counter++;
+                $this->info($this->counter . ' => Processing email: ' . $user->email);
+
                 $user_id = $user->id;
+                
                 if ($user_id) {
-                    $contacts = Contact::where('email',$user->email)->get();
-                    foreach($contacts as $contact) {
+                    $contacts = Contact::where('email', $user->email)->get();
+                    foreach ($contacts as $contact) {
                         $contact->user_id = $user_id;
                         $contact->save();
                     }
                 } 
             }
-        }
+        });
+
+
+        $this->info($this->counter . ' Finished.');
+    }
 }

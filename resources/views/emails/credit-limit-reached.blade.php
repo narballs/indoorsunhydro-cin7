@@ -115,37 +115,6 @@
                                                     color: #575757;
                                                     ">Thank you for your order</p>
                                                 </div>
-                                                {{-- <div class="col-md-5 pt-5" style="width: width: 50%;">
-                                                    <div class="pt-5" style="padding-top: 35px!important;
-                                                        padding-left: 14px!important;
-                                                        background: #fbfbfb;
-                                                        border-radius: 6px;
-                                                        display: flex;">
-                                                        <img src="https://stage.indoorsunhydro.com/theme/img/thnak-page-user-icon.png"
-                                                            class="img-fluid" alt="">
-                                                        &nbsp; &nbsp;
-                                                        <span class="thank-you-page-user-name pt-4 ps-2" style="font-family: 'Roboto' !important;
-                                                        font-style: normal;
-                                                        font-weight: 500;
-                                                        font-size: 30px;
-                                                        line-height: 120%;
-                                                        color: #2653A0;">
-                                                            {{$addresses['billing_address']['firstName']}}
-                                                            {{$addresses['billing_address']['lastName']}}
-
-                                                        </span>
-                                                    </div>
-                                                    <p style="font-family: 'Poppins';
-                                                    font-style: normal;
-                                                    font-weight: 500;
-                                                    font-size: 25px;
-                                                    line-height: 120%;
-                                                    letter-spacing: 0.545em;
-                                                    color: #575757;
-                                                    padding-left: 24px;
-                                                    margin-top: -18px !important;
-                                                    ">for your order</p>
-                                                </div> --}}
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-12 mt-5" style="width: 100%">
@@ -478,7 +447,7 @@
                                             padding-left: 47px;
                                             margin-top: 68px;"> Best Product
                                                 <span> <img
-                                                        src="https://stage.indoorsunhydro.com/theme/img/thnak-you-best-pruduct-img.png"
+                                                        src="{{ url('theme/img/thnak-you-best-pruduct-img.png) }}"
                                                         class="img-fluid ps-3" alt=""></span>
                                             </p>
                                             <div class="row ps-4" style="display: flex;">
@@ -546,34 +515,29 @@
                         margin-top: -111px !important;
                         ">
                             <p class="thank-you-page-card-footer" style=" font-family: 'Poppins';
-                        font-style: normal;
-                        font-weight: 400;
-                        font-size: 16px;
-                        line-height: 22px;
-                        text-align: center;
-                        color: #FFFFFF !important;
-                        ">
-                                Indoorsunhydro isn’t your grandma’s gardening
+                                font-style: normal;
+                                font-weight: 400;
+                                font-size: 16px;
+                                line-height: 22px;
+                                text-align: center;
+                                color: #FFFFFF !important;
+                            ">
+                                {{ \App\Helpers\SettingHelper::getSetting('website_name') }} isn't your grandma's gardening
                                 store.<br> But you can bring her along
                                 if you want. <br> Walk-ins welcome anytime — except Sunday. Even
-                                gardeners need
-                                a day
-                                of rest.</p>
+                                gardeners need a day of rest.
+                            </p>
                             <center>
-                                <p style="display: flex !important;
-                                justify-content: center !important;
-                            padding: 3px; !important">
-                                    <img src="https://stage.indoorsunhydro.com/theme/img/thank-you-page-icon-3.png"
-                                        alt="">
+                                <p style="display: flex !important; justify-content: center !important; padding: 3px; !important">
+                                    <img src="{{ \App\Helpers\SettingHelper::getSetting('website_url') }}/theme/img/thank-you-page-icon-3.png" alt="" />
                                     <span>
-                                        <img src="https://stage.indoorsunhydro.com/theme/img/thank-you-page-icon-2.png"
-                                            alt=""></span>
+                                        <img src="{{ \App\Helpers\SettingHelper::getSetting('website_url') }}/theme/img/thank-you-page-icon-2.png" alt="" />
+                                    </span>
                                     <span>
-                                        <img src="https://stage.indoorsunhydro.com/theme/img/thank-you-page-icon-1.png"
-                                            alt=""></span>
+                                        <img src="{{ \App\Helpers\SettingHelper::getSetting('website_url') }}/theme/img/thank-you-page-icon-1.png" alt="" />
+                                    </span>
                                 </p>
                             </center>
-
                         </div>
                     </div>
                 </div>
@@ -581,5 +545,4 @@
         </div>
     </div>
 </body>
-
 </html>

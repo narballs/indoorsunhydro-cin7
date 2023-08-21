@@ -44,14 +44,28 @@ class ContactsToUsers extends Command
      */
     public function handle()
     {
-        $contacts = Contact::all();
-        foreach($contacts as $contact) {
-            $email = $contact->email;
-            if ($email) {
+        $this->counter = 0;
+        
+        Contact::chunk(100, function($contacts) {
+            foreach ($contacts as $contact)
+            {
+                $this->counter++;
+                $email = $contact->email;
+                
+                $this->info($this->counter . ' => Processing email: ' . $email);
+
+                if (empty($email)) {
+                    $this->error('Empty Email: Skipping');
+                    continue;
+                }
+        
+                
                 $user = User::firstOrCreate([
                     'email' => $email
                 ]);
-            } 
-        }
+            }
+        });
+        
+        $this->info($this->counter . ' Finished.');
     }
 }

@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\ProductOption;
 
 use App\Helpers\UtilHelper;
+use App\Helpers\SettingHelper;
 
 class SyncStock extends Command
 {
@@ -52,6 +53,9 @@ class SyncStock extends Command
 
         $product_array = [];
 
+        $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
+        $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
+
         for ($i = 1; $i <= $total_products_pages; $i++) {
             sleep(1);
 
@@ -60,8 +64,8 @@ class SyncStock extends Command
                 'https://api.cin7.com/api/v1/Stock?page=' . $i, 
                 [
                     'auth' => [
-                        'IndoorSunHydroUS', 
-                        'faada8a7a5ef4f90abaabb63e078b5c1'
+                        $cin7_auth_username,
+                        $cin7_auth_password
                     ]                     
                 ]
             );

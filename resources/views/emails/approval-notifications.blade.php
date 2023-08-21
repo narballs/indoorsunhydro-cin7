@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>IndoorSun</title>
+    <title>{{ \App\Helpers\SettingHelper::getSetting('website_name') }}</title>
     <style type="text/css">
         .main-div {
             width: 600px;
@@ -37,7 +37,7 @@
             <tr>
                 <td style="text-align: center;">
                     <div >
-                        <img src="{{ url('/theme/img/indoor_sun.png') }}" width="200">
+                        <img src="{{ url('/theme/img/' . \App\Helpers\SettingHelper::getSetting('logo_name')) }}" width="200">
                     </div>
                     <div style="margin-top:100px; border-bottom: 1px solid gray">
                         <h2>NEW CUSTOMER ACTIVATION</h2>
@@ -70,7 +70,7 @@
                                 </tr>
                             </table>
                             Thanks,<br>
-                            Team IndoorSunHydro
+                            Team {{ \App\Helpers\SettingHelper::getSetting('website_name') }}
                         </p>
                     </div >
                 </td>

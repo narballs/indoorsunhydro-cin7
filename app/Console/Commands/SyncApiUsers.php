@@ -5,6 +5,8 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Models\ApiUser;
 
+use App\Helpers\SettingHelper;
+
 class SyncApiUsers extends Command
 {
     /**
@@ -39,15 +41,11 @@ class SyncApiUsers extends Command
     public function handle()
     {
          $client2 = new \GuzzleHttp\Client();
-
-
-        // Find total category pages
-        //$total_products_pages = 44;
-        // echo env('API_USER'); 
-        // echo env('API_PASSWORD');
-        // echo 'here';
-        // exit;
+        
         $total_users_pages = 4;
+
+        $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
+        $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
 
         for ($i = 1; $i <= $total_users_pages; $i++) {
             $this->info('Processing page#' . $i);
@@ -55,11 +53,10 @@ class SyncApiUsers extends Command
             $res = $client2->request(
                 'GET', 
                 'https://api.cin7.com/api/v1/Users/?page=' . $i,
-                //'https://api.cin7.com/api/v1/Contacts/9888', 
                 [
                     'auth' => [
-                       env('API_USER'),
-                    env('API_PASSWORD')
+                        $cin7_auth_username,
+                        $cin7_auth_password
                     ]
                 ]
             );
