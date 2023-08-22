@@ -35,7 +35,7 @@
                                 </div>
                             @endif
                             <div class="table-responsive">
-                                <table class="table mt-4" id="cart_table">
+                                <table class="table mt-4 mb-0" id="cart_table">
                                     <thead class="table-head-items">
                                         <tr>
                                             {{-- <th scope="col" class="th-lg" class="table-head-items">
@@ -174,9 +174,11 @@
                             <tfoot class="border-0" style="border-color: #ffff !important;">
                                 <tr>
                                     <td colspan="5">
-                                        <div class="w-100 d-flex mt-4">
+                                        <div class="w-100 d-flex mt-3">
+                                            
                                             <div class="col-md-8 coupon-code ps-0">
                                                 <div class=" align-items-center d-flex">
+                                                    
                                                     {{-- <div>
                                                         <span class="coupon-code-label"><img class="img-fluid"
                                                                 src="/theme/img/Vector.png"
@@ -199,8 +201,8 @@
                                                     </div> --}}
                                                 </div>
                                             </div>
-                                            <div class="col-md-4 p-0">
-
+                                            <div class="col-md-4 p-0 text-right">
+                                                <span class="cart-page-items text-danger">Price Subject to Change</span>
                                             </div>
                                         </div>
                                     </td>
@@ -418,8 +420,9 @@
                                         
                                         <div class="card-body p-0 m-0">
                                             <div class="p-3 mb-3" style="border: 0.793792px solid #DFDFDF;box-shadow: 0px 3.17517px 3.17517px rgba(231, 231, 231, 0.25);">
-                                                <div class="card-header bg-white p-0 border-0">
+                                                <div class="card-header bg-white p-0 border-0 d-flex align-items-center justify-content-between">
                                                     <p class="your-cart-title ps-1"> Your Cart</p>
+                                                    <p class="cart-page-items text-danger text-right mb-2"> Price Subject to Change</p>
                                                 </div>
                                                 <div class="col-md-12 p-0 pt-3" style="border-top: 1.5px solid #EBEBEB;">
                                                     <table class="table cart_table_mobile">
@@ -694,8 +697,9 @@
                         <fieldset>
                             <div class="form-card">
                                 <div class="card border-0">
-                                    <div class="card-header bg-light">
+                                    <div class="card-header bg-light d-flex align-items-center justify-content-between">
                                         <p class="your-cart-title ps-1"> Your Cart</p>
+                                        <p class="cart-page-items text-danger text-right mb-0"> Price Subject to Change</p>
                                     </div>
                                     <div class="card-body ">
                                         <div class="col-md-12">
