@@ -738,7 +738,6 @@ class OrderController extends Controller
     }
 
     public function webhook(Request $request) {
-        Log::info('danish' , [$request]);
         $payload = $request->getContent();
         $signature = $request->header('Stripe-Signature');
 
@@ -758,6 +757,7 @@ class OrderController extends Controller
 
             return response()->json(['status' => 'success'], Response::HTTP_OK);
         } catch (\Exception $e) {
+            Log::error($e->getMessage());
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
         }
     }
