@@ -254,46 +254,46 @@ class CheckoutController extends Controller
                     'from' => SettingHelper::getSetting('noreply_email_address')
                 ];
 
-                if (!empty($users_with_role_admin)) {
-                    foreach ($users_with_role_admin as $role_admin) {
-                        $subject = 'New order received';
-                        $adminTemplate = 'emails.admin-order-received';
-                        $data['email'] = $role_admin->email;
-                        MailHelper::sendMailNotification('emails.admin-order-received', $data);
-                    }
-                }
-                $credit_limit = $contact->credit_limit;
-                $parent_email = Contact::where('contact_id', $active_contact_id)->first();
-
-                $data['subject'] = 'Your order has been received';
-                $data['email'] = $email;
-                MailHelper::sendMailNotification('emails.admin-order-received', $data);
-
-
-                $email_sent_to_users = [];
-                $user = User::where('id',  Auth::id())->first();
-                $all_ids = UserHelper::getAllMemberIds($user);
-                $all_members = Contact::whereIn('id', $all_ids)->get();
-                foreach ($all_members as $member) {
-                    $member_user = User::find($member->user_id);
-                    if (!empty($member_user) && $member_user->hasRole(['Order Approver'])) {
-                        if (isset($email_sent_to_users[$member_user->id])) {
-                            continue;
-                        }
-
-                        $email_sent_to_users[$member_user->id] = $member_user;
-                        $data['name'] = $member_user->firstName;
-                        $data['subject'] = 'New order awaiting approval';
-                        $data['email'] = $member_user->email;
-                        MailHelper::sendMailNotification('emails.user-order-received', $data);
-                    }
-                }
+                
                 // Handle payment success event
                 break;
             case 'invoice.payment_failed':
                 // Handle payment failure event
                 break;
             // Add more cases for other event types you want to handle
+        }
+        if (!empty($users_with_role_admin)) {
+            foreach ($users_with_role_admin as $role_admin) {
+                $subject = 'New order received';
+                $adminTemplate = 'emails.admin-order-received';
+                $data['email'] = $role_admin->email;
+                MailHelper::sendMailNotification('emails.admin-order-received', $data);
+            }
+        }
+        $parent_email = Contact::where('contact_id', $active_contact_id)->first();
+
+        $data['subject'] = 'Your order has been received';
+        $data['email'] = $email;
+        MailHelper::sendMailNotification('emails.admin-order-received', $data);
+
+
+        $email_sent_to_users = [];
+        $user = User::where('id',  Auth::id())->first();
+        $all_ids = UserHelper::getAllMemberIds($user);
+        $all_members = Contact::whereIn('id', $all_ids)->get();
+        foreach ($all_members as $member) {
+            $member_user = User::find($member->user_id);
+            if (!empty($member_user) && $member_user->hasRole(['Order Approver'])) {
+                if (isset($email_sent_to_users[$member_user->id])) {
+                    continue;
+                }
+
+                $email_sent_to_users[$member_user->id] = $member_user;
+                $data['name'] = $member_user->firstName;
+                $data['subject'] = 'New order awaiting approval';
+                $data['email'] = $member_user->email;
+                MailHelper::sendMailNotification('emails.user-order-received', $data);
+            }
         }
         return response()->json(['status' => 'success']);
     }
