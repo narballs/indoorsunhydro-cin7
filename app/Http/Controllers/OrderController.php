@@ -173,10 +173,10 @@ class OrderController extends Controller
                                 
                             ]);
 
-                            $order_comment = new OrderComment;
-                            $order_comment->order_id = $order_id;
-                            $order_comment->comment = 'Order Placed through Stripe';
-                            $order_comment->save();
+                            // $order_comment = new OrderComment;
+                            // $order_comment->order_id = $order_id;
+                            // $order_comment->comment = 'Order Placed through Stripe';
+                            // $order_comment->save();
 
                         } else {
                             session()->forget('cart');
