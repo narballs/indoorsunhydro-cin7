@@ -166,9 +166,10 @@ class OrderController extends Controller
                                 'mode' => 'payment',
                                 'payment_intent_data'=> [
                                     "metadata" => [
-                                        "order_id"=> $order_id,  # Add your order_id here
+                                        "order_id"=> $order_id,
                                     ]
-                                ]
+                                    ],
+                                'customer_email' => auth()->user()->email,
                                 
                             ]);
 
