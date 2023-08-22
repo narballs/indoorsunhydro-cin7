@@ -135,24 +135,44 @@ class CheckoutController extends Controller
         $payload = $request->getContent();
         $signature = $request->header('Stripe-Signature');
 
-        try {
-            $event = Webhook::constructEvent($payload, $signature, config('services.stripe.webhook_secret'));
-            // dd($event);
-            // Handle the event based on its type
-            switch ($event->type) {
-                case 'checkout.session.completed':
-                    // Handle checkout session completed event
-                    break;
-                case 'payment_intent.succeeded':
-                    // Handle payment intent succeeded event
-                    break;
-                // Add more cases for other event types
-            }
+        $payload = file_get_contents('php://input');
+        $stripeSignature = $_SERVER['HTTP_STRIPE_SIGNATURE'];
+        
+        // try {
+        //     $event = Webhook::constructEvent($payload, $signature, config('services.stripe.webhook_secret'));
+        //     // dd($event);
+        //     // Handle the event based on its type
+        //     switch ($event->type) {
+        //         case 'checkout.session.completed':
+        //             // Handle checkout session completed event
+        //             break;
+        //         case 'payment_intent.succeeded':
+        //             // Handle payment intent succeeded event
+        //             break;
+        //         // Add more cases for other event types
+        //     }
 
-            return response()->json(['status' => 'success'], Response::HTTP_OK);
-        } catch (\Exception $e) {
+        //     return response()->json(['status' => 'success'], Response::HTTP_OK);
+        // } catch (\Exception $e) {
+        //     Log::error($e->getMessage());
+        //     return response()->json(['status' => 'error', 'message' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
+        // }
+        try {
+            $event = Webhook::constructEvent($payload, $stripeSignature, config('services.stripe.webhook_secret'));
+        } catch (\Stripe\Exception\SignatureVerificationException $e) {
             Log::error($e->getMessage());
-            return response()->json(['status' => 'error', 'message' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
+            return response()->json(['error' => 'Invalid webhook signature'], 400);
         }
+
+        switch ($event->type) {
+            case 'payment_intent.succeeded':
+                // Handle payment success event
+                break;
+            case 'invoice.payment_failed':
+                // Handle payment failure event
+                break;
+            // Add more cases for other event types you want to handle
+        }
+        return response()->json(['status' => 'success']);
     }
 }
