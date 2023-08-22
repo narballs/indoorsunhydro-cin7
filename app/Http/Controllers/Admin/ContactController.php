@@ -31,13 +31,34 @@ class ContactController extends Controller
 
     function __construct()
     {
-        $this->middleware(['role:Admin'])->except('contomer_invitation', 'send_invitation_email');
+        $this->middleware(['role:Admin'])->except('customer_invitation', 'send_invitation_email');
     }
 
-    public function supplier()
+    public function supplier(Request $request)
     {
-        $contacts = Contact::where('type', 'Supplier')->paginate(10);
-        return view('admin/contacts', compact('contacts'));
+        $sort_by_desc = $request->get('sort_by_desc');
+        $sort_by_asc = $request->get('sort_by_asc');
+        $sort_by_name = $request->get('sort_by_name');
+        
+        $contacts = Contact::where('type', 'Supplier');
+        if (!empty($request->sort_by_desc)) {
+            $contacts = $contacts->orderBy('id' , 'Desc');
+        }
+        if (!empty($request->sort_by_asc)) {
+            $contacts = $contacts->orderBy('id' , 'Asc');
+        }
+
+
+        if (!empty($request->sort_by_name)) {
+            if ($sort_by_name == 'Asc') {
+                $contacts = $contacts->orderBy('firstName' , 'Asc');
+            }
+            if ($sort_by_name == 'Desc') {
+                $contacts = $contacts->orderBy('firstName' , 'Desc');
+            }
+        }
+        $contacts = $contacts->orderBy('id' , 'Desc')->paginate(10);
+        return view('admin/contacts', compact('contacts' , 'sort_by_desc' , 'sort_by_asc' , 'sort_by_name'));
     }
 
     public function customer(Request $request)
@@ -46,6 +67,8 @@ class ContactController extends Controller
         $search = $request->get('search');
         $sort_by_desc = $request->get('sort_by_desc');
         $sort_by_asc = $request->get('sort_by_asc');
+        $sort_by_name = $request->get('sort_by_name');
+        $sort_by_email = $request->get('sort_by_email');
         $activeCustomer = $request->get('active-customer');
         $pendingApproval = $request->get('pending-approval');
         $contact_query = Contact::where('type', 'Customer');
@@ -85,6 +108,25 @@ class ContactController extends Controller
             $contact_query = $contact_query->orderBy('id' , 'Asc');
         }
 
+
+        if (!empty($request->sort_by_name)) {
+            if ($sort_by_name == 'Asc') {
+                $contact_query = $contact_query->orderBy('firstName' , 'Asc');
+            }
+            if ($sort_by_name == 'Desc') {
+                $contact_query = $contact_query->orderBy('firstName' , 'Desc');
+            }
+        }
+
+        if (!empty($request->sort_by_email)) {
+            if ($sort_by_email == 'Asc') {
+                $contact_query = $contact_query->orderBy('email' , 'Asc');
+            }
+            if ($sort_by_email == 'Desc') {
+                $contact_query = $contact_query->orderBy('email' , 'Desc');
+            }
+        }
+
         $contacts = $contact_query->paginate($perPage);
         return view('admin/customers', compact(
             'contacts',
@@ -92,7 +134,9 @@ class ContactController extends Controller
             'perPage',
             'activeCustomer',
             'sort_by_desc',
-            'sort_by_asc'
+            'sort_by_asc',
+            'sort_by_name',
+            'sort_by_email',
         ));
     }
 
@@ -430,7 +474,7 @@ class ContactController extends Controller
         }
     }
 
-    public function contomer_invitation(Request $request, $hash)
+    public function customer_invitation(Request $request, $hash)
     {
         if ($request->is_secondary) {
             $secondary = true;
@@ -442,20 +486,20 @@ class ContactController extends Controller
         if ($contact) {
             if ($contact->hashUsed == 1) {
 
-                return view('contomer_invitation-error', compact('msg'));
+                return view('customer-invitation-error', compact('msg'));
             } else {
 
-                return view('contomer_invitation', compact('contact'));
+                return view('customer-invitation', compact('contact'));
             }
 
-            return view('contomer_invitation', compact('contact'));
+            return view('customer-invitation', compact('contact'));
         } else {
             $contact = Contact::where('hashKey', $hash)->first();
             if ($contact->hashUsed == 1) {
 
-                return view('contomer_invitation-error', compact('msg'));
+                return view('customer-invitation-error', compact('msg'));
             } else {
-                return view('contomer_invitation', compact('contact', 'secondary'));
+                return view('customer-invitation', compact('contact', 'secondary'));
             }
         }
     }

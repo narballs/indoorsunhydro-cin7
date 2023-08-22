@@ -77,19 +77,36 @@
                         <tr>
                             <thead>
                                 <tr class="table-header-background">
-                                    <td class="d-flex table-row-item">
-                                        <span class="tabel-checkbox-user">
+                                    <td class="d-flex table-row-item align-items-center">
+                                        <span class="mt-0">
                                             <input type="checkbox" name="test" class="checkbox-table" id="selectAll">
                                         </span>
-                                        <span class="table-row-heading">
-                                            <i class="fas fa-arrow-up sm-d-none"></i>
+                                        <span class="table-row-heading mt-0">
+                                            <input type="hidden" class="" name="sort_by_desc" id="sort_by_desc" value="Desc">
+                                            <input type="hidden" class="ml-1" name="sort_by_asc" id="sort_by_asc" value="Asc">
+                                            <i class="fas fa-arrow-up  sm-d-none" style="font-size:14.5px ;" onclick="sortbyDesc()"></i>
+                                            <i class="fas fa-arrow-down  sm-d-none ml-1" style="font-size:14.5px ;" onclick="sortbyAsc()"></i>
                                         </span>
                                     </td>
                                     <td>
-                                        <span class="d-flex table-row-item"> Full Name</span>
+                                        <span class="d-flex table-row-item"> Full Name
+                                            <span class="ml-1 d-flex">
+                                                <input type="hidden" class="" name="sort_by_name" id="sort_name_by_desc" value="Desc">
+                                                <input type="hidden" class="ml-1" name="sort_by_name" id="sort_name_by_asc" value="Asc">
+                                                <i class="fas fa-arrow-up  sm-d-none text-dark" style="font-size:14.5px ;" onclick="sortnamebyDesc()"></i>
+                                                <i class="fas fa-arrow-down  sm-d-none text-dark ml-1" style="font-size:14.5px ;" onclick="sortnamebyAsc()"></i>
+                                            </span>
+                                        </span>
                                     </td>
                                     <td>
-                                        <span class="d-flex table-row-item"> Email</span>
+                                        <span class="d-flex table-row-item"> Email
+                                            <span class="ml-1">
+                                                <input type="hidden" class="" name="sort_by_email" id="sort_email_by_desc" value="Desc">
+                                                <input type="hidden" class="ml-1" name="sort_by_email" id="sort_email_by_asc" value="Asc">
+                                                <i class="fas fa-arrow-up  sm-d-none text-dark" style="font-size:14.5px ;" onclick="sortemailbyDesc()"></i>
+                                                <i class="fas fa-arrow-down  sm-d-none text-dark ml-1" style="font-size:14.5px ;" onclick="sortemailbyAsc()"></i>
+                                            </span>
+                                        </span>
                                     </td>
                                     <td>
                                         <span class="d-flex table-row-item"> Cin7 User-ID </span>
@@ -314,6 +331,9 @@
     <link rel="stylesheet" href="/theme/css/admin_custom.css">
     <link rel="stylesheet" href="{{ asset('admin/admin_lte.css') }}">
     <style>
+        .text-dark {
+            color: #000 !important;
+        }
         .remove_padding {
             padding: 0.05rem 1rem;
         }
@@ -509,6 +529,64 @@
 @stop
 @section('js')
     <script>
+        // main sorting
+        function sortbyDesc() {
+            var search = $('#search').val();
+            var sort_by = $('#sort_by_desc').val();
+            var basic_url = '/admin/users?&search=' + search;
+            if (sort_by != '') {
+                basic_url = basic_url + `&sort_by_desc=${sort_by}`;
+            }
+            window.location.href = basic_url
+        }
+        function sortbyAsc() {
+            var search = $('#search').val();
+            var sort_by = $('#sort_by_asc').val();
+            var basic_url = '/admin/users?&search=' + search;
+            if (sort_by != '') {
+                basic_url = basic_url+`&sort_by_asc=${sort_by}`;
+            }
+            window.location.href = basic_url
+        }
+        // sort by name
+        function sortnamebyDesc() {
+            var search = $('#search').val();
+            var sort_by = $('#sort_name_by_desc').val();
+            var basic_url = '/admin/users?&search=' + search;
+            if (sort_by != '') {
+                basic_url = basic_url + `&sort_by_name=${sort_by}`;
+            }
+            window.location.href = basic_url
+        }
+        function sortnamebyAsc() {
+            var search = $('#search').val();
+            var sort_by = $('#sort_name_by_asc').val();
+            var basic_url = '/admin/users?&search=' + search;
+            if (sort_by != '') {
+                basic_url = basic_url+`&sort_by_name=${sort_by}`;
+            }
+            window.location.href = basic_url
+        }
+        // sort by email
+        function sortemailbyDesc() {
+            var search = $('#search').val();
+            var sort_by = $('#sort_email_by_desc').val();
+            var basic_url = '/admin/users?&search=' + search;
+            if (sort_by != '') {
+                basic_url = basic_url + `&sort_by_email=${sort_by}`;
+            }
+            window.location.href = basic_url
+        }
+        function sortemailbyAsc() {
+            var search = $('#search').val();
+            var sort_by = $('#sort_email_by_asc').val();
+            var basic_url = '/admin/users?&search=' + search;
+            if (sort_by != '') {
+                basic_url = basic_url+`&sort_by_email=${sort_by}`;
+            }
+            window.location.href = basic_url
+        }
+
         $('.user-row-none').hover(function() {
             let id = $(this).attr('id');
             children = $(this).children('.user_name').children('span').addClass('text-successs');

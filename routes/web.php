@@ -182,7 +182,6 @@ Route::delete('secondary/user/delete', [UserController::class, 'delete_secondary
 Route::post('/reset-password', [UserController::class, 'reset_password'])->name('reset_password');
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
-Route::get('/customer/invitation/{hash}', [ContactController::class, 'contomer_invitation']);
 Route::group(['middleware' => ['auth']], function () {
 });
 Route::get('/products/{id}/{slug}', [ProductController::class, 'showProductByCategory']);
@@ -194,7 +193,7 @@ Route::post('/login/', [UserController::class, 'process_login'])->name('login');
 Route::post('/user-contact/', [UserController::class, 'save_contact'])->name('save_contact');
 Route::post('/update-contact/', [UserController::class, 'update_contact'])->name('update_contact');
 Route::get('/my-account/', [UserController::class, 'my_account'])->name('my_account');
-Route::get('select-companiens-to-order', [UserController::class, 'chooise_companie']);
+Route::get('select-companies-to-order', [UserController::class, 'choose_company']);
 Route::get('/my-qoutes/', [UserController::class, 'my_qoutes'])->name('my_qoutes');
 Route::get('/my-qoutes-details/{id}', [UserController::class, 'my_qoutes_details'])->name('my_qoutes_details');
 Route::get('/my-qoute-edit/{id}', [UserController::class, 'my_qoute_edit'])->name('my_qoute_edit');
@@ -310,7 +309,7 @@ Route::delete('secondary/user/delete', [UserController::class, 'delete_secondary
 Route::post('/reset-password', [UserController::class, 'reset_password'])->name('reset_password');
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
-Route::get('/customer/invitation/{hash}', [ContactController::class, 'contomer_invitation']);
+Route::get('/customer/invitation/{hash}', [ContactController::class, 'customer_invitation']);
 Route::group(['middleware' => ['auth']], function () {
 });
 

@@ -107,26 +107,39 @@
                             <thead>
                                 <tr class="table-header-background">
                                     <td class="d-flex table-row-item mt-0">
-                                        <div class="custom-control custom-checkbox tabel-checkbox">
+                                        <div class="custom-control custom-checkbox tabel-checkbox d-flex">
                                             <input class="custom-control-input custom-control-input-success checkbox-table"
                                                 type="checkbox" id="selectAll" value="">
                                             <label for="selectAll" class="custom-control-label ml-4"></label>
-                                            <span class="table-row-heading-order sm-d-none">
-                                                <i class="fas fa-arrow-up mt-1" style="font-size:14.5px ;"></i>
+                                            <span class="table-row-heading-order sm-d-none d-flex">
+                                                <input type="hidden" class="" name="sort_by_desc" id="sort_by_desc" value="Desc">
+                                                <input type="hidden" class="ml-1" name="sort_by_asc" id="sort_by_asc" value="Asc">
+                                                <i class="fas fa-arrow-up  sm-d-none" style="font-size:14.5px ;" onclick="sortbyDesc()"></i>
+                                                <i class="fas fa-arrow-down  sm-d-none ml-1" style="font-size:14.5px ;" onclick="sortbyAsc()"></i>
                                             </span>
                                         </div>
                                     </td>
                                     <td>
-                                        <span class="d-flex table-row-item"> Created By</span>
+                                        <span class="d-flex table-row-item"> Created By
+                                        </span>
                                     </td>
                                     <td>
                                         <span class="d-flex table-row-item"> Reference</span>
                                     </td>
                                     <td>
-                                        <span class="d-flex table-row-item"> Date Created</span>
+                                        <span class="d-flex table-row-item"> Date Created
+                                            
+                                            <span class="ml-1 d-flex">
+                                                <input type="hidden" class="" name="sort_by_email" id="sort_by_date" value="Desc">
+                                                <input type="hidden" class="ml-1" name="sort_by_email" id="sort_by_date" value="Asc">
+                                                <i class="fas fa-arrow-up  sm-d-none text-dark" style="font-size:14.5px ;" onclick="sortbydateDESC()"></i>
+                                                <i class="fas fa-arrow-down  sm-d-none text-dark ml-1" style="font-size:14.5px ;" onclick="sortbydateASC()"></i>
+                                            </span>
+                                        </span>
                                     </td>
                                     <td>
-                                        <span class="d-flex table-row-item"> Primary Account Email</span>
+                                        <span class="d-flex table-row-item"> Primary Account Email
+                                        </span>
                                     </td>
                                     
                                     <td>
@@ -533,6 +546,63 @@
 
 @section('js')
     <script>
+        // main sorting
+        function sortbyDesc() {
+            var search = $('#search').val();
+            var sort_by = $('#sort_by_desc').val();
+            var basic_url = '/admin/orders?&search=' + search;
+            if (sort_by != '') {
+                basic_url = basic_url + `&sort_by_desc=${sort_by}`;
+            }
+            window.location.href = basic_url
+        }
+        function sortbyAsc() {
+            var search = $('#search').val();
+            var sort_by = $('#sort_by_asc').val();
+            var basic_url = '/admin/orders?&search=' + search;
+            if (sort_by != '') {
+                basic_url = basic_url+`&sort_by_asc=${sort_by}`;
+            }
+            window.location.href = basic_url
+        }
+        function sortbydateDESC() {
+            var search = $('#search').val();
+            var sort_by = $('#sort_by_desc').val();
+            var basic_url = '/admin/orders?&search=' + search;
+            if (sort_by != '') {
+                basic_url = basic_url + `&sort_by_desc=${sort_by}`;
+            }
+            window.location.href = basic_url
+        }
+        function sortbydateASC() {
+            var search = $('#search').val();
+            var sort_by = $('#sort_by_asc').val();
+            var basic_url = '/admin/orders?&search=' + search;
+            if (sort_by != '') {
+                basic_url = basic_url+`&sort_by_asc=${sort_by}`;
+            }
+            window.location.href = basic_url
+        }
+
+        // sort by email
+        function sortemailbyDesc() {
+            var search = $('#search').val();
+            var sort_by = $('#sort_email_by_desc').val();
+            var basic_url = '/admin/orders?&search=' + search;
+            if (sort_by != '') {
+                basic_url = basic_url + `&sort_by_email=${sort_by}`;
+            }
+            window.location.href = basic_url
+        }
+        function sortemailbyAsc() {
+            var search = $('#search').val();
+            var sort_by = $('#sort_email_by_asc').val();
+            var basic_url = '/admin/orders?&search=' + search;
+            if (sort_by != '') {
+                basic_url = basic_url+`&sort_by_email=${sort_by}`;
+            }
+            window.location.href = basic_url
+        }
         // toggle hover on rows in loop 
         $('.order-row-none').hover(function() {
             let id = $(this).attr('id');

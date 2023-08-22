@@ -50,11 +50,15 @@ class UserController extends Controller
     {
         $page = $request->page;
         $search = $request->search;
+        $sort_by_desc = $request->get('sort_by_desc');
+        $sort_by_asc = $request->get('sort_by_asc');
+        $sort_by_name = $request->get('sort_by_name');
+        $sort_by_email = $request->get('sort_by_email');
         $primaryUserSearch = $request->primaryUserSearch;
         $secondaryUserSearch = $request->secondaryUserSearch;
         $usersData = $request->usersData;
         $secondaryUser = $request->secondaryUser;
-        $user_query = User::orderBy('id', 'DESC')->with('contact');
+        $user_query = User::with('contact');
         if (!empty($usersData)) {
             if ($usersData == 'admin-user') {
                 $user_query = $user_query->role(['Admin']);
@@ -96,7 +100,33 @@ class UserController extends Controller
                 });
         }
 
-        $data = $user_query->paginate(10);
+        if (!empty($request->sort_by_desc)) {
+            $user_query = $user_query->orderBy('id' , 'Desc');
+        }
+        if (!empty($request->sort_by_asc)) {
+            $user_query = $user_query->orderBy('id' , 'Asc');
+        }
+
+
+        if (!empty($request->sort_by_name)) {
+            if ($sort_by_name == 'Asc') {
+                $user_query = $user_query->orderBy('first_name' , 'Asc')->orderBy('last_name' , 'Asc');
+            }
+            if ($sort_by_name == 'Desc') {
+                $user_query = $user_query->orderBy('first_name' , 'Desc')->orderBy('last_name' , 'Desc');
+            }
+        }
+
+        if (!empty($request->sort_by_email)) {
+            if ($sort_by_email == 'Asc') {
+                $user_query = $user_query->orderBy('email' , 'Asc');
+            }
+            if ($sort_by_email == 'Desc') {
+                $user_query = $user_query->orderBy('email' , 'Desc');
+            }
+        }
+
+        $data = $user_query->orderBy('created_at' , 'Desc')->paginate(10);
         $users = User::role(['Admin'])->get();
         $count = $users->count();
         return view('admin.users.index', compact(
@@ -104,7 +134,11 @@ class UserController extends Controller
             'count',
             'search',
             'usersData',
-            'secondaryUser'
+            'secondaryUser',
+            'sort_by_desc',
+            'sort_by_asc',
+            'sort_by_name',
+            'sort_by_email',
         ))
             ->with('i', ($request->input('page', 1) - 1) * 5);
     }
@@ -1712,7 +1746,7 @@ class UserController extends Controller
         MailHelper::sendMailNotification('emails.order-approver-email', $data);
     }
 
-    public function chooise_companie(Request $request)
+    public function choose_company(Request $request)
     {
         if ($request->ajax()) {
             $companies = Contact::where('user_id', auth()->user()->id)->get();
