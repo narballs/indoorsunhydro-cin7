@@ -163,7 +163,114 @@ class CheckoutController extends Controller
         }
 
         switch ($event->type) {
-            case 'payment_intent.succeeded':
+            case 'charge.succeeded':
+                $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
+                $payment_succeded = $stripe->events->retrieve(
+                    $event->id,
+                    []
+                );
+                dd($payment_succeded);
+                // $contact = Contact::where('user_id', auth()->id())->first();
+                // $user_email = Auth::user();
+                // $count = $order_items->count();
+                // $best_products = Product::where('status', '!=', 'Inactive')->orderBy('views', 'DESC')->limit(4)->get();
+                // $addresses = [
+                //     'billing_address' => [
+                //         'firstName' => $contact->firstName,
+                //         'lastName' => $contact->lastName,
+                //         'address1' => $contact->address1,
+                //         'address2' => $contact->address2,
+                //         'city' => $contact->city,
+                //         'state' => $contact->state,
+                //         'zip' => $contact->postCode,
+                //         'mobile' => $contact->mobile,
+                //         'phone' => $contact->phone,
+                //     ],
+                //     'shipping_address' => [
+                //         'postalAddress1' => $contact->postalAddress1,
+                //         'postalAddress2' => $contact->postalAddress2,
+                //         'phone' => $contact->postalCity,
+                //         'postalCity' => $contact->postalState,
+                //         'postalState' => $contact->postalPostCode,
+                //         'postalPostCode' => $contact->postalPostCode
+                //     ],
+                //     'best_product' => $best_products,
+                //     'user_email' =>   $user_email,
+                //     'currentOrder' => $currentOrder,
+                //     'count' => $count,
+                //     'order_id' => $order_id,
+                // ];
+
+                // $name = $contact->firstName;
+                // $email =  $contact->email;
+                // $reference  =  $currentOrder->reference;
+                // $template = 'emails.admin-order-received';
+                // $admin_users = DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
+
+                // $admin_users = $admin_users->toArray();
+
+                // $users_with_role_admin = User::select("email")
+                //     ->whereIn('id', $admin_users)
+                //     ->get();
+
+                // $data = [
+                //     'name' =>  $name,
+                //     'email' => $email,
+                //     'subject' => 'New order received',
+                //     'reference' => $reference,
+                //     'order_items' => $order_items,
+                //     'dateCreated' => $dateCreated,
+                //     'addresses' => $addresses,
+                //     'best_product' => $best_products,
+                //     'user_email' => $user_email,
+                //     'currentOrder' => $currentOrder,
+                //     'count' => $count,
+                //     'from' => SettingHelper::getSetting('noreply_email_address')
+                // ];
+
+                // if (!empty($users_with_role_admin)) {
+                //     foreach ($users_with_role_admin as $role_admin) {
+                //         $subject = 'New order received';
+                //         $adminTemplate = 'emails.admin-order-received';
+                //         $data['email'] = $role_admin->email;
+                //         MailHelper::sendMailNotification('emails.admin-order-received', $data);
+                //     }
+                // }
+                // $credit_limit = $contact->credit_limit;
+                // $parent_email = Contact::where('contact_id', $active_contact_id)->first();
+
+                // if ($credit_limit < $cart_total) {
+                //     if ($is_primary == null) {
+                //         $data['subject'] = 'Credit limit reached';
+                //         $data['email'] = $parent_email->email;
+
+                //         MailHelper::sendMailNotification('emails.credit-limit-reached', $data);
+                //     }
+                // } else {
+                //     $data['subject'] = 'Your order has been received';
+                //     $data['email'] = $email;
+                // }
+                // MailHelper::sendMailNotification('emails.admin-order-received', $data);
+
+
+                // $email_sent_to_users = [];
+                // $user = User::where('id',  Auth::id())->first();
+                // $all_ids = UserHelper::getAllMemberIds($user);
+                // $all_members = Contact::whereIn('id', $all_ids)->get();
+                // foreach ($all_members as $member) {
+                //     $member_user = User::find($member->user_id);
+                //     if (!empty($member_user) && $member_user->hasRole(['Order Approver'])) {
+                //         if (isset($email_sent_to_users[$member_user->id])) {
+                //             continue;
+                //         }
+
+                //         $email_sent_to_users[$member_user->id] = $member_user;
+                //         $data['name'] = $member_user->firstName;
+                //         $data['subject'] = 'New order awaiting approval';
+                //         $data['email'] = $member_user->email;
+                //         MailHelper::sendMailNotification('emails.user-order-received', $data);
+                //     }
+                // }
                 // Handle payment success event
                 break;
             case 'invoice.payment_failed':
