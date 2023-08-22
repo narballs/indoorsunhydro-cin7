@@ -73,7 +73,7 @@ class OrderController extends Controller
                 }
 
                 $is_primary = Contact::where('contact_id', $session_contact_id)->first();
-                if (!empty($setting) && $setting->option_value == 'yes') {
+                if (!empty($setting) && $setting->option_value == 'Yes') {
                     if ($request->paymentTerms == 'Pay in Advanced') {
                         $order = new ApiOrder;
                         
