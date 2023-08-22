@@ -248,7 +248,6 @@ class CheckoutController extends Controller
                     'dateCreated' => $dateCreated,
                     'addresses' => $addresses,
                     'best_product' => $best_products,
-                    'user_email' => $user_email,
                     'currentOrder' => $currentOrder,
                     'count' => $count,
                     'from' => SettingHelper::getSetting('noreply_email_address')
