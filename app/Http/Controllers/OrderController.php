@@ -26,6 +26,7 @@ use Stripe\Webhook;
 use Symfony\Component\HttpFoundation\Response;
 
 use App\Helpers\SettingHelper;
+use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
@@ -737,7 +738,7 @@ class OrderController extends Controller
     }
 
     public function webhook(Request $request) {
-        \Log::info('Webhook request: ' . $request);
+        Log::info('Webhook request: ' . $request);
         $payload = $request->getContent();
         $signature = $request->header('Stripe-Signature');
 
