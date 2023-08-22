@@ -315,3 +315,4 @@ Route::group(['middleware' => ['auth']], function () {
 
 
 Route::get('/index', [UserController::class, 'index_email_view']);
+Route::get('/event', [CheckoutController::class, 'event']);
