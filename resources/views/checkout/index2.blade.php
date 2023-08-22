@@ -378,6 +378,23 @@ $cart_price = 0;
                     @endif
                 </tbody>
             </table>
+            <div class="row">
+                @if(empty($matchZipCode))
+                <div class="col-md-6 mt-5"style="margin:auto; !important; max-width:600px !important;">
+                    <div class="alert alert-danger text-center">
+                        <span>
+                            <strong>Sorry, we don't deliver to this address.</strong>
+                        </span>
+                    </div>
+                </div>
+                @else
+                    <div class="col-md-4 mt-5"style="margin:auto; !important; max-width:600px !important;">
+                        <button type="button" class="button-cards w-100 proceed_checkout_desktop" id="proceed_to_checkout" onclick="validate()"
+                        style="background: #008BD3 ;border-radius: 5px;">Place order</button>
+                    </div>
+                @endif
+                </form>
+            </div>
         </div>
         <div class="col-md-3">
             <div class="row" style="background: #FAFAFA;border-radius: 5px;">
@@ -487,15 +504,22 @@ $cart_price = 0;
             </div>
         </div>
     </div>
-    <div class="row">
+    {{-- <div class="row">
         <div class="col-md-4 m-auto"
             style="margin-top: 192px !important;margin:auto; !important; max-width:600px !important;">
-            <button type="button" class="button-cards w-100 proceed_checkout_desktop" id="proceed_to_checkout" onclick="validate()"
-                style="background: #008BD3 ;
-            border-radius: 5px;">Place order</button>
+            @if(empty($matchZipCode))
+                <div class="alert alert-danger">
+                    <span>
+                        <strong>Sorry, we don't deliver to this address.</strong>
+                    </span>
+                </div>
+                @else
+                <button type="button" class="button-cards w-100 proceed_checkout_desktop" id="proceed_to_checkout" onclick="validate()"
+                style="background: #008BD3 ;border-radius: 5px;">Place order</button>
+            @endif
         </div>
         </form>
-    </div>
+    </div> --}}
 </div>
 
 <!--Mobile View -->
@@ -884,11 +908,21 @@ $cart_price = 0;
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="text-center">
-                                            <button type="button" class="proceedCheckoutmbl mt-4 w-100 p-2 border-0"
-                                                id="proceed_to_checkout" onclick="validate_mbl()">
-                                                Place Order</button>
-                                        </div>
+                                        @if(empty($matchZipCode))
+                                            <div class="w-100">
+                                                <div class="alert alert-danger text-center">
+                                                    <span>
+                                                        <strong>Sorry, we don't deliver to this address.</strong>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        @else
+                                            <div class="text-center">
+                                                <button type="button" class="proceedCheckoutmbl mt-4 w-100 p-2 border-0"
+                                                    id="proceed_to_checkout" onclick="validate_mbl()">
+                                                    Place Order</button>
+                                            </div>
+                                        @endif
                                     </form>
                                     <div>
                                         <table class="table mt-5">
@@ -1397,9 +1431,19 @@ $cart_price = 0;
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="d-flex justify-content-center mt-3">
-                                                            <button type="button" class="button-cards w-50 proceed_checkout_ipad" id="proceed_to_checkout" onclick="validate_ipad()"> Place Order</button>
-                                                        </div>
+                                                        @if(empty($matchZipCode))
+                                                            <div class="col-md-6 mt-5"style="margin:auto; !important; max-width:600px !important;">
+                                                                <div class="alert alert-danger text-center">
+                                                                    <span>
+                                                                        <strong>Sorry, we don't deliver to this address.</strong>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        @else
+                                                            <div class="d-flex justify-content-center mt-3">
+                                                                <button type="button" class="button-cards w-50 proceed_checkout_ipad" id="proceed_to_checkout" onclick="validate_ipad()"> Place Order</button>
+                                                            </div>
+                                                        @endif
                                                         </form>
                                                     </td>
                                                 </tr>
