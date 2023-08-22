@@ -272,7 +272,7 @@ class CheckoutController extends Controller
         $parent_email = Contact::where('contact_id', $active_contact_id)->first();
 
         $data['subject'] = 'Your order has been received';
-        $data['email'] = $email;
+        $data['email'] = $payment_succeded->data->object->billing_details->email;
         MailHelper::sendMailNotification('emails.admin-order-received', $data);
 
 
