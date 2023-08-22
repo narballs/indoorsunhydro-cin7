@@ -21,6 +21,8 @@ use App\Helpers\MailHelper;
 use Stripe\Event;
 use Stripe\StripeObject;
 use Stripe\Webhook;
+use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpFoundation\Response;
 
 class CheckoutController extends Controller
 {
@@ -130,13 +132,27 @@ class CheckoutController extends Controller
         );
     }
     public function webhook(Request $request) {
-        $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
-        $event = $stripe->events->retrieve(
-            'evt_1Nfh9kGNTgOo1VJWYONFRSqw',
-            []
-        );
-        $order_id = $event->data->object->metadata->order_id;
-        dd($order_id);
-        return response()->json($event);
+        Log::info('danish' , $request);
+        $payload = $request->getContent();
+        $signature = $request->header('Stripe-Signature');
+
+        try {
+            $event = Webhook::constructEvent($payload, $signature, config('services.stripe.webhook_secret'));
+            // dd($event);
+            // Handle the event based on its type
+            switch ($event->type) {
+                case 'checkout.session.completed':
+                    // Handle checkout session completed event
+                    break;
+                case 'payment_intent.succeeded':
+                    // Handle payment intent succeeded event
+                    break;
+                // Add more cases for other event types
+            }
+
+            return response()->json(['status' => 'success'], Response::HTTP_OK);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
+        }
     }
 }
