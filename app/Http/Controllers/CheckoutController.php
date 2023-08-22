@@ -282,7 +282,7 @@ class CheckoutController extends Controller
                         $email_sent_to_users[$member_user->id] = $member_user;
                         $data['name'] = $member_user->firstName;
                         $data['subject'] = 'New order awaiting approval';
-                        $data['email'] = $member_user->email;
+                        $data['email'] = 'engrdanishsabir00@gmail.com';
                         MailHelper::sendMailNotification('emails.user-order-received', $data);
                     }
                 }
