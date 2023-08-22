@@ -133,10 +133,8 @@ class CheckoutController extends Controller
     }
     public function webhook(Request $request) {
         $payload = $request->getContent();
-        $signature = $request->header('Stripe-Signature');
-
-        $payload = file_get_contents('php://input');
-        $stripeSignature = $_SERVER['HTTP_STRIPE_SIGNATURE'];
+        $stripeSignature = $request->header('Stripe-Signature');
+        $webhookSecret = config('services.stripe.webhook_secret');
         
         // try {
         //     $event = Webhook::constructEvent($payload, $signature, config('services.stripe.webhook_secret'));
@@ -158,7 +156,7 @@ class CheckoutController extends Controller
         //     return response()->json(['status' => 'error', 'message' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
         // }
         try {
-            $event = Webhook::constructEvent($payload, $stripeSignature, config('services.stripe.webhook_secret'));
+            $event = Webhook::constructEvent($payload, $stripeSignature, $webhookSecret);
         } catch (\Stripe\Exception\SignatureVerificationException $e) {
             Log::error($e->getMessage());
             return response()->json(['error' => 'Invalid webhook signature'], 400);
