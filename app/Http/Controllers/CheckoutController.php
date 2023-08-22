@@ -300,6 +300,11 @@ class CheckoutController extends Controller
     public function event() {
         $user = User::where('id',  Auth::id())->first();
         $all_ids = UserHelper::getAllMemberIds($user);
-        dd($all_ids);
+        $all_members = Contact::whereIn('id', $all_ids)->get();
+        foreach ($all_members as $member) {
+
+            $member_user = User::find($member->user_id);
+            dd($member_user);
+        }
     }
 }
