@@ -737,6 +737,7 @@ class OrderController extends Controller
     }
 
     public function webhook(Request $request) {
+        \Log::info('Webhook request: ' . $request);
         $payload = $request->getContent();
         $signature = $request->header('Stripe-Signature');
 
