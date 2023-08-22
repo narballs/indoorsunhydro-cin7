@@ -124,25 +124,6 @@ class CheckoutController extends Controller
         $stripeSignature = $request->header('Stripe-Signature');
         $webhookSecret = config('services.stripe.webhook_secret');
         
-        // try {
-        //     $event = Webhook::constructEvent($payload, $signature, config('services.stripe.webhook_secret'));
-        //     // dd($event);
-        //     // Handle the event based on its type
-        //     switch ($event->type) {
-        //         case 'checkout.session.completed':
-        //             // Handle checkout session completed event
-        //             break;
-        //         case 'payment_intent.succeeded':
-        //             // Handle payment intent succeeded event
-        //             break;
-        //         // Add more cases for other event types
-        //     }
-
-        //     return response()->json(['status' => 'success'], Response::HTTP_OK);
-        // } catch (\Exception $e) {
-        //     Log::error($e->getMessage());
-        //     return response()->json(['status' => 'error', 'message' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
-        // }
         try {
             $event = Webhook::constructEvent($payload, $stripeSignature, $webhookSecret);
         } catch (\Stripe\Exception\SignatureVerificationException $e) {
@@ -264,28 +245,10 @@ class CheckoutController extends Controller
                 $parent_email = Contact::where('contact_id', $active_contact_id)->first();
         
                 $data['subject'] = 'Your order has been received';
-                $data['email'] = 'engrdanishsabir00@gmail.com';
+                $data['email'] = $email;
                 MailHelper::sendMailNotification('emails.admin-order-received', $data);
         
-        
-                $email_sent_to_users = [];
-                $user = User::where('id',  Auth::id())->first();
-                $all_ids = UserHelper::getAllMemberIds($user);
-                $all_members = Contact::whereIn('id', $all_ids)->get();
-                foreach ($all_members as $member) {
-                    $member_user = User::find($member->user_id);
-                    if (!empty($member_user) && $member_user->hasRole(['Order Approver'])) {
-                        if (isset($email_sent_to_users[$member_user->id])) {
-                            continue;
-                        }
-        
-                        $email_sent_to_users[$member_user->id] = $member_user;
-                        $data['name'] = $member_user->firstName;
-                        $data['subject'] = 'New order awaiting approval';
-                        $data['email'] = 'engrdanishsabir00@gmail.com';
-                        MailHelper::sendMailNotification('emails.user-order-received', $data);
-                    }
-                }
+            
                 // Handle payment success event
                 break;
             case 'invoice.payment_failed':
@@ -298,13 +261,123 @@ class CheckoutController extends Controller
     }
 
     public function event() {
+        // $dateCreated = Carbon::now();
+        // $createdDate = Carbon::now();
+        // $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
+        // $payment_succeded = $stripe->events->retrieve(
+        //     "evt_3Nhu6IGNTgOo1VJW1Qk5vMOo",
+        //     []
+        // );
+        // $session_contact_id = Session::get('contact_id');
+        // $active_contact_id = null;
+        // $is_primary = null;
+        // if (!empty($session_contact_id)) {
+        //     $contact = Contact::where('contact_id', $session_contact_id)->first();
+        //     if ($contact) {
+        //         $active_contact_id = $contact->contact_id;
+        //     } else {
+        //         $contact = Contact::where('secondary_id', $session_contact_id)->first();
+        //         $active_contact_id = $contact->parent_id;
+        //     }
+        // }
+        // if($active_contact_id) {
+        //     $is_primary = Contact::where('contact_id', $session_contact_id)->first();
+        // }
+        // $order_id = $payment_succeded->data->object->metadata->order_id;
+        // $currentOrder = ApiOrder::where('id', $order_id)->first();
+        // $contact = Contact::where('user_id', auth()->id())->first();
+        // $order_items = ApiOrderItem::with('order.texClasses', 'product.options')
+        // ->where('order_id', $order_id)
+        // ->get();
+        // $user_email = Auth::user();
+        // $count = $order_items->count();
+        // $best_products = Product::where('status', '!=', 'Inactive')->orderBy('views', 'DESC')->limit(4)->get();
+        // $addresses = [
+        //     'billing_address' => [
+        //         'firstName' => $contact->firstName,
+        //         'lastName' => $contact->lastName,
+        //         'address1' => $contact->address1,
+        //         'address2' => $contact->address2,
+        //         'city' => $contact->city,
+        //         'state' => $contact->state,
+        //         'zip' => $contact->postCode,
+        //         'mobile' => $contact->mobile,
+        //         'phone' => $contact->phone,
+        //     ],
+        //     'shipping_address' => [
+        //         'postalAddress1' => $contact->postalAddress1,
+        //         'postalAddress2' => $contact->postalAddress2,
+        //         'phone' => $contact->postalCity,
+        //         'postalCity' => $contact->postalState,
+        //         'postalState' => $contact->postalPostCode,
+        //         'postalPostCode' => $contact->postalPostCode
+        //     ],
+        //     'best_product' => $best_products,
+        //     'user_email' =>   $user_email,
+        //     'currentOrder' => $currentOrder,
+        //     'count' => $count,
+        //     'order_id' => $order_id,
+        // ];
+
+        // $name = $contact->firstName;
+        // $email =  $contact->email;
+        // $reference  =  $currentOrder->reference;
+        // $template = 'emails.admin-order-received';
+        // $admin_users = DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
+
+        // $admin_users = $admin_users->toArray();
+
+        // $users_with_role_admin = User::select("email")
+        //     ->whereIn('id', $admin_users)
+        //     ->get();
+
+        // $data = [
+        //     'name' =>  $name,
+        //     'email' => $email,
+        //     'subject' => 'New order received',
+        //     'reference' => $reference,
+        //     'order_items' => $order_items,
+        //     'dateCreated' => $dateCreated,
+        //     'addresses' => $addresses,
+        //     'best_product' => $best_products,
+        //     'currentOrder' => $currentOrder,
+        //     'user_email' => $user_email->email,
+        //     'count' => $count,
+        //     'from' => SettingHelper::getSetting('noreply_email_address')
+        // ];
+        // if (!empty($users_with_role_admin)) {
+        //     foreach ($users_with_role_admin as $role_admin) {
+        //         $subject = 'New order received';
+        //         $adminTemplate = 'emails.admin-order-received';
+        //         $data['email'] = $role_admin->email;
+        //         MailHelper::sendMailNotification('emails.admin-order-received', $data);
+        //     }
+        // }
+        // $parent_email = Contact::where('contact_id', $active_contact_id)->first();
+
+        // $data['subject'] = 'Your order has been received';
+        // $data['email'] = $email;
+
+        // MailHelper::sendMailNotification('emails.admin-order-received', $data);
+
+
+        $email_sent_to_users = [];
         $user = User::where('id',  Auth::id())->first();
         $all_ids = UserHelper::getAllMemberIds($user);
         $all_members = Contact::whereIn('id', $all_ids)->get();
         foreach ($all_members as $member) {
-
             $member_user = User::find($member->user_id);
-            dd($member_user);
+            if (!empty($member_user) && $member_user->hasRole(['Order Approver'])) {
+                if (isset($email_sent_to_users[$member_user->id])) {
+                    continue;
+                }
+
+                $email_sent_to_users[$member_user->id] = $member_user;
+                $data['name'] = $member_user->firstName;
+                $data['subject'] = 'New order awaiting approval';
+                $data['email'] = $member_user->email;
+                MailHelper::sendMailNotification('emails.user-order-received', $data);
+            }
         }
     }
 }
