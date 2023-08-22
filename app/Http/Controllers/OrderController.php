@@ -169,7 +169,7 @@ class OrderController extends Controller
                                         "order_id"=> $order_id,
                                     ]
                                     ],
-                                // 'customer_email' => auth()->user()->email,
+                                'customer_email' => auth()->user()->email,
                                 
                             ]);
                         } else {
