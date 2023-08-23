@@ -32,5 +32,10 @@ return [
         'secret' => env('STRIPE_SECRET'),
         'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
     ],
+    'shipstation' => [
+        'key' => env('SHIPMENT_KEY'),
+        'secret' => env('SHIPMENT_SECRET'),
+        'host_url' => env('SHIPMENT_HOST_URL'),
+    ],
 
 ];

@@ -30,6 +30,8 @@ use App\Models\OperationalZipCode;
 use App\Helpers\SettingHelper;
 use App\Helpers\UserHelper;
 use App\Models\AdminSetting;
+use App\Models\ProductOption;
+use PSpell\Config;
 
 class CheckoutController extends Controller
 {
@@ -53,7 +55,13 @@ class CheckoutController extends Controller
             $row_price = $cart_item['quantity'] * $cart_item['price'];
             $cart_total = $row_price + $cart_total;
         }
-
+        $produts_weight = 0;
+        foreach ($cart_items as $cart_item) {
+            $product_options = ProductOption::where('product_id', $cart_item['product_id'])->where('option_id' , $cart_item['option_id'])->get();
+            foreach ($product_options as $product_option) {
+                $produts_weight += $product_option->optionWeight * $cart_item['quantity'];
+            }
+        }
         if ($contact) {
             $isApproved = $contact->contact_id;
         }
@@ -77,6 +85,51 @@ class CheckoutController extends Controller
                 $matchZipCode = OperationalZipCode::where('status' , 'active')->where('zip_code', $user_address->postalPostCode)->orWhere('zip_code' , $user_address->postCode)->first();
             }
             $setting = AdminSetting::where('option_name', 'check_zipcode')->where('option_value' , 'Yes')->first();
+
+            // adding shipment rates
+
+            $client = new \GuzzleHttp\Client();
+            $shipstation_host_url = config('services.shipstation.host_url');
+            $shipstation_api_key = config('services.shipstation.key');
+            $shipstation_api_secret = config('services.shipstation.secret');
+            $carrier_code = AdminSetting::where('option_name', 'shipping_carrier_code')->first();
+            $service_code = AdminSetting::where('option_name', 'shipping_service_code')->first();
+            $data = [
+                'carrierCode' => $carrier_code->option_value,
+                'serviceCode' => $service_code->option_value,
+                'fromPostalCode' => '95826',
+                'toCountry' => 'US',
+                'toPostalCode' => $user_address->postalPostCode ? $user_address->postalPostCode : $user_address->postCode,
+                'weight' => [
+                    'value' => $produts_weight,
+                    'units' => 'pounds'
+                ],
+            ];
+            
+            $headers = [
+                'Authorization' => 'Basic ' . base64_encode($shipstation_api_key . ':' . $shipstation_api_secret),
+                'Content-Type' => 'application/json',
+            ];
+            $responseBody = null;
+            try {
+                $response = $client->post($shipstation_host_url, [
+                    'headers' => $headers,
+                    'json' => $data,
+                ]);
+
+                $statusCode = $response->getStatusCode();
+                $responseBody = $response->getBody()->getContents();
+            } catch (\Exception $e) {
+                $e->getMessage();
+            }
+
+            $shipment_price = 0;
+            if ($responseBody != null) {
+                $shipping_response = json_decode($responseBody);
+                foreach ($shipping_response as $shipping_response) {
+                    $shipment_price += $shipping_response->shipmentCost;
+                } 
+            }
             return view('checkout/index2', compact(
                 'user_address',
                 'states',
@@ -85,7 +138,8 @@ class CheckoutController extends Controller
                 'contact_id',
                 'tax_class_none',
                 'matchZipCode',
-                'setting'
+                'setting',
+                'shipment_price'
             ));
         } else {
             return redirect()->back()->with('message', 'Your account is disabled. You can not proceed with checkout. Please contact us.');
