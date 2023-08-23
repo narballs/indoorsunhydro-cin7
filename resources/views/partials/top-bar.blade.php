@@ -155,14 +155,16 @@
                                                                                                     }
                                                                                                     
                                                                                                 @endphp
-                                                                                                <a type="button"
-                                                                                                    class="multiple_company_hover select_company_top list-group-item list-group-item-action {{ $disabled }} {{ $muted }}"
-                                                                                                    onclick="switch_company_user({{ $contact_id }})">{{ $company->company }}
-                                                                                                    <span
-                                                                                                        style="font-size: 9px;font-family: 'Poppins';"
-                                                                                                        class="{{ $muted }}">{{ $primary }}
-                                                                                                    </span>
-                                                                                                </a>
+                                                                                                @if($company->type != "Supplier")
+                                                                                                    <a type="button"
+                                                                                                        class="multiple_company_hover select_company_top list-group-item list-group-item-action {{ $disabled }} {{ $muted }}"
+                                                                                                        onclick="switch_company_user({{ $contact_id }})">{{ $company->company }}
+                                                                                                        <span
+                                                                                                            style="font-size: 9px;font-family: 'Poppins';"
+                                                                                                            class="{{ $muted }}">{{ $primary }}
+                                                                                                        </span>
+                                                                                                    </a>
+                                                                                                @endif
                                                                                             @endforeach
                                                                                         @endif
                                                                                     @endif

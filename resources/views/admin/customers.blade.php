@@ -122,6 +122,9 @@
                                     </span>
                                 </td>
                                 <td>
+                                    Type
+                                </td>
+                                <td>
                                     <span class="d-flex table-row-item"> Notes</span>
                                 </td>
                                 <td>
