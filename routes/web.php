@@ -23,6 +23,7 @@ use App\Http\Controllers\Admin\AdminShareListController;
 use App\Http\Controllers\Admin\LogsController;
 use App\Http\Controllers\Admin\DailyApiLogController;
 use App\Http\Controllers\Admin\TaxClassController;
+use App\Http\Controllers\Admin\OperationalZipCodeController;
 use App\Models\TaxClass;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -316,3 +317,5 @@ Route::group(['middleware' => ['auth']], function () {
 
 Route::get('/index', [UserController::class, 'index_email_view']);
 Route::get('/event', [CheckoutController::class, 'event']);
+
+Route::resource('admin/operational-zip-codes', OperationalZipCodeController::class);

@@ -364,6 +364,10 @@ return [
             'text'    => 'Tax Classes',
             'url'  => 'admin/tax_classes',
         ],
+        [
+            'text'    => 'Operational Zip Codes',
+            'url'  => 'admin/operational-zip-codes',
+        ],
 
         [
             'text'       => 'Logout',
