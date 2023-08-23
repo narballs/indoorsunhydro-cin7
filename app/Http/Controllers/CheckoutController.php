@@ -127,7 +127,7 @@ class CheckoutController extends Controller
             if ($responseBody != null) {
                 $shipping_response = json_decode($responseBody);
                 foreach ($shipping_response as $shipping_response) {
-                    $shipment_price += $shipping_response->shipmentCost;
+                    $shipment_price = $shipping_response->shipmentCost;
                 } 
             }
             return view('checkout/index2', compact(
