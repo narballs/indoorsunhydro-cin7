@@ -689,8 +689,8 @@ class UserController extends Controller
 
         $user_log = UserLog::create([
             'user_id' => $user->id,
-            'action' => 'Singup',
-            'user_notes' => 'Contact do not exist in Cin7. Awaiting approval from admin to assign role ' . Carbon::now()->toDateTimeString()
+            'action' => 'Signup',
+            'user_notes' => 'Contact does not exist in Cin7. Awaiting approval from admin to assign role ' . Carbon::now()->toDateTimeString()
         ]);
 
         if (!$already_in_cin7) {
