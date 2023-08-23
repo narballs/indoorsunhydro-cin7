@@ -124,7 +124,7 @@ class SettingSeeder extends Seeder
             [
                 'option_name' => 'retail_price_column', 
                 'type' => 'text',
-                'option_value' => 'sacramentoUSD',
+                'option_value' => 'retailUSD',
             ],
             [
                 'option_name' => 'site_id', 
@@ -142,6 +142,11 @@ class SettingSeeder extends Seeder
                 'type' => 'text',
                 'option_value' => '9AM-5pm',
             ],
+            [
+                'option_name' => 'check_zipcode', 
+                'type' => 'yes/no',
+                'option_value' => 'Yes',
+            ]
         ];
 
         foreach($setting as $setting) {

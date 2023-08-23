@@ -29,6 +29,8 @@ use App\Models\User;
 use App\Models\OperationalZipCode;
 use App\Helpers\SettingHelper;
 use App\Helpers\UserHelper;
+use App\Models\AdminSetting;
+
 class CheckoutController extends Controller
 {
     public function index(Request $request)
@@ -74,6 +76,7 @@ class CheckoutController extends Controller
 
                 $matchZipCode = OperationalZipCode::where('status' , 'active')->where('zip_code', $user_address->postalPostCode)->orWhere('zip_code' , $user_address->postCode)->first();
             }
+            $setting = AdminSetting::where('option_name', 'check_zipcode')->where('option_value' , 'Yes')->first();
             return view('checkout/index2', compact(
                 'user_address',
                 'states',
@@ -81,7 +84,8 @@ class CheckoutController extends Controller
                 'tax_class',
                 'contact_id',
                 'tax_class_none',
-                'matchZipCode'
+                'matchZipCode',
+                'setting'
             ));
         } else {
             return redirect()->back()->with('message', 'Your account is disabled. You can not proceed with checkout. Please contact us.');
