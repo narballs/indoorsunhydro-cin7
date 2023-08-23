@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class ZipCodeSeeder extends Seeder
+class OperationalZipCodeSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -599,7 +599,7 @@ class ZipCodeSeeder extends Seeder
         
 
         foreach ($northern_california_zip_codes as $zipCode) {
-            DB::table('zip_codes')->insert([
+            DB::table('operational_zip_codes')->insert([
                 'zip_code' => $zipCode,
                 'status' => 'active',
             ]);

@@ -26,7 +26,7 @@ use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
-use App\Models\ZipCode;
+use App\Models\OperationalZipCode;
 use App\Helpers\SettingHelper;
 use App\Helpers\UserHelper;
 class CheckoutController extends Controller
@@ -72,7 +72,7 @@ class CheckoutController extends Controller
             $matchZipCode = null;
             if ($user_address->postalPostCode != null || $user_address->postCode != null) {
 
-                $matchZipCode = ZipCode::where('zip_code', $user_address->postalPostCode)->orWhere('zip_code' , $user_address->postCode)->first();
+                $matchZipCode = OperationalZipCode::where('status' , 'active')->where('zip_code', $user_address->postalPostCode)->orWhere('zip_code' , $user_address->postCode)->first();
             }
             return view('checkout/index2', compact(
                 'user_address',
