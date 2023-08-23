@@ -146,7 +146,17 @@ class SettingSeeder extends Seeder
                 'option_name' => 'check_zipcode', 
                 'type' => 'yes/no',
                 'option_value' => 'Yes',
-            ]
+            ],
+            [
+                'option_name' => 'shipping_carrier_code', 
+                'type' => 'text',
+                'option_value' => 'ups_walleted',
+            ],
+            [
+                'option_name' => 'shipping_service_code', 
+                'type' => 'text',
+                'option_value' => 'ups_ground',
+            ],
         ];
 
         foreach($setting as $setting) {
