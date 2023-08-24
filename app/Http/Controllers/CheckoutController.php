@@ -351,13 +351,19 @@ class CheckoutController extends Controller
         $order_created_date = $getDate . 'T' . $getTime ;
         $calculate_tax =$currentOrder->total_including_tax - $currentOrder->productTotal;
         $tax = $calculate_tax - $currentOrder->shipment_price;
+        $orderStatus = null;
+        if ($currentOrder->payment_status == 'paid') {
+            $orderStatus = 'awaiting_shipment';
+        } else {
+            $orderStatus = 'on_hold';
+        }
         $data = [
             'orderNumber' => $order_id,
             'orderKey' => $currentOrder->reference,
             'orderDate' => $order_created_date,
             'carrierCode' => $carrier_code->option_value,
             'serviceCode' => $service_code->option_value,
-            'orderStatus' => 'awaiting_shipment',
+            'orderStatus' => $orderStatus,
             'shippingAmount' => number_format($currentOrder->shipment_price , 2),
             "amountPaid" => number_format($currentOrder->total_including_tax , 2),
             "taxAmount" => number_format($tax, 2),
