@@ -171,7 +171,6 @@ class CheckoutController extends Controller
         $contact = Contact::where('user_id', $user_id)->first();
 
         $pricing = $contact->priceColumn;
-        $this->shipping_order($id , $order , $order_contact);
         return view(
             'checkout/order-received',
             compact(
@@ -249,7 +248,7 @@ class CheckoutController extends Controller
                 ->get();
                 $contact = Contact::where('user_id', auth()->id())->first();
 
-                // $this->shipping_order($order_id , $currentOrder , $order_contact);
+                $this->shipping_order($order_id , $currentOrder , $order_contact);
 
                 $user_email = Auth::user();
                 $count = $order_items->count();
