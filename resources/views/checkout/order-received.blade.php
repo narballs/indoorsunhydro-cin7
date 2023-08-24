@@ -1214,7 +1214,7 @@
 												<span class="summary_sub_total_head">Rate ({{$order->texClasses->rate . '%' }}) :</span>
 											</div>
 											<div class="w-50 p-1 text-right">
-												<span class="summary_sub_total_price text-right">${{ number_format(($order->total_including_tax - $order->productTotal) - $order->shipping_price, 2) }}</span>
+												<span class="summary_sub_total_price text-right">${{ number_format(($order->total_including_tax - $order->productTotal) - $order->shipment_price, 2) }}</span>
 											</div>
 										</div>
 										<div class="d-flex w-100 mb-2">
@@ -1222,7 +1222,7 @@
 												<span class="summary_sub_total_head">Shipping:</span>
 											</div>
 											<div class="w-50 p-1 text-right">
-												<span class="summary_sub_total_price text-right">${{ number_format($order->shipping_price) }}</span>
+												<span class="summary_sub_total_price text-right">${{ number_format($order->shipment_price) }}</span>
 											</div>
 										</div>
 										<div class="d-flex w-100">
