@@ -909,7 +909,9 @@
 													</p> --}}
 													
 													<p class="order-confirmation-page-address-line-one-title mb-1">
-														{{$order_contact->address1 ? $order_contact->address1 . ',' : $order_contact->postalAddress1 . ','}}
+														@if(!empty($order_contact->address1 || $order_contact->postalAddress1))
+															{{$order_contact->address1 ? $order_contact->address1 . ',' : $order_contact->postalAddress1 . ','}}
+														@endif
 													</p>
 													
 													{{-- <p class="order-confirmation-page-address-line-tow-title mb-1">
@@ -917,7 +919,9 @@
 													</p> --}}
 													
 													<p class="order-confirmation-page-address-line-one-title mb-1">
-														{{$order_contact->address2 ? $order_contact->address2 . ',' : $order_contact->postalAddress2 . ','}}
+														@if(!empty($order_contact->address2 || $order_contact->postalAddress2))
+															{{$order_contact->address2 ? $order_contact->address2: $order_contact->postalAddress2 }}
+														@endif
 													</p>
 													<p class="order-confirmation-page-address-line-one-title">
 														{{$order_contact->city ? $order_contact->city . ',' : $order_contact->postalCity . ','}}
@@ -976,10 +980,14 @@
 													</p> --}}
 													
 													<p class="order-confirmation-page-address-line-one-title mb-1">
-														{{$order_contact->address1 ? $order_contact->address1 . ',' : $order_contact->postalAddress1 . ','}}
+														@if(!empty($order_contact->address1 || $order_contact->postalAddress1))
+															{{$order_contact->address1 ? $order_contact->address1 . ',' : $order_contact->postalAddress1 . ','}}
+														@endif
 													</p>
 													<p class="order-confirmation-page-address-line-one-title mb-1">
-														{{$order_contact->address2 ? $order_contact->address2 . ',' : $order_contact->postalAddress2 . ','}}
+														@if(!empty($order_contact->address2 || $order_contact->postalAddress2))
+															{{$order_contact->address2 ? $order_contact->address2 . ',' : $order_contact->postalAddress2 . ','}}
+														@endif
 													</p>
 													<p class="order-confirmation-page-address-line-one-title">
 														{{$order_contact->city ? $order_contact->city . ',' : $order_contact->postalCity . ','}}
@@ -1222,7 +1230,7 @@
 												<span class="summary_sub_total_head">Shipping:</span>
 											</div>
 											<div class="w-50 p-1 text-right">
-												<span class="summary_sub_total_price text-right">${{ number_format($order->shipment_price) }}</span>
+												<span class="summary_sub_total_price text-right">${{ number_format($order->shipment_price ,2) }}</span>
 											</div>
 										</div>
 										<div class="d-flex w-100">
