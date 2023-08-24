@@ -504,7 +504,7 @@ $cart_price = 0;
                             <p class=" thank-you-page-product-item-cart mb-0">${{ number_format($cart_total, 2) }}</p>
                             {{-- <p class=" thank-you-page-product-item-cart">shipping</p> --}}
                             <p class=" thank-you-page-product-item-cart mb-0">${{ number_format($tax, 2) }}</p>
-                            <p class=" thank-you-page-product-item-cart mb-0" id="shipment_price">{{number_format($shipment_price , 2)}}</p>
+                            <p class=" thank-you-page-product-item-cart mb-0" id="shipment_price">${{number_format($shipment_price , 2)}}</p>
                             <p class="thank-you-page-product-item-cart-total mb-0" id="tax-rate">
                                 ${{ number_format($total_including_tax, 2) }}</p>
                         </div>
@@ -832,6 +832,7 @@ $cart_price = 0;
                                                     @endforeach
                                                 @endforeach
                                                 <input type="hidden" name="incl_tax" id="incl_tax" value="{{ $total_including_tax }}">
+                                                <input type="hidden" name="shipment_price" id="shipment_price" value="{{ $shipment_price }}">
                                                 @if(!empty($tax_class))
                                                 <input type="hidden" name="tax_class_id" id="tax_class_id" value="{{ $tax_class->id }}">
                                                 @else
