@@ -451,16 +451,20 @@ class CheckoutController extends Controller
     public function shipping_order($order_id , $currentOrder , $order_contact) {
         //adding orders to shistation api 
         $client = new \GuzzleHttp\Client();
-        $shipstation_host_url = config('services.shipstation.shipment_order_url');
+        $shipstation_order_url = config('services.shipstation.shipment_order_url');
         $shipstation_api_key = config('services.shipstation.key');
         $shipstation_api_secret = config('services.shipstation.secret');
         $carrier_code = AdminSetting::where('option_name', 'shipping_carrier_code')->first();
         $service_code = AdminSetting::where('option_name', 'shipping_service_code')->first();
+        $created_date = \Carbon\Carbon::parse($currentOrder->createdDate);
+        $getDate =$created_date->format('Y-m-d');
+        $getTime = date('H:i:s' ,strtotime($currentOrder->createdDate));
+        $order_created_date = $getDate . 'T' . $getTime ;
         $data = [
             'orderId' => $order_id,
             'orderNumber' => $order_id,
             'orderKey' => $currentOrder->reference,
-            'orderDate' => $currentOrder->createdDate,
+            'orderDate' => $order_created_date,
             'carrierCode' => $carrier_code->option_value,
             'serviceCode' => $service_code->option_value,
             'orderStatus' => $currentOrder->payment_status == 'paid' ? 'awaiting_shipment' : 'awaiting_payment',
@@ -497,7 +501,7 @@ class CheckoutController extends Controller
         ];
         $responseBody = null;
         try {
-            $response = $client->post($shipstation_host_url, [
+            $response = $client->post($shipstation_order_url, [
                 'headers' => $headers,
                 'json' => $data,
             ]);

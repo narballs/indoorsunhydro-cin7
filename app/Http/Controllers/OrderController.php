@@ -27,6 +27,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 use App\Helpers\SettingHelper;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
 
 class OrderController extends Controller
 {
@@ -384,7 +385,13 @@ class OrderController extends Controller
                     $currentOrder->reference = 'DEV4' . '-QCOM-' .$random_string . '-' .$order_id;
 
                     $currentOrder->save();
-                    $currentOrder = ApiOrder::where('id', $order->id)->with('contact')->first();
+                    $currentOrder = ApiOrder::where('id', $order_id)->with(
+                        'contact',
+                        'user.contact',
+                        'apiOrderItem.product.options',
+                        'texClasses'
+                    )->first();
+                    $order_contact = Contact::where('contact_id', $currentOrder->memberId)->first();
                     $reference = $currentOrder->reference;
                     if (session()->has('cart')) {
                         foreach ($cart_items as $cart_item) {
@@ -406,6 +413,7 @@ class OrderController extends Controller
                         ->get();
 
                     $contact = Contact::where('user_id', auth()->id())->first();
+                    // $this->shipping_order($order_id , $currentOrder , $order_contact);
                     $user_email = Auth::user();
                     $count = $order_items->count();
                     $best_products = Product::where('status', '!=', 'Inactive')->orderBy('views', 'DESC')->limit(4)->get();
@@ -759,5 +767,67 @@ class OrderController extends Controller
         }
     }
 
-    
+    // public function shipping_order($order_id , $currentOrder , $order_contact) {
+    //     //adding orders to shistation api 
+    //     $client = new \GuzzleHttp\Client();
+    //     $shipstation_order_url = config('services.shipstation.shipment_order_url');
+    //     $shipstation_api_key = config('services.shipstation.key');
+    //     $shipstation_api_secret = config('services.shipstation.secret');
+    //     $carrier_code = AdminSetting::where('option_name', 'shipping_carrier_code')->first();
+    //     $service_code = AdminSetting::where('option_name', 'shipping_service_code')->first();
+    //     $created_date = \Carbon\Carbon::parse($currentOrder->createdDate);
+    //     $getDate =$created_date->format('Y-m-d');
+    //     $getTime = date('H:i:s' ,strtotime($currentOrder->createdDate));
+    //     $order_created_date = $getDate . 'T' . $getTime ;
+    //     $data = [
+    //         // 'orderId' => $order_id,
+    //         'orderNumber' => $order_id,
+    //         'orderKey' => $currentOrder->reference,
+    //         'orderDate' => $order_created_date,
+    //         'carrierCode' => $carrier_code->option_value,
+    //         'serviceCode' => $service_code->option_value,
+    //         'orderStatus' => 'awaiting_shipment',
+    //         'shippingAmount' => $currentOrder->shipment_price,
+    //         'shipTo' => [
+    //             "name" => $order_contact->firstName . $order_contact->lastName,
+    //             "company" => $order_contact->company,
+    //             "street1" => $order_contact->address1 ? $order_contact->address1 : $order_contact->postalAddress,
+    //             "street2" => $order_contact->address2 ? $order_contact->address2 : $order_contact->postalAddress,
+    //             "city" => $order_contact->city ? $order_contact->city : $order_contact->postalCity,
+    //             "state" => $order_contact->state ? $order_contact->state : $order_contact->postalState,
+    //             "postalCode" => $order_contact->postCode ? $order_contact->postCode : $order_contact->postalPostCode,
+    //             "country"=>"US",
+    //             "phone" => $order_contact->phone ? $order_contact->phone : $order_contact->mobile,
+    //             "residential"=>true
+    //         ],
+    //         'billTo' => [
+    //             "name" => $order_contact->firstName . $order_contact->lastName,
+    //             "company" => $order_contact->company,
+    //             "street1" => $order_contact->address1 ? $order_contact->address1 : $order_contact->postalAddress,
+    //             "street2" => $order_contact->address2 ? $order_contact->address2 : $order_contact->postalAddress,
+    //             "city" => $order_contact->city ? $order_contact->city : $order_contact->postalCity,
+    //             "state" => $order_contact->state ? $order_contact->state : $order_contact->postalState,
+    //             "postalCode" => $order_contact->postCode ? $order_contact->postCode : $order_contact->postalPostCode,
+    //             "country"=>"US",
+    //             "phone" => $order_contact->phone ? $order_contact->phone : $order_contact->mobile,
+    //             "residential"=>true
+    //         ],
+    //     ];
+    //     $headers = [
+    //         'Authorization' => 'Basic ' . base64_encode($shipstation_api_key . ':' . $shipstation_api_secret),
+    //         'Content-Type' => 'application/json',
+    //     ];
+    //     $responseBody = null;
+    //     $response = $client->post($shipstation_order_url, [
+    //         'headers' => $headers, 
+    //         $data,
+    //     ]);
+        
+
+    //     dd($response);
+    //     $statusCode = $response->getStatusCode();
+    //     $responseBody = $response->getBody()->getContents();
+    //     dd($responseBody);exit;
+    // }
 }
+
