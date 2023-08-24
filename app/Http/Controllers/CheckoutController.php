@@ -447,9 +447,18 @@ class CheckoutController extends Controller
             }
         }
     }
-
+    //adding orders to shistation api 
     public function shipping_order($order_id , $currentOrder , $order_contact) {
-        //adding orders to shistation api 
+        $order_items = ApiOrderItem::with('order.texClasses', 'product.options', 'product')->where('order_id', $order_id)->get();
+        for ($i = 0; $i <= count($order_items) - 1; $i++){
+            $items[] = [
+                'name' => $order_items[0]->product->name,
+                'sku' => $order_items[0]->product->code,
+                'quantity' => $order_items[0]->quantity,
+                'unitPrice' => $order_items[0]->price,
+            ];  
+        }
+        
         $client = new \GuzzleHttp\Client();
         $shipstation_order_url = config('services.shipstation.shipment_order_url');
         $shipstation_api_key = config('services.shipstation.key');
@@ -460,15 +469,18 @@ class CheckoutController extends Controller
         $getDate =$created_date->format('Y-m-d');
         $getTime = date('H:i:s' ,strtotime($currentOrder->createdDate));
         $order_created_date = $getDate . 'T' . $getTime ;
+        $calculate_tax =$currentOrder->total_including_tax - $currentOrder->productTotal;
+        $tax = $calculate_tax - $currentOrder->shipment_price;
         $data = [
-            'orderId' => $order_id,
             'orderNumber' => $order_id,
             'orderKey' => $currentOrder->reference,
             'orderDate' => $order_created_date,
             'carrierCode' => $carrier_code->option_value,
             'serviceCode' => $service_code->option_value,
-            'orderStatus' => $currentOrder->payment_status == 'paid' ? 'awaiting_shipment' : 'awaiting_payment',
-            'shippingAmount' => $currentOrder->shipment_price,
+            'orderStatus' => 'awaiting_shipment',
+            'shippingAmount' => number_format($currentOrder->shipment_price , 2),
+            "amountPaid" => number_format($currentOrder->total_including_tax , 2),
+            "taxAmount" => number_format($tax, 2),
             'shipTo' => [
                 "name" => $order_contact->firstName . $order_contact->lastName,
                 "company" => $order_contact->company,
@@ -493,11 +505,11 @@ class CheckoutController extends Controller
                 "phone" => $order_contact->phone ? $order_contact->phone : $order_contact->mobile,
                 "residential"=>true
             ],
+            'items'=> $items
         ];
-        
         $headers = [
+            "Content-Type: application/json",
             'Authorization' => 'Basic ' . base64_encode($shipstation_api_key . ':' . $shipstation_api_secret),
-            'Content-Type' => 'application/json',
         ];
         $responseBody = null;
         try {
