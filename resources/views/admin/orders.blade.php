@@ -251,9 +251,7 @@
                                                 @endif
                                             </td>
                                             <td class="td_padding_row">
-                                                @if($order->stage != 'New') 
-                                                    <span class="badge badge-success">{{ strtoupper($order->stage) }}</span>
-                                                @endif 
+                                                {{$order->payment_status}}
                                             </td>
                                             <td class="td_padding_row">
                                                 {{ $order->logisticsCarrier }}

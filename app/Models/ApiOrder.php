@@ -39,7 +39,8 @@ class ApiOrder extends Model
         'user_switch',
         'isVoid',
         'total_including_tax',
-        'shipment_price'
+        'shipment_price',
+        'paymenty_status'
     ];
     public function contact()
     {
