@@ -20,7 +20,6 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Str;
 use Illuminate\Database\Eloquent\Builder;
 use Stripe\Webhook;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,6 +27,8 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Helpers\SettingHelper;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Str;
 
 class OrderController extends Controller
 {
@@ -342,7 +343,6 @@ class OrderController extends Controller
                             ];
                         }
 
-                        $this->shipping_order($order_id , $currentOrder , $order_contact);
                         session()->forget('cart');
                         
                         return redirect($checkout_session->url);
@@ -575,7 +575,7 @@ class OrderController extends Controller
                     }
                     session()->forget('cart');
                     
-                    return \Redirect::route('thankyou', $order_id);
+                    return Redirect::route('thankyou', $order_id);
                 }
             }
         }
@@ -596,7 +596,7 @@ class OrderController extends Controller
         echo $response->getBody();
         exit;
 
-        return \Redirect::route('thankyou', $order_id);
+        return Redirect::route('thankyou', $order_id);
     }
 
     // delete item from order by admin 
@@ -849,98 +849,7 @@ class OrderController extends Controller
     // }
     
 
-    //adding orders to shistation api 
-    public function shipping_order($order_id , $currentOrder , $order_contact) {
-        $order_items = ApiOrderItem::with('order.texClasses', 'product.options', 'product')->where('order_id', $order_id)->get();
-        for ($i = 0; $i <= count($order_items) - 1; $i++){
-            $items[] = [
-                'name' => $order_items[0]->product->name,
-                'sku' => $order_items[0]->product->code,
-                'quantity' => $order_items[0]->quantity,
-                'unitPrice' => $order_items[0]->price,
-            ];  
-        }
-        
-        $client = new \GuzzleHttp\Client();
-        $shipstation_order_url = config('services.shipstation.shipment_order_url');
-        $shipstation_api_key = config('services.shipstation.key');
-        $shipstation_api_secret = config('services.shipstation.secret');
-        $carrier_code = AdminSetting::where('option_name', 'shipping_carrier_code')->first();
-        $service_code = AdminSetting::where('option_name', 'shipping_service_code')->first();
-        $created_date = \Carbon\Carbon::parse($currentOrder->createdDate);
-        $getDate =$created_date->format('Y-m-d');
-        $getTime = date('H:i:s' ,strtotime($currentOrder->createdDate));
-        $order_created_date = $getDate . 'T' . $getTime ;
-        $calculate_tax =$currentOrder->total_including_tax - $currentOrder->productTotal;
-        $tax = $calculate_tax - $currentOrder->shipment_price;
-        $orderStatus = null;
-        if ($currentOrder->payment_status == 'paid') {
-            $orderStatus = 'awaiting_shipment';
-        } else {
-            $orderStatus = 'on_hold';
-        }
-        $data = [
-            'orderNumber' => $order_id,
-            'orderKey' => $currentOrder->reference,
-            'orderDate' => $order_created_date,
-            'carrierCode' => $carrier_code->option_value,
-            'serviceCode' => $service_code->option_value,
-            'orderStatus' => $orderStatus,
-            'shippingAmount' => number_format($currentOrder->shipment_price , 2),
-            "amountPaid" => number_format($currentOrder->total_including_tax , 2),
-            "taxAmount" => number_format($tax, 2),
-            'shipTo' => [
-                "name" => $order_contact->firstName . $order_contact->lastName,
-                "company" => $order_contact->company,
-                "street1" => $order_contact->address1 ? $order_contact->address1 : $order_contact->postalAddress,
-                "street2" => $order_contact->address2 ? $order_contact->address2 : $order_contact->postalAddress,
-                "city" => $order_contact->city ? $order_contact->city : $order_contact->postalCity,
-                "state" => $order_contact->state ? $order_contact->state : $order_contact->postalState,
-                "postalCode" => $order_contact->postCode ? $order_contact->postCode : $order_contact->postalPostCode,
-                "country"=>"US",
-                "phone" => $order_contact->phone ? $order_contact->phone : $order_contact->mobile,
-                "residential"=>true
-            ],
-            'billTo' => [
-                "name" => $order_contact->firstName . $order_contact->lastName,
-                "company" => $order_contact->company,
-                "street1" => $order_contact->address1 ? $order_contact->address1 : $order_contact->postalAddress,
-                "street2" => $order_contact->address2 ? $order_contact->address2 : $order_contact->postalAddress,
-                "city" => $order_contact->city ? $order_contact->city : $order_contact->postalCity,
-                "state" => $order_contact->state ? $order_contact->state : $order_contact->postalState,
-                "postalCode" => $order_contact->postCode ? $order_contact->postCode : $order_contact->postalPostCode,
-                "country"=>"US",
-                "phone" => $order_contact->phone ? $order_contact->phone : $order_contact->mobile,
-                "residential"=>true
-            ],
-            'items'=> $items
-        ];
-        dd($data);
-        $headers = [
-            "Content-Type: application/json",
-            'Authorization' => 'Basic ' . base64_encode($shipstation_api_key . ':' . $shipstation_api_secret),
-        ];
-        $responseBody = null;
-        // try {
-        //     $response = $client->post($shipstation_order_url, [
-        //         'headers' => $headers,
-        //         'json' => $data,
-        //     ]);
-
-        //     $statusCode = $response->getStatusCode();
-        //     $responseBody = $response->getBody()->getContents();
-        // } catch (\Exception $e) {
-        //     $e->getMessage();
-        // }
-        $response = $client->post($shipstation_order_url, [
-            'headers' => $headers,
-            'json' => $data,
-        ]);
-
-        $statusCode = $response->getStatusCode();
-        $responseBody = $response->getBody()->getContents();
-    }
-
+    
 
 }
 
