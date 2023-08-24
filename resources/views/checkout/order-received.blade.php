@@ -685,7 +685,7 @@
 							<div class="col-md-3">
 								<p class="order-confirmation-page-order-number-title">Tax</p>
 								<p class="order-confirmation-page-order-number-item">
-									${{ number_format($order->total_including_tax - $order->productTotal, 2) }}
+									${{ number_format(($order->total_including_tax - $order->productTotal) - $order->shipment_price, 2) }}
 								</p>
 							</div>
 							<div class="col-md-3">
@@ -744,7 +744,7 @@
 									<div class="col-md-3">
 										<p class="order-confirmation-page-order-number-title">Tax</p>
 										<p class="order-confirmation-page-order-number-item">
-											${{ number_format($order->total_including_tax - $order->productTotal, 2) }}
+											${{ number_format(($order->total_including_tax - $order->productTotal) - $order->shipment_price, 2) }}
 										</p>
 									</div>
 									<div class="col-md-3">
@@ -815,7 +815,7 @@
 								<div class="col-md-4">
 									<p class="order-confirmation-page-order-number-title">Tax</p>
 									<p class="order-confirmation-page-order-number-item">
-										${{ number_format($order->total_including_tax - $order->productTotal, 2) }}
+										${{ number_format(($order->total_including_tax - $order->productTotal) - $order->shipment_price  , 2) }}
 									</p>
 								</div>
 								<div class="col-md-4">
@@ -872,7 +872,7 @@
 								<div class="d-flex justify-content-between">
 									<p class="order-confirmation-page-tax-title">Tax</p>
 									<p class="order-confirmation-page-tax-item">
-										${{ number_format($order->total_including_tax - $order->productTotal, 2) }}
+										${{ number_format(($order->total_including_tax - $order->productTotal) - $order->shipment_price , 2) }}
 									</p>
 								</div>
 							</div>
@@ -1146,7 +1146,11 @@
 												<p class=" mb-0 order-confirmation-page-product-price"> ${{number_format($item->price,2)}}</p>
 											</td>
 											<td style="width:5%;">
-												{{$item->product->code}}
+												<div class="ps-0 mobile_text_class mt-1" style="">
+													<p class="order-confirmation-page-product-title">
+														{{$item->product->code}}
+													</p>
+												</div>
 											</td>
 										</tr>
 										@endforeach
@@ -1210,7 +1214,7 @@
 												<span class="summary_sub_total_head">Rate ({{$order->texClasses->rate . '%' }}) :</span>
 											</div>
 											<div class="w-50 p-1 text-right">
-												<span class="summary_sub_total_price text-right">${{ number_format($order->total_including_tax - $order->productTotal, 2) }}</span>
+												<span class="summary_sub_total_price text-right">${{ number_format(($order->total_including_tax - $order->productTotal) - $order->shipping_price, 2) }}</span>
 											</div>
 										</div>
 										<div class="d-flex w-100 mb-2">
