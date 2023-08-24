@@ -775,6 +775,9 @@ class OrderController extends Controller
         }
     }
 
+
+    // Test Funtions 
+
     // public function shipping_order($order_id , $currentOrder , $order_contact) {
     //     $order_items = ApiOrderItem::with('order.texClasses', 'product.options', 'product')->where('order_id', $order_id)->get();
     //     for ($i = 0; $i <= count($order_items) - 1; $i++){
