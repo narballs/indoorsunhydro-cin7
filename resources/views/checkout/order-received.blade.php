@@ -680,7 +680,7 @@
 							</div>
 							<div class="col-md-3">
 								<p class="order-confirmation-page-order-number-title">Shipping</p>
-								<p class="order-confirmation-page-order-number-item">$</p>
+								<p class="order-confirmation-page-order-number-item">{{number_format($order->shipment_price , 2)}}</p>
 							</div>
 							<div class="col-md-3">
 								<p class="order-confirmation-page-order-number-title">Tax</p>
@@ -739,7 +739,7 @@
 									</div>
 									<div class="col-md-3">
 										<p class="order-confirmation-page-order-number-title">Shipping</p>
-										<p class="order-confirmation-page-order-number-item">$</p>
+										<p class="order-confirmation-page-order-number-item">{{number_format($order->shipment_price , 2)}}</p>
 									</div>
 									<div class="col-md-3">
 										<p class="order-confirmation-page-order-number-title">Tax</p>
@@ -803,7 +803,7 @@
 								</div>
 								<div class="col-md-4">
 									<p class="order-confirmation-page-order-number-title">Shipping</p>
-									<p class="order-confirmation-page-order-number-item">$</p>
+									<p class="order-confirmation-page-order-number-item">{{number_format($order->shipment_price , 2)}}</p>
 								</div>
 								
 								
@@ -867,7 +867,7 @@
 								</div>
 								<div class="d-flex justify-content-between">
 									<p class="order-confirmation-page-shipping-title">Shipping</p>
-									<p class="order-confirmation-page-shipping-item">$</p>
+									<p class="order-confirmation-page-shipping-item">{{number_format($order->shipment_price , 2)}}</p>
 								</div>
 								<div class="d-flex justify-content-between">
 									<p class="order-confirmation-page-tax-title">Tax</p>
@@ -1037,6 +1037,7 @@
 							<table class="table">
 								<tr>
 									<th class="order-confirmation-page-table-data-heading">Name</th>
+									<th class="order-confirmation-page-table-data-heading">Sku</th>
 									<th class="order-confirmation-page-table-data-heading"
 										style="padding-left: 0px; !important">
 										Quantity</th>
@@ -1067,6 +1068,14 @@
 															class="order-confirmation-page-product-item">
 															{{$item->product->name}}</span>
 													</p>
+												</div>
+											</div>
+										</td>
+										<td>
+											<div class="row">
+												<div class="col-md-12">
+													<p class="pt-4 order-confirmation-page-product-quantity">
+														{{$item->product->code}}</p>
 												</div>
 											</div>
 										</td>
@@ -1123,6 +1132,9 @@
 													<img src="/theme/img/image_not_available.png" class="m_chechout_image" alt="" width="80px">
 													@endif
 												</div>
+											</td>
+											<td>
+												{{$item->product->code}}
 											</td>
 											<td style="width:80%;">
 												<div class="ps-0 mobile_text_class mt-1" style="">
@@ -1202,10 +1214,10 @@
 										</div>
 										<div class="d-flex w-100 mb-2">
 											<div class="w-50 p-1">
-												<span class="summary_sub_total_head">Discount:</span>
+												<span class="summary_sub_total_head">Shipping:</span>
 											</div>
 											<div class="w-50 p-1 text-right">
-												<span class="summary_sub_total_price text-right">$0</span>
+												<span class="summary_sub_total_price text-right">${{ number_format($order->shipping_price) }}</span>
 											</div>
 										</div>
 										<div class="d-flex w-100">

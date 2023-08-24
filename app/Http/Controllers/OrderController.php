@@ -111,6 +111,7 @@ class OrderController extends Controller
                         $order->paymentTerms = $request->paymentTerms;
                         $order->memo = $request->memo;
                         $order->date = $request->date;
+                        $order->shipment_price = $request->shipment_price;
                         $order->save();
 
                         $order_id =  $order->id;
@@ -373,6 +374,7 @@ class OrderController extends Controller
                     $order->paymentTerms = $request->paymentTerms;
                     $order->memo = $request->memo;
                     $order->date = $request->date;
+                    $order->shipment_price = $request->shipment_price;
                     $order->save();
 
                     $order_id =  $order->id;

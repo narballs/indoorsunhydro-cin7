@@ -467,6 +467,7 @@ $cart_price = 0;
 
                 ?>
                 <input type="hidden" name="incl_tax" id="incl_tax" value="{{ $total_including_tax }}">
+                <input type="hidden" name="shipment_price" id="shipment_price" value="{{ $shipment_price }}">
                 @if(!empty($tax_class))
                 <input type="hidden" name="tax_class_id" id="tax_class_id" value="{{ $tax_class->id }}">
                 @else
