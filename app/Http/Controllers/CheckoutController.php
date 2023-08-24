@@ -222,13 +222,17 @@ class CheckoutController extends Controller
                 }
                 $order_id = $payment_succeded->data->object->metadata->order_id;
 
-
-                $currentOrder = ApiOrder::where('id', $order_id)->first();
+                $currentOrder = ApiOrder::where('id', $order_id)->with(
+                        'user.contact',
+                        'apiOrderItem.product.options',
+                        'texClasses'
+                    )->first();
+                $order_contact = Contact::where('contact_id', $currentOrder->memberId)->first();
                 if ($payment_succeded->data->object->paid == true) {
-                    $currentOrder->stage = 'paid';
+                    $currentOrder->payment_status = 'paid';
                     $currentOrder->save();
                 } else {
-                    $currentOrder->stage =  $payment_succeded->data->object->paid;
+                    $currentOrder->payment_status =  'unpaid';
                     $currentOrder->save();
                 }
 
@@ -312,10 +316,8 @@ class CheckoutController extends Controller
                 $data['subject'] = 'Your order has been received';
                 $data['email'] = 'engrdanishsabir00@gmail.com';
                 MailHelper::sendMailNotification('emails.admin-order-received', $data);
-        
-            
-                // Handle payment success event
-                break;
+                $this->shipping_order($order_id , $currentOrder , $order_contact);
+            break;
             case 'invoice.payment_failed':
                 // Handle payment failure event
             break;
@@ -443,6 +445,67 @@ class CheckoutController extends Controller
                 $data['email'] = $member_user->email;
                 MailHelper::sendMailNotification('emails.user-order-received', $data);
             }
+        }
+    }
+
+    public function shipping_order($order_id , $currentOrder , $order_contact) {
+        //adding orders to shistation api 
+        $client = new \GuzzleHttp\Client();
+        $shipstation_host_url = config('services.shipstation.shipment_order_url');
+        $shipstation_api_key = config('services.shipstation.key');
+        $shipstation_api_secret = config('services.shipstation.secret');
+        $carrier_code = AdminSetting::where('option_name', 'shipping_carrier_code')->first();
+        $service_code = AdminSetting::where('option_name', 'shipping_service_code')->first();
+        $data = [
+            'orderId' => $order_id,
+            'orderNumber' => $order_id,
+            'orderKey' => $currentOrder->reference,
+            'orderDate' => $currentOrder->createdDate,
+            'carrierCode' => $carrier_code->option_value,
+            'serviceCode' => $service_code->option_value,
+            'orderStatus' => $currentOrder->payment_status == 'paid' ? 'awaiting_shipment' : 'awaiting_payment',
+            'shippingAmount' => $currentOrder->shipment_price,
+            'shipTo' => [
+                "name" => $order_contact->firstName . $order_contact->lastName,
+                "company" => $order_contact->company,
+                "street1" => $order_contact->address1 ? $order_contact->address1 : $order_contact->postalAddress,
+                "street2" => $order_contact->address2 ? $order_contact->address2 : $order_contact->postalAddress,
+                "city" => $order_contact->city ? $order_contact->city : $order_contact->postalCity,
+                "state" => $order_contact->state ? $order_contact->state : $order_contact->postalState,
+                "postalCode" => $order_contact->postCode ? $order_contact->postCode : $order_contact->postalPostCode,
+                "country"=>"US",
+                "phone" => $order_contact->phone ? $order_contact->phone : $order_contact->mobile,
+                "residential"=>true
+            ],
+            'billTo' => [
+                "name" => $order_contact->firstName . $order_contact->lastName,
+                "company" => $order_contact->company,
+                "street1" => $order_contact->address1 ? $order_contact->address1 : $order_contact->postalAddress,
+                "street2" => $order_contact->address2 ? $order_contact->address2 : $order_contact->postalAddress,
+                "city" => $order_contact->city ? $order_contact->city : $order_contact->postalCity,
+                "state" => $order_contact->state ? $order_contact->state : $order_contact->postalState,
+                "postalCode" => $order_contact->postCode ? $order_contact->postCode : $order_contact->postalPostCode,
+                "country"=>"US",
+                "phone" => $order_contact->phone ? $order_contact->phone : $order_contact->mobile,
+                "residential"=>true
+            ],
+        ];
+        
+        $headers = [
+            'Authorization' => 'Basic ' . base64_encode($shipstation_api_key . ':' . $shipstation_api_secret),
+            'Content-Type' => 'application/json',
+        ];
+        $responseBody = null;
+        try {
+            $response = $client->post($shipstation_host_url, [
+                'headers' => $headers,
+                'json' => $data,
+            ]);
+
+            $statusCode = $response->getStatusCode();
+            $responseBody = $response->getBody()->getContents();
+        } catch (\Exception $e) {
+            $e->getMessage();
         }
     }
 }
