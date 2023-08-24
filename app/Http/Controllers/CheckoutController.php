@@ -171,7 +171,6 @@ class CheckoutController extends Controller
         $contact = Contact::where('user_id', $user_id)->first();
 
         $pricing = $contact->priceColumn;
-        $this->shipping_order($id , $order , $order_contact);
         return view(
             'checkout/order-received',
             compact(
@@ -249,7 +248,7 @@ class CheckoutController extends Controller
                 ->get();
                 $contact = Contact::where('user_id', auth()->id())->first();
 
-                // $this->shipping_order($order_id , $currentOrder , $order_contact);
+                $this->shipping_order($order_id , $currentOrder , $order_contact);
 
                 $user_email = Auth::user();
                 $count = $order_items->count();
@@ -374,8 +373,8 @@ class CheckoutController extends Controller
             'shipTo' => [
                 "name" => $order_contact->firstName . $order_contact->lastName,
                 "company" => $order_contact->company,
-                "street1" => $order_contact->address1 ? $order_contact->address1 : $order_contact->postalAddress,
-                "street2" => $order_contact->address2 ? $order_contact->address2 : $order_contact->postalAddress,
+                "street1" => $order_contact->address1 ? $order_contact->address1 : $order_contact->postalAddress1,
+                "street2" => $order_contact->address2 ? $order_contact->address2 : $order_contact->postalAddress2,
                 "city" => $order_contact->city ? $order_contact->city : $order_contact->postalCity,
                 "state" => $order_contact->state ? $order_contact->state : $order_contact->postalState,
                 "postalCode" => $order_contact->postCode ? $order_contact->postCode : $order_contact->postalPostCode,
@@ -386,8 +385,8 @@ class CheckoutController extends Controller
             'billTo' => [
                 "name" => $order_contact->firstName . $order_contact->lastName,
                 "company" => $order_contact->company,
-                "street1" => $order_contact->address1 ? $order_contact->address1 : $order_contact->postalAddress,
-                "street2" => $order_contact->address2 ? $order_contact->address2 : $order_contact->postalAddress,
+                "street1" => $order_contact->address1 ? $order_contact->address1 : $order_contact->postalAddress1,
+                "street2" => $order_contact->address2 ? $order_contact->address2 : $order_contact->postalAddress2,
                 "city" => $order_contact->city ? $order_contact->city : $order_contact->postalCity,
                 "state" => $order_contact->state ? $order_contact->state : $order_contact->postalState,
                 "postalCode" => $order_contact->postCode ? $order_contact->postCode : $order_contact->postalPostCode,
@@ -397,7 +396,6 @@ class CheckoutController extends Controller
             ],
             'items'=> $items
         ];
-        dd($data);
         $headers = [
             "Content-Type: application/json",
             'Authorization' => 'Basic ' . base64_encode($shipstation_api_key . ':' . $shipstation_api_secret),
@@ -407,7 +405,6 @@ class CheckoutController extends Controller
             'headers' => $headers,
             'json' => $data,
         ]);
-        dd($response);
         $statusCode = $response->getStatusCode();
         $responseBody = $response->getBody()->getContents();
     }
