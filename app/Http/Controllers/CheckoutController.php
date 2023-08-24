@@ -353,7 +353,7 @@ class CheckoutController extends Controller
         $getDate =$created_date->format('Y-m-d');
         $getTime = date('H:i:s' ,strtotime($currentOrder->createdDate));
         $order_created_date = $getDate . 'T' . $getTime ;
-        $calculate_tax =$currentOrder->total_including_tax - $currentOrder->productTotal;
+        $calculate_tax = $currentOrder->total_including_tax - $currentOrder->productTotal;
         $tax = $calculate_tax - $currentOrder->shipment_price;
         $orderStatus = null;
         if ($currentOrder->payment_status == 'paid') {
@@ -397,6 +397,7 @@ class CheckoutController extends Controller
             ],
             'items'=> $items
         ];
+        dd($data);
         $headers = [
             "Content-Type: application/json",
             'Authorization' => 'Basic ' . base64_encode($shipstation_api_key . ':' . $shipstation_api_secret),
