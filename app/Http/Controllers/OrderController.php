@@ -930,6 +930,8 @@ class OrderController extends Controller
 
         $statusCode = $response->getStatusCode();
         $responseBody = $response->getBody()->getContents();
+
+        dd(json_decode($responseBody));
     }
 
 
@@ -954,7 +956,7 @@ class OrderController extends Controller
             foreach ($product_options as $product_option) {
                 $produts_weight += $product_option->optionWeight * $order_item['quantity'];
             }
-}
+        }
 
         $data = [
             'orderNumber' => $order_id,
@@ -967,13 +969,13 @@ class OrderController extends Controller
             'shipFrom' => [
                 "name" => $order_contact->firstName . $order_contact->lastName,
                 "company" => $order_contact->company,
-                "street1" => $order_contact->address1 ? $order_contact->address1 : $order_contact->postalAddress,
-                "street2" => $order_contact->address2 ? $order_contact->address2 : $order_contact->postalAddress,
-                "city" => $order_contact->city ? $order_contact->city : $order_contact->postalCity,
-                "state" => $order_contact->state ? $order_contact->state : $order_contact->postalState,
-                "postalCode" => $order_contact->postCode ? $order_contact->postCode : $order_contact->postalPostCode,
+                "street1" => '5671 Warehouse Way',
+                "street2" => '5671 Warehouse Way',
+                "city" => 'Sacramento',
+                "state" => 'CA',
+                "postalCode" => '95826',
                 "country"=>"US",
-                "phone" => $order_contact->phone ? $order_contact->phone : $order_contact->mobile,
+                "phone" => '(916) 281-3090',
                 "residential"=>true
             ],
             'shipTo' => [
@@ -994,7 +996,6 @@ class OrderController extends Controller
             ],
             'shipDate'=> $getDate,
         ];
-        dd($data);
         $headers = [
             "Content-Type: application/json",
             'Authorization' => 'Basic ' . base64_encode($shipstation_api_key . ':' . $shipstation_api_secret),
