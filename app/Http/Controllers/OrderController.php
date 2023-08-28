@@ -869,7 +869,6 @@ class OrderController extends Controller
         $order_id = $request->order_id;
         $order = ApiOrder::where('id', $order_id)->first();
         $order_contact = Contact::where('contact_id', $order->memberId)->first();
-        dd($order_contact);
         $client = new \GuzzleHttp\Client();
         $shipstation_label_url = config('services.shipstation.shipment_label_url');
         $shipstation_api_key = config('services.shipstation.key');
