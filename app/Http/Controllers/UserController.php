@@ -1518,7 +1518,7 @@ class UserController extends Controller
                     $cart->save();
                 }
                 
-                $cart[$cartItem['qoute_id']] = [
+                $cart[$cartItem['qoute_id']][] = [
                     "product_id" => $cartItem['product_id'],
                     "name" => $cartItem['name'],
                     "quantity" => $cartItem['quantity'],
