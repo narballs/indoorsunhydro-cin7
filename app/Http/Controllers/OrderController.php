@@ -40,13 +40,14 @@ class OrderController extends Controller
         ]);
 
 
-        $setting = AdminSetting::where('option_name', 'enable_stripe_checkout')->first();
+        $enable_stripe_checkout_setting = AdminSetting::where('option_name', 'enable_stripe_checkout')->first();
         $paymentMethod = $request->input('method_name');
         $paymentMethodOption = $request->input('method_option');
         $paymentMethod = $paymentMethodOption;
         //check if user have already contact with cin7
         $existing_contact = Contact::where('user_id', Auth::id())->first();
         $session_contact_id = Session::get('contact_id');
+        
         if (!empty($session_contact_id)) {
             $contact = Contact::where('contact_id', $session_contact_id)->first();
             if ($contact) {
@@ -77,7 +78,7 @@ class OrderController extends Controller
                 }
 
                 $is_primary = Contact::where('contact_id', $session_contact_id)->first();
-                if (!empty($setting) && $setting->option_value == 'Yes') {
+                if (!empty($enable_stripe_checkout_setting) && $enable_stripe_checkout_setting->option_value == 'Yes') {
                     if ($request->paymentTerms == 'Pay in Advanced') {
                         $order = new ApiOrder;
                         
@@ -580,22 +581,6 @@ class OrderController extends Controller
                 }
             }
         }
-        
-
-        $client = new \GuzzleHttp\Client();
-        $url = "https://api.cin7.com/api/v1/SalesOrders/";
-        $response = $client->post($url, [
-            'headers' => ['Content-type' => 'application/json'],
-            'auth' => [
-                SettingHelper::getSetting('cin7_auth_username'),
-                SettingHelper::getSetting('cin7_auth_password')
-            ],
-            'json' => $order,
-        ]);
-
-
-        echo $response->getBody();
-        exit;
 
         return Redirect::route('thankyou', $order_id);
     }
