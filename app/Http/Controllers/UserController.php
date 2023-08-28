@@ -1518,17 +1518,15 @@ class UserController extends Controller
                     $cart->save();
                 }
                 
-                $cart = [
-                    $cartItem['qoute_id'] => [
-                        "product_id" => $cartItem['product_id'],
-                        "name" => $cartItem['name'],
-                        "quantity" => $cartItem['quantity'],
-                        "price" => $cart['price'],
-                        "code" => $cartItem['code'],
-                        "image" => $cartItem['image'],
-                        'option_id' => $cartItem['option_id'],
-                        "slug" => $cartItem['slug'],
-                    ]
+                $cart[$cartItem['qoute_id']] = [
+                    "product_id" => $cartItem['product_id'],
+                    "name" => $cartItem['name'],
+                    "quantity" => $cartItem['quantity'],
+                    "price" => $cart['price'],
+                    "code" => $cartItem['code'],
+                    "image" => $cartItem['image'],
+                    'option_id' => $cartItem['option_id'],
+                    "slug" => $cartItem['slug'],
                 ];
             }
             Session::put('cart', $cart);
