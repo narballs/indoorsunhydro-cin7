@@ -35,18 +35,15 @@ class AdminProductController extends Controller
 
     public function show($id) {
         $product = Product::where('id', $id)->with('options.price','categories','brand')->first();
-         //dd($product);
         $parent_category_name = '';
         if (!empty($product->categories->category_id)) {
             $product_category = $product->categories;
-            //dd($product_category);exit;
-
             $parent_id = $product_category->parent_id;
-
 
             $category = $product_category->category_id;
             $parent_category = Category::where('category_id', $parent_id)->first();
-            $parent_category_name = $parent_category->name;
+
+            $parent_category_name = !empty($parent_category->name) ? $parent_category->name : '';
         }
         return view('admin/product-detail', compact('product', 'parent_category_name'));
     }
