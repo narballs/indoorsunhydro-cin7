@@ -89,9 +89,9 @@ class CheckoutController extends Controller
             // adding shipment rates
 
             $client = new \GuzzleHttp\Client();
-            $shipstation_host_url = config('services.shipstation.host_url');
-            $shipstation_api_key = config('services.shipstation.key');
-            $shipstation_api_secret = config('services.shipstation.secret');
+            $ship_station_host_url = config('services.shipstation.host_url');
+            $ship_station_api_key = config('services.shipstation.key');
+            $ship_station_api_secret = config('services.shipstation.secret');
             $carrier_code = AdminSetting::where('option_name', 'shipping_carrier_code')->first();
             $service_code = AdminSetting::where('option_name', 'shipping_service_code')->first();
             $data = [
@@ -107,12 +107,12 @@ class CheckoutController extends Controller
             ];
             
             $headers = [
-                'Authorization' => 'Basic ' . base64_encode($shipstation_api_key . ':' . $shipstation_api_secret),
+                'Authorization' => 'Basic ' . base64_encode($ship_station_api_key . ':' . $ship_station_api_secret),
                 'Content-Type' => 'application/json',
             ];
             $responseBody = null;
             try {
-                $response = $client->post($shipstation_host_url, [
+                $response = $client->post($ship_station_host_url, [
                     'headers' => $headers,
                     'json' => $data,
                 ]);
@@ -199,7 +199,7 @@ class CheckoutController extends Controller
         switch ($event->type) {
             case 'charge.succeeded':
                 $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
-                $payment_succeded = $stripe->events->retrieve(
+                $payment_succeeded = $stripe->events->retrieve(
                     $event->id,
                     []
                 );
@@ -220,7 +220,7 @@ class CheckoutController extends Controller
                 if($active_contact_id) {
                     $is_primary = Contact::where('contact_id', $session_contact_id)->first();
                 }
-                $order_id = $payment_succeded->data->object->metadata->order_id;
+                $order_id = $payment_succeeded->data->object->metadata->order_id;
 
                 $currentOrder = ApiOrder::where('id', $order_id)->with(
                         'user.contact',
@@ -228,7 +228,7 @@ class CheckoutController extends Controller
                         'texClasses'
                     )->first();
                 $order_contact = Contact::where('contact_id', $currentOrder->memberId)->first();
-                if ($payment_succeded->data->object->paid == true) {
+                if ($payment_succeeded->data->object->paid == true) {
                     $currentOrder->payment_status = 'paid';
                     $currentOrder->save();
                 } else {
@@ -344,8 +344,8 @@ class CheckoutController extends Controller
         
         $client = new \GuzzleHttp\Client();
         $shipstation_order_url = config('services.shipstation.shipment_order_url');
-        $shipstation_api_key = config('services.shipstation.key');
-        $shipstation_api_secret = config('services.shipstation.secret');
+        $ship_station_api_key = config('services.shipstation.key');
+        $ship_station_api_secret = config('services.shipstation.secret');
         $carrier_code = AdminSetting::where('option_name', 'shipping_carrier_code')->first();
         $service_code = AdminSetting::where('option_name', 'shipping_service_code')->first();
         $created_date = \Carbon\Carbon::parse($currentOrder->createdDate);
@@ -398,7 +398,7 @@ class CheckoutController extends Controller
         ];
         $headers = [
             "Content-Type: application/json",
-            'Authorization' => 'Basic ' . base64_encode($shipstation_api_key . ':' . $shipstation_api_secret),
+            'Authorization' => 'Basic ' . base64_encode($ship_station_api_key . ':' . $ship_station_api_secret),
         ];
         $responseBody = null;
         $response = $client->post($shipstation_order_url, [
