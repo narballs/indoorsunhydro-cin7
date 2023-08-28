@@ -876,6 +876,7 @@ class OrderController extends Controller
         $carrier_code = AdminSetting::where('option_name', 'shipping_carrier_code')->first();
         $service_code = AdminSetting::where('option_name', 'shipping_service_code')->first();
         $shipping_package = AdminSetting::where('option_name', 'shipping_package')->first();
+        $company_name = AdminSetting::where('option_name', 'website_name')->first();
         $getDate = now()->format('Y-m-d');
         $order_items = ApiOrderItem::with('order.texClasses', 'product.options', 'product')->where('order_id', $order_id)->get();
         $produts_weight = 0;
@@ -890,9 +891,10 @@ class OrderController extends Controller
             'carrierCode' => $carrier_code->option_value,
             'serviceCode' => $service_code->option_value,
             'packageCode' => $shipping_package->option_value,
+            "confirmation" => "delivery",
             'shipFrom' => [
-                "name" => $order_contact->firstName . $order_contact->lastName,
-                "company" => $order_contact->company,
+                "name" => 'Kevin',
+                "company" => $company_name->option_value,
                 "street1" => '5671 Warehouse Way',
                 "street2" => '5671 Warehouse Way',
                 "city" => 'Sacramento',
