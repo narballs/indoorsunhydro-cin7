@@ -15,17 +15,21 @@ use App\Models\Contact;
 use App\Models\Pricingnew;
 use App\Models\AdminSetting;
 use App\Models\OrderComment;
+use App\Models\Productoption;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Str;
 use Illuminate\Database\Eloquent\Builder;
 use Stripe\Webhook;
 use Symfony\Component\HttpFoundation\Response;
 
 use App\Helpers\SettingHelper;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Str;
 
 class OrderController extends Controller
 {
@@ -73,7 +77,7 @@ class OrderController extends Controller
                 }
 
                 $is_primary = Contact::where('contact_id', $session_contact_id)->first();
-                if (!empty($setting) && $setting->option_value == 'yes') {
+                if (!empty($setting) && $setting->option_value == 'Yes') {
                     if ($request->paymentTerms == 'Pay in Advanced') {
                         $order = new ApiOrder;
                         
@@ -110,6 +114,7 @@ class OrderController extends Controller
                         $order->paymentTerms = $request->paymentTerms;
                         $order->memo = $request->memo;
                         $order->date = $request->date;
+                        $order->shipment_price = $request->shipment_price;
                         $order->save();
 
                         $order_id =  $order->id;
@@ -119,7 +124,13 @@ class OrderController extends Controller
                         $currentOrder->reference = 'DEV4' . '-QCOM-' .$random_string . '-' .$order_id;
 
                         $currentOrder->save();
-                        $currentOrder = ApiOrder::where('id', $order->id)->with('contact')->first();
+                        $currentOrder = ApiOrder::where('id', $order_id)->with(
+                            'contact',
+                            'user.contact',
+                            'apiOrderItem.product.options',
+                            'texClasses'
+                        )->first();
+                        $order_contact = Contact::where('contact_id', $currentOrder->memberId)->first();
                         $product_prices = [];
                         $reference = $currentOrder->reference;
                         if (session()->has('cart')) {
@@ -165,17 +176,12 @@ class OrderController extends Controller
                                 'mode' => 'payment',
                                 'payment_intent_data'=> [
                                     "metadata" => [
-                                        "order_id"=> $order_id,  # Add your order_id here
+                                        "order_id"=> $order_id,
                                     ]
-                                ]
+                                    ],
+                                'customer_email' => auth()->user()->email,
                                 
                             ]);
-
-                            $order_comment = new OrderComment;
-                            $order_comment->order_id = $order_id;
-                            $order_comment->comment = 'Order Placed through Stripe';
-                            $order_comment->save();
-
                         } else {
                             session()->forget('cart');
                             return redirect('/');
@@ -185,107 +191,107 @@ class OrderController extends Controller
                             ->where('order_id', $order_id)
                             ->get();
 
-                        $contact = Contact::where('user_id', auth()->id())->first();
-                        $user_email = Auth::user();
-                        $count = $order_items->count();
-                        $best_products = Product::where('status', '!=', 'Inactive')->orderBy('views', 'DESC')->limit(4)->get();
-                        $addresses = [
-                            'billing_address' => [
-                                'firstName' => $contact->firstName,
-                                'lastName' => $contact->lastName,
-                                'address1' => $contact->address1,
-                                'address2' => $contact->address2,
-                                'city' => $contact->city,
-                                'state' => $contact->state,
-                                'zip' => $contact->postCode,
-                                'mobile' => $contact->mobile,
-                                'phone' => $contact->phone,
-                            ],
-                            'shipping_address' => [
-                                'postalAddress1' => $contact->postalAddress1,
-                                'postalAddress2' => $contact->postalAddress2,
-                                'phone' => $contact->postalCity,
-                                'postalCity' => $contact->postalState,
-                                'postalState' => $contact->postalPostCode,
-                                'postalPostCode' => $contact->postalPostCode
-                            ],
-                            'best_product' => $best_products,
-                            'user_email' =>   $user_email,
-                            'currentOrder' => $currentOrder,
-                            'count' => $count,
-                            'order_id' => $order_id,
-                        ];
+                        // $contact = Contact::where('user_id', auth()->id())->first();
+                        // $user_email = Auth::user();
+                        // $count = $order_items->count();
+                        // $best_products = Product::where('status', '!=', 'Inactive')->orderBy('views', 'DESC')->limit(4)->get();
+                        // $addresses = [
+                        //     'billing_address' => [
+                        //         'firstName' => $contact->firstName,
+                        //         'lastName' => $contact->lastName,
+                        //         'address1' => $contact->address1,
+                        //         'address2' => $contact->address2,
+                        //         'city' => $contact->city,
+                        //         'state' => $contact->state,
+                        //         'zip' => $contact->postCode,
+                        //         'mobile' => $contact->mobile,
+                        //         'phone' => $contact->phone,
+                        //     ],
+                        //     'shipping_address' => [
+                        //         'postalAddress1' => $contact->postalAddress1,
+                        //         'postalAddress2' => $contact->postalAddress2,
+                        //         'phone' => $contact->postalCity,
+                        //         'postalCity' => $contact->postalState,
+                        //         'postalState' => $contact->postalPostCode,
+                        //         'postalPostCode' => $contact->postalPostCode
+                        //     ],
+                        //     'best_product' => $best_products,
+                        //     'user_email' =>   $user_email,
+                        //     'currentOrder' => $currentOrder,
+                        //     'count' => $count,
+                        //     'order_id' => $order_id,
+                        // ];
 
-                        $name = $contact->firstName;
-                        $email =  $contact->email;
-                        $reference  =  $currentOrder->reference;
-                        $template = 'emails.admin-order-received';
-                        $admin_users = DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
+                        // $name = $contact->firstName;
+                        // $email =  $contact->email;
+                        // $reference  =  $currentOrder->reference;
+                        // $template = 'emails.admin-order-received';
+                        // $admin_users = DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
 
-                        $admin_users = $admin_users->toArray();
+                        // $admin_users = $admin_users->toArray();
 
-                        $users_with_role_admin = User::select("email")
-                            ->whereIn('id', $admin_users)
-                            ->get();
+                        // $users_with_role_admin = User::select("email")
+                        //     ->whereIn('id', $admin_users)
+                        //     ->get();
 
-                        $data = [
-                            'name' =>  $name,
-                            'email' => $email,
-                            'subject' => 'New order received',
-                            'reference' => $reference,
-                            'order_items' => $order_items,
-                            'dateCreated' => $dateCreated,
-                            'addresses' => $addresses,
-                            'best_product' => $best_products,
-                            'user_email' => $user_email,
-                            'currentOrder' => $currentOrder,
-                            'count' => $count,
-                            'from' => SettingHelper::getSetting('noreply_email_address')
-                        ];
+                        // $data = [
+                        //     'name' =>  $name,
+                        //     'email' => $email,
+                        //     'subject' => 'New order received',
+                        //     'reference' => $reference,
+                        //     'order_items' => $order_items,
+                        //     'dateCreated' => $dateCreated,
+                        //     'addresses' => $addresses,
+                        //     'best_product' => $best_products,
+                        //     'user_email' => $user_email,
+                        //     'currentOrder' => $currentOrder,
+                        //     'count' => $count,
+                        //     'from' => SettingHelper::getSetting('noreply_email_address')
+                        // ];
 
-                        if (!empty($users_with_role_admin)) {
-                            foreach ($users_with_role_admin as $role_admin) {
-                                $subject = 'New order received';
-                                $adminTemplate = 'emails.admin-order-received';
-                                $data['email'] = $role_admin->email;
-                                MailHelper::sendMailNotification('emails.admin-order-received', $data);
-                            }
-                        }
-                        $credit_limit = $contact->credit_limit;
-                        $parent_email = Contact::where('contact_id', $active_contact_id)->first();
+                        // if (!empty($users_with_role_admin)) {
+                        //     foreach ($users_with_role_admin as $role_admin) {
+                        //         $subject = 'New order received';
+                        //         $adminTemplate = 'emails.admin-order-received';
+                        //         $data['email'] = $role_admin->email;
+                        //         MailHelper::sendMailNotification('emails.admin-order-received', $data);
+                        //     }
+                        // }
+                        // $credit_limit = $contact->credit_limit;
+                        // $parent_email = Contact::where('contact_id', $active_contact_id)->first();
 
-                        if ($credit_limit < $cart_total) {
-                            if ($is_primary == null) {
-                                $data['subject'] = 'Credit limit reached';
-                                $data['email'] = $parent_email->email;
+                        // if ($credit_limit < $cart_total) {
+                        //     if ($is_primary == null) {
+                        //         $data['subject'] = 'Credit limit reached';
+                        //         $data['email'] = $parent_email->email;
 
-                                MailHelper::sendMailNotification('emails.credit-limit-reached', $data);
-                            }
-                        } else {
-                            $data['subject'] = 'Your order has been received';
-                            $data['email'] = $email;
-                        }
-                        MailHelper::sendMailNotification('emails.admin-order-received', $data);
+                        //         MailHelper::sendMailNotification('emails.credit-limit-reached', $data);
+                        //     }
+                        // } else {
+                        //     $data['subject'] = 'Your order has been received';
+                        //     $data['email'] = $email;
+                        // }
+                        // MailHelper::sendMailNotification('emails.admin-order-received', $data);
 
 
-                        $email_sent_to_users = [];
-                        $user = User::where('id',  Auth::id())->first();
-                        $all_ids = UserHelper::getAllMemberIds($user);
-                        $all_members = Contact::whereIn('id', $all_ids)->get();
-                        foreach ($all_members as $member) {
-                            $member_user = User::find($member->user_id);
-                            if (!empty($member_user) && $member_user->hasRole(['Order Approver'])) {
-                                if (isset($email_sent_to_users[$member_user->id])) {
-                                    continue;
-                                }
+                        // $email_sent_to_users = [];
+                        // $user = User::where('id',  Auth::id())->first();
+                        // $all_ids = UserHelper::getAllMemberIds($user);
+                        // $all_members = Contact::whereIn('id', $all_ids)->get();
+                        // foreach ($all_members as $member) {
+                        //     $member_user = User::find($member->user_id);
+                        //     if (!empty($member_user) && $member_user->hasRole(['Order Approver'])) {
+                        //         if (isset($email_sent_to_users[$member_user->id])) {
+                        //             continue;
+                        //         }
 
-                                $email_sent_to_users[$member_user->id] = $member_user;
-                                $data['name'] = $member_user->firstName;
-                                $data['subject'] = 'New order awaiting approval';
-                                $data['email'] = $member_user->email;
-                                MailHelper::sendMailNotification('emails.user-order-received', $data);
-                            }
-                        }
+                        //         $email_sent_to_users[$member_user->id] = $member_user;
+                        //         $data['name'] = $member_user->firstName;
+                        //         $data['subject'] = 'New order awaiting approval';
+                        //         $data['email'] = $member_user->email;
+                        //         MailHelper::sendMailNotification('emails.user-order-received', $data);
+                        //     }
+                        // }
 
                         $lineItems = [];
                         foreach ($order_items as $order_item) {
@@ -337,6 +343,7 @@ class OrderController extends Controller
                                 ],
                             ];
                         }
+
                         session()->forget('cart');
                         
                         return redirect($checkout_session->url);
@@ -377,6 +384,7 @@ class OrderController extends Controller
                     $order->paymentTerms = $request->paymentTerms;
                     $order->memo = $request->memo;
                     $order->date = $request->date;
+                    $order->shipment_price = $request->shipment_price;
                     $order->save();
 
                     $order_id =  $order->id;
@@ -386,7 +394,13 @@ class OrderController extends Controller
                     $currentOrder->reference = 'DEV4' . '-QCOM-' .$random_string . '-' .$order_id;
 
                     $currentOrder->save();
-                    $currentOrder = ApiOrder::where('id', $order->id)->with('contact')->first();
+                    $currentOrder = ApiOrder::where('id', $order_id)->with(
+                        'contact',
+                        'user.contact',
+                        'apiOrderItem.product.options',
+                        'texClasses'
+                    )->first();
+                    $order_contact = Contact::where('contact_id', $currentOrder->memberId)->first();
                     $reference = $currentOrder->reference;
                     if (session()->has('cart')) {
                         foreach ($cart_items as $cart_item) {
@@ -408,6 +422,7 @@ class OrderController extends Controller
                         ->get();
 
                     $contact = Contact::where('user_id', auth()->id())->first();
+                    // $this->shipping_order($order_id , $currentOrder , $order_contact);
                     $user_email = Auth::user();
                     $count = $order_items->count();
                     $best_products = Product::where('status', '!=', 'Inactive')->orderBy('views', 'DESC')->limit(4)->get();
@@ -462,7 +477,7 @@ class OrderController extends Controller
                         'user_email' => $user_email,
                         'currentOrder' => $currentOrder,
                         'count' => $count,
-                        'from' => 'noreply@indoorsunhydro.com'
+                        'from' => SettingHelper::getSetting('noreply_email_address')
                     ];
 
                     if (!empty($users_with_role_admin)) {
@@ -561,7 +576,7 @@ class OrderController extends Controller
                     }
                     session()->forget('cart');
                     
-                    return \Redirect::route('thankyou', $order_id);
+                    return Redirect::route('thankyou', $order_id);
                 }
             }
         }
@@ -582,7 +597,7 @@ class OrderController extends Controller
         echo $response->getBody();
         exit;
 
-        return \Redirect::route('thankyou', $order_id);
+        return Redirect::route('thankyou', $order_id);
     }
 
     // delete item from order by admin 
@@ -756,7 +771,175 @@ class OrderController extends Controller
 
             return response()->json(['status' => 'success'], Response::HTTP_OK);
         } catch (\Exception $e) {
+            Log::error($e->getMessage());
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
         }
     }
+
+
+    // Test Funtions 
+
+    
+    
+    // public function shipping_order($order_id , $currentOrder , $order_contact) {
+    //     $order_items = ApiOrderItem::with('order.texClasses', 'product.options', 'product')->where('order_id', $order_id)->get();
+    //     for ($i = 0; $i <= count($order_items) - 1; $i++){
+    //         $items[] = [
+    //             'name' => $order_items[0]->product->name,
+    //             'sku' => $order_items[0]->product->code,
+    //             'quantity' => $order_items[0]->quantity,
+    //             'unitPrice' => $order_items[0]->price,
+    //         ];  
+    //     }
+        
+    //     $client = new \GuzzleHttp\Client();
+    //     $shipstation_order_url = config('services.shipstation.shipment_order_url');
+    //     $shipstation_api_key = config('services.shipstation.key');
+    //     $shipstation_api_secret = config('services.shipstation.secret');
+    //     $carrier_code = AdminSetting::where('option_name', 'shipping_carrier_code')->first();
+    //     $service_code = AdminSetting::where('option_name', 'shipping_service_code')->first();
+    //     $created_date = \Carbon\Carbon::parse($currentOrder->createdDate);
+    //     $getDate =$created_date->format('Y-m-d');
+    //     $getTime = date('H:i:s' ,strtotime($currentOrder->createdDate));
+    //     $order_created_date = $getDate . 'T' . $getTime ;
+    //     $calculate_tax =$currentOrder->total_including_tax - $currentOrder->productTotal;
+    //     $tax = $calculate_tax - $currentOrder->shipment_price;
+    //     $orderStatus = null;
+    //     if ($currentOrder->payment_status == 'paid') {
+    //         $orderStatus = 'awaiting_shipment';
+    //     } else {
+    //         $orderStatus = 'awaiting_payment';
+    //     }
+    //     $data = [
+    //         'orderNumber' => $order_id,
+    //         'orderKey' => $currentOrder->reference,
+    //         'orderDate' => $order_created_date,
+    //         'carrierCode' => $carrier_code->option_value,
+    //         'serviceCode' => $service_code->option_value,
+    //         'orderStatus' => $orderStatus,
+    //         'shippingAmount' => number_format($currentOrder->shipment_price , 2),
+    //         "amountPaid" => number_format($currentOrder->total_including_tax , 2),
+    //         "taxAmount" => number_format($tax, 2),
+    //         'shipTo' => [
+    //             "name" => $order_contact->firstName . $order_contact->lastName,
+    //             "company" => $order_contact->company,
+    //             "street1" => $order_contact->address1 ? $order_contact->address1 : $order_contact->postalAddress,
+    //             "street2" => $order_contact->address2 ? $order_contact->address2 : $order_contact->postalAddress,
+    //             "city" => $order_contact->city ? $order_contact->city : $order_contact->postalCity,
+    //             "state" => $order_contact->state ? $order_contact->state : $order_contact->postalState,
+    //             "postalCode" => $order_contact->postCode ? $order_contact->postCode : $order_contact->postalPostCode,
+    //             "country"=>"US",
+    //             "phone" => $order_contact->phone ? $order_contact->phone : $order_contact->mobile,
+    //             "residential"=>true
+    //         ],
+    //         'billTo' => [
+    //             "name" => $order_contact->firstName . $order_contact->lastName,
+    //             "company" => $order_contact->company,
+    //             "street1" => $order_contact->address1 ? $order_contact->address1 : $order_contact->postalAddress,
+    //             "street2" => $order_contact->address2 ? $order_contact->address2 : $order_contact->postalAddress,
+    //             "city" => $order_contact->city ? $order_contact->city : $order_contact->postalCity,
+    //             "state" => $order_contact->state ? $order_contact->state : $order_contact->postalState,
+    //             "postalCode" => $order_contact->postCode ? $order_contact->postCode : $order_contact->postalPostCode,
+    //             "country"=>"US",
+    //             "phone" => $order_contact->phone ? $order_contact->phone : $order_contact->mobile,
+    //             "residential"=>true
+    //         ],
+    //         'items'=> $items
+    //     ];
+    //     $headers = [
+    //         "Content-Type: application/json",
+    //         'Authorization' => 'Basic ' . base64_encode($shipstation_api_key . ':' . $shipstation_api_secret),
+    //     ];
+    //     $responseBody = null;
+    //     $response = $client->post($shipstation_order_url, [
+    //         'headers' => $headers,
+    //         'json' => $data,
+    //     ]);
+
+    //     $statusCode = $response->getStatusCode();
+    //     $responseBody = $response->getBody()->getContents();
+
+    //     dd(json_decode($responseBody));
+    // }
+
+
+    //create label for order
+    public function create_label(Request $request) {
+        
+        $order_id = $request->order_id;
+        $order = ApiOrder::where('id', $order_id)->first();
+        $order_contact = Contact::where('contact_id', $order->memberId)->first();
+        $client = new \GuzzleHttp\Client();
+        $shipstation_label_url = config('services.shipstation.shipment_label_url');
+        $shipstation_api_key = config('services.shipstation.key');
+        $shipstation_api_secret = config('services.shipstation.secret');
+        $carrier_code = AdminSetting::where('option_name', 'shipping_carrier_code')->first();
+        $service_code = AdminSetting::where('option_name', 'shipping_service_code')->first();
+        $shipping_package = AdminSetting::where('option_name', 'shipping_package')->first();
+        $company_name = AdminSetting::where('option_name', 'website_name')->first();
+        $getDate = now()->format('Y-m-d');
+        $order_items = ApiOrderItem::with('order.texClasses', 'product.options', 'product')->where('order_id', $order_id)->get();
+        $produts_weight = 0;
+        foreach ($order_items as $order_item) {
+            $product_options = ProductOption::where('product_id', $order_item['product_id'])->where('option_id' , $order_item['option_id'])->get();
+            foreach ($product_options as $product_option) {
+                $produts_weight += $product_option->optionWeight * $order_item['quantity'];
+            }
+        }
+        $data = [
+            'carrierCode' => $carrier_code->option_value,
+            'serviceCode' => $service_code->option_value,
+            'packageCode' => $shipping_package->option_value,
+            "confirmation" => "delivery",
+            'shipFrom' => [
+                "name" => 'Kevin',
+                "company" => $company_name->option_value,
+                "street1" => '5671 Warehouse Way',
+                "street2" => '5671 Warehouse Way',
+                "city" => 'Sacramento',
+                "state" => 'CA',
+                "postalCode" => '95826',
+                "country"=>"US",
+                "phone" => '(916) 281-3090',
+                "residential"=>true
+            ],
+            'shipTo' => [
+                "name" => $order_contact->firstName . $order_contact->lastName,
+                "company" => $order_contact->company,
+                "street1" => $order_contact->address1 ? $order_contact->address1 : $order_contact->postalAddress1,
+                "street2" => $order_contact->address2 ? $order_contact->address2 : $order_contact->postalAddress1,
+                "city" => $order_contact->city ? $order_contact->city : $order_contact->postalCity,
+                "state" => $order_contact->state ? $order_contact->state : $order_contact->postalState,
+                "postalCode" => $order_contact->postCode ? $order_contact->postCode : $order_contact->postalPostCode,
+                "country"=>"US",
+                "phone" => $order_contact->phone ? $order_contact->phone : $order_contact->mobile,
+                "residential"=>true
+            ],
+            'weight' => [
+                "value" => $produts_weight,
+                "units" => "pounds"
+            ],
+            'shipDate'=> $getDate,
+        ];
+        $headers = [
+            "Content-Type: application/json",
+            'Authorization' => 'Basic ' . base64_encode($shipstation_api_key . ':' . $shipstation_api_secret),
+        ];
+        $responseBody = null;
+        try {
+            $response = $client->post($shipstation_label_url, [
+                'headers' => $headers,
+                'json' => $data,
+            ]);
+            $statusCode = $response->getStatusCode();
+            $responseBody = $response->getBody()->getContents();
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return redirect('admin/orders')->with('error', $e->getMessage());
+        }
+        
+    }
+    
+
 }
+

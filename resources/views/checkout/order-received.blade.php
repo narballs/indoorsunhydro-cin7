@@ -680,12 +680,12 @@
 							</div>
 							<div class="col-md-3">
 								<p class="order-confirmation-page-order-number-title">Shipping</p>
-								<p class="order-confirmation-page-order-number-item">$</p>
+								<p class="order-confirmation-page-order-number-item">${{number_format($order->shipment_price , 2)}}</p>
 							</div>
 							<div class="col-md-3">
 								<p class="order-confirmation-page-order-number-title">Tax</p>
 								<p class="order-confirmation-page-order-number-item">
-									${{ number_format($order->total_including_tax - $order->productTotal, 2) }}
+									${{ number_format(($order->total_including_tax - $order->productTotal) - $order->shipment_price, 2) }}
 								</p>
 							</div>
 							<div class="col-md-3">
@@ -739,12 +739,12 @@
 									</div>
 									<div class="col-md-3">
 										<p class="order-confirmation-page-order-number-title">Shipping</p>
-										<p class="order-confirmation-page-order-number-item">$</p>
+										<p class="order-confirmation-page-order-number-item">${{number_format($order->shipment_price , 2)}}</p>
 									</div>
 									<div class="col-md-3">
 										<p class="order-confirmation-page-order-number-title">Tax</p>
 										<p class="order-confirmation-page-order-number-item">
-											${{ number_format($order->total_including_tax - $order->productTotal, 2) }}
+											${{ number_format(($order->total_including_tax - $order->productTotal) - $order->shipment_price, 2) }}
 										</p>
 									</div>
 									<div class="col-md-3">
@@ -803,7 +803,7 @@
 								</div>
 								<div class="col-md-4">
 									<p class="order-confirmation-page-order-number-title">Shipping</p>
-									<p class="order-confirmation-page-order-number-item">$</p>
+									<p class="order-confirmation-page-order-number-item">${{number_format($order->shipment_price , 2)}}</p>
 								</div>
 								
 								
@@ -815,7 +815,7 @@
 								<div class="col-md-4">
 									<p class="order-confirmation-page-order-number-title">Tax</p>
 									<p class="order-confirmation-page-order-number-item">
-										${{ number_format($order->total_including_tax - $order->productTotal, 2) }}
+										${{ number_format(($order->total_including_tax - $order->productTotal) - $order->shipment_price  , 2) }}
 									</p>
 								</div>
 								<div class="col-md-4">
@@ -867,12 +867,12 @@
 								</div>
 								<div class="d-flex justify-content-between">
 									<p class="order-confirmation-page-shipping-title">Shipping</p>
-									<p class="order-confirmation-page-shipping-item">$</p>
+									<p class="order-confirmation-page-shipping-item">${{number_format($order->shipment_price , 2)}}</p>
 								</div>
 								<div class="d-flex justify-content-between">
 									<p class="order-confirmation-page-tax-title">Tax</p>
 									<p class="order-confirmation-page-tax-item">
-										${{ number_format($order->total_including_tax - $order->productTotal, 2) }}
+										${{ number_format(($order->total_including_tax - $order->productTotal) - $order->shipment_price , 2) }}
 									</p>
 								</div>
 							</div>
@@ -909,7 +909,9 @@
 													</p> --}}
 													
 													<p class="order-confirmation-page-address-line-one-title mb-1">
-														{{$order_contact->address1 ? $order_contact->address1 : $order_contact->postalAddress1 . ','}}
+														@if(!empty($order_contact->address1 || $order_contact->postalAddress1))
+															{{$order_contact->address1 ? $order_contact->address1 . ',' : $order_contact->postalAddress1 . ','}}
+														@endif
 													</p>
 													
 													{{-- <p class="order-confirmation-page-address-line-tow-title mb-1">
@@ -917,11 +919,13 @@
 													</p> --}}
 													
 													<p class="order-confirmation-page-address-line-one-title mb-1">
-														{{$order_contact->address2 ? $order_contact->address2 : $order_contact->postalAddress2 . ','}}
+														@if(!empty($order_contact->address2 || $order_contact->postalAddress2))
+															{{$order_contact->address2 ? $order_contact->address2: $order_contact->postalAddress2 }}
+														@endif
 													</p>
 													<p class="order-confirmation-page-address-line-one-title">
-														{{$order_contact->city ? $order_contact->city : $order_contact->postalCity . ','}}
-														{{$order_contact->state ? $order_contact->state : $order_contact->postalState . ','}}
+														{{$order_contact->city ? $order_contact->city . ',' : $order_contact->postalCity . ','}}
+														{{$order_contact->state ? $order_contact->state . ',' : $order_contact->postalState . ','}}
 														{{$order_contact->postCode ? $order_contact->postCode : $order_contact->postalPostCode}}
 													</p>
 													
@@ -976,14 +980,18 @@
 													</p> --}}
 													
 													<p class="order-confirmation-page-address-line-one-title mb-1">
-														{{$order_contact->address1 ? $order_contact->address1 : $order_contact->postalAddress1 . ','}}
+														@if(!empty($order_contact->address1 || $order_contact->postalAddress1))
+															{{$order_contact->address1 ? $order_contact->address1 . ',' : $order_contact->postalAddress1 . ','}}
+														@endif
 													</p>
 													<p class="order-confirmation-page-address-line-one-title mb-1">
-														{{$order_contact->address2 ? $order_contact->address2 : $order_contact->postalAddress2 . ','}}
+														@if(!empty($order_contact->address2 || $order_contact->postalAddress2))
+															{{$order_contact->address2 ? $order_contact->address2 . ',' : $order_contact->postalAddress2 . ','}}
+														@endif
 													</p>
 													<p class="order-confirmation-page-address-line-one-title">
-														{{$order_contact->city ? $order_contact->city : $order_contact->postalCity . ','}}
-														{{$order_contact->state ? $order_contact->state : $order_contact->postalState . ','}}
+														{{$order_contact->city ? $order_contact->city . ',' : $order_contact->postalCity . ','}}
+														{{$order_contact->state ? $order_contact->state . ',' : $order_contact->postalState . ','}}
 														{{$order_contact->postCode ? $order_contact->postCode : $order_contact->postalPostCode}}
 													</p>
 
@@ -1037,6 +1045,7 @@
 							<table class="table">
 								<tr>
 									<th class="order-confirmation-page-table-data-heading">Name</th>
+									<th class="order-confirmation-page-table-data-heading">Sku</th>
 									<th class="order-confirmation-page-table-data-heading"
 										style="padding-left: 0px; !important">
 										Quantity</th>
@@ -1067,6 +1076,14 @@
 															class="order-confirmation-page-product-item">
 															{{$item->product->name}}</span>
 													</p>
+												</div>
+											</div>
+										</td>
+										<td>
+											<div class="row">
+												<div class="col-md-12">
+													<p class="pt-4 order-confirmation-page-product-quantity">
+														{{$item->product->code}}</p>
 												</div>
 											</div>
 										</td>
@@ -1124,7 +1141,8 @@
 													@endif
 												</div>
 											</td>
-											<td style="width:80%;">
+											
+											<td style="width:75%;">
 												<div class="ps-0 mobile_text_class mt-1" style="">
 													<p class="order-confirmation-page-product-title">
 														<a class="order-confirmation-page-product-category-name pb-3"
@@ -1133,7 +1151,14 @@
 														</a>
 													</p>
 												</div>
-												<p class=" mb-0 order-confirmation-page-product-price text-right"> ${{number_format($item->price,2)}}</p>
+												<p class=" mb-0 order-confirmation-page-product-price"> ${{number_format($item->price,2)}}</p>
+											</td>
+											<td style="width:5%;">
+												<div class="ps-0 mobile_text_class mt-1" style="">
+													<p class="order-confirmation-page-product-title">
+														{{$item->product->code}}
+													</p>
+												</div>
 											</td>
 										</tr>
 										@endforeach
@@ -1197,15 +1222,15 @@
 												<span class="summary_sub_total_head">Rate ({{$order->texClasses->rate . '%' }}) :</span>
 											</div>
 											<div class="w-50 p-1 text-right">
-												<span class="summary_sub_total_price text-right">${{ number_format($order->total_including_tax - $order->productTotal, 2) }}</span>
+												<span class="summary_sub_total_price text-right">${{ number_format(($order->total_including_tax - $order->productTotal) - $order->shipment_price, 2) }}</span>
 											</div>
 										</div>
 										<div class="d-flex w-100 mb-2">
 											<div class="w-50 p-1">
-												<span class="summary_sub_total_head">Discount:</span>
+												<span class="summary_sub_total_head">Shipping:</span>
 											</div>
 											<div class="w-50 p-1 text-right">
-												<span class="summary_sub_total_price text-right">$0</span>
+												<span class="summary_sub_total_price text-right">${{ number_format($order->shipment_price ,2) }}</span>
 											</div>
 										</div>
 										<div class="d-flex w-100">

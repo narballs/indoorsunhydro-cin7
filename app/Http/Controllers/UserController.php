@@ -32,6 +32,8 @@ use Illuminate\Support\Facades\Hash;
 use App\Jobs\SalesOrders;
 use App\Models\Cart;
 use App\Models\AdminSetting;
+use App\Models\Pricing;
+use App\Models\Pricingnew;
 use App\Models\ProductBuyList;
 use Illuminate\Auth\Events\Validated;
 
@@ -343,20 +345,20 @@ class UserController extends Controller
                     $cart_item->save();
                 }
             }
-            $active_qoutes = Cart::where('user_id', $user_id)->where('is_active', 1)->get();
-            foreach ($active_qoutes as $active_qoute) {
-                $cart[$active_qoute->qoute_id] = [
-                    "product_id" => $active_qoute->product_id,
-                    "name" => $active_qoute->name,
-                    "quantity" => $active_qoute->quantity,
-                    "price" => $active_qoute->price,
-                    "code" => $active_qoute->code,
-                    "image" => $active_qoute->image,
-                    'option_id' => $active_qoute->option_id,
-                    "slug" => $active_qoute->slug,
-                ];
-                Session::put('cart', $cart);
-            }
+            // $active_qoutes = Cart::where('user_id', $user_id)->where('is_active', 1)->get();
+            // foreach ($active_qoutes as $active_qoute) {
+            //     $cart[$active_qoute->qoute_id] = [
+            //         "product_id" => $active_qoute->product_id,
+            //         "name" => $active_qoute->name,
+            //         "quantity" => $active_qoute->quantity,
+            //         "price" => $active_qoute->price,
+            //         "code" => $active_qoute->code,
+            //         "image" => $active_qoute->image,
+            //         'option_id' => $active_qoute->option_id,
+            //         "slug" => $active_qoute->slug,
+            //     ];
+            //     Session::put('cart', $cart);
+            // }
             if ($user->hasRole(['Admin'])) {
                 session()->flash('message', 'Successfully Logged in');
                 $companies = Contact::where('user_id', auth()->user()->id)->get();
@@ -375,7 +377,6 @@ class UserController extends Controller
                 $companies = Contact::where('user_id', auth()->user()->id)->get();
 
                 if ($companies->count() == 1) {
-                    
                     if ($companies[0]->contact_id == null) {
                         UserHelper::switch_company($companies[0]->secondary_id);
                     } else {
@@ -1483,38 +1484,58 @@ class UserController extends Controller
 
     public function switch_company(Request $request)
     {
+        $user_id =  auth()->user()->id;
         $contact_id = $request->companyId;
-
-        // return UserHelper::switch_company($contact_id);
-
         $contact = Contact::where('contact_id', $contact_id)->first();
-        // dd($contact->contact_id);
-
+        $active_contact_id = null;
+        $active_company = null;
+        $cart = [];
         if (!empty($contact)) {
             $active_contact_id = $contact->contact_id;
             $active_company = $contact->company;
-            Session::put([
-                'contact_id' => $active_contact_id,
-                'company' => $active_company
-            ]);
-            return response()->json([
-                'status' => '204',
-                'message' => 'Company Switch Successfully !'
-            ]);
+            
         } else {
             $contact = Contact::where('secondary_id', $contact_id)->first();
             $active_contact_id = $contact->secondary_id;
             $active_company = $contact->company;
-            Session::put([
-                'contact_id' => $active_contact_id,
-                'company' => $active_company
-            ]);
-
-            return response()->json([
-                'status' => '204',
-                'message' => 'Company Switch Successfully !'
-            ]);
+            
         }
+        Session::put([
+            'contact_id' => $active_contact_id,
+            'company' => $active_company
+        ]);
+        $getSelectedContact = Contact::where('company' , $active_company)->where('user_id' , $user_id)->first();
+        $cartItem = Cart::where('user_id' , $getSelectedContact->user_id)->get();
+        $getPriceColumn = UserHelper::getUserPriceColumn(false , $getSelectedContact->user_id);
+        if (count($cartItem) > 0) {
+            foreach($cartItem as $cartItem){
+                $productPricing = Pricingnew::where('option_id' , $cartItem['option_id'])->first();
+                $productPrice = $productPricing->$getPriceColumn;
+                $cart = Cart::where('user_id' , $user_id)->where('product_id' , $cartItem['product_id'])->first();
+                if (!empty($cart)) {
+                    $cart->price = $productPrice;
+                    $cart->save();
+                }
+                Session::forget('cart');
+                $cart = [
+                    $cartItem['qoute_id'] => [
+                        "product_id" => $cartItem['product_id'],
+                        "name" => $cartItem['name'],
+                        "quantity" => $cartItem['quantity'],
+                        "price" => $cart['price'],
+                        "code" => $cartItem['code'],
+                        "image" => $cartItem['image'],
+                        'option_id' => $cartItem['option_id'],
+                        "slug" => $cartItem['slug'],
+                    ]
+                ];
+                Session::put('cart', $cart);
+            }
+        }
+        return response()->json([
+            'status' => '204',
+            'message' => 'Company Switch Successfully !'
+        ]);
     }
 
     public function switch_company_select(Request $request)
