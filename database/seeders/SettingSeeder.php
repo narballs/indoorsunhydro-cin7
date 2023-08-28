@@ -157,6 +157,11 @@ class SettingSeeder extends Seeder
                 'type' => 'text',
                 'option_value' => 'ups_ground',
             ],
+            [
+                'option_name' => 'shipping_package', 
+                'type' => 'text',
+                'option_value' => 'package',
+            ],
         ];
 
         foreach($setting as $setting) {

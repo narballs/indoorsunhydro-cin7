@@ -407,5 +407,10 @@ class CheckoutController extends Controller
         ]);
         $statusCode = $response->getStatusCode();
         $responseBody = $response->getBody()->getContents();
+        $shipment_order_id = json_decode($responseBody)->orderId;
+        $order = ApiOrder::where('id', $order_id)->first();
+        $order->shipment_order_id = $shipment_order_id;
+        $order->save();
+
     }
 }

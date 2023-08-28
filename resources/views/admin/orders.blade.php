@@ -161,6 +161,9 @@
                                         <span class="d-flex table-row-item"> Payment Term</span>
                                     </td>
                                     <td>
+                                        <span class="d-flex table-row-item">Create Labels</span>
+                                    </td>
+                                    <td>
                                         <span class="d-flex table-row-item" style="visibility: hidden;">
                                             Actions
                                         </span>
@@ -255,6 +258,22 @@
                                             </td>
                                             <td class="td_padding_row">
                                                 {{ $order->logisticsCarrier }}
+                                            </td>
+                                            <td class="td_padding_row">
+                                                @if($order->label_created == 0)
+                                                <form action="{{url('admin/order/create/label')}}" method="post" style="width:110%">
+                                                    @csrf
+                                                    <input type="hidden" name="order_id" id="order_id"
+                                                        value="{{ $order->id }}">
+                                                    <button type="submit" class="create_label btn btn-info btn-sm p-1 ">
+                                                        Create Label
+                                                    </button>
+                                                </form>
+                                                @else
+                                                <button type="submit" class="create_label btn btn-success btn-sm p-1 ">
+                                                    Label Created
+                                                </button>
+                                                @endif
                                             </td>
                                             <td class="created_by toggleClass td_padding_row orders-action">
                                                 <div class="d-flex aling-items-center order-table-actions">
