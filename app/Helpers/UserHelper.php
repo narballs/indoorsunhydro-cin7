@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\Subscribe;
 
 use App\Models\Contact;
+use App\Models\Cart;
+use App\Models\Pricingnew;
 
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
@@ -62,7 +64,7 @@ class UserHelper
 
     public static function switch_company($contact_id) {
         $user_id = Auth::id();
-
+        $active_contact_id = $active_company = null;
         $new_register_contact = Contact::where('contact_id' , null)->where('user_id' , $user_id)->first();
         if (!empty($new_register_contact)) {
             $active_company = $new_register_contact->company;
@@ -76,22 +78,48 @@ class UserHelper
             if (!empty($contact)) {
                 $active_contact_id = $contact->contact_id;
                 $active_company = $contact->company;
-                Session::put([
-                    'contact_id' => $active_contact_id,
-                    'company' => $active_company,
-                ]);
             } 
             else {
                 $contact = Contact::where('secondary_id', $contact_id)->where('status', '!=', 0)->first();
                 if (!empty($contact)) {
                     $active_contact_id = $contact->secondary_id;
                     $active_company = $contact->company;
-                    Session::put([
-                        'contact_id' => $active_contact_id,
-                        'company' => $active_company,
-                    ]);
+                    
                 }
             }
+            Session::put([
+                'contact_id' => $active_contact_id,
+                'company' => $active_company,
+            ]);
+            $getSelectedContact = Contact::where('company' , $active_company)->where('user_id' , $user_id)->first();
+            $cartItem = Cart::where('user_id' , $getSelectedContact->user_id)->get();
+            $getPriceColumn = UserHelper::getUserPriceColumn(false , $getSelectedContact->user_id);
+            if (count($cartItem) > 0) {
+                foreach ($cartItem as $cartItem) {
+                    $productPricing = Pricingnew::where('option_id' , $cartItem['option_id'])->first();
+                    $productPrice = $productPricing->$getPriceColumn;
+                    $cart = Cart::where('user_id' , $user_id)->where('product_id' , $cartItem['product_id'])->first();
+                    if (!empty($cart)) {
+                        $cart->price = $productPrice;
+                        $cart->save();
+                    }
+                    Session::forget('cart');
+                    $cart = [
+                        $cartItem['qoute_id'] => [
+                            "product_id" => $cartItem['product_id'],
+                            "name" => $cartItem['name'],
+                            "quantity" => $cartItem['quantity'],
+                            "price" => $cart['price'],
+                            "code" => $cartItem['code'],
+                            "image" => $cartItem['image'],
+                            'option_id' => $cartItem['option_id'],
+                            "slug" => $cartItem['slug'],
+                        ]
+                    ];
+                    Session::put('cart', $cart);
+                }
+            }
+            
         }
         
 
