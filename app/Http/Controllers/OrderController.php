@@ -930,9 +930,13 @@ class OrderController extends Controller
             'json' => $data,
         ]);
 
-        $statusCode = $response->getStatusCode();
-        $responseBody = $response->getBody()->getContents();
-        dd($responseBody);
+        try {
+            $statusCode = $response->getStatusCode();
+            $responseBody = $response->getBody()->getContents();
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+        }
+        
     }
     
 
