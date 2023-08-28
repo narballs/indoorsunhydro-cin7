@@ -1484,6 +1484,7 @@ class UserController extends Controller
 
     public function switch_company(Request $request)
     {
+        $user_id =  auth()->user()->id;
         $contact_id = $request->companyId;
         $contact = Contact::where('contact_id', $contact_id)->first();
         $active_contact_id = null;
@@ -1503,29 +1504,29 @@ class UserController extends Controller
             'contact_id' => $active_contact_id,
             'company' => $active_company
         ]);
-        $getSelectedContact = Contact::where('company' , $active_company)->where('user_id' , auth()->user()->id)->first();
-        $get_session_cart = Cart::where('user_id' , $getSelectedContact->user_id)->get();
-        $getPriceColumn = UserHelper::getUserPriceColumn($is_admin = false , $user_id = $getSelectedContact->user_id);
-        if (count($get_session_cart) > 0){
-            foreach($get_session_cart as $cartItems){
-                $product_pricing = Pricingnew::where('option_id' , $cartItems['option_id'])->first();
-                $product_price = $product_pricing->$getPriceColumn;
-                $cart = Cart::where('user_id' , auth()->user()->id)->where('product_id' , $cartItems['product_id'])->first();
-                if(!empty($cart)){
-                    $cart->price = $product_price;
+        $getSelectedContact = Contact::where('company' , $active_company)->where('user_id' , $user_id)->first();
+        $cartItem = Cart::where('user_id' , $getSelectedContact->user_id)->get();
+        $getPriceColumn = UserHelper::getUserPriceColumn(false , $getSelectedContact->user_id);
+        if (count($cartItem) > 0) {
+            foreach($cartItem as $cartItem){
+                $productPricing = Pricingnew::where('option_id' , $cartItem['option_id'])->first();
+                $productPrice = $productPricing->$getPriceColumn;
+                $cart = Cart::where('user_id' , $user_id)->where('product_id' , $cartItem['product_id'])->first();
+                if (!empty($cart)) {
+                    $cart->price = $productPrice;
                     $cart->save();
                 }
                 Session::forget('cart');
                 $cart = [
-                    $cartItems['qoute_id'] => [
-                        "product_id" => $cartItems['product_id'],
-                        "name" => $cartItems['name'],
-                        "quantity" => $cartItems['quantity'],
+                    $cartItem['qoute_id'] => [
+                        "product_id" => $cartItem['product_id'],
+                        "name" => $cartItem['name'],
+                        "quantity" => $cartItem['quantity'],
                         "price" => $cart['price'],
-                        "code" => $cartItems['code'],
-                        "image" => $cartItems['image'],
-                        'option_id' => $cartItems['option_id'],
-                        "slug" => $cartItems['slug'],
+                        "code" => $cartItem['code'],
+                        "image" => $cartItem['image'],
+                        'option_id' => $cartItem['option_id'],
+                        "slug" => $cartItem['slug'],
                     ]
                 ];
                 Session::put('cart', $cart);
