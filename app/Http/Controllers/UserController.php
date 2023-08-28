@@ -1505,10 +1505,11 @@ class UserController extends Controller
             'company' => $active_company
         ]);
         $getSelectedContact = Contact::where('company' , $active_company)->where('user_id' , $user_id)->first();
-        $cartItem = Cart::where('user_id' , $getSelectedContact->user_id)->get();
+        $cartItems = Cart::where('user_id' , $getSelectedContact->user_id)->get();
         $getPriceColumn = UserHelper::getUserPriceColumn(false , $getSelectedContact->user_id);
-        if (count($cartItem) > 0) {
-            foreach($cartItem as $cartItem){
+        if (count($cartItems) > 0) {
+            Session::forget('cart');
+            foreach ($cartItems as $cartItem){
                 $productPricing = Pricingnew::where('option_id' , $cartItem['option_id'])->first();
                 $productPrice = $productPricing->$getPriceColumn;
                 $cart = Cart::where('user_id' , $user_id)->where('product_id' , $cartItem['product_id'])->first();
@@ -1516,7 +1517,7 @@ class UserController extends Controller
                     $cart->price = $productPrice;
                     $cart->save();
                 }
-                Session::forget('cart');
+                
                 $cart = [
                     $cartItem['qoute_id'] => [
                         "product_id" => $cartItem['product_id'],
@@ -1529,8 +1530,8 @@ class UserController extends Controller
                         "slug" => $cartItem['slug'],
                     ]
                 ];
-                Session::put('cart', $cart);
             }
+            Session::put('cart', $cart);
         }
         return response()->json([
             'status' => '204',

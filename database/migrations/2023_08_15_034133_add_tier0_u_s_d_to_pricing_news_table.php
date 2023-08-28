@@ -14,7 +14,7 @@ class AddTier0USDToPricingNewsTable extends Migration
     public function up()
     {
         Schema::table('pricingnews', function (Blueprint $table) {
-            $table->float('tier0USD',10,2)->after('tier3USD');
+            //$table->float('tier0USD',10,2)->after('tier3USD');
         });
     }
 
