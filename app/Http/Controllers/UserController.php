@@ -1507,6 +1507,8 @@ class UserController extends Controller
         $getSelectedContact = Contact::where('company' , $active_company)->where('user_id' , $user_id)->first();
         $cartItems = Cart::where('user_id' , $getSelectedContact->user_id)->get();
         $getPriceColumn = UserHelper::getUserPriceColumn(false , $getSelectedContact->user_id);
+
+        $cart_data = [];
         if (count($cartItems) > 0) {
             Session::forget('cart');
             foreach ($cartItems as $cartItem){
@@ -1518,7 +1520,7 @@ class UserController extends Controller
                     $cart->save();
                 }
                 
-                $cart[$cartItem['qoute_id']][] = [
+                $cart_data[$cart['qoute_id']] = [
                     "product_id" => $cartItem['product_id'],
                     "name" => $cartItem['name'],
                     "quantity" => $cartItem['quantity'],
@@ -1529,8 +1531,10 @@ class UserController extends Controller
                     "slug" => $cartItem['slug'],
                 ];
             }
-            Session::put('cart', $cart);
         }
+
+        Session::put('cart', $cart_data);
+
         return response()->json([
             'status' => '204',
             'message' => 'Company Switch Successfully !'
