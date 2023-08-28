@@ -927,16 +927,17 @@ class OrderController extends Controller
             'Authorization' => 'Basic ' . base64_encode($shipstation_api_key . ':' . $shipstation_api_secret),
         ];
         $responseBody = null;
-        $response = $client->post($shipstation_label_url, [
-            'headers' => $headers,
-            'json' => $data,
-        ]);
-
         try {
+            $response = $client->post($shipstation_label_url, [
+                'headers' => $headers,
+                'json' => $data,
+            ]);
             $statusCode = $response->getStatusCode();
             $responseBody = $response->getBody()->getContents();
         } catch (\Exception $e) {
             Log::error($e->getMessage());
+            dd($e->getMessage());
+            return redirect('admin/orders')->with('error', $e->getMessage());
         }
         
     }

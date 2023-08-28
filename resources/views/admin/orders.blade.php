@@ -2,6 +2,13 @@
 @section('title', 'Dashboard')
 
 @section('content')
+    @if (count($errors) > 0)
+        <div class="alert alert-danger">
+            <ul>
+                <li>{{ $error }}</li>
+            </ul>
+        </div>
+    @endif
     <div class="table-wrapper">
         <div class="card-body product_secion_main_body">
             <div class="row border-bottom product_section_header">
