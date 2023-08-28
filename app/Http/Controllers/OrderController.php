@@ -77,11 +77,12 @@ class OrderController extends Controller
 
                 $is_primary = Contact::where('contact_id', $session_contact_id)->first();
                 $enable_stripe_checkout_setting = AdminSetting::where('option_name', 'enable_stripe_checkout')->first();
+                $stripe_is_enabled = !empty($enable_stripe_checkout_setting) && strtolower($enable_stripe_checkout_setting->option_value) == 'yes';
 
                 $go_to_stripe_checkout = false;
-                $pay_in_advance = $request->paymentTerms;
+                $pay_in_advance = strtolower($request->paymentTerms) === 'pay in advanced' ? true : false;
 
-                if (!empty($enable_stripe_checkout_setting) && $enable_stripe_checkout_setting->option_value == 'Yes' && strtolower('pay in advanced') == $pay_in_advance) {
+                if ($stripe_is_enabled && $pay_in_advance) {
                     $go_to_stripe_checkout = true;
                 }
 
@@ -186,7 +187,7 @@ class OrderController extends Controller
                                 "metadata" => [
                                     "order_id"=> $order_id,
                                 ]
-                                ],
+                            ],
                             'customer_email' => auth()->user()->email,
                             
                         ]);
