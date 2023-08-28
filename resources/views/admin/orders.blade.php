@@ -261,7 +261,7 @@
                                             </td>
                                             <td class="td_padding_row">
                                                 @if($order->label_created == 0)
-                                                <form action="{{url('admin/order/create/label')}}" method="post" style="width:110%">
+                                                <form action="{{url('admin/orders/create/label')}}" method="post" style="width:110%">
                                                     @csrf
                                                     <input type="hidden" name="order_id" id="order_id"
                                                         value="{{ $order->id }}">
