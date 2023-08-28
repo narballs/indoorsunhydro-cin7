@@ -869,6 +869,7 @@ class OrderController extends Controller
         $order_id = $request->order_id;
         $order = ApiOrder::where('id', $order_id)->first();
         $order_contact = Contact::where('contact_id', $order->memberId)->first();
+        dd($order_contact);
         $client = new \GuzzleHttp\Client();
         $shipstation_label_url = config('services.shipstation.shipment_label_url');
         $shipstation_api_key = config('services.shipstation.key');
@@ -906,8 +907,8 @@ class OrderController extends Controller
             'shipTo' => [
                 "name" => $order_contact->firstName . $order_contact->lastName,
                 "company" => $order_contact->company,
-                "street1" => $order_contact->address1 ? $order_contact->address1 : $order_contact->postalAddress,
-                "street2" => $order_contact->address2 ? $order_contact->address2 : $order_contact->postalAddress,
+                "street1" => $order_contact->address1 ? $order_contact->address1 : $order_contact->postalAddress1,
+                "street2" => $order_contact->address2 ? $order_contact->address2 : $order_contact->postalAddress1,
                 "city" => $order_contact->city ? $order_contact->city : $order_contact->postalCity,
                 "state" => $order_contact->state ? $order_contact->state : $order_contact->postalState,
                 "postalCode" => $order_contact->postCode ? $order_contact->postCode : $order_contact->postalPostCode,
@@ -921,7 +922,6 @@ class OrderController extends Controller
             ],
             'shipDate'=> $getDate,
         ];
-        dd($data);
         $headers = [
             "Content-Type: application/json",
             'Authorization' => 'Basic ' . base64_encode($shipstation_api_key . ':' . $shipstation_api_secret),
