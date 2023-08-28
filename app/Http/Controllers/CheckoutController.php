@@ -409,7 +409,7 @@ class CheckoutController extends Controller
         $responseBody = $response->getBody()->getContents();
         $shipment_order_id = json_decode($responseBody)->orderId;
         $order = ApiOrder::where('id', $order_id)->first();
-        $order->shipment_order_id = $shipment_order_id;
+        $order->shipstation_orderId = $shipment_order_id;
         $order->save();
 
     }
