@@ -166,6 +166,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('admin/api-sync-logs', [LogsController::class, 'index']);
 
     Route::get('admin/daily_api_logs', [DailyApiLogController::class, 'index']);
+    Route::post('admin/order/create/label', [OrderController::class, 'create_label']);
 
 
 

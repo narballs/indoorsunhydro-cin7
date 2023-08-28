@@ -15,6 +15,7 @@ use App\Models\Contact;
 use App\Models\Pricingnew;
 use App\Models\AdminSetting;
 use App\Models\OrderComment;
+use App\Models\Productoption;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
@@ -929,6 +930,84 @@ class OrderController extends Controller
 
         $statusCode = $response->getStatusCode();
         $responseBody = $response->getBody()->getContents();
+    }
+
+
+    //create label for order
+    public function create_label(Request $request) {
+        
+        $order_id = $request->order_id;
+        $order = ApiOrder::where('id', $order_id)->first();
+        $order_contact = Contact::where('contact_id', $order->memberId)->first();
+        $client = new \GuzzleHttp\Client();
+        $shipstation_order_url = config('services.shipstation.shipment_label_url');
+        $shipstation_api_key = config('services.shipstation.key');
+        $shipstation_api_secret = config('services.shipstation.secret');
+        $carrier_code = AdminSetting::where('option_name', 'shipping_carrier_code')->first();
+        $service_code = AdminSetting::where('option_name', 'shipping_service_code')->first();
+        $shipping_package = AdminSetting::where('option_name', 'shipping_package')->first();
+        $getDate = now()->format('Y-m-d');
+        $order_items = ApiOrderItem::with('order.texClasses', 'product.options', 'product')->where('order_id', $order_id)->get();
+        $produts_weight = 0;
+        foreach ($order_items as $order_item) {
+            $product_options = ProductOption::where('product_id', $order_item['product_id'])->where('option_id' , $order_item['option_id'])->get();
+            foreach ($product_options as $product_option) {
+                $produts_weight += $product_option->optionWeight * $order_item['quantity'];
+            }
+}
+
+        $data = [
+            'orderNumber' => $order_id,
+            'orderKey' => $order->reference,
+            'carrierCode' => $carrier_code->option_value,
+            'serviceCode' => $service_code->option_value,
+            'packageCode' => $shipping_package->option_value,
+            'shippingAmount' => number_format($order->shipment_price , 2),
+            "amountPaid" => number_format($order->total_including_tax , 2),
+            'shipFrom' => [
+                "name" => $order_contact->firstName . $order_contact->lastName,
+                "company" => $order_contact->company,
+                "street1" => $order_contact->address1 ? $order_contact->address1 : $order_contact->postalAddress,
+                "street2" => $order_contact->address2 ? $order_contact->address2 : $order_contact->postalAddress,
+                "city" => $order_contact->city ? $order_contact->city : $order_contact->postalCity,
+                "state" => $order_contact->state ? $order_contact->state : $order_contact->postalState,
+                "postalCode" => $order_contact->postCode ? $order_contact->postCode : $order_contact->postalPostCode,
+                "country"=>"US",
+                "phone" => $order_contact->phone ? $order_contact->phone : $order_contact->mobile,
+                "residential"=>true
+            ],
+            'shipTo' => [
+                "name" => $order_contact->firstName . $order_contact->lastName,
+                "company" => $order_contact->company,
+                "street1" => $order_contact->address1 ? $order_contact->address1 : $order_contact->postalAddress,
+                "street2" => $order_contact->address2 ? $order_contact->address2 : $order_contact->postalAddress,
+                "city" => $order_contact->city ? $order_contact->city : $order_contact->postalCity,
+                "state" => $order_contact->state ? $order_contact->state : $order_contact->postalState,
+                "postalCode" => $order_contact->postCode ? $order_contact->postCode : $order_contact->postalPostCode,
+                "country"=>"US",
+                "phone" => $order_contact->phone ? $order_contact->phone : $order_contact->mobile,
+                "residential"=>true
+            ],
+            'weight' => [
+                "value" => $produts_weight,
+                "units" => "pounds"
+            ],
+            'shipDate'=> $getDate,
+        ];
+        dd($data);
+        $headers = [
+            "Content-Type: application/json",
+            'Authorization' => 'Basic ' . base64_encode($shipstation_api_key . ':' . $shipstation_api_secret),
+        ];
+        $responseBody = null;
+        $response = $client->post($shipstation_order_url, [
+            'headers' => $headers,
+            'json' => $data,
+        ]);
+
+        $statusCode = $response->getStatusCode();
+        $responseBody = $response->getBody()->getContents();
+        dd($responseBody);
     }
     
 
