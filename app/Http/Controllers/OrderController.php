@@ -921,6 +921,7 @@ class OrderController extends Controller
             ],
             'shipDate'=> $getDate,
         ];
+        dd($data);
         $headers = [
             "Content-Type: application/json",
             'Authorization' => 'Basic ' . base64_encode($shipstation_api_key . ':' . $shipstation_api_secret),
