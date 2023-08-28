@@ -886,7 +886,6 @@ class OrderController extends Controller
                 $produts_weight += $product_option->optionWeight * $order_item['quantity'];
             }
         }
-
         $data = [
             'carrierCode' => $carrier_code->option_value,
             'serviceCode' => $service_code->option_value,
@@ -936,7 +935,6 @@ class OrderController extends Controller
             $responseBody = $response->getBody()->getContents();
         } catch (\Exception $e) {
             Log::error($e->getMessage());
-            dd($e->getMessage());
             return redirect('admin/orders')->with('error', $e->getMessage());
         }
         
