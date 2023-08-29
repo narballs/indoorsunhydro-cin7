@@ -8,7 +8,6 @@ use App\Models\Product;
 use App\Models\Cart;
 use App\Models\ProductOption;
 use App\Models\Pricingnew;
-use Session;
 use Str;
 use App\Models\Contact;
 use App\Models\Brand;
@@ -28,6 +27,7 @@ use App\Models\User;
 use App\Helpers\UtilHelper;
 use App\Models\ApiOrderItem;
 use App\Models\ProductStock;
+use Illuminate\Support\Facades\Session;
 
 use Illuminate\Database\Eloquent\Builder;
 
@@ -343,6 +343,58 @@ class ProductController extends Controller
             'user_buy_list_options',
             'contact_id'
             // 'db_price_column'
+        ));
+    }
+
+    public function buy_again(Request $request) {
+        $contact_id = session()->get('contact_id');
+        $user_id = auth()->id();
+        $user = User::where('id', $user_id)->first();
+        $can_approve_order = $user->hasRole('Order Approver');
+        $selected_company = Session::get('company');
+        $all_ids = UserHelper::getAllMemberIds($user);
+        $contact_ids = Contact::whereIn('id', $all_ids)
+            ->pluck('contact_id')
+            ->toArray();
+       
+        $products_ids = ApiOrderItem::with('product')
+        ->whereHas('order' , function($query)use ($contact_ids) {
+            $query->with(['createdby'])->whereIn('memberId', $contact_ids)
+            ->whereHas('contact' , function($query) {
+                $query->orderBy('company');
+            });
+        })->pluck('product_id')->toArray();
+        $products_query  = Product::whereIn('product_id' , $products_ids)
+        ->with('options', 'brand', 'categories')
+        ->where('status' , '!=' , 'Inactive');
+        $products = $products_query->with('options.defaultPrice', 'brand')->paginate(12);
+        $user_list = BuyList::where('user_id', $user_id)
+            ->where('contact_id', $contact_id)
+            ->first();
+        $user_buy_list_options = [];
+
+        if (!empty($user_list)) {
+            $user_buy_list_options = ProductBuyList::where('list_id', $user_list->id)->pluck('option_id', 'option_id')->toArray();
+        }
+
+        $lists = BuyList::where('user_id', $user_id)->get();
+        $contact = '';
+        if ($user_id != null) {
+            $contact = Contact::where('user_id', $user_id)->first();
+        }
+
+        if ($contact) {
+            $pricing = $contact->priceColumn;
+        } else {
+            $pricing = 'Retail';
+        }
+
+        return view('buy_again', compact(
+            'products',
+            'lists',
+            'pricing',
+            'user_buy_list_options',
+            'contact_id',
         ));
     }
 

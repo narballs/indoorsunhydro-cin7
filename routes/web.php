@@ -226,6 +226,7 @@ Route::post('/create-list/', [ProductController::class, 'createList']);
 Route::post('/multi-favorites-to-cart/', [ProductController::class, 'multi_favorites_to_cart']);
 Route::get('/order/items/{id}', [ProductController::class, 'order_items']);
 Route::post('/buy/order/items', [ProductController::class, 'buy_again_order_items']);
+Route::get('/products/buy-again', [ProductController::class, 'buy_again']);
 
 Route::group(['middleware' => ['auth']], function () {
     Route::resource('admin/roles', RoleController::class);
