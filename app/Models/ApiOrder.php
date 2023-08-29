@@ -42,7 +42,9 @@ class ApiOrder extends Model
         'shipment_price',
         'paymenty_status',
         'shipstation_orderId',
-        'label_created'
+        'label_created',
+        'is_shipped',
+        'is_stripe'
     ];
     public function contact()
     {
