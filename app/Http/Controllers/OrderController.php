@@ -124,6 +124,7 @@ class OrderController extends Controller
                     $order->memo = $request->memo;
                     $order->date = $request->date;
                     $order->shipment_price = $request->shipment_price;
+                    $order->is_stripe = 1;
                     $order->save();
 
                     $order_id =  $order->id;
@@ -381,7 +382,7 @@ class OrderController extends Controller
             }
         }
 
-        return Redirect::route('thankyou', $order_id);
+        return redirect('/checkout');
     }
 
     // delete item from order by admin 

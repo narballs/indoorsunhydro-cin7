@@ -317,13 +317,23 @@
                                         </tr>
                                         @foreach ($customer_orders as $customer_order)
                                             <tr>
-                                                @if ($customer_order->order_id)
-                                                    <td>
-                                                        {{ $customer_order->id }}
-
-                                                    </td>
+                                                @if ($customer_order->is_stripe == 1)
+                                                    @if ($customer_order->payment_status == 'paid' && $customer_order->is_shipped == 1)
+                                                        <td class="badge bg-success">Order Completed</td>
+                                                    @elseif ($customer_order->payment_status === 'paid' && $customer_order->is_shipped == 0)
+                                                        <td class="badge bg-success">Ready to Ship</td>
+                                                    @elseif ($customer_order->payment_status == 'unpaid' || $customer_order->payment_status == '')
+                                                        <td class="badge bg-warning">Pending Payment</td>
+                                                    @endif
                                                 @else
-                                                    <td class="badge bg-danger">Pending Approval</td>
+                                                    @if ($customer_order->order_id)
+                                                        <td>
+                                                            {{ $customer_order->id }}
+
+                                                        </td>
+                                                    @else
+                                                        <td class="badge bg-danger">Pending Approval</td>
+                                                    @endif
                                                 @endif
                                                 <?php $createdDate = $customer_order->created_at;
                                                 $formatedDate = $createdDate->format('F j, Y');
