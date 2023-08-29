@@ -14,15 +14,24 @@ class OrderStatusTableSeeder extends Seeder
      */
     public function run()
     {
-        OrderStatus::truncate();
-
-        // $statuses = ['New','Awaiting Paymet','Procressing', 'Release to Pick', 'Partially Picked', 'Fully Picked', 'Fully Picked-Hold', 'On-Hold', 'Dispatched', 'Cancelled'];
-        //dd($statuses);exit;
-        $statuses =  ['DRAFT','APPROVED','VOID'];
+        $statuses =  [
+            ['status' => 'Pending payment'],
+            ['status' => 'Preparing for Shipping' ],
+            ['status' => 'On hold' ],
+            ['status' => 'Order Completed' ],
+            ['status' => 'Cancelled'],
+            ['status' => 'Refunded'],
+            ['status' => 'DRAFT'],
+            ['status' => 'APPROVED'],
+            ['status' => 'VOID']
+        ];
         foreach($statuses as $status) {
-            OrderStatus::create([
-                'status' => $status
-            ]);
+
+            $order_status = OrderStatus::firstOrCreate(
+                [
+                    'status' => $status['status']
+                ]
+            );
         }
 
     }

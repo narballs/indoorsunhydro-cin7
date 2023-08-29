@@ -251,7 +251,7 @@ class ContactController extends Controller
             ->orderBy('id', 'desc')
             ->get();
 
-        $statuses = OrderStatus::all();
+        $order_statuses = OrderStatus::all();
         if ($customer->hashKey && $customer->hashUsed == false) {
             $invitation_url = URL::to("/");
             $invitation_url = $invitation_url . '/customer/invitation/' . $customer->hashKey;
@@ -266,12 +266,11 @@ class ContactController extends Controller
         return view('admin/customer-details', compact(
             'customer',
             'secondary_contacts',
-            'statuses',
+            'order_statuses',
             'customer_orders',
             'invitation_url',
             'customer',
             'primary_contact',
-            'statuses',
             'customer_orders',
             'invitation_url',
             'logs',
