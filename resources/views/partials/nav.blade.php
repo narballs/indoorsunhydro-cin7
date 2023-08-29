@@ -89,6 +89,13 @@ $categories = NavHelper::getCategories();
                         Contact
                     </a>
                 </li>
+                @if(auth()->user())
+                <li class="nav-item me-4 mx-4">
+                    <a class="nav-link text-uppercase nav-item-links font_style_menu" href="{{ url('/products/buy-again') }}">
+                        Buy Again
+                    </a>
+                </li>
+                @endif
                 
                 </ul>
             </div>
@@ -276,6 +283,13 @@ $categories = NavHelper::getCategories();
                                     Contact
                                 </a>
                             </li>
+                            @if(auth()->user())
+                                <li class="nav-item me-4">
+                                    <a class="nav-link text-uppercase nav-item-links ps-1" href="{{ url('/products/buy-again') }}">
+                                        Buy Again
+                                    </a>
+                                </li>
+                            @endif
                             {{-- <li class="nav-item me-3">
                                 <a class="nav-link text-uppercase nav-item-links ps-4" href="{{ url('my-account') }} ">My
                                     account
@@ -518,6 +532,13 @@ $categories = NavHelper::getCategories();
                             account
                         </a>
                     </li>
+                    @if(auth()->user())
+                        <li class="nav-item me-3">
+                            <a class="nav-link text-uppercase nav-item-links ps-4" href="{{ url('/products/buy-again') }}">
+                                Buy Again
+                            </a>
+                        </li>
+                    @endif
                     @if (Auth::user())
                         <li class="nav-item">
                             <a class="nav-link text-uppercase nav-item-links p-0" href="{{ '/user/' }}">
