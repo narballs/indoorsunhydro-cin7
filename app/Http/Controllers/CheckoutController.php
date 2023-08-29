@@ -55,6 +55,7 @@ class CheckoutController extends Controller
             $row_price = $cart_item['quantity'] * $cart_item['price'];
             $cart_total = $row_price + $cart_total;
         }
+        
         $produts_weight = 0;
         foreach ($cart_items as $cart_item) {
             $product_options = ProductOption::where('product_id', $cart_item['product_id'])->where('option_id' , $cart_item['option_id'])->get();
@@ -341,6 +342,14 @@ class CheckoutController extends Controller
                 'unitPrice' => $order_items[0]->price,
             ];  
         }
+
+        $produts_weight = 0;
+        foreach ($order_items as $order_item) {
+            $product_options = ProductOption::where('product_id', $order_item['product_id'])->where('option_id' , $order_item['option_id'])->get();
+            foreach ($product_options as $product_option) {
+                $produts_weight += $product_option->optionWeight * $order_item['quantity'];
+            }
+        }
         
         $client = new \GuzzleHttp\Client();
         $shipstation_order_url = config('services.shipstation.shipment_order_url');
@@ -393,6 +402,10 @@ class CheckoutController extends Controller
                 "country"=>"US",
                 "phone" => $order_contact->phone ? $order_contact->phone : $order_contact->mobile,
                 "residential"=>true
+            ],
+            'weight' => [
+                'value' => $produts_weight,
+                'units' => 'pounds'
             ],
             'items'=> $items
         ];
