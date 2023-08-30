@@ -667,6 +667,7 @@ class OrderController extends Controller
         $getDate = now()->format('Y-m-d');
         $order_items = ApiOrderItem::with('order.texClasses', 'product.options', 'product')->where('order_id', $order_id)->get();
         $products_weight = 0;
+        $responseBody = null;
         foreach ($order_items as $order_item) {
             $product_options = ProductOption::where('product_id', $order_item['product_id'])->where('option_id' , $order_item['option_id'])->get();
             foreach ($product_options as $product_option) {
@@ -714,18 +715,11 @@ class OrderController extends Controller
             "Content-Type: application/json",
             'Authorization' => 'Basic ' . base64_encode($shipstation_api_key . ':' . $shipstation_api_secret),
         ];
-        $responseBody = null;
-        try {
-            $response = $client->post($shipstation_label_url, [
-                'headers' => $headers,
-                'json' => $data,
-            ]);
-            $statusCode = $response->getStatusCode();
-            
-            $responseBody = $response->getBody()->getContents();
-            $label_api_response = json_decode($responseBody);
-            $label_data = base64_decode($label_api_response->labelData);
-            
+        $check_mode = AdminSetting::where('option_name', 'shipment_mode')->first();
+        if  (strtolower($check_mode->option_value) == strtolower('sandbox')) {
+            $labelData = UserHelper::shipment_label();
+
+            $label_data = base64_decode($labelData);
             $file_name = 'label-' . $order_id . '-' . date('YmdHis') . '.pdf';
             $label_path = 'public/' . $file_name;
             Storage::disk('local')->put($label_path, $label_data);
@@ -736,40 +730,81 @@ class OrderController extends Controller
                 'label_link' => $file_name,
             ]);
 
-            $label = [
-                'orderId' => $label_api_response->orderId,
-                'labelData' => $label_api_response->labelData,
-            ];
-
-
             $ship_station_api_logs  = new ShipStationApiLogs();      
             $ship_station_api_logs->api_url = $shipstation_label_url;
             $ship_station_api_logs->request = json_encode($data);
-            $ship_station_api_logs->response = $responseBody;
-            $ship_station_api_logs->status = $statusCode;
+            $ship_station_api_logs->response = 'label created from sandbox';
+            $ship_station_api_logs->status = 200;
             $ship_station_api_logs->save();
 
             return response($label_data)
             ->header('Content-Type', 'application/pdf')
             ->header('Content-Disposition', 'attachment; filename='.$file_name);
-             
+        } else {
+            try {
+                $response = $client->post($shipstation_label_url, [
+                    'headers' => $headers,
+                    'json' => $data,
+                ]);
+                $statusCode = $response->getStatusCode();
                 
-        
-        } catch (\Exception $e) {
-            Log::error($e->getMessage());
-
-            $ship_station_api_logs  = new ShipStationApiLogs();      
-            $ship_station_api_logs->api_url = $shipstation_label_url;
-            $ship_station_api_logs->request = json_encode($data);
-            $ship_station_api_logs->response = $e->getMessage();
-            $ship_station_api_logs->status = $response->getStatusCode();
-            $ship_station_api_logs->save();
+                $responseBody = $response->getBody()->getContents();
+                $label_api_response = json_decode($responseBody);
+                $label_data = base64_decode($label_api_response->labelData);
+                
+                $file_name = 'label-' . $order_id . '-' . date('YmdHis') . '.pdf';
+                $label_path = 'public/' . $file_name;
+                Storage::disk('local')->put($label_path, $label_data);
+                
+                $order->update([
+                    'is_shipped' => 1,
+                    'label_created' => 1,
+                    'label_link' => $file_name,
+                ]);
+    
+                $label = [
+                    'orderId' => $label_api_response->orderId,
+                    'labelData' => $label_api_response->labelData,
+                ];
+    
+    
+                $ship_station_api_logs  = new ShipStationApiLogs();      
+                $ship_station_api_logs->api_url = $shipstation_label_url;
+                $ship_station_api_logs->request = json_encode($data);
+                $ship_station_api_logs->response = $responseBody;
+                $ship_station_api_logs->status = $statusCode;
+                $ship_station_api_logs->save();
+    
+                return response($label_data)
+                ->header('Content-Type', 'application/pdf')
+                ->header('Content-Disposition', 'attachment; filename='.$file_name);
+                 
+                    
             
-            return redirect('admin/orders')->with('error', $e->getMessage());
+            } catch (\Exception $e) {
+                Log::error($e->getMessage());
+    
+                $ship_station_api_logs  = new ShipStationApiLogs();      
+                $ship_station_api_logs->api_url = $shipstation_label_url;
+                $ship_station_api_logs->request = json_encode($data);
+                $ship_station_api_logs->response = $e->getMessage();
+                $ship_station_api_logs->status = $response->getStatusCode();
+                $ship_station_api_logs->save();
+    
+                return redirect('admin/orders')->with('error', $e->getMessage());
+            }
         }
+        
         
     }
     
 
+    // download shipment label for order
+    public function download_label($filename) {
+        $file = Storage::disk('public')->get($filename);
+        return response($file)
+        ->header('Content-Type', 'application/pdf')
+        ->header('Content-Disposition', 'attachment; filename='.$filename);
+    }
 }
 
