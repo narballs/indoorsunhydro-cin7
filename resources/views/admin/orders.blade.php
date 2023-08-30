@@ -7,10 +7,10 @@
         <div class="card-body product_secion_main_body">
             <div class="row border-bottom product_section_header">
                 @if (Session::has('error'))
-                <div class="alert alert-danger alert-dismissible">
-                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    {{ Session::get('error')}}
-                </div>
+                    <div class="alert alert-danger alert-dismissible mt-2 ml-4">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        {{ Session::get('error')}}
+                    </div>
                 @endif
                
                 <div class="col-md-12">

@@ -652,9 +652,11 @@ class OrderController extends Controller
 
     //create label for order
     public function create_label(Request $request) {
-        
         $order_id = $request->order_id;
         $order = ApiOrder::where('id', $order_id)->first();
+        if ($order->label_created == 1) {
+            return redirect('admin/orders')->with('error', 'Label already created for this order.');
+        } 
         $order_contact = Contact::where('contact_id', $order->memberId)->first();
         $client = new \GuzzleHttp\Client();
         $shipstation_label_url = config('services.shipstation.shipment_label_url');
@@ -793,6 +795,7 @@ class OrderController extends Controller
     
                 return redirect('admin/orders')->with('error', $e->getMessage());
             }
+            
         }
         
         
