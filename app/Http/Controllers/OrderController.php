@@ -718,6 +718,10 @@ class OrderController extends Controller
             ]);
             $statusCode = $response->getStatusCode();
             $responseBody = $response->getBody()->getContents();
+
+            return response()->streamDownload(function () use ($responseBody) {
+                echo file_get_contents($responseBody['labelUrl']);
+            }, 'label.pdf');
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             return redirect('admin/orders')->with('error', $e->getMessage());
