@@ -727,8 +727,8 @@ class OrderController extends Controller
             ]);
 
             $label = [
-                'orderId' => $response['orderId'],
-                'labelData' => $response['labelData'],
+                'orderId' => $response->orderId,
+                'labelData' => $response->labelData,
             ];
             $pdfContent = file_get_contents($label['labelData']);
             return response($pdfContent)
