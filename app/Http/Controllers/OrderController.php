@@ -721,6 +721,7 @@ class OrderController extends Controller
             $statusCode = $response->getStatusCode();
             $responseBody = $response->getBody()->getContents();
             $response = json_decode($responseBody);
+            echo "<pre>";var_dump($response);die;
             $order->update([
                 'is_shipped' => 1,
                 'label_created' => 1,
