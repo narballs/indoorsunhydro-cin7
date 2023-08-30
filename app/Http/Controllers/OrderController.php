@@ -16,7 +16,7 @@ use App\Models\Pricingnew;
 use App\Models\AdminSetting;
 use App\Models\OrderComment;
 use App\Models\Productoption;
-use App\Models\ShipStationApiLogs;
+use App\Models\ShipstationApiLogs;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
@@ -732,7 +732,7 @@ class OrderController extends Controller
                 'label_link' => $file_name,
             ]);
 
-            $ship_station_api_logs  = new ShipStationApiLogs();      
+            $ship_station_api_logs  = new ShipstationApiLogs();      
             $ship_station_api_logs->api_url = $shipstation_label_url;
             $ship_station_api_logs->request = json_encode($data);
             $ship_station_api_logs->response = 'label created from sandbox';
@@ -770,7 +770,7 @@ class OrderController extends Controller
                 ];
     
     
-                $ship_station_api_logs  = new ShipStationApiLogs();      
+                $ship_station_api_logs  = new ShipstationApiLogs();      
                 $ship_station_api_logs->api_url = $shipstation_label_url;
                 $ship_station_api_logs->request = json_encode($data);
                 $ship_station_api_logs->response = $responseBody;
@@ -786,7 +786,7 @@ class OrderController extends Controller
             } catch (\Exception $e) {
                 Log::error($e->getMessage());
     
-                $ship_station_api_logs  = new ShipStationApiLogs();      
+                $ship_station_api_logs  = new ShipstationApiLogs();      
                 $ship_station_api_logs->api_url = $shipstation_label_url;
                 $ship_station_api_logs->request = json_encode($data);
                 $ship_station_api_logs->response = $e->getMessage();
