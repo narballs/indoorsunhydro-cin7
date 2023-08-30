@@ -268,20 +268,22 @@
                                                 {{ $order->logisticsCarrier }}
                                             </td>
                                             <td class="td_padding_row">
-                                                @if($order->is_stripe == 1)
-                                                    @if($order->label_created == 0 && $order->is_shipped == 0)
-                                                    <form action="{{url('admin/orders/create/label')}}" method="post" style="width:110%">
-                                                        @csrf
-                                                        <input type="hidden" name="order_id" id="order_id"
-                                                            value="{{ $order->id }}">
-                                                        <button type="submit" class="create_label btn btn-info btn-sm p-1 ">
-                                                            Create Label
-                                                        </button>
-                                                    </form>
+                                                @if ($order->is_stripe == 1)
+                                                    @if ($order->label_created == 0 && $order->is_shipped == 0)
+                                                        <form action="{{url('admin/orders/create/label')}}" method="post" style="width:110%">
+                                                            @csrf
+                                                            <input type="hidden" name="order_id" id="order_id"
+                                                                value="{{ $order->id }}">
+                                                            <button type="submit" class="create_label btn btn-info btn-sm p-1 ">
+                                                                Create Label
+                                                            </button>
+                                                        </form>
                                                     @else
-                                                        <a href="{{route('download_label' , $order->label_link)}}" class="btn btn-success btn-sm p-1 text-white">
-                                                            Download
-                                                        </a>
+                                                        @if ($order->label_link != '')
+                                                            <a href="{{route('download_label' , $order->label_link)}}" class="btn btn-success btn-sm p-1 text-white">
+                                                                Download
+                                                            </a>
+                                                        @endif
                                                     @endif
                                                 @endif
                                             </td>
