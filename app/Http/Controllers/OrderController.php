@@ -672,39 +672,41 @@ class OrderController extends Controller
             }
         }
         $data = [
+            'orderId' => $order->shipstation_orderId,
             'carrierCode' => $carrier_code->option_value,
             'serviceCode' => $service_code->option_value,
             'packageCode' => $shipping_package->option_value,
             "confirmation" => "delivery",
-            'shipFrom' => [
-                "name" => 'Kevin',
-                "company" => $company_name->option_value,
-                "street1" => '5671 Warehouse Way',
-                "street2" => '5671 Warehouse Way',
-                "city" => 'Sacramento',
-                "state" => 'CA',
-                "postalCode" => '95826',
-                "country"=>"US",
-                "phone" => '(916) 281-3090',
-                "residential"=>true
-            ],
-            'shipTo' => [
-                "name" => $order_contact->firstName . $order_contact->lastName,
-                "company" => $order_contact->company,
-                "street1" => $order_contact->address1 ? $order_contact->address1 : $order_contact->postalAddress1,
-                "street2" => $order_contact->address2 ? $order_contact->address2 : $order_contact->postalAddress1,
-                "city" => $order_contact->city ? $order_contact->city : $order_contact->postalCity,
-                "state" => $order_contact->state ? $order_contact->state : $order_contact->postalState,
-                "postalCode" => $order_contact->postCode ? $order_contact->postCode : $order_contact->postalPostCode,
-                "country"=>"US",
-                "phone" => $order_contact->phone ? $order_contact->phone : $order_contact->mobile,
-                "residential"=>true
-            ],
+            // 'shipFrom' => [
+            //     "name" => 'Kevin',
+            //     "company" => $company_name->option_value,
+            //     "street1" => '5671 Warehouse Way',
+            //     "street2" => '5671 Warehouse Way',
+            //     "city" => 'Sacramento',
+            //     "state" => 'CA',
+            //     "postalCode" => '95826',
+            //     "country"=>"US",
+            //     "phone" => '(916) 281-3090',
+            //     "residential"=>true
+            // ],
+            // 'shipTo' => [
+            //     "name" => $order_contact->firstName . $order_contact->lastName,
+            //     "company" => $order_contact->company,
+            //     "street1" => $order_contact->address1 ? $order_contact->address1 : $order_contact->postalAddress1,
+            //     "street2" => $order_contact->address2 ? $order_contact->address2 : $order_contact->postalAddress1,
+            //     "city" => $order_contact->city ? $order_contact->city : $order_contact->postalCity,
+            //     "state" => $order_contact->state ? $order_contact->state : $order_contact->postalState,
+            //     "postalCode" => $order_contact->postCode ? $order_contact->postCode : $order_contact->postalPostCode,
+            //     "country"=>"US",
+            //     "phone" => $order_contact->phone ? $order_contact->phone : $order_contact->mobile,
+            //     "residential"=>true
+            // ],
             'weight' => [
                 "value" => $products_weight,
                 "units" => "pounds"
             ],
             'shipDate'=> $getDate,
+            'testLabel' => true,
         ];
         $headers = [
             "Content-Type: application/json",
@@ -718,10 +720,8 @@ class OrderController extends Controller
             ]);
             $statusCode = $response->getStatusCode();
             $responseBody = $response->getBody()->getContents();
-
-            return response()->streamDownload(function () use ($responseBody) {
-                echo file_get_contents($responseBody['labelUrl']);
-            }, 'label.pdf');
+            echo "<pre>";var_dump(json_decode($responseBody));die;
+        
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             return redirect('admin/orders')->with('error', $e->getMessage());
