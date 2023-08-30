@@ -706,7 +706,7 @@ class OrderController extends Controller
                 "units" => "pounds"
             ],
             'shipDate'=> $getDate,
-            'testLabel' => true,
+            'testLabel' => false,
         ];
         $headers = [
             "Content-Type: application/json",
