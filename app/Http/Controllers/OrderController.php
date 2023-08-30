@@ -720,7 +720,20 @@ class OrderController extends Controller
             ]);
             $statusCode = $response->getStatusCode();
             $responseBody = $response->getBody()->getContents();
-            echo "<pre>";var_dump(json_decode($responseBody));die;
+            $response = json_decode($responseBody);
+            $order->update([
+                'is_shipped' => 1,
+                'label_created' => 1,
+            ]);
+
+            $label = [
+                'orderId' => $response['orderId'],
+                'labelData' => $response['labelData'],
+            ];
+            $pdfContent = file_get_contents($label['labelData']);
+            return response($pdfContent)
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'attachment; filename="label.pdf"');
         
         } catch (\Exception $e) {
             Log::error($e->getMessage());
