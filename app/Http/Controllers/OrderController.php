@@ -16,6 +16,7 @@ use App\Models\Pricingnew;
 use App\Models\AdminSetting;
 use App\Models\OrderComment;
 use App\Models\Productoption;
+use App\Models\ShipStationApiLogs;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
@@ -30,6 +31,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class OrderController extends Controller
 {
@@ -719,25 +721,50 @@ class OrderController extends Controller
                 'json' => $data,
             ]);
             $statusCode = $response->getStatusCode();
+            
             $responseBody = $response->getBody()->getContents();
-            $response = json_decode($responseBody);
-            echo "<pre>";var_dump($response);die;
+            $label_api_response = json_decode($responseBody);
+            $label_data = base64_decode($label_api_response->labelData);
+            
+            $file_name = 'label-' . $order_id . '-' . date('YmdHis') . '.pdf';
+            $label_path = 'public/' . $file_name;
+            Storage::disk('local')->put($label_path, $label_data);
+            
             $order->update([
                 'is_shipped' => 1,
                 'label_created' => 1,
+                'label_link' => $file_name,
             ]);
 
             $label = [
-                'orderId' => $response->orderId,
-                'labelData' => $response->labelData,
+                'orderId' => $label_api_response->orderId,
+                'labelData' => $label_api_response->labelData,
             ];
-            $pdfContent = file_get_contents($label['labelData']);
-            return response($pdfContent)
+
+
+            $ship_station_api_logs  = new ShipStationApiLogs();      
+            $ship_station_api_logs->api_url = $shipstation_label_url;
+            $ship_station_api_logs->request = json_encode($data);
+            $ship_station_api_logs->response = $responseBody;
+            $ship_station_api_logs->status = $statusCode;
+            $ship_station_api_logs->save();
+
+            return response($label_data)
             ->header('Content-Type', 'application/pdf')
-            ->header('Content-Disposition', 'attachment; filename="label.pdf"');
+            ->header('Content-Disposition', 'attachment; filename='.$file_name);
+             
+                
         
         } catch (\Exception $e) {
             Log::error($e->getMessage());
+
+            $ship_station_api_logs  = new ShipStationApiLogs();      
+            $ship_station_api_logs->api_url = $shipstation_label_url;
+            $ship_station_api_logs->request = json_encode($data);
+            $ship_station_api_logs->response = $e->getMessage();
+            $ship_station_api_logs->status = $response->getStatusCode();
+            $ship_station_api_logs->save();
+            
             return redirect('admin/orders')->with('error', $e->getMessage());
         }
         
