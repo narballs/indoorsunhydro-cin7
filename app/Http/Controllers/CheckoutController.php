@@ -317,12 +317,11 @@ class CheckoutController extends Controller
                     }
                 }
                 
-                if ($parent_email) {
+                $data['email'] = $email;
+                $data['subject'] = 'Your order has been received';
+                MailHelper::sendMailNotification('emails.admin-order-received', $data);
 
-                    $data['email'] = $email;
-                    $data['subject'] = 'Your order has been received';
-                    MailHelper::sendMailNotification('emails.admin-order-received', $data);
-                }
+                Log::info("sending email to user");
                 
             break;
             case 'invoice.payment_failed':
