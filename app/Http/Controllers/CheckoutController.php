@@ -275,7 +275,7 @@ class CheckoutController extends Controller
                         'postalPostCode' => $contact->postalPostCode
                     ],
                     'best_product' => $best_products,
-                    'user_email' =>   $user_email,
+                    'user_email' =>   $user_email->email,
                     'currentOrder' => $currentOrder,
                     'count' => $count,
                     'order_id' => $order_id,
@@ -292,7 +292,7 @@ class CheckoutController extends Controller
                 $users_with_role_admin = User::select("email")
                     ->whereIn('id', $admin_users)
                     ->get();
-
+                $parent_email = Contact::where('contact_id', $active_contact_id)->first();
                 $data = [
                     'name' =>  $name,
                     'email' => $email,
@@ -303,6 +303,7 @@ class CheckoutController extends Controller
                     'addresses' => $addresses,
                     'best_product' => $best_products,
                     'currentOrder' => $currentOrder,
+                    'user_email' => $user_email,
                     'count' => $count,
                     'from' => SettingHelper::getSetting('noreply_email_address')
                 ];
@@ -315,10 +316,13 @@ class CheckoutController extends Controller
                         MailHelper::sendMailNotification('emails.admin-order-received', $data);
                     }
                 }
-                $parent_email = Contact::where('contact_id', $active_contact_id)->first();
-        
-                $data['subject'] = 'Your order has been received';
-                MailHelper::sendMailNotification('emails.admin-order-received', $data);
+                
+                if ($parent_email) {
+
+                    $data['email'] = $email;
+                    $data['subject'] = 'Your order has been received';
+                    MailHelper::sendMailNotification('emails.admin-order-received', $data);
+                }
                 
             break;
             case 'invoice.payment_failed':
