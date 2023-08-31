@@ -354,7 +354,7 @@ class OrderController extends Controller
                         }
                     } else {
                         $data['subject'] = 'Your order has been received';
-                        $data['email'] = $parent_email->email;
+                        $data['email'] = $email;
                     }
                     MailHelper::sendMailNotification('emails.admin-order-received', $data);
 
