@@ -41,7 +41,6 @@ class MailHelper
         Mail::send($template, $data, function($message) use ($data){
             $message->from($data['from']);
             $message->to($data['email'])->subject($data['subject']);
-            $message->to($data['user_email']->email)->subject('Your order has been placed');
         });
        
     }
