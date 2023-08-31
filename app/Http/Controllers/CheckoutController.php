@@ -283,6 +283,7 @@ class CheckoutController extends Controller
 
                 $name = $contact->firstName;
                 $email =  $contact->email;
+                $auth_user_email = $contact->email;
                 $reference  =  $currentOrder->reference;
                 $template = 'emails.admin-order-received';
                 $admin_users = DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
@@ -308,7 +309,7 @@ class CheckoutController extends Controller
                     'from' => SettingHelper::getSetting('noreply_email_address')
                 ];
 
-                $data['email'] = $email;
+                $data['email'] = $auth_user_email;
                 $data['subject'] = 'Your order has been received';
                 MailHelper::sendMailNotification('emails.admin-order-received', $data);
 
