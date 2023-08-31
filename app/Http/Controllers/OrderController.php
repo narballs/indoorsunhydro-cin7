@@ -319,7 +319,6 @@ class OrderController extends Controller
                     $users_with_role_admin = User::select("email")
                         ->whereIn('id', $admin_users)
                         ->get();
-
                     $data = [
                         'name' =>  $name,
                         'email' => $email,
