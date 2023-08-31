@@ -267,7 +267,7 @@
                                             <td class="td_padding_row">
                                                 {{ $order->logisticsCarrier }}
                                             </td>
-                                            <td class="td_padding_row">
+                                            <td class="td_padding_row p-0">
                                                 @if ($order->is_stripe == 1)
                                                     @if ($order->label_created == 0 && $order->is_shipped == 0)
                                                         <form action="{{url('admin/orders/create/label')}}" method="post" style="width:110%">
