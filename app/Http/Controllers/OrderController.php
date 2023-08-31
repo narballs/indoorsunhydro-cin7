@@ -319,7 +319,6 @@ class OrderController extends Controller
                     $users_with_role_admin = User::select("email")
                         ->whereIn('id', $admin_users)
                         ->get();
-
                     $data = [
                         'name' =>  $name,
                         'email' => $email,
@@ -355,7 +354,7 @@ class OrderController extends Controller
                         }
                     } else {
                         $data['subject'] = 'Your order has been received';
-                        $data['email'] = $email;
+                        $data['email'] = $parent_email->email;
                     }
                     MailHelper::sendMailNotification('emails.admin-order-received', $data);
 
