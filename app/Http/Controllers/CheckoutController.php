@@ -292,7 +292,7 @@ class CheckoutController extends Controller
                 $users_with_role_admin = User::select("email")
                     ->whereIn('id', $admin_users)
                     ->get();
-
+                $parent_email = Contact::where('contact_id', $active_contact_id)->first();
                 $data = [
                     'name' =>  $name,
                     'email' => $email,
@@ -303,9 +303,14 @@ class CheckoutController extends Controller
                     'addresses' => $addresses,
                     'best_product' => $best_products,
                     'currentOrder' => $currentOrder,
+                    'user_email' => $user_email,
                     'count' => $count,
                     'from' => SettingHelper::getSetting('noreply_email_address')
                 ];
+
+                $data['email'] = $email;
+                $data['subject'] = 'Your order has been received';
+                MailHelper::sendMailNotification('emails.admin-order-received', $data);
 
                 if (!empty($users_with_role_admin)) {
                     foreach ($users_with_role_admin as $role_admin) {
@@ -315,10 +320,8 @@ class CheckoutController extends Controller
                         MailHelper::sendMailNotification('emails.admin-order-received', $data);
                     }
                 }
-                $parent_email = Contact::where('contact_id', $active_contact_id)->first();
-        
-                $data['subject'] = 'Your order has been received';
-                MailHelper::sendMailNotification('emails.admin-order-received', $data);
+                
+                Log::info('send email stripe',  MailHelper::sendMailNotification('emails.admin-order-received', $data));
                 
             break;
             case 'invoice.payment_failed':
