@@ -309,9 +309,7 @@ class CheckoutController extends Controller
                     'from' => SettingHelper::getSetting('noreply_email_address')
                 ];
 
-                $data['email'] = $auth_user_email;
-                $data['subject'] = 'Your order has been received';
-                MailHelper::sendMailNotification('emails.admin-order-received', $data);
+                
 
                 if (!empty($users_with_role_admin)) {
                     foreach ($users_with_role_admin as $role_admin) {
@@ -320,6 +318,12 @@ class CheckoutController extends Controller
                         $data['email'] = $role_admin->email;
                         MailHelper::sendMailNotification('emails.admin-order-received', $data);
                     }
+                }
+
+                if ($auth_user_email) {
+                    $data['email'] = $auth_user_email;
+                    $data['subject'] = 'Your order has been received';
+                    MailHelper::sendMailNotification('emails.admin-order-received', $data);
                 }
                 
                 Log::info('send email stripe',  MailHelper::sendMailNotification('emails.admin-order-received', $data));
