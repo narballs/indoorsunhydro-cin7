@@ -269,10 +269,14 @@
                                     <tbody class="order-detail-tbody">
                                         @php
                                             $tax=0;
+                                            $shipment_price = 0;
+                                            if (!empty($order->shipment_price)) {
+                                                $shipment_price = $order->shipment_price;
+                                            }
                                             if (!empty($tax_class)) {
                                                 $tax = $order->total * ($tax_class->rate / 100);
                                             }
-                                            $total_including_tax = $tax + $order->total;
+                                            $total_including_tax = $tax + $shipment_price + $order->total;
                                         @endphp
                                         @foreach ($orderitems as $item)
                                             @foreach($item->product->options as $option)
@@ -343,7 +347,7 @@
                                         </tr>
                                         <tr class="border-bottom">
                                             <td colspan="4" class="add_colspan"><span class="summary-head mx-2">Shipping</span></td>
-                                            <td class="text-center"><span class="order-item-price">$0.00</span></td>
+                                            <td class="text-center"><span class="order-item-price">${{ number_format($shipment_price, 2) }}</span></td>
                                         </tr>
                                         <tr class="border-bottom">
                                             <td colspan="4" class="add_colspan"><span class="summary-head mx-2">Add Tax</span></td>
