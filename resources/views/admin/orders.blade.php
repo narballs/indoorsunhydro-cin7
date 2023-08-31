@@ -274,13 +274,13 @@
                                                             @csrf
                                                             <input type="hidden" name="order_id" id="order_id"
                                                                 value="{{ $order->id }}">
-                                                            <button type="submit" class="create_label btn btn-info btn-sm p-1 ">
+                                                            <button type="submit" class="create_label btn-sm p-1 border-0 bg-info text-white">
                                                                 Create Label
                                                             </button>
                                                         </form>
                                                     @else
                                                         @if ($order->label_link != '')
-                                                            <a href="{{route('download_label' , $order->label_link)}}" class="btn btn-success btn-sm p-1 text-white">
+                                                            <a href="{{route('download_label' , $order->label_link)}}" class="create_label btn-sm p-1 border-0 bg-success text-white">
                                                                 Download
                                                             </a>
                                                         @endif
@@ -448,6 +448,10 @@
                 border-right: 1px solid #EAECF0 !important;
                 top: -21px !important;
             }
+        }
+
+        .create_label {
+            font-size:12px;
         }
 
         /* mobile responsive admin panel end */
