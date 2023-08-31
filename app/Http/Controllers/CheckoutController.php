@@ -326,8 +326,6 @@ class CheckoutController extends Controller
                     MailHelper::sendMailNotification('emails.admin-order-received', $data);
                 }
                 
-                Log::info('send email stripe',  MailHelper::sendMailNotification('emails.admin-order-received', $data));
-                
             break;
             case 'invoice.payment_failed':
                 // Handle payment failure event
