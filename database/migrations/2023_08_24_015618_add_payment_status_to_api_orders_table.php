@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddTier0USDToPricingNewsTable extends Migration
+class AddPaymentStatusToApiOrdersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddTier0USDToPricingNewsTable extends Migration
      */
     public function up()
     {
-        Schema::table('pricingnews', function (Blueprint $table) {
-            //$table->float('tier0USD',10,2)->after('tier3USD');
+        Schema::table('api_orders', function (Blueprint $table) {
+            $table->string('payment_status')->after('status')->nullable();
         });
     }
 
@@ -25,7 +25,7 @@ class AddTier0USDToPricingNewsTable extends Migration
      */
     public function down()
     {
-        Schema::table('pricingnews', function (Blueprint $table) {
+        Schema::table('api_orders', function (Blueprint $table) {
             //
         });
     }

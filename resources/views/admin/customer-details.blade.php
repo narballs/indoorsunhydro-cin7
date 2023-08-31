@@ -314,16 +314,27 @@
                                             <th>Status</th>
                                             <th>Total</th>
                                             <th>Ref#</th>
+                                            <th>Order Status</th>
                                         </tr>
                                         @foreach ($customer_orders as $customer_order)
                                             <tr>
-                                                @if ($customer_order->order_id)
-                                                    <td>
-                                                        {{ $customer_order->id }}
-
-                                                    </td>
+                                                @if ($customer_order->is_stripe == 1)
+                                                    @if ($customer_order->payment_status == 'paid' && $customer_order->is_shipped == 1)
+                                                        <td class="badge bg-success">Order Completed</td>
+                                                    @elseif ($customer_order->payment_status === 'paid' && $customer_order->is_shipped == 0)
+                                                        <td class="badge bg-success">Ready to Ship</td>
+                                                    @elseif ($customer_order->payment_status == 'unpaid' || $customer_order->payment_status == '')
+                                                        <td class="badge bg-warning">Pending Payment</td>
+                                                    @endif
                                                 @else
-                                                    <td class="badge bg-danger">Pending Approval</td>
+                                                    @if ($customer_order->order_id)
+                                                        <td>
+                                                            {{ $customer_order->id }}
+
+                                                        </td>
+                                                    @else
+                                                        <td class="badge bg-danger">Pending Approval</td>
+                                                    @endif
                                                 @endif
                                                 <?php $createdDate = $customer_order->created_at;
                                                 $formatedDate = $createdDate->format('F j, Y');
@@ -339,6 +350,16 @@
                                                 </td>
                                                 <td>
                                                     <a href="{{ url('admin/order-detail/' . $customer_order->id) }}">{{ $customer_order->reference }}
+                                                </td>
+                                                <td>
+                                                    <select name="order_status_id" class="form-control" id="order_status_id" onchange="update_order_status('{{$customer_order->id}}')">
+                                                        <option value="">Select Status</option>
+                                                        @foreach ($order_statuses as $order_status)
+                                                            <option value="{{ $order_status->id }}"
+                                                                {{ $customer_order->order_status_id == $order_status->id ? 'selected="selected"' : '' }}>
+                                                                {{ $order_status->status }}</option>
+                                                        @endforeach
+                                                    </select>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -425,6 +446,24 @@
 
 @section('js')
     <script>
+        function update_order_status (order_id) {
+            var order_status_id = $('#order_status_id').val();
+            jQuery.ajax({
+                url: "{{ url('admin/customer/update-order-status') }}",
+                method: 'post',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "order_id": order_id,
+                    "order_status_id": order_status_id
+                },
+                success: function(response) {
+                    console.log(response);
+                    if (response.success == true) {
+                        window.location.reload();
+                    }
+                }
+            });
+        } 
         function addComment() {
             var comment = $("#comment").val();
             var order_id = $("#order_id").val();

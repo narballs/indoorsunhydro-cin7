@@ -378,6 +378,30 @@ $cart_price = 0;
                     @endif
                 </tbody>
             </table>
+            <div class="row">
+                @if(!empty($setting))
+                    @if(empty($matchZipCode))
+                        <div class="col-md-6 mt-5"style="margin:auto; !important; max-width:600px !important;">
+                            <div class="alert alert-danger text-center">
+                                <span>
+                                    <strong>Sorry, we don't deliver to this address.</strong>
+                                </span>
+                            </div>
+                        </div>
+                    @else
+                        <div class="col-md-4 mt-5"style="margin:auto; !important; max-width:600px !important;">
+                            <button type="button" class="button-cards w-100 proceed_checkout_desktop" id="proceed_to_checkout" onclick="validate()"
+                            style="background: #008BD3 ;border-radius: 5px;">Place order</button>
+                        </div>
+                    @endif
+                @else
+                    <div class="col-md-4 mt-5"style="margin:auto; !important; max-width:600px !important;">
+                        <button type="button" class="button-cards w-100 proceed_checkout_desktop" id="proceed_to_checkout" onclick="validate()"
+                        style="background: #008BD3 ;border-radius: 5px;">Place order</button>
+                    </div>
+                @endif
+                </form>
+            </div>
         </div>
         <div class="col-md-3">
             <div class="row" style="background: #FAFAFA;border-radius: 5px;">
@@ -439,9 +463,11 @@ $cart_price = 0;
                 if (!empty($tax_class)) {
                     $tax = $cart_total * ($tax_class->rate / 100);
                 }
-                $total_including_tax = $tax + $cart_total;
+                $total_including_tax = $tax + $cart_total  + $shipment_price;
+
                 ?>
                 <input type="hidden" name="incl_tax" id="incl_tax" value="{{ $total_including_tax }}">
+                <input type="hidden" name="shipment_price" id="shipment_price" value="{{ $shipment_price }}">
                 @if(!empty($tax_class))
                 <input type="hidden" name="tax_class_id" id="tax_class_id" value="{{ $tax_class->id }}">
                 @else
@@ -466,7 +492,7 @@ $cart_price = 0;
                             </p>
                             <p class="thank-you-page-product-items-subtotal-cart mt-4">
                                 {{-- <img class=" img-fluid" src="/theme/img/sub_total_icon_check_out_page.png"> --}}
-                                <span>Discount</span>
+                                <span>Shipment Price</span>
                             </p>
                             <p class="thank-you-page-product-items-subtotal-cart mt-4">
                                 {{-- <img class=" img-fluid" src="/theme/img/sub_total_icon_check_out_page.png"> --}}
@@ -478,7 +504,7 @@ $cart_price = 0;
                             <p class=" thank-you-page-product-item-cart mb-0">${{ number_format($cart_total, 2) }}</p>
                             {{-- <p class=" thank-you-page-product-item-cart">shipping</p> --}}
                             <p class=" thank-you-page-product-item-cart mb-0">${{ number_format($tax, 2) }}</p>
-                            <p class=" thank-you-page-product-item-cart mb-0">$ 0</p>
+                            <p class=" thank-you-page-product-item-cart mb-0" id="shipment_price">${{number_format($shipment_price , 2)}}</p>
                             <p class="thank-you-page-product-item-cart-total mb-0" id="tax-rate">
                                 ${{ number_format($total_including_tax, 2) }}</p>
                         </div>
@@ -487,15 +513,22 @@ $cart_price = 0;
             </div>
         </div>
     </div>
-    <div class="row">
+    {{-- <div class="row">
         <div class="col-md-4 m-auto"
             style="margin-top: 192px !important;margin:auto; !important; max-width:600px !important;">
-            <button type="button" class="button-cards w-100 proceed_checkout_desktop" id="proceed_to_checkout" onclick="validate()"
-                style="background: #008BD3 ;
-            border-radius: 5px;">Place order</button>
+            @if(empty($matchZipCode))
+                <div class="alert alert-danger">
+                    <span>
+                        <strong>Sorry, we don't deliver to this address.</strong>
+                    </span>
+                </div>
+                @else
+                <button type="button" class="button-cards w-100 proceed_checkout_desktop" id="proceed_to_checkout" onclick="validate()"
+                style="background: #008BD3 ;border-radius: 5px;">Place order</button>
+            @endif
         </div>
         </form>
-    </div>
+    </div> --}}
 </div>
 
 <!--Mobile View -->
@@ -799,6 +832,7 @@ $cart_price = 0;
                                                     @endforeach
                                                 @endforeach
                                                 <input type="hidden" name="incl_tax" id="incl_tax" value="{{ $total_including_tax }}">
+                                                <input type="hidden" name="shipment_price" id="shipment_price" value="{{ $shipment_price }}">
                                                 @if(!empty($tax_class))
                                                 <input type="hidden" name="tax_class_id" id="tax_class_id" value="{{ $tax_class->id }}">
                                                 @else
@@ -837,10 +871,10 @@ $cart_price = 0;
                                                     </div>
                                                     <div class="d-flex w-100 mb-2">
                                                         <div class="w-50 p-1">
-                                                            <span class="summary_sub_total_head">Discount:</span>
+                                                            <span class="summary_sub_total_head">Shipment Price:</span>
                                                         </div>
                                                         <div class="w-50 p-1 text-right">
-                                                            <span class="summary_sub_total_price text-right">$0</span>
+                                                            <span class="summary_sub_total_price text-right">${{number_format($shipment_price , 2)}}</span>
                                                         </div>
                                                     </div>
                                                     <div class="d-flex w-100">
@@ -884,11 +918,29 @@ $cart_price = 0;
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="text-center">
-                                            <button type="button" class="proceedCheckoutmbl mt-4 w-100 p-2 border-0"
-                                                id="proceed_to_checkout" onclick="validate_mbl()">
-                                                Place Order</button>
-                                        </div>
+                                        @if(!empty($setting))
+                                            @if(empty($matchZipCode))
+                                                <div class="w-100">
+                                                    <div class="alert alert-danger text-center">
+                                                        <span>
+                                                            <strong>Sorry, we don't deliver to this address.</strong>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            @else
+                                                <div class="text-center">
+                                                    <button type="button" class="proceedCheckoutmbl mt-4 w-100 p-2 border-0"
+                                                        id="proceed_to_checkout" onclick="validate_mbl()">
+                                                        Place Order</button>
+                                                </div>
+                                            @endif
+                                        @else
+                                            <div class="text-center">
+                                                <button type="button" class="proceedCheckoutmbl mt-4 w-100 p-2 border-0"
+                                                    id="proceed_to_checkout" onclick="validate_mbl()">
+                                                    Place Order</button>
+                                            </div>
+                                        @endif
                                     </form>
                                     <div>
                                         <table class="table mt-5">
@@ -1327,6 +1379,14 @@ $cart_price = 0;
                                                         </div>
                                                         <div class="d-flex justify-content-between">
                                                             <span>
+                                                                <img src="/theme/img/text-rate-icon.png" alt="" width=" 22px">
+                                                                <span id="ipad_shipment">Shipment Price
+                                                                </span>
+                                                            </span>
+                                                            <p id="ipad_shipment_price">${{number_format($shipment_price , 2)}}</p>
+                                                        </div>
+                                                        <div class="d-flex justify-content-between">
+                                                            <span>
                                                                 <img src="/theme/img/pricing_tag.png" alt="" width=" 22px">
                                                                 <span class="cart-total-checkout-page">Total</span>
                                                             </span>
@@ -1397,9 +1457,26 @@ $cart_price = 0;
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="d-flex justify-content-center mt-3">
-                                                            <button type="button" class="button-cards w-50 proceed_checkout_ipad" id="proceed_to_checkout" onclick="validate_ipad()"> Place Order</button>
-                                                        </div>
+                                                        @if(!empty($setting))
+                                                            @if(empty($matchZipCode))
+                                                                <div class="col-md-6 mt-5"style="margin:auto; !important; max-width:600px !important;">
+                                                                    <div class="alert alert-danger text-center">
+                                                                        <span>
+                                                                            <strong>Sorry, we don't deliver to this address.</strong>
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                            @else
+                                                                <div class="d-flex justify-content-center mt-3">
+                                                                    <button type="button" class="button-cards w-50 proceed_checkout_ipad" id="proceed_to_checkout" onclick="validate_ipad()"> Place Order</button>
+                                                                </div>
+                                                            @endif
+                                                        @else
+                                                            <div class="d-flex justify-content-center mt-3">
+                                                                <button type="button" class="button-cards w-50 proceed_checkout_ipad" id="proceed_to_checkout" onclick="validate_ipad()"> Place Order</button>
+                                                            </div>
+                                                        @endif
+
                                                         </form>
                                                     </td>
                                                 </tr>

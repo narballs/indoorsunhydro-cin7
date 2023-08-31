@@ -89,6 +89,13 @@ $categories = NavHelper::getCategories();
                         Contact
                     </a>
                 </li>
+                @if(auth()->user())
+                <li class="nav-item me-4 mx-4">
+                    <a class="nav-link text-uppercase nav-item-links font_style_menu" href="{{ url('/products/buy-again') }}">
+                        Buy Again
+                    </a>
+                </li>
+                @endif
                 
                 </ul>
             </div>
@@ -147,13 +154,15 @@ $categories = NavHelper::getCategories();
                                                 $muted = '';
                                             }
                                         @endphp
-                                        <a class="mb_item" {{ $disabled }} {{ $muted }} type="button" onclick="switch_company_user({{ $contact_id }})">
-                                            {{ $company->company }}
-                                            <span
-                                                style="font-size: 9px;font-family: 'Poppins';"
-                                                class="{{ $muted }}">{{ $primary }}
-                                            </span>
-                                        </a>
+                                        @if($company->type != "Supplier")
+                                            <a class="mb_item" {{ $disabled }} {{ $muted }} type="button" onclick="switch_company_user({{ $contact_id }})">
+                                                {{ $company->company }}
+                                                <span
+                                                    style="font-size: 9px;font-family: 'Poppins';"
+                                                    class="{{ $muted }}">{{ $primary }}
+                                                </span>
+                                            </a>
+                                        @endif
                                     @endforeach
                                 @endif
                             @endif
@@ -274,6 +283,13 @@ $categories = NavHelper::getCategories();
                                     Contact
                                 </a>
                             </li>
+                            @if(auth()->user())
+                                <li class="nav-item me-4">
+                                    <a class="nav-link text-uppercase nav-item-links ps-1" href="{{ url('/products/buy-again') }}">
+                                        Buy Again
+                                    </a>
+                                </li>
+                            @endif
                             {{-- <li class="nav-item me-3">
                                 <a class="nav-link text-uppercase nav-item-links ps-4" href="{{ url('my-account') }} ">My
                                     account
@@ -516,6 +532,13 @@ $categories = NavHelper::getCategories();
                             account
                         </a>
                     </li>
+                    @if(auth()->user())
+                        <li class="nav-item me-3">
+                            <a class="nav-link text-uppercase nav-item-links ps-4" href="{{ url('/products/buy-again') }}">
+                                Buy Again
+                            </a>
+                        </li>
+                    @endif
                     @if (Auth::user())
                         <li class="nav-item">
                             <a class="nav-link text-uppercase nav-item-links p-0" href="{{ '/user/' }}">
@@ -581,13 +604,15 @@ $categories = NavHelper::getCategories();
                                                                 }
                                                                 
                                                             @endphp
-                                                            <a type="button"
-                                                                class="list-group-item list-group-item-action p-0 {{ $disabled }} {{ $muted }}"
-                                                                onclick="switch_company_user({{ $contact_id }})">{{ $company->company }}
-                                                                <span style="font-size: 9px;font-family: 'Poppins';"
-                                                                    class="{{ $muted }}">{{ $primary }}
-                                                                </span>
-                                                            </a>
+                                                            @if($company->type != "Supplier")
+                                                                <a type="button"
+                                                                    class="list-group-item list-group-item-action p-0 {{ $disabled }} {{ $muted }}"
+                                                                    onclick="switch_company_user({{ $contact_id }})">{{ $company->company }}
+                                                                    <span style="font-size: 9px;font-family: 'Poppins';"
+                                                                        class="{{ $muted }}">{{ $primary }}
+                                                                    </span>
+                                                                </a>
+                                                            @endif
                                                         @endforeach
                                                     @endif
                                                 @endif

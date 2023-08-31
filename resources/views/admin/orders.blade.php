@@ -2,9 +2,17 @@
 @section('title', 'Dashboard')
 
 @section('content')
+    
     <div class="table-wrapper">
         <div class="card-body product_secion_main_body">
             <div class="row border-bottom product_section_header">
+                @if (Session::has('error'))
+                    <div class="alert alert-danger alert-dismissible mt-2 ml-4">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        {{ Session::get('error')}}
+                    </div>
+                @endif
+               
                 <div class="col-md-12">
                     <div class="row">
                         <div class="col-md-2 mobile_heading">
@@ -161,6 +169,9 @@
                                         <span class="d-flex table-row-item"> Payment Term</span>
                                     </td>
                                     <td>
+                                        <span class="d-flex table-row-item">Create Labels</span>
+                                    </td>
+                                    <td>
                                         <span class="d-flex table-row-item" style="visibility: hidden;">
                                             Actions
                                         </span>
@@ -251,12 +262,30 @@
                                                 @endif
                                             </td>
                                             <td class="td_padding_row">
-                                                @if($order->stage != 'New') 
-                                                    <span class="badge badge-success">{{ strtoupper($order->stage) }}</span>
-                                                @endif 
+                                                {{$order->payment_status}}
                                             </td>
                                             <td class="td_padding_row">
                                                 {{ $order->logisticsCarrier }}
+                                            </td>
+                                            <td class="td_padding_row">
+                                                @if ($order->is_stripe == 1)
+                                                    @if ($order->label_created == 0 && $order->is_shipped == 0)
+                                                        <form action="{{url('admin/orders/create/label')}}" method="post" style="width:110%">
+                                                            @csrf
+                                                            <input type="hidden" name="order_id" id="order_id"
+                                                                value="{{ $order->id }}">
+                                                            <button type="submit" class="create_label btn btn-info btn-sm p-1 ">
+                                                                Create Label
+                                                            </button>
+                                                        </form>
+                                                    @else
+                                                        @if ($order->label_link != '')
+                                                            <a href="{{route('download_label' , $order->label_link)}}" class="btn btn-success btn-sm p-1 text-white">
+                                                                Download
+                                                            </a>
+                                                        @endif
+                                                    @endif
+                                                @endif
                                             </td>
                                             <td class="created_by toggleClass td_padding_row orders-action">
                                                 <div class="d-flex aling-items-center order-table-actions">

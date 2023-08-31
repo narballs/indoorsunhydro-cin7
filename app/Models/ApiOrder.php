@@ -38,7 +38,15 @@ class ApiOrder extends Model
         'tax_class_id',
         'user_switch',
         'isVoid',
-        'total_including_tax'
+        'total_including_tax',
+        'shipment_price',
+        'paymenty_status',
+        'shipstation_orderId',
+        'label_created',
+        'is_shipped',
+        'is_stripe',
+        'label_link',
+        'order_status_id'
     ];
     public function contact()
     {

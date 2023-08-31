@@ -124,7 +124,7 @@ class SettingSeeder extends Seeder
             [
                 'option_name' => 'retail_price_column', 
                 'type' => 'text',
-                'option_value' => 'sacramentoUSD',
+                'option_value' => 'retailUSD',
             ],
             [
                 'option_name' => 'site_id', 
@@ -141,6 +141,31 @@ class SettingSeeder extends Seeder
                 'option_name' => 'timings_part2', 
                 'type' => 'text',
                 'option_value' => '9AM-5pm',
+            ],
+            [
+                'option_name' => 'check_zipcode', 
+                'type' => 'yes/no',
+                'option_value' => 'Yes',
+            ],
+            [
+                'option_name' => 'shipping_carrier_code', 
+                'type' => 'text',
+                'option_value' => 'ups_walleted',
+            ],
+            [
+                'option_name' => 'shipping_service_code', 
+                'type' => 'text',
+                'option_value' => 'ups_ground',
+            ],
+            [
+                'option_name' => 'shipping_package', 
+                'type' => 'text',
+                'option_value' => 'package',
+            ],
+            [
+                'option_name' => 'shipment_mode', 
+                'type' => 'text',
+                'option_value' => 'sandbox',
             ],
         ];
 

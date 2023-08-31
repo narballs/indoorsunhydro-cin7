@@ -46,6 +46,9 @@
             {{ $contact->email }}
         </a>
     </td>
+    <td class="customer-items-row">
+        <span class="text-bold text-dark">{{ $contact->type }}</span>        
+    </td>
     <td title="{{ $contact->notes }}" class="customer-items-row">
         <span>
             {{ Illuminate\Support\Str::limit($contact->notes, 30) }}
@@ -54,7 +57,7 @@
     <td class="customer-items-row">
         {{$contact->created_at->format('m/d/Y') }}
     </td>
-    @if ($contact && $contact->status == 1)
+    @if ($contact && $contact->status == 1 && $contact->type != 'Supplier')
         <td class="customer-items-row">
             <span class="d-flex">
                 <span class="badge badge-success">Active</span>
@@ -73,7 +76,7 @@
                 <label class="custom-control custom-checkbox ">
                     <input type="checkbox" id="{{ $contact->id }}" value="{{ $contact->status }}"
                         class="custom-control-input general_switch" onchange="disableSecondary({{ $contact->id }})"
-                        {{ isset($contact->status) && $contact->status == 1 ? 'checked="checked"' : '' }}>
+                        {{ isset($contact->status) && $contact->type != 'Supplier' && $contact->status == 1 ? 'checked="checked"' : '' }}>
                     <span class="custom-control-indicator"></span>
                 </label>
             </span>

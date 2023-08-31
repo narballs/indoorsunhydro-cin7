@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddTier0USDToPricingNewsTable extends Migration
+class CreateZipCodesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,11 @@ class AddTier0USDToPricingNewsTable extends Migration
      */
     public function up()
     {
-        Schema::table('pricingnews', function (Blueprint $table) {
-            //$table->float('tier0USD',10,2)->after('tier3USD');
+        Schema::create('zip_codes', function (Blueprint $table) {
+            $table->id();
+            $table->string('zip_code')->nullable();
+            $table->string('status')->nullable();
+            $table->timestamps();
         });
     }
 
@@ -25,8 +28,6 @@ class AddTier0USDToPricingNewsTable extends Migration
      */
     public function down()
     {
-        Schema::table('pricingnews', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('zip_codes');
     }
 }

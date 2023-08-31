@@ -23,6 +23,7 @@ use App\Http\Controllers\Admin\AdminShareListController;
 use App\Http\Controllers\Admin\LogsController;
 use App\Http\Controllers\Admin\DailyApiLogController;
 use App\Http\Controllers\Admin\TaxClassController;
+use App\Http\Controllers\Admin\OperationalZipCodeController;
 use App\Models\TaxClass;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -165,8 +166,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('admin/api-sync-logs', [LogsController::class, 'index']);
 
     Route::get('admin/daily_api_logs', [DailyApiLogController::class, 'index']);
-
-
+    Route::post('admin/orders/create/label', [OrderController::class, 'create_label']);
+    Route::get('admin/order/label/download/{filename}', [OrderController::class, 'download_label'])->name('download_label');
+    Route::post('admin/customer/update-order-status', [OrderController::class, 'update_order_status'])->name('update_order_status');
 
     Route::get('admin/logout', function () {
         Auth::logout();
@@ -224,6 +226,7 @@ Route::post('/create-list/', [ProductController::class, 'createList']);
 Route::post('/multi-favorites-to-cart/', [ProductController::class, 'multi_favorites_to_cart']);
 Route::get('/order/items/{id}', [ProductController::class, 'order_items']);
 Route::post('/buy/order/items', [ProductController::class, 'buy_again_order_items']);
+Route::get('/products/buy-again', [ProductController::class, 'buy_again']);
 
 Route::group(['middleware' => ['auth']], function () {
     Route::resource('admin/roles', RoleController::class);
@@ -315,3 +318,6 @@ Route::group(['middleware' => ['auth']], function () {
 
 
 Route::get('/index', [UserController::class, 'index_email_view']);
+Route::get('/event', [CheckoutController::class, 'event']);
+
+Route::resource('admin/operational-zip-codes', OperationalZipCodeController::class);
