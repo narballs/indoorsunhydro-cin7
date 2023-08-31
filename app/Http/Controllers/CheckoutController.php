@@ -275,7 +275,7 @@ class CheckoutController extends Controller
                         'postalPostCode' => $contact->postalPostCode
                     ],
                     'best_product' => $best_products,
-                    'user_email' =>   $user_email->email,
+                    'user_email' =>   $user_email,
                     'currentOrder' => $currentOrder,
                     'count' => $count,
                     'order_id' => $order_id,
