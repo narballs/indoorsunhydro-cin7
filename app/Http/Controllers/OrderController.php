@@ -358,7 +358,6 @@ class OrderController extends Controller
                         $data['email'] = $email;
                         MailHelper::sendMailNotification('emails.admin-order-received', $data);
 
-                        Log::info('send email manually',  MailHelper::sendMailNotification('emails.admin-order-received', $data));
                     }
 
 
