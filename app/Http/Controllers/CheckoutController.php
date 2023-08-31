@@ -321,7 +321,7 @@ class CheckoutController extends Controller
                 $data['subject'] = 'Your order has been received';
                 MailHelper::sendMailNotification('emails.admin-order-received', $data);
 
-                Log::info('send email manually',  MailHelper::sendMailNotification('emails.admin-order-received', $data));
+                Log::info('send email stripe',  MailHelper::sendMailNotification('emails.admin-order-received', $data));
                 
             break;
             case 'invoice.payment_failed':
