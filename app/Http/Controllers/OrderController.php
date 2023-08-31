@@ -27,6 +27,7 @@ use Stripe\Webhook;
 use Symfony\Component\HttpFoundation\Response;
 
 use App\Helpers\SettingHelper;
+use App\Models\OrderStatus;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Redirect;
@@ -808,6 +809,17 @@ class OrderController extends Controller
         return response($file)
         ->header('Content-Type', 'application/pdf')
         ->header('Content-Disposition', 'attachment; filename='.$filename);
+    }
+
+    // uppdate order status manually 
+    public function update_order_status(Request $request) {
+        $order_id = $request->order_id;
+        $order_status_id = $request->order_status_id;
+        $order = ApiOrder::where('id', $order_id)->first();
+        $order->update([
+            'order_status_id' => $order_status_id
+        ]);
+        return response()->json(['success' => true , 'message' => 'Order status updated successfully.']);
     }
 }
 
