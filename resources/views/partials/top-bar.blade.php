@@ -58,17 +58,13 @@
                             <div class="mt-2">
                                 @if(auth()->user())
                                     @if(auth()->user()->hasRole('Admin'))
-                                        <a href="{{ url('admin/dashboard') }}" class="top-bar-logout mt-3 top-header-items">Return to Admin</a>
+                                        <a href="{{ url('admin/go-back') }}" class="top-bar-logout mt-3 top-header-items">Return to Admin</a>
                                     @endif
                                 @endif
                             </div>
                         </div>
                         <div class="col-xl-9 col-lg-9 mx-auto">
                             <a href="{{ '/user/' }}" class="text-white d-flex align-items-end">
-                                {{-- <div>
-                                    <img src="/theme/img/users-icons-top-bar (2).png" class="img-fluid w-100">
-                                </div> --}}
-                                {{-- <i class="fa fa-user" style="color:#979797 !important;font-size:25px;"></i> --}}
                                 @if (Auth::user())
                                     <div>
                                         @php
@@ -188,24 +184,6 @@
                                                                 </a>
                                                             </li>
                                                         </div>
-                                                        {{-- <div class="col-md-6 d-flex align-items-center">
-                                                            <div class="col-md-12">
-                                                                <div class="row">
-                                                                    <div class="col-6">
-                                                                        <a href="{{ url('my-account') }}" class="login-in-register top-header-items">
-                                                                            <span>Account</span>
-                                                                        </a>
-                                                                    </div>
-                                                                   <div class="col-md-6">
-                                                                        <a class="login-in-register top-header-items" href="{{ route('logout') }}"
-                                                                            onclick="event.preventDefault(); document.getElementById('frm-logout').submit();">
-                                                                            <span>Logout</span>
-                                                                        </a>
-                                                                   </div>
-                                                                    
-                                                                </div>
-                                                            </div>
-                                                        </div> --}}
                                                     </div>
                                                 </ul>
                                             </div>
