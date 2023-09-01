@@ -40,7 +40,7 @@ class ApiOrder extends Model
         'isVoid',
         'total_including_tax',
         'shipment_price',
-        'paymenty_status',
+        'payment_status',
         'shipstation_orderId',
         'label_created',
         'is_shipped',
