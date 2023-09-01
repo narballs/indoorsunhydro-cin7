@@ -277,7 +277,12 @@ class OrderController extends Controller
                         ->get();
 
                     $contact = Contact::where('user_id', auth()->id())->first();
-                    // $this->shipping_order($order_id , $currentOrder , $order_contact);
+                    $shiping_order = UserHelper::shipping_order($order_id , $currentOrder , $order_contact);
+                    if ($shiping_order['statusCode'] == 200) {
+                        $orderUpdate = ApiOrder::where('id', $order_id)->update([
+                            'shipstation_orderId' => $shiping_order['responseBody']->orderId,
+                        ]);
+                    }
                     $user_email = Auth::user();
                     $count = $order_items->count();
                     $best_products = Product::where('status', '!=', 'Inactive')->orderBy('views', 'DESC')->limit(4)->get();
@@ -333,6 +338,8 @@ class OrderController extends Controller
                         'count' => $count,
                         'from' => SettingHelper::getSetting('noreply_email_address')
                     ];
+
+                    
 
                     if (!empty($users_with_role_admin)) {
                         foreach ($users_with_role_admin as $role_admin) {
@@ -734,6 +741,26 @@ class OrderController extends Controller
             'order_status_id' => $order_status_id
         ]);
         return response()->json(['success' => true , 'message' => 'Order status updated successfully.']);
+    }
+
+    public function mark_order_paid(Request $request) {
+        $order_id = $request->order_id;
+        $currentOrder = ApiOrder::where('id', $order_id)->with(
+            'contact',
+            'user.contact',
+            'apiOrderItem.product.options',
+            'texClasses'
+        )->first();
+        $order_contact = Contact::where('contact_id', $currentOrder->memberId)->first();
+        $shiping_order = UserHelper::shipping_order($order_id , $currentOrder , $order_contact);
+    
+        if ($shiping_order['statusCode'] == 200) {
+            $orderUpdate = ApiOrder::where('id', $order_id)->update([
+                'payment_status' => 'paid',
+                'shipstation_orderId' => $shiping_order['responseBody']->orderId,
+            ]);
+        }
+        return redirect()->back()->with('success', 'Order marked as paid successfully.');
     }
 }
 

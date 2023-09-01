@@ -321,3 +321,4 @@ Route::get('/index', [UserController::class, 'index_email_view']);
 Route::get('/event', [CheckoutController::class, 'event']);
 
 Route::resource('admin/operational-zip-codes', OperationalZipCodeController::class);
+Route::post('/order/mark/paid', [OrderController::class, 'mark_order_paid']);
