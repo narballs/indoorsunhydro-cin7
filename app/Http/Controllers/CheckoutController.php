@@ -249,7 +249,14 @@ class CheckoutController extends Controller
                 ->get();
                 $contact = Contact::where('user_id', auth()->id())->first();
 
-                $this->shipping_order($order_id , $currentOrder , $order_contact);
+                UserHelper::shipping_order($order_id , $currentOrder , $order_contact);
+
+                $shiping_order = UserHelper::shipping_order($order_id , $currentOrder , $order_contact);
+                if ($shiping_order['statusCode'] == 200) {
+                    $orderUpdate = ApiOrder::where('id', $order_id)->update([
+                        'shipstation_orderId' => $shiping_order['responseBody']->orderId,
+                    ]);
+                }
 
                 $user_email = Auth::user();
                 $count = $order_items->count();
@@ -334,101 +341,5 @@ class CheckoutController extends Controller
         }
         
         return response()->json(['status' => 'success']);
-    }
-
-    //adding orders to shistation api 
-    public function shipping_order($order_id , $currentOrder , $order_contact) {
-        $order_items = ApiOrderItem::with('order.texClasses', 'product.options', 'product')->where('order_id', $order_id)->get();
-        for ($i = 0; $i <= count($order_items) - 1; $i++){
-            $items[] = [
-                'name' => $order_items[0]->product->name,
-                'sku' => $order_items[0]->product->code,
-                'quantity' => $order_items[0]->quantity,
-                'unitPrice' => $order_items[0]->price,
-            ];  
-        }
-
-        $produts_weight = 0;
-        foreach ($order_items as $order_item) {
-            $product_options = ProductOption::where('product_id', $order_item['product_id'])->where('option_id' , $order_item['option_id'])->get();
-            foreach ($product_options as $product_option) {
-                $produts_weight += $product_option->optionWeight * $order_item['quantity'];
-            }
-        }
-        
-        $client = new \GuzzleHttp\Client();
-        $shipstation_order_url = config('services.shipstation.shipment_order_url');
-        $ship_station_api_key = config('services.shipstation.key');
-        $ship_station_api_secret = config('services.shipstation.secret');
-        $carrier_code = AdminSetting::where('option_name', 'shipping_carrier_code')->first();
-        $service_code = AdminSetting::where('option_name', 'shipping_service_code')->first();
-        $created_date = \Carbon\Carbon::parse($currentOrder->createdDate);
-        $getDate =$created_date->format('Y-m-d');
-        $getTime = date('H:i:s' ,strtotime($currentOrder->createdDate));
-        $order_created_date = $getDate . 'T' . $getTime ;
-        $calculate_tax = $currentOrder->total_including_tax - $currentOrder->productTotal;
-        $tax = $calculate_tax - $currentOrder->shipment_price;
-        $orderStatus = null;
-        if ($currentOrder->payment_status == 'paid') {
-            $orderStatus = 'awaiting_shipment';
-        } else {
-            $orderStatus = 'awaiting_payment';
-        }
-        $data = [
-            'orderNumber' => $order_id,
-            'orderKey' => $currentOrder->reference,
-            'orderDate' => $order_created_date,
-            'carrierCode' => $carrier_code->option_value,
-            'serviceCode' => $service_code->option_value,
-            'orderStatus' => $orderStatus,
-            'shippingAmount' => number_format($currentOrder->shipment_price , 2),
-            "amountPaid" => number_format($currentOrder->total_including_tax , 2),
-            "taxAmount" => number_format($tax, 2),
-            'shipTo' => [
-                "name" => $order_contact->firstName . $order_contact->lastName,
-                "company" => $order_contact->company,
-                "street1" => $order_contact->address1 ? $order_contact->address1 : $order_contact->postalAddress1,
-                "street2" => $order_contact->address2 ? $order_contact->address2 : $order_contact->postalAddress2,
-                "city" => $order_contact->city ? $order_contact->city : $order_contact->postalCity,
-                "state" => $order_contact->state ? $order_contact->state : $order_contact->postalState,
-                "postalCode" => $order_contact->postCode ? $order_contact->postCode : $order_contact->postalPostCode,
-                "country"=>"US",
-                "phone" => $order_contact->phone ? $order_contact->phone : $order_contact->mobile,
-                "residential"=>true
-            ],
-            'billTo' => [
-                "name" => $order_contact->firstName . $order_contact->lastName,
-                "company" => $order_contact->company,
-                "street1" => $order_contact->address1 ? $order_contact->address1 : $order_contact->postalAddress1,
-                "street2" => $order_contact->address2 ? $order_contact->address2 : $order_contact->postalAddress2,
-                "city" => $order_contact->city ? $order_contact->city : $order_contact->postalCity,
-                "state" => $order_contact->state ? $order_contact->state : $order_contact->postalState,
-                "postalCode" => $order_contact->postCode ? $order_contact->postCode : $order_contact->postalPostCode,
-                "country"=>"US",
-                "phone" => $order_contact->phone ? $order_contact->phone : $order_contact->mobile,
-                "residential"=>true
-            ],
-            'weight' => [
-                'value' => $produts_weight,
-                'units' => 'pounds'
-            ],
-            'items'=> $items
-        ];
-        $headers = [
-            "Content-Type: application/json",
-            'Authorization' => 'Basic ' . base64_encode($ship_station_api_key . ':' . $ship_station_api_secret),
-        ];
-        $responseBody = null;
-        $response = $client->post($shipstation_order_url, [
-            'headers' => $headers,
-            'json' => $data,
-        ]);
-        $statusCode = $response->getStatusCode();
-        $responseBody = $response->getBody()->getContents();
-        $shipment_order_id = json_decode($responseBody)->orderId;
-        $order = ApiOrder::where('id', $order_id)->first();
-        $order->shipstation_orderId = $shipment_order_id;
-        $order->save();
-
     }
 }

@@ -262,15 +262,25 @@
                                                 @endif
                                             </td>
                                             <td class="td_padding_row">
-                                                {{$order->payment_status}}
+                                                @if (strtolower($order->payment_status) == 'paid' && $order->shipstation_orderId != null)
+                                                    <span class="badge badge-success bg_success">Paid</span>
+                                                @elseif (strtolower($order->payment_status) == '' && $order->shipstation_orderId != null)
+                                                    <form action="{{url('order/mark/paid')}}" method="post">
+                                                        @csrf
+                                                        <input type="hidden" name="order_id" id="mark_paid_order_id" value="{{ $order->id }}">
+                                                        <button class="create_label btn-sm p-1 border-0 bg-primary text-white">
+                                                            Mark as Paid
+                                                        </button>
+                                                    </form>
+                                                @endif
                                             </td>
                                             <td class="td_padding_row">
                                                 {{ $order->logisticsCarrier }}
                                             </td>
                                             <td class="td_padding_row p-0">
-                                                @if ($order->is_stripe == 1)
+                                                @if ($order->shipstation_orderId != '' && strtolower($order->payment_status) == 'paid')
                                                     @if ($order->label_created == 0 && $order->is_shipped == 0)
-                                                        <form action="{{url('admin/orders/create/label')}}" method="post" style="width:110%">
+                                                        <form action="{{url('admin/orders/create/label')}}" method="post">
                                                             @csrf
                                                             <input type="hidden" name="order_id" id="order_id"
                                                                 value="{{ $order->id }}">
