@@ -293,7 +293,7 @@ return [
         // Navbar items:
         [
             'text' => 'Go to site',
-            'url'  => '/',
+            'url'  => '/site',
             'topnav_right' => true,
             'classes' => 'text-primary go_to_site',
         ],

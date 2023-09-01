@@ -1415,6 +1415,26 @@ class UserController extends Controller
         session()->flash('logged_in_as_another_user', '');
         return redirect('admin/dashboard');
     }
+    public function switch_admin()
+    {
+        Session::forget('contact_id');
+        Session::forget('company');
+        Session::forget('companies');
+        Session::forget('cart');
+        $admin = User::role('Admin')->first();
+        Auth::loginUsingId($admin->id);
+        $companies = Contact::where('user_id', $admin->id)->get();
+        if ($companies->count() == 1) {
+            
+            if ($companies[0]->contact_id == null) {
+                UserHelper::switch_company($companies[0]->secondary_id);
+            } else {
+                UserHelper::switch_company($companies[0]->contact_id);
+            }
+        }
+        Session::put('companies', $companies);
+        return redirect('/');
+    }
 
     public function create_secondary_user(Request $request)
     {
