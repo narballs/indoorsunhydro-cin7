@@ -1093,12 +1093,13 @@ class UserController extends Controller
         $all_ids = UserHelper::getAllMemberIds($user);
         $user_address = Contact::where('user_id', $user_id)->first();
         $secondary_contacts = Contact::whereIn('id', $all_ids)->paginate(10);
+        $secondary_contacts_data = Contact::whereIn('id', $all_ids)->get();
         $list = BuyList::where('id', 20)->with('list_products.product.options')->first();
         $contact = Contact::where('email', $user_address->email)->first();
         $companies = Contact::where('user_id', $user_id)->get();
-
-        $address_user = User::where('id', $user_id)->with('contact')->first();
-
+        $default_user_address = Contact::whereIn('id', $all_ids)->where('is_default' , 1)->first();
+        $address_user = User::where('id', $default_user_address->user_id)->with('contact')->first();
+        
         if ($contact) {
             $parent = Contact::where('contact_id', $contact->parent_id)->get();
         } else {
@@ -1113,8 +1114,28 @@ class UserController extends Controller
             'companies',
             'states',
             'address_user',
-            'contact_id'
+            'contact_id',
+            'secondary_contacts_data'
         ));
+    }
+
+    // make address default
+    public function make_address_default(Request $request) {
+        $contact_key = $request->id;
+        $data = $request->contacts;
+        $data_decode = json_decode($data);
+        foreach ($data_decode as $data) {
+            if ($contact_key == $data->id) {
+                $contact = Contact::where('id', $contact_key)->first();
+                $contact->is_default = 1;
+                $contact->save();
+            } else {
+                $contact = Contact::where('id', $data->id)->first();
+                $contact->is_default = 0;
+                $contact->save();
+            }
+        }
+        return redirect()->back()->with('success', 'Address Set default successfully');
     }
 
     //account details

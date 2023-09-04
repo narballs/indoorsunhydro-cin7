@@ -276,7 +276,10 @@ class OrderController extends Controller
                         ->where('order_id', $order_id)
                         ->get();
 
-                    $contact = Contact::where('user_id', auth()->id())->first();
+                    // $contact = Contact::where('user_id', auth()->id())->first();
+                    $user_default =User::where('id', Auth::id())->first();
+                    $all_ids = UserHelper::getAllMemberIds($user_default);
+                    $contact = Contact::whereIn('id', $all_ids)->where('is_default' , 1)->first();
                     $shiping_order = UserHelper::shipping_order($order_id , $currentOrder , $order_contact);
                     if ($shiping_order['statusCode'] == 200) {
                         $orderUpdate = ApiOrder::where('id', $order_id)->update([

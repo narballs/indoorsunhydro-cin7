@@ -68,16 +68,20 @@ class CheckoutController extends Controller
         }
         if (Auth::check() && (!empty($contact->contact_id) || !empty($contact->secondary_id)) && $contact->status == 1) {
             // $tax_class = TaxClass::where('is_default', 1)->first();
+            $user_address = null;
+            $user = User::where('id', $user_id)->first();
+            $all_ids = UserHelper::getAllMemberIds($user);
+            $user_address = Contact::whereIn('id', $all_ids)->where('is_default' , 1)->first();
             $states = UsState::all();
             $payment_methods = PaymentMethod::with('options')->get();
             $contact_id = session()->get('contact_id');
-            $user_address = null;
-            if ($contact->secondary_id) {
-                $parent_id = Contact::where('secondary_id', $contact->secondary_id)->first();
-                $user_address = Contact::where('user_id', $user_id)->where('secondary_id', $parent_id->secondary_id)->first();
-            } else {
-                $user_address = Contact::where('user_id', $user_id)->where('contact_id', $contact_id)->orWhere('contact_id' , $contact->contact_id)->first();
-            }
+            // $user_address = null;
+            // if ($contact->secondary_id) {
+            //     $parent_id = Contact::where('secondary_id', $contact->secondary_id)->first();
+            //     $user_address = Contact::where('user_id', $user_id)->where('secondary_id', $parent_id->secondary_id)->first();
+            // } else {
+            //     $user_address = Contact::where('user_id', $user_id)->where('contact_id', $contact_id)->orWhere('contact_id' , $contact->contact_id)->first();
+            // }
             $tax_class = TaxClass::where('name', $user_address->tax_class)->first();
             $tax_class_none = TaxClass::where('name', 'none')->first();
             $matchZipCode = null;
@@ -150,20 +154,24 @@ class CheckoutController extends Controller
 
     public function thankyou(Request $request , $id)
     {
-        
+        $user_id = Auth::id();
         $order = ApiOrder::where('id', $id)
             ->with(
                 'user.contact',
                 'apiOrderItem.product.options',
                 'texClasses'
             )->first();
-        $order_contact = Contact::where('contact_id', $order->memberId)->first();
+        
+        // $order_contact = Contact::where('contact_id', $order->memberId)->first();
+        $user = User::where('id', $user_id)->first();
+        $all_ids = UserHelper::getAllMemberIds($user);
+        $order_contact = Contact::whereIn('id', $all_ids)->where('is_default' , 1)->first();
         $createdDate = $order->created_at;
         $formatedDate = $createdDate->format('F  j, Y h:i:s A');
         $orderitems = ApiOrderItem::where('order_id', $id)->with('product')->get();
         $count = $orderitems->count();
         $best_products = Product::where('status', '!=', 'Inactive')->orderBy('views', 'DESC')->limit(4)->get();
-        $user_id = Auth::id();
+        
         Cart::where('user_id', $user_id)->where('is_active', 1)->delete();
 
         Session::forget('cart');
