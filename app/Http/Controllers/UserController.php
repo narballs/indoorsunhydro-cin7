@@ -1080,6 +1080,7 @@ class UserController extends Controller
     public function address(Request  $request)
     {
         $user_id = Auth::id();
+        $address_user = null;
         if (!$user_id) {
             return redirect('/user/');
         }
@@ -1094,14 +1095,11 @@ class UserController extends Controller
         $user_address = Contact::where('user_id', $user_id)->first();
         $secondary_contacts = Contact::whereIn('id', $all_ids)->paginate(10);
         $secondary_contacts_data = Contact::whereIn('id', $all_ids)->get();
+        $pluck_default_user = Contact::whereIn('id', $all_ids)->where('is_default' , 1)->first();
         $list = BuyList::where('id', 20)->with('list_products.product.options')->first();
         $contact = Contact::where('email', $user_address->email)->first();
         $companies = Contact::where('user_id', $user_id)->get();
-        $address_user = User::where('id', $user_id)->with('contact')
-        ->whereHas('contact' , function($query){
-            $query->where('is_default' , 1);
-        })->first();
-
+        $address_user = User::where('id', $pluck_default_user->user_id)->with('contact')->first();
         if ($contact) {
             $parent = Contact::where('contact_id', $contact->parent_id)->get();
         } else {
