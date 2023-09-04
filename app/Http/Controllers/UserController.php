@@ -1099,7 +1099,7 @@ class UserController extends Controller
         $list = BuyList::where('id', 20)->with('list_products.product.options')->first();
         $contact = Contact::where('email', $user_address->email)->first();
         $companies = Contact::where('user_id', $user_id)->get();
-        
+        dd($secondary_contacts_data);
         if (!empty($pluck_default_user)) {
             $address_user = User::where('id', $pluck_default_user->user_id)->with('contact')->first();
         } else {
