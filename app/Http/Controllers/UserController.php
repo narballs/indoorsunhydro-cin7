@@ -1097,10 +1097,11 @@ class UserController extends Controller
         $list = BuyList::where('id', 20)->with('list_products.product.options')->first();
         $contact = Contact::where('email', $user_address->email)->first();
         $companies = Contact::where('user_id', $user_id)->get();
-        $default_user_address = Contact::whereIn('id', $all_ids)->where('is_default' , 1)->first();
-        dd($default_user_address);
-        $address_user = User::where('id', $default_user_address->user_id)->with('contact')->first();
-        
+        $address_user = User::where('id', $user_id)->with('contact')
+        ->whereHas('contact' , function($query){
+            $query->where('is_default' , 1);
+        })->first();
+
         if ($contact) {
             $parent = Contact::where('contact_id', $contact->parent_id)->get();
         } else {
