@@ -1098,6 +1098,7 @@ class UserController extends Controller
         $contact = Contact::where('email', $user_address->email)->first();
         $companies = Contact::where('user_id', $user_id)->get();
         $default_user_address = Contact::whereIn('id', $all_ids)->where('is_default' , 1)->first();
+        dd($default_user_address);
         $address_user = User::where('id', $default_user_address->user_id)->with('contact')->first();
         
         if ($contact) {
