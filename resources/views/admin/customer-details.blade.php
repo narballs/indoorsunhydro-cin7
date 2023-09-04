@@ -318,7 +318,7 @@
                                         </tr>
                                         @foreach ($customer_orders as $customer_order)
                                             <tr>
-                                                @if ($customer_order->is_stripe == 1)
+                                                {{-- @if ($customer_order->is_stripe == 1)
                                                     @if ($customer_order->payment_status == 'paid' && $customer_order->is_shipped == 1)
                                                         <td class="badge bg-success">Order Completed</td>
                                                     @elseif ($customer_order->payment_status === 'paid' && $customer_order->is_shipped == 0)
@@ -335,7 +335,10 @@
                                                     @else
                                                         <td class="badge bg-danger">Pending Approval</td>
                                                     @endif
-                                                @endif
+                                                @endif --}}
+                                                <td>
+                                                    {{$customer_order->id}}
+                                                </td>
                                                 <?php $createdDate = $customer_order->created_at;
                                                 $formatedDate = $createdDate->format('F j, Y');
                                                 ?>
@@ -353,11 +356,12 @@
                                                 </td>
                                                 <td>
                                                     <select name="order_status_id" class="form-control" id="order_status_id" onchange="update_order_status('{{$customer_order->id}}')">
-                                                        <option value="">Select Status</option>
+                                                        <option value="">Pending</option>
                                                         @foreach ($order_statuses as $order_status)
                                                             <option value="{{ $order_status->id }}"
                                                                 {{ $customer_order->order_status_id == $order_status->id ? 'selected="selected"' : '' }}>
-                                                                {{ $order_status->status }}</option>
+                                                                {{ $order_status->status }}
+                                                            </option>
                                                         @endforeach
                                                     </select>
                                                 </td>
