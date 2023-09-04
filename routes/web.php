@@ -111,6 +111,7 @@ Route::group(['prefix' => 'my-account/'], function () {
     Route::get('account-profile/', [UserController::class, 'account_profile'])->name('account_profile');
     Route::post('account-profile/update', [UserController::class, 'account_profile_update'])->name('account_profile_update');
     Route::get('additional-users', [UserController::class, 'additional_users'])->name('additional_users');
+    Route::post('address/default', [UserController::class, 'make_address_default'])->name('make_address_default');
 });
 
 Route::group(['middleware' => ['auth']], function () {

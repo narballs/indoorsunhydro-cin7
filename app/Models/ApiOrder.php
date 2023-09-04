@@ -46,7 +46,8 @@ class ApiOrder extends Model
         'is_shipped',
         'is_stripe',
         'label_link',
-        'order_status_id'
+        'order_status_id',
+        'is_default'
     ];
     public function contact()
     {
