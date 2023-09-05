@@ -172,6 +172,11 @@ class SettingSeeder extends Seeder
                 'type' => 'yes/no',
                 'option_value' => 'Yes',
             ],
+            [
+                'option_name' => 'create_order_in_shipstation', 
+                'type' => 'yes/no',
+                'option_value' => 'No',
+            ],
         ];
 
         foreach($setting as $setting) {
