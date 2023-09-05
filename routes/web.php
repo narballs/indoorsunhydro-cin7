@@ -24,6 +24,7 @@ use App\Http\Controllers\Admin\LogsController;
 use App\Http\Controllers\Admin\DailyApiLogController;
 use App\Http\Controllers\Admin\TaxClassController;
 use App\Http\Controllers\Admin\OperationalZipCodeController;
+use App\Http\Controllers\AdminInventoryLocationController;
 use App\Models\TaxClass;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -274,6 +275,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('admin/send-password/{id}', [UserController::class, 'send_password'])->name('users.send_password');
     Route::get('admin/go-back', [UserController::class, 'switch_user_back'])->name('users.switch_user_back');
     Route::get('/site', [UserController::class, 'switch_admin'])->name('switch_admin');
+    Route::resource('admin/inventory-locations', AdminInventoryLocationController::class);
+
 
     //crud for admin settings
     Route::prefix('admin')->group(function () {
