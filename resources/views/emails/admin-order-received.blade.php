@@ -31,8 +31,8 @@
         src: url(https://fonts.gstatic.com/s/poppins/v20/pgitxiEyp8kv8JHgFVrJJbecmNE.woff2) format('woff2');
     }
 </style>
-<body bgcolor="#000000" style="background-color: #000000;padding-top:5px;padding-bottom:5px;padding-right:5px;padding-left:5px;" width="100%">
-    <div><table padding="0" bgcolor="#FFFFFF" style="background-color:#FFFFFF;border-radius:5px;" width="50%" border="0" align="center" cellpadding="0">
+<body bgcolor="#000000" style="background-color: #000000;padding-top:5px;padding-bottom:5px;padding-right:0px;padding-left:0px;" width="100%">
+    <div  class="mx-auto" style="margin-left:5px; margin-right:5px"><table padding="0" bgcolor="#FFFFFF" style="background-color:#FFFFFF;border-radius:5px;" width="50%" border="0" align="center" cellpadding="0">
         <tbody>
             <tr>
                 <td>
