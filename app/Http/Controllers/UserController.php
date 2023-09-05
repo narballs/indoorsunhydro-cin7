@@ -1210,7 +1210,7 @@ class UserController extends Controller
         $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
         $balance_owing = AdminSetting::where('option_name', 'update_balance_owing')->first();
 
-        if (strtolower($balance_owing->option_value) == 'yes') {
+        if (!empty($balance_owing) && strtolower($balance_owing->option_value) == 'yes') {
             if (count($companies) > 0) {
                 foreach ($companies as $company) {
                     if ($company->status == 1) {
