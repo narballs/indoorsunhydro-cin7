@@ -349,8 +349,6 @@ class OrderController extends Controller
                         'from' => SettingHelper::getSetting('noreply_email_address')
                     ];
 
-                    dd($data);
-
                     if (!empty($users_with_role_admin)) {
                         foreach ($users_with_role_admin as $role_admin) {
                             $subject = 'New order received';
