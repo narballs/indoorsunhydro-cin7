@@ -368,6 +368,10 @@ return [
             'text'    => 'Operational Zip Codes',
             'url'  => 'admin/operational-zip-codes',
         ],
+        [
+            'text'    => 'Inventory Locations',
+            'url'  => 'admin/inventory-locations',
+        ],
 
         [
             'text'       => 'Logout',
