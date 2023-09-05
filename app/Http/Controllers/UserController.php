@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 use App\Helpers\MailHelper;
 use App\Helpers\UserHelper;
+use App\Helpers\SettingHelper;
 use \Illuminate\Support\Str;
 use \Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
@@ -1196,13 +1197,46 @@ class UserController extends Controller
         $list = BuyList::where('id', 20)->with('list_products.product.options')->first();
         $contact = Contact::where('email', $user_address->email)->first();
         $companies = Contact::where('user_id', $user_id)->get();
-
         if ($contact) {
             $parent = Contact::where('contact_id', $contact->parent_id)->get();
         } else {
             $parent = "";
         }
         $states = UsState::all();
+
+        // update balance owing with api request 
+        $client = new \GuzzleHttp\Client();
+        $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
+        $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
+        $balance_owing = AdminSetting::where('option_name', 'update_balance_owing')->first();
+
+        if (strtolower($balance_owing->option_value) == 'yes') {
+            if (count($companies) > 0) {
+                foreach ($companies as $company) {
+                    if ($company->status == 1) {
+                        $update_contact = Contact::where('id', $company->id)->first();
+                        $contact_id = $update_contact->contact_id;
+                        $cin7_get_contact_url = config('services.cin7.get_contact_url');
+                        $url = $cin7_get_contact_url.$contact_id;
+
+                        try {
+                            $response = $client->request('GET', $url, [
+                                'auth' => [$cin7_auth_username, $cin7_auth_password]
+                            ]);
+                            $response = json_decode($response->getBody()->getContents());
+                            $balance_owing = $response->balanceOwing;
+                            $credit_limit = $response->creditLimit;
+                            $update_contact->balance_owing = $balance_owing;
+                            $update_contact->credit_limit = $credit_limit;
+                            $update_contact->save();
+                        } catch (\Exception $e) {
+                            $e->getMessage();
+                        }
+                    }
+                }
+            }
+        }
+
         return view('my-account.additional_users', compact(
             'lists',
             'user',
