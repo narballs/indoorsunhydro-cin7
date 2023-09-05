@@ -167,6 +167,11 @@ class SettingSeeder extends Seeder
                 'type' => 'text',
                 'option_value' => 'sandbox',
             ],
+            [
+                'option_name' => 'update_balance_owing', 
+                'type' => 'yes/no',
+                'option_value' => 'Yes',
+            ],
         ];
 
         foreach($setting as $setting) {

@@ -39,5 +39,8 @@ return [
         'shipment_order_url' => env('SHIPMENT_ORDER_URL'),
         'shipment_label_url' => env('SHIPMENT_LABEL_URL'),
     ],
+    'cin7' => [
+        'get_contact_url' => env('Cin7_GET_CONTACT_URL'),
+    ],
 
 ];
