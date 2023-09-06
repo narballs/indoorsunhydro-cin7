@@ -217,7 +217,7 @@ $cart_price = 0;
         ?>
     @endforeach
 @endif
-
+<?php $check_allowed_zip_code = false; ?>
 <div class="container-fluid w-75 desktop-view">
     <div class="row">
         <div class="col-md-12">
@@ -379,7 +379,7 @@ $cart_price = 0;
                 </tbody>
             </table>
             <div class="row">
-                @if(!empty($setting))
+                @if($check_allowed_zip_code === true)
                     @if(empty($matchZipCode))
                         <div class="col-md-6 mt-5"style="margin:auto; !important; max-width:600px !important;">
                             <div class="alert alert-danger text-center">
@@ -918,7 +918,7 @@ $cart_price = 0;
                                                 </div>
                                             </div>
                                         </div>
-                                        @if(!empty($setting))
+                                        @if($check_allowed_zip_code === true)
                                             @if(empty($matchZipCode))
                                                 <div class="w-100">
                                                     <div class="alert alert-danger text-center">
@@ -1457,7 +1457,7 @@ $cart_price = 0;
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        @if(!empty($setting))
+                                                        @if($check_allowed_zip_code === true)
                                                             @if(empty($matchZipCode))
                                                                 <div class="col-md-6 mt-5"style="margin:auto; !important; max-width:600px !important;">
                                                                     <div class="alert alert-danger text-center">
