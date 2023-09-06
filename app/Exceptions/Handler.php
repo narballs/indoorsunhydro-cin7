@@ -60,12 +60,12 @@ class Handler extends ExceptionHandler
         });
     }
 
-    public function report(Throwable $exception)
-    {
-        if ($this->shouldReport($exception)) {
-            $this->notify(new SlackErrorNotification($exception));
-        }
+    // public function report(Throwable $exception)
+    // {
+    //     if ($this->shouldReport($exception)) {
+    //         $this->notify(new SlackErrorNotification($exception));
+    //     }
 
-        parent::report($exception);
-    }
+    //     parent::report($exception);
+    // }
 }
