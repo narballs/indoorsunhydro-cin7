@@ -379,6 +379,9 @@ class OrderManagementController extends Controller
         $memberId = $currentOrder->memberId;
         $order_items = ApiOrderItem::with('product.options')->where('order_id', $order_id)->get();
         $dateCreated = Carbon::now();
+        $originalDateTime = Carbon::createFromFormat('Y-m-d H:i:s', $currentOrder->date);
+        $originalDateTime->setTimezone('America/Los_Angeles');
+        $date_set = $originalDateTime->format('Y-m-d h:i:s A');
         $lineItems = [];
         foreach ($order_items as $order_item) {
             $lineItems[] = [
@@ -472,7 +475,7 @@ class OrderManagementController extends Controller
                 "costCenter" => null,
                 "alternativeTaxRate" => $currentOrder->texClasses->rate,
                 // "estimatedDeliveryDate" => "2022-07-13T15:21:16.1946848+12:00",
-                "estimatedDeliveryDate" => $currentOrder->date,
+                "estimatedDeliveryDate" => $date_set,
                 "salesPersonId" => 10,
                 "salesPersonEmail" => "wqszeeshan@gmail.com",
                 "paymentTerms" => $currentOrder->paymentTerms,
