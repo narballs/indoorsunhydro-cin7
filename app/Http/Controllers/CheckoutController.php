@@ -66,6 +66,9 @@ class CheckoutController extends Controller
         if ($contact) {
             $isApproved = $contact->contact_id;
         }
+
+        $zip_code_is_valid = true;
+
         if (Auth::check() && (!empty($contact->contact_id) || !empty($contact->secondary_id)) && $contact->status == 1) {
             // $tax_class = TaxClass::where('is_default', 1)->first();
             $user_address = null;
@@ -88,12 +91,25 @@ class CheckoutController extends Controller
             }
             $tax_class = TaxClass::where('name', $user_address->tax_class)->first();
             $tax_class_none = TaxClass::where('name', 'none')->first();
+            
             $matchZipCode = null;
             if ($user_address->postalPostCode != null || $user_address->postCode != null) {
-
                 $matchZipCode = OperationalZipCode::where('status' , 'active')->where('zip_code', $user_address->postalPostCode)->orWhere('zip_code' , $user_address->postCode)->first();
             }
-            $setting = AdminSetting::where('option_name', 'check_zipcode')->where('option_value' , 'Yes')->first();
+            
+            $check_zip_code_setting = AdminSetting::where('option_name', 'check_zipcode')->where('option_value' , 'Yes')->first();
+
+            if (!empty($check_zip_code_setting) && strtolower($check_zip_code_setting->option_value) == 'yes') {
+                $zip_code_is_valid = false;
+                $operational_zip_code = OperationalZipCode::where('status' , 'active')
+                    ->where('zip_code', $user_address->postalPostCode)
+                    ->orWhere('zip_code' , $user_address->postCode)
+                    ->first();
+                if (!empty($operational_zip_code)) {
+                    $zip_code_is_valid = true;
+                }
+            }
+
 
             // adding shipment rates
 
@@ -147,7 +163,8 @@ class CheckoutController extends Controller
                 'contact_id',
                 'tax_class_none',
                 'matchZipCode',
-                'setting',
+                'zip_code_is_valid',
+                'check_zip_code_setting',
                 'shipment_price'
             ));
         } else {
