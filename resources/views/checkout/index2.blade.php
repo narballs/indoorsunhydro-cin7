@@ -217,7 +217,7 @@ $cart_price = 0;
         ?>
     @endforeach
 @endif
-<?php $check_allowed_zip_code = false; ?>
+<?php $zip_code_is_valid = true; ?>
 <div class="container-fluid w-75 desktop-view">
     <div class="row">
         <div class="col-md-12">
@@ -379,28 +379,20 @@ $cart_price = 0;
                     </tbody>
                 </table>
                 <div class="row">
-                    @if($check_allowed_zip_code === true)
-                        @if(empty($matchZipCode))
-                            <div class="col-md-6 mt-5"style="margin:auto; !important; max-width:600px !important;">
-                                <div class="alert alert-danger text-center">
-                                    <span>
-                                        <strong>Sorry, we don't deliver to this address.</strong>
-                                    </span>
-                                </div>
-                            </div>
-                        @else
-                            <div class="col-md-4 mt-5"style="margin:auto; !important; max-width:600px !important;">
-                                <button type="button" class="button-cards w-100 proceed_checkout_desktop" id="proceed_to_checkout" onclick="validate()"
-                                style="background: #008BD3 ;border-radius: 5px;">Place order</button>
-                            </div>
-                        @endif
-                    @else
+                    @if ($zip_code_is_valid === true)
                         <div class="col-md-4 mt-5"style="margin:auto; !important; max-width:600px !important;">
                             <button type="button" class="button-cards w-100 proceed_checkout_desktop" id="proceed_to_checkout" onclick="validate()"
                             style="background: #008BD3 ;border-radius: 5px;">Place order</button>
                         </div>
+                    @else
+                        <div class="col-md-6 mt-5"style="margin:auto; !important; max-width:600px !important;">
+                            <div class="alert alert-danger text-center">
+                                <span>
+                                    <strong>Sorry, we don't deliver to this address.</strong>
+                                </span>
+                            </div>
+                        </div>
                     @endif
-                
                 </div>
             </div>
             <div class="col-md-3">
@@ -409,7 +401,6 @@ $cart_price = 0;
                     <div class="row">
                         <div class="col-md-12 mt-2">
                             @foreach ($payment_methods as $payment_method)
-                                
                                     @php
                                         $session_contact_id = Session::get('contact_id');
                                     @endphp
@@ -515,22 +506,6 @@ $cart_price = 0;
             </div>
         </form>
     </div>
-    {{-- <div class="row">
-        <div class="col-md-4 m-auto"
-            style="margin-top: 192px !important;margin:auto; !important; max-width:600px !important;">
-            @if(empty($matchZipCode))
-                <div class="alert alert-danger">
-                    <span>
-                        <strong>Sorry, we don't deliver to this address.</strong>
-                    </span>
-                </div>
-                @else
-                <button type="button" class="button-cards w-100 proceed_checkout_desktop" id="proceed_to_checkout" onclick="validate()"
-                style="background: #008BD3 ;border-radius: 5px;">Place order</button>
-            @endif
-        </div>
-        </form>
-    </div> --}}
 </div>
 
 <!--Mobile View -->
@@ -920,27 +895,19 @@ $cart_price = 0;
                                                 </div>
                                             </div>
                                         </div>
-                                        @if($check_allowed_zip_code === true)
-                                            @if(empty($matchZipCode))
-                                                <div class="w-100">
-                                                    <div class="alert alert-danger text-center">
-                                                        <span>
-                                                            <strong>Sorry, we don't deliver to this address.</strong>
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            @else
-                                                <div class="text-center">
-                                                    <button type="button" class="proceedCheckoutmbl mt-4 w-100 p-2 border-0"
-                                                        id="proceed_to_checkout" onclick="validate_mbl()">
-                                                        Place Order</button>
-                                                </div>
-                                            @endif
-                                        @else
+                                        @if ($zip_code_is_valid === true)
                                             <div class="text-center">
                                                 <button type="button" class="proceedCheckoutmbl mt-4 w-100 p-2 border-0"
                                                     id="proceed_to_checkout" onclick="validate_mbl()">
                                                     Place Order</button>
+                                            </div>
+                                        @else
+                                            <div class="w-100">
+                                                <div class="alert alert-danger text-center">
+                                                    <span>
+                                                        <strong>Sorry, we don't deliver to this address.</strong>
+                                                    </span>
+                                                </div>
                                             </div>
                                         @endif
                                     </form>
@@ -1460,23 +1427,17 @@ $cart_price = 0;
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        @if($check_allowed_zip_code === true)
-                                                            @if(empty($matchZipCode))
-                                                                <div class="col-md-6 mt-5"style="margin:auto; !important; max-width:600px !important;">
-                                                                    <div class="alert alert-danger text-center">
-                                                                        <span>
-                                                                            <strong>Sorry, we don't deliver to this address.</strong>
-                                                                        </span>
-                                                                    </div>
-                                                                </div>
-                                                            @else
-                                                                <div class="d-flex justify-content-center mt-3">
-                                                                    <button type="button" class="button-cards w-50 proceed_checkout_ipad" id="proceed_to_checkout" onclick="validate_ipad()"> Place Order</button>
-                                                                </div>
-                                                            @endif
-                                                        @else
+                                                        @if ($zip_code_is_valid === true)
                                                             <div class="d-flex justify-content-center mt-3">
                                                                 <button type="button" class="button-cards w-50 proceed_checkout_ipad" id="proceed_to_checkout" onclick="validate_ipad()"> Place Order</button>
+                                                            </div>
+                                                        @else
+                                                            <div class="col-md-6 mt-5"style="margin:auto; !important; max-width:600px !important;">
+                                                                <div class="alert alert-danger text-center">
+                                                                    <span>
+                                                                        <strong>Sorry, we don't deliver to this address.</strong>
+                                                                    </span>
+                                                                </div>
                                                             </div>
                                                         @endif
 
