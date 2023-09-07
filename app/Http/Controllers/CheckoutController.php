@@ -66,26 +66,50 @@ class CheckoutController extends Controller
         if ($contact) {
             $isApproved = $contact->contact_id;
         }
+
+        $zip_code_is_valid = true;
+
         if (Auth::check() && (!empty($contact->contact_id) || !empty($contact->secondary_id)) && $contact->status == 1) {
             // $tax_class = TaxClass::where('is_default', 1)->first();
+            $user_address = null;
             $states = UsState::all();
             $payment_methods = PaymentMethod::with('options')->get();
             $contact_id = session()->get('contact_id');
-            $user_address = null;
-            if ($contact->secondary_id) {
-                $parent_id = Contact::where('secondary_id', $contact->secondary_id)->first();
-                $user_address = Contact::where('user_id', $user_id)->where('secondary_id', $parent_id->secondary_id)->first();
+            $user = User::where('id', $user_id)->first();
+            $all_ids = UserHelper::getAllMemberIds($user);
+            $pluck_default_user = Contact::whereIn('id', $all_ids)->where('is_default' , 1)->first();
+           
+            if (!empty($pluck_default_user)) {
+                $user_address = Contact::where('id' ,$pluck_default_user->id)->first();
             } else {
-                $user_address = Contact::where('user_id', $user_id)->where('contact_id', $contact_id)->orWhere('contact_id' , $contact->contact_id)->first();
+                if ($contact->secondary_id) {
+                    $parent_id = Contact::where('secondary_id', $contact->secondary_id)->first();
+                    $user_address = Contact::where('user_id', $user_id)->where('secondary_id', $parent_id->secondary_id)->first();
+                } else {
+                    $user_address = Contact::where('user_id', $user_id)->where('contact_id', $contact_id)->orWhere('contact_id' , $contact->contact_id)->first();
+                }
             }
             $tax_class = TaxClass::where('name', $user_address->tax_class)->first();
             $tax_class_none = TaxClass::where('name', 'none')->first();
+            
             $matchZipCode = null;
             if ($user_address->postalPostCode != null || $user_address->postCode != null) {
-
                 $matchZipCode = OperationalZipCode::where('status' , 'active')->where('zip_code', $user_address->postalPostCode)->orWhere('zip_code' , $user_address->postCode)->first();
             }
-            $setting = AdminSetting::where('option_name', 'check_zipcode')->where('option_value' , 'Yes')->first();
+            
+            $check_zip_code_setting = AdminSetting::where('option_name', 'check_zipcode')->where('option_value' , 'Yes')->first();
+
+            if (!empty($check_zip_code_setting) && strtolower($check_zip_code_setting->option_value) == 'yes') {
+                $zip_code_is_valid = false;
+                $operational_zip_code = OperationalZipCode::where('status' , 'active')
+                    ->where('zip_code', $user_address->postalPostCode)
+                    ->orWhere('zip_code' , $user_address->postCode)
+                    ->first();
+                if (!empty($operational_zip_code)) {
+                    $zip_code_is_valid = true;
+                }
+            }
+
 
             // adding shipment rates
 
@@ -139,7 +163,8 @@ class CheckoutController extends Controller
                 'contact_id',
                 'tax_class_none',
                 'matchZipCode',
-                'setting',
+                'zip_code_is_valid',
+                'check_zip_code_setting',
                 'shipment_price'
             ));
         } else {
@@ -150,20 +175,28 @@ class CheckoutController extends Controller
 
     public function thankyou(Request $request , $id)
     {
-        
+        $user_id = Auth::id();
         $order = ApiOrder::where('id', $id)
             ->with(
                 'user.contact',
                 'apiOrderItem.product.options',
                 'texClasses'
             )->first();
-        $order_contact = Contact::where('contact_id', $order->memberId)->first();
+        
+        $user = User::where('id', $user_id)->first();
+        $all_ids = UserHelper::getAllMemberIds($user);
+        $order_contact_query = Contact::whereIn('id', $all_ids)->where('is_default' , 1)->first();
+        if (!empty($order_contact_query)) {
+            $order_contact = Contact::where('id', $order_contact_query->id)->first();
+        } else {
+            $order_contact = Contact::where('contact_id', $order->memberId)->first();
+        }
         $createdDate = $order->created_at;
         $formatedDate = $createdDate->format('F  j, Y h:i:s A');
         $orderitems = ApiOrderItem::where('order_id', $id)->with('product')->get();
         $count = $orderitems->count();
         $best_products = Product::where('status', '!=', 'Inactive')->orderBy('views', 'DESC')->limit(4)->get();
-        $user_id = Auth::id();
+        
         Cart::where('user_id', $user_id)->where('is_active', 1)->delete();
 
         Session::forget('cart');
@@ -248,16 +281,16 @@ class CheckoutController extends Controller
                 ->where('order_id', $order_id)
                 ->get();
                 $contact = Contact::where('user_id', auth()->id())->first();
-
-                UserHelper::shipping_order($order_id , $currentOrder , $order_contact);
-
-                $shiping_order = UserHelper::shipping_order($order_id , $currentOrder , $order_contact);
-                if ($shiping_order['statusCode'] == 200) {
-                    $orderUpdate = ApiOrder::where('id', $order_id)->update([
-                        'shipstation_orderId' => $shiping_order['responseBody']->orderId,
-                    ]);
+                $check_shipstation_create_order_status = AdminSetting::where('option_name', 'create_order_in_shipstation')->first();
+                if (!empty($check_shipstation_create_order_status) && strtolower($check_shipstation_create_order_status->option_value) == 'yes') {
+                    UserHelper::shipping_order($order_id , $currentOrder , $order_contact);
+                    $shiping_order = UserHelper::shipping_order($order_id , $currentOrder , $order_contact);
+                    if ($shiping_order['statusCode'] == 200) {
+                        $orderUpdate = ApiOrder::where('id', $order_id)->update([
+                            'shipstation_orderId' => $shiping_order['responseBody']->orderId,
+                        ]);
+                    }
                 }
-
                 $user_email = Auth::user();
                 $count = $order_items->count();
                 $best_products = Product::where('status', '!=', 'Inactive')->orderBy('views', 'DESC')->limit(4)->get();

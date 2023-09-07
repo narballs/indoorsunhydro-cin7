@@ -165,11 +165,29 @@
                                             <td class="my_account_addresses">State</td>
                                             <td class="my_account_addresses">Zip Code</td>
                                             <td class="my_account_addresses">Phone Number</td>
-                                            <td></td>
+                                            <td class="my_account_addresses">Action</td>
                                         </tr>
                                     </thead>
+                                    @php
+                                        $ids_array = [];
+                                        $contacts_data = $secondary_contacts_data->toArray();
+                                        $data = json_encode($contacts_data);
+                                    @endphp
                                     <tbody>
                                         @foreach ($secondary_contacts as $key => $contact)
+                                            {{-- @php
+                                                $contacts_array = [
+                                                    'id' => $contact->id,
+                                                    'contact_id' => $contact->contact_id,
+                                                    'is_parent' => $contact->is_parent,
+                                                    'is_default' => $contact->is_default,
+                                                    'secondary_id' => $contact->secondary_id,
+                                                    'user_id' => $contact->user_id,
+                                                ];
+                                                array_push($ids_array, $contacts_array);
+                                                $contacts_data = implode(',', $ids_array);
+                                                dd($contacts_data);
+                                            @endphp --}}
                                             <tr class="py-5">
                                                 <td class="table-items align-middle pt-0 pb-0">
                                                     <div class="custom-control custom-checkbox tabel-checkbox d-flex align-items-center">
@@ -228,7 +246,17 @@
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    <img src="/theme/img/dots_icons.png" alt="">
+                                                    @if ($contact->is_default == 1)
+                                                        <button type="button" class="btn btn-success btn-sm">Default</button>
+                                                    @else
+                                                        <form action="{{route('make_address_default')}}" method="post">
+                                                            @csrf
+                                                            <input type="hidden" name="id" value="{{$contact->id}}">
+                                                            <input type="hidden" name="contacts" value="{{$data}}">
+
+                                                            <button type="submit" class="btn btn-primary btn-sm">Make Default</button>
+                                                        </form>
+                                                    @endif
                                                 </td>
                                             </tr>
                                         @endforeach

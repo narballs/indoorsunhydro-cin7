@@ -275,14 +275,24 @@ class OrderController extends Controller
                     $order_items = ApiOrderItem::with('order.texClasses', 'product.options')
                         ->where('order_id', $order_id)
                         ->get();
-
-                    $contact = Contact::where('user_id', auth()->id())->first();
-                    $shiping_order = UserHelper::shipping_order($order_id , $currentOrder , $order_contact);
-                    if ($shiping_order['statusCode'] == 200) {
-                        $orderUpdate = ApiOrder::where('id', $order_id)->update([
-                            'shipstation_orderId' => $shiping_order['responseBody']->orderId,
-                        ]);
+                    $user_default = User::where('id', Auth::id())->first();
+                    $all_ids = UserHelper::getAllMemberIds($user_default);
+                    $check_default_user = Contact::whereIn('id', $all_ids)->where('is_default' , 1)->first();
+                    if (!empty($check_default_user)) {
+                        $contact = Contact::where('id', $check_default_user->id)->first();
+                    } else {
+                        $contact = Contact::where('user_id', auth()->id())->first();
                     }
+                    $check_shipstation_create_order_status = AdminSetting::where('option_name', 'create_order_in_shipstation')->first();
+                    if (!empty($check_shipstation_create_order_status) && strtolower($check_shipstation_create_order_status->option_value) == 'yes') {
+                        $shiping_order = UserHelper::shipping_order($order_id , $currentOrder , $order_contact);
+                        if ($shiping_order['statusCode'] == 200) {
+                            $orderUpdate = ApiOrder::where('id', $order_id)->update([
+                                'shipstation_orderId' => $shiping_order['responseBody']->orderId,
+                            ]);
+                        }
+                    }
+                    
                     $user_email = Auth::user();
                     $count = $order_items->count();
                     $best_products = Product::where('status', '!=', 'Inactive')->orderBy('views', 'DESC')->limit(4)->get();
@@ -338,8 +348,6 @@ class OrderController extends Controller
                         'count' => $count,
                         'from' => SettingHelper::getSetting('noreply_email_address')
                     ];
-
-                    
 
                     if (!empty($users_with_role_admin)) {
                         foreach ($users_with_role_admin as $role_admin) {

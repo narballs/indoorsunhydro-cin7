@@ -7,6 +7,7 @@ use GuzzleHttp\Client;
 use App\Models\DailyApiLog;
 use App\Models\AdminSetting;
 use App\Models\ProductStock;
+use App\Models\InventoryLocation;
 
 use App\Helpers\SettingHelper;
 
@@ -118,8 +119,10 @@ class UtilHelper
             if (empty($location_inventories)) {
                 return $stock_updated;
             }
-
-            $skip_branches = [172, 173, 174];
+            $inactive_inventory_locations = InventoryLocation::where('status', 0)->pluck('cin7_branch_id')->toArray();
+            
+            // $skip_branches = [172, 173, 174];
+            $skip_branches = $inactive_inventory_locations;
             $branch_ids = [];
 
             foreach ($location_inventories as $location_inventory) {

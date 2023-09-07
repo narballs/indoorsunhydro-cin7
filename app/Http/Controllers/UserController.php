@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 use App\Helpers\MailHelper;
 use App\Helpers\UserHelper;
+use App\Helpers\SettingHelper;
 use \Illuminate\Support\Str;
 use \Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
@@ -1080,6 +1081,7 @@ class UserController extends Controller
     public function address(Request  $request)
     {
         $user_id = Auth::id();
+        $address_user = null;
         if (!$user_id) {
             return redirect('/user/');
         }
@@ -1093,12 +1095,17 @@ class UserController extends Controller
         $all_ids = UserHelper::getAllMemberIds($user);
         $user_address = Contact::where('user_id', $user_id)->first();
         $secondary_contacts = Contact::whereIn('id', $all_ids)->paginate(10);
+        $secondary_contacts_data = Contact::whereIn('id', $all_ids)->get();
+        $pluck_default_user = Contact::whereIn('id', $all_ids)->where('is_default' , 1)->first();
         $list = BuyList::where('id', 20)->with('list_products.product.options')->first();
         $contact = Contact::where('email', $user_address->email)->first();
         $companies = Contact::where('user_id', $user_id)->get();
-
-        $address_user = User::where('id', $user_id)->with('contact')->first();
-
+        if (!empty($pluck_default_user)) {
+            $address_user = User::where('id', $pluck_default_user->user_id)->with('contact')->first();
+        } else {
+            $address_user = User::where('id', $user_id)->with('contact')->first();
+        }
+        
         if ($contact) {
             $parent = Contact::where('contact_id', $contact->parent_id)->get();
         } else {
@@ -1113,8 +1120,28 @@ class UserController extends Controller
             'companies',
             'states',
             'address_user',
-            'contact_id'
+            'contact_id',
+            'secondary_contacts_data'
         ));
+    }
+
+    // make address default
+    public function make_address_default(Request $request) {
+        $contact_key = $request->id;
+        $data = $request->contacts;
+        $data_decode = json_decode($data);
+        foreach ($data_decode as $data) {
+            if ($contact_key == $data->id) {
+                $contact = Contact::where('id', $contact_key)->first();
+                $contact->is_default = 1;
+                $contact->save();
+            } else {
+                $contact = Contact::where('id', $data->id)->first();
+                $contact->is_default = 0;
+                $contact->save();
+            }
+        }
+        return redirect()->back()->with('success', 'Address Set default successfully');
     }
 
     //account details
@@ -1170,13 +1197,46 @@ class UserController extends Controller
         $list = BuyList::where('id', 20)->with('list_products.product.options')->first();
         $contact = Contact::where('email', $user_address->email)->first();
         $companies = Contact::where('user_id', $user_id)->get();
-
         if ($contact) {
             $parent = Contact::where('contact_id', $contact->parent_id)->get();
         } else {
             $parent = "";
         }
         $states = UsState::all();
+
+        // update balance owing with api request 
+        $client = new \GuzzleHttp\Client();
+        $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
+        $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
+        $balance_owing = AdminSetting::where('option_name', 'update_balance_owing')->first();
+
+        if (!empty($balance_owing) && strtolower($balance_owing->option_value) == 'yes') {
+            if (count($companies) > 0) {
+                foreach ($companies as $company) {
+                    if ($company->status == 1) {
+                        $update_contact = Contact::where('id', $company->id)->first();
+                        $contact_id = $update_contact->contact_id;
+                        $cin7_get_contact_url = config('services.cin7.get_contact_url');
+                        $url = $cin7_get_contact_url.$contact_id;
+
+                        try {
+                            $response = $client->request('GET', $url, [
+                                'auth' => [$cin7_auth_username, $cin7_auth_password]
+                            ]);
+                            $response = json_decode($response->getBody()->getContents());
+                            $balance_owing = $response->balanceOwing;
+                            $credit_limit = $response->creditLimit;
+                            $update_contact->balance_owing = $balance_owing;
+                            $update_contact->credit_limit = $credit_limit;
+                            $update_contact->save();
+                        } catch (\Exception $e) {
+                            $e->getMessage();
+                        }
+                    }
+                }
+            }
+        }
+
         return view('my-account.additional_users', compact(
             'lists',
             'user',

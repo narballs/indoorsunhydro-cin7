@@ -217,7 +217,7 @@ $cart_price = 0;
         ?>
     @endforeach
 @endif
-<?php $check_allowed_zip_code = false; ?>
+<?php $zip_code_is_valid = true; ?>
 <div class="container-fluid w-75 desktop-view">
     <div class="row">
         <div class="col-md-12">
@@ -310,77 +310,81 @@ $cart_price = 0;
         <div class="col-md-12">
             <p class="item-purchased-thank-you-page">Item(s) Purchased </p>
         </div>
-
-        <div class=" col-xl-9 col-lg-9 col-md-12 col-sm-12 pe-5">
-            <table class="table">
-                <tr>
-                    <th class="thank-you-page-table-data-heading">Name</th>
-                    <th class="thank-you-page-table-data-heading" style="padding-left: 0px; !important">Quantity</th>
-                    {{-- <th class="thank-you-page-table-data-heading">Shipping</th> --}}
-                    <th class="thank-you-page-table-data-heading">Price</th>
-                </tr>
-                <tbody class="border-0">
-                    <?php
-                    $cart_total = 0;
-                    $cart_price = 0;
-                    ?>
-                    @if (Session::get('cart'))
-        
-                        @foreach (Session::get('cart') as $product_id => $cart)
-                            <?php
-                            $total_quatity = $cart['quantity'];
-                            $total_price = $cart['price'] * $total_quatity;
-                            $cart_total = $cart_total + $total_price;
-                            ?>
-                            <tr>
-                                <td>
-                                    <div class="row">
-                                        <div class="col-md-2 py-2">
-                                            @if ($cart['image'])
-                                                <img class="img-fluid img-thumbnail" src="{{ $cart['image'] }}"
-                                                    alt="" width="90px" style="max-height: 90px">
-                                            @else
-                                                <img src="/theme/img/image_not_available.png" alt=""
-                                                    width="80px">
-                                            @endif
+        <form action="{{ url('order') }}" method="POST" id="order_form" name="order_form" class="row mx-1">
+            <div class=" col-xl-9 col-lg-9 col-md-12 col-sm-12 pe-5">
+                <table class="table">
+                    <tr>
+                        <th class="thank-you-page-table-data-heading">Name</th>
+                        <th class="thank-you-page-table-data-heading" style="padding-left: 0px; !important">Quantity</th>
+                        {{-- <th class="thank-you-page-table-data-heading">Shipping</th> --}}
+                        <th class="thank-you-page-table-data-heading">Price</th>
+                    </tr>
+                    <tbody class="border-0">
+                        <?php
+                        $cart_total = 0;
+                        $cart_price = 0;
+                        ?>
+                        @if (Session::get('cart'))
+            
+                            @foreach (Session::get('cart') as $product_id => $cart)
+                                <?php
+                                $total_quatity = $cart['quantity'];
+                                $total_price = $cart['price'] * $total_quatity;
+                                $cart_total = $cart_total + $total_price;
+                                ?>
+                                <tr>
+                                    <td>
+                                        <div class="row">
+                                            <div class="col-md-2 py-2">
+                                                @if ($cart['image'])
+                                                    <img class="img-fluid img-thumbnail" src="{{ $cart['image'] }}"
+                                                        alt="" width="90px" style="max-height: 90px">
+                                                @else
+                                                    <img src="/theme/img/image_not_available.png" alt=""
+                                                        width="80px">
+                                                @endif
+                                            </div>
+                                            <div class="col-md-8 py-2 ps-0">
+                                                <a class="category-name-thank-you-page pb-3"
+                                                    href="{{ url('product-detail/' .$product_id . '/' . $cart['option_id'] . '/' . $cart['slug']) }}">
+                                                    {{ $cart['name'] }}
+                                                </a>
+                                                <br>
+                                                <p class="product-title-thank-you-page ">Title:<span
+                                                        class="product-title-thank-you-page-title">
+                                                        {{ $cart['name'] }}</span>
+                                                </p>
+                                                <p class="product-delete-icon-thank-you-page-icon">
+                                                    <img class="img-fluid" src="/theme/img/thank-you-page-delete.icon.png"
+                                                        alt="">
+                                                </p>
+                                            </div>
                                         </div>
-                                        <div class="col-md-8 py-2 ps-0">
-                                            <a class="category-name-thank-you-page pb-3"
-                                                href="{{ url('product-detail/' .$product_id . '/' . $cart['option_id'] . '/' . $cart['slug']) }}">
-                                                {{ $cart['name'] }}
-                                            </a>
-                                            <br>
-                                            <p class="product-title-thank-you-page ">Title:<span
-                                                    class="product-title-thank-you-page-title">
-                                                    {{ $cart['name'] }}</span>
-                                            </p>
-                                            <p class="product-delete-icon-thank-you-page-icon">
-                                                <img class="img-fluid" src="/theme/img/thank-you-page-delete.icon.png"
-                                                    alt="">
-                                            </p>
+                                    </td>
+                                    <td>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <p class="pt-4 thank-you-page-product-items-cart">{{ $cart['quantity'] }}
+                                                </p>
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <p class="pt-4 thank-you-page-product-items-cart">{{ $cart['quantity'] }}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <p class="pt-4 thank-you-page-product-items-price">
-                                        ${{ number_format($cart['price'], 2) }}</p>
-                                </td>
-                            </tr>
-                        @endforeach
-                    @endif
-                </tbody>
-            </table>
-            <div class="row">
-                @if($check_allowed_zip_code === true)
-                    @if(empty($matchZipCode))
+                                    </td>
+                                    <td>
+                                        <p class="pt-4 thank-you-page-product-items-price">
+                                            ${{ number_format($cart['price'], 2) }}</p>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @endif
+                    </tbody>
+                </table>
+                <div class="row">
+                    @if ($zip_code_is_valid === true)
+                        <div class="col-md-4 mt-5"style="margin:auto; !important; max-width:600px !important;">
+                            <button type="button" class="button-cards w-100 proceed_checkout_desktop" id="proceed_to_checkout" onclick="validate()"
+                            style="background: #008BD3 ;border-radius: 5px;">Place order</button>
+                        </div>
+                    @else
                         <div class="col-md-6 mt-5"style="margin:auto; !important; max-width:600px !important;">
                             <div class="alert alert-danger text-center">
                                 <span>
@@ -388,147 +392,120 @@ $cart_price = 0;
                                 </span>
                             </div>
                         </div>
-                    @else
-                        <div class="col-md-4 mt-5"style="margin:auto; !important; max-width:600px !important;">
-                            <button type="button" class="button-cards w-100 proceed_checkout_desktop" id="proceed_to_checkout" onclick="validate()"
-                            style="background: #008BD3 ;border-radius: 5px;">Place order</button>
-                        </div>
                     @endif
-                @else
-                    <div class="col-md-4 mt-5"style="margin:auto; !important; max-width:600px !important;">
-                        <button type="button" class="button-cards w-100 proceed_checkout_desktop" id="proceed_to_checkout" onclick="validate()"
-                        style="background: #008BD3 ;border-radius: 5px;">Place order</button>
-                    </div>
-                @endif
-                </form>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="row" style="background: #FAFAFA;border-radius: 5px;">
-                <p class="thank-you-page-product-items-delivery-options">Delivery Options</p>
-                <div class="row">
-                    <div class="col-md-12 mt-2">
-                        @foreach ($payment_methods as $payment_method)
-                            <form action="{{ url('order') }}" method="POST" id="order_form" name="order_form" class="mx-3 w-100">
-                                @php
-                                    $session_contact_id = Session::get('contact_id');
-                                @endphp
-                                @csrf
-                                <div class="row">
-                                    @foreach ($payment_method->options as $payment_option)
-                                        <div class="col-md-6 p-0 ps-4 d-flex align-items-center">
-                                            <input type="hidden" value="{{ $payment_method->name }}"
-                                                name="method_name">
-                                            <input type="radio" id="local_delivery_{{ $payment_option->id }}"
-                                                name="method_option"{{ $payment_option->option_name == 'Local Delivery' ? 'checked' : '' }}
-                                                value="{{ $payment_option->option_name }}" style="background: #008BD3;">
-                                            <label for="local_delivery payment-option-label"
-                                                class="thank-you-page-product-items-payment-method-cart ml-2 mb-0">{{ $payment_option->option_name }}</label>
-                                        </div>
-                                    @endforeach
-                                </div>
-                        @endforeach
-                    </div>
-                    <div class="col-md-12 mt-1">
-                        <p class="thank-you-page-select-date-options mb-1">Please Select Date</p>
-                        <input type="date" name="date" class="form-control" min="{{ now()->toDateString('Y-m-d') }}" id="date">
-                    </div>
-                    <div class="col-md-12">
-                        <p class="thank-you-page-select-date-options mb-1">Purchase Order Number</p>
-                        <input type="text" name="po_number" placeholder="PO Number" id="po_number"
-                            class="form-control fontAwesome">
-                    </div>
-                    <div class="col-md-12">
-                        <p class="thank-you-page-select-date-options mb-1">Memo</p>
-                        <textarea type="text" name="memo" cols="20" rows="5" placeholder="Enter your Message"
-                            id="memo" class="form-control fontAwesome">
-                            </textarea>
-                    </div>
-                    <div class="col-md-12 mb-3">
-                        <p class="thank-you-page-select-date-options mb-2">Payment Terms</p>
-                        <select name="paymentTerms" id="pay_terms" class="form-control">
-                            @if($user_address->paymentTerms == "Pay in Advanced" )
-                                <option value="Pay in Advanced" selected>Pay in Advanced</option>
-                            @else
-                                <option value="30 days from invoice" selected>30 days from invoice</option>
-                            @endif
-                        </select>
-                    </div>
                 </div>
-                
             </div>
-            <div class="row">
-                <?php
-                $tax=0;
-                if (!empty($tax_class)) {
-                    $tax = $cart_total * ($tax_class->rate / 100);
-                }
-                $total_including_tax = $tax + $cart_total  + $shipment_price;
-
-                ?>
-                <input type="hidden" name="incl_tax" id="incl_tax" value="{{ $total_including_tax }}">
-                <input type="hidden" name="shipment_price" id="shipment_price" value="{{ $shipment_price }}">
-                @if(!empty($tax_class))
-                <input type="hidden" name="tax_class_id" id="tax_class_id" value="{{ $tax_class->id }}">
-                @else
-                <input type="hidden" name="tax_class_id" id="tax_class_id" value="{{$tax_class_none->id}}">
-                @endif
-                <div class="col-md-12 mt-3 py-3" style="background: #F7F7F7; border-radius: 5px;">
-                    <p class="thank-you-page-product-imtes-total-cart">Total</p>
+            <div class="col-md-3">
+                <div class="row" style="background: #FAFAFA;border-radius: 5px;">
+                    <p class="thank-you-page-product-items-delivery-options">Delivery Options</p>
                     <div class="row">
-                        <div class="col-md-6 mt-1">
-                            <p class="thank-you-page-product-items-subtotal-cart">
-                                {{-- <img class="img-fluid" src="theme/img/pricing_tag.png" width=" 35px"> --}}
-                                Subtotal
-                            </p>
-                            <p class="thank-you-page-product-items-subtotal-cart">
-                                {{-- <img class=" img-fluid" src="/theme/img/tax_icon_check_out_page.png"> --}}
-                                <span>Rate</span> 
-                                @if(!empty($tax_class))
-                                    ({{ number_format($tax_class->rate  , 2)}}%)
-                                @else 
-                                    ({{ number_format(0  , 2)}})
-                                @endif
-                            </p>
-                            <p class="thank-you-page-product-items-subtotal-cart mt-4">
-                                {{-- <img class=" img-fluid" src="/theme/img/sub_total_icon_check_out_page.png"> --}}
-                                <span>Shipment Price</span>
-                            </p>
-                            <p class="thank-you-page-product-items-subtotal-cart mt-4">
-                                {{-- <img class=" img-fluid" src="/theme/img/sub_total_icon_check_out_page.png"> --}}
-                                <span>Total</span>
-                            </p>
-
+                        <div class="col-md-12 mt-2">
+                            @foreach ($payment_methods as $payment_method)
+                                    @php
+                                        $session_contact_id = Session::get('contact_id');
+                                    @endphp
+                                    @csrf
+                                    <div class="row mx-0">
+                                        @foreach ($payment_method->options as $payment_option)
+                                            <div class="col-md-6 p-0 ps-4 d-flex align-items-center">
+                                                <input type="hidden" value="{{ $payment_method->name }}"
+                                                    name="method_name">
+                                                <input type="radio" id="local_delivery_{{ $payment_option->id }}"
+                                                    name="method_option"{{ $payment_option->option_name == 'Local Delivery' ? 'checked' : '' }}
+                                                    value="{{ $payment_option->option_name }}" style="background: #008BD3;">
+                                                <label for="local_delivery payment-option-label"
+                                                    class="thank-you-page-product-items-payment-method-cart ml-2 mb-0">{{ $payment_option->option_name }}</label>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                            @endforeach
                         </div>
-                        <div class="col-md-6">
-                            <p class=" thank-you-page-product-item-cart mb-0">${{ number_format($cart_total, 2) }}</p>
-                            {{-- <p class=" thank-you-page-product-item-cart">shipping</p> --}}
-                            <p class=" thank-you-page-product-item-cart mb-0">${{ number_format($tax, 2) }}</p>
-                            <p class=" thank-you-page-product-item-cart mb-0" id="shipment_price">${{number_format($shipment_price , 2)}}</p>
-                            <p class="thank-you-page-product-item-cart-total mb-0" id="tax-rate">
-                                ${{ number_format($total_including_tax, 2) }}</p>
+                        <div class="col-md-12 mt-1">
+                            <p class="thank-you-page-select-date-options mb-1">Please Select Date</p>
+                            <input type="datetime-local" name="date" class="form-control datetime_" min="" id="date">
+                        </div>
+                        <div class="col-md-12">
+                            <p class="thank-you-page-select-date-options mb-1">Purchase Order Number</p>
+                            <input type="text" name="po_number" placeholder="PO Number" id="po_number"
+                                class="form-control fontAwesome">
+                        </div>
+                        <div class="col-md-12">
+                            <p class="thank-you-page-select-date-options mb-1">Memo</p>
+                            <textarea type="text" name="memo" cols="20" rows="5" placeholder="Enter your Message"
+                                id="memo" class="form-control fontAwesome">
+                                </textarea>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <p class="thank-you-page-select-date-options mb-2">Payment Terms</p>
+                            <select name="paymentTerms" id="pay_terms" class="form-control">
+                                @if($user_address->paymentTerms == "Pay in Advanced" )
+                                    <option value="Pay in Advanced" selected>Pay in Advanced</option>
+                                @else
+                                    <option value="30 days from invoice" selected>30 days from invoice</option>
+                                @endif
+                            </select>
+                        </div>
+                    </div>
+                    
+                </div>
+
+                <div class="row">
+                    <?php
+                    $tax=0;
+                    if (!empty($tax_class)) {
+                        $tax = $cart_total * ($tax_class->rate / 100);
+                    }
+                    $total_including_tax = $tax + $cart_total  + $shipment_price;
+
+                    ?>
+                    <input type="hidden" name="incl_tax" id="incl_tax" value="{{ $total_including_tax }}">
+                    <input type="hidden" name="shipment_price" id="shipment_price" value="{{ $shipment_price }}">
+                    @if(!empty($tax_class))
+                    <input type="hidden" name="tax_class_id" id="tax_class_id" value="{{ $tax_class->id }}">
+                    @else
+                    <input type="hidden" name="tax_class_id" id="tax_class_id" value="{{$tax_class_none->id}}">
+                    @endif
+                    <div class="col-md-12 mt-3 py-3" style="background: #F7F7F7; border-radius: 5px;">
+                        <p class="thank-you-page-product-imtes-total-cart">Total</p>
+                        <div class="row">
+                            <div class="col-md-6 mt-1">
+                                <p class="thank-you-page-product-items-subtotal-cart">
+                                    {{-- <img class="img-fluid" src="theme/img/pricing_tag.png" width=" 35px"> --}}
+                                    Subtotal
+                                </p>
+                                <p class="thank-you-page-product-items-subtotal-cart">
+                                    {{-- <img class=" img-fluid" src="/theme/img/tax_icon_check_out_page.png"> --}}
+                                    <span>Rate</span> 
+                                    @if(!empty($tax_class))
+                                        ({{ number_format($tax_class->rate  , 2)}}%)
+                                    @else 
+                                        ({{ number_format(0  , 2)}})
+                                    @endif
+                                </p>
+                                <p class="thank-you-page-product-items-subtotal-cart mt-4">
+                                    {{-- <img class=" img-fluid" src="/theme/img/sub_total_icon_check_out_page.png"> --}}
+                                    <span>Shipment Price</span>
+                                </p>
+                                <p class="thank-you-page-product-items-subtotal-cart mt-4">
+                                    {{-- <img class=" img-fluid" src="/theme/img/sub_total_icon_check_out_page.png"> --}}
+                                    <span>Total</span>
+                                </p>
+
+                            </div>
+                            <div class="col-md-6">
+                                <p class=" thank-you-page-product-item-cart mb-0">${{ number_format($cart_total, 2) }}</p>
+                                {{-- <p class=" thank-you-page-product-item-cart">shipping</p> --}}
+                                <p class=" thank-you-page-product-item-cart mb-0">${{ number_format($tax, 2) }}</p>
+                                <p class=" thank-you-page-product-item-cart mb-0" id="shipment_price">${{number_format($shipment_price , 2)}}</p>
+                                <p class="thank-you-page-product-item-cart-total mb-0" id="tax-rate">
+                                    ${{ number_format($total_including_tax, 2) }}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-    {{-- <div class="row">
-        <div class="col-md-4 m-auto"
-            style="margin-top: 192px !important;margin:auto; !important; max-width:600px !important;">
-            @if(empty($matchZipCode))
-                <div class="alert alert-danger">
-                    <span>
-                        <strong>Sorry, we don't deliver to this address.</strong>
-                    </span>
-                </div>
-                @else
-                <button type="button" class="button-cards w-100 proceed_checkout_desktop" id="proceed_to_checkout" onclick="validate()"
-                style="background: #008BD3 ;border-radius: 5px;">Place order</button>
-            @endif
-        </div>
         </form>
-    </div> --}}
+    </div>
 </div>
 
 <!--Mobile View -->
@@ -892,7 +869,7 @@ $cart_price = 0;
                                             <div class="ps-1">
                                                 <div class=" mt-1">
                                                     <p class="payment-option">Please Select Date</p>
-                                                    <input type="date" name="date" class="form-control" min="{{ now()->toDateString('Y-m-d') }}" id="date">
+                                                    <input type="datetime-local" name="date" class="form-control datetimembl_" min="" id="date">
                                                 </div>
                                                 <div class="">
                                                     <p class="payment-option">Purchase Order Number</p>
@@ -918,27 +895,19 @@ $cart_price = 0;
                                                 </div>
                                             </div>
                                         </div>
-                                        @if($check_allowed_zip_code === true)
-                                            @if(empty($matchZipCode))
-                                                <div class="w-100">
-                                                    <div class="alert alert-danger text-center">
-                                                        <span>
-                                                            <strong>Sorry, we don't deliver to this address.</strong>
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            @else
-                                                <div class="text-center">
-                                                    <button type="button" class="proceedCheckoutmbl mt-4 w-100 p-2 border-0"
-                                                        id="proceed_to_checkout" onclick="validate_mbl()">
-                                                        Place Order</button>
-                                                </div>
-                                            @endif
-                                        @else
+                                        @if ($zip_code_is_valid === true)
                                             <div class="text-center">
                                                 <button type="button" class="proceedCheckoutmbl mt-4 w-100 p-2 border-0"
                                                     id="proceed_to_checkout" onclick="validate_mbl()">
                                                     Place Order</button>
+                                            </div>
+                                        @else
+                                            <div class="w-100">
+                                                <div class="alert alert-danger text-center">
+                                                    <span>
+                                                        <strong>Sorry, we don't deliver to this address.</strong>
+                                                    </span>
+                                                </div>
                                             </div>
                                         @endif
                                     </form>
@@ -1422,6 +1391,7 @@ $cart_price = 0;
                                                                     </div>
                                                                 @endforeach
                                                         @endforeach
+                                                        <input type="hidden" name="shipment_price" id="shipment_price" value="{{ $shipment_price }}">
                                                         <input type="hidden" name="incl_tax" id="incl_tax" value="{{ $total_including_tax }}">
                                                         @if(!empty($tax_class))
                                                         <input type="hidden" name="tax_class_id" id="tax_class_id" value="{{ $tax_class->id }}">
@@ -1432,7 +1402,7 @@ $cart_price = 0;
                                                             <div class="ps-1">
                                                                 <div class=" mt-1">
                                                                     <p class="cart-total-checkout-page">Please Select Date</p>
-                                                                    <input type="date" name="date" class="form-control " min="{{ now()->toDateString('Y-m-d') }}" id="date">
+                                                                    <input type="datetime-local" name="date" class="form-control datetimeipad_" min="" id="date">
                                                                 </div>
                                                                 <div class="">
                                                                     <p class="cart-total-checkout-page">Purchase Order Number</p>
@@ -1457,23 +1427,17 @@ $cart_price = 0;
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        @if($check_allowed_zip_code === true)
-                                                            @if(empty($matchZipCode))
-                                                                <div class="col-md-6 mt-5"style="margin:auto; !important; max-width:600px !important;">
-                                                                    <div class="alert alert-danger text-center">
-                                                                        <span>
-                                                                            <strong>Sorry, we don't deliver to this address.</strong>
-                                                                        </span>
-                                                                    </div>
-                                                                </div>
-                                                            @else
-                                                                <div class="d-flex justify-content-center mt-3">
-                                                                    <button type="button" class="button-cards w-50 proceed_checkout_ipad" id="proceed_to_checkout" onclick="validate_ipad()"> Place Order</button>
-                                                                </div>
-                                                            @endif
-                                                        @else
+                                                        @if ($zip_code_is_valid === true)
                                                             <div class="d-flex justify-content-center mt-3">
                                                                 <button type="button" class="button-cards w-50 proceed_checkout_ipad" id="proceed_to_checkout" onclick="validate_ipad()"> Place Order</button>
+                                                            </div>
+                                                        @else
+                                                            <div class="col-md-6 mt-5"style="margin:auto; !important; max-width:600px !important;">
+                                                                <div class="alert alert-danger text-center">
+                                                                    <span>
+                                                                        <strong>Sorry, we don't deliver to this address.</strong>
+                                                                    </span>
+                                                                </div>
                                                             </div>
                                                         @endif
 
@@ -2536,7 +2500,14 @@ $cart_price = 0;
             @include('partials.footer')
             <script>
                 $(document).ready(function() {
-
+                    const currentDate = new Date();
+                    const formattedDate = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')}T${String(currentDate.getHours()).padStart(2, '0')}:${String(currentDate.getMinutes()).padStart(2, '0')}`;
+                    $('.datetime_').val(formattedDate);
+                    $('.datetime_').attr('min', formattedDate);
+                    $('.datetimeipad_').val(formattedDate);
+                    $('.datetimeipad_').attr('min', formattedDate);
+                    $('.datetimembl_').val(formattedDate);
+                    $('.datetimembl_').attr('min', formattedDate);
                     var current_fs, next_fs, previous_fs; //fieldsets
                     var opacity;
 
