@@ -78,7 +78,6 @@ class CheckoutController extends Controller
             $user = User::where('id', $user_id)->first();
             $all_ids = UserHelper::getAllMemberIds($user);
             $pluck_default_user = Contact::whereIn('id', $all_ids)->where('is_default' , 1)->first();
-           
             if (!empty($pluck_default_user)) {
                 $user_address = Contact::where('id' ,$pluck_default_user->id)->first();
             } else {
@@ -89,6 +88,10 @@ class CheckoutController extends Controller
                     $user_address = Contact::where('user_id', $user_id)->where('contact_id', $contact_id)->orWhere('contact_id' , $contact->contact_id)->first();
                 }
             }
+            if (($user_address->postCode == null && $user_address->postalPostCode == null) || ($user_address->postalAddress1 == null && $user_address->address1 == null)) {
+                return redirect()->back()->with('message', 'Please update your address before proceeding to checkout.');
+            }
+
             $tax_class = TaxClass::where('name', $user_address->tax_class)->first();
             $tax_class_none = TaxClass::where('name', 'none')->first();
             
