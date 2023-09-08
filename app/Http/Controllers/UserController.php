@@ -1589,7 +1589,7 @@ class UserController extends Controller
             'contact_id' => $active_contact_id,
             'company' => $active_company
         ]);
-        $getSelectedContact = Contact::where('company' , $active_company)->where('status' , 1)->where('user_id' , $user_id)->first();
+        $getSelectedContact = Contact::where('company' , $active_company)->where('user_id' , $user_id)->first();
         $cartItems = Cart::where('user_id' , $getSelectedContact->user_id)->get();
         $getPriceColumn = UserHelper::getUserPriceColumn(false , $getSelectedContact->user_id);
 
