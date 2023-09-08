@@ -27,12 +27,14 @@ use Illuminate\Support\Facades\URL;
 use App\Helpers\MailHelper;
 use App\Helpers\UserHelper;
 use App\Helpers\SettingHelper;
+use App\Helpers\UtilHelper;
 use \Illuminate\Support\Str;
 use \Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
 use App\Jobs\SalesOrders;
 use App\Models\Cart;
 use App\Models\AdminSetting;
+use App\Models\DailyApiLog;
 use App\Models\Pricing;
 use App\Models\Pricingnew;
 use App\Models\ProductBuyList;
@@ -1229,6 +1231,9 @@ class UserController extends Controller
                             $update_contact->balance_owing = $balance_owing;
                             $update_contact->credit_limit = $credit_limit;
                             $update_contact->save();
+
+                            UtilHelper::saveDailyApiLog('update_contact');
+
                         } catch (\Exception $e) {
                             $e->getMessage();
                         }

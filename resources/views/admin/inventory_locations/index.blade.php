@@ -67,7 +67,7 @@
                                     @csrf
                                     @method('PUT')
                                     <button type="submit" class="btn btn-info btn-sm">
-                                        Update Status
+                                        Toggle Status
                                     </button>
                                 </form>
                             </td>
