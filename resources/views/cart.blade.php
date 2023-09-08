@@ -12,12 +12,19 @@
         {{ session('success') }}
     </div>
 @endif
+@php
+    $address_url = 'my-account/address';
+@endphp
 <div class="container-fluid desktop-view" style="
 	width: 1280px;
 	margin: auto !important;
 	">
     <div class="row">
-        <div class="col-md-9">
+        @if(auth()->user())
+        <div class="col-md-9 mt-2">
+            @else
+            <div class="col-md-9 ">
+                @endif
             <section class=" h-100">
                 <div class="h-100 py-5">
                     <div class="row">
@@ -32,6 +39,12 @@
                             @if (session('message'))
                                 <div class="alert alert-danger">
                                     {{ session('message') }}
+                                </div>
+                            @endif
+                            @if (session('address_message'))
+                                <div class="alert alert-danger">
+                                    {{ session('address_message') }}  <a href="{{route('my_account_address')}}">Click Here</a>
+                                    {{'to update your address'}}
                                 </div>
                             @endif
                             <div class="table-responsive">
@@ -216,57 +229,64 @@
         </section>
     </div>
     @if(auth()->user())
-    <div class="col-md-3 p-0  mt-1">
-        <div class="row mb-1">
-            <div class="w-75">
-                <div class="dropdown">
-                    @php
-                        $session_contact_company = Session::get('company');
-                        $companies = Session::get('companies');
-                    @endphp
-                    @if(!empty($companies))
-                        <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            {{!empty($session_contact_company) ? $session_contact_company : 'Select Company'}}
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            @if ($companies)
-                                @foreach ($companies as $company)
-                                    @php
-                                        if ($company->contact_id) {
-                                            $contact_id = $company->contact_id;
-                                            $primary = '(primary)';
-                                        } else {
-                                            $contact_id = $company->secondary_id;
-                                            $primary = '(secondary)';
-                                        }
-                                        if ($company->status == 0) {
-                                            $disabled = 'disabled';
-                                            $disable_text = '(Disabled)';
-                                            $muted = 'text-muted';
-                                        } else {
-                                            $disabled = '';
-                                            $disable_text = '';
-                                            $muted = '';
-                                        }
-                                        
-                                    @endphp
-                                    @if($company->type != "Supplier")
-                                        <a class="dropdown-item {{ $disabled }} {{ $muted }}" type="button" onclick="switch_company_user({{ $contact_id }})">{{ $company->company }}
-                                            <span
-                                                style="font-size: 9px;font-family: 'Poppins';"
-                                                class="{{ $muted }}">{{ $primary }}
-                                            </span>
+    <div class="col-md-3 p-0  mt-3">
+        <div class="col-md-12 p-0">
+            <div class="row mb-1 align-items-center">
+                <div class="col-md-4">
+                    <h5>
+                        Location(s):
+                    </h5>
+                </div>
+                <div class="col-md-8 text-right">
+                    <div class="dropdown">
+                        @php
+                            $session_contact_company = Session::get('company');
+                            $companies = Session::get('companies');
+                        @endphp
+                        @if(!empty($companies))
+                            <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {{!empty($session_contact_company) ? \Illuminate\Support\Str::limit($session_contact_company, 20)  : 'Select Company'}}
+                            </button>
+                            <div class="dropdown-menu mx-4 pl-1" aria-labelledby="dropdownMenuButton">
+                                @if ($companies)
+                                    @foreach ($companies as $company)
+                                        @php
+                                            if ($company->contact_id) {
+                                                $contact_id = $company->contact_id;
+                                                $primary = '(primary)';
+                                            } else {
+                                                $contact_id = $company->secondary_id;
+                                                $primary = '(secondary)';
+                                            }
+                                            if ($company->status == 0) {
+                                                $disabled = 'disabled';
+                                                $disable_text = '(Disabled)';
+                                                $muted = 'text-muted';
+                                            } else {
+                                                $disabled = '';
+                                                $disable_text = '';
+                                                $muted = '';
+                                            }
                                             
-                                        </a>
-                                    @endif
-                                @endforeach
-                            @endif
-                        </div>
-                    @elseif(!empty($session_contact_company))
-                        <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {{$session_contact_company}}
-                      </button>
-                    @endif
+                                        @endphp
+                                        @if($company->type != "Supplier")
+                                            <a class="dropdown-item {{ $disabled }} {{ $muted }}" type="button" onclick="switch_company_user({{ $contact_id }})">{{ $company->company }}
+                                                <span
+                                                    style="font-size: 9px;font-family: 'Poppins';"
+                                                    class="{{ $muted }}">{{ $primary }}
+                                                </span>
+                                                
+                                            </a>
+                                        @endif
+                                    @endforeach
+                                @endif
+                            </div>
+                        @elseif(!empty($session_contact_company))
+                            <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {!! \Illuminate\Support\Str::limit($session_contact_company, 20) !!}
+                            </button>
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>
@@ -477,54 +497,61 @@
                                         
                                         <div class="card-body p-0 m-0">
                                             @if(auth()->user())
-                                            <div class="dropdown mb-1">
-                                                @php
-                                                    $session_contact_company = Session::get('company');
-                                                    $companies = Session::get('companies');
-                                                @endphp
-                                                @if(!empty($companies))
-                                                    <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        {{!empty($session_contact_company) ? $session_contact_company : 'Select Company'}}
-                                                    </button>
-                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                        @if ($companies)
-                                                            @foreach ($companies as $company)
-                                                                @php
-                                                                    if ($company->contact_id) {
-                                                                        $contact_id = $company->contact_id;
-                                                                        $primary = '(primary)';
-                                                                    } else {
-                                                                        $contact_id = $company->secondary_id;
-                                                                        $primary = '(secondary)';
-                                                                    }
-                                                                    if ($company->status == 0) {
-                                                                        $disabled = 'disabled';
-                                                                        $disable_text = '(Disabled)';
-                                                                        $muted = 'text-muted';
-                                                                    } else {
-                                                                        $disabled = '';
-                                                                        $disable_text = '';
-                                                                        $muted = '';
-                                                                    }
-                                                                    
-                                                                @endphp
-                                                                @if($company->type != "Supplier")
-                                                                    <a class="dropdown-item {{ $disabled }} {{ $muted }}" type="button" onclick="switch_company_user({{ $contact_id }})">{{ $company->company }}
-                                                                        <span
-                                                                            style="font-size: 9px;font-family: 'Poppins';"
-                                                                            class="{{ $muted }}">{{ $primary }}
-                                                                        </span>
+                                            <div class="row p-1">
+                                                <div class="w-50 d-flex align-items-center">
+                                                    <h6 class="text-dark">
+                                                        Location(s):
+                                                    </h6>
+                                                </div>
+                                                <div class="dropdown mb-1 w-50">
+                                                    @php
+                                                        $session_contact_company = Session::get('company');
+                                                        $companies = Session::get('companies');
+                                                    @endphp
+                                                    @if(!empty($companies))
+                                                        <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            {{!empty($session_contact_company) ? $session_contact_company : 'Select Company'}}
+                                                        </button>
+                                                        <div class="dropdown-menu mb_item_mnu" aria-labelledby="dropdownMenuButton">
+                                                            @if ($companies)
+                                                                @foreach ($companies as $company)
+                                                                    @php
+                                                                        if ($company->contact_id) {
+                                                                            $contact_id = $company->contact_id;
+                                                                            $primary = '(primary)';
+                                                                        } else {
+                                                                            $contact_id = $company->secondary_id;
+                                                                            $primary = '(secondary)';
+                                                                        }
+                                                                        if ($company->status == 0) {
+                                                                            $disabled = 'disabled';
+                                                                            $disable_text = '(Disabled)';
+                                                                            $muted = 'text-muted';
+                                                                        } else {
+                                                                            $disabled = '';
+                                                                            $disable_text = '';
+                                                                            $muted = '';
+                                                                        }
                                                                         
-                                                                    </a>
-                                                                @endif
-                                                            @endforeach
-                                                        @endif
-                                                    </div>
-                                                @elseif(!empty($session_contact_company))
-                                                    <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    {{$session_contact_company}}
-                                                  </button>
-                                                @endif
+                                                                    @endphp
+                                                                    @if($company->type != "Supplier")
+                                                                        <a class="mb_item {{ $disabled }} {{ $muted }}" type="button" onclick="switch_company_user({{ $contact_id }})">{{ $company->company }}
+                                                                            <span
+                                                                                style="font-size: 9px;font-family: 'Poppins';"
+                                                                                class="{{ $muted }}">{{ $primary }}
+                                                                            </span>
+                                                                            
+                                                                        </a>
+                                                                    @endif
+                                                                @endforeach
+                                                            @endif
+                                                        </div>
+                                                    @elseif(!empty($session_contact_company))
+                                                        <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        {{$session_contact_company}}
+                                                      </button>
+                                                    @endif
+                                                </div>
                                             </div>
                                             @endif
                                             <div class="p-3 mb-3" style="border: 0.793792px solid #DFDFDF;box-shadow: 0px 3.17517px 3.17517px rgba(231, 231, 231, 0.25);">
@@ -805,54 +832,63 @@
                         <fieldset>
                             <div class="form-card">
                                 @if(auth()->user())
-                                <div class="dropdown mb-1">
-                                    @php
-                                        $session_contact_company = Session::get('company');
-                                        $companies = Session::get('companies');
-                                    @endphp
-                                    @if(!empty($companies))
-                                        <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            {{!empty($session_contact_company) ? $session_contact_company : 'Select Company'}}
-                                        </button>
-                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            @if ($companies)
-                                                @foreach ($companies as $company)
-                                                    @php
-                                                        if ($company->contact_id) {
-                                                            $contact_id = $company->contact_id;
-                                                            $primary = '(primary)';
-                                                        } else {
-                                                            $contact_id = $company->secondary_id;
-                                                            $primary = '(secondary)';
-                                                        }
-                                                        if ($company->status == 0) {
-                                                            $disabled = 'disabled';
-                                                            $disable_text = '(Disabled)';
-                                                            $muted = 'text-muted';
-                                                        } else {
-                                                            $disabled = '';
-                                                            $disable_text = '';
-                                                            $muted = '';
-                                                        }
-                                                        
-                                                    @endphp
-                                                    @if($company->type != "Supplier")
-                                                        <a class="dropdown-item {{ $disabled }} {{ $muted }}" type="button" onclick="switch_company_user({{ $contact_id }})">{{ $company->company }}
-                                                            <span
-                                                                style="font-size: 9px;font-family: 'Poppins';"
-                                                                class="{{ $muted }}">{{ $primary }}
-                                                            </span>
-                                                            
-                                                        </a>
+                                <div class="row">
+                                    <div class="col-md-2 d-flex align-items-center">
+                                        <h6 class="text-dark">
+                                            Location(s):
+                                        </h6>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="dropdown mb-1 ">
+                                            @php
+                                                $session_contact_company = Session::get('company');
+                                                $companies = Session::get('companies');
+                                            @endphp
+                                            @if(!empty($companies))
+                                                <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    {{!empty($session_contact_company) ? $session_contact_company : 'Select Company'}}
+                                                </button>
+                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                    @if ($companies)
+                                                        @foreach ($companies as $company)
+                                                            @php
+                                                                if ($company->contact_id) {
+                                                                    $contact_id = $company->contact_id;
+                                                                    $primary = '(primary)';
+                                                                } else {
+                                                                    $contact_id = $company->secondary_id;
+                                                                    $primary = '(secondary)';
+                                                                }
+                                                                if ($company->status == 0) {
+                                                                    $disabled = 'disabled';
+                                                                    $disable_text = '(Disabled)';
+                                                                    $muted = 'text-muted';
+                                                                } else {
+                                                                    $disabled = '';
+                                                                    $disable_text = '';
+                                                                    $muted = '';
+                                                                }
+                                                                
+                                                            @endphp
+                                                            @if($company->type != "Supplier")
+                                                                <a class="dropdown-item {{ $disabled }} {{ $muted }}" type="button" onclick="switch_company_user({{ $contact_id }})">{{ $company->company }}
+                                                                    <span
+                                                                        style="font-size: 9px;font-family: 'Poppins';"
+                                                                        class="{{ $muted }}">{{ $primary }}
+                                                                    </span>
+                                                                    
+                                                                </a>
+                                                            @endif
+                                                        @endforeach
                                                     @endif
-                                                @endforeach
+                                                </div>
+                                            @elseif(!empty($session_contact_company))
+                                                <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                {{$session_contact_company}}
+                                              </button>
                                             @endif
                                         </div>
-                                    @elseif(!empty($session_contact_company))
-                                        <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        {{$session_contact_company}}
-                                      </button>
-                                    @endif
+                                    </div>
                                 </div>
                                 @endif
                                 <div class="card border-0">
