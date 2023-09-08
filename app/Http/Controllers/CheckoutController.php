@@ -89,7 +89,7 @@ class CheckoutController extends Controller
                 }
             }
             if (($user_address->postCode == null && $user_address->postalPostCode == null) || ($user_address->postalAddress1 == null && $user_address->address1 == null)) {
-                return redirect()->back()->with('message', 'Please update your address before proceeding to checkout.');
+                return redirect()->back()->with('address_message', "Please update your address before proceeding to checkout" );
             }
 
             $tax_class = TaxClass::where('name', $user_address->tax_class)->first();
