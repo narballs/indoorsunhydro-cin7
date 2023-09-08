@@ -56,11 +56,11 @@ class CheckoutController extends Controller
             $cart_total = $row_price + $cart_total;
         }
         
-        $produts_weight = 0;
+        $products_weight = 0;
         foreach ($cart_items as $cart_item) {
             $product_options = ProductOption::where('product_id', $cart_item['product_id'])->where('option_id' , $cart_item['option_id'])->get();
             foreach ($product_options as $product_option) {
-                $produts_weight += $product_option->optionWeight * $cart_item['quantity'];
+                $products_weight += $product_option->optionWeight * $cart_item['quantity'];
             }
         }
         if ($contact) {
@@ -129,7 +129,7 @@ class CheckoutController extends Controller
                 'toCountry' => 'US',
                 'toPostalCode' => $user_address->postalPostCode ? $user_address->postalPostCode : $user_address->postCode,
                 'weight' => [
-                    'value' => $produts_weight,
+                    'value' => $products_weight,
                     'units' => 'pounds'
                 ],
             ];
