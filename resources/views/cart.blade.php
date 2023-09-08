@@ -510,7 +510,7 @@
                                                     @endphp
                                                     @if(!empty($companies))
                                                         <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                            {{!empty($session_contact_company) ? \Illuminate\Support\Str::limit($session_contact_company, 20) : 'Select Company'}}
+                                                            {{!empty($session_contact_company) ? \Illuminate\Support\Str::limit($session_contact_company, 16) : 'Select Company'}}
                                                         </button>
                                                         <div class="dropdown-menu mb_item_mnu" aria-labelledby="dropdownMenuButton">
                                                             @if ($companies)
@@ -548,7 +548,7 @@
                                                         </div>
                                                     @elseif(!empty($session_contact_company))
                                                         <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        {{\Illuminate\Support\Str::limit($session_contact_company, 20)}}
+                                                        {{\Illuminate\Support\Str::limit($session_contact_company, 16)}}
                                                       </button>
                                                     @endif
                                                 </div>
