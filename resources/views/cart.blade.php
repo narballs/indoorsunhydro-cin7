@@ -497,13 +497,13 @@
                                         
                                         <div class="card-body p-0 m-0">
                                             @if(auth()->user())
-                                            <div class="row p-1">
-                                                <div class="w-50 d-flex align-items-center">
+                                            <div class="d-flex">
+                                                <div class="col-md-4 d-flex align-items-center">
                                                     <h6 class="text-dark">
                                                         Location(s):
                                                     </h6>
                                                 </div>
-                                                <div class="dropdown mb-1 w-50">
+                                                <div class="dropdown mb-1 col-md-8 p-0">
                                                     @php
                                                         $session_contact_company = Session::get('company');
                                                         $companies = Session::get('companies');
