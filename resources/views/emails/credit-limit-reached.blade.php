@@ -171,26 +171,7 @@
                                                      ?>
                                                     <div
                                                         style="display: flex;  background: #FFFFFF !important; border: 1px solid #D3D3D3 !important;  border-radius: 5px !important; width: 722px !important;min-height: 114px !important; margin-top: 10px;">
-                                                        {{-- @if (!empty($item->product->options[0]->image))
-                                                        <div style="width:20%">
-                                                            <img class="img-fluid my-2 thank-you-page-product-options-image"
-                                                                src="{{$item->product->options[0]->image}}" alt=""
-                                                                style="
-                                                                    border: 1px solid #ddd; !important
-                                                                    border-radius: 4px !important;  
-                                                                    padding: 5px !important;
-                                                                    max-width: 110px !important;
-                                                                    padding-left: 12px !important;
-                                                                  " width="  120px !important;">
-                                                        </div>
-                                                        @else --}}
-                                                        {{-- <div style="width:20%">
-                                                            <img class="img-fluid my-2 thank-you-page-product-options-image"
-                                                                src="/theme/img/image_not_available.png" alt=""
-                                                                style="max-height: 95px !important;"
-                                                                width="120px !important;">
-                                                        </div>
-                                                        @endif --}}
+                                                        
                                                         <div style="width:60%;">
                                                             <p class=" thank-you-sku ps-0" style="font-family: 'Poppins';
                                                             font-style: normal;
@@ -427,6 +408,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    
                                 </div>
                             </div>
                         </div>
