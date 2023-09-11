@@ -2,8 +2,8 @@
     <div class="container-fluid my-1">
         <div class="row justify-content-center">
             
-            <div class="col-md-5"></div>
-            <div class="col-md-7">
+            <div class="col-md-2 col-lg-5 col-xl-5"></div>
+            <div class="col-md-8 col-lg-7 col-xl-7">
                 <div class="col-md-12">
                     <div class="row mx-1">
                         <div class="col-xl-3 col-lg-3 d-flex justify-content-around">
