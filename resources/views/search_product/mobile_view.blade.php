@@ -108,13 +108,6 @@
          {{ $products->appends(Request::all())->onEachSide(1)->links('pagination.front_custom_pagination') }}
       </div>
    </div>
-   {{-- <div class="row mobile-view">
-      <div class="container">
-         <div class="col-md-6">
-            {{ $products->appends(Request::all())->onEachSide(1)->links() }}
-         </div>
-      </div>
-   </div> --}}
 </div>
 
 

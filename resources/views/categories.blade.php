@@ -715,33 +715,6 @@
          return false;
    }
 </script>
-{{-- <script>
-   jQuery(document).ready(function(){
-      jQuery('.ajaxSubmit11').click(function(e){ alert('xxxxxxxxxx')
-         e.preventDefault();
-         //alert('here');
-         $.ajaxSetup({
-            headers: {
-                  'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-            }
-         });
-         jQuery.ajax({
-            url: "{{ url('/add-to-cart/') }}",
-            method: 'post',
-            data: {
-               "_token": "{{ csrf_token() }}",
-               p_id: jQuery('#p_id').val(),
-               quantity: jQuery('#quantity').val(),
-            },
-            success: function(result){
-               console.log(result);
-                  jQuery('.alert').html(result.success);
-                  // window.location.reload();
-            }
-         });
-      });
-   });
-</script> --}}
 
 <!-- Remove the container if you want to extend the Footer to full width. -->
 

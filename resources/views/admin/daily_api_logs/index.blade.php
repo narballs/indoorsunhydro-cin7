@@ -14,17 +14,7 @@
 
     <div class="table-wrapper">
         <div class="card-body product_secion_main_body">
-            {{-- <div class="row border-bottom product_section_header">
-                <div class="col-md-12">
-                    <div class="row">
-                        <div class="col-md-10">
-                            <p class="product_heading">
-                                DAILY API LOGS
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div> --}}
+            
             <div class="row border-bottom product_section_header">
                 <div class="col-md-12">
                     <div class="row">

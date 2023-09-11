@@ -292,36 +292,7 @@
                                                     color: #575757;
                                                     ">Thank you for your order</p>
                                                 </div>
-                                                {{-- <div class="col-md-5 pt-5" style="width: width: 50%;">
-                                                    <div class="pt-5" style="padding-top: 35px!important;
-                                                        padding-left: 14px!important;
-                                                        background: #fbfbfb;
-                                                        border-radius: 6px;
-                                                        display: flex;">
-                                                        <img src="{{ \App\Helpers\SettingHelper::getSetting('website_url') }}/theme/img/thnak-page-user-icon.png"
-                                                            class="img-fluid" alt="">
-                                                        &nbsp; &nbsp;
-                                                        <span class="thank-you-page-user-name pt-4 ps-2" style="font-family: 'Roboto' !important;
-                                                        font-style: normal;
-                                                        font-weight: 500;
-                                                        font-size: 30px;
-                                                        line-height: 120%;
-                                                        color: #2653A0;">
-                                                            {{$addresses['billing_address']['firstName']}}
-                                                            {{$addresses['billing_address']['lastName']}}
-                                                        </span>
-                                                    </div>
-                                                    <p style="font-family: 'Poppins';
-                                                    font-style: normal;
-                                                    font-weight: 500;
-                                                    font-size: 25px;
-                                                    line-height: 120%;
-                                                    letter-spacing: 0.545em;
-                                                    color: #575757;
-                                                    padding-left: 24px;
-                                                    margin-top: -18px !important;
-                                                    ">for your order</p>
-                                                </div> --}}
+                                                
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-12 mt-5" style="width: 100%">
@@ -337,12 +308,7 @@
                                                 </div>
                                                 <div class="mt-5" style="margin-top: 50px !important;">
                                                     <div style="display: flex;">
-                                                        {{-- <div style="width:20%">
-                                                            <p style="font-size: 15px;
-                                                            font-weight: 600;
-                                                            font-family: 'Poppins';
-                                                            padding-left: 46px;">Image</p>
-                                                        </div> --}}
+                                                        
                                                         <div style="width:60%">
                                                             <p style="
                                                             font-size: 15px;
@@ -384,26 +350,7 @@
                                                      ?>
                                                     <div
                                                         style="display: flex;  background: #FFFFFF !important; border: 1px solid #D3D3D3 !important;  border-radius: 5px !important; width: 722px !important;min-height: 114px !important; margin-top: 10px;">
-                                                        {{-- @if (!empty($item->product->options[0]->image))
-                                                        <div style="width:20%">
-                                                            <img class="img-fluid my-2 thank-you-page-product-options-image"
-                                                                src="{{$item->product->options[0]->image}}" alt=""
-                                                                style="
-                                                                    border: 1px solid #ddd; !important
-                                                                    border-radius: 4px !important;  
-                                                                    padding: 5px !important;
-                                                                    max-width: 110px !important;
-                                                                    padding-left: 12px !important;
-                                                                  " width="  120px !important;">
-                                                        </div>
-                                                        @else --}}
-                                                        {{-- <div style="width:20%">
-                                                            <img class="img-fluid my-2 thank-you-page-product-options-image"
-                                                                src="/theme/img/image_not_available.png" alt=""
-                                                                style="max-height: 95px !important;"
-                                                                width="120px !important;">
-                                                        </div>
-                                                        @endif --}}
+                                                        
                                                         <div style="width:60%;">
                                                             <p class=" thank-you-sku ps-0" style="font-family: 'Poppins';
                                                             font-style: normal;
@@ -640,76 +587,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    {{-- <div class="row mt-5 ms-5">
-                                        <div class="col-md-12" style="
-                                        width: 96%;
-                                        margin-top: 119px;
-                                       padding-bottom: 109px!important;">
-                                            <hr class=" second-border">
-                                            <p class="best-product mt-5" style="font-family: 'Poppins';
-                                            font-style: normal;
-                                            font-weight: 600;
-                                            font-size: 30px;
-                                            line-height: 36px;
-                                            padding-left: 47px;
-                                            margin-top: 68px;"> Best Product
-                                                <span> <img
-                                                        src="{{ \App\Helpers\SettingHelper::getSetting('website_url') }}/theme/img/thnak-you-best-pruduct-img.png"
-                                                        class="img-fluid ps-3" alt=""></span>
-                                            </p>
-                                            <div class="row ps-4" style="display: flex;">
-                                                @foreach ($best_product as $product)
-                                                <div class="col-md-3 d-flex justify-content-between aling-imtes-center ps-0 pe-3"
-                                                    style="    width: 25%;
-                                                    padding-left: 46px;">
-                                                    <div>
-                                                        <div style=" background: #ffffff;
-                                                        border: 1px solid #d3d3d3;
-                                                        border-radius: 5px;
-                                                        height: 223px;
-                                                        /* width: 250px; */
-                                                        width: 100%;
-													">
-                                                            @if ($product->images)
-                                                            <img src="{{$product->images}}" alt="" class="img-fluid"
-                                                                style="margin-left: 41px;
-                                                                padding-top: 28px;
-                                                                max-height: 172px;
-															">
-                                                            @else
-                                                            <img src="/theme/img/image_not_available.png"
-                                                                class="img-fluid" alt="" style="max-width: 62%;
-                                                                margin-left: 41px;
-                                                                padding-top: 28px;
-                                                                max-height: 118px;">
-                                                            @endif
-                                                        </div>
-                                                        <p class="thank-you-page-product-sku pt-1" style="    font-family: 'Roboto';
-                                                        font-style: normal;
-                                                        font-weight: 600;
-                                                        font-size: 18px;
-                                                        line-height: 21px;
-                                                        color: #000000;
-                                                        margin-bottom: 8px;
-                                                        margin-top: 18px;">
-                                                            Sku:
-                                                            {{$product->code}}
-                                                        </p>
-                                                        <p class="thank-you-page-product-name" style="  font-family: 'Roboto';
-                                                    font-style: normal;
-                                                    font-weight: 400;
-                                                    font-size: 18px;
-                                                    line-height: 25px;
-                                                    color: #4E4E4E;
-                                                    margin-top: 6px;">
-                                                            {{$product->name}}
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                                @endforeach
-                                            </div>
-                                        </div>
-                                    </div> --}}
+                                    
                                 </div>
                             </div>
                         </div>

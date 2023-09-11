@@ -130,12 +130,6 @@
                                                 </div>
                                                 <div class="mt-5" style="margin-top: 50px !important;">
                                                     <div style="display: flex;">
-                                                        {{-- <div style="width:20%">
-                                                            <p style="font-size: 15px;
-                                                            font-weight: 600;
-                                                            font-family: 'Poppins';
-                                                            padding-left: 46px;">Image</p>
-                                                        </div> --}}
                                                         <div style="width:60%">
                                                             <p style="
                                                             font-size: 15px;
@@ -433,76 +427,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    {{-- <div class="row mt-5 ms-5">
-                                        <div class="col-md-12" style="
-                                        width: 96%;
-                                        margin-top: 119px;
-                                       padding-bottom: 109px!important;">
-                                            <hr class=" second-border">
-                                            <p class="best-product mt-5" style="font-family: 'Poppins';
-                                            font-style: normal;
-                                            font-weight: 600;
-                                            font-size: 30px;
-                                            line-height: 36px;
-                                            padding-left: 47px;
-                                            margin-top: 68px;"> Best Product
-                                                <span> <img
-                                                        src="{{ url('theme/img/thnak-you-best-pruduct-img.png) }}"
-                                                        class="img-fluid ps-3" alt=""></span>
-                                            </p>
-                                            <div class="row ps-4" style="display: flex;">
-                                                @foreach ($best_product as $product)
-                                                <div class="col-md-3 d-flex justify-content-between aling-imtes-center ps-0 pe-3"
-                                                    style="    width: 25%;
-                                                    padding-left: 46px;">
-                                                    <div>
-                                                        <div style=" background: #ffffff;
-                                                        border: 1px solid #d3d3d3;
-                                                        border-radius: 5px;
-                                                        height: 223px;
-                                                        /* width: 250px; */
-                                                        width: 100%;
-													">
-                                                            @if ($product->images)
-                                                            <img src="{{$product->images}}" alt="" class="img-fluid"
-                                                                style="margin-left: 41px;
-                                                                padding-top: 28px;
-                                                                max-height: 172px;
-															">
-                                                            @else
-                                                            <img src="/theme/img/image_not_available.png"
-                                                                class="img-fluid" alt="" style="max-width: 62%;
-                                                                margin-left: 41px;
-                                                                padding-top: 28px;
-                                                                max-height: 118px;">
-                                                            @endif
-                                                        </div>
-                                                        <p class="thank-you-page-product-sku pt-1" style="    font-family: 'Roboto';
-                                                        font-style: normal;
-                                                        font-weight: 600;
-                                                        font-size: 18px;
-                                                        line-height: 21px;
-                                                        color: #000000;
-                                                        margin-bottom: 8px;
-                                                        margin-top: 18px;">
-                                                            Sku:
-                                                            {{$product->code}}
-                                                        </p>
-                                                        <p class="thank-you-page-product-name" style="  font-family: 'Roboto';
-                                                    font-style: normal;
-                                                    font-weight: 400;
-                                                    font-size: 18px;
-                                                    line-height: 25px;
-                                                    color: #4E4E4E;
-                                                    margin-top: 6px;">
-                                                            {{$product->name}}
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                                @endforeach
-                                            </div>
-                                        </div>
-                                    </div> --}}
                                 </div>
                             </div>
                         </div>
