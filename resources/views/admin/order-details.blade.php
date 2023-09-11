@@ -89,9 +89,6 @@
                 @else
                 <input type="hidden" value="0" name="tax_rate" id="tax_rate">
                 @endif
-                {{-- <div class="d-flex justify-content-between align-items-center py-3">
-                    <h2 class="h5 mb-0"><a href="#" class="text-muted"></a> Order #{{ $order->id }}</h2>
-                </div> --}}
                 <div class="row">
                     <div class="col-md-8">
                         <div class="card">
@@ -181,79 +178,7 @@
                                     </div>
                                 </div>
                             </div>
-                            {{-- <div class="row mb-5">
-                                <div class="col-md-2">
-                                    <form>
-                                        @csrf
-                                        <input type="hidden" value="{{ $time_diff }}" id="timeSpanToCancel">
-                                        <input type="hidden" value="{{ $time_difference_seconds }}" id="seconds">
-                                        @if ($order->isApproved == 2)
-                                            <button type="button" class="btn btn-danger btn-sm" disabled>Cancel
-                                                Order</button>
-                                            <div class="countdown">
-                                            </div>
-                                        @elseif($order->isApproved == 1 || $time_diff > 3)
-                                            <div class="col-md-12">
-                                                <button type="button" class="btn btn-secondary btn-sm" disabled>
-                                                    Cancel Order
-                                                </button>
-                                            </div>
-                                        @else
-                                            <div class="col-md-10">
-                                                <input type="hidden" value="{{ $orderitems[0]['order_id'] }}"
-                                                    id="order_id">
-                                                <input class="btn btn-danger btn-sm" type="button" value="Cancel Order"
-                                                    id="cancel_order" onclick=" cancelOrder(); addComment(0);">
-
-                                            </div>
-                                            <div class="countdown"></div>
-                                        @endif
-                                    </form>
-                                </div>
-                                <div class="col-md-6">
-                                    <form>
-                                        @csrf
-                                        @if ($order->isApproved == 1 )
-                                            <div class="col-md-12">
-                                                <button type="button" class="btn btn-secondary btn-sm" disabled>
-                                                    Fullfilled
-                                                </button>
-                                            </div>
-                                        @elseif ($order->isApproved == 2)
-                                            <div class="col-md-12"
-                                                style="margin-left: 122px;
-                                        margin-top: -29px;">
-                                                <button type="button" class="btn btn-danger btn-sm" disabled>
-                                                    Fullfilled
-                                                </button>
-                                            </div>
-
-                                        @elseif ($order->isApproved == 0 && $auto_fullfill == true )
-                                            <div class="col-md-12" style="margin-left: 50px;">
-                                                <input id="full_fill" class="btn btn-primary btn-sm " type="button"
-                                                    value="Fullfill Order" disabled>
-                                            </div>
-                                            <div class="spinner-border d-none" role="status" id="spinner">
-                                                <span class="sr-only" style="margin-left: 227px">Activating...</span>
-                                            </div>
-                                         @elseif ($order->isApproved == 0 && $auto_fullfill == false )
-                                            <div class="col-md-12" style="margin-left: 50px;">
-                                                <input id="full_fill" class="btn btn-primary btn-sm" type="button"
-                                                    value="Fullfill Order" onclick="fullFillOrder()">
-                                            </div>
-                                            <div class="spinner-border d-none" role="status" id="spinner">
-                                                <span class="sr-only" style="margin-left: 227px">Activating...</span>
-                                            </div>
-                                        @endif
-                                    </form>
-                                </div>
-                            </div>
-                            <div class="progress border d-none w-50 mx-auto" id="progress-bar">
-                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-info"
-                                    role="progressbar" aria-valuenow="100" aria-valuemin="" aria-valuemax="100"></div>
-                            </div>
-                            <div class="bg-success text-white text-center" id="fullfill_success"></div>
-                            <div class="bg-warning text-white text-center" id="fullfill_failed"></div> --}}
+                            
                             <div class="">
                                 <table class="table">
                                     <thead>

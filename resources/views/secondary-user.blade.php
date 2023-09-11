@@ -94,23 +94,3 @@
 top: 30%;" role="status">
 	<span class="sr-only">Loading...</span>
 </div>
-{{-- <script>
-	function copyUrlLink(i){
-		console.log($(this));
-		//console.log($('#copyUrl'))
-		console.time('time1');
-		var temp = $("<input>");
-		$("body").append(temp);
-		temp.val($('#copyUrl').text()).select();
-		document.execCommand("copy");
-		temp.remove();
-		console.timeEnd('time1');
- }		
-</script> --}}
-
-
-
-<script>
-	// display a modal (small modal)
-  
-</script>

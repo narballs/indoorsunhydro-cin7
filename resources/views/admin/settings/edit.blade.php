@@ -24,34 +24,7 @@
                                 </div>
                             </div>
                         </div>
-                            {{-- <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="type">Type</label>
-                                    <select name="type" id="setting_type" class="form-control">
-                                        @if($setting->type == 'boolean')
-                                        <option value="boolean" selected>Boolean</option>
-                                        <option value="text">Text</option>
-                                        <option value="number">Number</option>
-                                        <option value="yes/no">Yes/No</option>
-                                        @elseif($setting->type == 'text')
-                                        <option value="boolean">Boolean</option>
-                                        <option value="text" selected >Text</option>
-                                        <option value="number">Number</option>
-                                        <option value="yes/no">Yes/No</option>
-                                        @elseif($setting->type == 'number')
-                                        <option value="boolean">Boolean</option>
-                                        <option value="text">Text</option>
-                                        <option value="number" selected>Number</option>
-                                        <option value="yes/no">Yes/No</option>
-                                        @elseif($setting->type == 'yes/no')
-                                        <option value="boolean">Boolean</option>
-                                        <option value="text">Text</option>
-                                        <option value="number">Number</option>
-                                        <option value="yes/no" selected>Yes/No</option>
-                                        @endif
-                                    </select>
-                                </div>
-                            </div> --}}
+                            
                         <div class="row">
                             @if($setting->type == 'yes/no')
                             <div class="col-md-4" id="yes_no">

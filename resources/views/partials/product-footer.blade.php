@@ -61,14 +61,6 @@
                     <h5 class="text-uppercase mb-4 contact-us-footer ms-5">MY ACCOUNTS</h5>
                     <p class="card-text  sm-4-footer ms-5">My orders</p>
                 </div>
-                {{-- <div class=" ps-lg-0 ps-xl-0 col-lg-4 col-md-4 mb-4 mb-md-0 main-page-footer-section footer-section-product"
-                    style="    padding-left: 73px !important;">
-                    <h5 class=" text-uppercase mb-4 contact-us-footer"> PAYMENT METHOD</h5>
-                    <img class="img-fluid" src="/theme/img/paypal (2).png">
-                    <img class="img-fluid" src="/theme/img/discover (2).png">
-                    <img class="img-fluid" src="/theme/img/cours_icons.png">
-                    <img class="img-fluid" src="/theme/img/visa (2).png">
-                </div> --}}
             </div>
         </div>
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 footer-end mt-5">

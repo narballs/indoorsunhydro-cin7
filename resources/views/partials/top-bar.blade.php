@@ -1,49 +1,7 @@
 <header class="bg-white  text-dark top-bar-height w-100 header-top">
     <div class="container-fluid my-1">
         <div class="row justify-content-center">
-            {{-- <div class="col-md-3 d-flex align-items-center justify-content-end">
-                <div class="mt-1">
-                    @if (session('logged_in_as_another_user'))
-                        <a href="{{ url('admin/go-back') }}" class="top-bar-logout mt-3 "
-                            style=" font-size: 16px;font-family: 'Poppins';font-weight: 400; color:#242424;text-decoration:none;">Go Back</a>
-                    @endif
-                </div>
-            </div> --}}
-            {{-- <div class="col-md-3 d-flex ps-5 mt-2">
-                <div style="font-family: 'Poppins';">
-                    <img class="basket-icon mt-2" src="/theme/img/Bascket.png">
-                    <span
-                        class="cart-basket d-flex align-items-center justify-content-center float-sm-end cart-counter rounded-circle"
-                        id="top_cart_quantity">
-                        <?php
-                        $total_quantity = 0;
-                        $grand_total = 0;
-                        
-                        ?>
-                        @if (Session::get('cart'))
-                            @foreach (Session::get('cart') as $cart)
-                                <?php
-                                $total_q[] = $cart['quantity'];
-                                $total_quantity = array_sum($total_q);
-                                $total_price[] = $cart['price'] * $cart['quantity'];
-                                $grand_total = array_sum($total_price);
-                                ?>
-                            @endforeach
-                        @endif
-                        {{ $total_quantity }}
-                    </span>
-                </div>
-                <div>
-                    <a class="p-0 cart-price btn btn-secondary" data-bs-container="body" data-bs-toggle="popover"
-                        data-bs-placement="right"
-                        data-bs-content="add <strong class='text-success'>$2500.00</strong> more to your cart and get <span class='text-danger'>5% off </span>"><span
-                            id="top_cart_total"><a href="{{ '/cart/' }}"
-                                class="text-white d-flex align-items-end ms-3"> n${{ number_format($grand_total, 2) }}</span>&nbsp;(<span id="cart_items_quantity"
-                                    class="cart-counter-details">{{ $total_quantity }}</span>&nbsp;<span
-                                    class="cart-counter-details">items</span> )
-                            </a>
-                </div>
-            </div> --}}
+            
             <div class="col-md-5"></div>
             <div class="col-md-7">
                 <div class="col-md-12">

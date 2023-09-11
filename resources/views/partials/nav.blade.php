@@ -290,108 +290,13 @@ $categories = NavHelper::getCategories();
                                     </a>
                                 </li>
                             @endif
-                            {{-- <li class="nav-item me-3">
-                                <a class="nav-link text-uppercase nav-item-links ps-4" href="{{ url('my-account') }} ">My
-                                    account
-                                </a>
-                            </li> --}}
                             @if (session('logged_in_as_another_user'))
                                 <li class="nav-item me-3">
                                     <a class="nav-link text-uppercase nav-item-links ps-4" href="{{ url('admin/go-back') }} ">Go Back
                                     </a>
                                 </li>
                             @endif
-                            {{-- @if (Auth::user())
-                                @php
-                                    $session_contact_company = Session::get('company');
-                                @endphp
-                                <li class="nav-item">
-                                    <a class="nav-link text-uppercase nav-item-links p-0 ps-4" href="{{ '/user/' }}">
-                                        <a class="nav-link text-uppercase nav-item-links ps-4" href="{{ route('logout') }}"
-                                            onclick="event.preventDefault(); document.getElementById('frm-logout').submit();">
-                                            <span class="menu-title">Logout</span>
-                                        </a>
-                                        <form style="display:none;" id="frm-logout" action="{{ route('logout') }}"
-                                            method="POST">
-                                            {{ csrf_field() }}
-                                            <input class="btn btn-link text-white" type="submit" value="logout">
-                                        </form>
-                                    </a>
-                                </li>
-                                <li class="nav-item dropdown position-static">
-                                    @if (!empty($session_contact_company))
-                                        <a style="margin-left: 14px;" class="nav-link dropdown-toggle" href="#"
-                                            id="navbarDropdown" role="button" data-mdb-toggle="dropdown"
-                                            aria-expanded="false">
-                                            <span class="select-comapny-top-bar-mobile d-flex justify-content-lg-start">
-                                                ({{ $session_contact_company }})</span>
-                                        </a>
-                                    @else
-                                        <a class="nav-link dropdown-toggle p-0  text-white" href="#"
-                                            id="navbarDropdown" role="button" data-mdb-toggle="dropdown"
-                                            aria-expanded="false">
-                                            <span class="text-dark">Select
-                                                Company</span>
-                                        </a>
-                                    @endif
-                                    @php
-                                        $companies = Session::get('companies');
-                                        
-                                    @endphp
-                                    <div class="dropdown-menu w-100 mt-0" aria-labelledby="navbarDropdown"
-                                        style="border-top-left-radius: 0;
-                                        border-top-right-radius: 0;
-                                        margin-left: 13px !important;
-                                        margin-top: -6px !important;">
-                                        <div class="container">
-                                            <div class="row my-4">
-                                                <div class="col-md-12">
-                                                    <div class="list-group list-group-flush">
-                                                        @if (Auth::user())
-                                                            @if ($companies)
-                                                                @foreach ($companies as $company)
-                                                                    @php
-                                                                        if ($company->contact_id) {
-                                                                            $contact_id = $company->contact_id;
-                                                                            $primary = '(primary)';
-                                                                        } else {
-                                                                            $contact_id = $company->secondary_id;
-                                                                            $primary = '(secondary)';
-                                                                        }
-                                                                        if ($company->status == 0) {
-                                                                            $disabled = 'disabled';
-                                                                            $disable_text = '(Disabled)';
-                                                                            $muted = 'text-muted';
-                                                                        } else {
-                                                                            $disabled = '';
-                                                                            $disable_text = '';
-                                                                            $muted = '';
-                                                                        }
-                                                                        
-                                                                    @endphp
-                                                                    <a type="button"
-                                                                        class="list-group-item list-group-item-action p-0 {{ $disabled }} {{ $muted }}"
-                                                                        onclick="switch_company_user({{ $contact_id }})">{{ $company->company }}
-                                                                        <span style="font-size: 9px;font-family: 'Poppins';"
-                                                                            class="{{ $muted }}">{{ $primary }}
-                                                                        </span>
-                                                                    </a>
-                                                                @endforeach
-                                                            @endif
-                                                        @endif
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                            @else
-                                <li class="nav-item me-3">
-                                    <a class="nav-link text-uppercase nav-item-links ps-4" href="{{ url('my-account') }} ">
-                                        login or register
-                                    </a>
-                                </li>
-                            @endif --}}
+                            
                         </ul>
                     </div>
                 </div>
@@ -428,17 +333,6 @@ $categories = NavHelper::getCategories();
                 id="top_cart_quantity">
                 {{ $total_quantity }}
             </span>
-            {{-- <a class="p-0 cart-price btn btn-secondary" data-bs-container="body" data-bs-toggle="popover"
-                data-bs-placement="right"
-                data-bs-content="add <strong class='text-success'>$2500.00</strong> more to your cart and get <span class='text-danger'>5% off </span>"><span
-                    id="top_cart_total">
-                    <a href="{{ '/cart/' }}" class="text-white ml-2">
-                        <span id="topbar_cart_total" class="ms-2 cart-counter-details">
-                            {{ number_format($grand_total, 2) }}
-                        </span>
-                    </a>
-                </span>
-            </a> --}}
             <a href="{{ '/cart/' }}" class="text-white ml-2">
                 <span id="topbar_cart_total" class="ms-2 cart-counter-details topbar_cart_total_ipad">
                     {{ number_format($grand_total, 2) }}

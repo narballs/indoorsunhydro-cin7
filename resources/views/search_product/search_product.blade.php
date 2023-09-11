@@ -2,21 +2,21 @@
 @include('partials.top-bar')
 @include('partials.search-bar')
 {{-- <div class="mb-5">
-   <p style="line-height: 95px;" class="fw-bold fs-2 product-btn my-auto border-0 text-white text-center align-middle">
-      SEARCHED PRODUCTS
-   </p>
+	<p style="line-height: 95px;" class="fw-bold fs-2 product-btn my-auto border-0 text-white text-center align-middle">
+		SEARCHED PRODUCTS
+	</p>
 </div> --}}
 <div class="row justify-content-center align-items-center" style="background-color: #008BD3;height:70px;">
-   <p class="fw-bold fs-2 my-auto border-0 text-white text-center align-middle">
-      SEARCHED PRODUCTS
-   </p>
+	<p class="fw-bold fs-2 my-auto border-0 text-white text-center align-middle">
+		SEARCHED PRODUCTS
+	</p>
 </div>
 <?php $count = 0; ?>
 @include('search_product.desktop_view')
 @include('search_product.mobile_view')
 @include('search_product.ipade_view')
 <script>
-   function showAllItems() {
+	function showAllItems() {
       $('#all-items').val('all-items');
       handleSelectChange();
    }
@@ -126,32 +126,6 @@
 
                 return false;
             }
-         // jQuery(document).ready(function(){
-         //    jQuery('.ajaxSubmit11').click(function(e){ alert('xxxxxxxxxx')
-         //       e.preventDefault();
-                
-         //       $.ajaxSetup({
-         //          headers: {
-         //              'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-         //          }
-         //      });
-
-         //       jQuery.ajax({
-         //          url: "{{ url('/add-to-cart/') }}",
-         //          method: 'post',
-         //          data: {
-         //            "_token": "{{ csrf_token() }}",
-         //             p_id: jQuery('#p_id').val(),
-         //             quantity: jQuery('#quantity').val(),
-         //          },
-         //          success: function(result){
-         //             console.log(result);
-         //              jQuery('.alert').html(result.success);
-                        
-         //          }});
-         //       });
-         //    });
-
 
          // mobile filter
          function handleSelectChangeMbl(searchedOption = '') {
@@ -203,7 +177,7 @@
 
 
 <script>
-   $(document).ready(function() {
+	$(document).ready(function() {
       $('.pagination').addClass('pagination-sm');
    });
 </script>

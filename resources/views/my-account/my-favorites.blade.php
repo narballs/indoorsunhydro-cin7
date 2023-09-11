@@ -68,11 +68,6 @@
                                             <tr class="table-header-background">
                                                 <td class="d-flex table-row-item border-0">
                                                     <div class="custom-control custom-checkbox tabel-checkbox d-flex align-items-center pl-0">
-                                                        {{-- <input
-                                                            class="custom-control-input custom-control-input-success checkbox-table"
-                                                            type="checkbox" id="selectAll" value="">
-                                                        <label for="selectAll" class="custom-control-label"></label> --}}
-
                                                         <span class="table-row-heading-order">
                                                             <i class="fas fa-arrow-up"
                                                                 style="font-size:14.5px ;"></i>

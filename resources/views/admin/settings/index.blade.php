@@ -28,11 +28,6 @@
                                 Settings
                             </p>
                         </div>
-                        {{-- <div class="col-md-6 text-right create_bnt">
-                            <a href="{{ '/admin/settings/create' }}" class="btn create-new-order-btn">
-                                Create New Settings +
-                            </a>
-                        </div> --}}
                     </div>
                     
                 </div>
@@ -59,15 +54,8 @@
                         <tr>
                             <td>{{ $i++ }}</td>
                             <td>{{ $setting->option_name }}</td>
-                            {{-- <td>{{ $setting->type }}</td> --}}
                             <td>{{$setting->option_value}}</span></td>
                             <td><a href="{{url('/admin/settings/edit/' . $setting->id)}}" class="btn btn-primary text-white">Edit</a></td>
-                            {{-- <td>
-                                <form action="{{url('/admin/settings/delete/' . $setting->id)}}" method="post">
-                                    @csrf
-                                    <button type="submit" class="btn btn-danger">Delete</button>
-                                </form>
-                            </td> --}}
                         </tr>
                         @endforeach
                         @else
@@ -78,11 +66,6 @@
                     </tbody>
                 </table>
             </div>
-            {{-- <div class="row">
-                <div class="col-md-10">
-                    {{ $contacts->appends(Request::all())->links() }}
-                </div>
-            </div> --}}
         </div>
     @stop
 
