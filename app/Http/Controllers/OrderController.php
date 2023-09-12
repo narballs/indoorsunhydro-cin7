@@ -353,6 +353,7 @@ class OrderController extends Controller
                         foreach ($users_with_role_admin as $role_admin) {
                             $subject = 'New order received';
                             $adminTemplate = 'emails.admin-order-received';
+                            $data['subject'] = $subject;
                             $data['email'] = $role_admin->email;
                             MailHelper::sendMailNotification('emails.admin-order-received', $data);
                         }
