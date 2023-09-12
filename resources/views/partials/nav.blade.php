@@ -1,8 +1,8 @@
 <?php
 $categories = NavHelper::getCategories();
 ?>
-<div class="col-xl-12 col-lg-12 col-md-6  col-sm-6 col-xs-6 p-0 header-top mb-2">
-    <nav class="navbar navbar-expand-lg navbar-light bg-transparent pb-0 justify-content-start">
+<div class="col-xl-12 col-lg-12 col-md-12  col-sm-6 col-xs-6 p-0 header-top mb-2">
+    <nav class="navbar navbar-expand-sm navbar-light bg-transparent pb-0 justify-content-start">
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -324,7 +324,7 @@ $categories = NavHelper::getCategories();
 {{-- mobile view end --}}
 
 {{-- ipad view start --}}
-<div class="container-fluid ipad-view p-0 m-0">
+{{--<div class="container-fluid ipad-view p-0 m-0">
     <div class="row">
         <div class="bg-dark ipad_second_row" style="">
             <img class="basket-icon" src="/theme/img/Bascket.png">
@@ -347,7 +347,6 @@ $categories = NavHelper::getCategories();
                     <button style="" class="navbar-toggler p-2 mt-2 text-white text-uppercase ipad_menu_btn" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
-                        {{-- <span class="navbar-toggler-icon"></span> --}}
                         <i class="fa fa-bars" aria-hidden="true"></i> Menu
                     </button>
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -436,7 +435,6 @@ $categories = NavHelper::getCategories();
                     @if (Auth::user())
                         <li class="nav-item">
                             <a class="nav-link text-uppercase nav-item-links p-0" href="{{ '/user/' }}">
-                                {{-- <img src="/theme/img/User.png" width="35px" height="35px"> --}}
                                 <a class="nav-link text-uppercase nav-item-links" href="{{ route('logout') }}"
                                     onclick="event.preventDefault(); document.getElementById('frm-logout').submit();">
                                     <span class="menu-title ps-4">Logout</span>
@@ -463,7 +461,6 @@ $categories = NavHelper::getCategories();
                                     <span class="text-dark">Select Company</span>
                                 </a>
                             @endif
-                            <!-- Dropdown menu -->
                             @php
                                 $companies = Session::get('companies');
                             @endphp
@@ -527,26 +524,25 @@ $categories = NavHelper::getCategories();
                 </div>
         </div>
         </nav>
+        </div>
+        <div class="col-md-12 mb-4">
+            <form class="d-flex mt-3" method="get" action="{{ route('product_search') }}">
+                <input type="hidden" id="is_search" name="is_search" value="1">
+                <div class="input-group top-search-group w-100">
+                    <input type="text" class="form-control" placeholder="What are you searching for"
+                        aria-label="Search" aria-describedby="basic-addon2" id="search" name="value"
+                        value="{{ isset($searched_value) ? $searched_value : '' }}">
+                    <span class="input-group-text" id="search-addon">
+                        <button class="btn-info" type="submit" id="search"
+                            style="background: transparent;border:none">
+                            <i class="fa fa-search" style="font-size:16px;"></i>
+                        </button>
+                    </span>
+                </div>
+            </form>
+        </div>
     </div>
-    <div class="col-md-12 mb-4">
-        <form class="d-flex mt-3" method="get" action="{{ route('product_search') }}">
-            <input type="hidden" id="is_search" name="is_search" value="1">
-            <div class="input-group top-search-group w-100">
-                <input type="text" class="form-control" placeholder="What are you searching for"
-                    aria-label="Search" aria-describedby="basic-addon2" id="search" name="value"
-                    value="{{ isset($searched_value) ? $searched_value : '' }}">
-                <span class="input-group-text" id="search-addon">
-                    <button class="btn-info" type="submit" id="search"
-                        style="background: transparent;border:none">
-                        {{-- <i class="text-white" data-feather="search"></i> --}}
-                        <i class="fa fa-search" style="font-size:16px;"></i>
-                    </button>
-                </span>
-            </div>
-        </form>
-    </div>
-</div>
-</div>
+</div>--}}
 {{-- ipad view end --}}
 <script>
     function switch_company_user(contact_id) {

@@ -15,21 +15,17 @@
 @php
     $address_url = 'my-account/address';
 @endphp
-<div class="container-fluid desktop-view" style="
-	width: 1280px;
-	margin: auto !important;
-	">
+<div class="container-fluid desktop-view" style="width: 1280px;margin: auto !important;">
     <div class="row">
         @if(auth()->user())
         <div class="col-sm-12 col-md-12 col-lg-9 mt-2">
             @else
-            <div class="col-md-12 col-lg-9 ">
-                @endif
+        <div class="col-md-12 col-lg-9 ">
+            @endif
             <section class=" h-100">
                 <div class="h-100 py-5">
                     <div class="row">
                         <div class="col-md-12">
-
 
                             @if (Auth::check() == true && $contact->status == 0)
                                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -122,313 +118,313 @@
                                                     </td>
                                                     <td scope=" row">
                                                         <div class="d-flex align-items-center mt-3">
-                                                                      @if (!empty($cart['image']))
-                                                                <img src="{{ $cart['image'] }}"
-                                                                    class="img-fluid rounded-3" style="width: 80px;"
-                                                                    alt="Book">
-                                                            @else
-                                                                <img src="/theme/img/image_not_available.png"
-                                                                    class="img-fluid rounded-3" style="width: 78px;"
-                                                                    alt="Book">
-                                            @endif
-                                            <div class="flex-column ms-4">
-                                                <span class="mb-2">
-                                                    <a class=" pe-3 cart-page-items"
-                                                        href="{{ url('product-detail/' . $pk_product_id . '/' . $cart['option_id'] . '/' . $cart['slug']) }}">{{ $cart['name'] }}
-                                                    </a>
-                                                </span>
-                                            </div>
-                            </div>
-                            </td>
-                            <td class=" align-middle">
-                                <p class="mb-0 ps-2  cart-page-items">
-                                    ${{ number_format($cart['price'], 2) }}
-                                </p>
-                            </td>
-                            <td class="align-middle">
-                                <div class="mt-4 ml-1">
-                                    <div class="quantity">
-                                        <input type="number" name="quantity" id={{ 'row_quantity_' . $pk_product_id }}
-                                            min="1" max="20" step="1"
-                                            value="{{ $cart['quantity'] }}" onchange="update_cart_products({{ $pk_product_id }})">
-                                        <input type="hidden" name="p_id" id="p_id"
-                                            value="{{ $cart['product_id'] }}">
-                                        <input type="hidden" name="p_id" id="option_id"
-                                            value="{{ $cart['option_id'] }}">
-                                        <div class="quantity-nav">
-                                            <div class="quantity-div quantity-up"
-                                                onclick="increase_qty({{ $pk_product_id }})">
-                                                
-                                            </div>
-                                            <div class="quantity-div quantity-down"
-                                                onclick="decrease_qty({{ $pk_product_id }})">
-                                                
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="align-middle pl-0">
-                                <div class="row align-items-center text-center">
-                                    <span class="mb-0 text-danger ps-2  cart-page-items">
-                                        <span
-                                            id="subtotal_{{ $pk_product_id }}">${{ number_format($cart['price'] * $cart['quantity'], 2) }}</span>
-                                    </span>
-                                    <p class="text-center remove-item-cart mb-0">
-                                        <a href="{{ url('remove/' . $pk_product_id) }}" id="remove"
-                                            class="remove-cart-page-button">Remove</a>
-                                    </p>
-                                </div>
-                            </td>
-                            </tr>
-                            @endforeach
-                            @endif
-                            </tbody>
-                            <tfoot class="border-0" style="border-color: #ffff !important;">
-                                <tr>
-                                    <td colspan="5">
-                                        <div class="w-100 d-flex mt-3">
-                                            
-                                            <div class="col-md-8 coupon-code ps-0">
-                                                <div class=" align-items-center d-flex">
+                                                                @if (!empty($cart['image']))
+                                                                    <img src="{{ $cart['image'] }}"
+                                                                        class="img-fluid rounded-3" style="width: 80px;"
+                                                                        alt="Book">
+                                                                @else
+                                                                    <img src="/theme/img/image_not_available.png"
+                                                                        class="img-fluid rounded-3" style="width: 78px;"
+                                                                        alt="Book">
+                                                                @endif
+                                                            <div class="flex-column ms-4">
+                                                                <span class="mb-2">
+                                                                    <a class=" pe-3 cart-page-items"
+                                                                        href="{{ url('product-detail/' . $pk_product_id . '/' . $cart['option_id'] . '/' . $cart['slug']) }}">{{ $cart['name'] }}
+                                                                    </a>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td class=" align-middle">
+                                                        <p class="mb-0 ps-2  cart-page-items">
+                                                            ${{ number_format($cart['price'], 2) }}
+                                                        </p>
+                                                    </td>
+                                                    <td class="align-middle">
+                                                        <div class="mt-4 ml-1">
+                                                            <div class="quantity">
+                                                                <input type="number" name="quantity" class="quantity_calculator" id={{ 'row_quantity_' . $pk_product_id }}
+                                                                    min="1" max="20" step="1"
+                                                                    value="{{ $cart['quantity'] }}" onchange="update_cart_products({{ $pk_product_id }})">
+                                                                <input type="hidden" name="p_id" id="p_id"
+                                                                    value="{{ $cart['product_id'] }}">
+                                                                <input type="hidden" name="p_id" id="option_id"
+                                                                    value="{{ $cart['option_id'] }}">
+                                                                <div class="quantity-nav">
+                                                                    <div class="quantity-div quantity-up"
+                                                                        onclick="increase_qty({{ $pk_product_id }})">
+                                                                        
+                                                                    </div>
+                                                                    <div class="quantity-div quantity-down"
+                                                                        onclick="decrease_qty({{ $pk_product_id }})">
+                                                                        
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="align-middle pl-0">
+                                                        <div class="row align-items-center text-center">
+                                                            <span class="mb-0 text-danger ps-2  cart-page-items">
+                                                                <span
+                                                                    id="subtotal_{{ $pk_product_id }}">${{ number_format($cart['price'] * $cart['quantity'], 2) }}</span>
+                                                            </span>
+                                                            <p class="text-center remove-item-cart mb-0">
+                                                                <a href="{{ url('remove/' . $pk_product_id) }}" id="remove"
+                                                                    class="remove-cart-page-button">Remove</a>
+                                                            </p>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        @endif
+                                    </tbody>
+                                    <tfoot class="border-0" style="border-color: #ffff !important;">
+                                        <tr>
+                                            <td colspan="5">
+                                                <div class="w-100 d-flex mt-3">
                                                     
-                                                    {{-- <div>
-                                                        <span class="coupon-code-label"><img class="img-fluid"
-                                                                src="/theme/img/Vector.png"
-                                                                class="img-fluid">&nbsp;&nbsp;Coupon
-                                                            code</span>
-                                                    </div>
-                                                    <div class="col-4 ps-3">
-                                                        <div class="form-signupp">
-                                                            <input type="text" name="code" id="code"
-                                                                class="fontAwesome form-control"
-                                                                placeholder="Your code" required>
+                                                    <div class="col-md-8 coupon-code ps-0">
+                                                        <div class=" align-items-center d-flex">
+                                                            
+                                                            {{-- <div>
+                                                                <span class="coupon-code-label"><img class="img-fluid"
+                                                                        src="/theme/img/Vector.png"
+                                                                        class="img-fluid">&nbsp;&nbsp;Coupon
+                                                                    code</span>
+                                                            </div>
+                                                            <div class="col-4 ps-3">
+                                                                <div class="form-signupp">
+                                                                    <input type="text" name="code" id="code"
+                                                                        class="fontAwesome form-control"
+                                                                        placeholder="Your code" required>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-5 p-0">
+                                                                <span>
+                                                                    <button class="apply-coupon-code-button">
+                                                                        Apply Coupon
+                                                                    </button>
+                                                                </span>
+                                                            </div> --}}
                                                         </div>
                                                     </div>
-                                                    <div class="col-5 p-0">
-                                                        <span>
-                                                            <button class="apply-coupon-code-button">
-                                                                Apply Coupon
-                                                            </button>
-                                                        </span>
-                                                    </div> --}}
+                                                    <div class="col-md-4 p-0 text-right">
+                                                        <span class="cart-page-items text-danger">Price Subject to Change</span>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-md-4 p-0 text-right">
-                                                <span class="cart-page-items text-danger">Price Subject to Change</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tfoot>
-                            </table>
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
+            </section>
         </div>
-        </section>
-    </div>
-    @if(auth()->user())
-    <div class="col-md-6 col-sm-6 col-lg-3 col-xl-3 p-0  mt-3 cart_total_div">
-        <div class="col-md-12 p-0">
-            <div class="row mb-1 align-items-center">
-                <div class="col-md-4">
-                    <h5>
-                        Location(s):
-                    </h5>
-                </div>
-                <div class="col-md-8 text-right">
-                    <div class="dropdown">
-                        @php
-                            $session_contact_company = Session::get('company');
-                            $companies = Session::get('companies');
-                        @endphp
-                        @if(!empty($companies))
-                            <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                {{!empty($session_contact_company) ? \Illuminate\Support\Str::limit($session_contact_company, 20)  : 'Select Company'}}
-                            </button>
-                            <div class="dropdown-menu mx-4 pl-1" aria-labelledby="dropdownMenuButton">
-                                @if ($companies)
-                                    @foreach ($companies as $company)
-                                        @php
-                                            if ($company->contact_id) {
-                                                $contact_id = $company->contact_id;
-                                                $primary = '(primary)';
-                                            } else {
-                                                $contact_id = $company->secondary_id;
-                                                $primary = '(secondary)';
-                                            }
-                                            if ($company->status == 0) {
-                                                $disabled = 'disabled';
-                                                $disable_text = '(Disabled)';
-                                                $muted = 'text-muted';
-                                            } else {
-                                                $disabled = '';
-                                                $disable_text = '';
-                                                $muted = '';
-                                            }
-                                            
-                                        @endphp
-                                        @if($company->type != "Supplier")
-                                            <a class="dropdown-item {{ $disabled }} {{ $muted }}" type="button" onclick="switch_company_user({{ $contact_id }})">{{ $company->company }}
-                                                <span
-                                                    style="font-size: 9px;font-family: 'Poppins';"
-                                                    class="{{ $muted }}">{{ $primary }}
-                                                </span>
+        @if(auth()->user())
+        <div class="col-md-6 col-sm-6 col-lg-3 col-xl-3 p-0  mt-3 cart_total_div">
+            <div class="col-md-12 p-0">
+                <div class="row mb-1 align-items-center">
+                    <div class="col-md-4">
+                        <h5>
+                            Location(s):
+                        </h5>
+                    </div>
+                    <div class="col-md-8 text-right">
+                        <div class="dropdown">
+                            @php
+                                $session_contact_company = Session::get('company');
+                                $companies = Session::get('companies');
+                            @endphp
+                            @if(!empty($companies))
+                                <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    {{!empty($session_contact_company) ? \Illuminate\Support\Str::limit($session_contact_company, 20)  : 'Select Company'}}
+                                </button>
+                                <div class="dropdown-menu mx-4 pl-1" aria-labelledby="dropdownMenuButton">
+                                    @if ($companies)
+                                        @foreach ($companies as $company)
+                                            @php
+                                                if ($company->contact_id) {
+                                                    $contact_id = $company->contact_id;
+                                                    $primary = '(primary)';
+                                                } else {
+                                                    $contact_id = $company->secondary_id;
+                                                    $primary = '(secondary)';
+                                                }
+                                                if ($company->status == 0) {
+                                                    $disabled = 'disabled';
+                                                    $disable_text = '(Disabled)';
+                                                    $muted = 'text-muted';
+                                                } else {
+                                                    $disabled = '';
+                                                    $disable_text = '';
+                                                    $muted = '';
+                                                }
                                                 
-                                            </a>
-                                        @endif
-                                    @endforeach
-                                @endif
-                            </div>
-                        @elseif(!empty($session_contact_company))
-                            <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                {!! \Illuminate\Support\Str::limit($session_contact_company, 20) !!}
-                            </button>
-                        @endif
+                                            @endphp
+                                            @if($company->type != "Supplier")
+                                                <a class="dropdown-item {{ $disabled }} {{ $muted }}" type="button" onclick="switch_company_user({{ $contact_id }})">{{ $company->company }}
+                                                    <span
+                                                        style="font-size: 9px;font-family: 'Poppins';"
+                                                        class="{{ $muted }}">{{ $primary }}
+                                                    </span>
+                                                    
+                                                </a>
+                                            @endif
+                                        @endforeach
+                                    @endif
+                                </div>
+                            @elseif(!empty($session_contact_company))
+                                <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    {!! \Illuminate\Support\Str::limit($session_contact_company, 20) !!}
+                                </button>
+                            @endif
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        @else
-        <div class="col-md-6 col-sm-6 col-lg-3 col-xl-3 p-0  mt-5 cart_total_div">
-        @endif
-        <div class="table-responsive" style="padding-top:3px !important;">
-            <?php
-            $tax=0;
-                if (!empty($tax_class)) {
-                    $tax = $cart_total * ($tax_class->rate / 100);
-                }
-                $total_including_tax = $tax + $cart_total;
-            ?>
-            @if(!empty($tax_class->rate))
-            <input type="hidden" value="{{$tax_class->rate}}" id="tax_rate_number">
             @else
-            <input type="hidden" value="0" id="tax_rate_number">
+        <div class="col-md-6 col-sm-6 col-lg-3 col-xl-3 p-0  mt-5 cart_total_div">
             @endif
-            <table class="table mt-4">
-                <thead>
-                    <tr>
-                        <th colspan="" scope="col" class="th-lg">
-                            <span class=" cart-total p-1">
-                                Cart Totals
-                            </span>
-                        </th>
-                        <th scope="col" class="th-lg">
-                            <span class="d-flex align-items-center justify-content-end">
-                                <button onclick="showZendesk()" class="bg-transparent border-0 show_zendesk_btn">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                        <path d="M4.08579 5.58579C3.71071 5.96086 3.5 6.46957 3.5 7V11C3.5 11.5304 3.71071 12.0391 4.08579 12.4142C4.46086 12.7893 4.96957 13 5.5 13H7.5V16L10.5 13H12.5C13.0304 13 13.5391 12.7893 13.9142 12.4142C14.2893 12.0391 14.5 11.5304 14.5 11V7C14.5 6.46957 14.2893 5.96086 13.9142 5.58579C13.5391 5.21071 13.0304 5 12.5 5H5.5C4.96957 5 4.46086 5.21071 4.08579 5.58579Z" fill="#A2A2A2"/>
-                                        <path d="M16.5 11V9H17.5C18.0304 9 18.5392 9.21071 18.9142 9.58579C19.2893 9.96086 19.5 10.4696 19.5 11V15C19.5 15.5304 19.2893 16.0391 18.9142 16.4142C18.5392 16.7893 18.0304 17 17.5 17H15.5V20L12.5 17H10.5C10.161 17 9.84201 16.916 9.56201 16.767L11.328 15H12.5C13.5609 15 14.5783 14.5786 15.3284 13.8284C16.0786 13.0783 16.5 12.0609 16.5 11Z" fill="#A2A2A2"/>
-                                    </svg> 
-                                    Feedback?
-                                </button>
-                            </span>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="ps-0" colspan="2">
-                            <div class="d-flex align-items-center justify-content-between">
-                                <span>
-                                    <img class=" img-fluid" src="/theme/img/sub-totals-icon.png">
-                                    <strong class=" cart-total">Subtotal</strong>
+            <div class="table-responsive" style="padding-top:3px !important;">
+                <?php
+                $tax=0;
+                    if (!empty($tax_class)) {
+                        $tax = $cart_total * ($tax_class->rate / 100);
+                    }
+                    $total_including_tax = $tax + $cart_total;
+                ?>
+                @if(!empty($tax_class->rate))
+                <input type="hidden" value="{{$tax_class->rate}}" id="tax_rate_number">
+                @else
+                <input type="hidden" value="0" id="tax_rate_number">
+                @endif
+                <table class="table mt-4">
+                    <thead>
+                        <tr>
+                            <th colspan="" scope="col" class="th-lg">
+                                <span class=" cart-total p-1">
+                                    Cart Totals
                                 </span>
-                                <span id="cart_grand_total">
-                                    <strong class=" d-flex justify-content-end cart-page-items ">
-                                        ${{ number_format($cart_total, 2) }}
-                                    </strong>
+                            </th>
+                            <th scope="col" class="th-lg">
+                                <span class="d-flex align-items-center justify-content-end">
+                                    <button onclick="showZendesk()" class="bg-transparent border-0 show_zendesk_btn">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                            <path d="M4.08579 5.58579C3.71071 5.96086 3.5 6.46957 3.5 7V11C3.5 11.5304 3.71071 12.0391 4.08579 12.4142C4.46086 12.7893 4.96957 13 5.5 13H7.5V16L10.5 13H12.5C13.0304 13 13.5391 12.7893 13.9142 12.4142C14.2893 12.0391 14.5 11.5304 14.5 11V7C14.5 6.46957 14.2893 5.96086 13.9142 5.58579C13.5391 5.21071 13.0304 5 12.5 5H5.5C4.96957 5 4.46086 5.21071 4.08579 5.58579Z" fill="#A2A2A2"/>
+                                            <path d="M16.5 11V9H17.5C18.0304 9 18.5392 9.21071 18.9142 9.58579C19.2893 9.96086 19.5 10.4696 19.5 11V15C19.5 15.5304 19.2893 16.0391 18.9142 16.4142C18.5392 16.7893 18.0304 17 17.5 17H15.5V20L12.5 17H10.5C10.161 17 9.84201 16.916 9.56201 16.767L11.328 15H12.5C13.5609 15 14.5783 14.5786 15.3284 13.8284C16.0786 13.0783 16.5 12.0609 16.5 11Z" fill="#A2A2A2"/>
+                                        </svg> 
+                                        Feedback?
+                                    </button>
                                 </span>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="ps-0" colspan="2">
-                            <div class="d-flex align-items-center justify-content-between">
-                                <span>
-                                    <img class=" img-fluid" src="/theme/img/text-rate-icon.png">
-                                    <span> <strong class="cart-total" id="tax_rate">Tax
-                                            @if(!empty($tax_class->rate))
-                                                {{ number_format($tax_class->rate, 2) }}%
-                                            @else
-                                                {{number_format(0, 2)}}
-                                            @endif
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="ps-0" colspan="2">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <span>
+                                        <img class=" img-fluid" src="/theme/img/sub-totals-icon.png">
+                                        <strong class=" cart-total">Subtotal</strong>
+                                    </span>
+                                    <span id="cart_grand_total">
+                                        <strong class=" d-flex justify-content-end cart-page-items ">
+                                            ${{ number_format($cart_total, 2) }}
                                         </strong>
                                     </span>
-                                </span>
-                                <span id="" class="tax_cart">
-                                    <strong class=" d-flex justify-content-end cart-page-items" id="tax_amount">
-                                        ${{ number_format($tax, 2) }}
-                                    </strong>
-                                </span>
-                            </div>
-                            @if(!empty($tax_class->name))
-                                <div class="mx-2"><span><strong class="cart-total mx-3 px-3" >{{'Tax Class:' . $tax_class->name}}</strong></span></div>
-                            @endif
-                            {{-- <div>
-                                <span class="tax-calculater">
-                                    (Tax is calculated when order is invoiced, could be 0% based
-                                    on your account setup)
-                                </span>
-                            </div> --}}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="ps-0" colspan="2">
-                            <div class="d-flex align-items-center justify-content-between">
-                                <span>
-                                    <img class="img-fluid subtotal-img-cart-page" src="/theme/img/total-icon.png">
-                                    <strong class="cart-total">SubTotal</strong>
-                                </span>
-                                <span id="cart_grand_total" class="grandTotal">
-                                    <strong class=" d-flex justify-content-end cart-page-items text-danger g_total">
-                                        ${{ number_format($total_including_tax, 2) }}
-                                    </strong>
-                                </span>
-                            </div>
-                            <div>
-                                <span class="tax-calculater">
-                                    (No payment is collected during this process)
-                                </span>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <div>
-                @if (Auth::check() == true && $contact->status == 1 && !empty($contact->contact_id))
-                    <a href="{{ url('/checkout') }}">
-                        <button class="procedd-to-checkout mt-3 w-100 mb-4">
-                            PROCEED TO CHECKOUT
-                        </button>
-                    </a>
-                @elseif (Auth::check() == true && $contact->status == 0)
-                    <div class="alert alert-danger alert-dismissible fade show py-2" role="alert">
-                        <span class="d-flex justify-content-center align-items-center">
-                            Checkout has been disabled for this email address, please contact your
-                            account
-                            manager to re-enable checkout.
-                        </span>
-                    </div>
-                @elseif(Auth::check() == true && empty($contact->contact_id))
-                    <a href="{{ url('/checkout/') }}">
-                        <button class="procedd-to-checkout mt-3 w-100 mb-4">
-                            PROCEED TO CHECKOUT
-                        </button>
-                    </a>
-                @else
-                    <a href="{{ url('/user/') }}">
-                        <button class="procedd-to-checkout mt-3 w-100 mb-4">
-                            Login or Register
-                        </button>
-                    </a>
-                @endif
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="ps-0" colspan="2">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <span>
+                                        <img class=" img-fluid" src="/theme/img/text-rate-icon.png">
+                                        <span> <strong class="cart-total" id="tax_rate">Tax
+                                                @if(!empty($tax_class->rate))
+                                                    {{ number_format($tax_class->rate, 2) }}%
+                                                @else
+                                                    {{number_format(0, 2)}}
+                                                @endif
+                                            </strong>
+                                        </span>
+                                    </span>
+                                    <span id="" class="tax_cart">
+                                        <strong class=" d-flex justify-content-end cart-page-items" id="tax_amount">
+                                            ${{ number_format($tax, 2) }}
+                                        </strong>
+                                    </span>
+                                </div>
+                                @if(!empty($tax_class->name))
+                                    <div class="mx-2"><span><strong class="cart-total mx-3 px-3" >{{'Tax Class:' . $tax_class->name}}</strong></span></div>
+                                @endif
+                                {{-- <div>
+                                    <span class="tax-calculater">
+                                        (Tax is calculated when order is invoiced, could be 0% based
+                                        on your account setup)
+                                    </span>
+                                </div> --}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="ps-0" colspan="2">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <span>
+                                        <img class="img-fluid subtotal-img-cart-page" src="/theme/img/total-icon.png">
+                                        <strong class="cart-total">SubTotal</strong>
+                                    </span>
+                                    <span id="cart_grand_total" class="grandTotal">
+                                        <strong class=" d-flex justify-content-end cart-page-items text-danger g_total">
+                                            ${{ number_format($total_including_tax, 2) }}
+                                        </strong>
+                                    </span>
+                                </div>
+                                <div>
+                                    <span class="tax-calculater">
+                                        (No payment is collected during this process)
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div>
+                    @if (Auth::check() == true && $contact->status == 1 && !empty($contact->contact_id))
+                        <a href="{{ url('/checkout') }}">
+                            <button class="procedd-to-checkout mt-3 w-100 mb-4">
+                                PROCEED TO CHECKOUT
+                            </button>
+                        </a>
+                    @elseif (Auth::check() == true && $contact->status == 0)
+                        <div class="alert alert-danger alert-dismissible fade show py-2" role="alert">
+                            <span class="d-flex justify-content-center align-items-center">
+                                Checkout has been disabled for this email address, please contact your
+                                account
+                                manager to re-enable checkout.
+                            </span>
+                        </div>
+                    @elseif(Auth::check() == true && empty($contact->contact_id))
+                        <a href="{{ url('/checkout/') }}">
+                            <button class="procedd-to-checkout mt-3 w-100 mb-4">
+                                PROCEED TO CHECKOUT
+                            </button>
+                        </a>
+                    @else
+                        <a href="{{ url('/user/') }}">
+                            <button class="procedd-to-checkout mt-3 w-100 mb-4">
+                                Login or Register
+                            </button>
+                        </a>
+                    @endif
+                </div>
             </div>
         </div>
     </div>
-                        </div>
-                        </div>
+</div>
 <!--Mobile View -->
 <!-- MultiStep Form  -->
 <div class="container-fluid mobile-view">
@@ -748,21 +744,8 @@
 </div>
 <!--ipad View -->
 <!-- MultiStep Form  -->
-<div class="container-fluid ipad-view">
-    <div class="row justify-content-center mt-0">
-        <div class="col-12 text-center">
-            <div class="card border-0 px-0">
-                <div class="row">
-                    {{-- <div class="col-md-12 mx-0"> --}}
+{{--<div class="container-fluid ipad-view">
                     <div id="msform">
-                        <!-- progressbar -->
-                        {{-- <ul id="progressbar">
-								<li class="active" id="account"><strong>Your Card</strong></li>
-								<li id="personal"><strong>Personal</strong></li>
-								<li id="payment"><strong>Payment</strong></li>
-								<li id="confirm"><strong>Finish</strong></li>
-							</ul> --}}
-                        <!-- fieldsets -->
                         <fieldset>
                             <div class="form-card">
                                 @if(auth()->user())
@@ -859,9 +842,6 @@
                                                                             href="{{ url('product-detail/' . $cart['product_id'] . '/' . $cart['option_id'] . '/' . $cart['slug']) }}">{{ $cart['name'] }}
                                                                         </a>
                                                                         <div class="d-flex mt-2">
-                                                                            {{-- <div class="quantity-bg">
-                                                                                <p class="ps-1">{{ $cart['quantity'] }}</p>
-                                                                            </div> --}}
                                                                             <div class="quantity-bg">
                                                                                 <input type="number"
                                                                                     class="itm_qty_ipad"
@@ -1028,8 +1008,6 @@
                             </div>
                             <input type="button" name="previous" class="previous action-button-previous"
                                 value="Previous" />
-                            {{-- <input type="button" name="next" class="next action-button" value="Next Step" />
-								--}}
                         </fieldset>
                         <fieldset>
                             <div class="form-card">
@@ -1062,8 +1040,7 @@
             </div>
         </div>
     </div>
-</div>
-</div>
+</div>--}}
 <!-- Modal -->
 <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
     aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -1117,23 +1094,23 @@
 
     }
 
-    function ipadplusq(pk_product_id) {
-        var plus = parseInt($('#itm_qty_ipad' + pk_product_id).val());
-        var result = plus + 1;
-        $('#itm_qty_ipad' + pk_product_id).val(result);
-        increase_qty(pk_product_id)
-    }
+    // function ipadplusq(pk_product_id) {
+    //     var plus = parseInt($('#itm_qty_ipad' + pk_product_id).val());
+    //     var result = plus + 1;
+    //     $('#itm_qty_ipad' + pk_product_id).val(result);
+    //     increase_qty(pk_product_id)
+    // }
 
-    function ipadminusq(pk_product_id) {
+    // function ipadminusq(pk_product_id) {
 
-        var minus = parseInt($('#itm_qty_ipad' + pk_product_id).val());
-        if (minus > 0) {
-            var result = minus - 1;
-            $('#itm_qty_ipad' + pk_product_id).val(result);
-            decrease_qty(pk_product_id);
-        }
+    //     var minus = parseInt($('#itm_qty_ipad' + pk_product_id).val());
+    //     if (minus > 0) {
+    //         var result = minus - 1;
+    //         $('#itm_qty_ipad' + pk_product_id).val(result);
+    //         decrease_qty(pk_product_id);
+    //     }
 
-    }
+    // }
     
 
     /* *****   INCREASE QTY   ****  */
@@ -1551,6 +1528,12 @@
             padding: 1rem !important;
             margin-top: 0rem !important;
         } 
+    }
+    @media screen and (min-width : 550px) and (max-width:768px) {
+        .quantity_calculator {
+            padding-left:30px !important;
+            width: 100px !important;
+        }
     }
 </style>
 
