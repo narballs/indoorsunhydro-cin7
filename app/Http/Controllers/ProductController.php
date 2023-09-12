@@ -350,7 +350,7 @@ class ProductController extends Controller
         $contact_id = session()->get('contact_id');
         $user_id = auth()->id();
         $user = User::where('id', $user_id)->first();
-        $can_approve_order = $user->hasRole('Order Approver');
+        // $can_approve_order = $user->hasRole('Order Approver');
         $selected_company = Session::get('company');
         $all_ids = UserHelper::getAllMemberIds($user);
         $contact_ids = Contact::whereIn('id', $all_ids)
