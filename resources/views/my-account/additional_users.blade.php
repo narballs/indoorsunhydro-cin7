@@ -15,22 +15,6 @@
                 <div class="col-md-6 pt-4">
                     @include('my-account.my-account-side-bar')
                 </div>
-                {{-- <div class="col-md-6 py-4">
-                    <div class="row search_row_my_account_page">
-                        <div class="col-md-10 d-flex ">
-                            <div class="has-search my_account_search w-100 ">
-                                <span class="fa fa-search form-control-feedback"></span>
-                                <form method="get" action="#" class="mb-2">
-                                    <input type="text" class="form-control border-0" id="search" name="search"
-                                        placeholder="Search all orders" value="{{ isset($search) ? $search : '' }}" />
-                            </div>
-                            <div class="ps-3">
-                                <button type="button" class="btn my_account_search_btn">Search</button>
-                            </div>
-                        </div>
-                        </form>
-                    </div>
-                </div> --}}
             </div>
             <div class="row">
                 <div class="col-md-12 my-3">

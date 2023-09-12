@@ -621,28 +621,7 @@
 									</div>
 								</div>
 							</div>
-							{{-- <div class="col-md-10 mt-2">
-								<div class="row">
-									<div class="col-md-12">
-										<span class="order-confirmation-page-user-name mobile-font mobile-font-part order-confirm-top">Order Confirmation</span>
-									</div>
-									<div class="col-md-12">
-										<p class="order-confirmation-page-title name_title">
-											{{$order_contact->firstName}}
-											{{$order_contact->lastName}}
-											<span class="order-confirmation-page-user-name mobile-font mobile-font-part">Your order has been received.</span>
-										</p>
-									</div>
-								</div>
-							</div> --}}
 						</div>
-						{{-- <div class="col-md-12 mt-4 thank-you-title-top">
-							<p class="order-confirmation-page-title">
-								{{$order_contact->firstName}}
-								{{$order_contact->lastName}}
-								<span class="order-confirmation-page-user-name mobile-font mobile-font-part">Your order has been received.</span>
-							</p>
-						</div> --}}
 					</div>
 					<div class="p-3 ms-5 me-5 main-color-div main-view ">
 						<div class="row ms-1 p-4 me-1 order-confirmation-page-invoice-row " style=" padding-top: 50px !important;">
@@ -930,35 +909,6 @@
 													</p>
 													
 												</div>
-												{{-- <div class="col-md-6">
-													<div class="row">
-														<div class="col-xl-4 col-lg-6 col-md-12 col-sm-12">
-															<p class="order-confirmation-page-city-name-title">City</p>
-															
-															<p class="order-confirmation-page-city-name-item">
-																{{$order_contact->city ? $order_contact->city : $order_contact->postalCity}}
-															</p>
-															
-														</div>
-														<div class="col-xl-4 col-lg-6 col-md-12 col-sm-12">
-															<p class="order-confirmation-page-state-name-title">State
-															</p>
-															
-															<p class="order-confirmation-page-state-name-item">
-																{{$order_contact->state ? $order_contact->state : $order_contact->postalState}}
-															</p>
-														</div>
-														<div class="col-xl-4 col-lg-6 col-md-12 col-sm-12">
-															<p class="order-confirmation-page-zip-name-title">Zip</p>
-
-															
-															<p class="order-confirmation-page-zip-name-item">
-
-																{{$order_contact->postCode ? $order_contact->postCode : $order_contact->postalPostCode}}
-															</p>
-														</div>
-													</div>
-												</div> --}}
 											</div>
 										</div>
 									</div>
@@ -969,16 +919,8 @@
 									</p>
 									<div class="row">
 										<div class="col-md-12">
-											{{-- <p class="order-confirmation-page-first-name-last-name-user-name pt-3">
-												{{$order_contact->first_name ? $order_contact->first_name : $order_contact->firstName}}
-												{{$order_contact->last_name ? $order_contact->last_name : $order_contact->lastName}}
-											</p> --}}
 											<div class="row">
 												<div class="col-md-12">
-													{{-- <p class="order-confirmation-page-address-line-one-title">
-														Address line 1
-													</p> --}}
-													
 													<p class="order-confirmation-page-address-line-one-title mb-1">
 														@if(!empty($order_contact->address1 || $order_contact->postalAddress1))
 															{{$order_contact->address1 ? $order_contact->address1 . ',' : $order_contact->postalAddress1 . ','}}
@@ -994,42 +936,7 @@
 														{{$order_contact->state ? $order_contact->state . ',' : $order_contact->postalState . ','}}
 														{{$order_contact->postCode ? $order_contact->postCode : $order_contact->postalPostCode}}
 													</p>
-
-													{{-- <div class="row mt-4">
-														<div class="col-xl-4 col-lg-6 col-md-12 col-sm-12">
-															<p class="order-confirmation-page-city-name-title">City</p>
-															
-															<p class="order-confirmation-page-city-name-item">
-																{{$order_contact->city ? $order_contact->city : $order_contact->postalCity}}
-															</p>
-														</div>
-														<div class="col-xl-4 col-lg-6 col-md-12 col-sm-12">
-															<p class="order-confirmation-page-state-name-title">State
-															</p>
-															
-															<p class="order-confirmation-page-state-name-item">
-																{{$order_contact->state ? $order_contact->state : $order_contact->postalState}}
-															</p>
-														</div>
-														<div class="col-xl-4 col-lg-6 col-md-12 col-sm-12">
-															<p class="order-confirmation-page-zip-name-title">Zip</p>
-															
-															<p class="order-confirmation-page-zip-name-item">
-																{{$order_contact->postCode ?  $order_contact->postCode  :$order_contact->postalPostCode}}
-															</p>
-														</div>
-													</div> --}}
 												</div>
-												{{-- <div class="col-md-6">
-													<p class="order-confirmation-page-address-line-tow-title">
-														Address line 2
-													</p>
-													
-													<p class="order-confirmation-page-address-line-tow-item">
-														{{$order_contact->address2 ? $order_contact->address2 : $order_contact->postalAddress2}}
-													</p>
-
-												</div> --}}
 											</div>
 										</div>
 									</div>
@@ -1116,15 +1023,6 @@
 						{{-- data show for mobile --}}
 						<div class="col-md-12 mt-5 purchaseTable for_mobile d-none">
 							<table class="table main_table_mobile">
-								{{-- <tr>
-									<th class="order-confirmation-page-table-data-heading">Image</th>
-									<th class="order-confirmation-page-table-data-heading"
-										style="padding-left: 0px; !important">Name</th>
-										<th class="order-confirmation-page-table-data-heading"
-										style="padding-left: 0px; !important">
-										Quantity</th>
-									<th class="order-confirmation-page-table-data-heading">Price</th>
-								</tr> --}}
 								<tbody class="border-0">
 									@foreach($order->apiOrderItem as $item)
 									

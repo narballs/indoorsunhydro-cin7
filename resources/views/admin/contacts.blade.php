@@ -133,27 +133,6 @@
                                             {{ $contact->notes }}
                                         </span>
                                     </td>
-                                    {{-- <td class="created_by toggleClass">
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown"
-                                            aria-haspopup="true" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-h" style="color: #CBCBCB !important;"></i>
-                                        </button>
-                                        <div class="dropdown-menu dropdonwn_menu">
-                                            <a class="dropdown-item" href="{{ url('admin/order-detail/' . $contact->id) }}"
-                                                class="view a_class" title="" data-toggle="tooltip"
-                                                data-original-title="View">Previews
-                                            </a>
-                                            <a class="dropdown-item"href="#" class="edit a_class" title=""
-                                                data-toggle="tooltip" data-original-title="Edit">Edit
-                                            </a>
-                                            <a class="dropdown-item delete deleteIcon a_class" href="#" class=""
-                                                id="{{ $contact->id }}" title="" data-toggle="tooltip"
-                                                data-original-title="Delete">Delete
-                                            </a>
-                                        </div>
-                                    </div>
-                                </td> --}}
                                     <td class="created_by toggleClass">
                                         <div class="d-flex aling-items-center order-table-actions">
                                             <span>
