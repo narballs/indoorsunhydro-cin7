@@ -21,9 +21,9 @@
 	">
     <div class="row">
         @if(auth()->user())
-        <div class="col-md-9 mt-2">
+        <div class="col-sm-12 col-md-12 col-lg-9 mt-2">
             @else
-            <div class="col-md-9 ">
+            <div class="col-md-12 col-lg-9 ">
                 @endif
             <section class=" h-100">
                 <div class="h-100 py-5">
@@ -229,7 +229,7 @@
         </section>
     </div>
     @if(auth()->user())
-    <div class="col-md-3 p-0  mt-3">
+    <div class="col-md-6 col-sm-6 col-lg-3 col-xl-3 p-0  mt-3 cart_total_div">
         <div class="col-md-12 p-0">
             <div class="row mb-1 align-items-center">
                 <div class="col-md-4">
@@ -291,7 +291,7 @@
             </div>
         </div>
         @else
-        <div class="col-md-3 p-0  mt-5">
+        <div class="col-md-6 col-sm-6 col-lg-3 col-xl-3 p-0  mt-5 cart_total_div">
         @endif
         <div class="table-responsive" style="padding-top:3px !important;">
             <?php
@@ -1542,6 +1542,15 @@
     .zendesk_img {
         width: 25px;
         height: 25px;
+    }
+    @media only screen and (max-width: 820px) and (min-width: 426px) {
+        .quantity-div.quantity-down {
+            margin-bottom: 0px !important;
+        }
+        .cart_total_div {
+            padding: 1rem !important;
+            margin-top: 0rem !important;
+        } 
     }
 </style>
 
