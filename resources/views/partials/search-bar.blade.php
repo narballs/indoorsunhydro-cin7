@@ -5,9 +5,6 @@
                 <img class="logo_image_main" src="{{ url('/theme/img/' . \App\Helpers\SettingHelper::getSetting('logo_name')) }}" ;>
             </a>
         </div>
-        {{-- <div class="col-xl-5 col-lg-6 col-md-12 col-sm-6 col-xs-6 mt-2 top-header-navigation p-0">
-            @include('partials.nav')
-        </div> --}}
         <div class="col-md-5 col-lg-5 col-xl-5 top-reach-bar d-flex align-items-center justify-content-center">
             <div class="col-md-12">
                 <div class="row">
@@ -78,13 +75,6 @@
 
 <div class="container-fluid mobile-view ">
     <div class="w-100">
-        {{-- @include('partials.top-bar') --}}
         @include('partials.nav')
     </div>
-</div>
-<div class="container-fluid ipad-view ">
-    <div class="w-100">
-        @include('partials.nav')
-    </div>
-</div>
 </div>

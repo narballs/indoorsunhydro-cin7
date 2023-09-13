@@ -2825,6 +2825,7 @@ input[type=number] {
         font-size: 16px !important;
         line-height: 12px !important;
         color: #FFFFFF !important;
+        margin-left: 0rem !important;
     }
 
     .contact-us-footer {
@@ -2835,6 +2836,7 @@ input[type=number] {
         line-height: 23px !important;
         text-transform: uppercase !important;
         color: #FFFFFF;
+        margin-left: 0rem !important;
     }
 
     .ms-4-footer {
