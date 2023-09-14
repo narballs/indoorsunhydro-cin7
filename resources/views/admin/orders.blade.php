@@ -188,7 +188,7 @@
                                         </tr>
                                     @else
                                         <tr id="tr_{{ $order->id }}" class="order-row border-bottom">
-                                            <td class="table-items">
+                                            <td data-label="" class="table-items">
                                                 <div class="custom-control custom-checkbox tabel-checkbox">
                                                     <span style="vertical-align: text-bottom;">
                                                         <input
@@ -204,7 +204,7 @@
                                                     </span>
                                                 </div>
                                             </td>
-                                            <td class="created_by toggleClass pb-0 pt-3">
+                                            <td data-label="Created By :" class="created_by toggleClass pb-0 pt-3">
                                                 @if (!empty($order->primaryId) && !empty($order->primary_contact))
                                                     <span title="Secondary Contact" class="created_by_order">
                                                         {{ $order->primary_contact->firstName }}
@@ -228,29 +228,29 @@
                                                     @endif
                                                 </span>
                                             </td>
-                                            <td class="td_padding_row">{{ $order->reference }}</td>
-                                            <td class="td_padding_row">
+                                            <td data-label="Reference :" class="td_padding_row">{{ $order->reference }}</td>
+                                            <td data-label="Date Created :" class="td_padding_row">
                                                 {{ date('m/d/Y', strtotime($order->created_at)) }}
                                             </td>
-                                            <td class="td_padding_row">
+                                            <td data-label="Primary Account Email :" class="td_padding_row">
                                                 @if ($order->contact)
                                                     {{ $order->contact->email }}
                                                 @endif
                                             </td>
-                                            <td class="created_by_order_total td_padding_row">${{ number_format($order->total_including_tax, 2) }}</td>
+                                            <td data-label="Order Total :" class="created_by_order_total td_padding_row">${{ number_format($order->total_including_tax, 2) }}</td>
                                             @if(!empty($order->texClasses))
-                                            <td class="created_by_order_total td_padding_row">{{ number_format($order->texClasses->rate, 2) }}% </td>
+                                            <td data-label="Tax :" class="created_by_order_total td_padding_row">{{ number_format($order->texClasses->rate, 2) }}% </td>
                                             @else
-                                            <td class="created_by_order_total td_padding_row">{{ number_format(0 ,2) }}% </td>
+                                            <td data-label="Tax :" class="created_by_order_total td_padding_row">{{ number_format(0 ,2) }}% </td>
                                             @endif
-                                            <td class="td_padding_row">
+                                            <td data-label="Company Name" class="td_padding_row">
                                                 @if ($order->contact)
                                                     @if ($order->contact->company)
                                                         {{ $order->contact->company }}
                                                     @endif
                                                 @endif
                                             </td>
-                                            <td class="is-approved td_padding_row">
+                                            <td data-label="Stage :" class="is-approved td_padding_row">
                                                 @if ($order->isApproved == 1 && $order->isVoid == 1)
                                                     <span class="badge badge-secondary  is_approded_0">Void</span>
                                                 @elseif ($order->isApproved == 0 && $order->isVoid == 0)
@@ -261,7 +261,7 @@
                                                     <span class="badge badge-danger is_approded_2">Cancelled</span>
                                                 @endif
                                             </td>
-                                            <td class="td_padding_row">
+                                            <td data-label="Payment Status :" class="td_padding_row">
                                                 @if (strtolower($order->payment_status) == 'paid' && $order->shipstation_orderId != null)
                                                     <span class="badge badge-success bg_success">Paid</span>
                                                 @elseif (strtolower($order->payment_status) == '' && $order->shipstation_orderId != null)
@@ -274,10 +274,10 @@
                                                     </form>
                                                 @endif
                                             </td>
-                                            <td class="td_padding_row">
+                                            <td data-label="Payment Term :" class="td_padding_row">
                                                 {{ $order->logisticsCarrier }}
                                             </td>
-                                            <td class="td_padding_row p-0">
+                                            <td data-label="Create Labels :" class="td_padding_row p-0">
                                                 @if ($order->shipstation_orderId != '' && strtolower($order->payment_status) == 'paid')
                                                     @if ($order->label_created == 0 && $order->is_shipped == 0)
                                                         <form action="{{url('admin/orders/create/label')}}" method="post">
@@ -297,7 +297,7 @@
                                                     @endif
                                                 @endif
                                             </td>
-                                            <td class="created_by toggleClass td_padding_row orders-action">
+                                            <td data-label="Action :" class="created_by toggleClass td_padding_row orders-action">
                                                 <div class="d-flex aling-items-center order-table-actions">
                                                     <span>
                                                         <a href="{{ url('admin/order-detail/' . $order->id) }}"
@@ -584,6 +584,31 @@
             font-weight: 500 !important;
             font-size: 11.3289px !important;
         }
+
+        /* @media only screen and (max-width: 425px) {
+            thead tr {
+                display: none;
+            }
+
+            td, th {
+                display: block;
+                font-size: 14px;
+                font-weight: 500;
+            }
+
+            table td::before {
+                content: attr(data-label);
+                float: left;
+                font-weight: bold;
+                text-transform: uppercase;
+            }
+            table td{
+               text-align: right;
+            }
+            .td_padding_row  {
+                padding: 0.50rem !important;
+            }
+        } */
     </style>
 @stop
 
