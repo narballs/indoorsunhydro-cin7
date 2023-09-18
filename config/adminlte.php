@@ -375,6 +375,7 @@ return [
         [
             'text'    => 'Discounts',
             'url'  => 'admin/discounts',
+            'classes' => 'd-none',
         ],
 
         [

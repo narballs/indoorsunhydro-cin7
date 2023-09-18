@@ -103,7 +103,7 @@
                                                             </div>
                                                             <input type="hidden" value="percentage" name="discount_variation" id="discount_variation">
                                                             <div class="col-md-7">
-                                                                <input type="number" min="1" class="form-control" id="discount_variation_value" name="discount_variation_value" step="any" onkeydown="removeAlpha($(this))" onkeyup="removeAlpha($(this))">
+                                                                <input type="number" min="1" class="form-control" id="discount_variation_value" placeholder="Percentage %" name="discount_variation_value" step="any" onkeydown="removeAlpha($(this))" onkeyup="removeAlpha($(this))">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -154,11 +154,11 @@
                                                     <div class="form-group">
                                                         <div class="row">
                                                             <div class="col-md-12">
-                                                                <input type="radio" data-value="all_customers" class="customer_eligibility" id="all_customers" name="customer_eligibility" checked>
+                                                                <input type="radio" data-value="All Customers" value="All Customers" class="customer_eligibility" id="all_customers" name="customer_eligibility" checked>
                                                                 <label for="">All Customers</label>
                                                             </div>
                                                             <div class="col-md-12">
-                                                                <input type="radio" data-value="specific_customers" class="customer_eligibility" name="customer_eligibility" id="specific_customers">
+                                                                <input type="radio" data-value="Specific Customers" class="customer_eligibility" name="customer_eligibility" id="specific_customers">
                                                                 <label for="">Specific Customers</label>
                                                             </div>
                                                             <input type="hidden" name="contactids[]" id="contact_ids_array">
@@ -180,19 +180,19 @@
                                                     <div class="form-group">
                                                         <div class="row">
                                                             <div class="col-md-12">
-                                                                <input type="radio" data-value="none" class="discount_uses" name="" value="">
+                                                                <input type="radio" data-value="none" name="max_discount_uses" class="discount_uses" name="" value="none" checked>
                                                                 <label for="">None</label>
                                                             </div>
                                                             <div class="col-md-12">
-                                                                <input type="radio" data-value="limit_max_times" class="discount_uses" name="max_discount_uses" id="limit_max_times">
+                                                                <input type="radio" data-value="Limit Max Times" class="discount_uses" name="max_discount_uses" id="limit_max_times">
                                                                 <label for="">Limit number of times this discount can be used in total</label>
                                                             </div>
                                                             <input type="number" name="max_usage_count" id="max_usage_count" class="form-control d-none" placeholder="Limit number of times this discount can be used in total">
                                                             <div class="col-md-12">
-                                                                <input type="radio" data-value="limit_for_user" class="discount_uses" name="max_discount_uses" value="limit_for_user">
+                                                                <input type="radio" data-value="Limit For User" class="discount_uses" name="max_discount_uses" value="Limit For User">
                                                                 <label for="">Limit to one use per customer</label>
                                                             </div>
-                                                            <input type="number" name="limit_per_user" id="limit_per_user" class="form-control d-none" placeholder="Limit to one use per customer">
+                                                            <input type="number" name="limit_per_user" id="limit_per_user" class="form-control d-none" value="1" readonly>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -210,11 +210,11 @@
                                                         <div class="row">
                                                             <div class="col-md-6">
                                                                 <label for="">Start Date</label>
-                                                                <input type="date" name="start_date" id="start_date" class="form-control">
+                                                                <input type="date" name="start_date"min="{{date("Y-m-d")}}" id="start_date" class="form-control" onchange="check_start_date()">
                                                             </div>
                                                             <div class="col-md-6">
                                                                 <label for="">End Date</label>
-                                                                <input type="date" name="end_date" id="end_date" class="form-control">
+                                                                <input type="date" name="end_date" min="{{date("Y-m-d")}}" id="end_date" class="form-control" onchange="check_end_date()">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -546,6 +546,28 @@
     @section('js')
 
     <script>
+        
+        function check_start_date() {
+            var start = document.getElementById('start_date');
+            var end = document.getElementById('end_date');
+
+            if (start.value) {
+                end.min = start.value;
+            } else {
+                false;
+            }
+        }
+        function check_end_date() {
+            var start = document.getElementById('start_date');
+            var end = document.getElementById('end_date');
+
+            if (end.value) {
+                start.max = end.value;
+            } else {
+                false;
+            }
+        }
+
         function removeAlpha(element) {
             var regExp = new RegExp('[a-zA-Z]'),
             inputVal = '';
@@ -603,31 +625,33 @@
 
         // minimum purchase requirements functionality
         $('.purchase_requirements').click(function() {
-            if ($(this).val() == 'amount') {
-                $('#minimum_purchase_amount').removeClass('d-none');
-            } 
-            else if ($(this).val() == 'quantity') {
-                $('#minimum_purchase_amount').addClass('d-none');
-                $('#minimum_quantity_items').removeClass('d-none');
-            } else {
-                $('#minimum_purchase_amount').addClass('d-none');
-                $('#minimum_quantity_items').addClass('d-none');
+            if ($(this).is(':checked')) {
+                if ($(this).val() == 'amount') {
+                    $('#minimum_purchase_amount').removeClass('d-none');
+                } 
+                else if ($(this).val() == 'quantity') {
+                    $('#minimum_purchase_amount').addClass('d-none');
+                    $('#minimum_quantity_items').removeClass('d-none');
+                } else {
+                    $('#minimum_purchase_amount').addClass('d-none');
+                    $('#minimum_quantity_items').addClass('d-none');
+                }
             }
         });
 
         // customer eligibility functionality
         $('.customer_eligibility').click(function() {
-            if ($(this).attr('data-value') == 'specific_customers') {
+            if ($(this).attr('data-value') == 'Specific Customers') {
                 $('#all_customers').val('');
-                $(this).val('specific_customers');
+                $(this).val('Specific Customers');
                 $(this).attr('checked', true);
                 $('#modal_content').modal({
                     show: true
                 });
             } else {
-                $('#specific_customers').val('');
+                $('#Specific Customers').val('');
                 $('#contact_ids_array').val('');
-                $(this).val('all_customers');
+                $(this).val('All Customers');
                 $('#specific_customers').attr('checked', false);
                 $(this).attr('checked', true);
             }
@@ -694,7 +718,6 @@
                 $('#contact_ids_array').val(contact_ids);
                 $('#contact_id').val(contact_ids);
                 $('#modal_content').modal('hide');
-                console.log($('#contact_ids_array').val());
             } else {
                 $('#modal_content').modal('hide');
             }
@@ -702,18 +725,22 @@
 
         // max discount uses functionality
         $('.discount_uses').click(function() {
-            if ($(this).attr('data-value') == 'limit_max_times') {
+            if ($(this).attr('data-value') == 'Limit Max Times') {
                 $('#max_usage_count').removeClass('d-none');
                 $('#limit_per_user').addClass('d-none');
-                $(this).val('limit_max_times');
-            } else if ($(this).attr('data-value') == 'limit_for_user') {
+                $('#limit_per_user').val('');
+                $(this).val('Limit Max Times');
+            } else if ($(this).attr('data-value') == 'Limit For User') {
                 $('#max_usage_count').addClass('d-none');
                 $('#limit_per_user').removeClass('d-none');
-                $(this).val('limit_for_user');
+                $(this).val('Limit For User');
+                $('#limit_per_user').val('1');
             } else {
                 $('#max_usage_count').addClass('d-none');
                 $('#limit_per_user').addClass('d-none');
-                $(this).val('');
+                $(this).val('none');
+                $('#limit_per_user').val('');
+                $('#max_usage_count').val('');
             }
         });
         

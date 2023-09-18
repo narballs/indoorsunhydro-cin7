@@ -53,7 +53,8 @@
                             <th>Min Purchase Items Quantity</th>
                             <th>Min Purchase Amount</th>
                             <th>Eligibility</th>
-                            <th>Max Uses</th></th>
+                            <th>Max Uses</th>
+                            <th>Max Uses Count</th>
                             <th>Usage Count</th>
                             <th>User Limit</th>
                             <th>Start Date</th>
@@ -74,24 +75,31 @@
                             <td>{{ $discount->type }}</td>
                             <td>{{ $discount->mode }}</td>
                             <td>{{ $discount->discount_code }}</td>
-                            <td>{{ $discount->discount_variation }}</td>
+                            <td>{{ucfirst( $discount->discount_variation) }}</td>
                             <td>{{ $discount->discount_variation_value }}</td>
                             <td>{{ $discount->minimum_purchase_requirements }}</td>
                             <td>{{ $discount->minimum_quantity_items }}</td>
                             <td>{{ $discount->minimum_purchase_amount }}</td>
                             <td>{{ $discount->customer_eligibility }}</td>
+                            <td>{{ $discount->max_discount_uses }}</td>
                             <td>{{ $discount->max_usage_count }}</td>
                             <td>{{ $discount->usage_count }}</td>
                             <td>{{ $discount->limit_per_user }}</td>
                             <td>{{ $discount->start_date }}</td>
                             <td>{{ $discount->end_date }}</td>
-                            <td>{{ $discount->status }}</td>
                             <td>
-                                <a href="{{ route('discounts.edit', $discount->id) }}" class="btn btn-primary btn-sm">Edit</a>
-                                <form action="{{ route('discounts.destroy', $discount->id) }}" method="POST" style="display: inline-block;">
+                                @if ($discount->status == 1)
+                                    <span class="badge badge-success">Active</span>
+                                @else
+                                    <span class="badge badge-danger">Inactive</span>
+                                @endif
+                            </td>
+                            <td>
+                                <form action="{{ route('discounts.destroy', $discount->id) }}" method="POST" class="d-flex justify-content-between">
+                                    <a href="{{ route('discounts.edit', $discount->id) }}" class="bg-none border-0"><i class="fa fa-edit"></i></a>
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this discount?');">Delete</button>
+                                    <button type="submit" class="bg-none border-0 ml-1" onclick="return confirm('Are you sure you want to delete this discount?');"><i class="fa fa-trash"></i></button>
                                 </form>
                             </td>
                         </tr>

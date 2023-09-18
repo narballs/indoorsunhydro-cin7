@@ -45,7 +45,8 @@ class DiscountController extends Controller
             // 'name' => 'required',
             'type' => 'required',
             'mode' => 'required',
-            'discount_code' => 'required',
+            'discount_variation' => 'required',
+            'discount_variation_value' => 'required',
             'minimum_purchase_requirements' => 'required',
             'customer_eligibility' => 'required',
             'status' => 'required',
@@ -62,6 +63,7 @@ class DiscountController extends Controller
             'discount_variation' => $request->discount_variation,
             'discount_variation_value' => $request->discount_variation_value,
             'minimum_purchase_amount' => $request->minimum_purchase_amount,
+            'max_discount_uses' => $request->max_discount_uses,
             'max_usage_count' => $request->max_usage_count,
             'limit_per_user' => $request->limit_per_user,
             'usage_count' => $request->usage_count,
@@ -71,13 +73,17 @@ class DiscountController extends Controller
 
         ]);
 
-        $contact_ids = $request->add_contact_ids;
-        if ((count($contact_ids) > 0) && $contact_ids != null) {
-            foreach ($contact_ids as $contact_id) {
-                CustomerDiscount::create([
-                    'discount_id' => $discount->id,
-                    'contact_id' => $contact_id,
-                ]);
+        if (strtolower($discount->customer_eligibility) == 'specific customers') {
+            $contact_ids = $request->contactids;
+            if (!empty($contact_ids)) {
+                if ((count($contact_ids) > 0)) {
+                    foreach ($contact_ids as $contact_id) {
+                        CustomerDiscount::create([
+                            'discount_id' => $discount->id,
+                            'contact_id' => $contact_id,
+                        ]);
+                    }
+                }
             }
         }
         return redirect()->route('discounts.index')->with('success', 'Discount created successfully.');
@@ -103,7 +109,9 @@ class DiscountController extends Controller
     public function edit($id)
     {
         $discount = Discount::findOrFail($id);
-        return view('admin.discounts.edit', compact('discount'));
+        $customerDiscounts = CustomerDiscount::with('contact')->where('discount_id', $discount->id)->get();
+        $customerDiscountsArray = $customerDiscounts->pluck('contact_id')->toArray();
+        return view('admin.discounts.edit', compact('discount' , 'customerDiscounts' , 'customerDiscountsArray'));
     }
 
     /**
@@ -116,14 +124,16 @@ class DiscountController extends Controller
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
-            'name' => 'required',
+            // 'name' => 'required',
             'type' => 'required',
             'mode' => 'required',
-            'discount_code' => 'required',
+            'discount_variation' => 'required',
+            'discount_variation_value' => 'required',
             'minimum_purchase_requirements' => 'required',
             'customer_eligibility' => 'required',
             'status' => 'required',
         ]);
+
 
         $discount = Discount::findOrFail($id);
         $discount->update([
@@ -137,6 +147,7 @@ class DiscountController extends Controller
             'discount_variation' => $request->discount_variation,
             'discount_variation_value' => $request->discount_variation_value,
             'minimum_purchase_amount' => $request->minimum_purchase_amount,
+            'max_discount_uses' => $request->max_discount_uses,
             'max_usage_count' => $request->max_usage_count,
             'limit_per_user' => $request->limit_per_user,
             'usage_count' => $request->usage_count,
@@ -144,6 +155,23 @@ class DiscountController extends Controller
             'end_date' => $request->end_date,
             'status' => $request->status,
         ]);
+        if (strtolower($discount->customer_eligibility) == 'specific customers') {
+            $contact_ids = $request->contactids;
+            if (!empty($contact_ids)) {
+                if ((count($contact_ids) > 0)) {
+                    $customerArray = explode(',', $contact_ids[0]);
+                    foreach ($customerArray as $contact_id) {
+                        if ($contact_id != '') {
+                            CustomerDiscount::where('contact_id', $contact_id)->where('discount_id', $discount->id)->delete();
+                            CustomerDiscount::create([
+                                'discount_id' => $discount->id,
+                                'contact_id' => $contact_id,
+                            ]);
+                        }
+                    }
+                }
+            }
+        }
         return redirect()->route('discounts.index')->with('success', 'Discount updated successfully.');
     }
 
@@ -157,12 +185,9 @@ class DiscountController extends Controller
     {   
             
         $discount = Discount::findOrFail($id);
-        $customerDiscounts = CustomerDiscount::where('discount_id', $id)->get();
+        $customerDiscounts = CustomerDiscount::where('discount_id', $discount->id)->get();
         foreach ($customerDiscounts as $customerDiscount) {
-            $customerDiscountUses = CustomerDiscountUses::where('customer_discount_id', $customerDiscount->id)->get();
-            foreach ($customerDiscountUses as $customerDiscountUse) {
-                $customerDiscountUse->delete();
-            }
+            
             $customerDiscount->delete();
         }
         $discount->delete();

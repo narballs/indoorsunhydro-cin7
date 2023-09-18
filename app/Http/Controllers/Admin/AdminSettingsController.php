@@ -178,7 +178,7 @@ class AdminSettingsController extends Controller
     public function search_customer(Request $request) {
         $search = $request->search;
         if (!empty($search)) {
-            $contacts = Contact::where('type', 'Customer')
+            $contacts = Contact::with('customerDiscount')->where('type', 'Customer')
             ->where('status', 1)
             ->where('firstName', 'LIKE', "%{$search}%")
             ->orWhere('lastName', 'LIKE', "%{$search}%")

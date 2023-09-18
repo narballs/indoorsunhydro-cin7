@@ -20,6 +20,7 @@ class Discount extends Model
         'discount_variation',
         'discount_variation_value',
         'minimum_purchase_amount',
+        'max_discount_uses',
         'max_usage_count',
         'limit_per_user',
         'usage_count',
