@@ -77,4 +77,8 @@ class Contact extends Model
     {
         return $this->hasMany('App\Models\Contact', 'contact_id', 'parent_id');
     }
+    public function customerDiscount()
+    {
+        return $this->hasOne(CustomerDiscount::class);
+    }
 }

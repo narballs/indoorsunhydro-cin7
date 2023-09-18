@@ -5,6 +5,7 @@ use \App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Middleware\IsAdmin;
 use App\Models\AdminSetting;
+use App\Models\Contact;
 
 class AdminSettingsController extends Controller
 {
@@ -171,5 +172,28 @@ class AdminSettingsController extends Controller
         $setting = AdminSetting::findOrFail($id);
         $setting->delete();
         return redirect()->route('admin.settings.index')->with('success', 'Setting deleted successfully.');
+    }
+
+    // search customers
+    public function search_customer(Request $request) {
+        $search = $request->search;
+        if (!empty($search)) {
+            $contacts = Contact::with('customerDiscount')->where('type', 'Customer')
+            ->where('status', 1)
+            ->where('firstName', 'LIKE', "%{$search}%")
+            ->orWhere('lastName', 'LIKE', "%{$search}%")
+            ->orWhere('email', 'LIKE', "%{$search}%")
+            ->orWhere('company', 'LIKE', "%{$search}%")
+            ->get();
+            return response()->json([
+                'success' => true,
+                'contacts' => $contacts
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'msg' => 'No customer found'
+            ]);
+        }
     }
 }
