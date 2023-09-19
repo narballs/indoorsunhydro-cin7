@@ -1195,7 +1195,7 @@ class UserController extends Controller
         $user = User::where('id', $user_id)->first();
         $all_ids = UserHelper::getAllMemberIds($user);
         $user_address = Contact::where('user_id', $user_id)->first();
-        $all_companies = Contact::where('status' , 1)->whereIn('id', $all_ids)->groupBy('company')->get();
+        $all_companies = Contact::whereIn('id', $all_ids)->groupBy('company')->get();
         $list = BuyList::where('id', 20)->with('list_products.product.options')->first();
         $contact = Contact::where('email', $user_address->email)->first();
         $companies = Contact::where('user_id', $user_id)->get();
