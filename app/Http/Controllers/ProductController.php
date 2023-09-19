@@ -14,6 +14,7 @@ use App\Models\Brand;
 use App\Models\BuyList;
 use App\Models\ProductBuyList;
 use App\Models\TaxClass;
+use App\Models\ProductView;
 use App\Models\AdminSetting;
 
 use Exception;
@@ -30,6 +31,7 @@ use App\Models\ProductStock;
 use Illuminate\Support\Facades\Session;
 
 use Illuminate\Database\Eloquent\Builder;
+
 
 class ProductController extends Controller
 {
@@ -168,7 +170,7 @@ class ProductController extends Controller
 
         $search_queries = $request->except('page');
 
-        $products_query  = Product::with('options', 'brand', 'categories')->where('status' , '!=' , 'Inactive');
+        $products_query  = Product::with('options', 'brand', 'categories' , 'product_views','apiorderItem')->where('status' , '!=' , 'Inactive');
 
         $selected_category_id = $request->get('selected_category');
 
@@ -367,7 +369,7 @@ class ProductController extends Controller
         $products_query  = Product::whereIn('product_id' , $products_ids)
         ->with('options', 'brand', 'categories')
         ->where('status' , '!=' , 'Inactive');
-        $products = $products_query->with('options.defaultPrice', 'brand')->paginate(12);
+        $products = $products_query->with('options.defaultPrice', 'brand' , 'product_views','apiorderItem')->paginate(12);
         $user_list = BuyList::where('user_id', $user_id)
             ->where('contact_id', $contact_id)
             ->first();
@@ -431,6 +433,11 @@ class ProductController extends Controller
             $views = $product->views;
             $product->views = $views + 1;
             $product->save();
+
+            // adding product views to separate table
+            $product_view = new ProductView();
+            $product_view->product_id = $product->id;
+            $product_view->save();
         }
         
         $productOption = ProductOption::where('option_id', $option_id)->with('products.categories', 'price')->first();
@@ -494,7 +501,7 @@ class ProductController extends Controller
         $category_ids = Category::where('parent_id', $category->id)->pluck('id')->toArray();
         $products = [];
         if (!empty($category_ids)) {
-            $products = Product::whereIn('category_id', $category_ids)->get();
+            $products = Product::with('product_views','apiorderItem')->whereIn('category_id', $category_ids)->get();
         }
         return view('categories', compact('products'));
     }
@@ -509,7 +516,7 @@ class ProductController extends Controller
 
         $search_queries = $request->all();
 
-        $products_query  = Product::with('options.price', 'brand')->where('brand', $name)->where('status' , '!=' , 'Inactive');
+        $products_query  = Product::with('options.price', 'brand' , 'product_views','apiorderItem')->where('brand', $name)->where('status' , '!=' , 'Inactive');
 
         $selected_category_id = $request->get('selected_category');
 
@@ -865,7 +872,7 @@ class ProductController extends Controller
         $search_queries = $request->all();
 
 
-        $products_query  = Product::with('options', 'brand', 'categories')->where('status', '!=', 'Inactive');
+        $products_query  = Product::with('options', 'brand', 'categories' , 'product_views','apiorderItem')->where('status', '!=', 'Inactive');
         $selected_category_id = $request->get('selected_category');
 
         $category_id = $selected_category_id;
@@ -1010,7 +1017,7 @@ class ProductController extends Controller
         //         ->paginate($per_page);
         //     };
         // }
-        $products = Product::with(['options' => function ($q) {
+        $products = Product::with(['product_views','apiorderItem' , 'options' => function ($q) {
                         $q->where('status', '!=', 'Disabled');
                     }])->orWhere(function (Builder $query) use ($searchvalue) {
                         $query->where('name', 'LIKE', '%' . $searchvalue . '%')

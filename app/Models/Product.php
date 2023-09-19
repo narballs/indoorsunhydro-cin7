@@ -52,5 +52,9 @@ class Product extends Model
     {
         return $this->hasMany('App\Models\Brand', 'id', 'brand_id');
     }
+    public function product_views()
+    {
+        return $this->hasMany('App\Models\ProductView', 'product_id', 'id');
+    }
 
 }
