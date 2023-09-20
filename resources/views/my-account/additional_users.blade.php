@@ -124,7 +124,7 @@
                                                                             @endif
                                                                         </td>
                                                                         <td class="my_account_all_items" style="vertical-align: middle;">
-                                                                            ${{ !empty($contact['contact_id']) ? number_format($contact['balance_owing'], 2) : "" }}
+                                                                            {{ !empty($contact['contact_id']) ? number_format('$' . $contact['balance_owing'], 2) : "" }}
                                                                         </td>
                                                                          <td class="my_account_all_items" style="vertical-align: middle;">
                                                                             ${{ number_format($contact['credit_limit'], 2) }}
