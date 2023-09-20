@@ -1,14 +1,11 @@
 <div class="container-fluid mt-3 header-top">
     <div class="row header-top justify-content-center align-items-center">
-        <div class="col-md-4 d-flex align-items-center justify-content-center">
+        <div class="col-md-3 col-xl-4 col-lg-4 d-flex align-items-center justify-content-center">
             <a class="navbar-brand d-flex justify-content-center" href="/">
-                <img class="w-50" src="{{ url('/theme/img/' . \App\Helpers\SettingHelper::getSetting('logo_name')) }}" ;>
+                <img class="logo_image_main" src="{{ url('/theme/img/' . \App\Helpers\SettingHelper::getSetting('logo_name')) }}" ;>
             </a>
         </div>
-        {{-- <div class="col-xl-5 col-lg-6 col-md-12 col-sm-6 col-xs-6 mt-2 top-header-navigation p-0">
-            @include('partials.nav')
-        </div> --}}
-        <div class="col-md-5 top-reach-bar d-flex align-items-center justify-content-center">
+        <div class="col-md-5 col-lg-5 col-xl-5 top-reach-bar d-flex align-items-center justify-content-center">
             <div class="col-md-12">
                 <div class="row">
                     <form class="" method="get" action="{{route('product_search')}}">
@@ -28,7 +25,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-4 col-lg-3 col-xl-3">
             <a href="{{ '/cart/' }}" style="color:#7BC533; !important;text-decoration:none !important;">
                 <div class="col-md-12">
                     <div class="d-flex">
@@ -78,13 +75,6 @@
 
 <div class="container-fluid mobile-view ">
     <div class="w-100">
-        {{-- @include('partials.top-bar') --}}
         @include('partials.nav')
     </div>
-</div>
-<div class="container-fluid ipad-view ">
-    <div class="w-100">
-        @include('partials.nav')
-    </div>
-</div>
 </div>

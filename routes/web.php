@@ -25,6 +25,7 @@ use App\Http\Controllers\Admin\DailyApiLogController;
 use App\Http\Controllers\Admin\TaxClassController;
 use App\Http\Controllers\Admin\OperationalZipCodeController;
 use App\Http\Controllers\AdminInventoryLocationController;
+use App\Http\Controllers\Admin\DiscountController;
 use App\Models\TaxClass;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -116,7 +117,7 @@ Route::group(['prefix' => 'my-account/'], function () {
 });
 
 Route::group(['middleware' => ['auth']], function () {
-    Route::resource('admin/roles', RoleController::class);
+    Route::resource('admin/discounts', DiscountController::class);
     Route::resource('admin/tax_classes', TaxClassController::class);
     Route::resource('admin/users', UserController::class);
     Route::get('admin/dashboard', [DashboardController::class, 'index'])->name('admin.view');
@@ -233,6 +234,7 @@ Route::get('/products/buy-again', [ProductController::class, 'buy_again']);
 Route::group(['middleware' => ['auth']], function () {
     Route::resource('admin/roles', RoleController::class);
     Route::resource('admin/users', UserController::class);
+    Route::resource('admin/roles', RoleController::class);
     Route::get('admin/dashboard', [DashboardController::class, 'index'])->name('admin.view');
     Route::get('admin/orders', [OrderManagementController::class, 'index'])->name('admin.orders');
     Route::get('admin/order/create', [OrderManagementController::class, 'create'])->name('admin.order.create');
@@ -327,3 +329,4 @@ Route::get('/event', [CheckoutController::class, 'event']);
 
 Route::resource('admin/operational-zip-codes', OperationalZipCodeController::class);
 Route::post('/order/mark/paid', [OrderController::class, 'mark_order_paid']);
+Route::post('admin/search/customer', [AdminSettingsController::class, 'search_customer']);

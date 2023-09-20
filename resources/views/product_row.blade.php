@@ -57,11 +57,31 @@
                         Category:&nbsp;&nbsp;Unassigned
                     </p>
                 @endif
-
-                <?php $enable_add_to_cart = App\Helpers\SettingHelper::enableAddToCart($option); ?>
+                <?php 
+                    $enable_add_to_cart = App\Helpers\SettingHelper::enableAddToCart($option); 
+                    $last_month_views = null;
+                    $views_count = $product->product_views->whereBetween('created_at', [Carbon\Carbon::now()->subMonth()->startOfMonth(), Carbon\Carbon::now()->subMonth()->endOfMonth()])->count();
+                    if ($views_count > 20) {
+                        $last_month_views = $views_count . '+ views in last month';
+                    }
+                    else if ($views_count == 0) {
+                        $last_month_views = 'No views in last month';
+                    } 
+                    else {
+                        $last_month_views = $views_count . ' views in last month';
+                    }
+                    $past_30_days = $date = Carbon\Carbon::today()->subDays(30);
+                    $bought_products_count = $product->apiorderItem->where('created_at','>=',$date)->count();
+                ?>
+                <p class="category-cart-page mt-2 mb-1">{{$last_month_views}}</p>
+                @if ($bought_products_count > 0)
+                <small class="text-danger category-cart-page font-weight-bold product_buys_count">{{$bought_products_count . '  bought in the past month'}}</small>
+                @else
+                <p class="text-danger category-cart-page font-weight-bold product_buys_count margin-for-empty"></p>
+                @endif
                 @if ($enable_add_to_cart)
                     <button 
-                        class="prd_btn_resp ajaxSubmit button-cards col w-100 mt-2 mb-1" 
+                        class="prd_btn_resp ajaxSubmit button-cards col w-100 mt-3 mb-1" 
                         type="submit" 
                         style="max-height: 46px;" id="ajaxSubmit_{{ $product->id }}"
                         onclick="updateCart('{{ $product->id }}', '{{ $option->option_id }}')"
@@ -70,7 +90,7 @@
                     </button>
                 @else
                     <button 
-                        class="prd_btn_resp ajaxSubmit mb-2 text-white bg-danger bg-gradient button-cards col w-100 autocomplete=off"
+                        class="prd_btn_resp ajaxSubmit mb-3 text-white bg-danger bg-gradient button-cards col w-100 autocomplete=off"
                         tabindex="-1" 
                         type="submit" 
                         style="max-height: 46px;" 
@@ -98,6 +118,22 @@
         </form>
     </div>
 </div>
+<style>
+    .product_buys_count {
+        font-size: 11px;
+    }
+    .margin-for-empty {
+        margin-bottom: 1.4rem ;
+    }
+    @media screen and (max-width:550px)  and (min-width: 280px){
+        .product_buys_count {
+            font-size: 7.5px !important;
+        }
+        .margin-for-empty {
+            margin-bottom: 0.95rem !important;
+        }
+    }
+</style>
 <script>
     function updateCart(id, option_id) {
         jQuery.ajax({

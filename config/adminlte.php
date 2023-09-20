@@ -372,6 +372,11 @@ return [
             'text'    => 'Inventory Locations',
             'url'  => 'admin/inventory-locations',
         ],
+        [
+            'text'    => 'Discounts',
+            'url'  => 'admin/discounts',
+            'classes' => 'd-none',
+        ],
 
         [
             'text'       => 'Logout',

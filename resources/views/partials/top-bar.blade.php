@@ -2,11 +2,11 @@
     <div class="container-fluid my-1">
         <div class="row justify-content-center">
             
-            <div class="col-md-5"></div>
-            <div class="col-md-7">
-                <div class="col-md-12">
+            <div class="col-md-2 col-lg-5 col-xl-5"></div>
+            <div class="col-md-10 col-lg-7 col-xl-7">
+                <div class="col-md-12 col-xl-12 col-lg-12">
                     <div class="row mx-1">
-                        <div class="col-xl-3 col-lg-3 d-flex justify-content-around">
+                        <div class="col-md-5 col-xl-3 col-lg-3 d-flex justify-content-around">
                             <div class="mt-2">
                                 @if (session('logged_in_as_another_user'))
                                     <a href="{{ url('admin/go-back') }}" class="top-bar-logout mt-3 top-header-items">Go
@@ -21,7 +21,7 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="col-xl-9 col-lg-9 mx-auto">
+                        <div class="col-md-7 col-xl-9 col-lg-9 mx-auto">
                             <a href="{{ '/user/' }}" class="text-white d-flex align-items-end">
                                 @if (Auth::user())
                                     <div>
@@ -33,7 +33,7 @@
                                             {{ csrf_field() }}
                                             <input class="btn btn-link text-white" type="submit" value="logout">
                                         </form>
-                                        <nav class="navbar navbar-expand-lg navbar-light company-nav-bar-conatainer p-0"
+                                        <nav class="navbar navbar-expand-sm navbar-light company-nav-bar-conatainer p-0"
                                             style="">
                                             <!-- Toggle button -->
                                             <button class="navbar-toggler px-0 text-light" type="button"
@@ -48,7 +48,7 @@
                                                 <ul class="navbar-nav me-auto ps-lg-0 row" style="">
                                                     <!-- Navbar dropdown -->
                                                     <div class="row">
-                                                        <div class="col-lg-10  col-xl-10  d-flex align-items-center">
+                                                        <div class="col-md-11 col-lg-10 col-xl-10 d-flex align-items-center">
                                                             <li
                                                                 class="nav-item dropdown position-static width_fix adjust_arrow_color">
                                                                 @if (!empty($session_contact_company))
