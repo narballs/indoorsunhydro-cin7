@@ -19,7 +19,7 @@
             @if(count($all_companies) > 0)
                 <div class="accordion mt-3" id="accordionExample">
                     @foreach ($all_companies as $company)
-                        @if ($company->is_parent != 0 )
+                       
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="heading{{$company->id}}">
                                 <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{$company->id}}" aria-expanded="true" aria-controls="collapse{{$company->id}}">
@@ -124,7 +124,7 @@
                                                                             @endif
                                                                         </td>
                                                                         <td class="my_account_all_items" style="vertical-align: middle;">
-                                                                            ${{ number_format($contact['balance_owing'], 2) }}
+                                                                            ${{ !empty($contact['contact_id']) ? number_format($contact['balance_owing'], 2) : "" }}
                                                                         </td>
                                                                          <td class="my_account_all_items" style="vertical-align: middle;">
                                                                             ${{ number_format($contact['credit_limit'], 2) }}
@@ -151,7 +151,7 @@
                                 </div>
                             </div>
                         </div>
-                        @endif
+                        
                     @endforeach
                 </div>
             @else
