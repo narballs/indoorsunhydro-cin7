@@ -38,7 +38,7 @@
             <input type="hidden" name="quantity" value="1" id="quantity">
             <input type="hidden" name="p_id" id="p_{{ $product->id }}" value="{{ $product->id }}">
             @csrf
-            <div class="col-md-12 p-1">
+            <div class="col-md-12 p-1 price-category-view-section">
                 <?php
                 $retail_price = 0;
                 $user_price_column = App\Helpers\UserHelper::getUserPriceColumn();
@@ -49,11 +49,11 @@
                 <h4 text="{{ $retail_price }}" class="text-uppercase mb-0 text-center p_price_resp mt-0">
                     ${{ number_format($retail_price, 2) }}</h4>
                 @if ($product->categories)
-                    <p class="category-cart-page  mt-2 mb-2" title="{{$product->categories->name}}">
+                    <p class="category-cart-page  mt-3 mb-2" title="{{$product->categories->name}}">
                         Category:&nbsp;&nbsp;{{ \Illuminate\Support\Str::limit($product->categories->name, 4) }}
                     </p>
                 @else
-                    <p class="category-cart-page mt-2 mb-2">
+                    <p class="category-cart-page mt-3 mb-2">
                         Category:&nbsp;&nbsp;Unassigned
                     </p>
                 @endif
@@ -63,25 +63,28 @@
                     $views_count = $product->product_views->whereBetween('created_at', [Carbon\Carbon::now()->subMonth()->startOfMonth(), Carbon\Carbon::now()->subMonth()->endOfMonth()])->count();
                     if ($views_count > 20) {
                         $last_month_views = $views_count . '+ views in last month';
-                    }
-                    else if ($views_count == 0) {
-                        $last_month_views = 'No views in last month';
                     } 
-                    else {
-                        $last_month_views = $views_count . ' views in last month';
+                    else if ($views_count <= 20 && $views_count > 0) {
+                        $last_month_views = $views_count . ' view(s) in last month';
                     }
                     $past_30_days = $date = Carbon\Carbon::today()->subDays(30);
                     $bought_products_count = $product->apiorderItem->where('created_at','>=',$date)->count();
                 ?>
-                <p class="category-cart-page mt-2 mb-1">{{$last_month_views}}</p>
-                @if ($bought_products_count > 0)
-                <small class="text-danger category-cart-page font-weight-bold product_buys_count">{{$bought_products_count . '  bought in the past month'}}</small>
-                @else
-                <p class="text-danger category-cart-page font-weight-bold product_buys_count margin-for-empty"></p>
+                @if (!empty($last_month_views))
+                    <p class="text-secondary mb-0 ft-size">{{$last_month_views}}</p>
+                {{-- @else
+                <p class="mt-2 pt-1"></p> --}}
                 @endif
+                @if ($bought_products_count > 0)
+                    <small class="text-danger ft-size font-weight-bold">{{$bought_products_count . '  bought in the past month'}}</small>
+                {{-- @else
+                <p class="text-danger category-cart-page font-weight-bold product_buys_count margin-for-empty"></p> --}}
+                @endif
+            </div>
+            <div class="col-md-12 add-to-cart-button-section">
                 @if ($enable_add_to_cart)
                     <button 
-                        class="prd_btn_resp ajaxSubmit button-cards col w-100 mt-3 mb-1" 
+                        class="prd_btn_resp ajaxSubmit button-cards col w-100  mb-1" 
                         type="submit" 
                         style="max-height: 46px;" id="ajaxSubmit_{{ $product->id }}"
                         onclick="updateCart('{{ $product->id }}', '{{ $option->option_id }}')"
@@ -125,12 +128,30 @@
     .margin-for-empty {
         margin-bottom: 1.4rem ;
     }
+
+    .price-category-view-section {
+        min-height: 7.7rem;
+    }
+    
+    @media screen and (max-width:350px)  and (min-width: 280px){
+        .add-to-cart-button-section {
+            padding: 0px !important;
+        }
+    }
     @media screen and (max-width:550px)  and (min-width: 280px){
         .product_buys_count {
             font-size: 7.5px !important;
         }
         .margin-for-empty {
             margin-bottom: 0.95rem !important;
+        }
+
+        .ft-size {
+            font-size: 0.5rem;
+        }
+
+        .price-category-view-section {
+            min-height: 5.7rem;
         }
     }
 </style>

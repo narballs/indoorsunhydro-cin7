@@ -44,10 +44,10 @@
                                                                 <tr class="table-header-background">
                                                                     <td class="table-row-item">
                                                                         <div class="custom-control custom-checkbox tabel-checkbox d-flex align-items-center">
-                                                                            <input
+                                                                            {{-- <input
                                                                                 class="custom-control-input custom-control-input-success checkbox-table"
                                                                                 type="checkbox" id="selectAll" value="">
-                                                                            <label for="selectAll" class="custom-control-label"></label>
+                                                                            <label for="selectAll" class="custom-control-label"></label> --}}
                                                                             <span class="table-row-heading-order">
                                                                                 <i class="fas fa-arrow-up" style="font-size:14.5px ;"></i>
                                                                             </span>
@@ -70,12 +70,12 @@
                                                                     <tr>
                                                                         <td class="table-items justify-content-start align-items-lg-center user_table_items">
                                                                             <div class="custom-control custom-checkbox tabel-checkbox d-flex align-items-center">
-                                                                                <input
+                                                                                {{-- <input
                                                                                     class="custom-control-input custom-control-input-success sub_chk"
                                                                                     data-id="{{ $contact->id }}" type="checkbox"
-                                                                                    id="separate_check_{{ $contact->id }}">
-                                                                                <label for="separate_check_{{ $contact->id }}"
-                                                                                    class="custom-control-label"></label>
+                                                                                    id="separate_check_{{ $contact->id }}"> --}}
+                                                                                {{-- <label for="separate_check_{{ $contact->id }}"
+                                                                                    class="custom-control-label"></label> --}}
                                                                                 <span> {{ $key + 1 }}</span>
                                                                             </div>
                                                                         </td>
@@ -99,7 +99,7 @@
                                                                         </td>
                                                                         <td class="my_account_all_items" style="vertical-align: middle;">
                                                                             <a href="{{ url('send-password/fornt-end/' . $contact->user_id) }}"
-                                                                                class="btn bg-white ps-0">send password</a>
+                                                                                class="btn bg-white ps-0">Send Password</a>
                                                                         </td>
                                                                         <td class="my_account_all_items" style="vertical-align: middle;">
                                                                             @if (!empty($contact['contact_id']))
@@ -129,9 +129,9 @@
                                                                          <td class="my_account_all_items" style="vertical-align: middle;">
                                                                             ${{ number_format($contact['credit_limit'], 2) }}
                                                                         </td>
-                                                                        <td style="vertical-align: middle;">
+                                                                        {{-- <td style="vertical-align: middle;">
                                                                             <img src="/theme/img/dots_icons.png" alt="">
-                                                                        </td>
+                                                                        </td> --}}
                                                                     </tr>
                                                                 @endforeach
                                                             </tbody>

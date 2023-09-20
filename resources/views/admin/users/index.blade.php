@@ -146,7 +146,6 @@
                                                 continue;
                                             }
                                         @endphp
-
                                         <tr id="row-{{ $user->id }}" class="user-row border-bottom">
                                             <td class="d-flex user-table-items">
                                                 <span class="tabel-checkbox-user">
@@ -204,11 +203,15 @@
                                             <td class="background_contact_id user_table_items">
                                                 @if ($contact)
                                                     @if (!empty($contact->contact_id))
-                                                        <span
-                                                            class="badge badge-primary  background_primary_1">primary</span>
+                                                        <span class="badge badge-primary  background_primary_1">primary</span>
+                                                        <small class="{{!empty($contact->status && $contact->status != 0) ? 'badge badge-success' : "badge badge-danger"}}">
+                                                            {{!empty($contact->status && $contact->status != 0) ? 'Active' : "Inactive"}}
+                                                        </small>
                                                     @else
-                                                        <span
-                                                            class="badge badge-secondary  background_secondary_1">secondary</span>
+                                                        <span class="badge badge-secondary  background_secondary_1">secondary</span>
+                                                        <small class="{{!empty($contact->status && $contact->status != 0) ? 'badge badge-success' : "badge badge-danger"}}">
+                                                            {{!empty($contact->status && $contact->status != 0) ? 'Active' : "Inactive"}}
+                                                        </small>
                                                     @endif
                                                 @endif
                                             </td>
