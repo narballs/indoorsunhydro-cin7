@@ -26,6 +26,7 @@ use App\Http\Controllers\Admin\TaxClassController;
 use App\Http\Controllers\Admin\OperationalZipCodeController;
 use App\Http\Controllers\AdminInventoryLocationController;
 use App\Http\Controllers\Admin\DiscountController;
+use App\Http\Controllers\Admin\PagesController;
 use App\Models\TaxClass;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -117,6 +118,25 @@ Route::group(['prefix' => 'my-account/'], function () {
 });
 
 Route::group(['middleware' => ['auth']], function () {
+    Route::resource('admin/pages', PagesController::class);
+    Route::post('/editor/image_upload', [PagesController::class, 'image_upload'])->name('image_upload');
+    // faqs page section
+    Route::get('admin/page/faqs', [PagesController::class, 'faqs'])->name('faqs.index');
+    Route::get('admin/page/faqs/create', [PagesController::class, 'create_faq'])->name('faqs.create');
+    Route::post('admin/page/faqs/store', [PagesController::class, 'store_faq'])->name('faqs.store');
+    Route::get('admin/page/faqs/edit/{id}', [PagesController::class, 'edit_faq'])->name('faqs.edit');
+    Route::post('admin/page/faqs/update/{id}', [PagesController::class, 'update_faq'])->name('faqs.update');
+    Route::post('admin/page/faqs/delete/{id}', [PagesController::class, 'delete_faq'])->name('faqs.delete');
+
+    // blog page section
+    Route::get('admin/page/blogs', [PagesController::class, 'blogs'])->name('blogs.index');
+    Route::get('admin/page/blogs/create', [PagesController::class, 'create_blog'])->name('blogs.create');
+    Route::post('admin/page/blogs/store', [PagesController::class, 'store_blog'])->name('blogs.store');
+    Route::get('admin/page/blogs/edit/{id}', [PagesController::class, 'edit_blog'])->name('blogs.edit');
+    Route::post('admin/page/blogs/update/{id}', [PagesController::class, 'update_blog'])->name('blogs.update');
+    Route::post('admin/page/blogs/delete/{id}', [PagesController::class, 'delete_blog'])->name('blogs.delete');
+    Route::post('admin/page/blog/detail/{id}', [PagesController::class, 'blog_detail'])->name('blog_detail');
+
     Route::resource('admin/discounts', DiscountController::class);
     Route::resource('admin/tax_classes', TaxClassController::class);
     Route::resource('admin/users', UserController::class);
@@ -163,7 +183,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('admin/admin-users', [UserController::class, 'adminUsers']);
     Route::get('admin/get-parent', [ContactController::class, 'getParent']);
     Route::post('admin/assign-parent-child', [ContactController::class, 'assingParentChild']);
-    Route::get('admin/user-switch/{id}/{contactId}', [UserController::class, 'switch_user'])->name('users.switch');
+    Route::get('admin/user-switch/{id}/{contactId}', [UserController::class, 'switch_user']);
     Route::get('admin/send-password/{id}', [UserController::class, 'send_password'])->name('users.send_password');
     Route::get('admin/go-back', [UserController::class, 'switch_user_back'])->name('users.switch_user_back');
     Route::get('admin/api-sync-logs', [LogsController::class, 'index']);
@@ -330,3 +350,4 @@ Route::get('/event', [CheckoutController::class, 'event']);
 Route::resource('admin/operational-zip-codes', OperationalZipCodeController::class);
 Route::post('/order/mark/paid', [OrderController::class, 'mark_order_paid']);
 Route::post('admin/search/customer', [AdminSettingsController::class, 'search_customer']);
+Route::get('/page/{slug}', [HomeController::class, 'show_page']);

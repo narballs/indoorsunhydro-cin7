@@ -1,5 +1,8 @@
 <?php
-$categories = NavHelper::getCategories();
+    $categories = NavHelper::getCategories();
+    $pages = NavHelper::getPages();
+    $faqs = NavHelper::getFaqs();
+    $blogs = NavHelper::getBlogs();
 ?>
 <div class="col-xl-12 col-lg-12 col-md-12  col-sm-6 col-xs-6 p-0 header-top mb-2">
     <nav class="navbar navbar-expand-sm navbar-light bg-transparent pb-0 justify-content-start">
@@ -78,12 +81,15 @@ $categories = NavHelper::getCategories();
                 @endforeach
                 </ul>
                 </li>
-                <li class=" nav-item me-3 mx-4">
-                    <a class="nav-link text-uppercase nav-item-links font_style_menu" href="#">
-                        About
-                    </a>
-                </li>
-
+                @if(count($pages) > 0)
+                    @foreach ($pages as $page)
+                        <li class=" nav-item me-3 mx-4">
+                            <a class="nav-link text-uppercase nav-item-links font_style_menu" href="{{url('page/' . $page->slug)}}">
+                                {{strtoupper($page->name)}}
+                            </a>
+                        </li>
+                    @endforeach
+                @endif
                 <li class="nav-item me-4 mx-4">
                     <a class="nav-link text-uppercase nav-item-links font_style_menu" href="{{ url('contact-us') }}">
                         Contact

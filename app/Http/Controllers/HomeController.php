@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Page;
 use Session;
 use Illuminate\Http\Request;
 
@@ -27,6 +28,15 @@ class HomeController extends Controller
         $categories = Category::orderBy('name', 'ASC')
             ->with('products')->where('is_active', 1)
             ->get();
+        $pages = Page::where('status', 1)->get();
         return view('index', compact('categories'));
     }
+
+    public function show_page($slug) {
+        $page = Page::where('slug' , $slug)->first();
+        $pages = Page::where('status', 1)->get();
+        return view('show_page', compact('page' , 'pages'));
+    }
+
+    
 }

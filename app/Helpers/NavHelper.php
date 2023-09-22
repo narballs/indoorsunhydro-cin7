@@ -1,8 +1,12 @@
 <?php
 
 namespace App\Helpers;
+
+use App\Models\Blog;
 use App\Models\Category;
+use App\Models\Faq;
 use App\Models\Product;
+use App\Models\Page;
 class NavHelper
 {
     /**
@@ -18,6 +22,23 @@ class NavHelper
             ->with('products')->where('is_active', 1)
             ->get();
         return $categories;
+    }
+
+    public static function getPages () {
+        $pages = Page::where('status', 1)->get();
+        return $pages;
+    }
+
+
+    public static function getFaqs () {
+        $faqs = Faq::where('status', 1)->get();
+        return $faqs;
+    }
+
+
+    public static function getBlogs () {
+        $blogs = Blog::where('status', 1)->get();
+        return $blogs;
     }
 }
 
