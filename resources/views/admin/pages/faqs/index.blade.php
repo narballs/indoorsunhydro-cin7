@@ -25,7 +25,7 @@
                     <div class="row">
                         <div class="col-md-6 mobile_heading">
                             <p class="product_heading">
-                               Pages
+                               FAQS
                             </p>
                         </div>
                         <div class="col-md-6 mobile_heading text-right">
