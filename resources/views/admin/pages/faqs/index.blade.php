@@ -57,8 +57,8 @@
                         @foreach ($faqs as $faq)
                         <tr>
                             <td>{{ $i++ }}</td>
-                            <td>{!! \Illuminate\Support\Str::limit($faq->question, 30) !!}</td>
-                            <td>{!! \Illuminate\Support\Str::limit($faq->answer, 70) !!}</td>
+                            <td>{!! \Illuminate\Support\Str::limit($faq->question, 20) !!}</td>
+                            <td>{!! \Illuminate\Support\Str::limit($faq->answer, 30) !!}</td>
                             <td>
                                 @if($faq->status == 1)
                                     <span class="badge badge-success">Active</span>
@@ -78,7 +78,7 @@
                         @endforeach
                         @else
                         <tr>
-                            <td colspan="3">No Pages Found</td>
+                            <td colspan="3">No Faqs Found</td>
                         </tr>
                         @endif
                     </tbody>

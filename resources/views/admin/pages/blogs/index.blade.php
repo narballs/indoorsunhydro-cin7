@@ -58,7 +58,7 @@
                         <tr>
                             <td>{{ $i++ }}</td>
                             <td>{{$blog->title}}</td>
-                            <td>{!! \Illuminate\Support\Str::limit($blog->description, 70) !!}</td>
+                            <td>{!! \Illuminate\Support\Str::limit($blog->description, 20) !!}</td>
                             <td>
                                 @if($blog->status == 1)
                                     <span class="badge badge-success">Active</span>
