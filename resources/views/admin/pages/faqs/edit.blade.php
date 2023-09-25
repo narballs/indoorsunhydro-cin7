@@ -5,7 +5,7 @@
 @section('content_header')
 <div class="row ">
     <div class="col-md-6">
-        <h1>Edit Page</h1>
+        <h1>Edit Faq</h1>
     </div>
     <div class="col-md-6 text-right">
         <a class="btn btn-primary text-white" href="{{ route('faqs.index') }}">Back</a>
