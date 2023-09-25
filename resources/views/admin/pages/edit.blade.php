@@ -36,7 +36,7 @@
                                 <div class="form-group">
                                     <label for="name">Name</label>
                                     <input type="text" class="form-control" id="name" aria-describedby=""
-                                    name="name" value="{{$page->name}}">
+                                    name="name" readonly value="{{$page->name}}">
                                 </div>
                             </div>
                             <div class="col-md-6">
