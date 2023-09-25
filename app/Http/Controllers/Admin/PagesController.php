@@ -19,6 +19,8 @@ use Illuminate\Support\Facades\Hash;
 use Image;
 
 
+
+
 class PagesController extends Controller
 {
     public function index()
@@ -58,6 +60,7 @@ class PagesController extends Controller
             $image = $request->file('banner_image');
             $banner_image = time() . '.' . $image->getClientOriginalExtension();
             $destinationPath = public_path('pages/banners');
+            File::makeDirectory($destinationPath, $mode = 0777, true, true);
             $image->move($destinationPath, $banner_image);
         }
         try {
@@ -124,6 +127,7 @@ class PagesController extends Controller
                 $destinationPath = public_path('pages/banners');
                 $Image = time() . "." . $banner_image->getClientOriginalExtension();
                 $banner_image->move($destinationPath, $Image);
+                File::makeDirectory($destinationPath, $mode = 0777, true, true);
                 $request['banner_image'] = "$Image";
 
             } else {
@@ -265,6 +269,7 @@ class PagesController extends Controller
             $image = $request->file('image');
             $blog_image = time() . '.' . $image->getClientOriginalExtension();
             $destinationPath = public_path('pages/blogs');
+            File::makeDirectory($destinationPath, $mode = 0777, true, true);
             $image->move($destinationPath, $blog_image);
         }
         try {
@@ -301,6 +306,7 @@ class PagesController extends Controller
         if ($blog_image = $request->file('image')) {
             $destinationPath = public_path('pages/blogs');
             $Image = time() . "." . $blog_image->getClientOriginalExtension();
+            File::makeDirectory($destinationPath, $mode = 0777, true, true);
             $blog_image->move($destinationPath, $Image);
             $request['image'] = "$Image";
 
