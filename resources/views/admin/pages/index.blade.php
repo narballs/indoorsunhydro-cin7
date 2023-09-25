@@ -25,12 +25,12 @@
                     <div class="row">
                         <div class="col-md-6 mobile_heading">
                             <p class="product_heading">
-                                Operational Zip Codes
+                               Pages
                             </p>
                         </div>
                         <div class="col-md-6 mobile_heading text-right">
                             <p class="product_heading">
-                                <a class="btn btn-primary text-white" href="{{ route('operational-zip-codes.create') }}"> Create Operational Zip Code</a>
+                                <a class="btn btn-primary text-white" href="{{ route('pages.create') }}"> Create Page</a>
                             </p>
                         </div>
                     </div>
@@ -43,7 +43,9 @@
                     <thead>
                         <tr>
                             <th>S.No</th>
-                            <th>Zip Code</th>
+                            <th>Name</th>
+                            <th>Slug</th>
+                            <th>Title</th>
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
@@ -52,31 +54,33 @@
                         @php
                             $i =1; 
                         @endphp
-                        @if(count($operationalZipCodes) > 0 )
-                        @foreach ($operationalZipCodes as $operational_zip_code)
+                        @if(count($pages) > 0 )
+                        @foreach ($pages as $page)
                         <tr>
                             <td>{{ $i++ }}</td>
-                            <td>{{ $operational_zip_code->zip_code }}</td>
+                            <td>{{ $page->name }}</td>
+                            <td>{{ $page->slug }}</td>
+                            <td>{{ $page->title }}</td>
                             <td>
-                                @if($operational_zip_code->status == 'active')
+                                @if($page->status == 1)
                                     <span class="badge badge-success">Active</span>
                                 @else
                                     <span class="badge badge-danger">Inactive</span>
                                 @endif
                             </td>
                             <td>
-                                <a href="{{ route('operational-zip-codes.edit', $operational_zip_code->id) }}" class="btn btn-primary btn-sm">Edit</a>
-                                <form action="{{ route('operational-zip-codes.destroy', $operational_zip_code->id) }}" method="POST" style="display: inline-block;">
+                                <form action="{{ route('pages.destroy', $page->id) }}" method="POST" style="display: inline-block;">
+                                    <a href="{{ route('pages.edit', $page->id) }}" class="btn btn-primary btn-sm text-white">Edit</a>
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this item?');">Delete</button>
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this Page?');">Delete</button>
                                 </form>
                             </td>
                         </tr>
                         @endforeach
                         @else
                         <tr>
-                            <td colspan="3">No Operational Zip Codes found</td>
+                            <td colspan="3">No Pages Found</td>
                         </tr>
                         @endif
                     </tbody>
@@ -84,7 +88,7 @@
             </div>
             <div class="row">
                 <div class="col-md-10">
-                    {{ $operationalZipCodes->links('pagination.custom_pagination') }}
+                    {{ $pages->links('pagination.custom_pagination') }}
                 </div>
             </div>
         </div>

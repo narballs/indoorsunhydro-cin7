@@ -373,6 +373,18 @@ return [
             'url'  => 'admin/inventory-locations',
         ],
         [
+            'text'    => 'Pages',
+            'url'  => 'admin/pages',
+        ],
+        [
+            'text'    => 'Faqs',
+            'url'  => 'admin/page/faqs',
+        ],
+        [
+            'text'    => 'Blogs',
+            'url'  => 'admin/page/blogs',
+        ],
+        [
             'text'    => 'Discounts',
             'url'  => 'admin/discounts',
             'classes' => 'd-none',
