@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
+
+use App\Helpers\NavHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Blog;
 use Illuminate\Support\Str;
@@ -58,19 +60,23 @@ class PagesController extends Controller
             $destinationPath = public_path('pages/banners');
             $image->move($destinationPath, $banner_image);
         }
+        try {
+            $page = Page::create([
+                'name' => $request->name,
+                'slug' => Str::slug($request->name),
+                'banner_image' => $banner_image,
+                'title' => $request->title,
+                'description' => $request->description,
+                'status' => $request->status,
 
-        $page = Page::create([
-            'name' => $request->name,
-            'slug' => Str::slug($request->name),
-            'banner_image' => $banner_image,
-            'title' => $request->title,
-            'description' => $request->description,
-            'status' => $request->status,
+            ]);
 
-        ]);
-
-        
-        return redirect()->route('pages.index')->with('success', 'Page created successfully.');
+            
+            return redirect()->route('pages.index')->with('success', 'Page created successfully.');
+        }
+        catch(\Exception $e) {
+            return redirect()->route('pages.index')->with('error', 'Please reduce image sizes and try again.');
+        }
     }
 
     /**
@@ -136,7 +142,7 @@ class PagesController extends Controller
             // Log the exception
             Log::info('Exception: ' . $e->getMessage());
             Log::info('Stack trace: ' . $e->getTraceAsString());
-            return redirect()->route('pages.index')->with('error', 'Something went wrong.');
+            return redirect()->route('pages.index')->with('error', 'Please reduce image sizes and try again.');
             // Handle the exception (e.g., return an error response, redirect, etc.)
         }
         
@@ -261,13 +267,18 @@ class PagesController extends Controller
             $destinationPath = public_path('pages/blogs');
             $image->move($destinationPath, $blog_image);
         }
-        $blog = Blog::create([
-            'title' => $request->title,
-            'description' => $request->description,
-            'image' => $blog_image,
-            'status' => $request->status,
-        ]);
-        return redirect()->route('blogs.index')->with('success', 'Blog created successfully.');
+        try {
+            $blog = Blog::create([
+                'title' => $request->title,
+                'description' => $request->description,
+                'image' => $blog_image,
+                'status' => $request->status,
+            ]);
+            return redirect()->route('blogs.index')->with('success', 'Blog created successfully.');
+        }
+        catch(\Exception $e) {
+            return redirect()->route('blogs.index')->with('error', 'Please reduce image sizes and try again.');
+        }
     }
 
     public function blogs() {
@@ -296,14 +307,18 @@ class PagesController extends Controller
         } else {
             $Image = $blog->image;
         }
-        
-        $blog->update([
-            'title' => $request->title,
-            'description' => $request->description,
-            'image' => $Image,
-            'status' => $request->status,
-        ]);
-        return redirect()->route('blogs.index')->with('success', 'Blog updated successfully.');
+        try{
+            $blog->update([
+                'title' => $request->title,
+                'description' => $request->description,
+                'image' => $Image,
+                'status' => $request->status,
+            ]);
+            return redirect()->route('blogs.index')->with('success', 'Blog updated successfully.');
+        }
+        catch(\Exception $e) {
+            return redirect()->route('blogs.index')->with('error', 'Please reduce image sizes and try again.');
+        }
     }
 
     public function delete_blog($id) {
@@ -312,5 +327,18 @@ class PagesController extends Controller
         return redirect()->route('blogs.index')->with('success', 'Blog deleted successfully.');
     }
 
+
+    public function blog_detail($id) {
+        $blog_detail = Blog::where('id', $id)->first();
+        return view('partials.blog_detail', compact('blog_detail')); 
+    }
     
+
+    public function blog_search (Request $request) {
+        $search_value = $request->search_blog;
+        $page_slug = $request->page_slug;
+        $blogs = Blog::where('title', 'LIKE', '%' . $search_value . '%')->paginate(10);
+        $page = Page::where('slug', $page_slug)->first();
+        return view('partials.search_blogs', compact('blogs' , 'page' , 'search_value'));
+    }
 }

@@ -135,7 +135,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('admin/page/blogs/edit/{id}', [PagesController::class, 'edit_blog'])->name('blogs.edit');
     Route::post('admin/page/blogs/update/{id}', [PagesController::class, 'update_blog'])->name('blogs.update');
     Route::post('admin/page/blogs/delete/{id}', [PagesController::class, 'delete_blog'])->name('blogs.delete');
-    Route::post('admin/page/blog/detail/{id}', [PagesController::class, 'blog_detail'])->name('blog_detail');
+    
 
     Route::resource('admin/discounts', DiscountController::class);
     Route::resource('admin/tax_classes', TaxClassController::class);
@@ -351,3 +351,6 @@ Route::resource('admin/operational-zip-codes', OperationalZipCodeController::cla
 Route::post('/order/mark/paid', [OrderController::class, 'mark_order_paid']);
 Route::post('admin/search/customer', [AdminSettingsController::class, 'search_customer']);
 Route::get('/page/{slug}', [HomeController::class, 'show_page']);
+Route::post('page/blogs/search', [PagesController::class, 'blog_search'])->name('blog_search');
+Route::get('admin/page/blog/detail/{id}', [PagesController::class, 'blog_detail'])->name('blog_detail');
+

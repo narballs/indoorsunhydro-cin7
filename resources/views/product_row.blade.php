@@ -67,16 +67,17 @@
                     else if ($views_count <= 20 && $views_count > 0) {
                         $last_month_views = $views_count . ' view(s) in last month';
                     }
+                    
                     $past_30_days = $date = Carbon\Carbon::today()->subDays(30);
                     $bought_products_count = $product->apiorderItem->where('created_at','>=',$date)->count();
                 ?>
                 @if (!empty($last_month_views))
-                    <p class="text-secondary mb-0 ft-size">{{$last_month_views}}</p>
+                    <p class="text-dark mb-0 ft-size">{{$last_month_views}}</p>
                 {{-- @else
                 <p class="mt-2 pt-1"></p> --}}
                 @endif
                 @if ($bought_products_count > 0)
-                    <small class="text-danger ft-size font-weight-bold">{{$bought_products_count . '  bought in the past month'}}</small>
+                    <small class="text-dark ft-size">{{$bought_products_count . '  bought in the past month'}}</small>
                 {{-- @else
                 <p class="text-danger category-cart-page font-weight-bold product_buys_count margin-for-empty"></p> --}}
                 @endif

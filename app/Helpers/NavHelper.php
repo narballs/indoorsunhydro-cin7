@@ -37,8 +37,12 @@ class NavHelper
 
 
     public static function getBlogs () {
-        $blogs = Blog::where('status', 1)->get();
+        $blogs = Blog::where('status', 1)->paginate(12);
         return $blogs;
+    }
+    public static function getblog ($id) {
+        $blog = Blog::where('status', 1)->where('id' , $id)->get();
+        return $blog;
     }
 }
 

@@ -231,7 +231,6 @@
                 }
             });
         });
-
-
+        $('.all_items:first').addClass('active');
     });
 </script>

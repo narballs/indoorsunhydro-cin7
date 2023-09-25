@@ -35,7 +35,7 @@ class HomeController extends Controller
     public function show_page($slug) {
         $page = Page::where('slug' , $slug)->first();
         $pages = Page::where('status', 1)->get();
-        return view('show_page', compact('page' , 'pages'));
+        return view('partials.show_page', compact('page' , 'pages'));
     }
 
     
