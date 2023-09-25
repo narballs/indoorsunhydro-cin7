@@ -82,8 +82,6 @@
         @endif
         @endif
     </main>
-
-    </div>
     @include('partials.product-footer')
     @include('partials.footer')
 </body>
