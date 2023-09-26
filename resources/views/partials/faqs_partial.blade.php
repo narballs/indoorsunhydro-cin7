@@ -1,4 +1,4 @@
-<div class="row text-center mb-4 mt-2">
+<div class="row text-center mb-5 mt-5">
     <h3>
         Frequently asked questions
     </h3>
