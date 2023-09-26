@@ -32,7 +32,7 @@
                     </div>
                 </h6>
                 <div id="body{{$faq->id}}" class="accordion-collapse collapse" aria-labelledby="head{{$faq->id}}" data-bs-parent="#accordionExample">
-                    <div class="accordion-body pt-0">
+                    <div class="accordion-body pt-0 pl-2">
                         {!! $faq->answer !!}
                     </div>
                 </div>
