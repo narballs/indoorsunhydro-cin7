@@ -17,7 +17,7 @@
 								<small class="text-muted">{{date('Y-m-d', strtotime($blog->created_at))}}</small>
 							</div>
 							<div class="col-md-5">
-								<small class="text-muted"><a href="{{route('blog_detail' , $blog->id)}}">Read More ..</a></small>
+								<small class="text-muted"><a href="{{route('blog_detail' , $blog->slug)}}">Read More ..</a></small>
 							</div>
 						</div>
 					</div>

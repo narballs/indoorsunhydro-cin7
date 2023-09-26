@@ -279,11 +279,20 @@
                                     @endforeach
                                 </ul>
                             </li>
-                            <li class="nav-item me-3">
+                            {{-- <li class="nav-item me-3">
                                 <a class="nav-link text-uppercase nav-item-links ps-1" href="#">
                                     About
                                 </a>
-                            </li>
+                            </li> --}}
+                            @if(count($pages) > 0)
+                                @foreach ($pages as $page)
+                                    <li class="nav-item me-3">
+                                        <a class="nav-link text-uppercase nav-item-links ps-1" href="{{url('page/' . $page->slug)}}">
+                                            {{strtoupper($page->name)}}
+                                        </a>
+                                    </li>
+                                @endforeach
+                            @endif
                             <li class="nav-item me-4">
                                 <a class="nav-link text-uppercase nav-item-links ps-1" href="{{ url('contact-us') }}">
                                     Contact

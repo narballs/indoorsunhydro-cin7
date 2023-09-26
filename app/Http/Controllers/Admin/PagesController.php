@@ -276,6 +276,7 @@ class PagesController extends Controller
             $blog = Blog::create([
                 'title' => $request->title,
                 'description' => $request->description,
+                'slug' => Str::slug($request->title),
                 'image' => $blog_image,
                 'status' => $request->status,
             ]);
@@ -317,6 +318,7 @@ class PagesController extends Controller
             $blog->update([
                 'title' => $request->title,
                 'description' => $request->description,
+                'slug' => Str::slug($request->title),
                 'image' => $Image,
                 'status' => $request->status,
             ]);
@@ -334,8 +336,8 @@ class PagesController extends Controller
     }
 
 
-    public function blog_detail($id) {
-        $blog_detail = Blog::where('id', $id)->first();
+    public function blog_detail($slug) {
+        $blog_detail = Blog::where('slug', $slug)->first();
         return view('partials.blog_detail', compact('blog_detail')); 
     }
     
