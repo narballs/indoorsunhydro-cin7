@@ -352,5 +352,5 @@ Route::post('/order/mark/paid', [OrderController::class, 'mark_order_paid']);
 Route::post('admin/search/customer', [AdminSettingsController::class, 'search_customer']);
 Route::get('/page/{slug}', [HomeController::class, 'show_page']);
 Route::post('page/blogs/search', [PagesController::class, 'blog_search'])->name('blog_search');
-Route::get('admin/page/blog/detail/{id}', [PagesController::class, 'blog_detail'])->name('blog_detail');
+Route::get('admin/page/blog/detail/{slug}', [PagesController::class, 'blog_detail'])->name('blog_detail');
 
