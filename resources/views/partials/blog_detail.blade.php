@@ -38,6 +38,9 @@
                                                     <div class="card-body" style="background:#F8FCF6;">
                                                         @include('partials.blog_slider')
                                                     </div>
+                                                    <div class="card-footer border-0 text-center" style="background:#F8FCF6;">
+                                                        <a type="button" href="{{'/page/blogs'}}" class="btn btn-success text-white border-0 read_more_button">Read more</a>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -60,9 +63,15 @@
     .start-30 {
         left: 30%;
     }
+    .read_more_button {
+        border-radius: 7px;
+        border: 1.353px solid #7BC533;
+        background: #7BC533;
+    }
+
+    .read_more_button:hover {
+        border-radius: 7px;
+        border: 1.353px solid #7BC533;
+        background: #7BC533;
+    }
 </style>
-<script>
-    $("#superior_brands").on('click', function() {
-        window.location.href = '/products/';
-    });
-</script>

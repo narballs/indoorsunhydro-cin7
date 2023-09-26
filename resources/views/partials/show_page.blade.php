@@ -65,11 +65,40 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="container-sm">
-                            <div class="row">
+                            <div class="row justify-content-center">
                                 <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="card border-0 ">
                                         <div class="card-body" style="background:#F8FCF6;">
                                             @include('partials.blog_slider')
+                                        </div>
+                                        <div class="card-footer border-0 text-center" style="background:#F8FCF6;">
+                                            <a type="button" href="{{'/page/blogs'}}" class="btn btn-success text-white border-0 read_more_button">Read more</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 mt-5">
+            <h2 class="text-center">
+                <div class="banner-title">
+                    <span class="text-uppercase font-weight-bold">Contact Us</span>
+                </div>
+            </h2>
+        </div>
+        <div class="pb-5">
+            <div class="container-fluid px-0 overflow-hidden">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="container-sm">
+                            <div class="row justify-content-center">
+                                <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="card border-0 ">
+                                        <div class="card-body p-4 border rounded">
+                                            @include('partials.contact_partial')
                                         </div>
                                     </div>
                                 </div>
@@ -94,5 +123,16 @@
     }
     .start-10 {
         left: 10%;
+    }
+    .read_more_button {
+        border-radius: 7px;
+        border: 1.353px solid #7BC533;
+        background: #7BC533;
+    }
+
+    .read_more_button:hover {
+        border-radius: 7px;
+        border: 1.353px solid #7BC533;
+        background: #7BC533;
     }
 </style>
