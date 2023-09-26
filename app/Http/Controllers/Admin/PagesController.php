@@ -272,11 +272,12 @@ class PagesController extends Controller
             File::makeDirectory($destinationPath, $mode = 0777, true, true);
             $image->move($destinationPath, $blog_image);
         }
+        $random_number = rand(1, 1000);
         try {
             $blog = Blog::create([
                 'title' => $request->title,
                 'description' => $request->description,
-                'slug' => Str::slug($request->title),
+                'slug' => Str::slug($request->title) . '-' . $random_number,
                 'image' => $blog_image,
                 'status' => $request->status,
             ]);
@@ -302,6 +303,7 @@ class PagesController extends Controller
             'title' => 'required',
             'description' => 'required',
         ]);
+        $random_number = rand(1, 1000);
         $blog = Blog::findOrFail($id);
         $Image =  null;
         if ($blog_image = $request->file('image')) {
@@ -318,7 +320,7 @@ class PagesController extends Controller
             $blog->update([
                 'title' => $request->title,
                 'description' => $request->description,
-                'slug' => Str::slug($request->title),
+                'slug' => Str::slug($request->title) . '-' . $random_number,
                 'image' => $Image,
                 'status' => $request->status,
             ]);

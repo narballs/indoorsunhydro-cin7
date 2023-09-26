@@ -6,7 +6,7 @@
         @include('partials.search-bar')
         @if(!empty($blog_detail))
         <div class="bg-white pb-5">
-            <div class="row">
+            <div class="">
                 <div class="container-fluid px-0 overflow-hidden">
                     <div class="row justify-content-center">
                         <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12 mb-5">
