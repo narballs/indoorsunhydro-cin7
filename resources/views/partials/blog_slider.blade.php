@@ -13,7 +13,7 @@ $chunks->toArray();
         display: none;
     }
 </style>
-<section class="pt-5 pb-5">
+<section class="pt-5 pb-2">
     <div class="row">
         <div class="col-md-12">
             <div class="row align-items-center">
