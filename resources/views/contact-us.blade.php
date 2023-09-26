@@ -15,15 +15,15 @@
 	<strong>{{ $message }}</strong>
 </div> -->
 @endif
-<div class="bg-white pb-5">
+<div class="bg-white">
 	<div class="bg-white">
 		<div class="container-fluid px-0 overflow-hidden">
-			<div class="row mb-5">
+			<div class="row">
 				<div class="col-xl-12 col-md-12 col-sm-12 col-xs-12 mb-3">
 					<img src="{{asset('/theme/img/contact-us-bannner.png')}}" class="banner-img img-fluid w-100" alt="...">
 					<h2 class="position-absolute top-50 start-50 translate-middle">
 						<div class="banner-title">
-							<h1 class="text-uppercase font-weight-bold text-white border-0">CONTACT US</h1>
+							<h3 class="text-uppercase font-weight-bold text-white border-0">CONTACT US</h3>
 						</div>
 					</h2>
 				</div>
