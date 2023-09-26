@@ -1,4 +1,4 @@
-<div class="row text-center mb-5 mt-5">
+<div class="row text-center faq-page-div">
     <h3>
         Frequently asked questions
     </h3>
@@ -17,14 +17,14 @@
             <div class="accordion-item">
                 <h6 class="accordion-header" id="head{{$faq->id}}">
                     <div class="row">
-                        <div class="col-md-10 d-flex align-items-center">
+                        <div class="col-md-10 d-flex align-items-center question_div_faq">
                             <div>
-                                <h6 class="mx-3">
+                                <h6 class="ml-2 mb-0">
                                     {{$faq->question}}
                                 </h6>
                             </div>
                         </div>
-                        <div class="col-md-2" id="button_div{{$faq->id}}">
+                        <div class="col-md-2 button_div_faq" id="button_div{{$faq->id}}">
                             <button class="accordion-button text-success plus_minus_faqs d-block text-right p-3" onclick="show_answer('{{$faq->id}}')" type="button" data-bs-toggle="collapse" data-bs-target="#body{{$faq->id}}" aria-expanded="true" aria-controls="body{{$faq->id}}">
                                 <i class="font-size-icon fa fa-plus-circle"></i>
                             </button>
@@ -72,6 +72,7 @@
     .font-size-icon {
         font-size: 20px !important;
     }
+    
 </style>
 <script>
     function show_answer(id) {

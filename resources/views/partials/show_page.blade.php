@@ -11,16 +11,16 @@
                     <div class="row">
                         <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12 mb-3">
                             <img src="{{asset('/pages/banners/' . $page->banner_image)}}" class="banner-img img-fluid w-100" alt="...">
-                            <h2 class="position-absolute top-50 start-50 translate-middle">
+                            <h2 class="position-absolute top-50 start-50 translate-middle page-title-head">
                                 <div class="banner-title">
                                     <span class="text-uppercase font-weight-bold text-white">{{$page->title}}</span>
                                 </div>
                             </h2>
                             @if (strtolower($page->name) == 'blogs')
-                                <div class="position-absolute top-60 start-50 translate-middle w-25">
+                                <div class="position-absolute top-60 start-50 translate-middle search-div-blog">
                                     <form method="post" action="{{route('blog_search')}}">
                                         @csrf
-                                        <div class="form-group has-search">
+                                        <div class="form-group has-search mb-0">
                                             <span class="fa fa-search form-control-feedback"></span>
                                             <input type="text" class="form-control" placeholder="Search" name="search_blog" id="search_blog"  value="{{!empty($search_value) ? $search_value : ''}}">
                                             <input type="hidden" name="page_slug" id="" value="{{$page->slug}}">
@@ -134,5 +134,21 @@
         border-radius: 7px;
         border: 1.353px solid #7BC533;
         background: #7BC533;
+    }
+    .search-div-blog {
+        width: 25%;
+    }
+
+    @media only screen and (max-width: 600px) {
+        .search-div-blog {
+            width: 50%;
+            top: 70%;
+        }
+        .page-title-head {
+            top: 30% !important;
+        }
+        #search_blog {
+            padding-top: 0.25rem!important
+        }
     }
 </style>
