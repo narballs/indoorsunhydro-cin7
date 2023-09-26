@@ -816,6 +816,17 @@ a {
     #quantity {
         margin-bottom: 10px !important;
     }
+    .icon_div {
+        width: 13% !important;
+    }
+    .icon_data_div {
+        width: 85% !important;
+    }
+}
+@media (max-width: 1600px){
+    .map_image {
+        width: 100% !important;
+    }
 }
 
 @media (max-width: 280px) {
