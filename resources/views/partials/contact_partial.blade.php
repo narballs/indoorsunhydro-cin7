@@ -44,21 +44,21 @@
             <h3 class="address_header"> Contact Information </h3>
             <p class="address_flag">Say something to start a live chat!</p>
             <div class="mb-4">
-                <img src="{{asset('/theme/img/address_map.png')}}" alt="">
+                <img src="{{asset('/theme/img/address_map.png')}}" alt="" class="map_image">
             </div>
             <div class="row mb-2">
-                <div class="col-md-1">
+                <div class="col-md-1 icon_div">
                     <img src="{{asset('/theme/img/contact_phone_icon.svg')}}" alt="">
                 </div>
-                <div class="col-md-10">
-                    <p class="mb-0 address_bar">(916) 281-3090</p>
+                <div class="col-md-10 icon_data_div">
+                    <p class="mb-0 address_bar ">(916) 281-3090</p>
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-1">
+                <div class="col-md-1 icon_div">
                     <img src="{{asset('/theme/img/contact_map_icon.svg')}}" alt="">
                 </div>
-                <div class="col-md-10">
+                <div class="col-md-10 icon_data_div">
                     <p class="mb-0 address_bar">Indoor Sun Hydro is a business located at 5671 Warehouse Way, Sacramento, CA, 95826</p>
                 </div>
             </div>
@@ -173,4 +173,10 @@
 		font-weight: 600;
 		line-height: normal;
 	}
+
+    @media and (max-width: 767px)  and (min-width: 280px){
+        .map_image {
+            width: 100% !important;
+        }
+    }
 </style>
