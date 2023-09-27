@@ -189,6 +189,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('admin/api-sync-logs', [LogsController::class, 'index']);
 
     Route::get('admin/daily_api_logs', [DailyApiLogController::class, 'index']);
+    Route::get('/update-all-products', [DailyApiLogController::class, 'update_all_products'])->name('update-all-products');
+    
     Route::post('admin/orders/create/label', [OrderController::class, 'create_label']);
     Route::get('admin/order/label/download/{filename}', [OrderController::class, 'download_label'])->name('download_label');
     Route::post('admin/customer/update-order-status', [OrderController::class, 'update_order_status'])->name('update_order_status');
