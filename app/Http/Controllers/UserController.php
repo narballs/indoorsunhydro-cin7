@@ -1898,4 +1898,10 @@ class UserController extends Controller
 
         return redirect()->back()->with('success', 'Profile Updated Successfully !');
     }
+
+    // crreate wholesale account
+
+    public function create_wholesale_account () {
+        return view('create_wholesale_account');
+    }
 }

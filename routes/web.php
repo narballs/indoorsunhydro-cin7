@@ -46,6 +46,7 @@ use App\Models\User;
 
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
+Route::get('/create/wholesale/account', [UserController::class, 'create_wholesale_account'])->name('create_wholesale_account');
 
 
 

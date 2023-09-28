@@ -148,8 +148,14 @@
                                         </nav>
                                     </div>
                                 @else
-                                    <div class="register-counter-details login_link">
+                                    <div class="register-counter-details login_link d-flex">
                                         <p class="mb-0 p-2 login-in-register top-header-items ">Login or Register</p>
+                                        @php
+                                            $enable_wholesale_registration = App\Models\AdminSetting::where('option_name', 'enable_wholesale_registration')->first();
+                                        @endphp
+                                        @if(strtolower($enable_wholesale_registration->option_value) == 'yes')
+                                            <a href="{{ url('create/wholesale/account') }}" class="mb-0 p-2 login-in-register top-header-items">Apply for Wholesale Account</a> 
+                                        @endif
                                     </div>
                                 @endif
                             </a>
