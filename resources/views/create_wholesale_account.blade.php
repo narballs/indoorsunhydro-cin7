@@ -469,7 +469,7 @@
                                             </div>
                                         </div>
                                         <!-- Step 3 Content -->
-                                        <div class="tab-pane fade show active" id="step3">
+                                        <div class="tab-pane fade" id="step3">
                                             <div class="card">
                                                 <div class="card-body p-4">
                                                     <div class="row p-3">
@@ -581,11 +581,11 @@
                                             </div>
                                         </div>
                                         {{-- step 4 goes here --}}
-                                        <div class="tab-pane fade" id="step4">
+                                        <div class="tab-pane fade show active" id="step4">
                                             <div class="card">
                                                 <div class="card-body p-4">
                                                     <div class="row p-3">
-                                                        <div class="col-md-12">
+                                                        <div class="col-md-12 mb-3">
                                                             <div class="step3_heading_div mb-4">
                                                                 <h5 class="step_1_main_heading">
                                                                     Credit Card Authorization Form
@@ -620,6 +620,99 @@
                                                                 </h5>
                                                             </div>
                                                         </div>
+                                                        <form action="" class="p-0">
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+                                                                    <label class="wholesale_form_labels mb-0" for="card_type">Card Type</label>
+                                                                    <div class="row justify-content-between pl-3 pt-2 pr-3">
+                                                                        <div class="col-md-2 d-flex border justify-content-center m-0  master-div-focus">
+                                                                            <input type="radio" name="card_type" class="wholesale_master_card form-control border-0" value="master_card">
+                                                                        </div>
+                                                                        <div class="col-md-2 d-flex border justify-content-center m-0 ">
+                                                                            <input type="radio" name="card_type" class="wholesale_visa_card form-control border-0" value="visa_card">
+                                                                        </div>
+                                                                        <div class="col-md-2 d-flex border justify-content-center m-0 ">
+                                                                            <input type="radio" name="card_type" class="wholesale_discover_card form-control border-0" value="discover_card">
+                                                                        </div>
+                                                                        <div class="col-md-2 d-flex border justify-content-center m-0 ">
+                                                                            <input type="radio" name="card_type" class="wholesale_american_card form-control border-0" value="american_express_card">
+                                                                        </div>
+                                                                        <div class="col-md-2 d-flex border justify-content-center m-0 ">
+                                                                            <input type="radio" name="card_type" class="form-control border-0 wholesale_other_card" value="other_card">
+                                                                            <span class="wholesale_other_card_label">OTHER</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+                                                                    <label class="wholesale_form_labels" for="cardholder_name">Cardholder name (as shown on card)</label>
+                                                                    <input type="text" name="cardholder_name" class="form-control wholesale_inputs" id="cardholder_name" placeholder="Enter card holder name">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+                                                                    <label class="wholesale_form_labels" for="card_number">Card Number</label>
+                                                                    <input type="text" name="card_number" class="form-control wholesale_inputs ccFormatMonitor" id="card_number" placeholder="Enter card number">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <label class="wholesale_form_labels" for="expiration_date">Expiration Date</label>
+                                                                            <input type="text" name="expiration_date" class="form-control wholesale_inputs inputExpDate" id="expiration_date" maxlength='7' placeholder="MM / YY">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <label class="wholesale_form_labels" for="card_holder_zip_code">Cardholder ZIP Code</label>
+                                                                            <input type="text" name="card_holder_zip_code" class="form-control wholesale_inputs" id="card_holder_zip_code" placeholder="Zip code from credit card billing address">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-12 mt-3">
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <div class="form-group mb-0 d-flex align-items-center">
+                                                                            <label class="mb-0 text-center align-middle credit_card_undertaking">
+                                                                                I,
+                                                                            </label>
+                                                                            <input type="text" name="undertaking_name" class="form-control wholesale_inputs w-50 ml-2" id="undertaking_name" placeholder="Enter text here">
+                                                                            <label class="mb-0 ml-2 text-center align-middle w-25 credit_card_undertaking">
+                                                                                , authorize
+                                                                            </label>
+                                                                            <input type="text" name="authorize_text" class="form-control wholesale_inputs w-50" id="authorize_text" placeholder="Enter text here">
+                                                                        </div>
+                                                                        <p class="credit_card_undertaking">
+                                                                            to change my credit card above for agreed upon purchases, I understand that my information will be saved to file for future transactions on my account.
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <div class="row mb-2">
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <label class="wholesale_form_labels" for="customer_signature">Customer Signature</label>
+                                                                            <input type="text" name="customer_signature" class="form-control wholesale_inputs" id="customer_signature" placeholder="Enter Signature">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <label class="wholesale_form_labels" for="date_wholesale"> Date</label>
+                                                                            <input type="date" name="date_wholesale" class="form-control wholesale_inputs" id="date_wholesale">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-12 text-right">
+                                                                <button type="button" id="step4_next" class="step_next btn">
+                                                                    Next
+                                                                </button>
+                                                            </div>
+                                                        </form>
                                                     </div>
                                                 </div>
                                             </div>
@@ -893,6 +986,79 @@
             line-height: 24px; /* 171.429% */
             letter-spacing: 0.07px;
         }
+        #cardholder_name {
+            background-image: url("{{ asset('/theme/img/wholesale-card-icons/mastercard.svg') }}");
+            background-repeat: no-repeat;
+            background-position: right;
+        }
+        .wholesale_master_card {
+            background-image: url("{{ asset('/theme/img/wholesale-card-icons/mastercard.svg') }}");
+            background-repeat: no-repeat;
+            background-position: center;
+            width: 56px;
+            height: 38px;
+            padding: 10.153px 13.538px !important;
+        }
+        .wholesale_master_card:focus {
+            box-shadow: 0 0 0 0rem rgb(239, 240, 238) !important;
+        }
+        .wholesale_visa_card {
+            background-image: url("{{ asset('/theme/img/wholesale-card-icons/visa.svg') }}");
+            background-repeat: no-repeat;
+            background-position: center;
+            width: 56px;
+            height: 38px;
+            padding: 10.153px 13.538px !important;
+        }
+        .wholesale_american_card {
+            background-image: url("{{ asset('/theme/img/wholesale-card-icons/american_express.svg') }}");
+            background-repeat: no-repeat;
+            background-position: center;
+            width: 56px;
+            height: 38px;
+            padding: 10.153px 13.538px !important;
+        }
+        .wholesale_discover_card {
+            background-image: url("{{ asset('/theme/img/wholesale-card-icons/discover.svg') }}");
+            background-repeat: no-repeat;
+            background-position: center;
+            width: 56px;
+            height: 38px;
+            padding: 10.153px 13.538px !important;
+        }
+        .wholesale_other_card {
+            width: 56px;
+            height: 38px;
+            padding: 10.153px 13.538px !important;
+        }
+        .wholesale_other_card_label {
+            color: #242424;
+            font-family: 'Poppins';
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: 20.307px; /* 145.048% */
+            text-transform: uppercase;
+            position: absolute;
+            top: 10px;
+            left: 35px;
+        }
+        
+        .master-div-focus:active {
+            outline: 2px solid #7CC633;
+        } 
+        .master-div-focus:focus-visible {
+            outline: 2px solid #7CC633;
+        }
+        .credit_card_undertaking {
+            color: #242424;
+            font-family: 'Poppins';
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 41px; /* 256.25% */
+            letter-spacing: 0.08px;
+        }
     </style>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     @include('partials.product-footer')
@@ -900,5 +1066,265 @@
 
     <script>
         $('.browse').click(function(){ $('#file_upload').trigger('click'); });
+        var app;
+
+(function() {
+  'use strict';
+  
+    app = {
+        monthAndSlashRegex: /^\d\d \/ $/, // regex to match "MM / "
+        monthRegex: /^\d\d$/, // regex to match "MM"
+        
+        el_cardNumber: '.ccFormatMonitor',
+        el_expDate: '.inputExpDate',
+        el_cvv: '.cvv',
+        el_ccUnknown: 'cc_type_unknown',
+        el_ccTypePrefix: 'cc_type_',
+        el_monthSelect: '#monthSelect',
+        el_yearSelect: '#yearSelect',
+        
+        cardTypes: {
+        'American Express': {
+            name: 'American Express',
+            code: 'ax',
+            security: 4,
+            pattern: /^3[47]/,
+            valid_length: [15],
+            formats: {
+            length: 15,
+            format: 'xxxx xxxxxxx xxxx'
+            }
+        },
+        'Visa': {
+                    name: 'Visa',
+                    code: 'vs',
+            security: 3,
+                    pattern: /^4/,
+                    valid_length: [16],
+                    formats: {
+                            length: 16,
+                            format: 'xxxx xxxx xxxx xxxx'
+                        }
+                },
+        'Maestro': {
+                    name: 'Maestro',
+                    code: 'ma',
+            security: 3,
+                    pattern: /^(50(18|20|38)|5612|5893|63(04|90)|67(59|6[1-3])|0604)/,
+                    valid_length: [16],
+                    formats: {
+                            length: 16,
+                            format: 'xxxx xxxx xxxx xxxx'
+                        }
+                },
+        'Mastercard': {
+                    name: 'Mastercard',
+                    code: 'mc',
+            security: 3,
+                    pattern: /^5[1-5]/,
+                    valid_length: [16],
+                    formats: {
+                            length: 16,
+                            format: 'xxxx xxxx xxxx xxxx'
+                        }
+                } 
+        }
+    };
+    
+    app.addListeners = function() {
+        $(app.el_expDate).on('keydown', function(e) {
+            app.removeSlash(e);
+        });
+
+        $(app.el_expDate).on('keyup', function(e) {
+            app.addSlash(e);
+        });
+
+        $(app.el_expDate).on('blur', function(e) {
+            app.populateDate(e);
+        });
+
+        $(app.el_cvv +', '+ app.el_expDate).on('keypress', function(e) {
+            return e.charCode >= 48 && e.charCode <= 57;
+        });  
+    };
+    
+    app.addSlash = function (e) {
+        var isMonthEntered = app.monthRegex.exec(e.target.value);
+        if (e.key >= 0 && e.key <= 9 && isMonthEntered) {
+        e.target.value = e.target.value + " / ";
+        }
+    };
+    
+    app.removeSlash = function(e) {
+        var isMonthAndSlashEntered = app.monthAndSlashRegex.exec(e.target.value);
+        if (isMonthAndSlashEntered && e.key === 'Backspace') {
+        e.target.value = e.target.value.slice(0, -3);
+        }
+    };
+    
+    app.populateDate = function(e) {
+        var month, year;
+        
+        if (e.target.value.length == 7) {
+        month = parseInt(e.target.value.slice(0, -5));
+        year = "20" + e.target.value.slice(5);
+        
+        if (app.checkMonth(month)) {
+            $(app.el_monthSelect).val(month);
+        } else {
+            $(app.el_monthSelect).val(0);
+        }
+        
+        if (app.checkYear(year)) {
+            $(app.el_yearSelect).val(year);
+        } else {
+            $(app.el_yearSelect).val(0);
+        }
+        
+        }
+    };
+    
+    app.checkMonth = function(month) {
+        if (month <= 12) {
+        var monthSelectOptions = app.getSelectOptions($(app.el_monthSelect));
+        month = month.toString();
+        if (monthSelectOptions.includes(month)) {
+            return true; 
+        }
+        }
+    };
+    
+    app.checkYear = function(year) {
+        var yearSelectOptions = app.getSelectOptions($(app.el_yearSelect));
+        if (yearSelectOptions.includes(year)) {
+        return true; 
+        }
+    };
+            
+    app.getSelectOptions = function(select) {
+        var options = select.find('option');
+        var optionValues = [];
+        for (var i = 0; i < options.length; i++) {
+        optionValues[i] = options[i].value;
+        }
+        return optionValues;
+    };
+    
+    app.setMaxLength = function ($elem, length) {
+        if($elem.length && app.isInteger(length)) {
+        $elem.attr('maxlength', length);
+        }else if($elem.length){
+        $elem.attr('maxlength', '');
+        }
+    };
+    
+    app.isInteger = function(x) {
+        return (typeof x === 'number') && (x % 1 === 0);
+    };
+
+    app.createExpDateField = function() {
+        $(app.el_monthSelect +', '+ app.el_yearSelect).hide();
+        $(app.el_monthSelect).parent().prepend('<input type="text" class="ccFormatMonitor">');
+    };
+    
+    
+    app.isValidLength = function(cc_num, card_type) {
+        for(var i in card_type.valid_length) {
+        if (cc_num.length <= card_type.valid_length[i]) {
+            return true;
+        }
+        }
+        return false;
+    };
+
+    app.getCardType = function(cc_num) {
+        for(var i in app.cardTypes) {
+        var card_type = app.cardTypes[i];
+        if (cc_num.match(card_type.pattern) && app.isValidLength(cc_num, card_type)) {
+            return card_type;
+        }
+        }
+    };
+
+    app.getCardFormatString = function(cc_num, card_type) {
+        for(var i in card_type.formats) {
+        var format = card_type.formats[i];
+        if (cc_num.length <= format.length) {
+            return format;
+        }
+        }
+    };
+
+    app.formatCardNumber = function(cc_num, card_type) {
+        var numAppendedChars = 0;
+        var formattedNumber = '';
+        var cardFormatIndex = '';
+
+        if (!card_type) {
+        return cc_num;
+        }
+
+        var cardFormatString = app.getCardFormatString(cc_num, card_type);
+        for(var i = 0; i < cc_num.length; i++) {
+        cardFormatIndex = i + numAppendedChars;
+        if (!cardFormatString || cardFormatIndex >= cardFormatString.length) {
+            return cc_num;
+        }
+
+        if (cardFormatString.charAt(cardFormatIndex) !== 'x') {
+            numAppendedChars++;
+            formattedNumber += cardFormatString.charAt(cardFormatIndex) + cc_num.charAt(i);
+        } else {
+            formattedNumber += cc_num.charAt(i);
+        }
+        }
+
+        return formattedNumber;
+    };
+
+    app.monitorCcFormat = function($elem) {
+        var cc_num = $elem.val().replace(/\D/g,'');
+        var card_type = app.getCardType(cc_num);
+        $elem.val(app.formatCardNumber(cc_num, card_type));
+        app.addCardClassIdentifier($elem, card_type);
+    };
+
+    app.addCardClassIdentifier = function($elem, card_type) {
+        var classIdentifier = app.el_ccUnknown;
+        if (card_type) {
+        classIdentifier = app.el_ccTypePrefix + card_type.code;
+        app.setMaxLength($(app.el_cvv), card_type.security);
+        } else {
+        app.setMaxLength($(app.el_cvv));
+        }
+
+        if (!$elem.hasClass(classIdentifier)) {
+        var classes = '';
+        for(var i in app.cardTypes) {
+            classes += app.el_ccTypePrefix + app.cardTypes[i].code + ' ';
+        }
+        $elem.removeClass(classes + app.el_ccUnknown);
+        $elem.addClass(classIdentifier);
+        }
+    };
+
+    
+    app.init = function() {
+
+        $(document).find(app.el_cardNumber).each(function() {
+        var $elem = $(this);
+        if ($elem.is('input')) {
+            $elem.on('input', function() {
+            app.monitorCcFormat($elem);
+            });
+        }
+        });
+        
+        app.addListeners();
+        
+    }();
+    
+    })();
     </script>
 </body>
