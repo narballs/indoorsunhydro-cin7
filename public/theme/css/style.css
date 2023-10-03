@@ -1210,7 +1210,7 @@ label {
 .nav .active {
     /* background: #F5F5F5; */
     /* border-left: 3px solid #008AD0; */
-    color: green !important;
+    color: green;
 
 }
 

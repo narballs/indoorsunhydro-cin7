@@ -1898,4 +1898,28 @@ class UserController extends Controller
 
         return redirect()->back()->with('success', 'Profile Updated Successfully !');
     }
+
+    // crreate wholesale account
+
+    public function create_wholesale_account () {
+        return view('create_wholesale_account');
+    }
+
+    // store wholesale account
+
+    public function store_wholesale_account (Request $request) {
+        $request->validate([
+            'email' => 'required|email|unique:users,email',
+            'first_name' => 'required',
+            'lastname' => 'required',
+            'phone' => 'required',
+            'mobile' => 'required',
+            'company_name' => 'required',
+        ]);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'success'
+        ]);
+    }
 }
