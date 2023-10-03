@@ -5,11 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class RegulationDetail extends Model
+class WholesaleApplicationRegulationDetail extends Model
 {
     use HasFactory;
+    protected $table = 'wholesale_application_regulation_details';
     protected $fillable = [
-        'contact_id',
+        'wholesale_application_id',
         'seller_name',
         'seller_address',
         'purchaser_signature',

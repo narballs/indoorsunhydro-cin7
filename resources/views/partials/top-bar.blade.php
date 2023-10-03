@@ -154,7 +154,11 @@
                                             $enable_wholesale_registration = App\Models\AdminSetting::where('option_name', 'enable_wholesale_registration')->first();
                                         @endphp
                                         @if(strtolower($enable_wholesale_registration->option_value) == 'yes')
-                                            <a href="{{ url('create/wholesale/account') }}" class="mb-0 p-2 login-in-register top-header-items">Apply for Wholesale Account</a> 
+                                        <form action="{{ route('create_wholesale_account') }}" method="post">
+                                            @csrf
+                                            <input type="hidden" name="wholesale_application_id" value="{{isset($wholesale_application) ? $wholesale_application->id : ''}}">
+                                            <input type="submit" class="mb-0 p-2 login-in-register top-header-items border-0 bg-transparent" value="Apply for Wholesale Account">
+                                        </form>
                                         @endif
                                     </div>
                                 @endif

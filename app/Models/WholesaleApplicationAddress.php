@@ -5,11 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Address extends Model
+class WholesaleApplicationAddress extends Model
 {
     use HasFactory;
+    protected $table = 'wholesale_application_addresses';
     protected $fillable = [
-        'contact_id',
+        'wholesale_application_id',
         'type',
         'first_name',
         'last_name',
