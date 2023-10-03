@@ -1,0 +1,27 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class WholesaleApplicationInformation extends Model
+{
+    use HasFactory;
+    protected $table = 'wholesale_application_information';
+    protected $fillable = [
+        'company',
+        'first_name',
+        'last_name',
+        'email',
+        'phone',
+        'mobile',
+        'payable_name',
+        'payable_phone',
+        'payable_email',
+        'permit_image',
+
+
+        
+    ];
+}

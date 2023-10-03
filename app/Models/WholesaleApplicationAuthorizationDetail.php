@@ -5,11 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class AuthorizationFormDetail extends Model
+class WholesaleApplicationAuthorizationDetail extends Model
 {
     use HasFactory;
+    protected $table = 'wholesale_application_authorization_details';
     protected $fillable = [
-        'contact_id',
+        'wholessale_application_id',
         'authorize_name',
         'financial_institute_name',
         'financial_institute_address',
