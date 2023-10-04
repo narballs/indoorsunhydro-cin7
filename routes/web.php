@@ -25,6 +25,7 @@ use App\Http\Controllers\Admin\DailyApiLogController;
 use App\Http\Controllers\Admin\TaxClassController;
 use App\Http\Controllers\Admin\OperationalZipCodeController;
 use App\Http\Controllers\AdminInventoryLocationController;
+use App\Http\Controllers\Admin\WholesaleApplicationController;
 use App\Http\Controllers\Admin\DiscountController;
 use App\Http\Controllers\Admin\PagesController;
 use App\Models\TaxClass;
@@ -304,6 +305,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('admin/go-back', [UserController::class, 'switch_user_back'])->name('users.switch_user_back');
     Route::get('/site', [UserController::class, 'switch_admin'])->name('switch_admin');
     Route::resource('admin/inventory-locations', AdminInventoryLocationController::class);
+    Route::resource('admin/wholesale-applications', WholesaleApplicationController::class);
 
 
     //crud for admin settings

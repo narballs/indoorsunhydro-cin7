@@ -22,4 +22,26 @@ class WholesaleApplicationInformation extends Model
         'permit_image',
         'parent_company'
     ];
+
+    public function wholesale_application_address()
+    {
+        return $this->hasMany(WholesaleApplicationAddress::class , 'wholesale_application_id');
+    }
+
+    public function wholesale_application_regulation_detail()
+    {
+        return $this->hasOne(WholesaleApplicationRegulationDetail::class , 'wholesale_application_id');
+    }
+
+    public function wholesale_application_authorization_detail()
+    {
+        return $this->hasOne(WholesaleApplicationAuthorizationDetail::class , 'wholesale_application_id');
+    }
+
+    public function wholesale_application_card()
+    {
+        return $this->hasOne(WholesaleApplicationCard::class , 'wholesale_application_id');
+    }
+
+    
 }

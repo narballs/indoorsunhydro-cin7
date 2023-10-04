@@ -22,4 +22,9 @@ class WholesaleApplicationAddress extends Model
         'postal_code',
         'phone',
     ];
+
+    public function wholesale_application()
+    {
+        return $this->belongsTo(WholesaleApplicationInformation::class);
+    }
 }
