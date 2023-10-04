@@ -742,14 +742,14 @@
                                                                             </label>
                                                                             <input type="text" name="authorize_card_text" class="form-control wholesale_inputs w-50" value="{{!empty($id) ? $wholesale_application_card->authorize_card_text : ''}}" id="authorize_text" onchange="remove_error(this)" placeholder="Enter text here">
                                                                         </div>
-                                                                        <diiv class="row">
+                                                                        <div class="row">
                                                                             <div class="col-md-6">
                                                                                 <div class="text-danger wholesale_inputs" id="undertaking_name_errors"></div>
                                                                             </div>
                                                                             <div class="col-md-6">
                                                                                 <div class="text-danger wholesale_inputs" id="authorize_text_errors"></div>
                                                                             </div>
-                                                                        </diiv>
+                                                                        </div>
                                                                         <p class="credit_card_undertaking">
                                                                             to charge my credit card above for agreed upon purchases, I understand that my information will be saved to file for future transactions on my account.
                                                                         </p>

@@ -25,4 +25,9 @@ class WholesaleApplicationCard extends Model
 
 
     ];
+
+    public function wholesale_application()
+    {
+        return $this->belongsTo(WholesaleApplicationInformation::class);
+    }
 }

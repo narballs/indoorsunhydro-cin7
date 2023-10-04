@@ -23,4 +23,9 @@ class WholesaleApplicationAuthorizationDetail extends Model
         'financial_institute_phone_number',
         
     ];
+
+    public function wholesale_application()
+    {
+        return $this->belongsTo(WholesaleApplicationInformation::class);
+    }
 }

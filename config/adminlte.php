@@ -373,6 +373,10 @@ return [
             'url'  => 'admin/inventory-locations',
         ],
         [
+            'text'    => 'Wholesale Applications',
+            'url'  => 'admin/wholesale-applications',
+        ],
+        [
             'text'    => 'Pages',
             'url'  => 'admin/pages',
         ],
