@@ -46,8 +46,9 @@ use App\Models\User;
 
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
-Route::post('/wholesale/account/create', [UserController::class, 'create_wholesale_account'])->name('create_wholesale_account');
+Route::get('/wholesale/account/create', [UserController::class, 'create_wholesale_account'])->name('create_wholesale_account');
 Route::get('/wholesale/account/edit/{id}', [UserController::class, 'edit_wholesale_account'])->name('edit_wholesale_account');
+Route::post('/wholesale/account/update', [UserController::class, 'update_wholesale_account'])->name('update_wholesale_account');
 Route::post('wholesale/account/store', [UserController::class, 'store_wholesale_account'])->name('store_wholesale_account');
 
 
