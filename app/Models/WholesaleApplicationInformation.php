@@ -20,8 +20,6 @@ class WholesaleApplicationInformation extends Model
         'payable_phone',
         'payable_email',
         'permit_image',
-
-
-        
+        'parent_company'
     ];
 }

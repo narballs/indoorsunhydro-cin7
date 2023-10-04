@@ -32,7 +32,7 @@
                             <div class="row justify-content-center">
                                 <div class="col-md-10 p-4">
                                     <form action="{{route('store_wholesale_account')}}" id="wholesaleForm" method="post" enctype="multipart/form-data">
-                                        <input type="hidden" name="wholesaleaapplication_id" id="whs_id" value="{{isset($id) ? $id : ''}}">
+                                        <input type="hidden" name="wholesale_application_id" id="whs_id" value="{{isset($id) ? $id : ''}}">
                                         <div class="" id="">
                                             <ul class="" id="wholesale_form_error"></ul>
                                         </div>
@@ -57,7 +57,7 @@
                                                                 <div class="col-md-12">
                                                                     <div class="form-group">
                                                                         <label class="wholesale_form_labels" for="company_name">Company Name</label>
-                                                                        <input type="text" name="company" class="form-control wholesale_inputs" id="company_name" value="{{!empty($id) ?  $wholesale_application->company : ''}}" placeholder="Enter your Company Name">
+                                                                        <input type="text" name="company" class="form-control wholesale_inputs" id="company_name" value="{{!empty($id) ?  $wholesale_application->company : ''}}" placeholder="Enter your Company Name" onchange="remove_error(this)">
                                                                         <div class="text-danger wholesale_inputs" id="company_name_errors"></div>
                                                                     </div>
                                                                 </div>
@@ -66,11 +66,11 @@
                                                                         <label class="wholesale_form_labels" for="">Name</label>
                                                                         <div class="row">
                                                                             <div class="col-md-6">
-                                                                                <input type="text" name="first_name" id="first_name" class="form-control wholesale_inputs" value="{{!empty($id) ?  $wholesale_application->first_name : ''}}" placeholder="First name">
+                                                                                <input type="text" name="first_name" id="first_name" class="form-control wholesale_inputs" value="{{!empty($id) ?  $wholesale_application->first_name : ''}}" onchange="remove_error(this)" placeholder="First name">
                                                                                 <div class="text-danger wholesale_inputs" id="first_name_errors"></div>
                                                                             </div>
                                                                             <div class="col-md-6">
-                                                                                <input type="text" name="last_name" id="last_name" class="form-control wholesale_inputs" placeholder="Last name" value="{{!empty($id) ?  $wholesale_application->last_name : ''}}">
+                                                                                <input type="text" name="last_name" id="last_name" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="Last name" value="{{!empty($id) ?  $wholesale_application->last_name : ''}}">
                                                                                 <div class="text-danger wholesale_inputs" id="last_name_errors"></div>
                                                                             </div>
                                                                         </div>
@@ -81,14 +81,14 @@
                                                                         <div class="col-md-6">
                                                                             <div class="form-group">
                                                                                 <label class="wholesale_form_labels" for="phone">Phone</label>
-                                                                                <input type="text" name="phone" value="{{!empty($id) ?  $wholesale_application->phone : ''}}" id="phone" class="form-control wholesale_inputs" placeholder="+1 (000) 000-0000">
+                                                                                <input type="text" name="phone" value="{{!empty($id) ?  $wholesale_application->phone : ''}}" id="phone" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="+1 (000) 000-0000">
                                                                                 <div class="text-danger wholesale_inputs" id="phone_errors"></div>
                                                                             </div>
                                                                         </div>
                                                                         <div class="col-md-6">
                                                                             <div class="form-group">
                                                                                 <label class="wholesale_form_labels" for="mobile">Mobile</label>
-                                                                                <input type="text" name="mobile" id="mobile" class="form-control wholesale_inputs" value="{{!empty($id) ?  $wholesale_application->mobile : ''}}" placeholder="+1 (000) 000-0000">
+                                                                                <input type="text" name="mobile" id="mobile" class="form-control wholesale_inputs" value="{{!empty($id) ?  $wholesale_application->mobile : ''}}" onchange="remove_error(this)" placeholder="+1 (000) 000-0000">
                                                                                 <div class="text-danger wholesale_inputs" id=mobile_errors"></div>
                                                                             </div>
                                                                         </div>
@@ -97,7 +97,7 @@
                                                                 <div class="col-md-12">
                                                                     <div class="form-group">
                                                                         <label class="wholesale_form_labels" for="email">Email</label>
-                                                                        <input type="email" class="form-control wholesale_inputs" id="email" value="{{!empty($id) ?  $wholesale_application->email : ''}}" name="email" placeholder="Enter your Email">
+                                                                        <input type="email" class="form-control wholesale_inputs" id="email" value="{{!empty($id) ?  $wholesale_application->email : ''}}" name="email" onchange="remove_error(this)" placeholder="Enter your Email">
                                                                         <div class="text-danger wholesale_inputs" id="email_errors"></div>
                                                                     </div>
                                                                 </div>
@@ -112,27 +112,27 @@
                                                                 <div class="col-md-12">
                                                                     <div class="form-group">
                                                                         <label class="wholesale_form_labels" for="parent_company">Parent Company</label>
-                                                                        <input type="text" name="parent_company" class="form-control wholesale_inputs" value="{{!empty($id) ?  $wholesale_application->parent_company : ''}}" id="parent_company" placeholder="Enter parent company name (if applicable)">
+                                                                        <input type="text" name="parent_company" class="form-control wholesale_inputs" value="{{!empty($id) ?  $wholesale_application->parent_company : ''}}" id="parent_company" onchange="remove_error(this)" placeholder="Enter parent company name (if applicable)">
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-12">
                                                                     <div class="form-group">
                                                                         <label class="wholesale_form_labels" for="account_payable_name">Accounts payable Name</label>
-                                                                        <input type="text" class="form-control wholesale_inputs" id="account_payable_name" name="payable_name" value="{{!empty($id) ?  $wholesale_application->payable_name : ''}}" placeholder="Accounts payable Name">
+                                                                        <input type="text" class="form-control wholesale_inputs" id="account_payable_name" name="payable_name" value="{{!empty($id) ?  $wholesale_application->payable_name : ''}}" onchange="remove_error(this)" placeholder="Accounts payable Name">
                                                                         <div class="text-danger wholesale_inputs" id="account_payable_name_errors"></div>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-12">
                                                                     <div class="form-group">
                                                                         <label class="wholesale_form_labels" for="account_payable_phone">Accounts payable Phone</label>
-                                                                        <input type="number" class="form-control wholesale_inputs" id="account_payable_phone" name="payable_phone" value="{{!empty($id) ?  $wholesale_application->payable_phone : ''}}" placeholder="Accounts payable Phone">
+                                                                        <input type="number" class="form-control wholesale_inputs" id="account_payable_phone" name="payable_phone" value="{{!empty($id) ?  $wholesale_application->payable_phone : ''}}" onchange="remove_error(this)" placeholder="Accounts payable Phone">
                                                                         <div class="text-danger wholesale_inputs" id="account_payable_phone_errors"></div>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-12">
                                                                     <div class="form-group">
                                                                         <label class="wholesale_form_labels" for="account_payable_email">Accounts payable Email</label>
-                                                                        <input type="email" class="form-control wholesale_inputs" id="account_payable_email" value="{{!empty($id) ?  $wholesale_application->payable_email : ''}}" name="payable_email" placeholder="Accounts payable Email">
+                                                                        <input type="email" class="form-control wholesale_inputs" id="account_payable_email" value="{{!empty($id) ?  $wholesale_application->payable_email : ''}}" name="payable_email" onchange="remove_error(this)" placeholder="Accounts payable Email">
                                                                         <div class="text-danger wholesale_inputs" id="account_payable_email_errors"></div>
                                                                     </div>
                                                                 </div>
@@ -149,11 +149,11 @@
                                                                         <label class="wholesale_form_labels" for="">Name</label>
                                                                         <div class="row">
                                                                             <div class="col-md-6">
-                                                                                <input type="text" name="first_name_billing" value="{{!empty($id) ? $wholesale_application_address_billing->first_name : '' }}" id="first_name_billing" class="form-control wholesale_inputs" placeholder="First name">
+                                                                                <input type="text" name="first_name_billing" value="{{!empty($id) ? $wholesale_application_address_billing->first_name : '' }}" id="first_name_billing" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="First name">
                                                                                 <div class="text-danger wholesale_inputs" id="first_name_billing_errors"></div>
                                                                             </div>
                                                                             <div class="col-md-6">
-                                                                                <input type="text" name="last_name_billing" id="last_name_billing" value="{{!empty($id) ? $wholesale_application_address_billing->last_name : '' }}" class="form-control wholesale_inputs" placeholder="Last name">
+                                                                                <input type="text" name="last_name_billing" id="last_name_billing" value="{{!empty($id) ? $wholesale_application_address_billing->last_name : '' }}" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="Last name">
                                                                                 <div class="text-danger wholesale_inputs" id="last_name_billing_errors"></div>
                                                                             </div>
                                                                         </div>
@@ -162,27 +162,27 @@
                                                                 <div class="col-md-12">
                                                                     <div class="form-group">
                                                                         <label class="wholesale_form_labels" for="company_name">Company Name</label>
-                                                                        <input type="text" name="company_name_billing" value="{{!empty($id) ? $wholesale_application_address_billing->company_name : '' }}" class="form-control wholesale_inputs" id="company_name_billing" placeholder="Enter your Company Name">
+                                                                        <input type="text" name="company_name_billing" value="{{!empty($id) ? $wholesale_application_address_billing->company_name : '' }}" class="form-control wholesale_inputs" id="company_name_billing" onchange="remove_error(this)" placeholder="Enter your Company Name">
                                                                         <div class="text-danger wholesale_inputs" id="company_name_billing_errors"></div>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-12">
                                                                     <div class="form-group">
                                                                         <label class="wholesale_form_labels" for="street_address">Street Address</label>
-                                                                        <input type="text" name="street_address_billing" value="{{!empty($id) ? $wholesale_application_address_billing->street_address : '' }}" class="form-control wholesale_inputs" id="street_address_billing" placeholder="Enter your street address here">
+                                                                        <input type="text" name="street_address_billing" value="{{!empty($id) ? $wholesale_application_address_billing->street_address : '' }}" class="form-control wholesale_inputs" id="street_address_billing" onchange="remove_error(this)" placeholder="Enter your street address here">
                                                                         <div class="text-danger wholesale_inputs" id="street_address_billing_errors"></div>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-12">
                                                                     <div class="form-group">
                                                                         <label class="wholesale_form_labels" for="address_2">Address2</label>
-                                                                        <input type="text" name="address_2_billing" value="{{!empty($id) ? $wholesale_application_address_billing->address_2 : '' }}" class="form-control wholesale_inputs" id="address_2_billing" placeholder="Enter your second address here">
+                                                                        <input type="text" name="address_2_billing" value="{{!empty($id) ? $wholesale_application_address_billing->address_2 : '' }}" class="form-control wholesale_inputs" id="address_2_billing" onchange="remove_error(this)" placeholder="Enter your second address here">
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-12">
                                                                     <div class="form-group">
                                                                         <label class="wholesale_form_labels" for="city">Town/City</label>
-                                                                        <input type="text" name="city_billing" value="{{!empty($id) ? $wholesale_application_address_billing->city : '' }}" class="form-control wholesale_inputs" id="city_billing" placeholder="Enter your town/city name here">
+                                                                        <input type="text" name="city_billing" value="{{!empty($id) ? $wholesale_application_address_billing->city : '' }}" class="form-control wholesale_inputs" id="city_billing" onchange="remove_error(this)" placeholder="Enter your town/city name here">
                                                                         <div class="text-danger wholesale_inputs" id="city_billing_errors"></div>
                                                                     </div>
                                                                 </div>
@@ -191,14 +191,14 @@
                                                                         <div class="col-md-6">
                                                                             <div class="form-group">
                                                                                 <label class="wholesale_form_labels" for="state">State</label>
-                                                                                <input type="text" name="state_billing" id="state_billing" value="{{!empty($id) ? $wholesale_application_address_billing->state : '' }}" class="form-control wholesale_inputs" placeholder="Enter your state name">
+                                                                                <input type="text" name="state_billing" id="state_billing" value="{{!empty($id) ? $wholesale_application_address_billing->state : '' }}" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="Enter your state name">
                                                                                 <div class="text-danger wholesale_inputs" id="state_billing_errors"></div>
                                                                             </div>
                                                                         </div>
                                                                         <div class="col-md-6">
                                                                             <div class="form-group">
                                                                                 <label class="wholesale_form_labels" for="postal_code">Zip/Postal</label>
-                                                                                <input type="text" name="postal_code_billing" id="postal_code_billing" value="{{!empty($id) ? $wholesale_application_address_billing->postal_code : '' }}" class="form-control wholesale_inputs" placeholder="Enter zip/postal code here">
+                                                                                <input type="text" name="postal_code_billing" id="postal_code_billing" value="{{!empty($id) ? $wholesale_application_address_billing->postal_code : '' }}" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="Enter zip/postal code here">
                                                                                 <div class="text-danger wholesale_inputs" id="postal_code_billing_errors"></div>
                                                                             </div>
                                                                         </div>
@@ -209,7 +209,7 @@
                                                                         <div class="col-md-6">
                                                                             <div class="form-group">
                                                                                 <label class="wholesale_form_labels" for="phone">Phone</label>
-                                                                                <input type="text" name="phone" id="phone_billing" value="{{!empty($id) ? $wholesale_application_address_billing->phone : ''}}" class="form-control wholesale_inputs" placeholder="+1 (000) 000-0000">
+                                                                                <input type="text" name="phone" id="phone_billing" value="{{!empty($id) ? $wholesale_application_address_billing->phone : ''}}" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="+1 (000) 000-0000">
                                                                                 <div class="text-danger wholesale_inputs" id="phone_billing_errors"></div>
                                                                             </div>
                                                                         </div>
@@ -228,11 +228,11 @@
                                                                         <label class="wholesale_form_labels" for="">Name</label>
                                                                         <div class="row">
                                                                             <div class="col-md-6">
-                                                                                <input type="text" name="first_name_delivery" id="first_name_delivery" value="{{!empty($id) ? $wholesale_application_address_delivery->first_name : ''}}" class="form-control wholesale_inputs" placeholder="First name">
+                                                                                <input type="text" name="first_name_delivery" id="first_name_delivery" value="{{!empty($id) ? $wholesale_application_address_delivery->first_name : ''}}" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="First name">
                                                                                 <div class="text-danger wholesale_inputs" id="first_name_delivery_errors"></div>
                                                                             </div>
                                                                             <div class="col-md-6">
-                                                                                <input type="text" name="last_name_delivery" id="last_name_delivery" value="{{!empty($id) ? $wholesale_application_address_delivery->last_name : ''}}" class="form-control wholesale_inputs" placeholder="Last name">
+                                                                                <input type="text" name="last_name_delivery" id="last_name_delivery" value="{{!empty($id) ? $wholesale_application_address_delivery->last_name : ''}}" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="Last name">
                                                                                 <div class="text-danger wholesale_inputs" id="last_name_delivery_errors"></div>
                                                                             </div>
                                                                         </div>
@@ -241,27 +241,27 @@
                                                                 <div class="col-md-12">
                                                                     <div class="form-group">
                                                                         <label class="wholesale_form_labels" for="company_name">Company Name</label>
-                                                                        <input type="text" name="company_name_delivery" value="{{!empty($id) ? $wholesale_application_address_delivery->company_name : ''}}" class="form-control wholesale_inputs" id="company_name_delivery" placeholder="Enter your Company Name">
+                                                                        <input type="text" name="company_name_delivery" value="{{!empty($id) ? $wholesale_application_address_delivery->company_name : ''}}" class="form-control wholesale_inputs" id="company_name_delivery" onchange="remove_error(this)" placeholder="Enter your Company Name">
                                                                         <div class="text-danger wholesale_inputs" id="company_name_delivery_errors"></div>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-12">
                                                                     <div class="form-group">
                                                                         <label class="wholesale_form_labels" for="street_address">Street Address</label>
-                                                                        <input type="text" name="street_address_delivery" value="{{!empty($id) ? $wholesale_application_address_delivery->street_address : ''}}" class="form-control wholesale_inputs" id="street_address_delivery" placeholder="Enter your street address here">
+                                                                        <input type="text" name="street_address_delivery" value="{{!empty($id) ? $wholesale_application_address_delivery->street_address : ''}}" class="form-control wholesale_inputs" id="street_address_delivery" onchange="remove_error(this)" placeholder="Enter your street address here">
                                                                         <div class="text-danger wholesale_inputs" id="street_address_delivery_errors"></div>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-12">
                                                                     <div class="form-group">
                                                                         <label class="wholesale_form_labels" for="address_2">Address2</label>
-                                                                        <input type="text" name="address_2_delivery" value="{{!empty($id) ? $wholesale_application_address_delivery->address_2 : ''}}" class="form-control wholesale_inputs" id="address_2_delivery" placeholder="Enter your second address here">
+                                                                        <input type="text" name="address_2_delivery" value="{{!empty($id) ? $wholesale_application_address_delivery->address_2 : ''}}" class="form-control wholesale_inputs" id="address_2_delivery" onchange="remove_error(this)" placeholder="Enter your second address here">
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-12">
                                                                     <div class="form-group">
                                                                         <label class="wholesale_form_labels" for="city">Town/City</label>
-                                                                        <input type="text" name="city_delivery" value="{{!empty($id) ? $wholesale_application_address_delivery->city : ''}}" class="form-control wholesale_inputs" id="city_delivery" placeholder="Enter your town/city name here">
+                                                                        <input type="text" name="city_delivery" value="{{!empty($id) ? $wholesale_application_address_delivery->city : ''}}" class="form-control wholesale_inputs" id="city_delivery" onchange="remove_error(this)" placeholder="Enter your town/city name here">
                                                                         <div class="text-danger wholesale_inputs" id="city_delivery_errors"></div>
                                                                     </div>
                                                                 </div>
@@ -270,14 +270,14 @@
                                                                         <div class="col-md-6">
                                                                             <div class="form-group">
                                                                                 <label class="wholesale_form_labels" for="state">State</label>
-                                                                                <input type="text" name="state_delivery" id="state_delivery" value="{{!empty($id) ? $wholesale_application_address_delivery->state : ''}}" class="form-control wholesale_inputs" placeholder="Enter your state name">
+                                                                                <input type="text" name="state_delivery" id="state_delivery" value="{{!empty($id) ? $wholesale_application_address_delivery->state : ''}}" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="Enter your state name">
                                                                                 <div class="text-danger wholesale_inputs" id="state_delivery_errors"></div>
                                                                             </div>
                                                                         </div>
                                                                         <div class="col-md-6">
                                                                             <div class="form-group">
                                                                                 <label class="wholesale_form_labels" for="postal_code">Zip/Postal</label>
-                                                                                <input type="text" name="postal_code_delivery" id="postal_code_delivery" value="{{!empty($id) ? $wholesale_application_address_delivery->postal_code : ''}}" class="form-control wholesale_inputs" placeholder="Enter zip/postal code here">
+                                                                                <input type="text" name="postal_code_delivery" id="postal_code_delivery" value="{{!empty($id) ? $wholesale_application_address_delivery->postal_code : ''}}" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="Enter zip/postal code here">
                                                                                 <div class="text-danger wholesale_inputs" id="postal_code_delivery_errors"></div>
                                                                             </div>
                                                                         </div>
@@ -288,7 +288,7 @@
                                                                         <div class="col-md-6">
                                                                             <div class="form-group">
                                                                                 <label class="wholesale_form_labels" for="phone">Phone</label>
-                                                                                <input type="text" name="phone_delivery" id="phone_delivery" value="{{!empty($id) ? $wholesale_application_address_delivery->phone : ''}}" class="form-control wholesale_inputs" placeholder="+1 (000) 000-0000">
+                                                                                <input type="text" name="phone_delivery" id="phone_delivery" value="{{!empty($id) ? $wholesale_application_address_delivery->phone : ''}}" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="+1 (000) 000-0000">
                                                                                 <div class="text-danger wholesale_inputs" id="phone_delivery_errors"></div>
                                                                             </div>
                                                                         </div>
@@ -304,13 +304,17 @@
                                                                                 <div class="col-md-6">
                                                                                     <div class="row justify-content-center">
                                                                                         <div class="col-md-12">
-                                                                                            <input id="file_upload" name="permit_image" style="display:none;" type="file" value="{{!empty($id) ? $wholesale_application->permit_image : ''}}">
+                                                                                            <input id="file_upload" name="permit_image" style="display:none;" type="file" >
                                                                                             <h6 class="drop_your_files_here text-center"> Drop your file here or  
                                                                                                 <label for="files" class="browse">Browse</label>
                                                                                                 <p class="size_info mb-0">Maximum size: 50MB</p>
                                                                                                 <div class="text-danger wholesale_inputs text-center" id="file_upload_errors"></div>
                                                                                             </h6>
                                                                                         </div>
+                                                                                        @if(!empty($id))
+                                                                                            <input type="hidden" name="" id="edit_image_input" value="{{!empty($id) ? $wholesale_application->permit_image : ''}}">
+                                                                                            <a href="{{asset('wholesale/images/' . $wholesale_application->permit_image)}}" class="btn-sm btn btn-primary edit_view_image w-50">View Image</a>
+                                                                                        @endif
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -369,14 +373,14 @@
                                                                     <div class="col-md-12">
                                                                         <div class="form-group">
                                                                             <label class="wholesale_form_labels" for="seller_name">Seller’s / Lessor’s name</label>
-                                                                            <input type="text" name="seller_name" class="form-control wholesale_inputs" id="seller_name" placeholder="Enter seller’s or lessor’s full name">
+                                                                            <input type="text" name="seller_name" value="{{!empty($id) ? $wholesale_regulation->seller_name : ''}}" class="form-control wholesale_inputs" id="seller_name" onchange="remove_error(this)" placeholder="Enter seller’s or lessor’s full name">
                                                                             <div class="text-danger wholesale_inputs" id="seller_name_errors"></div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-12">
                                                                         <div class="form-group">
                                                                             <label class="wholesale_form_labels" for="seller_address">Seller’s / Lessor’s address </label>
-                                                                            <input type="text" name="seller_address" class="form-control wholesale_inputs" id="seller_address" placeholder="Enter seller’s or lessor’s address (street, city, state, zip code)">
+                                                                            <input type="text" name="seller_address"  value="{{!empty($id) ? $wholesale_regulation->seller_address : ''}}" class="form-control wholesale_inputs" id="seller_address" onchange="remove_error(this)" placeholder="Enter seller’s or lessor’s address (street, city, state, zip code)">
                                                                             <div class="text-danger wholesale_inputs" id="seller_address_errors"></div>
                                                                         </div>
                                                                     </div>
@@ -388,7 +392,7 @@
                                                                     <div class="col-md-12">
                                                                         <div class="undertaking_div p-2 d-flex">
                                                                             <div class="col-md-1">
-                                                                                <input type="checkbox" name="certificate_eligibility_1" id="under_signed_checkbox" class="under_signed_checkbox mt-1">
+                                                                                <input type="checkbox" name="certificate_eligibility_1"  onchange="remove_error(this)" value="{{!empty($id) ? $wholesale_regulation->certificate_eligibility_1 : ''}}"  {{!empty($wholesale_regulation->certificate_eligibility_1) ? 'checked=checked' : ''}} id="under_signed_checkbox" class="under_signed_checkbox mt-1">
                                                                                 
                                                                             </div>
                                                                             <div class="col-md-11 pl-0">
@@ -405,14 +409,14 @@
                                                                     <div class="col-md-12 mb-2">
                                                                         <div class="form-group">
                                                                             <label class="wholesale_form_labels" for="type_of_farm">Type of Farm Equipment and Machinery (or parts thereof) </label>
-                                                                            <input type="text" name="equipment_type" class="form-control wholesale_inputs" id="type_of_farm" placeholder="type of farm equipment or machinery being bought">
+                                                                            <input type="text" name="equipment_type" class="form-control wholesale_inputs" value="{{!empty($id) ? $wholesale_regulation->equipment_type : ''}}" id="type_of_farm" onchange="remove_error(this)" placeholder="type of farm equipment or machinery being bought">
                                                                             <div class="text-danger wholesale_inputs" id="type_of_farm_errors"></div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-12 mb-3">
                                                                         <div class="undertaking_div p-2 d-flex">
                                                                             <div class="col-md-1">
-                                                                                <input type="checkbox" name="certificate_eligibility_2" id="under_property_checkbox" class="under_signed_checkbox mt-1">
+                                                                                <input type="checkbox" name="certificate_eligibility_2" onchange="remove_error(this)" value="{{!empty($id) ? $wholesale_regulation->certificate_eligibility_2 : ''}}"  {{!empty($wholesale_regulation->certificate_eligibility_2) ? 'checked=checked' : ''}} id="under_property_checkbox" class="under_signed_checkbox mt-1">
                                                                             
                                                                             </div>
                                                                             <div class="col-md-11 pl-0">
@@ -426,48 +430,48 @@
                                                                     <div class="col-md-12 mb-2">
                                                                         <div class="form-group">
                                                                             <label class="wholesale_form_labels" for="purchaser_company_name">Purchaser’s name or company name (if applicable)</label>
-                                                                            <input type="text" name="purchaser_company_name" class="form-control wholesale_inputs" id="company_name_seller" placeholder="Enter in the Purchaser’s name or company’s name">
+                                                                            <input type="text" name="purchaser_company_name" value="{{!empty($id) ? $wholesale_regulation->purchaser_company_name : ''}}" class="form-control wholesale_inputs" id="company_name_seller" onchange="remove_error(this)" placeholder="Enter in the Purchaser’s name or company’s name">
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-12 mb-2">
                                                                         <div class="form-group">
                                                                             <label class="wholesale_form_labels" for="signature">Signature </label>
-                                                                            <input type="text" name="purchaser_signature" class="form-control wholesale_inputs" id="signature" placeholder="(signature of the purchaser, purchaser’s employee, or authorized representative or the the purchaser)">
+                                                                            <input type="text" name="purchaser_signature" class="form-control wholesale_inputs"  value="{{!empty($id) ? $wholesale_regulation->purchaser_signature : ''}}" id="signature" onchange="remove_error(this)" placeholder="(signature of the purchaser, purchaser’s employee, or authorized representative or the the purchaser)">
                                                                             <div class="text-danger wholesale_inputs" id="signature_errors"></div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-12 mb-2">
                                                                         <div class="form-group">
                                                                             <label class="wholesale_form_labels" for="title">Title </label>
-                                                                            <input type="text" name="title" class="form-control wholesale_inputs" id="title" placeholder="Title">
+                                                                            <input type="text" name="title" class="form-control wholesale_inputs" id="title" value="{{!empty($id) ? $wholesale_regulation->title : ''}}" onchange="remove_error(this)" placeholder="Title">
                                                                             <div class="text-danger wholesale_inputs" id="title_errors"></div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-12 mb-2">
                                                                         <div class="form-group">
                                                                             <label class="wholesale_form_labels" for="address"> Address</label>
-                                                                            <input type="text" name="purchaser_address" class="form-control wholesale_inputs" id="address" placeholder="(street, city, state, zip code)">
+                                                                            <input type="text" name="purchaser_address" class="form-control wholesale_inputs" id="address" value="{{!empty($id) ? $wholesale_regulation->purchaser_address : ''}}" onchange="remove_error(this)" placeholder="(street, city, state, zip code)">
                                                                             <div class="text-danger wholesale_inputs" id="address_errors"></div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
                                                                         <div class="form-group">
                                                                             <label class="wholesale_form_labels" for="permit_number">Permit number (if applicable)</label>
-                                                                            <input type="text" name="regulation_permit_number" id="permit_number" class="form-control wholesale_inputs" placeholder="Permit number (if applicable)">
+                                                                            <input type="text" name="regulation_permit_number" id="permit_number" class="form-control wholesale_inputs" value="{{!empty($id) ? $wholesale_regulation->regulation_permit_number : ''}}" onchange="remove_error(this)" placeholder="Permit number (if applicable)">
                                                                             <div class="text-danger wholesale_inputs" id="permit_number_errors"></div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
                                                                         <div class="form-group">
                                                                             <label class="wholesale_form_labels" for="phone">Phone</label>
-                                                                            <input type="text" name="purchaser_phone" id="phone_number" class="form-control wholesale_inputs" placeholder="+1 (000) 000-0000">
+                                                                            <input type="text" name="purchaser_phone" id="phone_number" class="form-control wholesale_inputs" value="{{!empty($id) ? $wholesale_regulation->purchaser_phone : ''}}" onchange="remove_error(this)" placeholder="+1 (000) 000-0000">
                                                                             <div class="text-danger wholesale_inputs" id="phone_number_errors"></div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
                                                                         <div class="form-group">
                                                                             <label class="wholesale_form_labels" for="phone">Date</label>
-                                                                            <input type="date" name="purchase_date" id="date" class="form-control wholesale_inputs">
+                                                                            <input type="date" name="purchase_date" id="date" value="{{!empty($id) ? $wholesale_regulation->purchase_date : ''}}" onchange="remove_error(this)" class="form-control wholesale_inputs">
                                                                             <div class="text-danger wholesale_inputs" id="date_errors"></div>
                                                                         </div>
                                                                     </div>
@@ -530,7 +534,7 @@
                                                                     </div>
                                                                     <div class="col-md-8">
                                                                         <div class="form-group mb-0">
-                                                                            <input type="text" name="authorize_name" class="form-control wholesale_inputs" id="authorization_name" placeholder="Enter text here">
+                                                                            <input type="text" name="authorize_name" class="form-control wholesale_inputs" value="{{!empty($id) ? $wholesale_authorization->authorize_name : ''}}" id="authorization_name" onchange="remove_error(this)" placeholder="Enter text here">
                                                                             <div class="text-danger wholesale_inputs" id="authorization_name_errors"></div>
                                                                         </div>
                                                                     </div>
@@ -542,62 +546,62 @@
                                                                     <div class="col-md-12">
                                                                         <div class="form-group">
                                                                             <label class="wholesale_form_labels" for="financial_institution_name">Name of Financial Institution</label>
-                                                                            <input type="text" name="financial_institute_name" class="form-control wholesale_inputs" id="financial_institution_name" placeholder="Enter the name of financial Institute">
+                                                                            <input type="text" name="financial_institute_name" class="form-control wholesale_inputs"  value="{{!empty($id) ? $wholesale_authorization->financial_institute_name : ''}}" id="financial_institution_name" onchange="remove_error(this)" placeholder="Enter the name of financial Institute">
                                                                             <div class="text-danger wholesale_inputs" id="financial_institution_name_errors"></div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-12">
                                                                         <div class="form-group">
                                                                             <label class="wholesale_form_labels" for="financial_institution_address"> Address</label>
-                                                                            <input type="text" name="financial_institute_address" class="form-control wholesale_inputs" id="financial_institution_address" placeholder="Address of Financial Institute (Branch, city, state, zip code)">
+                                                                            <input type="text" name="financial_institute_address" value="{{!empty($id) ? $wholesale_authorization->financial_institute_address : ''}}" class="form-control wholesale_inputs" id="financial_institution_address" onchange="remove_error(this)" placeholder="Address of Financial Institute (Branch, city, state, zip code)">
                                                                             <div class="text-danger wholesale_inputs" id="financial_institution_address_errors"></div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-12">
                                                                         <div class="form-group">
                                                                             <label class="wholesale_form_labels" for="financial_institution_signature">Signature </label>
-                                                                            <input type="text" name="financial_institute_signature" class="form-control wholesale_inputs" id="financial_institution_signature" placeholder="Signature">
+                                                                            <input type="text" name="financial_institute_signature" value="{{!empty($id) ? $wholesale_authorization->financial_institute_signature : ''}}" class="form-control wholesale_inputs" id="financial_institution_signature" onchange="remove_error(this)" placeholder="Signature">
                                                                             <div class="text-danger wholesale_inputs" id="financial_institution_signature_errors"></div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
                                                                             <label class="wholesale_form_labels" for="set_amount">Set amount</label>
-                                                                            <input type="text" name="set_amount" class="form-control wholesale_inputs" id="set_amount" placeholder="Set Amount">
+                                                                            <input type="text" name="set_amount" value="{{!empty($id) ? $wholesale_authorization->set_amount : ''}}" class="form-control wholesale_inputs" id="set_amount" onchange="remove_error(this)" placeholder="Set Amount">
                                                                             <div class="text-danger wholesale_inputs" id="set_amount_errors"></div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
                                                                             <label class="wholesale_form_labels" for="maximum_amount">Maximum amount</label>
-                                                                            <input type="text" name="maximum_amount" class="form-control wholesale_inputs" id="maximum_amount" placeholder="Maximum Amount">
+                                                                            <input type="text" name="maximum_amount" value="{{!empty($id) ? $wholesale_authorization->maximum_amount : ''}}" class="form-control wholesale_inputs" id="maximum_amount" onchange="remove_error(this)" placeholder="Maximum Amount">
                                                                             <div class="text-danger wholesale_inputs" id="maximum_amount_errors"></div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-12">
                                                                         <div class="form-group">
                                                                             <label class="wholesale_form_labels" for="institute_routine_number">Financial institute routine number</label>
-                                                                            <input type="text" name="financial_institute_routine_number" class="form-control wholesale_inputs" id="institute_routine_number" placeholder="Enter Financial institute routine number">
+                                                                            <input type="text" name="financial_institute_routine_number" value="{{!empty($id) ? $wholesale_authorization->financial_institute_routine_number : ''}}" class="form-control wholesale_inputs" id="institute_routine_number" onchange="remove_error(this)" placeholder="Enter Financial institute routine number">
                                                                             <div class="text-danger wholesale_inputs" id="institute_routine_number_errors"></div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-12">
                                                                         <div class="form-group">
                                                                             <label class="wholesale_form_labels" for="saving_account_number">Checking/Saving account number</label>
-                                                                            <input type="text" name="financial_institute_account_number" class="form-control wholesale_inputs" id="saving_account_number" placeholder="Enter Checking/Saving account number">
+                                                                            <input type="text" name="financial_institute_account_number" value="{{!empty($id) ? $wholesale_authorization->financial_institute_account_number : ''}}" class="form-control wholesale_inputs" id="saving_account_number" onchange="remove_error(this)" placeholder="Enter Checking/Saving account number">
                                                                             <div class="text-danger wholesale_inputs" id="saving_account_number_errors"></div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
                                                                             <label class="wholesale_form_labels" for="autorization_permit_number">Permit number (if applicable)</label>
-                                                                            <input type="text" name="financial_institute_permit_number" id="autorization_permit_number" class="form-control wholesale_inputs" placeholder="Permit number (if applicable)">
+                                                                            <input type="text" name="financial_institute_permit_number" id="autorization_permit_number" value="{{!empty($id) ? $wholesale_authorization->financial_institute_permit_number : ''}}" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="Permit number (if applicable)">
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
                                                                             <label class="wholesale_form_labels" for="autorization_phone_number">Phone</label>
-                                                                            <input type="text" name="financial_institute_phone_number" id="autorization_phone_number" class="form-control wholesale_inputs" placeholder="+1 (000) 000-0000">
+                                                                            <input type="text" name="financial_institute_phone_number" id="autorization_phone_number" value="{{!empty($id) ? $wholesale_authorization->financial_institute_phone_number : ''}}" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="+1 (000) 000-0000">
                                                                             <div class="text-danger wholesale_inputs" id="autorization_phone_number_errors"></div>
                                                                         </div>
                                                                     </div>
@@ -669,24 +673,24 @@
                                                                 <div class="form-group">
                                                                     <label class="wholesale_form_labels mb-0" for="card_type">Card Type</label>
                                                                     <div class="row justify-content-between pl-3 pt-2 pr-3">
-                                                                        <div class="col-md-2 d-flex border justify-content-center align-items-center m-0 wholesale-custom-radio" onclick="selectRadio(this)">
-                                                                            <input type="radio" name="card_type" class="radio_check_wholesale hidden-radio border-0" id="master_card">
+                                                                        <div class="col-md-2 d-flex border justify-content-center align-items-center m-0 wholesale-custom-radio  {{!empty($id) && $wholesale_application_card->card_type == 'master_card' ? 'selected'  : ''}}" onclick="selectRadio(this)">
+                                                                            <input type="radio" name="card_type" class="radio_check_wholesale hidden-radio border-0" onchange="remove_error_card_type(this)" value="{{!empty($id) && $wholesale_application_card->card_type == 'master_card' ? 'master_card'  : ''}}"  {{!empty($id) && $wholesale_application_card->card_type == 'master_card' ? 'checked'  : ''}}  id="master_card">
                                                                             <span class="master-radio-label"></span>
                                                                         </div>
-                                                                        <div class="col-md-2 d-flex border justify-content-center align-items-center m-0 wholesale-custom-radio" onclick="selectRadio(this)">
-                                                                            <input type="radio" name="card_type" class="radio_check_wholesale hidden-radio border-0" id="visa_card">
+                                                                        <div class="col-md-2 d-flex border justify-content-center align-items-center m-0 wholesale-custom-radio {{!empty($id) && $wholesale_application_card->card_type == 'visa_card' ? 'selected'  : ''}}" onclick="selectRadio(this)">
+                                                                            <input type="radio" name="card_type" class="radio_check_wholesale hidden-radio border-0" onchange="remove_error_card_type(this)" value="{{!empty($id) && $wholesale_application_card->card_type == 'visa_card' ? 'visa_card'  : ''}}"  {{!empty($id) && $wholesale_application_card->card_type == 'visa_card' ? 'checked'  : ''}} id="visa_card">
                                                                             <span class="visa-radio-label"></span>
                                                                         </div>
-                                                                        <div class="col-md-2 d-flex border justify-content-center align-items-center m-0 wholesale-custom-radio" onclick="selectRadio(this)">
-                                                                            <input type="radio" name="card_type" class="radio_check_wholesale hidden-radio border-0" id="discover_card">
+                                                                        <div class="col-md-2 d-flex border justify-content-center align-items-center m-0 wholesale-custom-radio {{!empty($id) && $wholesale_application_card->card_type == 'discover_card' ? 'selected'  : ''}}" onclick="selectRadio(this)">
+                                                                            <input type="radio" name="card_type" class="radio_check_wholesale hidden-radio border-0" onchange="remove_error_card_type(this)" value="{{!empty($id) && $wholesale_application_card->card_type == 'discover_card' ? 'discover_card'  : ''}}"  {{!empty($id) && $wholesale_application_card->card_type == 'discover_card' ? 'checked'  : ''}} id="discover_card">
                                                                             <span class="discover-radio-label"></span>
                                                                         </div>
-                                                                        <div class="col-md-2 d-flex border justify-content-center align-items-center m-0 wholesale-custom-radio" onclick="selectRadio(this)">
-                                                                            <input type="radio" name="card_type" class="radio_check_wholesale hidden-radio border-0" id="american_express_card">
+                                                                        <div class="col-md-2 d-flex border justify-content-center align-items-center m-0 wholesale-custom-radio {{!empty($id) && $wholesale_application_card->card_type == 'american_express_card' ? 'selected'  : ''}}" onclick="selectRadio(this)">
+                                                                            <input type="radio" name="card_type" class="radio_check_wholesale hidden-radio border-0" onchange="remove_error_card_type(this)" value="{{!empty($id) && $wholesale_application_card->card_type == 'american_express_card' ? 'american_express_card'  : ''}}"  {{!empty($id) && $wholesale_application_card->card_type == 'american_express_card' ? 'checked'  : ''}} id="american_express_card">
                                                                             <span class="american-radio-label"></span>
                                                                         </div>
-                                                                        <div class="col-md-2 d-flex border justify-content-center align-items-center m-0 wholesale-custom-radio" onclick="selectRadio(this)">
-                                                                            <input type="radio" name="card_type" class="radio_check_wholesale hidden-radio border-0" id="other_card">
+                                                                        <div class="col-md-2 d-flex border justify-content-center align-items-center m-0 wholesale-custom-radio {{!empty($id) && $wholesale_application_card->card_type == 'other_card' ? 'selected'  : ''}}"  onclick="selectRadio(this)">
+                                                                            <input type="radio" name="card_type" class="radio_check_wholesale hidden-radio border-0" onchange="remove_error_card_type(this)" value="{{!empty($id) && $wholesale_application_card->card_type == 'other_card' ? 'other_card'  : ''}}"  {{!empty($id) && $wholesale_application_card->card_type == 'other_card' ? 'checked'  : ''}} id="other_card">
                                                                             <span class="other-radio-label">OTHER</span>
                                                                         </div>
                                                                         <div class="text-danger wholesale_inputs" id="card_type_errors"></div>
@@ -696,14 +700,14 @@
                                                             <div class="col-md-12">
                                                                 <div class="form-group">
                                                                     <label class="wholesale_form_labels" for="cardholder_name">Cardholder name (as shown on card)</label>
-                                                                    <input type="text" name="cardholder_name" class="form-control wholesale_inputs" id="cardholder_name" placeholder="Enter card holder name">
+                                                                    <input type="text" name="cardholder_name"  value="{{!empty($id) ? $wholesale_application_card->cardholder_name : ''}}" class="form-control wholesale_inputs" id="cardholder_name" onchange="remove_error(this)" placeholder="Enter card holder name">
                                                                     <div class="text-danger wholesale_inputs" id="cardholder_name_errors"></div>
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-12">
                                                                 <div class="form-group">
                                                                     <label class="wholesale_form_labels" for="card_number">Card Number</label>
-                                                                    <input type="text" name="card_number" class="form-control wholesale_inputs ccFormatMonitor" id="card_number" placeholder="Enter card number">
+                                                                    <input type="text" name="card_number" class="form-control wholesale_inputs ccFormatMonitor"  value="{{!empty($id) ? $wholesale_application_card->card_number : ''}}" id="card_number" onchange="remove_error(this)" placeholder="Enter card number">
                                                                     <div class="text-danger wholesale_inputs" id="card_number_errors"></div>
                                                                 </div>
                                                             </div>
@@ -712,14 +716,14 @@
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
                                                                             <label class="wholesale_form_labels" for="expiration_date">Expiration Date</label>
-                                                                            <input type="text" name="expiration_date" class="form-control wholesale_inputs inputExpDate" id="expiration_date" maxlength='7' placeholder="MM / YY">
+                                                                            <input type="text" name="expiration_date" class="form-control wholesale_inputs inputExpDate" id="expiration_date"  value="{{!empty($id) ? $wholesale_application_card->expiration_date : ''}}" maxlength='7' onchange="remove_error(this)" placeholder="MM / YY">
                                                                             <div class="text-danger wholesale_inputs" id="expiration_date_errors"></div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
                                                                             <label class="wholesale_form_labels" for="card_holder_zip_code">Cardholder ZIP Code</label>
-                                                                            <input type="text" name="cardholder_zip_code" class="form-control wholesale_inputs" id="card_holder_zip_code" placeholder="Zip code from credit card billing address">
+                                                                            <input type="text" name="cardholder_zip_code" class="form-control wholesale_inputs" id="card_holder_zip_code" value="{{!empty($id) ? $wholesale_application_card->cardholder_zip_code : ''}}" onchange="remove_error(this)" placeholder="Zip code from credit card billing address">
                                                                             <div class="text-danger wholesale_inputs" id="cardholder_zip_code_errors"></div>
                                                                         </div>
                                                                     </div>
@@ -732,11 +736,11 @@
                                                                             <label class="mb-0 text-center align-middle credit_card_undertaking">
                                                                                 I,
                                                                             </label>
-                                                                            <input type="text" name="authorize_card_name" class="form-control wholesale_inputs w-50 ml-2" id="undertaking_name" placeholder="Enter text here">
+                                                                            <input type="text" name="authorize_card_name" class="form-control wholesale_inputs w-50 ml-2" value="{{!empty($id) ? $wholesale_application_card->authorize_card_name : ''}}" id="undertaking_name" onchange="remove_error(this)" placeholder="Enter text here">
                                                                             <label class="mb-0 ml-2 text-center align-middle w-25 credit_card_undertaking">
                                                                                 , authorize
                                                                             </label>
-                                                                            <input type="text" name="authorize_card_text" class="form-control wholesale_inputs w-50" id="authorize_text" placeholder="Enter text here">
+                                                                            <input type="text" name="authorize_card_text" class="form-control wholesale_inputs w-50" value="{{!empty($id) ? $wholesale_application_card->authorize_card_text : ''}}" id="authorize_text" onchange="remove_error(this)" placeholder="Enter text here">
                                                                         </div>
                                                                         <diiv class="row">
                                                                             <div class="col-md-6">
@@ -757,14 +761,14 @@
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
                                                                             <label class="wholesale_form_labels" for="customer_signature">Customer Signature</label>
-                                                                            <input type="text" name="customer_signature" class="form-control wholesale_inputs" id="customer_signature" placeholder="Enter Signature">
+                                                                            <input type="text" name="customer_signature" value="{{!empty($id) ? $wholesale_application_card->customer_signature : ''}}" class="form-control wholesale_inputs" id="customer_signature" onchange="remove_error(this)" placeholder="Enter Signature">
                                                                             <div class="text-danger wholesale_inputs" id="customer_signature_errors"></div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
                                                                             <label class="wholesale_form_labels" for="date_wholesale"> Date</label>
-                                                                            <input type="date" name="date" class="form-control wholesale_inputs" id="date_wholesale">
+                                                                            <input type="date" name="date" value="{{!empty($id) ? $wholesale_application_card->date : ''}}" class="form-control wholesale_inputs" onchange="remove_error(this)" id="date_wholesale">
                                                                             <div class="text-danger wholesale_inputs" id="date_wholesale_errors"></div>
                                                                         </div>
                                                                     </div>
@@ -1398,6 +1402,18 @@
     </script>
 
     <script>
+        // remove error message when filled
+
+        function remove_error_card_type(element) {
+            var name = $(element).attr('name');
+            $('#' + name + '_errors').html('');
+        }
+        function remove_error(element) {
+            var id = $(element).attr('id');
+            $('#' + id + '_errors').html('');
+        }
+
+
         function selectRadio(element) {
             $('#card_type_errors').html('');
             $('.wholesale-custom-radio').removeClass('selected');
@@ -1525,10 +1541,10 @@
             if (phone_delivery == '') {
                 $('#phone_delivery_errors').html('Phone number is required');
             }
-            if (file_upload == '') {
+            if ((file_upload == '')  && $('#edit_image_input').val() == '') {
                 $('#file_upload_errors').html('Permit image is required');
             }
-            if (company_name != '' && first_name != '' && last_name != '' && phone != '' && mobile != '' && email != '' && account_payable_name != '' && account_payable_phone != '' && account_payable_email != '' && first_name_billing != '' && last_name_billing != '' && company_name_billing != '' && street_address_billing != '' && city_billing != '' && state_billing != '' && postal_code_billing != '' && phone_billing != '' && first_name_delivery != '' && last_name_delivery != '' && company_name_delivery != '' && street_address_delivery != '' && city_delivery != '' && state_delivery != '' && postal_code_delivery != '' && phone_delivery != '' && file_upload != '') { 
+            if (company_name != '' && first_name != '' && last_name != '' && phone != '' && mobile != '' && email != '' && account_payable_name != '' && account_payable_phone != '' && account_payable_email != '' && first_name_billing != '' && last_name_billing != '' && company_name_billing != '' && street_address_billing != '' && city_billing != '' && state_billing != '' && postal_code_billing != '' && phone_billing != '' && first_name_delivery != '' && last_name_delivery != '' && company_name_delivery != '' && street_address_delivery != '' && city_delivery != '' && state_delivery != '' && postal_code_delivery != '' && phone_delivery != '' && (file_upload != '' || $('#edit_image_input').val() != '')) { 
                 return true;
             } else {
                 return false;
@@ -1550,6 +1566,7 @@
         }
 
         $("#file_upload").change(function(e) {
+            $('.edit_view_image').addClass('d-none');
             var filename = e.target.files[0];
             console.log(filename);
             if (filename.size > 419430400) {
@@ -1877,6 +1894,7 @@
                 data.append('state_delivery', $('#state_delivery').val());
                 data.append('postal_code_delivery', $('#postal_code_delivery').val());
                 data.append('phone_delivery', $('#phone_delivery').val());
+                data.append('wholesale_application_id', $('#whs_id').val());
                 $.ajaxSetup({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1890,6 +1908,7 @@
                     contentType: false,
                     processData: false,
                     success:function(response){
+                        console.log(response);
                         if (response.status == true) {
                             $('#wholesale_spinner').addClass('d-none');
                             window.location.href = '/wholesale/account/edit/' + response.wholesale_appication_id;

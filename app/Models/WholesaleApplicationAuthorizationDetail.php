@@ -10,7 +10,7 @@ class WholesaleApplicationAuthorizationDetail extends Model
     use HasFactory;
     protected $table = 'wholesale_application_authorization_details';
     protected $fillable = [
-        'wholessale_application_id',
+        'wholesale_application_id',
         'authorize_name',
         'financial_institute_name',
         'financial_institute_address',
