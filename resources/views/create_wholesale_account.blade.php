@@ -46,16 +46,30 @@
                             @endif
                             <div class="row justify-content-center">
                                 <div class="col-md-10 p-4">
+                                    <div class="important_notice mt-2  mb-3">
+                                        <div class="row p-3">
+                                            <div class="col-md-1">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" class="mt-1" height="16" viewBox="0 0 16 16" fill="none">
+                                                    <g clip-path="url(#clip0_107_29812)">
+                                                    <path d="M8.00016 14.6666C11.6821 14.6666 14.6668 11.6819 14.6668 7.99998C14.6668 4.31808 11.6821 1.33331 8.00016 1.33331C4.31826 1.33331 1.3335 4.31808 1.3335 7.99998C1.3335 11.6819 4.31826 14.6666 8.00016 14.6666Z" stroke="#242424" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+                                                    <path d="M8 10.6667V8" stroke="#242424" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+                                                    <path d="M8 5.33331H8.00667" stroke="#242424" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+                                                    </g>
+                                                    <defs>
+                                                    <clipPath id="clip0_107_29812">
+                                                        <rect width="16" height="16" fill="white"/>
+                                                    </clipPath>
+                                                    </defs>
+                                                </svg>
+                                            </div>
+                                            <div class="col-md-11 pl-0">
+                                                <p class="notice_para mb-0 font-weight-bold text-danger">
+                                                    Please complete all the steps for Application Consideration!
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <form action="{{route('store_wholesale_account')}}" id="wholesaleForm" method="post" enctype="multipart/form-data">
-                                        <div class="success_message d-none">
-                                            
-                                        </div>
-                                        <div class="alert alert-info alert-dismissible fade show mt-2 success_message d-none" role="alert">
-                                            <p id="successMessage" class="mb-0"></p>
-                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
                                         <input type="hidden" name="wholesale_application_id" id="whs_id" value="{{isset($id) ? $id : ''}}">
                                         <div class="" id="">
                                             <ul class="" id="wholesale_form_error"></ul>
@@ -355,13 +369,23 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="text-right">
+                                                            <div class="row">
+                                                                <div class="col-md-8">
+                                                                    <div class="alert alert-info alert-dismissible fade show success_message mb-0 p-1 d-none" role="alert">
+                                                                        <p id="successMessage" class="mb-0"></p>
+                                                                        <button type="button" class="close btn-sm p-1" data-dismiss="alert" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-4">
                                                                 @if(empty($id))
-                                                                    <button id="save_for_now" type="button"  class="step_next btn" data-toggle="" data-target="">Save for now</button>
+                                                                <button id="save_for_now" type="button"  class="step_next btn" data-toggle="" data-target="">Save for now</button>
                                                                 @endif
                                                                 <button type="button" id="step1_next" onclick="check_validation_step1()" class="step_next btn">
                                                                     Next
                                                                 </button>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -537,6 +561,9 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="text-right">
+                                                                    @if(empty($id))
+                                                                        <button id="save_for_now" type="button"  class="step_next btn" data-toggle="" data-target="">Save for now</button>
+                                                                    @endif
                                                                     <button type="button" id="step2_next" class="step_next btn" onclick="check_validation_step2()">
                                                                         Next
                                                                     </button>
@@ -656,6 +683,9 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="text-right">
+                                                                    @if(empty($id))
+                                                                        <button id="save_for_now" type="button"  class="step_next btn" data-toggle="" data-target="">Save for now</button>
+                                                                    @endif
                                                                     <button type="button" id="step3_next" class="step_next btn" onclick="check_validation_step3()">
                                                                         Next
                                                                     </button>
@@ -1494,7 +1524,7 @@
         // save for now functionality
         $(document).ready(function() {
 
-            function save_progress() {
+            function save_progress_step1() {
                 $('#wholesale_spinner').removeClass('d-none');
                 $.ajaxSetup({
                     headers: {
@@ -1532,6 +1562,28 @@
                 data.append('state_delivery', $('#state_delivery').val());
                 data.append('postal_code_delivery', $('#postal_code_delivery').val());
                 data.append('phone_delivery', $('#phone_delivery').val());
+                data.append('authorization_name', $('#authorization_name').val());
+                data.append('financial_institution_name', $('#financial_institution_name').val());
+                data.append('financial_institution_address', $('#financial_institution_address').val());
+                data.append('financial_institution_signature', $('#financial_institution_signature').val());
+                data.append('set_amount', $('#set_amount').val());
+                data.append('maximum_amount', $('#maximum_amount').val());
+                data.append('institute_routine_number', $('#institute_routine_number').val());
+                data.append('saving_account_number', $('#saving_account_number').val());
+                data.append('autorization_permit_number', $('#autorization_permit_number').val());
+                data.append('autorization_phone_number', $('#autorization_phone_number').val());
+                data.append('seller_name', $('#seller_name').val());
+                data.append('seller_address', $('#seller_address').val());
+                data.append('under_signed_checkbox', $('#under_signed_checkbox').val());
+                data.append('under_property_checkbox', $('#under_property_checkbox').val());
+                data.append('company_name_seller', $('#company_name_seller').val());
+                data.append('signature', $('#signature').val());
+                data.append('title', $('#title').val());
+                data.append('address', $('#address').val());
+                data.append('permit_number', $('#permit_number').val());
+                data.append('phone_number', $('#phone_number').val());
+                data.append('date', $('#date').val());
+                data.append('type_of_farm', $('#type_of_farm').val());
             
                 $.ajax({
                     type:'POST',
@@ -1545,11 +1597,16 @@
                             $('#save_for_now').attr('data-toggle', '')
                             $('#save_for_now').attr('data-target', '')
                             $('.success_message').removeClass('d-none');
+                            $('#successMessage').html('Data saved For now');
                             setTimeout(() => {
-                                $('#successMessage').html(response.message);
+                                window.location.href = '/wholesale/account/create'
                             }, 1000);
                         } else {
-                            window.location.href = "/wholesale/account/edit/" + response.id;
+                            $('.success_message').removeClass('d-none');
+                            $('#successMessage').html('Email Already Exist');
+                            setTimeout(() => {
+                                window.location.href = "/wholesale/account/edit/" + response.id;
+                            }, 1000);
                         }
                     },
                     error: function (response) {
@@ -1568,7 +1625,7 @@
                     $('#save_for_now').attr('data-target', '')
                     $('#save_for_now_modal').modal('hide');
 
-                    save_progress();
+                    save_progress_step1();
                 }
             });
         });
@@ -1602,7 +1659,10 @@
                                 $('#successMessage').html(response.message);
                             }, 1000);
                         } else if (response.status == false) {
-                            window.location.href = "/wholesale/account/edit/" + response.id;
+                            $('#email_address_errors').html('Email Already Exists')
+                            setTimeout(() => {
+                                window.location.href = "/wholesale/account/edit/" + response.id;
+                            }, 1000);
 
                         }
                     },
@@ -1719,10 +1779,6 @@
             }
             if (email == '') {
                 $('#email_errors').html('Email is required');
-            }
-            var result =validate_email();
-            if (result.status == true) {
-                $('#email_errors').html('Email already exist');
             }
             if (account_payable_name == '') {
                 $('#account_payable_name_errors').html('Account payable name is required');

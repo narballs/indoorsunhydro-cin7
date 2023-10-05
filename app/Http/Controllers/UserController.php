@@ -2376,6 +2376,43 @@ class UserController extends Controller
                 ]);
     
                 $wholesale_appication_address_delivery->save();
+
+                // step 2 save 
+                $wholesale_regulation = WholesaleApplicationRegulationDetail::create([
+                    'wholesale_application_id' => $wholesale_appication->id,
+                    'seller_name' => $request->seller_name,
+                    'seller_address' => $request->seller_address,
+                    'purchaser_signature' => $request->signature,
+                    'certificate_eligibility_1' => $request->under_signed_checkbox,
+                    'certificate_eligibility_2' => $request->under_property_checkbox,
+                    'equipment_type' => $request->type_of_farm,
+                    'purchaser_company_name' => $request->company_name_seller,
+                    'title' => $request->title,
+                    'purchaser_address' => $request->address,
+                    'purchaser_phone' => $request->phone_number,
+                    'regulation_permit_number' => $request->permit_number,
+                    'purchase_date' => $request->date,
+                ]);
+
+                $wholesale_regulation->save();
+                
+                
+                //save step 3 
+                $wholesale_authorization = WholesaleApplicationAuthorizationDetail::create([
+                    'wholesale_application_id' => $wholesale_appication->id,
+                    'authorize_name' => $request->authorization_name,
+                    'financial_institute_name' => $request->financial_institution_name,
+                    'financial_institute_address' => $request->financial_institution_address,
+                    'financial_institute_signature' => $request->financial_institution_signature,
+                    'set_amount' => $request->set_amount,
+                    'maximum_amount' => $request->maximum_amount,
+                    'financial_institute_routine_number' => $request->institute_routine_number,
+                    'financial_institute_account_number' => $request->saving_account_number,
+                    'financial_institute_permit_number' => $request->autorization_permit_number,
+                    'financial_institute_phone_number' => $request->autorization_phone_number,
+                ]);
+
+                $wholesale_authorization->save();
                 DB::commit();
                 return response()->json([
                     'status' => true,
