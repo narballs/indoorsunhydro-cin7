@@ -1914,15 +1914,22 @@ class UserController extends Controller
     public function create_wholesale_account (Request $request) {
         return view('create_wholesale_account');
     }
-    public function update_wholesale_account (Request $request) {
-        $id = $request->wholesale_application_id;
+
+    // edit wholesale account
+    public function edit_wholesale_account ($id) {
         $wholesale_application = WholesaleApplicationInformation::where('id' , $id)->first();
         $wholesale_application_address_billing = WholesaleApplicationAddress::where('wholesale_application_id' , $id)->where('type' , 'Billing Address')->first();
         $wholesale_application_address_delivery = WholesaleApplicationAddress::where('wholesale_application_id' , $id)->where('type' , 'Delievery Address')->first();
         $wholesale_regulation = WholesaleApplicationRegulationDetail::where('wholesale_application_id' , $id)->first();
         $wholesale_authorization = WholesaleApplicationAuthorizationDetail::where('wholesale_application_id' , $id)->first();
         $wholesale_application_card = WholesaleApplicationCard::where('wholesale_application_id' , $id)->first();
-        return view('create_wholesale_account' , compact('id','wholesale_application' , 'wholesale_application_address_billing' , 'wholesale_application_address_delivery' , 'wholesale_regulation' , 'wholesale_authorization' , 'wholesale_application_card'));
+        return view('edit_wholesale_account', compact('id','wholesale_application' , 'wholesale_application_address_billing' , 'wholesale_application_address_delivery' , 'wholesale_regulation' , 'wholesale_authorization' , 'wholesale_application_card'));
+    }
+
+     // edit wholesale account
+    public function wholesaleuser_thankyou($id) {
+        $wholesale_application = WholesaleApplicationInformation::where('id' , $id)->first();
+        return view('wholesale_thankyou', compact('wholesale_application' , 'id'));
     }
 
     // store wholesale account
@@ -1941,7 +1948,6 @@ class UserController extends Controller
             }
             
             $wholesale_application_id = $request->wholesale_application_id;
-            
 
             if (!empty($wholesale_application_id)) {
                 $update_wholesale_appication = WholesaleApplicationInformation::where('id' , $wholesale_application_id)->first();
@@ -1964,87 +1970,173 @@ class UserController extends Controller
                     'permit_image' => $permit_image,
                 ]);
 
+
+
                 $update_wholesale_appication_address_billing = WholesaleApplicationAddress::where('wholesale_application_id' , $wholesale_application_id)->where('type' , 'Billing Address')->first();
-                $update_wholesale_appication_address_billing->update([
-                    'wholesale_application_id' => $wholesale_application_id,
-                    'type' => 'Billing Address',
-                    'first_name' => $request->first_name_billing,
-                    'last_name' => $request->last_name_billing,
-                    'company_name' => $request->company_name_billing,
-                    'street_address' => $request->street_address_billing,
-                    'address2' => $request->address2_billing,
-                    'city' => $request->city_billing,
-                    'state' => $request->state_billing,
-                    'postal_code' => $request->postal_code_billing,
-                    'phone' => $request->phone_billing,
-                ]);
+                if(!empty($update_wholesale_appication_address_billing)) {
+                    $update_wholesale_appication_address_billing->update([
+                        'wholesale_application_id' => $wholesale_application_id,
+                        'type' => 'Billing Address',
+                        'first_name' => $request->first_name_billing,
+                        'last_name' => $request->last_name_billing,
+                        'company_name' => $request->company_name_billing,
+                        'street_address' => $request->street_address_billing,
+                        'address2' => $request->address2_billing,
+                        'city' => $request->city_billing,
+                        'state' => $request->state_billing,
+                        'postal_code' => $request->postal_code_billing,
+                        'phone' => $request->phone_billing,
+                    ]);
+                } else {
+                    WholesaleApplicationAddress::create([
+                        'wholesale_application_id' => $wholesale_application_id,
+                        'type' => 'Billing Address',
+                        'first_name' => $request->first_name_billing,
+                        'last_name' => $request->last_name_billing,
+                        'company_name' => $request->company_name_billing,
+                        'street_address' => $request->street_address_billing,
+                        'address2' => $request->address2_billing,
+                        'city' => $request->city_billing,
+                        'state' => $request->state_billing,
+                        'postal_code' => $request->postal_code_billing,
+                        'phone' => $request->phone_billing,
+                    ]);
+                }
 
                 $update_wholesale_appication_address_delivery = WholesaleApplicationAddress::where('wholesale_application_id' , $wholesale_application_id)->where('type' , 'Delievery Address')->first();
-                $update_wholesale_appication_address_delivery->update([
-                    'wholesale_application_id' => $wholesale_application_id,
-                    'type' => 'Delievery Address',
-                    'first_name' => $request->first_name_delivery,
-                    'last_name' => $request->last_name_delivery,
-                    'company_name' => $request->company_name_delivery,
-                    'street_address' => $request->street_address_delivery,
-                    'address2' => $request->address2_delivery,
-                    'city' => $request->city_delivery,
-                    'state' => $request->state_delivery,
-                    'postal_code' => $request->postal_code_delivery,
-                    'phone' => $request->phone_delivery,
-                ]);
+                if (!empty($update_wholesale_appication_address_delivery)) {
+                    $update_wholesale_appication_address_delivery->update([
+                        'wholesale_application_id' => $wholesale_application_id,
+                        'type' => 'Delievery Address',
+                        'first_name' => $request->first_name_delivery,
+                        'last_name' => $request->last_name_delivery,
+                        'company_name' => $request->company_name_delivery,
+                        'street_address' => $request->street_address_delivery,
+                        'address2' => $request->address2_delivery,
+                        'city' => $request->city_delivery,
+                        'state' => $request->state_delivery,
+                        'postal_code' => $request->postal_code_delivery,
+                        'phone' => $request->phone_delivery,
+                    ]);
+                } else {
+                    WholesaleApplicationAddress::create([
+                        'wholesale_application_id' => $wholesale_application_id,
+                        'type' => 'Delievery Address',
+                        'first_name' => $request->first_name_delivery,
+                        'last_name' => $request->last_name_delivery,
+                        'company_name' => $request->company_name_delivery,
+                        'street_address' => $request->street_address_delivery,
+                        'address2' => $request->address2_delivery,
+                        'city' => $request->city_delivery,
+                        'state' => $request->state_delivery,
+                        'postal_code' => $request->postal_code_delivery,
+                        'phone' => $request->phone_delivery,
+                    ]);
+                }
+                
 
                 // step 2 update
 
                 $update_wholesale_regulation = WholesaleApplicationRegulationDetail::where('wholesale_application_id' , $wholesale_application_id)->first();
-                $update_wholesale_regulation->update([
-                    'wholesale_application_id' => $wholesale_application_id,
-                    'seller_name' => $request->seller_name,
-                    'seller_address' => $request->seller_address,
-                    'purchaser_signature' => $request->signature,
-                    'certificate_eligibility_1' => $request->under_signed_checkbox,
-                    'certificate_eligibility_2' => $request->under_property_checkbox,
-                    'equipment_type' => $request->type_of_farm,
-                    'purchaser_company_name' => $request->company_name_seller,
-                    'title' => $request->title,
-                    'purchaser_address' => $request->address,
-                    'purchaser_phone' => $request->phone_number,
-                    'regulation_permit_number' => $request->permit_number,
-                    'purchase_date' => $request->date,
-                ]);
+                if(!empty($update_wholesale_regulation)) {
+                    $update_wholesale_regulation->update([
+                        'wholesale_application_id' => $wholesale_application_id,
+                        'seller_name' => $request->seller_name,
+                        'seller_address' => $request->seller_address,
+                        'purchaser_signature' => $request->signature,
+                        'certificate_eligibility_1' => $request->under_signed_checkbox,
+                        'certificate_eligibility_2' => $request->under_property_checkbox,
+                        'equipment_type' => $request->type_of_farm,
+                        'purchaser_company_name' => $request->company_name_seller,
+                        'title' => $request->title,
+                        'purchaser_address' => $request->address,
+                        'purchaser_phone' => $request->phone_number,
+                        'regulation_permit_number' => $request->permit_number,
+                        'purchase_date' => $request->date,
+                    ]);
+                } else {
+                    WholesaleApplicationRegulationDetail::create([
+                        'wholesale_application_id' => $wholesale_application_id,
+                        'seller_name' => $request->seller_name,
+                        'seller_address' => $request->seller_address,
+                        'purchaser_signature' => $request->signature,
+                        'certificate_eligibility_1' => $request->under_signed_checkbox,
+                        'certificate_eligibility_2' => $request->under_property_checkbox,
+                        'equipment_type' => $request->type_of_farm,
+                        'purchaser_company_name' => $request->company_name_seller,
+                        'title' => $request->title,
+                        'purchaser_address' => $request->address,
+                        'purchaser_phone' => $request->phone_number,
+                        'regulation_permit_number' => $request->permit_number,
+                        'purchase_date' => $request->date,
+                    ]);
+                }
+                
 
                 // step 3 update
 
                 $update_wholesale_authorization = WholesaleApplicationAuthorizationDetail::where('wholesale_application_id' , $wholesale_application_id)->first();
-                $update_wholesale_authorization->update([
-                    'wholesale_application_id' => $wholesale_application_id,
-                    'authorize_name' => $request->authorization_name,
-                    'financial_institute_name' => $request->financial_institution_name,
-                    'financial_institute_address' => $request->financial_institution_address,
-                    'financial_institute_signature' => $request->financial_institution_signature,
-                    'set_amount' => $request->set_amount,
-                    'maximum_amount' => $request->maximum_amount,
-                    'financial_institute_routine_number' => $request->institute_routine_number,
-                    'financial_institute_account_number' => $request->saving_account_number,
-                    'financial_institute_permit_number' => $request->autorization_permit_number,
-                    'financial_institute_phone_number' => $request->autorization_phone_number,
-                ]);
+                if (!empty($update_wholesale_authorization)) {
+                    $update_wholesale_authorization->update([
+                        'wholesale_application_id' => $wholesale_application_id,
+                        'authorize_name' => $request->authorization_name,
+                        'financial_institute_name' => $request->financial_institution_name,
+                        'financial_institute_address' => $request->financial_institution_address,
+                        'financial_institute_signature' => $request->financial_institution_signature,
+                        'set_amount' => $request->set_amount,
+                        'maximum_amount' => $request->maximum_amount,
+                        'financial_institute_routine_number' => $request->institute_routine_number,
+                        'financial_institute_account_number' => $request->saving_account_number,
+                        'financial_institute_permit_number' => $request->autorization_permit_number,
+                        'financial_institute_phone_number' => $request->autorization_phone_number,
+                    ]);
+                } else {
+                    WholesaleApplicationAuthorizationDetail::create([
+                        'wholesale_application_id' => $wholesale_application_id,
+                        'authorize_name' => $request->authorization_name,
+                        'financial_institute_name' => $request->financial_institution_name,
+                        'financial_institute_address' => $request->financial_institution_address,
+                        'financial_institute_signature' => $request->financial_institution_signature,
+                        'set_amount' => $request->set_amount,
+                        'maximum_amount' => $request->maximum_amount,
+                        'financial_institute_routine_number' => $request->institute_routine_number,
+                        'financial_institute_account_number' => $request->saving_account_number,
+                        'financial_institute_permit_number' => $request->autorization_permit_number,
+                        'financial_institute_phone_number' => $request->autorization_phone_number,
+                    ]);
+                }
 
                 // step 4 update
 
                 $update_wholesale_appication_card = WholesaleApplicationCard::where('wholesale_application_id' , $wholesale_application_id)->first();
-                $update_wholesale_appication_card->update([
-                    'wholesale_application_id' => $wholesale_application_id,
-                    'card_type' => $request->card_type,
-                    'cardholder_name' => $request->cardholder_name,
-                    'card_number' => $request->card_number,
-                    'cardholder_zip_code' => $request->card_holder_zip_code,
-                    'authorize_card_name' => $request->undertaking_name,
-                    'authorize_card_text' => $request->authorize_text,
-                    'expiration_date' => $request->expiration_date,
-                    'customer_signature' => $request->customer_signature,
-                    'date' => $request->date_wholesale,
-                ]);
+                if(!empty($update_wholesale_appication_card)) {
+                    $update_wholesale_appication_card->update([ 
+                        'wholesale_application_id' => $wholesale_application_id,
+                        'card_type' => $request->card_type,
+                        'cardholder_name' => $request->cardholder_name,
+                        'card_number' => $request->card_number,
+                        'cardholder_zip_code' => $request->card_holder_zip_code,
+                        'authorize_card_name' => $request->undertaking_name,
+                        'authorize_card_text' => $request->authorize_text,
+                        'expiration_date' => $request->expiration_date,
+                        'customer_signature' => $request->customer_signature,
+                        'date' => $request->date_wholesale,
+                    ]);
+                } else {
+                    WholesaleApplicationCard::create([
+                        'wholesale_application_id' => $wholesale_application_id,
+                        'card_type' => $request->card_type,
+                        'cardholder_name' => $request->cardholder_name,
+                        'card_number' => $request->card_number,
+                        'cardholder_zip_code' => $request->card_holder_zip_code,
+                        'authorize_card_name' => $request->undertaking_name,
+                        'authorize_card_text' => $request->authorize_text,
+                        'expiration_date' => $request->expiration_date,
+                        'customer_signature' => $request->customer_signature,
+                        'date' => $request->date_wholesale,
+                    ]);
+                }
+                
 
                 DB::commit();
                 return response()->json([
@@ -2059,6 +2151,7 @@ class UserController extends Controller
                 
                 $wholesale_appication = WholesaleApplicationInformation::create([
                     'company' => $request->company_name,
+                    'slug' => Str::random(20),
                     'first_name' => $request->first_name,
                     'last_name' => $request->last_name,
                     'phone' => $request->phone,
@@ -2184,9 +2277,241 @@ class UserController extends Controller
 
     }
 
-    // edit wholesale account
-    public function edit_wholesale_account($id) {
+
+
+
+    public function update_wholesale_account (Request $request) {
+        $email = $request->email_address_previous;
+        $id = null;
+        if (!empty($request->wholesale_application_id)) {
+
+            $id = $request->wholesale_application_id;
+        }
+
+        if (!empty($email)) {
+            $wholesale_application = WholesaleApplicationInformation::where('email' , $email)->first();
+            if (!empty($wholesale_application)) {
+                $id = $wholesale_application->id;
+            }
+        }
         $wholesale_application = WholesaleApplicationInformation::where('id' , $id)->first();
-        return view('edit_wholesale_account', compact('wholesale_application'));
+        $wholesale_application_address_billing = WholesaleApplicationAddress::where('wholesale_application_id' , $id)->where('type' , 'Billing Address')->first();
+        $wholesale_application_address_delivery = WholesaleApplicationAddress::where('wholesale_application_id' , $id)->where('type' , 'Delievery Address')->first();
+        $wholesale_regulation = WholesaleApplicationRegulationDetail::where('wholesale_application_id' , $id)->first();
+        $wholesale_authorization = WholesaleApplicationAuthorizationDetail::where('wholesale_application_id' , $id)->first();
+        $wholesale_application_card = WholesaleApplicationCard::where('wholesale_application_id' , $id)->first();
+        return view('create_wholesale_account' , compact('id','wholesale_application' , 'wholesale_application_address_billing' , 'wholesale_application_address_delivery' , 'wholesale_regulation' , 'wholesale_authorization' , 'wholesale_application_card'));
+    }
+
+    
+
+   
+
+    // save for now 
+
+    public function save_for_now(Request $request) {
+        $permit_image_name = null;
+        if($request->hasFile('permit_image')) {
+            $image = $request->file('permit_image');
+            $permit_image_name = time() . '.' . $image->getClientOriginalExtension();
+            $destinationPath = public_path('wholesale/images');
+            File::makeDirectory($destinationPath, $mode = 0777, true, true);
+            $image->move($destinationPath, $permit_image_name);
+        }
+        DB::beginTransaction();
+        try {
+            $email = $request->email;
+            $check_email = WholesaleApplicationInformation::where('email' , $email)->first();
+            if (!empty($check_email)) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Email Already Exist !',
+                    'id' => $check_email->id
+                ],200);
+            } else {
+                $wholesale_appication = WholesaleApplicationInformation::create([
+                    'company' => $request->company_name,
+                    'slug' => Str::random(20),
+                    'first_name' => $request->first_name,
+                    'last_name' => $request->last_name,
+                    'phone' => $request->phone,
+                    'email' => $request->email,
+                    'mobile' => $request->mobile,
+                    'parent_company' => $request->parent_company,
+                    'payable_name' => $request->account_payable_name,
+                    'payable_email' => $request->account_payable_email,
+                    'payable_phone' => $request->account_payable_phone,
+                    'permit_image' => $permit_image_name,
+                ]);
+                $wholesale_appication->save();
+    
+                $wholesale_appication_address_billing = WholesaleApplicationAddress::create([
+                    'wholesale_application_id' => $wholesale_appication->id,
+                    'type' => 'Billing Address',
+                    'first_name' => $request->first_name_billing,
+                    'last_name' => $request->last_name_billing,
+                    'company_name' => $request->company_name_billing,
+                    'street_address' => $request->street_address_billing,
+                    'address2' => $request->address2_billing,
+                    'city' => $request->city_billing,
+                    'state' => $request->state_billing,
+                    'postal_code' => $request->postal_code_billing,
+                    'phone' => $request->phone_billing,
+                ]);
+    
+                $wholesale_appication_address_billing->save();
+    
+                $wholesale_appication_address_delivery = WholesaleApplicationAddress::create([
+                    'wholesale_application_id' => $wholesale_appication->id,
+                    'type' => 'Delievery Address',
+                    'first_name' => $request->first_name_delivery,
+                    'last_name' => $request->last_name_delivery,
+                    'company_name' => $request->company_name_delivery,
+                    'street_address' => $request->street_address_delivery,
+                    'address2' => $request->address2_delivery,
+                    'city' => $request->city_delivery,
+                    'state' => $request->state_delivery,
+                    'postal_code' => $request->postal_code_delivery,
+                    'phone' => $request->phone_delivery,
+                ]);
+    
+                $wholesale_appication_address_delivery->save();
+
+                // step 2 save 
+                $wholesale_regulation = WholesaleApplicationRegulationDetail::create([
+                    'wholesale_application_id' => $wholesale_appication->id,
+                    'seller_name' => $request->seller_name,
+                    'seller_address' => $request->seller_address,
+                    'purchaser_signature' => $request->signature,
+                    'certificate_eligibility_1' => $request->under_signed_checkbox,
+                    'certificate_eligibility_2' => $request->under_property_checkbox,
+                    'equipment_type' => $request->type_of_farm,
+                    'purchaser_company_name' => $request->company_name_seller,
+                    'title' => $request->title,
+                    'purchaser_address' => $request->address,
+                    'purchaser_phone' => $request->phone_number,
+                    'regulation_permit_number' => $request->permit_number,
+                    'purchase_date' => $request->date,
+                ]);
+
+                $wholesale_regulation->save();
+                
+                
+                //save step 3 
+                $wholesale_authorization = WholesaleApplicationAuthorizationDetail::create([
+                    'wholesale_application_id' => $wholesale_appication->id,
+                    'authorize_name' => $request->authorization_name,
+                    'financial_institute_name' => $request->financial_institution_name,
+                    'financial_institute_address' => $request->financial_institution_address,
+                    'financial_institute_signature' => $request->financial_institution_signature,
+                    'set_amount' => $request->set_amount,
+                    'maximum_amount' => $request->maximum_amount,
+                    'financial_institute_routine_number' => $request->institute_routine_number,
+                    'financial_institute_account_number' => $request->saving_account_number,
+                    'financial_institute_permit_number' => $request->autorization_permit_number,
+                    'financial_institute_phone_number' => $request->autorization_phone_number,
+                ]);
+
+                $wholesale_authorization->save();
+                DB::commit();
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Data saved for now !'
+                ],200);
+            }
+            
+        } catch (\Exception $e) {
+            
+            DB::rollback();
+
+            return response()->json([
+                'status' => false,
+                'message' => 'Something Went Wrong !',
+                'error' => $e->getMessage()
+            ],500);
+        }
+    }
+
+    public function save_email_for_now(Request $request) {
+        $email = $request->email;
+        $check_email = WholesaleApplicationInformation::where('email' , $email)->first();
+        if (!empty($check_email)) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Email Already Exist !',
+                'id' => $check_email->id
+            ],200);
+        } else {
+            $wholesale_appication = WholesaleApplicationInformation::create([
+                'email' => $request->email,
+                'slug' => Str::random(20),
+            ]);
+            return response()->json([
+                'status' => true,
+                'message' => 'Data saved for now !'
+            ],200);
+        }
+        
+    }
+
+    public function validate_email(Request $request) {
+        $email = $request->email;
+        $check_email = WholesaleApplicationInformation::where('email' , $email)->first();
+        if (!empty($check_email)) {
+            return response()->json([
+                'status' => true,
+                'message' => 'Email Already Exist !',
+                'id' => $check_email->id
+            ],200);
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'Email Not Exist !'
+            ],200);
+        }
+    }
+
+    public function show_previous_data_by_email(Request $request) {
+        $email = $request->email;
+        $wholesale_application = WholesaleApplicationInformation::where('email' , $email)->first();
+        if (!empty($wholesale_application)) {
+            $wholesale_application_address_billing = WholesaleApplicationAddress::where('wholesale_application_id' , $wholesale_application->id)->where('type' , 'Billing Address')->first();
+            $wholesale_application_address_delivery = WholesaleApplicationAddress::where('wholesale_application_id' , $wholesale_application->id)->where('type' , 'Delievery Address')->first();
+            $wholesale_regulation = WholesaleApplicationRegulationDetail::where('wholesale_application_id' , $wholesale_application->id)->first();
+            $wholesale_authorization = WholesaleApplicationAuthorizationDetail::where('wholesale_application_id' , $wholesale_application->id)->first();
+            $wholesale_application_card = WholesaleApplicationCard::where('wholesale_application_id' , $wholesale_application->id)->first();
+            return response()->json([
+                'status' => true,
+                'message' => 'Email Already Exist !',
+                'wholesale_application' => $wholesale_application,
+                'wholesale_application_address_billing' => $wholesale_application_address_billing,
+                'wholesale_application_address_delivery' => $wholesale_application_address_delivery,
+                'wholesale_regulation' => $wholesale_regulation,
+                'wholesale_authorization' => $wholesale_authorization,
+                'wholesale_application_card' => $wholesale_application_card,
+            ],200);
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'Email Not Exist !'
+            ],200);
+        }
+    
+    }
+
+    public function wholesale_user_check_email(Request $request) {
+        $wholesale_application = WholesaleApplicationInformation::where('email' , $request->email_address_previous)->first();
+        if (!empty($wholesale_application)) {
+            $id = $wholesale_application->id;
+            $wholesale_application_address_billing = WholesaleApplicationAddress::where('wholesale_application_id' , $id)->where('type' , 'Billing Address')->first();
+            $wholesale_application_address_delivery = WholesaleApplicationAddress::where('wholesale_application_id' , $id)->where('type' , 'Delievery Address')->first();
+            $wholesale_regulation = WholesaleApplicationRegulationDetail::where('wholesale_application_id' , $id)->first();
+            $wholesale_authorization = WholesaleApplicationAuthorizationDetail::where('wholesale_application_id' , $id)->first();
+            $wholesale_application_card = WholesaleApplicationCard::where('wholesale_application_id' , $id)->first();
+            return redirect()->route('edit_wholesale_account' , $id);
+        } else {
+            return redirect()->back()->with('error' , 'Email Not Exist !');
+        }
+        
     }
 }

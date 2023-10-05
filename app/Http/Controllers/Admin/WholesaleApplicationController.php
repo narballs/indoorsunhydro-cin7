@@ -9,6 +9,7 @@ use App\Models\WholesaleApplicationAddress;
 use App\Models\WholesaleApplicationAuthorizationDetail;
 use App\Models\WholesaleApplicationRegulationDetail;
 use App\Models\WholesaleApplicationCard;
+use Illuminate\Support\Facades\DB;
 
 class WholesaleApplicationController extends Controller
 {
@@ -19,7 +20,26 @@ class WholesaleApplicationController extends Controller
      */
     public function index()
     {
-        $wholesale_applications = WholesaleApplicationInformation::orderBy('id' , 'Desc')->paginate(10);
+        
+        $wholesale_applications = WholesaleApplicationInformation::
+        whereHas('wholesale_application_address', function ($query) {
+            $query->select(DB::raw(1))->from('wholesale_application_addresses')
+            ->whereRaw('wholesale_application_addresses.wholesale_application_id = wholesale_application_information.id');
+        })
+        ->whereHas('wholesale_application_regulation_detail', function ($query) {
+            $query->select(DB::raw(1))->from('wholesale_application_regulation_details')
+            ->whereRaw('wholesale_application_regulation_details.wholesale_application_id = wholesale_application_information.id');
+        })
+        ->whereHas('wholesale_application_authorization_detail', function ($query) {
+            $query->select(DB::raw(1))->from('wholesale_application_authorization_details')
+            ->whereRaw('wholesale_application_authorization_details	.wholesale_application_id = wholesale_application_information.id');
+        })
+        ->whereHas('wholesale_application_card', function ($query) {
+            $query->select(DB::raw(1))->from('wholesale_application_cards')
+            ->whereRaw('wholesale_application_cards.wholesale_application_id = wholesale_application_information.id');
+        })
+        ->orderBy('created_at' , 'Desc')
+        ->paginate(10);
         return view('admin.wholesale_applications.index', compact('wholesale_applications'));
     }
 
