@@ -897,6 +897,7 @@
             font-weight: 600;
             line-height: 20.283px; /* 126.766% */
             letter-spacing: 0.08px;
+            cursor: pointer;
         }
         .files-div {
             border: 1px dashed #E1E1E1;
