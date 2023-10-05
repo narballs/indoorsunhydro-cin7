@@ -29,9 +29,33 @@
                         </div>
                         <!-- Content Area -->
                         <div class="col-md-9 bg-light p-4">
+                            @if (\Session::has('success'))
+                                <div class="alert alert-success alert-dismissible fade show mt-2" role="alert">
+                                    {!! \Session::get('success') !!}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                @elseif (\Session::has('error'))
+                                <div class="alert alert-danger alert-dismissible fade show mt-2" role="alert">
+                                    {!! \Session::get('error') !!}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            @endif
                             <div class="row justify-content-center">
                                 <div class="col-md-10 p-4">
                                     <form action="{{route('store_wholesale_account')}}" id="wholesaleForm" method="post" enctype="multipart/form-data">
+                                        <div class="success_message d-none">
+                                            
+                                        </div>
+                                        <div class="alert alert-info alert-dismissible fade show mt-2 success_message d-none" role="alert">
+                                            <p id="successMessage" class="mb-0"></p>
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
                                         <input type="hidden" name="wholesale_application_id" id="whs_id" value="{{isset($id) ? $id : ''}}">
                                         <div class="" id="">
                                             <ul class="" id="wholesale_form_error"></ul>
@@ -50,9 +74,18 @@
                                                             {{-- first row --}}
                                                             <div class="row mb-2">
                                                                 <div class="sub-head-step-form mb-2">
-                                                                    <h6 class="step_1_sub_heading">
-                                                                        Company Information
-                                                                    </h6>
+                                                                    <div class="row">
+                                                                        <div class="col-md-6">
+                                                                            <h6 class="step_1_sub_heading">
+                                                                                Company Information
+                                                                            </h6>
+                                                                        </div>
+                                                                        @if(empty($id))
+                                                                        <div class="col-md-6 text-right">
+                                                                            <button class="step_next btn" data-toggle="" data-target="" type="button" id="show_previous_data_button"> Show Previous Data </button>
+                                                                        </div>
+                                                                        @endif
+                                                                    </div>
                                                                 </div>
                                                                 <div class="col-md-12">
                                                                     <div class="form-group">
@@ -97,7 +130,7 @@
                                                                 <div class="col-md-12">
                                                                     <div class="form-group">
                                                                         <label class="wholesale_form_labels" for="email">Email</label>
-                                                                        <input type="email" class="form-control wholesale_inputs" id="email" value="{{!empty($id) ?  $wholesale_application->email : ''}}" name="email" onchange="remove_error(this)" placeholder="Enter your Email">
+                                                                        <input type="email" class="form-control wholesale_inputs" id="email" value="{{!empty($id) ?  $wholesale_application->email : ''}}" name="email" onchange="remove_error(this)" onkeydown="validate_email()" placeholder="Enter your Email">
                                                                         <div class="text-danger wholesale_inputs" id="email_errors"></div>
                                                                     </div>
                                                                 </div>
@@ -311,9 +344,9 @@
                                                                                                 <div class="text-danger wholesale_inputs text-center" id="file_upload_errors"></div>
                                                                                             </h6>
                                                                                         </div>
+                                                                                        <input type="hidden" name="" id="edit_image_input" value="{{!empty($id) ? $wholesale_application->permit_image : ''}}">
                                                                                         @if(!empty($id))
-                                                                                            <input type="hidden" name="" id="edit_image_input" value="{{!empty($id) ? $wholesale_application->permit_image : ''}}">
-                                                                                            <a href="{{asset('wholesale/images/' . $wholesale_application->permit_image)}}" class="btn-sm btn btn-primary edit_view_image w-50">View Image</a>
+                                                                                            <a href="{{asset('wholesale/images/' . $wholesale_application->permit_image)}}" id="permit_img_src" class="btn-sm btn btn-primary edit_view_image w-50">View Image</a>
                                                                                         @endif
                                                                                     </div>
                                                                                 </div>
@@ -323,6 +356,9 @@
                                                                 </div>
                                                             </div>
                                                             <div class="text-right">
+                                                                @if(empty($id))
+                                                                    <button id="save_for_now" type="button"  class="step_next btn" data-toggle="" data-target="">Save for now</button>
+                                                                @endif
                                                                 <button type="button" id="step1_next" onclick="check_validation_step1()" class="step_next btn">
                                                                     Next
                                                                 </button>
@@ -673,23 +709,23 @@
                                                                 <div class="form-group">
                                                                     <label class="wholesale_form_labels mb-0" for="card_type">Card Type</label>
                                                                     <div class="row justify-content-between pl-3 pt-2 pr-3">
-                                                                        <div class="col-md-2 d-flex border justify-content-center align-items-center m-0 wholesale-custom-radio  {{!empty($id) && $wholesale_application_card->card_type == 'master_card' ? 'selected'  : ''}}" onclick="selectRadio(this)">
+                                                                        <div id="card_type_master" class="col-md-2 d-flex border justify-content-center align-items-center m-0 wholesale-custom-radio  {{!empty($id) && $wholesale_application_card->card_type == 'master_card' ? 'selected'  : ''}}" onclick="selectRadio(this)">
                                                                             <input type="radio" name="card_type" class="radio_check_wholesale hidden-radio border-0" onchange="remove_error_card_type(this)" value="{{!empty($id) && $wholesale_application_card->card_type == 'master_card' ? 'master_card'  : ''}}"  {{!empty($id) && $wholesale_application_card->card_type == 'master_card' ? 'checked'  : ''}}  id="master_card">
                                                                             <span class="master-radio-label"></span>
                                                                         </div>
-                                                                        <div class="col-md-2 d-flex border justify-content-center align-items-center m-0 wholesale-custom-radio {{!empty($id) && $wholesale_application_card->card_type == 'visa_card' ? 'selected'  : ''}}" onclick="selectRadio(this)">
+                                                                        <div id="card_type_visa" class="col-md-2 d-flex border justify-content-center align-items-center m-0 wholesale-custom-radio {{!empty($id) && $wholesale_application_card->card_type == 'visa_card' ? 'selected'  : ''}}" onclick="selectRadio(this)">
                                                                             <input type="radio" name="card_type" class="radio_check_wholesale hidden-radio border-0" onchange="remove_error_card_type(this)" value="{{!empty($id) && $wholesale_application_card->card_type == 'visa_card' ? 'visa_card'  : ''}}"  {{!empty($id) && $wholesale_application_card->card_type == 'visa_card' ? 'checked'  : ''}} id="visa_card">
                                                                             <span class="visa-radio-label"></span>
                                                                         </div>
-                                                                        <div class="col-md-2 d-flex border justify-content-center align-items-center m-0 wholesale-custom-radio {{!empty($id) && $wholesale_application_card->card_type == 'discover_card' ? 'selected'  : ''}}" onclick="selectRadio(this)">
+                                                                        <div id="card_type_discover" class="col-md-2 d-flex border justify-content-center align-items-center m-0 wholesale-custom-radio {{!empty($id) && $wholesale_application_card->card_type == 'discover_card' ? 'selected'  : ''}}" onclick="selectRadio(this)">
                                                                             <input type="radio" name="card_type" class="radio_check_wholesale hidden-radio border-0" onchange="remove_error_card_type(this)" value="{{!empty($id) && $wholesale_application_card->card_type == 'discover_card' ? 'discover_card'  : ''}}"  {{!empty($id) && $wholesale_application_card->card_type == 'discover_card' ? 'checked'  : ''}} id="discover_card">
                                                                             <span class="discover-radio-label"></span>
                                                                         </div>
-                                                                        <div class="col-md-2 d-flex border justify-content-center align-items-center m-0 wholesale-custom-radio {{!empty($id) && $wholesale_application_card->card_type == 'american_express_card' ? 'selected'  : ''}}" onclick="selectRadio(this)">
+                                                                        <div id="card_type_american" class="col-md-2 d-flex border justify-content-center align-items-center m-0 wholesale-custom-radio {{!empty($id) && $wholesale_application_card->card_type == 'american_express_card' ? 'selected'  : ''}}" onclick="selectRadio(this)">
                                                                             <input type="radio" name="card_type" class="radio_check_wholesale hidden-radio border-0" onchange="remove_error_card_type(this)" value="{{!empty($id) && $wholesale_application_card->card_type == 'american_express_card' ? 'american_express_card'  : ''}}"  {{!empty($id) && $wholesale_application_card->card_type == 'american_express_card' ? 'checked'  : ''}} id="american_express_card">
                                                                             <span class="american-radio-label"></span>
                                                                         </div>
-                                                                        <div class="col-md-2 d-flex border justify-content-center align-items-center m-0 wholesale-custom-radio {{!empty($id) && $wholesale_application_card->card_type == 'other_card' ? 'selected'  : ''}}"  onclick="selectRadio(this)">
+                                                                        <div id="card_type_other" class="col-md-2 d-flex border justify-content-center align-items-center m-0 wholesale-custom-radio {{!empty($id) && $wholesale_application_card->card_type == 'other_card' ? 'selected'  : ''}}"  onclick="selectRadio(this)">
                                                                             <input type="radio" name="card_type" class="radio_check_wholesale hidden-radio border-0" onchange="remove_error_card_type(this)" value="{{!empty($id) && $wholesale_application_card->card_type == 'other_card' ? 'other_card'  : ''}}"  {{!empty($id) && $wholesale_application_card->card_type == 'other_card' ? 'checked'  : ''}} id="other_card">
                                                                             <span class="other-radio-label">OTHER</span>
                                                                         </div>
@@ -792,6 +828,59 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="save_for_now_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Please Enter Your Email Address</h5>
+                    <button type="button" class="close close_modal" data-dismiss="modal" aria-label="Close" onclick="close_modal()">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <form action="" method="post">
+                        @csrf
+                        <div class="form-group">
+                            <label for="email_address">Email Address</label>
+                            <input type="email" name="email_address" id="email_address" class="form-control" placeholder="Enter your email address" required="required" onchange="remove_error(this)">
+                            <div class="text-danger wholesale_inputs" id="email_address_errors"></div>
+                        </div>
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary close_modal" data-dismiss="modal" onclick="close_modal()">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="save_email_for_now()">Save changes</button>
+                  </div>
+                </div>
+              </div>
+        </div>
+        <div class="modal fade" id="previous_data_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Please Enter Your Email Address</h5>
+                    <button type="button" class="close close_previous_data_modal" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <form action="{{route('wholesale_user_check_email')}}" method="post">
+                  <div class="modal-body">
+                        @csrf
+                        <div class="form-group">
+                            <label for="email_address">Email Address</label>
+                            <input type="email" name="email_address_previous" id="email_address_previous" class="form-control" placeholder="Enter your email address" required="required" onchange="remove_error(this)">
+                            <div class="text-danger wholesale_inputs" id="email_address_previous_errors"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary close_previous_data_modal" data-dismiss="modal" >Close</button>
+                        {{-- <button type="button" class="btn btn-primary" id="show_previous_data_by_email" >Save changes</button> --}}
+                        <button type="submit" class="btn btn-primary" id="" >Save changes</button>
+                    </div>
+                </form>
                 </div>
             </div>
         </div>
@@ -1402,6 +1491,158 @@
     </script>
 
     <script>
+        // save for now functionality
+        $(document).ready(function() {
+
+            function save_progress() {
+                $('#wholesale_spinner').removeClass('d-none');
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                var data = new FormData();
+                var files = $('input[name="permit_image"]')[0].files[0];
+                data.append('permit_image',files);
+                data.append('company_name', $('#company_name').val());
+                data.append('first_name', $('#first_name').val());
+                data.append('last_name', $('#last_name').val());
+                data.append('phone', $('#phone').val());
+                data.append('mobile', $('#mobile').val());
+                data.append('email',$('#email').val());
+                data.append('parent_company', $('#parent_company').val());
+                data.append('account_payable_name', $('#account_payable_name').val());
+                data.append('account_payable_phone', $('#account_payable_phone').val());
+                data.append('account_payable_email', $('#account_payable_email').val());
+                data.append('first_name_billing', $('#first_name_billing').val());
+                data.append('last_name_billing', $('#last_name_billing').val());
+                data.append('company_name_billing', $('#company_name_billing').val());
+                data.append('street_address_billing', $('#street_address_billing').val());
+                data.append('address2_billing', $('#address_2_billing').val());
+                data.append('city_billing', $('#city_billing').val());
+                data.append('state_billing', $('#state_billing').val());
+                data.append('postal_code_billing', $('#postal_code_billing').val());
+                data.append('phone_billing', $('#phone_billing').val());
+                data.append('first_name_delivery', $('#first_name_delivery').val());
+                data.append('last_name_delivery', $('#last_name_delivery').val());
+                data.append('company_name_delivery', $('#company_name_delivery').val());
+                data.append('street_address_delivery', $('#street_address_delivery').val());
+                data.append('address2_delivery', $('#address_2_delivery').val());
+                data.append('city_delivery', $('#city_delivery').val());
+                data.append('state_delivery', $('#state_delivery').val());
+                data.append('postal_code_delivery', $('#postal_code_delivery').val());
+                data.append('phone_delivery', $('#phone_delivery').val());
+            
+                $.ajax({
+                    type:'POST',
+                    url:"{{ route('save_for_now') }}",
+                    data:data,
+                    contentType: false,
+                    processData: false,
+                    success:function(response){
+                        if (response.status == true) {
+                            $('#wholesale_spinner').addClass('d-none');
+                            $('#save_for_now').attr('data-toggle', '')
+                            $('#save_for_now').attr('data-target', '')
+                            $('.success_message').removeClass('d-none');
+                            setTimeout(() => {
+                                $('#successMessage').html(response.message);
+                            }, 1000);
+                        } else {
+                            window.location.href = "/wholesale/account/edit/" + response.id;
+                        }
+                    },
+                    error: function (response) {
+                    }
+                });
+            }
+            // save email for now 
+            
+            $(document).on('click', '#save_for_now' ,function() {
+                if ($('#email').val() == '') {
+                    $('#save_for_now').attr('data-toggle', 'modal')
+                    $('#save_for_now').attr('data-target', '#save_for_now_modal')
+                    $('#save_for_now_modal').modal('show');
+                } else {
+                    $('#save_for_now').attr('data-toggle', '')
+                    $('#save_for_now').attr('data-target', '')
+                    $('#save_for_now_modal').modal('hide');
+
+                    save_progress();
+                }
+            });
+        });
+
+        function save_email_for_now() {
+            $('#wholesale_spinner').removeClass('d-none');
+            var email = $('#email_address').val();
+            if(email == '') {
+                $('#wholesale_spinner').addClass('d-none');
+                $('#email_address_errors').html('Email is required');
+                return false;
+            }
+            else {
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                $.ajax({
+                    type:'POST',
+                    url:"{{ route('save_email_for_now') }}",
+                    data:{email:email},
+                    success:function(response){
+                        if (response.status == true) {
+                            $('#wholesale_spinner').addClass('d-none');
+                            $('#save_for_now').attr('data-toggle', '');
+                            $('#save_for_now').attr('data-target', '');
+                            $('#save_for_now_modal').modal('hide');
+                            $('.success_message').removeClass('d-none');
+                            setTimeout(() => {
+                                $('#successMessage').html(response.message);
+                            }, 1000);
+                        } else if (response.status == false) {
+                            window.location.href = "/wholesale/account/edit/" + response.id;
+
+                        }
+                    },
+                    error: function (response) {
+                    }
+                });
+            }
+        }
+
+        function validate_email() {
+            var email = $('#email').val();
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            var result = $.ajax({
+                type:'POST',
+                url:"{{ route('validate_email') }}",
+                data:{email:email},
+                success: function(response){
+                    if (response.status == true) {
+                        window.location.href = "/wholesale/account/edit/" + response.id;
+                    } else {
+                        return false;
+                    }
+                }
+            });
+        }
+
+        // close modal
+        function close_modal() {
+            $(document).on('click', '.close_modal' ,function() {
+                $('#save_for_now').attr('data-toggle', '')
+                $('#save_for_now').attr('data-target', '')
+                $('#save_for_now_modal').modal('hide');
+            });
+        }
+        
+
         // remove error message when filled
 
         function remove_error_card_type(element) {
@@ -1429,7 +1670,7 @@
             $(element).addClass('selected');
         }
 
-
+        
         // validation for each  step 1
 
         function validation_message_step_1() {
@@ -1479,8 +1720,10 @@
             if (email == '') {
                 $('#email_errors').html('Email is required');
             }
-
-
+            var result =validate_email();
+            if (result.status == true) {
+                $('#email_errors').html('Email already exist');
+            }
             if (account_payable_name == '') {
                 $('#account_payable_name_errors').html('Account payable name is required');
             }
@@ -1553,7 +1796,7 @@
 
         function check_validation_step1 () {
             
-            var validation = validation_message_step_1();
+            var validation =validation_message_step_1();
             if (validation == true) {
                 $('#step1').removeClass('active');
                 $('#step1').removeClass('show');
@@ -1911,7 +2154,7 @@
                         console.log(response);
                         if (response.status == true) {
                             $('#wholesale_spinner').addClass('d-none');
-                            window.location.href = '/wholesale/account/edit/' + response.wholesale_appication_id;
+                            window.location.href = '/wholesale/account/thankyou/' + response.wholesale_appication_id;
                         } else {
                             $('#wholesale_spinner').addClass('d-none');
                             $('#wholesale_form_error').html(response.message);
@@ -1930,8 +2173,138 @@
             }
         }
 
-        
-            
-    </script>
+
+        // show preview data
+        $(document).ready(function() {
+            $(document).on('click', '.close_previous_data_modal' ,function() {
+                $('.close_previous_data_modal').attr('data-toggle', '')
+                $('.close_previous_data_modal').attr('data-target', '')
+                $('#previous_data_modal').modal('hide');
+            });
+
+            $(document).on('click', '#show_previous_data_button' ,function() {
+                $('#show_previous_data_button').attr('data-toggle', 'modal')
+                $('#show_previous_data_button').attr('data-target', '#previous_data_modal')
+                $('#previous_data_modal').modal('show');
+            });
+
+            // $(document).on('click' , '#show_previous_data_by_email' , function() {
+            //     var email = $('#email_address_previous').val();
+            //     if (email == '') {
+            //         $('#email_address_previous_errors').html('Email is required');
+            //     } 
+            //     else {
+            //         $('#wholesale_spinner').removeClass('d-none');
+            //         $.ajaxSetup({
+            //             headers: {
+            //                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            //             }
+            //         });
+            //         $.ajax({
+            //             type:'POST',
+            //             url:"{{ route('show_previous_data_by_email') }}",
+            //             data:{email:email},
+            //             success:function(response){
+            //                 console.log(response.wholesale_regulation);
+            //                 if (response.status == true) {
+            //                     $('#wholesale_spinner').addClass('d-none');
+            //                     $('#previous_data_modal').modal('hide');
+            //                     $('#show_previous_data_button').attr('data-toggle', '')
+            //                     $('#show_previous_data_button').attr('data-target', '')
+            //                     $('#show_previous_data_button').attr('data-target', '')
+
+            //                     $('#company_name').val(response.wholesale_application.company);
+            //                     $('#first_name').val(response.wholesale_application.first_name);
+            //                     $('#last_name').val(response.wholesale_application.last_name);
+            //                     $('#phone').val(response.wholesale_application.phone);
+            //                     $('#mobile').val(response.wholesale_application.mobile);
+            //                     $('#email').val(response.wholesale_application.email);
+            //                     $('#parent_company').val(response.wholesale_application.parent_company);
+            //                     $('#account_payable_name').val(response.wholesale_application.payable_name);
+            //                     $('#account_payable_phone').val(response.wholesale_application.payable_phone);
+            //                     $('#account_payable_email').val(response.wholesale_application.payable_email);
+            //                     $('#first_name_billing').val(response.wholesale_application_address_billing.first_name);
+            //                     $('#last_name_billing').val(response.wholesale_application_address_billing.last_name);
+            //                     $('#company_name_billing').val(response.wholesale_application_address_billing.company_name);
+            //                     $('#street_address_billing').val(response.wholesale_application_address_billing.street_address);
+            //                     $('#address_2_billing').val(response.wholesale_application_address_billing.address2);
+            //                     $('#city_billing').val(response.wholesale_application_address_billing.city);
+            //                     $('#state_billing').val(response.wholesale_application_address_billing.state);
+            //                     $('#postal_code_billing').val(response.wholesale_application_address_billing.postal_code);
+            //                     $('#phone_billing').val(response.wholesale_application_address_billing.phone);
+            //                     $('#first_name_delivery').val(response.wholesale_application_address_delivery.first_name);
+            //                     $('#last_name_delivery').val(response.wholesale_application_address_delivery.last_name);
+            //                     $('#company_name_delivery').val(response.wholesale_application_address_delivery.company_name);
+            //                     $('#street_address_delivery').val(response.wholesale_application_address_delivery.street_address);
+            //                     $('#address_2_delivery').val(response.wholesale_application_address_delivery.address2);
+            //                     $('#city_delivery').val(response.wholesale_application_address_delivery.city);
+            //                     $('#state_delivery').val(response.wholesale_application_address_delivery.state);
+            //                     $('#postal_code_delivery').val(response.wholesale_application_address_delivery.postal_code);
+            //                     $('#phone_delivery').val(response.wholesale_application_address_delivery.phone);
+            //                     $('#permit_img_src').attr('src', '/wholesale/images/'+response.wholesale_application.permit_image);
+            //                     // $('#file_upload').val(response.wholesale_application.permit_image);
+            //                     $('#edit_image_input').val(response.wholesale_application.permit_image);
+            //                     $('#seller_name').val(response.wholesale_regulation.seller_name);
+            //                     $('#seller_address').val(response.wholesale_regulation.seller_address);
+            //                     $('#under_signed_checkbox').val(response.wholesale_regulation.certificate_eligibility_1);
+            //                     $('#under_signed_checkbox').attr('checked', 'checked');
+            //                     $('#under_property_checkbox').val(response.wholesale_regulation.certificate_eligibility_2);
+            //                     $('#under_property_checkbox').attr('checked', 'checked');
+            //                     $('#company_name_seller').val(response.wholesale_regulation.purchaser_company_name);
+            //                     $('#signature').val(response.wholesale_regulation.purchaser_signature);
+            //                     $('#title').val(response.wholesale_regulation.title);
+            //                     $('#address').val(response.wholesale_regulation.purchaser_address);
+            //                     $('#permit_number').val(response.wholesale_regulation.regulation_permit_number);
+            //                     $('#phone_number').val(response.wholesale_regulation.purchaser_phone);
+            //                     $('#date').val(response.wholesale_regulation.purchase_date);
+            //                     $('#type_of_farm').val(response.wholesale_authorization.equipment_type);
+            //                     $('#authorization_name').val(response.wholesale_authorization.authorize_name);
+            //                     $('#financial_institution_name').val(response.wholesale_authorization.financial_institute_name);
+            //                     $('#financial_institution_address').val(response.wholesale_authorization.financial_institute_address);
+            //                     $('#financial_institution_signature').val(response.wholesale_authorization.financial_institute_signature);
+            //                     $('#set_amount').val(response.wholesale_authorization.set_amount);
+            //                     $('#maximum_amount').val(response.wholesale_authorization.maximum_amount);
+            //                     $('#institute_routine_number').val(response.wholesale_authorization.financial_institute_routine_number);
+            //                     $('#saving_account_number').val(response.wholesale_authorization.financial_institute_account_number);
+            //                     $('#autorization_permit_number').val(response.wholesale_authorization.financial_institute_permit_number);
+            //                     $('#autorization_phone_number').val(response.wholesale_authorization.financial_institute_phone_number);
+            //                     $('#cardholder_name').val(response.wholesale_application_card.cardholder_name);
+            //                     $('#card_number').val(response.wholesale_application_card.card_number);
+            //                     $('#expiration_date').val(response.wholesale_application_card.expiration_date);
+            //                     $('#card_holder_zip_code').val(response.wholesale_application_card.cardholder_zip_code);
+            //                     $('#undertaking_name').val(response.wholesale_application_card.authorize_card_name);
+            //                     $('#authorize_text').val(response.wholesale_application_card.authorize_card_text);
+            //                     $('#customer_signature').val(response.wholesale_application_card.customer_signature);
+            //                     $('#date_wholesale').val(response.wholesale_application_card.date);
+            //                     if (response.wholesale_application_card.card_type == 'master_card') {
+            //                         $('#card_type_master').addClass('selected');
+            //                         $('#master_card').val('master_card');
+            //                     } else if (response.wholesale_application_card.card_type == 'visa_card') {
+            //                         $('#card_type_visa').addClass('selected');
+            //                         $('#visa_card').val('visa_card');
+            //                     } else if (response.wholesale_application_card.card_type == 'discover_card') {
+            //                         $('#card_type_discover').addClass('selected');
+            //                         $('#discover_card').val('discover_card');
+            //                     } else if (response.wholesale_application_card.card_type == 'american_express_card') {
+            //                         $('#card_type_american').addClass('selected');
+            //                         $('#american_express_card').val('american_express_card');
+            //                     } else if (response.wholesale_application_card.card_type == 'other_card') {
+            //                         $('#card_type_other').addClass('selected');
+            //                         $('#other_card').val('other_card');
+            //                     }
+            //                     $('#whs_id').val(response.wholesale.id);
+            //                 } else {
+            //                     $('#wholesale_spinner').addClass('d-none');
+            //                     $('#email_address_errors').html(response.message);
+            //                 }
+            //             },
+            //             error: function (response) {
+            //             }
+            //         });
+            //     }
+            // });
+        });
+
+     </script>
 
 </body>

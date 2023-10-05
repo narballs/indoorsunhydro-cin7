@@ -48,9 +48,18 @@ use App\Models\User;
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
 Route::get('/wholesale/account/create', [UserController::class, 'create_wholesale_account'])->name('create_wholesale_account');
+Route::get('/wholesale/account/thankyou/{id}', [UserController::class, 'wholesaleuser_thankyou'])->name('wholesaleuser_thankyou');
 Route::get('/wholesale/account/edit/{id}', [UserController::class, 'edit_wholesale_account'])->name('edit_wholesale_account');
+Route::post('/wholesale/account/check/email', [UserController::class, 'wholesale_user_check_email'])->name('wholesale_user_check_email');
+
+
+
 Route::post('/wholesale/account/update', [UserController::class, 'update_wholesale_account'])->name('update_wholesale_account');
 Route::post('wholesale/account/store', [UserController::class, 'store_wholesale_account'])->name('store_wholesale_account');
+Route::post('/save-for-now', [UserController::class, 'save_for_now'])->name('save_for_now');
+Route::post('/save-email-for-now', [UserController::class, 'save_email_for_now'])->name('save_email_for_now');
+Route::post('/validate-email', [UserController::class, 'validate_email'])->name('validate_email');
+Route::post('/get-user-by-email', [UserController::class, 'show_previous_data_by_email'])->name('show_previous_data_by_email');
 
 
 

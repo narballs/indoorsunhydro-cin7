@@ -11,6 +11,7 @@ class WholesaleApplicationInformation extends Model
     protected $table = 'wholesale_application_information';
     protected $fillable = [
         'company',
+        'slug',
         'first_name',
         'last_name',
         'email',
