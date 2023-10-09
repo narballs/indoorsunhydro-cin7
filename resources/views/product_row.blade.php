@@ -85,7 +85,7 @@
             <div class="col-md-12 add-to-cart-button-section">
                 @if ($enable_add_to_cart)
                     <button 
-                        class="prd_btn_resp ajaxSubmit button-cards col w-100  mb-1" 
+                        class="hover_effect prd_btn_resp ajaxSubmit button-cards col w-100  mb-1" 
                         type="submit" 
                         style="max-height: 46px;" id="ajaxSubmit_{{ $product->id }}"
                         onclick="updateCart('{{ $product->id }}', '{{ $option->option_id }}')"
@@ -123,6 +123,12 @@
     </div>
 </div>
 <style>
+
+    .hover_effect:hover {
+        background-color: #FFFFFF !important;
+        color: #7BC533 !important;
+        border: 1px solid #7BC533 !important;
+    }
     .product_buys_count {
         font-size: 11px;
     }
