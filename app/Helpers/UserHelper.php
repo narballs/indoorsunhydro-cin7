@@ -96,10 +96,11 @@ class UserHelper
                 'company' => $active_company,
             ]);
             $getSelectedContact = Contact::where('company' , $active_company)->where('user_id' , $user_id)->first();
-            $cartItem = Cart::where('user_id' , $getSelectedContact->user_id)->get();
+            $cartItems = Cart::where('user_id' , $getSelectedContact->user_id)->get();
+            $all_cart_items = [];
             $getPriceColumn = UserHelper::getUserPriceColumn(false , $getSelectedContact->user_id);
-            if (count($cartItem) > 0) {
-                foreach ($cartItem as $cartItem) {
+            if (count($cartItems) > 0) {
+                foreach ($cartItems as $cartItem) {
                     $productPricing = Pricingnew::where('option_id' , $cartItem['option_id'])->first();
                     $productPrice = $productPricing->$getPriceColumn;
                     $cart = Cart::where('user_id' , $user_id)->where('product_id' , $cartItem['product_id'])->first();
@@ -107,20 +108,19 @@ class UserHelper
                         $cart->price = $productPrice;
                         $cart->save();
                     }
-                    Session::forget('cart');
-                    $cart = [
-                        $cartItem['qoute_id'] => [
-                            "product_id" => $cartItem['product_id'],
-                            "name" => $cartItem['name'],
-                            "quantity" => $cartItem['quantity'],
-                            "price" => $cart['price'],
-                            "code" => $cartItem['code'],
-                            "image" => $cartItem['image'],
-                            'option_id' => $cartItem['option_id'],
-                            "slug" => $cartItem['slug'],
-                        ]
+                    
+                    $all_cart_items[$cartItem['qoute_id']] = [
+                        "product_id" => $cartItem['product_id'],
+                        "name" => $cartItem['name'],
+                        "quantity" => $cartItem['quantity'],
+                        "price" => $cart['price'],
+                        "code" => $cartItem['code'],
+                        "image" => $cartItem['image'],
+                        'option_id' => $cartItem['option_id'],
+                        "slug" => $cartItem['slug'],
                     ];
-                    Session::put('cart', $cart);
+                    session()->forget('cart');
+                    Session::put('cart', $all_cart_items);
                 }
             }
             
