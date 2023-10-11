@@ -9,7 +9,8 @@ dist/
 vendor/
 .env
 composer.lock
-
+pages/
+wholesale/
 
 
 # Compiled Java class files
