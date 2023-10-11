@@ -1044,6 +1044,7 @@ class UserController extends Controller
     public function order_detail(Request  $request, $id)
     {
         $order_detail = ApiOrder::where('id', $id)
+            ->with('contact')
             ->with('apiOrderItem.product.options')
             ->with('texClasses')
             ->first();
