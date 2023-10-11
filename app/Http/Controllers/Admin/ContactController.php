@@ -244,8 +244,8 @@ class ContactController extends Controller
         $contact_ids = Contact::whereIn('id', $all_ids)
             ->pluck('contact_id')
             ->toArray();
-
-        $customer_orders = ApiOrder::whereIn('memberId', $contact_ids)
+        // dd($customer->contact_id);
+        $customer_orders = ApiOrder::where('memberId', $customer->contact_id)->orWhere('memberId' , $customer->parent_id)
             ->with('contact')
             ->with('apiOrderItem')
             ->orderBy('id', 'desc')
