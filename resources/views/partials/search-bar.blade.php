@@ -67,7 +67,7 @@
         </div>
     </div>
     <div class="row justify-content-center">
-        <div class="col-xl-5 col-lg-8 col-md-12 col-sm-6 col-xs-6 mt-2 top-header-navigation p-0">
+        <div class="col-xl-8 col-xxl-6 col-lg-10 col-md-12 col-sm-6 col-xs-6 mt-2 top-header-navigation p-0">
             @include('partials.nav')
         </div>
     </div>

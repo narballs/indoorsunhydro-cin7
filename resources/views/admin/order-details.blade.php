@@ -320,9 +320,26 @@
                                             @if (!empty($customer->firstName && $customer->lastName))
                                                 <strong>{{ $customer->firstName }}&nbsp;{{ $customer->lastName }}</strong><br>
                                             @endif
-                                            {{ $customer->postalAddress1 }}<br>
-                                            {{ $customer->postalAddress2 }}
-                                            {{ $customer->postalCity }}, {{ $customer->state }}
+                                            @if(!empty($customer->address1))
+                                                {{$customer->address1}} <br>
+                                            @else
+                                                {{$customer->postalAddress1}} <br>
+                                            @endif
+                                            @if(!empty($customer->address2))
+                                                {{$customer->address2}} 
+                                            @else
+                                                {{$customer->postalAddress2}}
+                                            @endif
+                                            @if(!empty($customer->city))
+                                                {{$customer->city}},
+                                            @else
+                                                {{$customer->postalCity}},
+                                            @endif
+                                            @if(!empty($customer->state))
+                                                {{$customer->state}}
+                                            @else
+                                                {{$customer->postalState}}
+                                            @endif
                                             <p title="Phone" class="m-0">P:({{ $customer->mobile }})</p>
                                         </address>
                                     </div>
