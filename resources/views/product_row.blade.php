@@ -37,9 +37,9 @@
                     {{-- <div class="tooltip-product-text">
                         <span class="">{{$product->name}}</span>
                     </div> --}}
-                    <div class="tooltip-product-text" role="tooltip">
+                    <div class="tooltip-product-text bg-white text-primary">
                         <div class="tooltip-arrow"></div>
-                        <div class="tooltip-inner">
+                        <div class="tooltip-inner bg-white text-primary">
                             <span class="">{{$product->name}}</span>
                         </div>
                     </div>
@@ -157,15 +157,16 @@
       display: inline-block;
     } */
     .tooltip-product-text {
-        visibility: hidden;
+        display: none;
         font-family: 'Poppins';
         font-style: normal;
         font-weight: 500;
         position: absolute;
         top: 47%;
-        color: #FFFFFF;
         text-align: center;
         font-size: 12px;
+        /* box-shadow: 1px 1px 4px 4px rgba(0, 0, 0, 0.25); */
+        box-shadow: 0px 4px 4px rgba(146, 130, 130, 0.25);
     }
 
     .tooltip-arrow {
@@ -173,13 +174,13 @@
         height: 0; 
         border-left: 7px solid transparent;
         border-right: 7px solid transparent;
-        border-top: 7px solid #000000;
+        border-top: 7px solid #fff !important;
         position: absolute;
         top: 100%;
         left: 10%;
     }
     .tooltip-product:hover .tooltip-product-text {
-      visibility: visible;
+      display: block;
     }
     
     @media screen and (max-width:350px)  and (min-width: 280px){
