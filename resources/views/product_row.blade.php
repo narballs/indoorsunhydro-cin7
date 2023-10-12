@@ -22,7 +22,7 @@
             </a>
         @else
             <a href="{{ url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug) }}">
-                <div class="image-height-mbl"  style="height: 315px;">
+                <div class="image-height-mbl"  style="height: 300px;">
                     <span class="d-flex justify-content-center align-items-center">
                         <img src=" {{ asset('theme/img/image_not_available.png') }}" class="img_responsive_mbl_not_available col-md-10 .image-body offset-1 mt-2"
                         style="" />
@@ -31,9 +31,19 @@
             </a>
         @endif
         <div class="card-body d-flex flex-column text-center mt-2 prd_mbl_card_bdy">
-            <h5 class="card-title card_product_title" style="font-weight: 500;font-size: 16px;" id="product_name_{{ $product->id }}">
-                <a title="{{$product->name}}" class="product-row-product-title" href="{{ url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug) }}">
-                    {{ \Illuminate\Support\Str::limit($product->name, 33) }}</a>
+            <h5 class="card-title card_product_title tooltip-product" style="font-weight: 500;font-size: 16px;" id="product_name_{{ $product->id }}">
+                <a class="product-row-product-title" href="{{ url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug) }}">
+                    {{ \Illuminate\Support\Str::limit($product->name, 33) }}
+                    {{-- <div class="tooltip-product-text">
+                        <span class="">{{$product->name}}</span>
+                    </div> --}}
+                    <div class="tooltip-product-text" role="tooltip">
+                        <div class="tooltip-arrow"></div>
+                        <div class="tooltip-inner">
+                            <span class="">{{$product->name}}</span>
+                        </div>
+                    </div>
+                </a>
             </h5>
             <input type="hidden" name="quantity" value="1" id="quantity">
             <input type="hidden" name="p_id" id="p_{{ $product->id }}" value="{{ $product->id }}">
@@ -138,6 +148,38 @@
 
     .price-category-view-section {
         min-height: 7.7rem;
+    }
+
+
+    /* addign tooltip for title of product */
+    /* .tooltip-product {
+      position: relative;
+      display: inline-block;
+    } */
+    .tooltip-product-text {
+        visibility: hidden;
+        font-family: 'Poppins';
+        font-style: normal;
+        font-weight: 500;
+        position: absolute;
+        top: 45%;
+        color: #FFFFFF;
+        text-align: center;
+        font-size: 12px;
+    }
+
+    .tooltip-arrow {
+        width: 0; 
+        height: 0; 
+        border-left: 7px solid transparent;
+        border-right: 7px solid transparent;
+        border-top: 7px solid #000000;
+        position: absolute;
+        top: 100%;
+        left: 10%;
+    }
+    .tooltip-product:hover .tooltip-product-text {
+      visibility: visible;
     }
     
     @media screen and (max-width:350px)  and (min-width: 280px){
