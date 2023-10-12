@@ -1,5 +1,7 @@
+@php
+$blogs = NavHelper::getBlogs();;
+@endphp
 @include('partials.header')
-
 <body>
     <main>
         @include('partials.top-bar')
@@ -68,11 +70,17 @@
                             <div class="row justify-content-center">
                                 <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="card border-0 ">
-                                        <div class="card-body" style="background:#F8FCF6;">
-                                            @include('partials.blog_slider')
-                                        </div>
-                                        <div class="card-footer border-0 text-center" style="background:#F8FCF6;">
-                                            <a type="button" href="{{'/page/blogs'}}" class="btn btn-success text-white border-0 read_more_button">Read more</a>
+                                            @if(count($blogs) > 0)
+                                                <div class="card-body" style="background:#F8FCF6;">
+                                                    @include('partials.blog_slider')
+                                                </div>
+                                                
+                                                <div class="card-footer border-0 text-center" style="background:#F8FCF6;">
+                                                    <a type="button" href="{{'/page/blogs'}}" class="btn btn-success text-white border-0 read_more_button">Read more</a>
+                                                </div>
+                                            @else
+                                                <h5> No Blogs Found !!</h5>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
@@ -81,7 +89,6 @@
                     </div>
                 </div>
             </div>
-        </div>
         <div class="col-md-12 mt-5">
             <h2 class="text-center">
                 <div class="banner-title">
