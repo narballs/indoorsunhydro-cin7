@@ -162,7 +162,7 @@
         font-style: normal;
         font-weight: 500;
         position: absolute;
-        top: 45%;
+        top: 47%;
         color: #FFFFFF;
         text-align: center;
         font-size: 12px;
