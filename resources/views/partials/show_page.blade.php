@@ -87,7 +87,7 @@ $blogs = NavHelper::getBlogs();;
             </div>
         </div>
         @else
-            <h5 class="text-center pt-5 pb-5"> No Blogs Found !!</h5>
+            <h5 class="text-center font-weight-bold"> No Blogs Found !!</h5>
         @endif
         <div class="col-md-12 mt-5">
             <h2 class="text-center">
