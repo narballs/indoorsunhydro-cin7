@@ -28,7 +28,7 @@ class SyncAPiData extends Command
      *
      * @var string
      */
-    protected $signature = 'Sync:ApiData';
+    protected $signature = 'Sync:ApiData {update_all_products?}';
 
     /**
      * The console command description.
@@ -54,13 +54,14 @@ class SyncAPiData extends Command
      */
     public function handle()
     {
+        
+        $update_all_products = $this->argument('update_all_products');
         $admin_setting = AdminSetting::where('option_name', 'sync_api_data')->first();
         if (empty($admin_setting) || $admin_setting->option_value != 'Yes') {
             $this->error('Api sync data setting is off');
             return false;
         }
 
-        
         $current_date = Carbon::now()->setTimezone('UTC')->format('Y-m-d H:i:s');
         $product_sync_log = ApiSyncLog::where('end_point', 'https://api.cin7.com/api/v1/Products')->first();
         if (empty($product_sync_log)) {
@@ -106,9 +107,6 @@ class SyncAPiData extends Command
         $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
         $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
 
-
-        
-
         // Find total category pages
         $total_category_pages = 9;
 
@@ -125,8 +123,6 @@ class SyncAPiData extends Command
                     ]                    
                 ]
             );
-            
-
 
             $api_categories = $res->getBody()->getContents();
             $api_categories = json_decode($api_categories);
@@ -173,7 +169,14 @@ class SyncAPiData extends Command
             $client2 = new \GuzzleHttp\Client();
 
             // Find total category pages
-            $total_products_pages = 150;
+            $total_products_pages = 200;
+
+            if (!empty($update_all_products) && $update_all_products == 'yes') {
+                $product_api_url = 'https://api.cin7.com/api/v1/Products?rows=250';
+            }
+            else {
+                $product_api_url = 'https://api.cin7.com/api/v1/Products?where=modifieddate>='. $api_formatted_product_sync_date . '&rows=250';
+            }
 
             for ($i = 1; $i <= $total_products_pages; $i++) {
                 $this->info('Processing page#' . $i);
@@ -181,7 +184,7 @@ class SyncAPiData extends Command
 
                     $res = $client2->request(
                         'GET', 
-                        'https://api.cin7.com/api/v1/Products?where=modifieddate>='. $api_formatted_product_sync_date . '&page=' . $i . '&rows=250', 
+                        $product_api_url . '&page=' . $i, 
                         [
                             'auth' => [
                                 $cin7_auth_username,

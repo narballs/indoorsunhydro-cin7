@@ -66,6 +66,23 @@
                                         @endif
                                     </span>
                                 </div>
+
+                                <div class="col-md-2">
+                                    <span class="my_account_order_details_page_date_order_id_title">
+                                        Ship to Address
+                                    </span><br>
+                                    <span class="shipping_to_my_account">
+                                        @if(!empty($order_detail->contact->address1))
+                                            <span class="header-row-mbl-my-account shipping_to_my_account" title="{{$order_detail->contact->address1}}">
+                                                {{ \Illuminate\Support\Str::limit($order_detail->contact->address1, 10) }}
+                                            </span>
+                                        @elseif(!empty($order_detail->contact->postalAddress1))
+                                            <span class="header-row-mbl-my-account shipping_to_my_account" title="{{$order_detail->contact->postalAddress1}}">
+                                                {{ \Illuminate\Support\Str::limit($order_detail->contact->postalAddress1, 10) }}
+                                            </span>
+                                        @endif
+                                    </span>
+                                </div>
                             </div>
 
                         </div>

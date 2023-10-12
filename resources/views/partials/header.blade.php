@@ -2,6 +2,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
     <link rel="stylesheet" href="/theme/bootstrap5/css/bootstrap.css">
     <link rel="stylesheet" href="/theme/css/style.css">
     <link rel="stylesheet" href="/theme/css/mobile.css">

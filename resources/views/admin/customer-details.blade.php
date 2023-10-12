@@ -149,13 +149,32 @@
                                                 <h3>Billing Address</h3>
                                                 <div class="col-md-10 bg-light">
                                                     <div>
-                                                        {{$customer->address1 ? $customer->address1  : $customer->postalAddress1 }}
+                                                        @if(empty($customer->contact_id))
+                                                            {{$get_secondary_contact->address1 ? $get_secondary_contact->address1  : $get_secondary_contact->postalAddress1 }}
+                                                        @else
+                                                            {{$customer->address1 ? $customer->address1  : $customer->postalAddress1 }}
+                                                        @endif
                                                     </div>
                                                     <div>
-                                                        {{$customer->address2 ? $customer->address2  : $customer->postalAddress2 }}
+                                                        @if(empty($customer->contact_id))
+                                                            {{$get_secondary_contact->address2 ? $get_secondary_contact->address2  : $get_secondary_contact->postalAddress2 }}
+                                                        @else
+                                                            {{$customer->address2 ? $customer->address2  : $customer->postalAddress2 }}
+                                                        @endif
                                                     </div>
                                                     <div>
-                                                        {{ $customer->postCode ? $customer->postCode :$customer->postalPostCode }}, {{ $customer->state ? $customer->state : $customer->postalState }}
+                                                        @if(empty($customer->contact_id))
+                                                            {{ $get_secondary_contact->postCode ? $get_secondary_contact->postCode :$get_secondary_contact->postalPostCode }},
+
+                                                        @else
+                                                            {{ $customer->postCode ? $customer->postCode :$customer->postalPostCode }},
+                                                        @endif
+
+                                                        @if(empty($customer->contact_id))
+                                                            {{ $get_secondary_contact->state ? $get_secondary_contact->state : $get_secondary_contact->postalState }}
+                                                        @else
+                                                            {{ $customer->state ? $customer->state : $customer->postalState }}
+                                                        @endif
                                                     </div>
                                                 </div>
                                             </div>
@@ -163,13 +182,32 @@
                                                 <h3>Delivery Address</h3>
                                                 <div class="col-md-10 bg-light">
                                                     <div>
-                                                        {{$customer->address1 ? $customer->address1  : $customer->postalAddress1 }}
+                                                        @if(empty($customer->contact_id))
+                                                            {{$get_secondary_contact->address1 ? $get_secondary_contact->address1  : $get_secondary_contact->postalAddress1 }}
+                                                        @else
+                                                            {{$customer->address1 ? $customer->address1  : $customer->postalAddress1 }}
+                                                        @endif
                                                     </div>
                                                     <div>
-                                                        {{$customer->address2 ? $customer->address2  : $customer->postalAddress2 }}
+                                                        @if(empty($customer->contact_id))
+                                                            {{$get_secondary_contact->address2 ? $get_secondary_contact->address2  : $get_secondary_contact->postalAddress2 }}
+                                                        @else
+                                                            {{$customer->address2 ? $customer->address2  : $customer->postalAddress2 }}
+                                                        @endif
                                                     </div>
                                                     <div>
-                                                        {{ $customer->postCode ? $customer->postCode :$customer->postalPostCode }}, {{ $customer->state ? $customer->state : $customer->postalState }}
+                                                        @if(empty($customer->contact_id))
+                                                            {{ $get_secondary_contact->postCode ? $get_secondary_contact->postCode :$get_secondary_contact->postalPostCode }},
+
+                                                        @else
+                                                            {{ $customer->postCode ? $customer->postCode :$customer->postalPostCode }},
+                                                        @endif
+                                                        
+                                                        @if(empty($customer->contact_id))
+                                                            {{ $get_secondary_contact->state ? $get_secondary_contact->state : $get_secondary_contact->postalState }}
+                                                        @else
+                                                            {{ $customer->state ? $customer->state : $customer->postalState }}
+                                                        @endif
                                                     </div>
                                                 </div>
                                             </div>

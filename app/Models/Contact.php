@@ -45,7 +45,7 @@ class Contact extends Model
         'credit_limit',
         'balance_owing',
         'tax_class',
-        'paymentTerms'
+        'paymentTerms',
     ];
 
     public function orders()

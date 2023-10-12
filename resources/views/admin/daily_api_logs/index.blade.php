@@ -6,13 +6,15 @@
 
 @stop
 @section('content')
-    @if ($message = Session::get('success'))
-        <div class="alert alert-success">
-            <p>{{ $message }}</p>
-        </div>
-    @endif
+    
 
     <div class="table-wrapper">
+        @if ($message = Session::get('success'))
+            <div class="alert alert-success alert-dismissible mt-2">
+                <a href="#" class="close text-white" data-dismiss="alert" aria-label="close">&times;</a>
+                {{ $message }}
+            </div>
+        @endif
         <div class="card-body product_secion_main_body">
             
             <div class="row border-bottom product_section_header">
@@ -67,8 +69,11 @@
                                     </tr>
                                 @endforeach
                                 <tr class="user-row border-bottom">
-                                    <td colspan="2" class="text-right text-bold">Total Count:</td>
-                                    <td class="text-left text-bold">{{ number_format($total_count) }}</td>
+                                    <td colspan="2" class="text-right text-bold align-middle">Total Count:</td>
+                                    <td class="text-left text-bold align-middle">
+                                        {{ number_format($total_count) }}
+                                        <a href="{{ route('update-all-products') }}" class="btn btn-primary text-white ml-3">Update All Products</a>
+                                    </td>
                                 </tr>
                             </tbody>
                     </table>

@@ -816,6 +816,17 @@ a {
     #quantity {
         margin-bottom: 10px !important;
     }
+    .icon_div {
+        width: 13% !important;
+    }
+    .icon_data_div {
+        width: 85% !important;
+    }
+}
+@media (max-width: 1600px){
+    .map_image {
+        width: 100% !important;
+    }
 }
 
 @media (max-width: 280px) {
@@ -1199,7 +1210,7 @@ label {
 .nav .active {
     /* background: #F5F5F5; */
     /* border-left: 3px solid #008AD0; */
-    color: green !important;
+    color: green;
 
 }
 
@@ -6986,4 +6997,26 @@ ul.pager>.main-row>.pagination>li {
 
 .disable>.prev_btn_css {
     display: flex !important;
+}
+
+
+@media (max-width: 600px) {
+    .question_div_faq {
+        width: 80% !important;
+    }
+    .button_div_faq {
+        width: 20% !important;
+        padding-left: 0rem !important;
+    }
+    .plus_minus_faqs {
+        padding: 1rem !important;
+    }
+    .faq-page-div {
+        margin-top: 1rem !important;
+        margin-bottom: 1rem !important;
+    }
+}
+.faq-page-div {
+    margin-top: 2.5rem ;
+    margin-bottom: 2.5rem ; 
 }

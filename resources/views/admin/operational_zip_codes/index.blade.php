@@ -45,7 +45,7 @@
                             <th>S.No</th>
                             <th>Zip Code</th>
                             <th>Status</th>
-                            <th>Active</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>

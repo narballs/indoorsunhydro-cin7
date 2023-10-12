@@ -108,7 +108,6 @@ class UserHelper
                         $cart->price = $productPrice;
                         $cart->save();
                     }
-                    
                     $all_cart_items[$cartItem['qoute_id']] = [
                         "product_id" => $cartItem['product_id'],
                         "name" => $cartItem['name'],
@@ -119,9 +118,9 @@ class UserHelper
                         'option_id' => $cartItem['option_id'],
                         "slug" => $cartItem['slug'],
                     ];
-                    session()->forget('cart');
-                    Session::put('cart', $all_cart_items);
                 }
+                session()->forget('cart');
+                Session::put('cart', $all_cart_items);
             }
             
         }
