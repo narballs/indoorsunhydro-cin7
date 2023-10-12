@@ -62,6 +62,7 @@ $blogs = NavHelper::getBlogs();;
             </div>
         </div>
         @if (strtolower($page->name) == 'about')
+        @if(count($blogs) > 0)
         <div class="pb-5 pt-5" style="background:#F8FCF6;">
             <div class="container-fluid px-0 overflow-hidden">
                 <div class="row">
@@ -70,17 +71,12 @@ $blogs = NavHelper::getBlogs();;
                             <div class="row justify-content-center">
                                 <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="card border-0 ">
-                                            @if(count($blogs) > 0)
-                                                <div class="card-body" style="background:#F8FCF6;">
-                                                    @include('partials.blog_slider')
-                                                </div>
-                                                
-                                                <div class="card-footer border-0 text-center" style="background:#F8FCF6;">
-                                                    <a type="button" href="{{'/page/blogs'}}" class="btn btn-success text-white border-0 read_more_button">Read more</a>
-                                                </div>
-                                            @else
-                                                <h5> No Blogs Found !!</h5>
-                                            @endif
+                                        <div class="card-body" style="background:#F8FCF6;">
+                                            @include('partials.blog_slider')
+                                        </div>
+                                        
+                                        <div class="card-footer border-0 text-center" style="background:#F8FCF6;">
+                                            <a type="button" href="{{'/page/blogs'}}" class="btn btn-success text-white border-0 read_more_button">Read more</a>
                                         </div>
                                     </div>
                                 </div>
@@ -89,6 +85,10 @@ $blogs = NavHelper::getBlogs();;
                     </div>
                 </div>
             </div>
+        </div>
+        @else
+            <h5 class="text-center pt-5 pb-5"> No Blogs Found !!</h5>
+        @endif
         <div class="col-md-12 mt-5">
             <h2 class="text-center">
                 <div class="banner-title">
