@@ -27,8 +27,10 @@
 				{{ $blogs->links('pagination.custom_pagination') }}
 			</div>
 		@else
-			<div class="orw">
-				No Blogs Found !!
+			<div class="row">
+				<h4 class="text-center font-weight-bold">
+					No Blogs Found !!
+				</h4>
 			</div>
 		@endif
 	</div>
