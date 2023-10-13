@@ -277,11 +277,12 @@ class OrderController extends Controller
                         ->get();
                     $user_default = User::where('id', Auth::id())->first();
                     $all_ids = UserHelper::getAllMemberIds($user_default);
+                    
                     $check_default_user = Contact::whereIn('id', $all_ids)->where('is_default' , 1)->first();
                     if (!empty($check_default_user)) {
                         $contact = Contact::where('id', $check_default_user->id)->first();
                     } else {
-                        $contact = Contact::where('user_id', auth()->id())->first();
+                        $contact = Contact::where('contact_id', $currentOrder->memberId)->first();
                     }
                     $check_shipstation_create_order_status = AdminSetting::where('option_name', 'create_order_in_shipstation')->first();
                     if (!empty($check_shipstation_create_order_status) && strtolower($check_shipstation_create_order_status->option_value) == 'yes') {
