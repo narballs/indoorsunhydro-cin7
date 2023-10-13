@@ -370,7 +370,7 @@ class OrderController extends Controller
                         }
                     } else {
 
-                        $data['subject'] = 'Your Indoorsun Hydro order' .'#'.$currentOrder->id.  'has been received';
+                        $data['subject'] = 'Your Indoorsun Hydro order' .'#'.$currentOrder->id. ' ' .'has been received';
                         $data['email'] = $email;
                         MailHelper::sendMailNotification('emails.admin-order-received', $data);
 
