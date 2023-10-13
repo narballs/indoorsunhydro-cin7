@@ -351,7 +351,7 @@ class OrderController extends Controller
 
                     if (!empty($users_with_role_admin)) {
                         foreach ($users_with_role_admin as $role_admin) {
-                            $subject = 'New order received';
+                            $subject = 'New Indoorsun Hydro order' .'#'.$currentOrder->id. ' ' . 'received';
                             $adminTemplate = 'emails.admin-order-received';
                             $data['subject'] = $subject;
                             $data['email'] = $role_admin->email;
