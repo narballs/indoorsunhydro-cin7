@@ -317,30 +317,30 @@
                                     <div class="col-lg-6">
                                         <h3 class="h6 summary-head">Billing address</h3>
                                         <address>
-                                            @if (!empty($customer->firstName && $customer->lastName))
-                                                <strong>{{ $customer->firstName }}&nbsp;{{ $customer->lastName }}</strong><br>
+                                            @if (!empty($customer->contact->firstName && $customer->contact->lastName))
+                                                <strong>{{ $customer->contact->firstName }}&nbsp;{{ $customer->contact->lastName }}</strong><br>
                                             @endif
-                                            @if(!empty($customer->address1))
-                                                {{$customer->address1}} <br>
+                                            @if(!empty($customer->contact->address1))
+                                                {{$customer->contact->address1}} <br>
                                             @else
-                                                {{$customer->postalAddress1}} <br>
+                                                {{$customer->contact->postalAddress1}} <br>
                                             @endif
-                                            @if(!empty($customer->address2))
-                                                {{$customer->address2}} 
+                                            @if(!empty($customer->contact->address2))
+                                                {{$customer->contact->address2}} 
                                             @else
-                                                {{$customer->postalAddress2}}
+                                                {{$customer->contact->postalAddress2}}
                                             @endif
-                                            @if(!empty($customer->city))
-                                                {{$customer->city}},
+                                            @if(!empty($customer->contact->city))
+                                                {{$customer->contact->city}},
                                             @else
-                                                {{$customer->postalCity}},
+                                                {{$customer->contact->postalCity}},
                                             @endif
-                                            @if(!empty($customer->state))
-                                                {{$customer->state}}
+                                            @if(!empty($customer->contact->state))
+                                                {{$customer->contact->state}}
                                             @else
-                                                {{$customer->postalState}}
+                                                {{$customer->contact->postalState}}
                                             @endif
-                                            <p title="Phone" class="m-0">P:({{ $customer->mobile }})</p>
+                                            <p title="Phone" class="m-0">P:({{ $customer->contact->mobile }})</p>
                                         </address>
                                     </div>
                                 </div>
@@ -402,11 +402,11 @@
                                 <hr>
                                 <h3 class=" h6">Address</h3>
                                 <address>
-                                    <strong>{{ $customer->firstName }} {{ $customer->lastName }}</strong><br>
-                                    {{ $customer->address1 }}, {{ $customer->address2 }}<br>
-                                    {{ $customer->city }},
-                                    <p title="Phone" class="mb-0">P: ({{ $customer->mobile }})</p>
-                                    <p title="Phone">{{ $customer->email }}</p>
+                                    <strong>{{ $customer->contact->firstName }} {{ $customer->contact->lastName }}</strong><br>
+                                    {{ $customer->contact->address1 }}, {{ $customer->contact->address2 }}<br>
+                                    {{ $customer->contact->city }},
+                                    <p title="Phone" class="mb-0">P: ({{ $customer->contact->mobile }})</p>
+                                    <p title="Phone">{{ $customer->contact->email }}</p>
                                 </address>
                             </div>
                         </div>
