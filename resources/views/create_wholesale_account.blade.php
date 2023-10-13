@@ -1522,6 +1522,10 @@
         
         // save for now functionality
         $(document).ready(function() {
+            $('.step_next').click(function() {
+                $('html, body').animate({ scrollTop: 0 }, 800);
+                return false; // Prevent the default anchor behavior
+            });
             $(document).on('keypress' , '#email_address' ,function(){
                 if(event.keyCode == 13) {
                     save_email_for_now(); 
