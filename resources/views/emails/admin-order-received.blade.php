@@ -45,7 +45,7 @@
                         </tr>
                         <tr>
                             <td align="" style="text-align: center;color:#000000;font-color:#000000;font-size: 18px;font-weight:bold;">
-                                We received your order!
+                                We received your  order #{{ $addresses['order_id'] }} !
                             </td>
                         </tr>
                         <tr>
