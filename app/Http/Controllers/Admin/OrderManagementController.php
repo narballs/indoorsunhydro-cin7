@@ -23,6 +23,7 @@ use App\Helpers\OrderHelper;
 use App\Models\BuyList;
 use App\Models\ProductBuyList;
 use App\Models\TaxClass;
+use App\Models\User;
 use App\Models\Product;
 use GuzzleHttp\Promise\Create;
 use Illuminate\Support\Carbon as SupportCarbon;
@@ -119,8 +120,19 @@ class OrderManagementController extends Controller
         $time_difference_seconds = date('s');
 
 
-
-        $customer = Contact::where('user_id', $order->user_id)->first();
+        $user = User::where('id', $order->user_id)->first();
+        $all_ids = UserHelper::getAllMemberIds($user);
+            $contact_ids = Contact::whereIn('id', $all_ids)
+                ->pluck('contact_id')
+                ->toArray();
+        $customer = ApiOrder::with(['createdby'])->whereIn('memberId', $contact_ids)
+        ->with('contact' , function($query) {
+            $query->orderBy('company');
+        })
+        ->with('apiOrderItem.product')
+        ->where('id' , $id)
+        ->first();
+        $customer1 = Contact::where('user_id', $order->user_id)->first();
         // $option_ids = ApiOrderItem::where('order_id', $id)->pluck('option_id')->toArray();
         // $orderitems = $this->option_ids = $option_ids;
         // $orderitems = ApiOrderItem:with(['product.options' => function ($q) {
@@ -131,7 +143,7 @@ class OrderManagementController extends Controller
         $orderitems = ApiOrderItem::with(['product.options' => function ($q) {
             $q->whereIn('option_id', $this->option_ids);
         }])->where('order_id', $id)->get();
-        $tax_class = TaxClass::where('name', $customer->tax_class)->first();
+        $tax_class = TaxClass::where('name', $customer1->tax_class)->first();
         $orderComment = OrderComment::where('order_id', $id)->with('comment')->get();
         // $products  = Product::with('options', 'brand', 'categories')->where('status' , '!=' , 'Inactive')->get();
         return view('admin/order-details', compact(
