@@ -132,7 +132,7 @@ class OrderManagementController extends Controller
         ->with('apiOrderItem.product')
         ->where('id' , $id)
         ->first();
-        $customer1 = Contact::where('user_id', $order->user_id)->first();
+        // $customer1 = Contact::where('user_id', $order->user_id)->first();
         // $option_ids = ApiOrderItem::where('order_id', $id)->pluck('option_id')->toArray();
         // $orderitems = $this->option_ids = $option_ids;
         // $orderitems = ApiOrderItem:with(['product.options' => function ($q) {
@@ -143,7 +143,7 @@ class OrderManagementController extends Controller
         $orderitems = ApiOrderItem::with(['product.options' => function ($q) {
             $q->whereIn('option_id', $this->option_ids);
         }])->where('order_id', $id)->get();
-        $tax_class = TaxClass::where('name', $customer1->tax_class)->first();
+        $tax_class = TaxClass::where('name', $customer->contact->tax_class)->first();
         $orderComment = OrderComment::where('order_id', $id)->with('comment')->get();
         // $products  = Product::with('options', 'brand', 'categories')->where('status' , '!=' , 'Inactive')->get();
         return view('admin/order-details', compact(
