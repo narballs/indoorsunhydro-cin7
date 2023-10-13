@@ -73,12 +73,12 @@
                                     </span><br>
                                     <span class="shipping_to_my_account">
                                         @if(!empty($order_detail->contact->address1))
-                                            <span class="header-row-mbl-my-account shipping_to_my_account" title="{{$order_detail->contact->address1}}">
-                                                {{ \Illuminate\Support\Str::limit($order_detail->contact->address1, 10) }}
+                                            <span class="header-row-mbl-my-account shipping_to_my_account">
+                                                {{$order_detail->contact->address1}}
                                             </span>
                                         @elseif(!empty($order_detail->contact->postalAddress1))
-                                            <span class="header-row-mbl-my-account shipping_to_my_account" title="{{$order_detail->contact->postalAddress1}}">
-                                                {{ \Illuminate\Support\Str::limit($order_detail->contact->postalAddress1, 10) }}
+                                            <span class="header-row-mbl-my-account shipping_to_my_account">
+                                                {{$order_detail->contact->postalAddress1}}
                                             </span>
                                         @endif
                                     </span>
