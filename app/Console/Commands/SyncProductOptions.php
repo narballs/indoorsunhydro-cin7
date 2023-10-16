@@ -199,7 +199,7 @@ class SyncProductOptions extends Command
                     }
                     else {
                         $retail_price = isset($product_option->priceColumns->$retail_price_column) ? $product_option->priceColumns->$retail_price_column : 0;
-                        $product_option = new ProductOption([
+                        $product_option_table = new ProductOption([
                             'option1' => $product_option->option1,
                             'option_id' => $product_option->id,
                             'product_id' => $product_option->productId,
@@ -221,7 +221,7 @@ class SyncProductOptions extends Command
                             'specialDays' =>  $product_option->specialDays,
                             'image' =>  !empty($product_option->image) ? $product_option->image->link: ''
                         ]);
-                        $product_option->save();
+                        $product_option_table->save();
 
                         $price_columns = $product_option->priceColumns;
                         $column_keys = array_keys(get_object_vars($price_columns));
