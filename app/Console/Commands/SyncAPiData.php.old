@@ -66,7 +66,7 @@ class SyncAPiData extends Command
         if (empty($product_sync_log)) {
             $product_sync_log = new ApiSyncLog();
             $product_sync_log->end_point = 'https://api.cin7.com/api/v1/Products';
-            $product_sync_log->desription = 'Products Sync';
+            $product_sync_log->description = 'Products Sync';
             $product_sync_log->record_count = 0;
             $product_sync_log->last_synced = $current_date;
             $product_sync_log->save();
@@ -84,7 +84,7 @@ class SyncAPiData extends Command
         if (empty($category_sync_log)) {
             $category_sync_log = new ApiSyncLog();
             $category_sync_log->end_point = 'categories';
-            $category_sync_log->desription = 'Categories Sync';
+            $category_sync_log->description = 'Categories Sync';
             $category_sync_log->record_count = 0;
             $category_sync_log->last_synced = $current_date;
             $category_sync_log->save();
