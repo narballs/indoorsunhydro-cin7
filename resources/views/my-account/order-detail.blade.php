@@ -67,18 +67,18 @@
                                     </span>
                                 </div>
 
-                                <div class="col-md-2">
+                                <div class="col-md-6">
                                     <span class="my_account_order_details_page_date_order_id_title">
                                         Ship to Address
                                     </span><br>
                                     <span class="shipping_to_my_account">
                                         @if(!empty($order_detail->contact->address1))
                                             <span class="header-row-mbl-my-account shipping_to_my_account" title="{{$order_detail->contact->address1}}  {{$order_detail->contact->city}}  {{$order_detail->contact->state}} {{$order_detail->contact->postCode}}">
-                                                {{$order_detail->contact->address1}}
+                                                {{$order_detail->contact->address1}} {{$order_detail->contact->city}}  {{$order_detail->contact->state}} {{$order_detail->contact->postCode}}
                                             </span>
                                         @elseif(!empty($order_detail->contact->postalAddress1))
                                             <span class="header-row-mbl-my-account shipping_to_my_account" title="{{$order_detail->contact->postalAddress1}}  {{$order_detail->contact->postalCity}}   {{$order_detail->contact->postalState}}  {{$order_detail->contact->postalPostCode}}">
-                                                {{$order_detail->contact->postalAddress1}}
+                                                {{$order_detail->contact->postalAddress1}} {{$order_detail->contact->postalCity}}   {{$order_detail->contact->postalState}}  {{$order_detail->contact->postalPostCode}}
                                             </span>
                                         @endif
                                     </span>
