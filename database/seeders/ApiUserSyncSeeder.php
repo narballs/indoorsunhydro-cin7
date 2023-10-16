@@ -30,12 +30,12 @@ class ApiUserSyncSeeder extends Seeder
             [
                 [
                     'end_point' => 'https://api.cin7.com/api/v1/Contacts', 
-                    'desription' => 'Contacts Sync', 
+                    'description' => 'Contacts Sync', 
                     'last_synced' => $formattedDateSting
                 ],
                 [
                     'end_point' => 'https://api.cin7.com/api/v1/Products', 
-                    'desription' => 'Products Sync', 
+                    'description' => 'Products Sync', 
                     'last_synced' => $formattedDateSting
                 ],
        

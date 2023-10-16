@@ -95,7 +95,7 @@
                                             {{ $log->end_point }}
                                         </td>
                                         <td class="user_table_items">
-                                            {{ $log->desription }}
+                                            {{ $log->description }}
                                         </td>
                                         <td class="user_table_items">
                                             {{ $log->last_synced }}

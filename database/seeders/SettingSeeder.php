@@ -37,6 +37,11 @@ class SettingSeeder extends Seeder
                 'option_value' => 'No',
             ],
             [
+                'option_name' => 'sync_product_options', 
+                'type' => 'yes/no',
+                'option_value' => 'No',
+            ],
+            [
                 'option_name' => 'allow_order_without_stock', 
                 'type' => 'yes/no',
                 'option_value' => 'no',

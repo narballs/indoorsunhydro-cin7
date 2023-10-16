@@ -11,7 +11,7 @@ class ApiSyncLog extends Model
     protected $table = 'api_sync_logs';
     protected $fillable = [
         'end_point',
-        'desription',
+        'description',
         'last_synced'
     ];
 }
