@@ -145,7 +145,7 @@
                                                                 </td>
                                                                 <td>
                                                                     @if(!empty($user_order->contact->company))
-                                                                        <span class="header-row-mbl-my-account shipping_to_my_account">
+                                                                        <span class="header-row-mbl-my-account shipping_to_my_account" title="{{$user_order->contact->company}}">
                                                                             {{ \Illuminate\Support\Str::limit($user_order->contact->company, 10) }}
                                                                         </span>
                                                                     @endif
@@ -162,15 +162,19 @@
                                                                     </span>
                                                                 </td>
                                                                 <td>
-                                                                    <span class="header-row-mbl-my-account shipping_to_my_account">
-                                                                        @if (!empty($user_order->primaryId) && !empty($user_order->primary_contact))
+                                                                    @if (!empty($user_order->primaryId) && !empty($user_order->primary_contact))
+                                                                    <span class="header-row-mbl-my-account shipping_to_my_account" title="{{$user_order->primary_contact->firstName.' '.$user_order->primary_contact->lastName}}">
                                                                             {{ \Illuminate\Support\Str::limit($user_order->primary_contact->firstName.' '.$user_order->primary_contact->lastName, 10) }}
-                                                                        @elseif (!empty($user_order->secondaryId) && !empty($user_order->secondary_contact))
-                                                                            {{ \Illuminate\Support\Str::limit($user_order->secondary_contact->firstName.' '.$user_order->secondary_contact->lastName, 10) }}
-                                                                        @elseif (!empty($user_order->contact))
-                                                                            {{ \Illuminate\Support\Str::limit($user_order->contact->firstName.' '.$user_order->contact->lastName , 10) }}
-                                                                        @endif
                                                                     </span>
+                                                                    @elseif (!empty($user_order->secondaryId) && !empty($user_order->secondary_contact))
+                                                                    <span class="header-row-mbl-my-account shipping_to_my_account" title="{{$user_order->secondary_contact->firstName.' '.$user_order->secondary_contact->lastName}}">
+                                                                        {{ \Illuminate\Support\Str::limit($user_order->secondary_contact->firstName.' '.$user_order->secondary_contact->lastName, 10) }}
+                                                                    </span>
+                                                                    @elseif (!empty($user_order->contact))
+                                                                    <span class="header-row-mbl-my-account shipping_to_my_account" title="{{$user_order->contact->firstName.' '.$user_order->contact->lastName}}">
+                                                                        {{ \Illuminate\Support\Str::limit($user_order->contact->firstName.' '.$user_order->contact->lastName , 10) }}
+                                                                    </span>
+                                                                    @endif
                                                                 </td>
                                                                 <td>
                                                                     <span class="header-row-mbl-my-account order_number_my_account">
