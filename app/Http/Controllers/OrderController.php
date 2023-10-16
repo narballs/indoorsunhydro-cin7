@@ -321,6 +321,7 @@ class OrderController extends Controller
                         'currentOrder' => $currentOrder,
                         'count' => $count,
                         'order_id' => $order_id,
+                        'company' => $order_contact->company, 
                     ];
 
                     $name = $contact->firstName;

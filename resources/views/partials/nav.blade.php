@@ -102,12 +102,12 @@
                         Blogs
                     </a>
                 </li>
-                <li class="nav-item me-4 mx-4">
+                {{-- <li class="nav-item me-4 mx-4">
                     <a class="nav-link text-uppercase nav-item-links font_style_menu" href="{{url('page/faqs')}}">
                         Faqs
                     </a>
                 </li>
-                
+                 --}}
                 <li class="nav-item me-4 mx-4">
                     <a class="nav-link text-uppercase nav-item-links font_style_menu" href="{{ url('contact-us') }}">
                         Contact
@@ -321,11 +321,11 @@
                                     Blogs
                                 </a>
                             </li>
-                            <li class="nav-item me-4">
+                            {{-- <li class="nav-item me-4">
                                 <a class="nav-link text-uppercase nav-item-links ps-1" href="{{url('page/faqs')}}">
                                     Faqs
                                 </a>
-                            </li>
+                            </li> --}}
                             <li class="nav-item me-4">
                                 <a class="nav-link text-uppercase nav-item-links ps-1" href="{{ url('contact-us') }}">
                                     Contact
