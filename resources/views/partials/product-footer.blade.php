@@ -59,10 +59,10 @@
                     <p class="card-text  sm-4-footer ms-5 mb-1">
                         <a href="{{ url('contact-us') }}" class="text-white">Customer Support</a>
                     </p>
-                    <p class="card-text  sm-4-footer ms-5">
+                    {{-- <p class="card-text  sm-4-footer ms-5">
                         
                         <a href="{{url('/page/hydro-guide-and-tips')}}" class="text-white">Hydro Guide and Tips</a>
-                    </p>
+                    </p> --}}
                 </div>
                 <div class="col-xl-4 col-lg-4 col-md-0 col-sm-0 col-xs-0 mb-4  mb-md-0 main-page-footer-section footer-section-product">
                     <h5 class="text-uppercase mb-4 contact-us-footer ms-5">MY ACCOUNTS</h5>
@@ -99,7 +99,7 @@
                     <h5 class="foooter-main-head-mbl contact-us-footer mt-5 mb-4 text-uppercase">Customer Service</h5>
                     <p class="p-footer-mbl ms-4-footer mx-1"><a href="{{url('/page/returns')}}" class="text-white">Returns</a></p>
                     <p class="p-footer-mbl ms-4-footer mx-1"><a href="{{ url('contact-us') }}" class="text-white">Customer Support</a></p>
-                    <p class="p-footer-mbl ms-4-footer mx-1"><a href="{{url('/page/hydro-guide-and-tips')}}" class="text-white">Hydro Guide and Tips</a></p>
+                    {{-- <p class="p-footer-mbl ms-4-footer mx-1"><a href="{{url('/page/hydro-guide-and-tips')}}" class="text-white">Hydro Guide and Tips</a></p> --}}
 
                     <h5 class="foooter-main-head-mbl contact-us-footer mt-5 mb-4 text-uppercase">MY ACCOUNT</h5>
                     <p class="p-footer-mbl ms-4-footer mx-1"><a href="{{route('my_account')}}" class="text-white">My orders</a></p>
@@ -156,7 +156,7 @@
                             <h5 class="text-uppercase contact-us-footer mt-3">Customer Service</h5>
                             <p class="card-text justify-content-end sm-4-footer"><a href="{{url('/page/returns')}}" class="text-white">Returns</a></p>
                             <p class="card-text justify-content-end sm-4-footer"><a href="{{ url('/contact-us') }}" class="text-white">Customer Support</a></p>
-                            <p class="card-text justify-content-end sm-4-footer"><a href="{{url('/page/hydro-guide-and-tips')}}" class="text-white">Hydro Guide and Tips</a></p>
+                            {{-- <p class="card-text justify-content-end sm-4-footer"><a href="{{url('/page/hydro-guide-and-tips')}}" class="text-white">Hydro Guide and Tips</a></p> --}}
                             <h5 class="text-uppercase  contact-us-footer">MY ACCOUNTS</h5>
                             <p class="card-text justify-content-end sm-4-footer"><a href="{{route('my_account')}}" class="text-white">My orders</a></p>
                         </div>

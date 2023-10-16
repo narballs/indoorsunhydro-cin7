@@ -134,11 +134,11 @@
                                                                 </td>
                                                                 <td>
                                                                     @if(!empty($user_order->contact->address1))
-                                                                        <span class="header-row-mbl-my-account shipping_to_my_account" title="{{$user_order->contact->address1}}">
+                                                                        <span class="header-row-mbl-my-account shipping_to_my_account" title="{{$user_order->contact->address1}}  {{$user_order->contact->city}}  {{$user_order->contact->state}} {{$user_order->contact->postCode}}">
                                                                             {{ \Illuminate\Support\Str::limit($user_order->contact->address1, 10) }}
                                                                         </span>
                                                                     @elseif(!empty($user_order->contact->postalAddress1))
-                                                                        <span class="header-row-mbl-my-account shipping_to_my_account" title="{{$user_order->contact->postalAddress1}}">
+                                                                        <span class="header-row-mbl-my-account shipping_to_my_account" title="{{$user_order->contact->postalAddress1}}  {{$user_order->contact->postalCity}}   {{$user_order->contact->postalState}}  {{$user_order->contact->postalPostCode}}">
                                                                             {{ \Illuminate\Support\Str::limit($user_order->contact->postalAddress1, 10) }}
                                                                         </span>
                                                                     @endif
