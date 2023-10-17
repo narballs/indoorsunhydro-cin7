@@ -49,7 +49,8 @@ class CheckoutController extends Controller
             ->with('states')
             ->with('cities')
             ->first();
-        $cart_items = session()->get('cart');
+        // $cart_items = session()->get('cart');
+        $cart_items = UserHelper::switch_price_tier($request);
         $cart_total = 0;
         foreach ($cart_items as $cart_item) {
             $row_price = $cart_item['quantity'] * $cart_item['price'];

@@ -58,7 +58,8 @@ class OrderController extends Controller
                 $active_contact_id = $contact->parent_id;
             }
             if ($active_contact_id) {
-                $cart_items = session()->get('cart');
+                // $cart_items = session()->get('cart');
+                $cart_items = UserHelper::switch_price_tier($request);
                 $user_switch = "";
                 if (!empty(session()->get('logged_in_as_another_user'))) {
                     $user_switch = "order placed by user switch ";
