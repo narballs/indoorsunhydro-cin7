@@ -119,6 +119,7 @@ class OrderController extends Controller
                     $order->user_id = Auth::id();
                     $order->status = "DRAFT";
                     $order->stage = "New";
+                    $order->payment_status = "unpaid";
                     $order->logisticsCarrier = $paymentMethod;
                     $order->tax_class_id = $request->tax_class_id;
                     $order->user_switch = $user_switch;
