@@ -264,9 +264,9 @@
                                             <td data-label="Payment Status :" class="td_padding_row">
                                                 @if($order->contact->paymentTerms == 'Pay in Advanced')
                                                     @if($order->payment_status == 'paid')
-                                                        <span class="badge badge-success bg_success">Paid</span>
+                                                        <span class="badge badge-success p-1">Paid</span>
                                                     @else
-                                                        <span class="badge badge-secondary bg_secondary">Unpaid</span>
+                                                        <span class="badge badge-danger p-1">Unpaid</span>
                                                     @endif
                                                 @else
                                                     @if (strtolower($order->payment_status) == 'paid' && $order->shipstation_orderId != null)
