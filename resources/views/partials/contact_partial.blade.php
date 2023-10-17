@@ -42,7 +42,7 @@
     <div class="col-md-6">
         <div class="p-4 address_div">
             <h3 class="address_header"> Contact Information </h3>
-            <p class="address_flag">Say something to start a live chat!</p>
+            {{-- <p class="address_flag">Say something to start a live chat!</p> --}}
             <div class="mb-4">
                 <img src="{{asset('/theme/img/address_map.png')}}" alt="" class="map_image">
             </div>

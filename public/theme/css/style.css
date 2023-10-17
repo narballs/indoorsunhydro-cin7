@@ -618,7 +618,7 @@ a {
 .navbar-light .navbar-nav .dropdown-toggle:focus,
 .dropdown-toggle:hover {
     /* width: 345px !important; */
-    background: #7CC633 !important;
+    background-color: #7CC633;
     color: #fff !important;
     border-radius: 5px 5px 0px 0px !important;
 }
@@ -4507,7 +4507,7 @@ select.list-dt:focus {
         padding-left: 1.5rem;
     }
 
-    .navbar-light .navbar-nav .dropdown-toggle:focus {
+    .remove_focus:focus {
         background: none !important;
     }
 }

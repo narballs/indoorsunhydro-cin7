@@ -44,7 +44,6 @@
                         <tr>
                             <th>S.No</th>
                             <th>Title</th>
-                            {{-- <th>Description</th> --}}
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
@@ -58,7 +57,6 @@
                         <tr>
                             <td>{{ $i++ }}</td>
                             <td>{{$blog->title}}</td>
-                            {{-- <td>{!! \Illuminate\Support\Str::limit($blog->description, 20) !!}</td> --}}
                             <td>
                                 @if($blog->status == 1)
                                     <span class="badge badge-success">Active</span>
@@ -70,7 +68,6 @@
                                 <form action="{{ route('blogs.delete', $blog->id) }}" method="POST" style="display: inline-block;">
                                     <a href="{{ route('blogs.edit', $blog->id) }}" class="btn btn-primary btn-sm text-white">Edit</a>
                                     @csrf
-                                    @method('DELETE')
                                     <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this?');">Delete</button>
                                 </form>
                             </td>

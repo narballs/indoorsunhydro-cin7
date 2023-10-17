@@ -53,7 +53,7 @@ class SyncSuppliers extends Command
         if (empty($sync_log)) {
             $sync_log = new ApiSyncLog();
             $sync_log->end_point = 'https://api.cin7.com/api/v1/Contacts';
-            $sync_log->desription = 'Contacts Sync';
+            $sync_log->description = 'Contacts Sync';
             $sync_log->record_count = 0;
             $sync_log->last_synced = $current_date;
             $sync_log->save();

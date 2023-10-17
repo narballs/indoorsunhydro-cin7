@@ -21,6 +21,7 @@ class Kernel extends ConsoleKernel
         // Api endpoints starts here
         
         $schedule->command('Sync:ApiData')->hourly();
+        $schedule->command('Sync:ProductOptions')->hourly();
         
         $schedule->command('sync:supplier')->hourly();
         $schedule->command('AutoOrder:Sync')->everyThreeMinutes();

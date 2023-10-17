@@ -133,6 +133,22 @@
                                     <thead>
                                         <tr>
                                             <td style="color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
+                                                Company Name
+                                            </td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
+                                                {{ $addresses['company'] }}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <table border="0" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <td style="color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
                                                 PAYMENT INFO
                                             </td>
                                         </tr>
