@@ -100,15 +100,15 @@ class SalesOrders implements ShouldQueue
             ->whereIn('id', $admin_users)
             ->get();
         if (!empty($order_id) && !empty($reference)) {
-            $get_id = ApiOrder::where('order_id', $order_id)->where('reference', $reference)->first();
+            // $get_id = ApiOrder::where('order_id', $order_id)->where('reference', $reference)->first();
             $data = [
                 'order_id' => $order_id,
                 'name' =>  'Admin',
                 'email' => '',
                 'contact_email' => '',
                 'reference' => $reference,
-                'primary_order_id' => $get_id->id,
-                'subject' => 'Order ' .' '. '#' .$get_id->id .'fulfilled',
+                // 'primary_order_id' => $get_id->id,
+                'subject' => 'Order ' .' '. 'fulfilled',
                 'from' => SettingHelper::getSetting('noreply_email_address'),
                 'content' => 'Order fulfilled has been fulfilled.'
             ];
