@@ -262,16 +262,24 @@
                                                 @endif
                                             </td>
                                             <td data-label="Payment Status :" class="td_padding_row">
-                                                @if (strtolower($order->payment_status) == 'paid' && $order->shipstation_orderId != null)
-                                                    <span class="badge badge-success bg_success">Paid</span>
-                                                @elseif (strtolower($order->payment_status) == '' && $order->shipstation_orderId != null)
-                                                    <form action="{{url('order/mark/paid')}}" method="post">
-                                                        @csrf
-                                                        <input type="hidden" name="order_id" id="mark_paid_order_id" value="{{ $order->id }}">
-                                                        <button class="create_label btn-sm p-1 border-0 bg-primary text-white">
-                                                            Mark as Paid
-                                                        </button>
-                                                    </form>
+                                                @if($order->contact->paymentTerms == 'Pay in Advanced')
+                                                    @if($order->payment_status == 'paid')
+                                                        <span class="badge badge-success p-1">Paid</span>
+                                                    @else
+                                                        <span class="badge badge-danger p-1">Unpaid</span>
+                                                    @endif
+                                                @else
+                                                    @if (strtolower($order->payment_status) == 'paid' && $order->shipstation_orderId != null)
+                                                        <span class="badge badge-success bg_success">Paid</span>
+                                                    @elseif (strtolower($order->payment_status) == '' && $order->shipstation_orderId != null)
+                                                        <form action="{{url('order/mark/paid')}}" method="post">
+                                                            @csrf
+                                                            <input type="hidden" name="order_id" id="mark_paid_order_id" value="{{ $order->id }}">
+                                                            <button class="create_label btn-sm p-1 border-0 bg-primary text-white">
+                                                                Mark as Paid
+                                                            </button>
+                                                        </form>
+                                                    @endif
                                                 @endif
                                             </td>
                                             <td data-label="Payment Term :" class="td_padding_row">

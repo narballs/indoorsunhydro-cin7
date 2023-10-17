@@ -385,7 +385,11 @@
                                 </div>
                                 <div>
                                     <span class="tax-calculater">
-                                        (No payment is collected during this process)
+                                        @if(!empty($contact) && $contact->paymentTerms != 'Pay in Advanced')
+                                            (Your account has terms, No payment will be collected at checkout)
+                                        @else
+                                            (Pay in Advanced)
+                                        @endif
                                     </span>
                                 </div>
                             </td>
