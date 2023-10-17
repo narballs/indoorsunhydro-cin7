@@ -395,7 +395,6 @@ class OrderManagementController extends Controller
         $originalDateTime->setTimezone('America/Los_Angeles');
         $date_set = $originalDateTime->format('Y-m-d h:i:s A');
         $lineItems = [];
-        
         foreach ($order_items as $order_item) {
             $lineItems[] = [
                 "id" => $order_item->product->product_id,
@@ -506,21 +505,7 @@ class OrderManagementController extends Controller
 
             ],
         ];
-        $contact = Contact::where('contact_id', $memberId)->orWhere('parent_id' , $memberId)->first();
-        $advanced_paymentTerms = $contact->paymentTerms;
-        if (!empty($advanced_paymentTerms) && ($advanced_paymentTerms == 'Pay in Advanced')) {
-            if ($currentOrder->payment_status == 'paid') {
-                SalesOrders::dispatch('create_order', $order)->onQueue(env('QUEUE_NAME'));
-            }  else {
-                return response()->json([
-                    'status' => 401,
-                    'message' => 'Order payment is not paid !',
-                ]);
-            }
-        } else {
-
-            SalesOrders::dispatch('create_order', $order)->onQueue(env('QUEUE_NAME'));
-        }
+        SalesOrders::dispatch('create_order', $order)->onQueue(env('QUEUE_NAME'));
     }
 
     public function cancelOrder(Request $request)
@@ -636,24 +621,9 @@ class OrderManagementController extends Controller
                 ->get();
             if (count($orders) > 0) {
                 foreach ($orders as $order) {
-                    $contact = Contact::where('contact_id', $order->memberId)->orWhere('parent_id' , $order->memberId)->first();
-                    $advanced_paymentTerms = $contact->paymentTerms;
-                    if (!empty($advanced_paymentTerms) && ($advanced_paymentTerms == 'Pay in Advanced')) {
-                        if ($order->payment_status == 'paid') {
-                            $order_data = OrderHelper::get_order_data_to_process($order);
-                            SalesOrders::dispatch('create_order', $order_data)->onQueue(env('QUEUE_NAME'));
-                        }  else {
-                            return response()->json([
-                                'status' => 401,
-                                'message' => 'Order payment is not paid !',
-                            ]);
-                        }
-                    } else {
-
-                        $order_data = OrderHelper::get_order_data_to_process($order);
-                        SalesOrders::dispatch('create_order', $order_data)->onQueue(env('QUEUE_NAME'));
-                    }
-                    
+                    $order_data = OrderHelper::get_order_data_to_process($order);
+                    SalesOrders::dispatch('create_order', $order_data)
+                        ->onQueue(env('QUEUE_NAME'));
                 }
             } else {
                 return response()->json([
