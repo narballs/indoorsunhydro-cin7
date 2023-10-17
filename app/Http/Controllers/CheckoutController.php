@@ -371,8 +371,26 @@ class CheckoutController extends Controller
                 }
                 
             break;
-            case 'invoice.payment_failed':
-                // Handle payment failure event
+            case 'charge.failed':
+                $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
+                $payment_failed = $stripe->events->retrieve(
+                    $event->id,
+                    []
+                );
+                $order_id = $payment_failed->data->object->metadata->order_id;
+                $currentOrder = ApiOrder::where('id', $order_id)->with(
+                    'user.contact',
+                    'apiOrderItem.product.options',
+                    'texClasses'
+                )->first();
+                if ($payment_failed->data->object->paid != true) {
+                    $currentOrder->payment_status =  'unpaid';
+                    $currentOrder->save();
+                }
+                $order_comment = new OrderComment;
+                $order_comment->order_id = $order_id;
+                $order_comment->comment = 'Webhook failed! Unable to process payment.';
+                $order_comment->save();
             break;
             // Add more cases for other event types you want to handle
         }
