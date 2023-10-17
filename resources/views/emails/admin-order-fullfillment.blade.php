@@ -41,7 +41,7 @@
                         <img src="{{ url('/theme/img/' . \App\Helpers\SettingHelper::getSetting('logo_name')) }}" width="200">
                     </div>
                     <div style="margin-top:100px; border-bottom: 1px solid gray">
-                        <h2>Order # {{$primary_order_id}} Fulfilled</h2>
+                        <h2>Order  Fulfilled</h2>
                     </div>
                     <br><br>
                 </td>
