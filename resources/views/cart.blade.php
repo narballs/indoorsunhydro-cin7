@@ -100,9 +100,9 @@
                                         $cart_total = 0;
                                         $cart_price = 0;
                                         ?>
-                                        @if ($cart_items)
-                                       
-                                            @foreach ($cart_items as $pk_product_id => $cart)
+                                        @if (Session::get('cart'))
+            
+                                        @foreach (Session::get('cart') as $pk_product_id => $cart)
                                                 <?php
                                                 $total_quatity = $cart['quantity'];
                                                 $total_price = $cart['price'] * $total_quatity;
@@ -529,8 +529,9 @@
                                                         <thead>
                                                         </thead>
                                                         <tbody style="border-top: none !important">
-                                                            @if ($cart_items)
-                                                                @foreach ($cart_items as $pk_product_id => $cart)
+                                                            @if (Session::get('cart'))
+            
+                            @foreach (Session::get('cart') as $pk_product_id => $cart)
                                                                     <tr>
                                                                         <td class="p-1" style="vertical-align: middle;width:20%;background-color:#F7F7F7;">
                                                                             @if (!empty($cart['image']))
