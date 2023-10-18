@@ -181,7 +181,7 @@ class OrderController extends Controller
                             ]);
                             array_push($product_prices, $productPrice);
                         }
-                        if ($tax_rate > 0) {
+                        if (!empty($tax_rate) && $tax_rate > 0) {
                             $products_tax= $stripe->products->create([
                                 'name' => 'Tax',
                             ]);
@@ -202,7 +202,7 @@ class OrderController extends Controller
                                 'quantity' => $product_prices[$i]['metadata']['quantity'],
                             ];  
                         }
-                        if ($tax_rate > 0) {
+                        if (!empty($tax_rate) && $tax_rate > 0) {
                             $items[] = [
                                 'price' => $taxproductPrice->id,
                                 'quantity' => '1',
