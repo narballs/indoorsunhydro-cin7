@@ -1017,6 +1017,7 @@
             var order_id = $("#order_id").val();
             var delay = 7000;
             $('#progress-bar').removeClass('d-none');
+            
             jQuery(".progress-bar").each(function(i) {
                 jQuery(this).delay(delay * i).animate({
                     width: $(this).attr('aria-valuenow') + '%'
@@ -1029,10 +1030,9 @@
                     // easing: 'swing',
                     step: function(now) {
                         jQuery(this).text(Math.ceil(100) + '%');
-
                     }
                 });
-            })
+            });
             jQuery.ajax({
                 url: "{{ url('admin/order-full-fill') }}",
                 method: 'post',
@@ -1041,25 +1041,30 @@
                     "order_id": order_id
                 },
                 success: function(response) {
-                    console.log(response);
-                    jQuery.ajax({
-                        url: "{{ url('admin/check-status') }}",
-                        method: 'post',
-                        data: {
-                            "_token": "{{ csrf_token() }}",
-                            "order_id": order_id
-                        },
-                        success: function(response) {
-                            console.log(response.status);
-                            if (response.status === 'Order fullfilled successfully') {
-                                $('#fullfill_success').html(response.status);
-                            } else {
-                                $('#fullfill_failed').html(response.status);
+                    if (response.status === 'success') {
+                        jQuery.ajax({
+                            url: "{{ url('admin/check-status') }}",
+                            method: 'post',
+                            data: {
+                                "_token": "{{ csrf_token() }}",
+                                "order_id": order_id
+                            },
+                            success: function(response) {
+                                console.log(response.status);
+                                if (response.status === 'Order fullfilled successfully') {
+                                    $('#fullfill_success').html(response.status);
+                                } else {
+                                    $('#fullfill_failed').html(response.status);
+                                }
+                                $('#progress-bar').addClass('d-none');
+                                setInterval('location.reload()', 7000);
                             }
-                            $('#progress-bar').addClass('d-none');
-                            setInterval('location.reload()', 7000);
-                        }
-                    });
+                        });
+                    }
+                    else if (response.status === 'failed') {
+                        alert('This order is already in process. Please wait for a while.');
+                        location.reload();
+                    }
                 }
             });
         }
