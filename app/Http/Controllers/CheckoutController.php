@@ -256,9 +256,15 @@ class CheckoutController extends Controller
                         $active_contact_id = $contact->parent_id;
                     }
                 }
-                if($active_contact_id) {
+                if ($active_contact_id) {
                     $is_primary = Contact::where('contact_id', $session_contact_id)->first();
                 }
+
+                $order_comment = new OrderComment;
+                $order_comment->order_id = $order_id;
+                $order_comment->comment = 'Order Placed through Stripe';
+                $order_comment->save();
+
                 $order_id = $payment_succeeded->data->object->metadata->order_id;
 
                 $currentOrder = ApiOrder::where('id', $order_id)->with(
@@ -270,18 +276,24 @@ class CheckoutController extends Controller
                 if ($payment_succeeded->data->object->paid == true) {
                     $currentOrder->payment_status = 'paid';
                     $currentOrder->save();
+
+                    $order_comment = new OrderComment;
+                    $order_comment->order_id = $order_id;
+                    $order_comment->comment = 'Order marked as paid through webhook. (charge.succeeded)';
+                    $order_comment->save();
+
                 } else {
-                    $currentOrder->payment_status =  'unpaid';
+                    $currentOrder->payment_status = 'unpaid';
                     $currentOrder->save();
+
+
+                    $order_comment = new OrderComment;
+                    $order_comment->order_id = $order_id;
+                    $order_comment->comment = 'Order marked as unpaid through webhook, unable to verify payment. Although (charge.succeeded).';
+                    $order_comment->save();
                 }
 
-                $order_comment = new OrderComment;
-                $order_comment->order_id = $order_id;
-                $order_comment->comment = 'Order Placed through Stripe';
-                $order_comment->save();
-
-
-               
+              
                 $order_items = ApiOrderItem::with('order.texClasses', 'product.options')
                 ->where('order_id', $order_id)
                 ->get();
@@ -388,10 +400,13 @@ class CheckoutController extends Controller
                     $currentOrder->payment_status =  'unpaid';
                     $currentOrder->save();
                 }
+                
                 $order_comment = new OrderComment;
                 $order_comment->order_id = $order_id;
-                $order_comment->comment = 'Webhook failed! Unable to process payment.';
+                $order_comment->comment = 'Order marked as unpaid through webhook, unable to verify payment (charge.failed).';
                 $order_comment->save();
+
+
             break;
             // Add more cases for other event types you want to handle
         }
