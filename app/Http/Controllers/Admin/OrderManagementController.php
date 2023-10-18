@@ -33,6 +33,8 @@ use DateTime;
 
 use App\Helpers\SettingHelper;
 
+use DB;
+
 class OrderManagementController extends Controller
 {
     function __construct()
@@ -132,12 +134,7 @@ class OrderManagementController extends Controller
         ->with('apiOrderItem.product')
         ->where('id' , $id)
         ->first();
-        // $customer1 = Contact::where('user_id', $order->user_id)->first();
-        // $option_ids = ApiOrderItem::where('order_id', $id)->pluck('option_id')->toArray();
-        // $orderitems = $this->option_ids = $option_ids;
-        // $orderitems = ApiOrderItem:with(['product.options' => function ($q) {
-        //     $q->whereIn('option_id', $this->option_ids);
-        // }])->where('order_id', $id)->get();
+        
         $option_ids = ApiOrderItem::where('order_id', $id)->pluck('option_id')->toArray();
         $orderitems = $this->option_ids = $option_ids;
         $orderitems = ApiOrderItem::with(['product.options' => function ($q) {
@@ -146,6 +143,15 @@ class OrderManagementController extends Controller
         $tax_class = TaxClass::where('name', $customer->contact->tax_class)->first();
         $orderComment = OrderComment::where('order_id', $id)->with('comment')->get();
         // $products  = Product::with('options', 'brand', 'categories')->where('status' , '!=' , 'Inactive')->get();
+        
+        $job = DB::table('jobs')->where('payload', 'like', '%' . $order->reference . '%')->first();
+        if (!empty($job)) {
+            $is_processing = true;
+        }
+        else {
+            $is_processing = false;
+        }
+        
         return view('admin/order-details', compact(
             'order',
             'tax_class',
@@ -157,6 +163,7 @@ class OrderManagementController extends Controller
             'time_diff',
             'time_difference_seconds',
             'auto_fullfill',
+            'is_processing'
         ));
     }
 
@@ -372,140 +379,25 @@ class OrderManagementController extends Controller
     public function order_full_fill(Request $request)
     {
         $order_id = $request->input('order_id');
-        $currentOrder = ApiOrder::where('id', $order_id)->with('user.contact')->first();
-        if (!empty($currentOrder->user['contact'])) {
-            foreach ($currentOrder->user['contact'] as $contact) {
-                $userSubmiter  =   $contact->email . ',' . $contact->firstName . ',' . $contact->lastName;
-            }
+        $order = ApiOrder::where('id', $order_id)
+            ->with('user.contact')
+            ->with('texClasses')
+            ->first();
+        
+        $job = DB::table('jobs')->where('payload', 'like', '%' . $order->reference . '%')->first();
+        
+        if (empty($job)) {
+            $order_data = OrderHelper::get_order_data_to_process($order);
+            SalesOrders::dispatch('create_order', $order_data)->onQueue(env('QUEUE_NAME'));
+
+            return response()->json([
+                'status' => 'success',
+            ]);
         }
 
-        $userSwitchUser = [];
-        if (!empty($currentOrder->user_switch)) {
-            $userSwitchUser = $currentOrder->user_switch;
-        } else {
-            $userSwitchUser = "";
-        }
-        $orderSubmiterDetail = $userSubmiter . ',' . $userSwitchUser;
-
-        $userSwitchUser = $currentOrder->user_switch;
-        $memberId = $currentOrder->memberId;
-        $order_items = ApiOrderItem::with('product.options')->where('order_id', $order_id)->get();
-        $dateCreated = Carbon::now();
-        $originalDateTime = Carbon::createFromFormat('Y-m-d H:i:s', $currentOrder->date);
-        $originalDateTime->setTimezone('America/Los_Angeles');
-        $date_set = $originalDateTime->format('Y-m-d h:i:s A');
-        $lineItems = [];
-        foreach ($order_items as $order_item) {
-            $lineItems[] = [
-                "id" => $order_item->product->product_id,
-                "createdDate" => '2022-07-31T23:43:38Z',
-                "transaction" => '12',
-                "parentId" => 1,
-                "productId" => $order_item->product->product_id,
-                "productOptionId" => null,
-                "integrationRef" => $orderSubmiterDetail,
-                "sort" => 16,
-                "code" => $order_item->product->code,
-                "name" => $order_item->product->name,
-                "option1" => $order_item->product->option1,
-                "option2" => $order_item->product->option2,
-                "option3" => $order_item->product->option,
-                "qty" => $order_item->quantity,
-                "styleCode" => "sample string 1",
-                "barcode" => "sample string 2",
-                "sizeCodes" => "sample string 4",
-                "lineComments" => null,
-                "unitCost" => $order_item->price,
-                "unitPrice" => $order_item->price,
-                "discount" => null,
-                "qtyShipped" => 7,
-                "holdingQty" => 8,
-                "accountCode" => null,
-                "stockControl" => "Undefined",
-                "stockMovements" => [
-                    [
-                        "batch" => "sample string 1",
-                        "quantity" => 2.0,
-                        "serial" => "sample string 3"
-                    ],
-                    [
-                        "batch" => "sample string 1",
-                        "quantity" => 2.0,
-                        "serial" => "sample string 3"
-                    ],
-                ],
-                "sizes" => [
-                    [
-                        "name" => "sample string 1",
-                        "code" => "sample string 2",
-                        "barcode" => "sample string 3",
-                        "qty" => 4.0
-                    ]
-                ],
-            ];
-        }
-        $order = [];
-        unset($currentOrder['primaryId']);
-        unset($currentOrder['memberId']);
-        $order = [
-            [
-                $currentOrder,
-                "createdDate" => $dateCreated,
-                "modifiedDate" => "",
-                "createdBy" => 79914,
-                "processedBy" => 79914,
-                "isApproved" => true,
-                "reference" => $currentOrder->reference,
-                "memberId" => $memberId,
-                "branchId" => 3,
-                "branchEmail" => "wqszeeshan@gmail.com",
-                "projectName" => "",
-                "trackingCode" => "",
-                "internalComments" => $orderSubmiterDetail,
-                "productTotal" => 100,
-                "freightTotal" => null,
-                "freightDescription" => null,
-                "surcharge" => null,
-                "surchargeDescription" => null,
-                "discountTotal" => null,
-                "discountDescription" => null,
-                "total" => 100,
-                "currencyCode" => "USD",
-                "currencyRate" => 59.0,
-                "currencySymbol" => "$",
-                "taxStatus" => $currentOrder->texClasses->name,
-                "taxRate" => $currentOrder->texClasses->rate,
-                "source" => "sample string 62",
-                "accountingAttributes" =>
-                [
-                    "importDate" => "2022-07-13T15:21:16.1946848+12:00",
-                    "accountingImportStatus" => "NotImported"
-                ],
-                "memberEmail" => "wqszeeshan@gmail.com",
-                "memberCostCenter" => "sample string 6",
-                "memberAlternativeTaxRate" => "",
-                "costCenter" => null,
-                "alternativeTaxRate" => $currentOrder->texClasses->rate,
-                // "estimatedDeliveryDate" => "2022-07-13T15:21:16.1946848+12:00",
-                "estimatedDeliveryDate" => $date_set,
-                "salesPersonId" => 10,
-                "salesPersonEmail" => "wqszeeshan@gmail.com",
-                "paymentTerms" => $currentOrder->paymentTerms,
-                "customerOrderNo" => $currentOrder->po_number,
-                "voucherCode" => "sample string 14",
-                "deliveryInstructions" =>  $currentOrder->memo,
-                "status" => "VOID",
-                "invoiceDate" => null,
-                "invoiceNumber" => 4232,
-                "dispatchedDate" => null,
-                "logisticsCarrier" => $currentOrder->logisticsCarrier,
-                "logisticsStatus" => 1,
-                "distributionBranchId" => 0,
-                "lineItems" => $lineItems
-
-            ],
-        ];
-        SalesOrders::dispatch('create_order', $order)->onQueue(env('QUEUE_NAME'));
+        return response()->json([
+            'status' => 'failed',
+        ]);
     }
 
     public function cancelOrder(Request $request)
