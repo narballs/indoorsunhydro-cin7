@@ -287,9 +287,9 @@ $cart_price = 0;
                         $cart_total = 0;
                         $cart_price = 0;
                         ?>
-                        @if (Session::get('cart'))
+                        @if ($cart_items)
             
-                            @foreach (Session::get('cart') as $product_id => $cart)
+                            @foreach ($cart_items as $product_id => $cart)
                                 <?php
                                 $total_quatity = $cart['quantity'];
                                 $total_price = $cart['price'] * $total_quatity;
@@ -707,8 +707,10 @@ $cart_price = 0;
                                             $cart_total = 0;
                                             $cart_price = 0;
                                             ?>
-                                            @if (Session::get('cart'))
-                                                @foreach (Session::get('cart') as  $product_id => $cart)
+                                            
+                                            @if ($cart_items)
+            
+                                                @foreach ($cart_items as $product_id => $cart)
                                                     <?php
                                                         $total_quatity = $cart['quantity'];
                                                         $total_price = $cart['price'] * $total_quatity;
@@ -1086,8 +1088,9 @@ $cart_price = 0;
                                             $cart_total = 0;
                                             $cart_price = 0;
                                             ?>
-                                            @if (Session::get('cart'))
-                                                @foreach (Session::get('cart') as $cart)
+                                             @if ($cart_items)
+            
+                                             @foreach ($cart_items as $product_id => $cart)
                                                     <?php
                                                     $total_quatity = $cart['quantity'];
                                                     $total_price = $cart['price'] * $total_quatity;

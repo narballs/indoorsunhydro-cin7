@@ -149,6 +149,7 @@ class OrderController extends Controller
                     $product_prices = [];
                     $reference = $currentOrder->reference;
                     if (session()->has('cart')) {
+                        // dd($cart_items);
                         foreach ($cart_items as $cart_item) {
                             $OrderItem = new ApiOrderItem;
                             $OrderItem->order_id = $order_id;
@@ -167,14 +168,16 @@ class OrderController extends Controller
                                 'unit_amount' => $cart_item['price'] * 100,
                                 'currency' => 'usd',
                                 'product' => $products->id,
+                                'metadata' => [
+                                    'quantity'=> $cart_item['quantity']
+                                ]
                             ]);
                             array_push($product_prices, $productPrice);
                         }
-
                         for ($i = 0; $i <= count($product_prices) - 1; $i++){
                             $items[] = [
                                 'price' => $product_prices[$i]->id,
-                                'quantity' => 1,
+                                'quantity' => $product_prices[$i]['metadata']['quantity'],
                             ];  
                         }
                         $line_items = [
@@ -183,7 +186,6 @@ class OrderController extends Controller
                                 $items
                             ]
                         ];
-                        
                         $checkout_session = $stripe->checkout->sessions->create([
                             'success_url' => url('/thankyou/' . $order_id) . '?session_id={CHECKOUT_SESSION_ID}',
                             'cancel_url' => url('/checkout'),
