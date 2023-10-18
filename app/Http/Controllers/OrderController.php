@@ -33,6 +33,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Stripe\TaxRate;
 
 class OrderController extends Controller
 {
@@ -90,7 +91,7 @@ class OrderController extends Controller
                     $go_to_stripe_checkout = true;
                 }
 
-
+                $tax_rate = 0;
                 if ($go_to_stripe_checkout) {
                     $order = new ApiOrder;
                     
@@ -148,6 +149,12 @@ class OrderController extends Controller
                     $order_contact = Contact::where('contact_id', $currentOrder->memberId)->first();
                     $product_prices = [];
                     $reference = $currentOrder->reference;
+                    $get_tax_class = !empty($currentOrder->texClasses) ? $currentOrder->texClasses : null;
+                    if (!empty($get_tax_class)) {
+                        $tax_rate = $currentOrder->total * ($get_tax_class->rate / 100);
+                    } else {
+                        $tax_rate = 0;
+                    }
                     if (session()->has('cart')) {
                         // dd($cart_items);
                         foreach ($cart_items as $cart_item) {
@@ -174,11 +181,32 @@ class OrderController extends Controller
                             ]);
                             array_push($product_prices, $productPrice);
                         }
+                        if (!empty($tax_rate) && $tax_rate > 0) {
+                            $products_tax= $stripe->products->create([
+                                'name' => 'Tax',
+                            ]);
+
+                            $taxproductPrice = $stripe->prices->create([
+                                'unit_amount_decimal' => number_format($tax_rate, 2) * 100,
+                                'currency' => 'usd',
+                                'product' => $products_tax->id,
+                                // 'metadata' => [
+                                //     'quantity'=> 1
+                                // ]
+                            ]);
+                        }
+
                         for ($i = 0; $i <= count($product_prices) - 1; $i++){
                             $items[] = [
                                 'price' => $product_prices[$i]->id,
                                 'quantity' => $product_prices[$i]['metadata']['quantity'],
                             ];  
+                        }
+                        if (!empty($tax_rate) && $tax_rate > 0) {
+                            $items[] = [
+                                'price' => $taxproductPrice->id,
+                                'quantity' => '1',
+                            ];
                         }
                         $line_items = [
                             'line_items' => 
