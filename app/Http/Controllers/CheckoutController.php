@@ -169,7 +169,8 @@ class CheckoutController extends Controller
                 'matchZipCode',
                 'zip_code_is_valid',
                 'check_zip_code_setting',
-                'shipment_price'
+                'shipment_price',
+                'cart_items'
             ));
         } else {
             return redirect()->back()->with('message', 'Your account is disabled. You can not proceed with checkout. Please contact us.');
