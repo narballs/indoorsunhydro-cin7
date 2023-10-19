@@ -259,14 +259,7 @@ class CheckoutController extends Controller
                 if ($active_contact_id) {
                     $is_primary = Contact::where('contact_id', $session_contact_id)->first();
                 }
-
-                $order_comment = new OrderComment;
-                $order_comment->order_id = $order_id;
-                $order_comment->comment = 'Order Placed through Stripe';
-                $order_comment->save();
-
                 $order_id = $payment_succeeded->data->object->metadata->order_id;
-
                 $currentOrder = ApiOrder::where('id', $order_id)->with(
                         'user.contact',
                         'apiOrderItem.product.options',
