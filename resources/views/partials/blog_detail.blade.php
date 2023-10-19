@@ -10,12 +10,20 @@
                 <div class="container-fluid px-0 overflow-hidden">
                     <div class="row justify-content-center">
                         <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12 mb-5">
+                            @if(!empty($blog_detail->image))
                             <img src="{{asset('/pages/blogs/' . $blog_detail->image)}}" class="banner-img img-fluid w-100" alt="..." style="max-height:450px">
                             <h2 class="position-absolute top-50 start-50 translate-middle">
                                 <div class="banner-title">
                                     <span class="text-uppercase font-weight-bold text-white">{{$blog_detail->title}}</span>
                                 </div>
                             </h2>
+                            @else
+                            <h2 class="card-title text-center mt-3">
+                                <div class="banner-title">
+                                    <span class="text-uppercase font-weight-bold text-dark ">{{$blog_detail->title}}</span>
+                                </div>
+                            </h2>
+                            @endif
                         </div>
 
                         <div class="col-xl-10 col-md-10 col-sm-10 col-xs-10">
