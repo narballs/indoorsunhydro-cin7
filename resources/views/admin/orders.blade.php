@@ -162,8 +162,12 @@
                                     <td>
                                         <span class="d-flex table-row-item"> Stage</span>
                                     </td>
+                                    
                                     <td>
                                         <span class="d-flex table-row-item"> Payment Status</span>
+                                    </td>
+                                    <td>
+                                        <span class="d-flex table-row-item"> Payment Gateway</span>
                                     </td>
                                     <td>
                                         <span class="d-flex table-row-item"> Payment Term</span>
@@ -281,6 +285,9 @@
                                                         </form>
                                                     @endif
                                                 @endif
+                                            </td>
+                                            <td data-label="Payment Gateway :" class="td_padding_row">
+                                                <span class="badge badge-info p-1"> {{ !empty($order->is_stripe) && $order->is_stripe ==  1 ? 'Stripe' : 'None' }}</span>
                                             </td>
                                             <td data-label="Payment Term :" class="td_padding_row">
                                                 {{ $order->logisticsCarrier }}

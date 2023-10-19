@@ -146,6 +146,14 @@ class OrderController extends Controller
                         'apiOrderItem.product.options',
                         'texClasses'
                     )->first();
+
+                    //adding comment to order
+
+                    $order_comment = new OrderComment;
+                    $order_comment->order_id = $order_id;
+                    $order_comment->comment = 'Order Placed through Stripe';
+                    $order_comment->save();
+
                     $order_contact = Contact::where('contact_id', $currentOrder->memberId)->first();
                     $product_prices = [];
                     $reference = $currentOrder->reference;
