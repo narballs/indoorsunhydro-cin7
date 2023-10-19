@@ -50,7 +50,7 @@ class PagesController extends Controller
         
         $validated = $request->validate([
             'name' => 'required',
-            'title' => 'required',
+            // 'title' => 'required',
             'banner_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             // 'description' => 'required',
         ]);
@@ -116,7 +116,7 @@ class PagesController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required',
-            'title' => 'required',
+            // 'title' => 'required',
             // 'banner_image' => 'required|max:2048',
             // 'description' => 'required',
         ]);
