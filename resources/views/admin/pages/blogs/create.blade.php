@@ -41,7 +41,7 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="name"> Image</label>
-                                    <input type="file" class="form-control" id="image" aria-describedby="" name="image" accept="jpg,png,jpeg">
+                                    <input type="file" class="form-control" id="blog_image" aria-describedby="" name="blog_image" accept="jpg,png,jpeg">
                                 </div>
                             </div>
                             <div class="col-md-4">

@@ -182,17 +182,18 @@ class OrderController extends Controller
                             array_push($product_prices, $productPrice);
                         }
                         if (!empty($tax_rate) && $tax_rate > 0) {
+                            $formatted_tax = number_format($tax_rate, 2);
+                            $formatted_tax_rate = str_replace(',', '', $formatted_tax);
+                            $formatted_tax_value = number_format(($formatted_tax_rate * 100) , 2);
+                            $tax_value = str_replace(',', '', $formatted_tax_value);
                             $products_tax= $stripe->products->create([
                                 'name' => 'Tax',
                             ]);
 
                             $taxproductPrice = $stripe->prices->create([
-                                'unit_amount_decimal' => number_format($tax_rate, 2) * 100,
+                                'unit_amount_decimal' => $tax_value,
                                 'currency' => 'usd',
-                                'product' => $products_tax->id,
-                                // 'metadata' => [
-                                //     'quantity'=> 1
-                                // ]
+                                'product' => $products_tax->id
                             ]);
                         }
 
