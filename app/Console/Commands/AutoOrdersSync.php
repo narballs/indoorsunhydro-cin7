@@ -73,9 +73,15 @@ class AutoOrdersSync extends Command
 
         foreach ($orders as $order) {
             $this->info('Order Date ' . $order->created_at);
-
-            $order_data = OrderHelper::get_order_data_to_process($order);
-            SalesOrders::dispatch('create_order', $order_data)->onQueue(env('QUEUE_NAME'));
+            if (!empty($order->is_stripe) && $order->is_stripe == 1 ) {
+                if (strtolower($order->payment_status) === 'paid') {
+                    $order_data = OrderHelper::get_order_data_to_process($order);
+                    SalesOrders::dispatch('create_order', $order_data)->onQueue(env('QUEUE_NAME'));
+                }
+            } else {
+                $order_data = OrderHelper::get_order_data_to_process($order);
+                SalesOrders::dispatch('create_order', $order_data)->onQueue(env('QUEUE_NAME'));
+            }
         }
 
         $this->info('Finished.');

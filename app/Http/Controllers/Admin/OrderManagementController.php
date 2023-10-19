@@ -33,7 +33,7 @@ use DateTime;
 
 use App\Helpers\SettingHelper;
 
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class OrderManagementController extends Controller
 {
@@ -208,163 +208,163 @@ class OrderManagementController extends Controller
         return redirect()->back()->with('success', 'Order Status changed successfully !');
     }
 
-    public function create()
-    {
-        $order = [];
+    // public function create()
+    // {
+    //     $order = [];
 
-        $order = [
-            [
-                "createdDate" => "2022-07-13T15:21:16.1946848+12:00",
-                "modifiedDate" => "2022-07-13T15:21:16.1946848+12:00",
-                "createdBy" => 17,
-                "processedBy" => 18,
-                "isApproved" => true,
-                "reference" => "",
-                "memberId" => 7,
-                "firstName" => "sample string 22",
-                "lastName" => "sample string 23",
-                "company" => "sample string 24",
-                "email" => "wqszeeshan@gmail.com",
-                "phone" => "sample string 26",
-                "mobile" => "sample string 27",
-                "fax" => "sample string 28",
-                "deliveryFirstName" => "sample string 29",
-                "deliveryLastName" => "sample string 30",
-                "deliveryCompany" => "sample string 31",
-                "deliveryAddress1" => "sample string 32",
-                "deliveryAddress2" => "sample string 33",
-                "deliveryCity" => "sample string 34",
-                "deliveryState" => "sample string 35",
-                "deliveryPostalCode" => "sample string 36",
-                "deliveryCountry" => "sample string 37",
-                "billingFirstName" => "sample string 38",
-                "billingLastName" => "sample string 39",
-                "billingCompany" => "sample string 40",
-                "billingAddress1" => "sample string 41",
-                "billingAddress2" => "sample string 42",
-                "billingCity" => "sample string 43",
-                "billingPostalCode" => "sample string 44",
-                "billingState" => "sample string 45",
-                "billingCountry" => "sample string 46",
-                "branchId" => 47,
-                "branchEmail" => "wqszeeshan@gmail.com",
-                "projectName" => "sample string 49",
-                "trackingCode" => "sample string 50",
-                "internalComments" => "sample string 51",
-                "productTotal" => 52.0,
-                "freightTotal" => null,
-                "freightDescription" => null,
-                "surcharge" => null,
-                "surchargeDescription" => null,
-                "discountTotal" => null,
-                "discountDescription" => null,
-                "total" => 56.0,
-                "currencyCode" => "USD",
-                "currencyRate" => 59.0,
-                "currencySymbol" => "sample string 60",
-                "taxStatus" => "Undefined",
-                "taxRate" => 61.0,
-                "source" => "sample string 62",
-                "isVoid" => true,
-                "accountingAttributes" =>
-                [
-                    "importDate" => "2022-07-13T15:21:16.1946848+12:00",
-                    "accountingImportStatus" => "NotImported"
-                ],
-                "memberEmail" => "wqszeeshan@gmail.com",
-                "memberCostCenter" => "sample string 6",
-                "memberAlternativeTaxRate" => "sample string 7",
-                "costCenter" => "sample string 8",
-                "alternativeTaxRate" => null,
-                "estimatedDeliveryDate" => "2022-07-13T15:21:16.1946848+12:00",
-                "salesPersonId" => 10,
-                "salesPersonEmail" => "wqszeeshan@gmail.com",
-                "paymentTerms" => "sample string 12",
-                "customerOrderNo" => "sample string 13",
-                "voucherCode" => "sample string 14",
-                "deliveryInstructions" => "sample string 15",
-                "status" => "VOID",
-                "stage" => "sample string 4",
-                "invoiceDate" => null,
-                "invoiceNumber" => null,
-                "dispatchedDate" => "",
-                "logisticsCarrier" => "sample string 2",
-                "logisticsStatus" => 1,
-                "distributionBranchId" => 0,
-                "lineItems" =>
-                [
-                    [
-                        "id" => 10,
-                        "createdDate" => "2022-07-13T15:21:16.1946848+12:00",
-                        "transactionId" => 12,
-                        "parentId" => 1,
-                        "productId" => 13,
-                        "productOptionId" => 14,
-                        "integrationRef" => "sample string 15",
-                        "sort" => 16,
-                        "code" => "sample string 17",
-                        "name" => "sample string 18",
-                        "option1" => "sample string 19",
-                        "option2" => "sample string 20",
-                        "option3" => "sample string 21",
-                        "qty" => 1.0,
-                        "styleCode" => "sample string 1",
-                        "barcode" => "sample string 2",
-                        "sizeCodes" => "sample string 4",
-                        "lineComments" => null,
-                        "unitCost" => 1.0,
-                        "unitPrice" => 1.0,
-                        "discount" => null,
-                        "qtyShipped" => 7.0,
-                        "holdingQty" => 8.0,
-                        "accountCode" => null,
-                        "stockControl" => "Undefined",
-                        "stockMovements" => [
-                            [
-                                "batch" => "sample string 1",
-                                "quantity" => 2.0,
-                                "serial" => "sample string 3"
+    //     $order = [
+    //         [
+    //             "createdDate" => "2022-07-13T15:21:16.1946848+12:00",
+    //             "modifiedDate" => "2022-07-13T15:21:16.1946848+12:00",
+    //             "createdBy" => 17,
+    //             "processedBy" => 18,
+    //             "isApproved" => true,
+    //             "reference" => "",
+    //             "memberId" => 7,
+    //             "firstName" => "sample string 22",
+    //             "lastName" => "sample string 23",
+    //             "company" => "sample string 24",
+    //             "email" => "wqszeeshan@gmail.com",
+    //             "phone" => "sample string 26",
+    //             "mobile" => "sample string 27",
+    //             "fax" => "sample string 28",
+    //             "deliveryFirstName" => "sample string 29",
+    //             "deliveryLastName" => "sample string 30",
+    //             "deliveryCompany" => "sample string 31",
+    //             "deliveryAddress1" => "sample string 32",
+    //             "deliveryAddress2" => "sample string 33",
+    //             "deliveryCity" => "sample string 34",
+    //             "deliveryState" => "sample string 35",
+    //             "deliveryPostalCode" => "sample string 36",
+    //             "deliveryCountry" => "sample string 37",
+    //             "billingFirstName" => "sample string 38",
+    //             "billingLastName" => "sample string 39",
+    //             "billingCompany" => "sample string 40",
+    //             "billingAddress1" => "sample string 41",
+    //             "billingAddress2" => "sample string 42",
+    //             "billingCity" => "sample string 43",
+    //             "billingPostalCode" => "sample string 44",
+    //             "billingState" => "sample string 45",
+    //             "billingCountry" => "sample string 46",
+    //             "branchId" => 47,
+    //             "branchEmail" => "wqszeeshan@gmail.com",
+    //             "projectName" => "sample string 49",
+    //             "trackingCode" => "sample string 50",
+    //             "internalComments" => "sample string 51",
+    //             "productTotal" => 52.0,
+    //             "freightTotal" => null,
+    //             "freightDescription" => null,
+    //             "surcharge" => null,
+    //             "surchargeDescription" => null,
+    //             "discountTotal" => null,
+    //             "discountDescription" => null,
+    //             "total" => 56.0,
+    //             "currencyCode" => "USD",
+    //             "currencyRate" => 59.0,
+    //             "currencySymbol" => "sample string 60",
+    //             "taxStatus" => "Undefined",
+    //             "taxRate" => 61.0,
+    //             "source" => "sample string 62",
+    //             "isVoid" => true,
+    //             "accountingAttributes" =>
+    //             [
+    //                 "importDate" => "2022-07-13T15:21:16.1946848+12:00",
+    //                 "accountingImportStatus" => "NotImported"
+    //             ],
+    //             "memberEmail" => "wqszeeshan@gmail.com",
+    //             "memberCostCenter" => "sample string 6",
+    //             "memberAlternativeTaxRate" => "sample string 7",
+    //             "costCenter" => "sample string 8",
+    //             "alternativeTaxRate" => null,
+    //             "estimatedDeliveryDate" => "2022-07-13T15:21:16.1946848+12:00",
+    //             "salesPersonId" => 10,
+    //             "salesPersonEmail" => "wqszeeshan@gmail.com",
+    //             "paymentTerms" => "sample string 12",
+    //             "customerOrderNo" => "sample string 13",
+    //             "voucherCode" => "sample string 14",
+    //             "deliveryInstructions" => "sample string 15",
+    //             "status" => "VOID",
+    //             "stage" => "sample string 4",
+    //             "invoiceDate" => null,
+    //             "invoiceNumber" => null,
+    //             "dispatchedDate" => "",
+    //             "logisticsCarrier" => "sample string 2",
+    //             "logisticsStatus" => 1,
+    //             "distributionBranchId" => 0,
+    //             "lineItems" =>
+    //             [
+    //                 [
+    //                     "id" => 10,
+    //                     "createdDate" => "2022-07-13T15:21:16.1946848+12:00",
+    //                     "transactionId" => 12,
+    //                     "parentId" => 1,
+    //                     "productId" => 13,
+    //                     "productOptionId" => 14,
+    //                     "integrationRef" => "sample string 15",
+    //                     "sort" => 16,
+    //                     "code" => "sample string 17",
+    //                     "name" => "sample string 18",
+    //                     "option1" => "sample string 19",
+    //                     "option2" => "sample string 20",
+    //                     "option3" => "sample string 21",
+    //                     "qty" => 1.0,
+    //                     "styleCode" => "sample string 1",
+    //                     "barcode" => "sample string 2",
+    //                     "sizeCodes" => "sample string 4",
+    //                     "lineComments" => null,
+    //                     "unitCost" => 1.0,
+    //                     "unitPrice" => 1.0,
+    //                     "discount" => null,
+    //                     "qtyShipped" => 7.0,
+    //                     "holdingQty" => 8.0,
+    //                     "accountCode" => null,
+    //                     "stockControl" => "Undefined",
+    //                     "stockMovements" => [
+    //                         [
+    //                             "batch" => "sample string 1",
+    //                             "quantity" => 2.0,
+    //                             "serial" => "sample string 3"
 
-                            ],
-                            [
-                                "batch" => "sample string 1",
-                                "quantity" => 2.0,
-                                "serial" => "sample string 3"
-                            ],
-                        ],
-                        "sizes" => [
-                            [
-                                "name" => "sample string 1",
-                                "code" => "sample string 2",
-                                "barcode" => "sample string 3",
-                                "qty" => 4.0
-                            ]
-                        ]
-                    ],
+    //                         ],
+    //                         [
+    //                             "batch" => "sample string 1",
+    //                             "quantity" => 2.0,
+    //                             "serial" => "sample string 3"
+    //                         ],
+    //                     ],
+    //                     "sizes" => [
+    //                         [
+    //                             "name" => "sample string 1",
+    //                             "code" => "sample string 2",
+    //                             "barcode" => "sample string 3",
+    //                             "qty" => 4.0
+    //                         ]
+    //                     ]
+    //                 ],
 
-                ]
-            ],
-        ];
-        SalesOrders::dispatch('create_order', [
-            'json' =>
-            $order
-        ])->onQueue(env('QUEUE_NAME'));
-        exit;
+    //             ]
+    //         ],
+    //     ];
+    //     SalesOrders::dispatch('create_order', [
+    //         'json' =>
+    //         $order
+    //     ])->onQueue(env('QUEUE_NAME'));
+    //     exit;
 
-        $client = new \GuzzleHttp\Client();
-        $url = "https://api.cin7.com/api/v1/SalesOrders/";
-        $response = $client->post($url, [
-            'headers' => ['Content-type' => 'application/json'],
-            'auth' => [
-                SettingHelper::getSetting('cin7_auth_username'),
-                SettingHelper::getSetting('cin7_auth_password')
-            ],
-            'json' =>
-            $order,
-        ]);
+    //     $client = new \GuzzleHttp\Client();
+    //     $url = "https://api.cin7.com/api/v1/SalesOrders/";
+    //     $response = $client->post($url, [
+    //         'headers' => ['Content-type' => 'application/json'],
+    //         'auth' => [
+    //             SettingHelper::getSetting('cin7_auth_username'),
+    //             SettingHelper::getSetting('cin7_auth_password')
+    //         ],
+    //         'json' =>
+    //         $order,
+    //     ]);
 
-        echo $response->getBody();
-    }
+    //     echo $response->getBody();
+    // }
 
     public function show_api_order($id)
     {
@@ -387,12 +387,25 @@ class OrderManagementController extends Controller
         $job = DB::table('jobs')->where('payload', 'like', '%' . $order->reference . '%')->first();
         
         if (empty($job)) {
-            $order_data = OrderHelper::get_order_data_to_process($order);
-            SalesOrders::dispatch('create_order', $order_data)->onQueue(env('QUEUE_NAME'));
+            if (!empty($order->is_stripe) && $order->is_stripe == 1 ) {
+                if (strtolower($order->payment_status) === 'paid') {
+                    $order_data = OrderHelper::get_order_data_to_process($order);
+                    SalesOrders::dispatch('create_order', $order_data)->onQueue(env('QUEUE_NAME'));
 
-            return response()->json([
-                'status' => 'success',
-            ]);
+                    return response()->json([
+                        'status' => 'success',
+                    ]);
+                }
+            } 
+            else {
+                $order_data = OrderHelper::get_order_data_to_process($order);
+                SalesOrders::dispatch('create_order', $order_data)->onQueue(env('QUEUE_NAME'));
+
+                return response()->json([
+                    'status' => 'success',
+                ]);
+            }
+            
         }
 
         return response()->json([
@@ -513,9 +526,22 @@ class OrderManagementController extends Controller
                 ->get();
             if (count($orders) > 0) {
                 foreach ($orders as $order) {
-                    $order_data = OrderHelper::get_order_data_to_process($order);
-                    SalesOrders::dispatch('create_order', $order_data)
-                        ->onQueue(env('QUEUE_NAME'));
+                    if (!empty($order->is_stripe) && $order->is_stripe == 1 ) {
+                        if (strtolower($order->payment_status) === 'paid') {
+                            $order_data = OrderHelper::get_order_data_to_process($order);
+                            SalesOrders::dispatch('create_order', $order_data)
+                                ->onQueue(env('QUEUE_NAME'));
+                        } else {
+                            return response()->json([
+                                'message' => 'Your order payment is not paid !',
+                                'status' => 401
+                            ]);
+                        }
+                    } else {
+                        $order_data = OrderHelper::get_order_data_to_process($order);
+                        SalesOrders::dispatch('create_order', $order_data)
+                            ->onQueue(env('QUEUE_NAME'));
+                    }
                 }
             } else {
                 return response()->json([
