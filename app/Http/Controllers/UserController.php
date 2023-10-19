@@ -105,13 +105,15 @@ class UserController extends Controller
         if (!empty($search)) {
             $user_query = $user_query->where('first_name', 'LIKE', '%' . $search . '%')
                 ->orWhere('last_name', 'like', '%' . $search . '%')
+                ->orWhere(DB::raw("CONCAT(first_name,' ',last_name)"), 'like', '%' . $search . '%')
                 ->orWhere('email', 'like', '%' . $search . '%')
                 ->orWhereHas('contact', function ($query) use ($search) {
                     $query->where('contact_id', 'like', '%' . $search . '%')
                         ->orWhere('company', 'like', '%' . $search . '%')
                         ->orWhere('email', 'like', '%' . $search . '%')
                         ->orWhere('firstName', 'like', '%' . $search . '%')
-                        ->orWhere('lastName', 'like', '%' . $search . '%');
+                        ->orWhere('lastName', 'like', '%' . $search . '%')
+                        ->orWhere(DB::raw("CONCAT(first_name,' ',last_name)"), 'like', '%' . $search . '%');
                 });
         }
 
