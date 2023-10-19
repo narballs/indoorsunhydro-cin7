@@ -10,68 +10,93 @@
     <!-- sdfkjlsdkfjsdlkfk -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <div class="row">
-        <div class="col-md-8 d-flex justify-content-end mb-3">
-            <form>
-                @csrf
-                <input type="hidden" value="{{ $time_diff }}" id="timeSpanToCancel">
-                <input type="hidden" value="{{ $time_difference_seconds }}" id="seconds">
-                @if ($order->isApproved == 2)
-                    <button type="button" class="btn btn-danger btn-sm" disabled>Cancel
-                        Order</button>
-                    <div class="countdown">
+        <div class="col-md-8 d-flex mb-3">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-8 d-flex align-items-center">
+                        <h6 class="mb-0">
+                            @if ($order->is_stripe == 1 && strtolower($order->payment_status) == 'unpaid')
+                                <span class="text-danger">This order is processed through stripe. But we are unable to verify payment.</span>
+                            @endif
+                        </h6>
                     </div>
-                @elseif($order->isApproved == 1 || $time_diff > 3)
-                    <div class="col-md-12">
-                        <button type="button" class="btn btn-secondary btn-sm" disabled>
-                            Cancel Order
-                        </button>
+                    <div class="col-md-4">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-6 d-flex justify-content-end">
+                                    <form class="mb-0">
+                                        @csrf
+                                        <input type="hidden" value="{{ $time_diff }}" id="timeSpanToCancel">
+                                        <input type="hidden" value="{{ $time_difference_seconds }}" id="seconds">
+                                        @if ($order->isApproved == 2)
+                                            <button type="button" class="btn btn-danger btn-sm" disabled>Cancel
+                                                Order</button>
+                                            <div class="countdown">
+                                            </div>
+                                        @elseif($order->isApproved == 1 || $time_diff > 3)
+                                            <div class="col-md-12">
+                                                <button type="button" class="btn btn-secondary btn-sm" disabled>
+                                                    Cancel Order
+                                                </button>
+                                            </div>
+                                        @else
+                                            <div class="col-md-10">
+                                                <input type="hidden" value="{{ $orderitems[0]['order_id'] }}"
+                                                    id="order_id">
+                                                <input class="btn btn-danger btn-sm" type="button" value="Cancel Order"
+                                                    id="cancel_order" onclick=" cancelOrder(); addComment(0);">
+                        
+                                            </div>
+                                            <div class="countdown"></div>
+                                        @endif
+                                    </form>
+                                </div>
+                                <div class="col-md-6 d-flex justify-content-end">
+                                    <form class="mb-0">
+                                        @csrf
+                                        @if ($order->isApproved == 1 )
+                                            <div class="col-md-12">
+                                                <button type="button" class="btn btn-secondary btn-sm" disabled>
+                                                    Fullfilled
+                                                </button>
+                                            </div>
+                                        @elseif ($order->isApproved == 2)
+                                            <div class="col-md-12">
+                                                <button type="button" class="btn btn-danger btn-sm" disabled>
+                                                    Fullfilled
+                                                </button>
+                                            </div>
+                                        @elseif ($order->is_stripe == 1 && strtolower($order->payment_status) == 'unpaid')
+                                            <div class="col-md-12">
+                                                <button type="button" class="btn btn-danger btn-sm" disabled>
+                                                    Fullfilled
+                                                </button>
+                                            </div>
+                        
+                                        @elseif ($order->isApproved == 0 && $auto_fullfill == true )
+                                            <div class="col-md-12">
+                                                <input id="full_fill" class="btn btn-primary btn-sm " type="button"
+                                                    value="Fullfill Order" disabled>
+                                            </div>
+                                            <div class="spinner-border d-none" role="status" id="spinner">
+                                                <span class="sr-only" style="margin-left: 227px">Activating...</span>
+                                            </div>
+                                         @elseif ($order->isApproved == 0 && $auto_fullfill == false )
+                                            <div class="col-md-12">
+                                                <input id="full_fill" class="btn btn-primary btn-sm" type="button"
+                                                    value="Fullfill Order" onclick="fullFillOrder()">
+                                            </div>
+                                            <div class="spinner-border d-none" role="status" id="spinner">
+                                                <span class="sr-only" style="margin-left: 227px">Activating...</span>
+                                            </div>
+                                        @endif
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                @else
-                    <div class="col-md-10">
-                        <input type="hidden" value="{{ $orderitems[0]['order_id'] }}"
-                            id="order_id">
-                        <input class="btn btn-danger btn-sm" type="button" value="Cancel Order"
-                            id="cancel_order" onclick=" cancelOrder(); addComment(0);">
-
-                    </div>
-                    <div class="countdown"></div>
-                @endif
-            </form>
-            <form>
-                @csrf
-                @if ($order->isApproved == 1 )
-                    <div class="col-md-12">
-                        <button type="button" class="btn btn-secondary btn-sm" disabled>
-                            Fullfilled
-                        </button>
-                    </div>
-                @elseif ($order->isApproved == 2)
-                    <div class="col-md-12"
-                        style="margin-left: 122px;
-                margin-top: -29px;">
-                        <button type="button" class="btn btn-danger btn-sm" disabled>
-                            Fullfilled
-                        </button>
-                    </div>
-
-                @elseif ($order->isApproved == 0 && $auto_fullfill == true )
-                    <div class="col-md-12">
-                        <input id="full_fill" class="btn btn-primary btn-sm " type="button"
-                            value="Fullfill Order" disabled>
-                    </div>
-                    <div class="spinner-border d-none" role="status" id="spinner">
-                        <span class="sr-only" style="margin-left: 227px">Activating...</span>
-                    </div>
-                 @elseif ($order->isApproved == 0 && $auto_fullfill == false )
-                    <div class="col-md-12">
-                        <input id="full_fill" class="btn btn-primary btn-sm" type="button"
-                            value="Fullfill Order" onclick="fullFillOrder()">
-                    </div>
-                    <div class="spinner-border d-none" role="status" id="spinner">
-                        <span class="sr-only" style="margin-left: 227px">Activating...</span>
-                    </div>
-                @endif
-            </form>
+                </div>
+            </div>
         </div>
         <div class="progress border d-none w-50 mb-2" id="progress-bar">
             <div class="progress-bar progress-bar-striped progress-bar-animated bg-info"
@@ -105,7 +130,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-2">
+                                        <div class="col-md-1">
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <span class="order-head">Order</span>
@@ -116,6 +141,16 @@
                                             </div>
                                         </div>
                                         <div class="col-md-2">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <span class="order-head">Payment Gateway</span>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <span class="text-info">{{ !empty($order->is_stripe) && $order->is_stripe ==  1 ? 'Stripe' : 'None' }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-1">
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <span class="order-head">Status</span>
@@ -133,13 +168,14 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        
                                         <div class="col-md-2">
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <span class="order-head">Payment Status</span>
                                                 </div>
                                                 <div class="col-md-12">
-                                                    {{strtoupper($order->payment_status)}}
+                                                    <span class="text-primary">{{strtoupper($order->payment_status)}}</span>
                                                 </div>
                                             </div>
                                         </div>
