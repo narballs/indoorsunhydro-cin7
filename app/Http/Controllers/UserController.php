@@ -113,7 +113,7 @@ class UserController extends Controller
                         ->orWhere('email', 'like', '%' . $search . '%')
                         ->orWhere('firstName', 'like', '%' . $search . '%')
                         ->orWhere('lastName', 'like', '%' . $search . '%')
-                        ->orWhere(DB::raw("CONCAT(first_name,' ',last_name)"), 'like', '%' . $search . '%');
+                        ->orWhere(DB::raw("CONCAT(firstName,' ',lastName)"), 'like', '%' . $search . '%');
                 });
         }
 
