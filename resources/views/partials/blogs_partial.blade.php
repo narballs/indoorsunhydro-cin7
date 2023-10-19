@@ -8,7 +8,9 @@
 				@foreach ($blogs as $blog)
 				<div class="col-md-4 mb-3">
 					<div class="card rounded">
-						<img class="card-img-top rounded-top" src="{{asset('pages/blogs/' . $blog->image)}}" alt="Blog Image">
+						@if (!empty($blog->image))
+							<img class="card-img-top rounded-top" src="{{asset('pages/blogs/' . $blog->image)}}" alt="Blog Image">
+						@endif
 						<div class="card-body">
 							<h5 class="card-title">{{$blog->title}}</h5>
 							<p class="card-text mb-0">{!! \Illuminate\Support\Str::limit($blog->description, 130) !!}</p>

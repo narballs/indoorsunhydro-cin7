@@ -265,12 +265,16 @@ class PagesController extends Controller
             'description' => 'required',
         ]);
 
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $blog_image = time() . '.' . $image->getClientOriginalExtension();
-            $destinationPath = public_path('pages/blogs');
-            File::makeDirectory($destinationPath, $mode = 0777, true, true);
-            $image->move($destinationPath, $blog_image);
+        if(!empty($request->blog_image)) {
+            if ($request->hasFile('blog_image')) {
+                $image = $request->file('blog_image');
+                $blog_image = time() . '.' . $image->getClientOriginalExtension();
+                $destinationPath = public_path('pages/blogs');
+                File::makeDirectory($destinationPath, $mode = 0777, true, true);
+                $image->move($destinationPath, $blog_image);
+            }
+        } else {
+            $blog_image = null;
         }
         $random_number = rand(1, 1000);
         try {
@@ -306,12 +310,12 @@ class PagesController extends Controller
         $random_number = rand(1, 1000);
         $blog = Blog::findOrFail($id);
         $Image =  null;
-        if ($blog_image = $request->file('image')) {
+        if ($blog_image = $request->file('blog_image')) {
             $destinationPath = public_path('pages/blogs');
             $Image = time() . "." . $blog_image->getClientOriginalExtension();
             File::makeDirectory($destinationPath, $mode = 0777, true, true);
             $blog_image->move($destinationPath, $Image);
-            $request['image'] = "$Image";
+            $request['blog_image'] = "$Image";
 
         } else {
             $Image = $blog->image;
