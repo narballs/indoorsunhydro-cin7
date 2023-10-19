@@ -98,7 +98,8 @@ class ContactController extends Controller
                 ->orWhere('contact_id', 'like', '%' . $search . '%')
                 ->orWhere('id', 'like', '%' . $search . '%')
                 ->orWhere('priceColumn', 'like', '%' . $search . '%')
-                ->orWhere('notes', 'like', '%' . $search . '%');
+                ->orWhere('notes', 'like', '%' . $search . '%')
+                ->orWhere(DB::raw("CONCAT(firstName,' ',lastName)"), 'like', '%' . $search . '%');
         }
 
         if (!empty($request->sort_by_desc)) {
