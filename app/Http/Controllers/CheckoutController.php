@@ -265,7 +265,7 @@ class CheckoutController extends Controller
                         'apiOrderItem.product.options',
                         'texClasses'
                     )->first();
-                $order_contact = Contact::where('contact_id', $currentOrder->memberId)->first();
+                
                 if ($payment_succeeded->data->object->paid == true) {
                     $currentOrder->payment_status = 'paid';
                     $currentOrder->save();
@@ -293,12 +293,15 @@ class CheckoutController extends Controller
                 $contact = Contact::where('user_id', auth()->id())->first();
                 $check_shipstation_create_order_status = AdminSetting::where('option_name', 'create_order_in_shipstation')->first();
                 if (!empty($check_shipstation_create_order_status) && strtolower($check_shipstation_create_order_status->option_value) == 'yes') {
-                    UserHelper::shipping_order($order_id , $currentOrder , $order_contact);
-                    $shiping_order = UserHelper::shipping_order($order_id , $currentOrder , $order_contact);
-                    if ($shiping_order['statusCode'] == 200) {
-                        $orderUpdate = ApiOrder::where('id', $order_id)->update([
-                            'shipstation_orderId' => $shiping_order['responseBody']->orderId,
-                        ]);
+                    $order_contact = Contact::where('contact_id', $currentOrder->memberId)->orWhere('parent_id' , $currentOrder->memberId)->first();
+                    if (!empty($order_contact)) {
+                        UserHelper::shipping_order($order_id , $currentOrder , $order_contact);
+                        $shiping_order = UserHelper::shipping_order($order_id , $currentOrder , $order_contact);
+                        if ($shiping_order['statusCode'] == 200) {
+                            $orderUpdate = ApiOrder::where('id', $order_id)->update([
+                                'shipstation_orderId' => $shiping_order['responseBody']->orderId,
+                            ]);
+                        }
                     }
                 }
                 $user_email = Auth::user();
