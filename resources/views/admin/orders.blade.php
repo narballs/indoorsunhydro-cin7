@@ -279,7 +279,7 @@
                                                         <form action="{{url('order/mark/paid')}}" method="post">
                                                             @csrf
                                                             <input type="hidden" name="order_id" id="mark_paid_order_id" value="{{ $order->id }}">
-                                                            <button class="create_label btn-sm p-1 border-0 bg-primary text-white">
+                                                            <button class="badge badge-primary p-2 border-0">
                                                                 Mark as Paid
                                                             </button>
                                                         </form>
@@ -299,13 +299,13 @@
                                                             @csrf
                                                             <input type="hidden" name="order_id" id="order_id"
                                                                 value="{{ $order->id }}">
-                                                            <button type="submit" class="create_label btn-sm p-1 border-0 bg-info text-white">
+                                                            <button type="submit" class="badge badge-info p-2 border-0">
                                                                 Create Label
                                                             </button>
                                                         </form>
                                                     @else
                                                         @if ($order->label_link != '')
-                                                            <a href="{{route('download_label' , $order->label_link)}}" class="create_label btn-sm p-1 border-0 bg-success text-white">
+                                                            <a href="{{route('download_label' , $order->label_link)}}" class="badge badge-success p-2 border-0">
                                                                 Download
                                                             </a>
                                                         @endif
