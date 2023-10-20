@@ -29,8 +29,7 @@
                                         <input type="hidden" value="{{ $time_diff }}" id="timeSpanToCancel">
                                         <input type="hidden" value="{{ $time_difference_seconds }}" id="seconds">
                                         @if ($order->isApproved == 2)
-                                            <button type="button" class="btn btn-danger btn-sm" disabled>Cancel
-                                                Order</button>
+                                            <button type="button" class="btn btn-danger btn-sm" disabled>Cancelled</button>
                                             <div class="countdown">
                                             </div>
                                         @elseif($order->isApproved == 1 || $time_diff > 3)
@@ -63,7 +62,7 @@
                                         @elseif ($order->isApproved == 2)
                                             <div class="col-md-12">
                                                 <button type="button" class="btn btn-danger btn-sm" disabled>
-                                                    Fullfilled
+                                                    Not Fullfilled
                                                 </button>
                                             </div>
                                         @elseif ($order->is_stripe == 1 && strtolower($order->payment_status) == 'unpaid')
