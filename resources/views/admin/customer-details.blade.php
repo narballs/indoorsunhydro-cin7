@@ -375,7 +375,7 @@
                                                     @endif
                                                 @endif --}}
                                                 <td>
-                                                    {{$customer_order->id}}
+                                                    <a href="{{url('admin/order-detail/' . $customer_order->id)}}" class="order-primary-id">{{$customer_order->id}}</a>
                                                 </td>
                                                 <?php $createdDate = $customer_order->created_at;
                                                 $formatedDate = $createdDate->format('F j, Y');
@@ -394,7 +394,7 @@
                                                 </td>
                                                 <td>
                                                     <select name="order_status_id" class="form-control" id="order_status_id" onchange="update_order_status('{{$customer_order->id}}')">
-                                                        <option value="">Pending</option>
+                                                        {{-- <option value="">Pending</option> --}}
                                                         @foreach ($order_statuses as $order_status)
                                                             <option value="{{ $order_status->id }}"
                                                                 {{ $customer_order->order_status_id == $order_status->id ? 'selected="selected"' : '' }}>
@@ -480,6 +480,9 @@
             font-size: 11.3289px;
         }
         .text-dark {
+            color: #000 !important;
+        }
+        .order-primary-id:hover {
             color: #000 !important;
         }
     </style>
