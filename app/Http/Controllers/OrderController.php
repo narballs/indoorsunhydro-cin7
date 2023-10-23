@@ -788,9 +788,18 @@ class OrderController extends Controller
         $order_id = $request->order_id;
         $order_status_id = $request->order_status_id;
         $order = ApiOrder::where('id', $order_id)->first();
+        $previous_order_status = OrderStatus::where('id', $order->order_status_id)->first();
+        $current_order_status = OrderStatus::where('id', $order_status_id)->first();
         $order->update([
             'order_status_id' => $order_status_id
         ]);
+
+
+        $update_order_status_comment = new OrderComment;
+        $update_order_status_comment->order_id = $order_id;
+        $update_order_status_comment->comment = 'Order status updated manually from' . ' ' . (!empty($previous_order_status->status) ? $previous_order_status->status : '') . ' ' . 'to' . ' ' .  (!empty($current_order_status->status) ? $current_order_status->status : '');
+        $update_order_status_comment->save();
+        
         return response()->json(['success' => true , 'message' => 'Order status updated successfully.']);
     }
 
