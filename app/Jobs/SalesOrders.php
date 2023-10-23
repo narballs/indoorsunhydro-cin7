@@ -15,6 +15,7 @@ use App\Models\Contact;
 use DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\User;
+use App\Models\OrderStatus;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\Subscribe;
@@ -99,6 +100,7 @@ class SalesOrders implements ShouldQueue
         $users_with_role_admin = User::select("email")
             ->whereIn('id', $admin_users)
             ->get();
+        $order_status = OrderStatus::where('status', 'FullFilled')->first();
         if (!empty($order_id) && !empty($reference)) {
             // $get_id = ApiOrder::where('order_id', $order_id)->where('reference', $reference)->first();
             $data = [
@@ -122,6 +124,7 @@ class SalesOrders implements ShouldQueue
             $api_order = ApiOrder::where('order_id', $order_id)->where('reference', $reference)->first();
             $api_order->order_id = $order_id;
             $api_order->isApproved = 1;
+            $api_order->order_status_id = $order_status->id;
             $api_order->save();
         }
 

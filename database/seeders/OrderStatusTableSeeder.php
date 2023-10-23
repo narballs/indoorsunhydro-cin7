@@ -23,7 +23,9 @@ class OrderStatusTableSeeder extends Seeder
             ['status' => 'Refunded'],
             ['status' => 'DRAFT'],
             ['status' => 'APPROVED'],
-            ['status' => 'VOID']
+            ['status' => 'VOID'],
+            ['status' => 'New'],
+            ['status' => 'FullFilled']
         ];
         foreach($statuses as $status) {
 

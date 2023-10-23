@@ -417,6 +417,7 @@ class OrderManagementController extends Controller
     {
         $order_id = $request->input('order_id');
         $user_id = Auth::user()->id;
+        $order_status = OrderStatus::where('status', 'Cancelled')->first();
 
         $quotes_id = BuyList::insertGetId([
             'title' => 'cancel order order',
@@ -442,6 +443,7 @@ class OrderManagementController extends Controller
         }
         $user_cancel_order = ApiOrder::where(['id' =>  $order_id])->update([
             'isApproved' => 2,
+            'order_status_id' => $order_status->id,
             'updated_at' => Carbon::now(),
         ]);
 
@@ -560,6 +562,7 @@ class OrderManagementController extends Controller
     public function multiple_cancle_orders(Request $request)
     {
         $order_id = $request->ids;
+        $order_status = OrderStatus::where('status', 'Cancelled')->first();
         if (!empty($order_id)) {
             $orders = ApiOrder::whereIn('id', explode(",", $order_id))
                 ->with('user.contact')
@@ -573,6 +576,7 @@ class OrderManagementController extends Controller
                         ]);
                     } else {
                         $order->isApproved = 2;
+                        $order->order_status_id = $order_status->id;
                         $order->save();
                     }
                 }

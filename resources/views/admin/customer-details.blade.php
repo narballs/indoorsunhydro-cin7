@@ -353,6 +353,8 @@
                                             <th>Total</th>
                                             <th>Ref#</th>
                                             <th>Order Status</th>
+                                            {{-- <th>Payment Status</th>
+                                            <th>Payment Gateway</th> --}}
                                         </tr>
                                         @foreach ($customer_orders as $customer_order)
                                             <tr>
@@ -375,7 +377,7 @@
                                                     @endif
                                                 @endif --}}
                                                 <td>
-                                                    {{$customer_order->id}}
+                                                    <a href="{{url('admin/order-detail/' . $customer_order->id)}}" class="order-primary-id">{{$customer_order->id}}</a>
                                                 </td>
                                                 <?php $createdDate = $customer_order->created_at;
                                                 $formatedDate = $createdDate->format('F j, Y');
@@ -394,7 +396,6 @@
                                                 </td>
                                                 <td>
                                                     <select name="order_status_id" class="form-control" id="order_status_id" onchange="update_order_status('{{$customer_order->id}}')">
-                                                        <option value="">Pending</option>
                                                         @foreach ($order_statuses as $order_status)
                                                             <option value="{{ $order_status->id }}"
                                                                 {{ $customer_order->order_status_id == $order_status->id ? 'selected="selected"' : '' }}>
@@ -402,7 +403,40 @@
                                                             </option>
                                                         @endforeach
                                                     </select>
+                                                    {{-- @if ($customer_order->isApproved == 1 && $customer_order->isVoid == 1)
+                                                        <span class="badge badge-secondary  is_approded_0">Void</span>
+                                                    @elseif ($customer_order->isApproved == 0 && $customer_order->isVoid == 0)
+                                                        <span class="badge badge-warning  is_approded_0">New</span>
+                                                    @elseif ($customer_order->isApproved == 1)
+                                                        <span class="badge badge-success is_approded_1">Fullfilled</span>
+                                                    @elseif ($customer_order->isApproved == 2)
+                                                        <span class="badge badge-danger is_approded_2">Cancelled</span>
+                                                    @endif --}}
                                                 </td>
+                                                {{-- <td>
+                                                    @if($customer_order->contact->paymentTerms == 'Pay in Advanced')
+                                                        @if($customer_order->payment_status == 'paid')
+                                                            <span class="badge badge-success p-1">Paid</span>
+                                                        @else
+                                                            <span class="badge badge-danger p-1">Unpaid</span>
+                                                        @endif
+                                                    @else
+                                                        @if (strtolower($customer_order->payment_status) == 'paid' && $customer_order->shipstation_orderId != null)
+                                                            <span class="badge badge-success bg_success">Paid</span>
+                                                        @elseif (strtolower($customer_order->payment_status) == '' && $customer_order->shipstation_orderId != null)
+                                                            <form action="{{url('order/mark/paid')}}" method="post">
+                                                                @csrf
+                                                                <input type="hidden" name="order_id" id="mark_paid_order_id" value="{{ $customer_order->id }}">
+                                                                <button class="badge badge-primary p-2 border-0">
+                                                                    Mark as Paid
+                                                                </button>
+                                                            </form>
+                                                        @endif
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <span class="badge badge-info p-1"> {{ !empty($customer_order->is_stripe) && $customer_order->is_stripe ==  1 ? 'Stripe' : 'None' }}</span>
+                                                </td> --}}
                                             </tr>
                                         @endforeach
                                     </table>
@@ -480,6 +514,9 @@
             font-size: 11.3289px;
         }
         .text-dark {
+            color: #000 !important;
+        }
+        .order-primary-id:hover {
             color: #000 !important;
         }
     </style>
