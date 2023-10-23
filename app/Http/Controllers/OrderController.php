@@ -49,6 +49,7 @@ class OrderController extends Controller
         //check if user have already contact with cin7
         $existing_contact = Contact::where('user_id', Auth::id())->first();
         $session_contact_id = Session::get('contact_id');
+        $order_status = OrderStatus::where('status', 'New')->first();
         
         if (!empty($session_contact_id)) {
             $contact = Contact::where('contact_id', $session_contact_id)->first();
@@ -116,7 +117,7 @@ class OrderController extends Controller
                     $order->currencyCode = 'USD';
                     $order->currencyRate = 59.0;
                     $order->currencySymbol = '$';
-
+                    $order->order_status_id = $order_status->id;
                     $order->user_id = Auth::id();
                     $order->status = "DRAFT";
                     $order->stage = "New";
@@ -164,7 +165,6 @@ class OrderController extends Controller
                         $tax_rate = 0;
                     }
                     if (session()->has('cart')) {
-                        // dd($cart_items);
                         foreach ($cart_items as $cart_item) {
                             $OrderItem = new ApiOrderItem;
                             $OrderItem->order_id = $order_id;
@@ -268,7 +268,7 @@ class OrderController extends Controller
                     $order->currencyCode = 'USD';
                     $order->currencyRate = 59.0;
                     $order->currencySymbol = '$';
-
+                    $order->order_status_id = $order_status->id;
                     $order->user_id = Auth::id();
                     $order->status = "DRAFT";
                     $order->stage = "New";
