@@ -393,8 +393,7 @@
                                         $user = auth()->user();
                                     @endphp
                                     <p>{{ $user->first_name }} {{ $user->last_name }} {{ $comment->comment }}</p>
-                                    <p style="margin-bottom: 0px;">Date</p>
-                                    <p>
+                                    <p class="mb-0 text-bold">Date : 
                                         <i>
                                             {{ $comment->created_at }}
                                         </i>
@@ -409,7 +408,7 @@
                                     <label for="exampleFormControlTextarea1" class="ms-2">Add Order Notes</label>
                                     <textarea class="form-control" id="comment" rows="3">
                     </textarea>
-                                    <input class="btn btn-primary" type="button" value="Add Notes"
+                                    <input class="btn btn-primary mt-2" type="button" value="Add Notes"
                                         onclick="addComment(1)">
                                     <input type="hidden" value="{!! $order->id !!}" id="order_id">
                                 </div>
@@ -422,7 +421,7 @@
                                     <label for="exampleFormControlTextarea1" class="ms-2">Fullfil</label>
                                     <textarea class="form-control" id="comment" rows="3">
                     </textarea>
-                                    <input class="btn btn-primary" type="button" value="Add Notes"
+                                    <input class="btn btn-primary mt-2" type="button" value="Add Notes"
                                         onclick="fullFillOrder()">
                                     <input type="hidden" value="{!! $order->id !!}" id="order_id">
                                 </div>
