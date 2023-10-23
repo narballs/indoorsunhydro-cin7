@@ -353,8 +353,8 @@
                                             <th>Total</th>
                                             <th>Ref#</th>
                                             <th>Order Status</th>
-                                            <th>Payment Status</th>
-                                            <th>Payment Gateway</th>
+                                            {{-- <th>Payment Status</th>
+                                            <th>Payment Gateway</th> --}}
                                         </tr>
                                         @foreach ($customer_orders as $customer_order)
                                             <tr>
@@ -395,16 +395,15 @@
                                                     <a href="{{ url('admin/order-detail/' . $customer_order->id) }}">{{ $customer_order->reference }}
                                                 </td>
                                                 <td>
-                                                    {{-- <select name="order_status_id" class="form-control" id="order_status_id" onchange="update_order_status('{{$customer_order->id}}')">
-                                                        <option value="">Pending</option>
+                                                    <select name="order_status_id" class="form-control" id="order_status_id" onchange="update_order_status('{{$customer_order->id}}')">
                                                         @foreach ($order_statuses as $order_status)
                                                             <option value="{{ $order_status->id }}"
                                                                 {{ $customer_order->order_status_id == $order_status->id ? 'selected="selected"' : '' }}>
                                                                 {{ $order_status->status }}
                                                             </option>
                                                         @endforeach
-                                                    </select> --}}
-                                                    @if ($customer_order->isApproved == 1 && $customer_order->isVoid == 1)
+                                                    </select>
+                                                    {{-- @if ($customer_order->isApproved == 1 && $customer_order->isVoid == 1)
                                                         <span class="badge badge-secondary  is_approded_0">Void</span>
                                                     @elseif ($customer_order->isApproved == 0 && $customer_order->isVoid == 0)
                                                         <span class="badge badge-warning  is_approded_0">New</span>
@@ -412,9 +411,9 @@
                                                         <span class="badge badge-success is_approded_1">Fullfilled</span>
                                                     @elseif ($customer_order->isApproved == 2)
                                                         <span class="badge badge-danger is_approded_2">Cancelled</span>
-                                                    @endif
+                                                    @endif --}}
                                                 </td>
-                                                <td>
+                                                {{-- <td>
                                                     @if($customer_order->contact->paymentTerms == 'Pay in Advanced')
                                                         @if($customer_order->payment_status == 'paid')
                                                             <span class="badge badge-success p-1">Paid</span>
@@ -437,7 +436,7 @@
                                                 </td>
                                                 <td>
                                                     <span class="badge badge-info p-1"> {{ !empty($customer_order->is_stripe) && $customer_order->is_stripe ==  1 ? 'Stripe' : 'None' }}</span>
-                                                </td>
+                                                </td> --}}
                                             </tr>
                                         @endforeach
                                     </table>
