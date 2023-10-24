@@ -888,7 +888,7 @@ class OrderController extends Controller
             'count' => $count,
             'order_id' => $order_id,
             'company' => $currentOrder->contact->company, 
-            'update_order_status' => true,
+            'order_status' => 'updated',
         ];
 
         $name = $customer->contact->firstName;
