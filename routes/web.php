@@ -208,6 +208,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('admin/orders/create/label', [OrderController::class, 'create_label']);
     Route::get('admin/order/label/download/{filename}', [OrderController::class, 'download_label'])->name('download_label');
     Route::post('admin/customer/update-order-status', [OrderController::class, 'update_order_status'])->name('update_order_status');
+    Route::post('admin/order/update-order-status', [OrderController::class, 'update_order_status_by_admin'])->name('update_order_status_by_admin');
 
     Route::get('admin/logout', function () {
         Auth::logout();
