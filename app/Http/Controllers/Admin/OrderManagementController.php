@@ -381,12 +381,11 @@ class OrderManagementController extends Controller
 
     public function order_full_fill(Request $request)
     {
-        $order_id = $request->input('order_id');
+        $order_id = $request->order_id;
         $order = ApiOrder::where('id', $order_id)
             ->with('user.contact')
             ->with('texClasses')
             ->first();
-        
         $job = DB::table('jobs')->where('payload', 'like', '%' . $order->reference . '%')->first();
         
         if (empty($job)) {

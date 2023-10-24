@@ -1092,7 +1092,7 @@
 
         function fullFillOrder() {
             var status = $("#status").val();
-            var order_id = $("#order_id").val();
+            var order_id = $("#orderID").val();
             var delay = 7000;
             $('#progress-bar').removeClass('d-none');
             
