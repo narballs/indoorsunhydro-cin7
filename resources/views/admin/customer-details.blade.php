@@ -349,33 +349,12 @@
                                         <tr>
                                             <th>Order #</th>
                                             <th>Date Created</th>
-                                            <th>Status</th>
                                             <th>Total</th>
                                             <th>Ref#</th>
                                             <th>Order Status</th>
-                                            {{-- <th>Payment Status</th>
-                                            <th>Payment Gateway</th> --}}
                                         </tr>
                                         @foreach ($customer_orders as $customer_order)
                                             <tr>
-                                                {{-- @if ($customer_order->is_stripe == 1)
-                                                    @if ($customer_order->payment_status == 'paid' && $customer_order->is_shipped == 1)
-                                                        <td class="badge bg-success">Order Completed</td>
-                                                    @elseif ($customer_order->payment_status === 'paid' && $customer_order->is_shipped == 0)
-                                                        <td class="badge bg-success">Ready to Ship</td>
-                                                    @elseif ($customer_order->payment_status == 'unpaid' || $customer_order->payment_status == '')
-                                                        <td class="badge bg-warning">Pending Payment</td>
-                                                    @endif
-                                                @else
-                                                    @if ($customer_order->order_id)
-                                                        <td>
-                                                            {{ $customer_order->id }}
-
-                                                        </td>
-                                                    @else
-                                                        <td class="badge bg-danger">Pending Approval</td>
-                                                    @endif
-                                                @endif --}}
                                                 <td>
                                                     <a href="{{url('admin/order-detail/' . $customer_order->id)}}" class="order-primary-id">{{$customer_order->id}}</a>
                                                 </td>
@@ -386,10 +365,7 @@
                                                     {{ $formatedDate }}
                                                 </td>
                                                 <td>
-                                                    {{ $customer_order->status }}
-                                                </td>
-                                                <td>
-                                                    {{ $customer_order->total }}
+                                                    {{ number_format($customer_order->total_including_tax , 2) }}
                                                 </td>
                                                 <td>
                                                     <a href="{{ url('admin/order-detail/' . $customer_order->id) }}">{{ $customer_order->reference }}
@@ -403,40 +379,7 @@
                                                             </option>
                                                         @endforeach
                                                     </select>
-                                                    {{-- @if ($customer_order->isApproved == 1 && $customer_order->isVoid == 1)
-                                                        <span class="badge badge-secondary  is_approded_0">Void</span>
-                                                    @elseif ($customer_order->isApproved == 0 && $customer_order->isVoid == 0)
-                                                        <span class="badge badge-warning  is_approded_0">New</span>
-                                                    @elseif ($customer_order->isApproved == 1)
-                                                        <span class="badge badge-success is_approded_1">Fullfilled</span>
-                                                    @elseif ($customer_order->isApproved == 2)
-                                                        <span class="badge badge-danger is_approded_2">Cancelled</span>
-                                                    @endif --}}
                                                 </td>
-                                                {{-- <td>
-                                                    @if($customer_order->contact->paymentTerms == 'Pay in Advanced')
-                                                        @if($customer_order->payment_status == 'paid')
-                                                            <span class="badge badge-success p-1">Paid</span>
-                                                        @else
-                                                            <span class="badge badge-danger p-1">Unpaid</span>
-                                                        @endif
-                                                    @else
-                                                        @if (strtolower($customer_order->payment_status) == 'paid' && $customer_order->shipstation_orderId != null)
-                                                            <span class="badge badge-success bg_success">Paid</span>
-                                                        @elseif (strtolower($customer_order->payment_status) == '' && $customer_order->shipstation_orderId != null)
-                                                            <form action="{{url('order/mark/paid')}}" method="post">
-                                                                @csrf
-                                                                <input type="hidden" name="order_id" id="mark_paid_order_id" value="{{ $customer_order->id }}">
-                                                                <button class="badge badge-primary p-2 border-0">
-                                                                    Mark as Paid
-                                                                </button>
-                                                            </form>
-                                                        @endif
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    <span class="badge badge-info p-1"> {{ !empty($customer_order->is_stripe) && $customer_order->is_stripe ==  1 ? 'Stripe' : 'None' }}</span>
-                                                </td> --}}
                                             </tr>
                                         @endforeach
                                     </table>
