@@ -151,6 +151,8 @@ class OrderManagementController extends Controller
         else {
             $is_processing = false;
         }
+
+        $order_statuses = OrderStatus::orderby('id', 'desc')->get();
         
         return view('admin/order-details', compact(
             'order',
@@ -163,7 +165,8 @@ class OrderManagementController extends Controller
             'time_diff',
             'time_difference_seconds',
             'auto_fullfill',
-            'is_processing'
+            'is_processing',
+            'order_statuses'
         ));
     }
 
