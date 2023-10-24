@@ -407,7 +407,7 @@
 
                             </div>
                         </div>
-                        <div class="col-lg-12">
+                        {{-- <div class="col-lg-12">
                             <form method="POST" id="order_notes" name="order_notes">
                                 <div class="form-group">
                                     <label for="exampleFormControlTextarea1" class="ms-2">Add Order Notes</label>
@@ -419,8 +419,8 @@
                                 </div>
 
                             </form>
-                        </div>
-                        <div class="col-lg-12">
+                        </div> --}}
+                        {{-- <div class="col-lg-12">
                             <form method="POST" id="order_notes" name="order_notes">
                                 <div class="form-group">
                                     <label for="exampleFormControlTextarea1" class="ms-2">Fullfil</label>
@@ -432,7 +432,7 @@
                                 </div>
 
                             </form>
-                        </div>
+                        </div> --}}
                         <div class="card mb-4">
                             <!-- Shipping information -->
                             <div class="card-body">
