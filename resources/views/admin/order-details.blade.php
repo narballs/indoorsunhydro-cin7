@@ -375,6 +375,11 @@
                                             @else
                                                 {{$customer->contact->postalState}}
                                             @endif
+                                            @if(!empty($customer->contact->postCode))
+                                                {{$customer->contact->postCode}}
+                                            @else
+                                                {{$customer->contact->postalPostCode}}
+                                            @endif
                                             <p title="Phone" class="m-0">P:({{ $customer->contact->mobile }})</p>
                                         </address>
                                     </div>
@@ -437,8 +442,10 @@
                                 <h3 class=" h6">Address</h3>
                                 <address>
                                     <strong>{{ $customer->contact->firstName }} {{ $customer->contact->lastName }}</strong><br>
-                                    {{ $customer->contact->address1 }}, {{ $customer->contact->address2 }}<br>
-                                    {{ $customer->contact->city }},
+                                    {{ !empty($customer->contact->address1) ? $customer->contact->address1 : $customer->contact->postalAddress1 }}, {{ !empty($customer->contact->address2) ? $customer->contact->address2 :   $customer->contact->postalAddress2}}<br>
+                                    {{ !empty($customer->contact->state) ? $customer->contact->state : $customer->contact->postalState }},
+                                    {{ !empty($customer->contact->city) ? $customer->contact->city : $customer->contact->postalCity }},
+                                    {{ !empty($customer->contact->postCode) ? $customer->contact->postCode : $customer->contact->postalPostCode }},
                                     <p title="Phone" class="mb-0">P: ({{ $customer->contact->mobile }})</p>
                                     <p title="Phone">{{ $customer->contact->email }}</p>
                                 </address>
