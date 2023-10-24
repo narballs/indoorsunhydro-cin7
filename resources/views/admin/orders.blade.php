@@ -266,7 +266,7 @@
                                                 @endif
                                             </td>
                                             <td data-label="Payment Status :" class="td_padding_row">
-                                                @if(strtolower($order->contact->paymentTerms) === 'pay in advanced')
+                                                @if(!empty($order->contact->paymentTerms) && strtolower($order->contact->paymentTerms) === 'pay in advanced')
                                                     @if($order->payment_status == 'paid')
                                                         <span class="badge badge-success p-1">Paid</span>
                                                     @else
