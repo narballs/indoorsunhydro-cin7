@@ -43,7 +43,7 @@
                                     src="{{ url('theme/img/email/approve_email_icon.png') }}">
                             </td>
                         </tr>
-                        @if ($addresses['update_order_status'] == true)
+                        @if (!empty($addresses['order_status']) && $addresses['order_status'] === 'updated')
                             <tr>
                                 <td align="" style="text-align: center;color:#000000;font-color:#000000;font-size: 18px;font-weight:bold;">
                                     Order #{{ $addresses['order_id'] }}  status has been updated
