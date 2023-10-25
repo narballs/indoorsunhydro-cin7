@@ -14,9 +14,9 @@
                 <div class="col-md-6 py-3">
                     @include('my-account.my-account-side-bar')
                 </div>
-                <div class="col-md-6 py-3 text-right">
+                {{-- <div class="col-md-6 py-3 text-right">
                     <button type="button" class="btn my_account_add_a_new_address"> Add a new address +</button>
-                </div>
+                </div> --}}
             </div>
             <div class="col-md-12 p-0">
                 <div class="card">
@@ -134,7 +134,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-12 my-4 p-0">
+            {{-- <div class="col-md-12 my-4 p-0">
                 <div class="card">
                     <div class="card-header">
                         <p class="additional_address_entries py-4 mb-0">
@@ -175,19 +175,7 @@
                                     @endphp
                                     <tbody>
                                         @foreach ($secondary_contacts as $key => $contact)
-                                            {{-- @php
-                                                $contacts_array = [
-                                                    'id' => $contact->id,
-                                                    'contact_id' => $contact->contact_id,
-                                                    'is_parent' => $contact->is_parent,
-                                                    'is_default' => $contact->is_default,
-                                                    'secondary_id' => $contact->secondary_id,
-                                                    'user_id' => $contact->user_id,
-                                                ];
-                                                array_push($ids_array, $contacts_array);
-                                                $contacts_data = implode(',', $ids_array);
-                                                dd($contacts_data);
-                                            @endphp --}}
+                                            
                                             <tr class="py-5">
                                                 <td class="table-items align-middle pt-0 pb-0">
                                                     <div class="custom-control custom-checkbox tabel-checkbox d-flex align-items-center">
@@ -273,7 +261,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
         </div>
     </div>
 </div>
