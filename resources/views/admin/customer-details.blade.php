@@ -129,7 +129,11 @@
                                                         <b>Cin7 ID:Parent Account</b> {{ $customer->contact_id }}
                                                     @endif
                                                 @endif
+                                                <div class="col-md-12 p-0">
+                                                    <b>Tax Status: {{!empty($customer->tax_class) ?  $customer->tax_class : 'Empty'}} </b>
+                                                </div>
                                             </div>
+                                            
                                         </div>
                                     </div>
                                     <div class="col-md-12 mt-2">
