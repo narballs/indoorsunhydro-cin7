@@ -190,8 +190,128 @@
 
     
 
-    function updateContact(user_id) {
-        $('#address_loader').removeClass('d-none');
+    // function updateContact(user_id) {
+    //     $('#address_loader').removeClass('d-none');
+    //     var first_name = $('input[name=firstName]').val();
+    //     var last_name = $('input[name=lastName]').val();
+    //     var company_name = $('input[name=company]').val();
+    //     var phone = $('input[name=phone]').val();
+    //     var address = $('input[name=address]').val();
+    //     var address2 = $('input[name=address2]').val();
+    //     var town_city = $('input[name=town_city]').val();
+    //     var state = document.getElementById("state").value;
+    //     var zip = $('input[name=zip]').val();
+    //     var email = $('input[name=email]').val();
+    //     var contact_id = $('#contact_id_val').val();
+    //     var secondary_id = $('input[name=secondary_id]').val();
+    //     console.log(secondary_id)
+
+    //     jQuery.ajax({
+    //         method: 'GET',
+    //         url: "{{ url('/my-account-user-addresses/') }}",
+    //         data: {
+    //             "_token": "{{ csrf_token() }}",
+    //             "user_id": user_id,
+    //             "first_name": first_name,
+    //             "last_name": last_name,
+    //             "company_name": company_name,
+    //             "phone": phone,
+    //             "address": address,
+    //             "address2": address2,
+    //             "town_city": town_city,
+    //             "state": state,
+    //             "zip": zip,
+    //             "email": email,
+    //             'contact_id': contact_id,
+    //             'secondary_id': secondary_id,
+    //         },
+    //         success: function(response) {
+    //             if (response.success == true) {
+    //                 $('#address_loader').addClass('d-none');
+    //                 $('.modal-backdrop').remove()
+    //                 $('#success_msg').removeClass('d-none');
+    //                 $('#success_msg').html(response.msg);
+    //                 window.location.reload();
+    //             }else {
+    //                 $('#address_loader').addClass('d-none');
+    //                 $('.modal-backdrop').remove()
+    //                 $('#error_msg').removeClass('d-none');
+    //                 $('#error_msg').html(response.msg);
+    //                 window.location.reload();
+    //             }
+    //         },
+    //         error: function(response) {
+    //             $('#address_loader').addClass('d-none');
+    //             var error_message = response.responseJSON;
+    //             var error_text = '';
+    //             if (typeof error_message.errors.first_name != 'undefined') {
+    //                 error_text = error_message.errors.first_name;
+    //                 $('#error_first_name').html(error_text);
+    //             } else {
+    //                 error_text = '';
+    //                 $('#error_first_name').html(error_text);
+    //             }
+    //             if (typeof error_message.errors.last_name != 'undefined') {
+    //                 var error_text = error_message.errors.last_name;
+    //                 $('#error_last_name').html(error_text);
+    //             } else {
+    //                 error_text = '';
+    //                 $('#error_last_name').html(error_text);
+    //             }
+    //             if (typeof error_message.errors.company_name != 'undefined') {
+    //                 var error_text = error_message.errors.company_name;
+    //                 $('#error_company').html(error_text);
+    //             } else {
+    //                 error_text = '';
+    //                 $('#error_company').html(error_text);
+    //             }
+    //             if (typeof error_message.errors.address != 'undefined') {
+    //                 var error_text = error_message.errors.address;
+    //                 $('#error_address1').html(error_text);
+    //             } else {
+    //                 error_text = '';
+    //                 $('#error_address1').html(error_text);
+    //             }
+
+    //             if (typeof error_message.errors.zip != 'undefined') {
+    //                 var error_text = error_message.errors.zip;
+    //                 $('#error_zip').html(error_text);
+    //             } else {
+    //                 error_text = '';
+    //                 $('#error_zip').html(error_text);
+    //             }
+    //             if (typeof error_message.errors.town_city != 'undefined') {
+    //                 var error_text = error_message.errors.town_city;
+    //                 $('#error_city').html(error_text);
+    //             } else {
+    //                 error_text = '';
+    //                 $('#error_city').html(error_text);
+    //             }
+    //             if (typeof error_message.errors.zip != 'undefined') {
+    //                 var error_text = error_message.zip;
+    //                 $('#error_zip').html(error_text);
+    //             } else {
+    //                 error_text = '';
+    //                 $('#error_zip').html(error_text);
+    //             }
+    //             if (typeof error_message.errors.phone != 'undefined') {
+    //                 var error_text = error_message.errors.phone;
+    //                 $('#error_phone').html(error_text);
+    //             } else {
+    //                 error_text = '';
+    //                 $('#error_phone').html(error_text);
+    //             }
+
+    //         }
+    //     });
+    // }
+
+    function updateContact(type , user_id) {
+        if (type === 'update shipping address') {
+            $('#address_loader_shipping').removeClass('d-none');
+        } else {
+            $('#address_loader').removeClass('d-none');
+        }
         var first_name = $('input[name=firstName]').val();
         var last_name = $('input[name=lastName]').val();
         var company_name = $('input[name=company]').val();
@@ -204,8 +324,7 @@
         var email = $('input[name=email]').val();
         var contact_id = $('#contact_id_val').val();
         var secondary_id = $('input[name=secondary_id]').val();
-        console.log(secondary_id)
-
+        
         jQuery.ajax({
             method: 'GET',
             url: "{{ url('/my-account-user-addresses/') }}",
@@ -224,84 +343,41 @@
                 "email": email,
                 'contact_id': contact_id,
                 'secondary_id': secondary_id,
+                'type': type
             },
             success: function(response) {
-                if (response.success == true) {
+                console.log(response.data.ticket.id );
+                if (response.data.ticket.id != '' || response.data.ticket.id != null) {
                     $('#address_loader').addClass('d-none');
+                    $('#address_loader_shipping').addClass('d-none');
                     $('.modal-backdrop').remove()
-                    $('#success_msg').removeClass('d-none');
-                    $('#success_msg').html(response.msg);
-                    window.location.reload();
-                }else {
+                    if (type === 'update shipping address') { 
+                        $('#success_msg_shipping').removeClass('d-none');
+                        $('#success_msg_shipping').html(response.msg);
+                    } else {
+
+                        $('#success_msg').removeClass('d-none');
+                        $('#success_msg').html(response.msg);
+                    }
+                    setTimeout(function() {
+                        window.location.href = "{{ url('my-account/address') }}";
+                    }, 2000);
+                }   else {
                     $('#address_loader').addClass('d-none');
-                    $('.modal-backdrop').remove()
-                    $('#error_msg').removeClass('d-none');
-                    $('#error_msg').html(response.msg);
-                    window.location.reload();
-                }
-            },
-            error: function(response) {
-                $('#address_loader').addClass('d-none');
-                var error_message = response.responseJSON;
-                var error_text = '';
-                if (typeof error_message.errors.first_name != 'undefined') {
-                    error_text = error_message.errors.first_name;
-                    $('#error_first_name').html(error_text);
-                } else {
-                    error_text = '';
-                    $('#error_first_name').html(error_text);
-                }
-                if (typeof error_message.errors.last_name != 'undefined') {
-                    var error_text = error_message.errors.last_name;
-                    $('#error_last_name').html(error_text);
-                } else {
-                    error_text = '';
-                    $('#error_last_name').html(error_text);
-                }
-                if (typeof error_message.errors.company_name != 'undefined') {
-                    var error_text = error_message.errors.company_name;
-                    $('#error_company').html(error_text);
-                } else {
-                    error_text = '';
-                    $('#error_company').html(error_text);
-                }
-                if (typeof error_message.errors.address != 'undefined') {
-                    var error_text = error_message.errors.address;
-                    $('#error_address1').html(error_text);
-                } else {
-                    error_text = '';
-                    $('#error_address1').html(error_text);
-                }
+                    $('#address_loader_shipping').addClass('d-none');
+                    $('.modal-backdrop').remove();
+                    if (type === 'update shipping address') {  
+                        $('#error_msg_shipping').removeClass('d-none');
+                        $('#error_msg_shipping').html('Something went wrong');
+                    } else {
 
-                if (typeof error_message.errors.zip != 'undefined') {
-                    var error_text = error_message.errors.zip;
-                    $('#error_zip').html(error_text);
-                } else {
-                    error_text = '';
-                    $('#error_zip').html(error_text);
+                        $('#error_msg').removeClass('d-none');
+                        $('#error_msg').html('Something went wrong');
+                    }
+                    setTimeout(function() {
+                        window.location.href = "{{ url('my-account/address') }}";
+                    }, 2000);
                 }
-                if (typeof error_message.errors.town_city != 'undefined') {
-                    var error_text = error_message.errors.town_city;
-                    $('#error_city').html(error_text);
-                } else {
-                    error_text = '';
-                    $('#error_city').html(error_text);
-                }
-                if (typeof error_message.errors.zip != 'undefined') {
-                    var error_text = error_message.zip;
-                    $('#error_zip').html(error_text);
-                } else {
-                    error_text = '';
-                    $('#error_zip').html(error_text);
-                }
-                if (typeof error_message.errors.phone != 'undefined') {
-                    var error_text = error_message.errors.phone;
-                    $('#error_phone').html(error_text);
-                } else {
-                    error_text = '';
-                    $('#error_phone').html(error_text);
-                }
-
             }
         });
     }
@@ -946,14 +1022,14 @@
    
 </script>
 
-
+{{-- billing address --}}
 <div class="modal fade" id="address_modal_id" data-dismiss="modal" data-backdrop="false" aria-hidden="true"
     aria-labelledby="exampleModalToggleLabel" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalToggleLabel">Update Address</h5>
+                <h5 class="modal-title" id="exampleModalToggleLabel">Update Billing Address</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -968,7 +1044,7 @@
                         @csrf
                         <div class="alert alert-success mt-3 d-none" id="success_msg"></div>
                         <div class="alert alert-danger mt-3 d-none" id="error_msg"></div>
-                        
+                        <input type="hidden" name="email" value="{{$user_address->email}}">
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="firstName">First name</label>
@@ -1010,14 +1086,14 @@
                         <div class="mb-3">
                             <label for="address">Street Address</label>
                             <input type="text" class="form-control bg-light" name="address" id="address1"
-                            value="{{ $user_address->address1 }}" placeholder="House number and street name"
+                            value="{{ !empty($user_address->postalAddress1) ?  $user_address->postalAddress1 : '' }}" placeholder="House number and street name"
                             required>
                             <div id="error_address1" class="text-danger"></div>
                         </div>
                         <div class="mb-3">
                             <label for="address2">Address 2 <span class="text-muted">(Optional)</span></label>
                             <input type="text" class="form-control bg-light" name="address2"
-                                value="{{ $user_address->address2 }}"
+                                value="{{ !empty($user_address->postalAddress2) ?  $user_address->postalAddress2 : '' }}"
                                 placeholder="Apartment, suite, unit etc (optional)">
                                 <div id="error_address2" class="text-danger"></div>
                         </div>
@@ -1025,7 +1101,7 @@
                         <div class="mb-3">
                             <label for="town">Town/City <span class="text-muted">(Optional)</span></label>
                             <input type="text" class="form-control bg-light" name="town_city"
-                                value="{{ $user_address->city }}" placeholder="Enter your town">
+                                value="{{ !empty($user_address->postalCity) ? $user_address->postalCity : '' }}" placeholder="Enter your town">
                                 <div id="error_city" class="text-danger"></div>
                         </div>
                         
@@ -1036,7 +1112,7 @@
                                 <select class="form-control bg-light" name="state" id="state">
                                     @foreach ($states as $state)
                                         <?php
-                                        if ($user_address->state == $state->state_name) {
+                                        if ($user_address->postalState == $state->state_name) {
                                             $selected = 'selected';
                                         } else {
                                             $selected = '';
@@ -1055,7 +1131,7 @@
                             <div class="col-md-6 mb-3">
                                 <label for="zip">Zip</label>
                                 <input type="text" class="form-control bg-light" name="zip"
-                                    placeholder="Enter zip code" value="{{ $user_address->postCode }}"
+                                    placeholder="Enter zip code" value="{{ !empty($user_address->postalPostCode) ? $user_address->postalPostCode : $user_address->postCode }}"
                                     required>
                                 <div id="error_zip" class="text-danger">
 
@@ -1089,7 +1165,155 @@
                     <span class="visually-hidden">Loading...</span>
                 </div>
                 <button type="button" class="btn button-cards primary"
-                    onclick="updateContact('{{ auth()->user()->id }}')">Update</button>
+                    onclick="updateContact('{{'update billing address'}}' , '{{ auth()->user()->id }}'  )">Update Billing</button>
+            </div>
+        </div>
+    </div>
+</div>
+{{-- shipping address --}}
+<div class="modal fade" id="address_modal_id_shipping" data-dismiss="modal" data-backdrop="false" aria-hidden="true"
+    aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalToggleLabel">Update Shipping Address</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="update-address-section" id="address-form-update">
+
+                    <form class="needs-validation mt-4 novalidate" action="{{ url('order') }}" method="POST">
+                        @if(!empty($user_address->contact_id))
+                        <input type="hidden" value="{{$user_address->contact_id}}" name="contact_id" id="contact_id_val">
+                        @elseif(!empty($user_address->secondary_id))
+                        <input type="hidden" value="{{$user_address->secondary_id}}" name="secondary_id" id="secondary_id_val">
+                        @endif
+                        @csrf
+                        <div class="alert alert-success mt-3 d-none" id="success_msg_shipping"></div>
+                        <div class="alert alert-danger mt-3 d-none" id="error_msg_shipping"></div>
+                        <input type="hidden" name="email" value="{{$user_address->email}}">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="firstName">First name</label>
+                                <input type="text" class="form-control bg-light" name="firstName"
+                                    placeholder="First name" value="{{ $user_address->firstName }}" required>
+                                <div id="error_first_name" class="text-danger">
+
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="lastName">Last name</label>
+                                <input type="text" class="form-control bg-light" name="lastName" placeholder=""
+                                    value="{{ $user_address->lastName }}" required>
+                                <div id="error_last_name" class="text-danger">
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="company">Company Name(optional)</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control bg-light" name="company"
+                                    placeholder="Enter you company name" value="{{ $user_address->company }}" required>
+
+                            </div>
+                            <div id="error_company" class="text-danger">
+
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="username">Country</label>&nbsp;<span>United States</span>
+                            <input type="hidden" name="country" value="United States">
+                        </div>
+
+
+                        <div class="mb-3">
+                            <label for="address">Street Address</label>
+                            <input type="text" class="form-control bg-light" name="address" id="address1"
+                            value="{{ !empty($user_address->address1) ? $user_address->address1 : $user_address->postalAddress1 }}" placeholder="House number and street name"
+                            required>
+                            <div id="error_address1" class="text-danger"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="address2">Address 2 <span class="text-muted">(Optional)</span></label>
+                            <input type="text" class="form-control bg-light" name="address2"
+                                value="{{ !empty($user_address->address2) ? $user_address->address2 : $user_address->postalAddress2 }}"
+                                placeholder="Apartment, suite, unit etc (optional)">
+                                <div id="error_address2" class="text-danger"></div>
+                        </div>
+                       
+                        <div class="mb-3">
+                            <label for="town">Town/City <span class="text-muted">(Optional)</span></label>
+                            <input type="text" class="form-control bg-light" name="town_city"
+                                value="{{ !empty($user_address->city) ?  $user_address->city  : $user_address->postalCity}}" placeholder="Enter your town">
+                                <div id="error_city" class="text-danger"></div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="state">State</label>
+
+                                <select class="form-control bg-light" name="state" id="state">
+                                    @foreach ($states as $state)
+                                        <?php
+                                        if ($user_address->state == $state->state_name || $user_address->postalState == $state->state_name) {
+                                            $selected = 'selected';
+                                        } else {
+                                            $selected = '';
+                                        }
+                                        
+                                        ?>
+                                        <option value="{{ $state->state_name }}" <?php echo $selected; ?>>{{ $state->state_name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <!--    <input type="text" class="form-control bg-light" name="state" value="{{ $user_address->postalState }}" placeholder="Enter State" value="" required> -->
+                                <div class="invalid-feedback">
+                                    Valid first name is required.
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="zip">Zip</label>
+                                <input type="text" class="form-control bg-light" name="zip"
+                                    placeholder="Enter zip code" value="{{ !empty($user_address->postCode) ?  $user_address->postCode : $user_address->postalState}}"
+                                    required>
+                                <div id="error_zip" class="text-danger">
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="phone">Phone</label>
+                                <input type="text" class="form-control bg-light" name="phone"
+                                    placeholder="Enter your phone" value="{{ $user_address->phone }}" required>
+                                <div id="error_phone" class="text-danger"></div>
+
+
+
+                            </div>
+
+                            <!-- <div>
+                      <button calss="btn btn-primary" onclick="updateContact('{{ auth()->user()->id }}')">Update</button>
+                  </div> -->
+                        </div>
+                    </form>
+                </div>
+
+
+            </div>
+            <div class="modal-footer">
+                <div class="spinner-border text-primary d-none" role="status" id="address_loader_shipping">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <button type="button" class="btn button-cards primary"
+                    onclick="updateContact('{{'update shipping address'}}'  , '{{ auth()->user()->id }}' )">Update Shipping</button>
             </div>
         </div>
     </div>
