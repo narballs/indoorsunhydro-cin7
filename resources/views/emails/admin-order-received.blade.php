@@ -51,7 +51,7 @@
                             </tr>
                             <tr>
                                 <td align="" style="text-align: center;color:#000000;font-color:#000000;font-size: 11px;font-weight:400;">
-                                    Your order #{{ $addresses['order_id'] }} is completed and ready to ship
+                                    Your order #{{ $addresses['order_id'] }} status has been updated from Unpaid to Paid-Preparing to Ship
                                 </td>
                             </tr>
                         @else
