@@ -1160,7 +1160,7 @@
 
 
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer justify-content-center">
                 <div class="spinner-border text-primary d-none" role="status" id="address_loader">
                     <span class="visually-hidden">Loading...</span>
                 </div>
@@ -1308,7 +1308,7 @@
 
 
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer justify-content-center">
                 <div class="spinner-border text-primary d-none" role="status" id="address_loader_shipping">
                     <span class="visually-hidden">Loading...</span>
                 </div>

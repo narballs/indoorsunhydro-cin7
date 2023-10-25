@@ -284,13 +284,13 @@
                                                                 <p class="delivery_estimate_date_my_account">Shipped</p>
                                                             @endif
                                                         @endif --}}
-                                                        <div class="row">
+                                                        <div class="row main-order-row" id="main_div_{{$user_order->id}}">
                                                             @php
                                                                 $totalItems = $user_order->apiOrderItem->count();
                                                             @endphp
                                                             @if (count($user_order->apiOrderItem) > 1)
-                                                                @foreach ($user_order->apiOrderItem as $orderItem)
-                                                                    <div class="my-2 my-account-image-div-mbl">
+                                                                @foreach ($user_order->apiOrderItem as $key => $orderItem)
+                                                                    <div class="my-2 my-account-image-div-mbl {{($key == 4 || $key > 4) ? 'd-none' : '' }}">
                                                                         <div class="img_my_account_order p-2">
                                                                             @if (!empty($orderItem->product->images))
                                                                                 <img src="{{ $orderItem->product->images }}"
@@ -304,6 +304,10 @@
                                                                         </div>
                                                                     </div>
                                                                 @endforeach
+                                                                @if( $totalItems > 5 )
+                                                                    <button class="w-25 text-decoration-underline border-0 p-0 m-0 bg-white text-success text-left ml-3" id="show_div_{{$user_order->id}}" onclick="show_more('{{$user_order->id}}')">ShowMore</button>
+                                                                    <button class="w-25 text-decoration-underline border-0 p-0 m-0 bg-white text-success text-left ml-3 d-none" id="hide_div_{{$user_order->id}}" onclick="show_less('{{$user_order->id}}')">ShowLess</button>
+                                                                @endif
                                                             @else
                                                                 @foreach ($user_order->apiOrderItem as $orderItem)
                                                                     <div class="my-2 my-account-image-div-mbl">
@@ -571,6 +575,16 @@
     }
 </style>
 <script>
+    function show_more(id) {
+        $('#main_div_'+id).find('.d-none').removeClass('d-none');
+        $('#show_div_'+id).addClass('d-none');
+        $('#hide_div_'+id).removeClass('d-none');
+    }
+    function show_less (id) {
+        $('#main_div_'+id).find('.my-account-image-div-mbl').slice(4).addClass('d-none');
+        $('#show_div_'+id).removeClass('d-none');
+        $('#hide_div_'+id).addClass('d-none');
+    }
     function search_orders() {
         var search = jQuery('#order_search').val();
         var basic_url = `/my-account`;
