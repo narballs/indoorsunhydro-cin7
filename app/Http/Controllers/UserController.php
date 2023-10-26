@@ -349,87 +349,81 @@ class UserController extends Controller
         $email_user = session::put('user', $user);
         $cart = [];
         if (auth()->attempt($credentials)) {
-            $user_id = auth()->user()->id;
-            if ($request->session()->has('cart_hash')) {
-                $cart_hash = $request->session()->get('cart_hash');
-                $cart_items = Cart::where('cart_hash', $cart_hash)->where('is_active', 1)->where('user_id', 0)->get();
-                foreach ($cart_items as $cart_item) {
-                    $cart_item->user_id = $user_id;
-                    $cart_item->save();
-                }
-            }
-            // $active_qoutes = Cart::where('user_id', $user_id)->where('is_active', 1)->get();
-            // foreach ($active_qoutes as $active_qoute) {
-            //     $cart[$active_qoute->qoute_id] = [
-            //         "product_id" => $active_qoute->product_id,
-            //         "name" => $active_qoute->name,
-            //         "quantity" => $active_qoute->quantity,
-            //         "price" => $active_qoute->price,
-            //         "code" => $active_qoute->code,
-            //         "image" => $active_qoute->image,
-            //         'option_id' => $active_qoute->option_id,
-            //         "slug" => $active_qoute->slug,
-            //     ];
-            //     Session::put('cart', $cart);
-            // }
-            if ($user->hasRole(['Admin'])) {
-                session()->flash('message', 'Successfully Logged in');
-                $companies = Contact::where('user_id', auth()->user()->id)->get();
-                if ($companies->count() == 1) {
-                    
-                    if ($companies[0]->contact_id == null) {
-                        UserHelper::switch_company($companies[0]->secondary_id);
-                    } else {
-                        UserHelper::switch_company($companies[0]->contact_id);
-                    }
-                }
-                Session::put('companies', $companies);
-
-                return redirect()->route('admin.view');
+            if (auth()->user()->allow_access == 0) {
+                Session::flush();
+                Auth::logout();
+                session()->flash('message', 'Your account has been disabled.');
+                return redirect()->back();
             } else {
-                $companies = Contact::where('user_id', auth()->user()->id)->get();
-
-                if ($companies->count() == 1) {
-                    if ($companies[0]->contact_id == null) {
-                        UserHelper::switch_company($companies[0]->secondary_id);
-                    } else {
-                        UserHelper::switch_company($companies[0]->contact_id);
+                $user_id = auth()->user()->id;
+                if ($request->session()->has('cart_hash')) {
+                    $cart_hash = $request->session()->get('cart_hash');
+                    $cart_items = Cart::where('cart_hash', $cart_hash)->where('is_active', 1)->where('user_id', 0)->get();
+                    foreach ($cart_items as $cart_item) {
+                        $cart_item->user_id = $user_id;
+                        $cart_item->save();
                     }
                 }
-                if ($companies->count() == 2) {
-                    foreach ($companies as $company) {
-                        if ($company->status == 1) {
-                            if ($company->contact_id == null) {
-                                UserHelper::switch_company($company->secondary_id);
-                            } else {
-                                UserHelper::switch_company($company->contact_id);
-                            }
-                        }
-                    }
-                }
-                Session::put('companies', $companies);
-                if (!empty(session()->get('cart'))) {
-                    return redirect()->route('cart');
-                } else {
-                    if ($user->is_updated == 1) {
-
-                        $companies = Contact::where('user_id', auth()->user()->id)->get();
-
+                if ($user->hasRole(['Admin'])) {
+                    session()->flash('message', 'Successfully Logged in');
+                    $companies = Contact::where('user_id', auth()->user()->id)->get();
+                    if ($companies->count() == 1) {
+                        
                         if ($companies[0]->contact_id == null) {
                             UserHelper::switch_company($companies[0]->secondary_id);
                         } else {
                             UserHelper::switch_company($companies[0]->contact_id);
                         }
-                        Session::put('companies', $companies);
-                        return redirect()->route('my_account');
-                    } else {
-                        $companies = Contact::where('user_id', auth()->user()->id)->get();
-                        Session::put('companies', $companies);
+                    }
+                    Session::put('companies', $companies);
 
-                        return view('reset-password', compact('user'));
+                    return redirect()->route('admin.view');
+                } else {
+                    $companies = Contact::where('user_id', auth()->user()->id)->get();
+
+                    if ($companies->count() == 1) {
+                        if ($companies[0]->contact_id == null) {
+                            UserHelper::switch_company($companies[0]->secondary_id);
+                        } else {
+                            UserHelper::switch_company($companies[0]->contact_id);
+                        }
+                    }
+                    if ($companies->count() == 2) {
+                        foreach ($companies as $company) {
+                            if ($company->status == 1) {
+                                if ($company->contact_id == null) {
+                                    UserHelper::switch_company($company->secondary_id);
+                                } else {
+                                    UserHelper::switch_company($company->contact_id);
+                                }
+                            }
+                        }
+                    }
+                    Session::put('companies', $companies);
+                    if (!empty(session()->get('cart'))) {
+                        return redirect()->route('cart');
+                    } else {
+                        if ($user->is_updated == 1) {
+
+                            $companies = Contact::where('user_id', auth()->user()->id)->get();
+
+                            if ($companies[0]->contact_id == null) {
+                                UserHelper::switch_company($companies[0]->secondary_id);
+                            } else {
+                                UserHelper::switch_company($companies[0]->contact_id);
+                            }
+                            Session::put('companies', $companies);
+                            return redirect()->route('my_account');
+                        } else {
+                            $companies = Contact::where('user_id', auth()->user()->id)->get();
+                            Session::put('companies', $companies);
+
+                            return view('reset-password', compact('user'));
+                        }
                     }
                 }
             }
+            
         } else {
             session()->flash('message', 'Invalid credentials');
             return redirect()->back();
@@ -1203,7 +1197,7 @@ class UserController extends Controller
         $contact_id = session()->get('contact_id');
         $lists = BuyList::where('user_id', $user_id)->where('contact_id', $contact_id)->with('list_products.product.options.price')->where('title', 'My Favorites')->get();
 
-        $user = User::where('id', $user_id)->first();
+        $user = User::with('contact')->where('id', $user_id)->first();
         $all_ids = UserHelper::getAllMemberIds($user);
         $user_address = Contact::where('user_id', $user_id)->first();
         $all_companies = Contact::whereIn('id', $all_ids)->groupBy('company')->get();
@@ -2508,5 +2502,36 @@ class UserController extends Controller
             return redirect()->back()->with('error' , 'Email Not Exist !');
         }
         
+    }
+
+    // allow access to primary user to toggle
+
+    public function allow_access (Request $request) {
+        $contact_primary_id = $request->contact_primary_id;
+        $allow_access = $request->access_value;
+        $contact = Contact::where('id' , $contact_primary_id)->first();
+        if (!empty($contact)) {
+            $user = User::where('email' , $contact->email)->first();
+            if (!empty($user)) {
+                $user->update([
+                    'allow_access' => $allow_access
+                ]);
+                return response()->json([
+                    'status' => 'success',
+                    'data' => $user
+
+                ],200);
+            } else {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'User Not Found !'
+                ],200);
+            }
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Contact Not Found !'
+            ],200);
+        }
     }
 }
