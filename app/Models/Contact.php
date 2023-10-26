@@ -81,4 +81,7 @@ class Contact extends Model
     {
         return $this->hasOne(CustomerDiscount::class);
     }
+    public function allow_user() {
+        return $this->hasOne('App\Models\User', 'id', 'user_id');
+    }
 }

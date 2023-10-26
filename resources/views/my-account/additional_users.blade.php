@@ -36,7 +36,7 @@
                                                 </div>
                                                 <div class="card-body">
                                                     @php
-                                                       $secondary_contacts = App\Models\Contact::where('company', $company->company)->get(); 
+                                                       $secondary_contacts = App\Models\Contact::with('allow_user')->where('company', $company->company)->get();
                                                     @endphp
                                                     <div class="table-responsive">
                                                         <table class="table address-table-items-data m-0 ">
@@ -56,19 +56,19 @@
                                                                     <td class="my_account_addresses">Name</td>
                                                                     <td class="my_account_addresses">Email</td>
                                                                     <td class="my_account_addresses">Job Title</td>
-                                                                    <td class="my_account_addresses">Status</td>
                                                                     <td class="my_account_addresses">Type</td>
                                                                     <td class="my_account_addresses">Company</td>
                                                                     <td class="my_account_addresses">Phone Number</td>
                                                                     <td class="my_account_addresses">Balance Owing</td>
                                                                     <td class="my_account_addresses">Credit Limit</td>
+                                                                    <td class="my_account_addresses">Allow Access</td>
                                                                     <td></td>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
                                                                 @foreach ($secondary_contacts as $key => $contact)
                                                                     <tr>
-                                                                        <td class="table-items justify-content-start align-items-lg-center user_table_items">
+                                                                        <td class="table-items justify-content-start align-items-lg-center user_table_items pt-0 align-middle">
                                                                             <div class="custom-control custom-checkbox tabel-checkbox d-flex align-items-center">
                                                                                 {{-- <input
                                                                                     class="custom-control-input custom-control-input-success sub_chk"
@@ -97,10 +97,10 @@
                                                                             @else
                                                                             @endif
                                                                         </td>
-                                                                        <td class="my_account_all_items" style="vertical-align: middle;">
+                                                                        {{-- <td class="my_account_all_items" style="vertical-align: middle;">
                                                                             <a href="{{ url('send-password/fornt-end/' . $contact->user_id) }}"
                                                                                 class="btn bg-white ps-0">Send Password</a>
-                                                                        </td>
+                                                                        </td> --}}
                                                                         <td class="my_account_all_items" style="vertical-align: middle;">
                                                                             @if (!empty($contact['contact_id']))
                                                                                 Primary contact
@@ -128,6 +128,17 @@
                                                                         </td>
                                                                          <td class="my_account_all_items" style="vertical-align: middle;">
                                                                             ${{ number_format($contact['credit_limit'], 2) }}
+                                                                        </td>
+                                                                        <td class="my_account_all_items align-middle text-center">
+                                                                            @if (!empty($user['contact'] && $user['contact'][0]['contact_id'] != null))
+                                                                                <div class="form-check form-switch">
+                                                                                    <input class="form-check-input allow_access" type="checkbox" role="switch" id="allow_access{{$contact['id']}}" {{!empty($contact['allow_user'] && $contact['allow_user']['allow_access'] == 1) ? 'checked' : ''}} value="{{!empty($contact['allow_user']) ? $contact['allow_user']['allow_access'] : 0}}" onclick="allow_access('{{$contact['id']}}')">
+                                                                                </div>
+                                                                            @else
+                                                                                <div class="form-check form-switch">
+                                                                                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDisabled" disabled>
+                                                                                </div>
+                                                                            @endif
                                                                         </td>
                                                                         {{-- <td style="vertical-align: middle;">
                                                                             <img src="/theme/img/dots_icons.png" alt="">
@@ -163,7 +174,65 @@
         </div>
     </div>
 </div>
-
+<script>
+     function allow_access(id) {
+        var allow_access = document.querySelector('#allow_access'+id);
+        if (allow_access.checked == true) {
+            allow_access.value = 1;
+            allow_access.attributes.checked = 'checked';
+        } else {
+            allow_access.value = 0;
+            allow_access.attributes.checked = '';
+        }
+        var access_value = allow_access.value;
+        var contact_primary_id = id;
+        jQuery.ajax({
+            url: "{{ url('/my-account/allow-access/') }}",
+            method: 'POST',
+            data: {
+                "_token": "{{ csrf_token() }}",
+                "contact_primary_id": contact_primary_id,
+                "access_value": access_value
+            },
+            success: function(response) {
+                if (response.status == 'success') {
+                    if (response.data.allow_access == 1) {
+                        Swal.fire({
+                            toast: true,
+                            icon: 'success',
+                            title: 'Access allowed successfully',
+                            timer: 2000,
+                            showConfirmButton: false,
+                            position: 'top',
+                            timerProgressBar: true
+                        });
+                    } else {
+                        Swal.fire({
+                            toast: true,
+                            icon: 'success',
+                            title: 'Access denied successfully',
+                            timer: 2000,
+                            showConfirmButton: false,
+                            position: 'top',
+                            timerProgressBar: true
+                        });
+                    }
+                }  else {
+                    Swal.fire({
+                        toast: true,
+                        icon: 'error',
+                        title: response.message,
+                        timer: 2000,
+                        showConfirmButton: false,
+                        position: 'top',
+                        timerProgressBar: true
+                    });
+                }
+                
+            }
+        });
+    }
+</script>
 @include('my-account.my-account-scripts')
 @include('partials.product-footer')
 @include('partials.footer')
