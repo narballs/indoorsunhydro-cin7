@@ -153,7 +153,7 @@
                                     <tbody>
                                         <tr>
                                             <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
-                                                {{ $addresses['company'] }}
+                                                {{!empty($addresses['company']) ? $addresses['company'] : ''}}  
                                             </td>
                                         </tr>
                                     </tbody>
