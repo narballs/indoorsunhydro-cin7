@@ -129,6 +129,7 @@ Route::group(['prefix' => 'my-account/'], function () {
     Route::post('account-profile/update', [UserController::class, 'account_profile_update'])->name('account_profile_update');
     Route::get('additional-users', [UserController::class, 'additional_users'])->name('additional_users');
     Route::post('address/default', [UserController::class, 'make_address_default'])->name('make_address_default');
+    Route::post('/allow-access', [UserController::class, 'allow_access'])->name('allow_access');
 });
 
 Route::group(['middleware' => ['auth']], function () {
@@ -208,6 +209,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('admin/orders/create/label', [OrderController::class, 'create_label']);
     Route::get('admin/order/label/download/{filename}', [OrderController::class, 'download_label'])->name('download_label');
     Route::post('admin/customer/update-order-status', [OrderController::class, 'update_order_status'])->name('update_order_status');
+    Route::post('admin/order/update-order-status', [OrderController::class, 'update_order_status_by_admin'])->name('update_order_status_by_admin');
 
     Route::get('admin/logout', function () {
         Auth::logout();

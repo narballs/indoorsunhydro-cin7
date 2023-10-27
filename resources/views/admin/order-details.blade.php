@@ -118,7 +118,10 @@
                         <div class="card">
                             <div class="d-flex card-header">
                                <div class="col-md-12">
-                                    <div class="row">
+                                    <div class="spinner-border text-warning order-status-spinner d-none" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                    <div class="row align-items-center">
                                         <div class="col-md-3">
                                             <div class="row">
                                                 <div class="col-md-12">
@@ -168,7 +171,7 @@
                                             </div>
                                         </div>
                                         
-                                        <div class="col-md-2">
+                                        <div class="col-md-1 p-0">
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <span class="order-head">Payment Status</span>
@@ -178,15 +181,40 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="col-md-2 order-status-drop-down d-none">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <span class="order-head">Order Statuses</span>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <select name="order_status_id" id="order_status_id" class="p-1 order-status-select" onchange="update_order_status('{{$order->id}}' , '{{'paid'}}')">
+                                                        @if(count($order_statuses) > 0)
+                                                            @if(!empty($order->order_status_id))
+                                                                @foreach($order_statuses as $order_status)
+                                                                    <option value="{{$order_status->id}}" {{(!empty($order->order_status_id) &&  $order->order_status_id == $order_status->id) ? 'selected' : ''}}>{{$order_status->status}}</option>
+                                                                @endforeach
+                                                            @else
+                                                                <option value="">Select Status</option>
+                                                                @foreach($order_statuses as $order_status)
+                                                                    <option value="{{$order_status->id}}">{{$order_status->status}}</option>
+                                                                @endforeach
+                                                            @endif
+                                                        @else
+                                                            <option value="">No Statuses</option>
+                                                        @endif
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
                                         @if($order->isApproved == 0 && $order->isVoid == 0)
-                                        <div class="col-md-3 d-flex align-items-center justify-content-end edit_order_div">
+                                        <div class="col-md-2 d-flex align-items-center justify-content-end edit_order_div">
                                             <button class="btn btn-light btn-sm edit_admin_order" type="button" onclick="edit_order('{{ $order->id }}')">
                                                     Edit Order
                                             </button>
                                         </div>
                                         @endif
 
-                                        <div class="col-md-3 d-none edit-order-butttons align-items-center justify-content-end">
+                                        <div class="col-md-2 d-none edit-order-butttons align-items-center justify-content-end mt-3 pt-1">
                                             <button class="btn btn-light btn-sm cancel_order_changes mx-3" type="button" onclick="cancel_order_changes('{{ $order->id }}')">
                                                    Cancel
                                             </button>
@@ -375,6 +403,11 @@
                                             @else
                                                 {{$customer->contact->postalState}}
                                             @endif
+                                            @if(!empty($customer->contact->postCode))
+                                                {{$customer->contact->postCode}}
+                                            @else
+                                                {{$customer->contact->postalPostCode}}
+                                            @endif
                                             <p title="Phone" class="m-0">P:({{ $customer->contact->mobile }})</p>
                                         </address>
                                     </div>
@@ -402,7 +435,7 @@
 
                             </div>
                         </div>
-                        <div class="col-lg-12">
+                        {{-- <div class="col-lg-12">
                             <form method="POST" id="order_notes" name="order_notes">
                                 <div class="form-group">
                                     <label for="exampleFormControlTextarea1" class="ms-2">Add Order Notes</label>
@@ -414,8 +447,8 @@
                                 </div>
 
                             </form>
-                        </div>
-                        <div class="col-lg-12">
+                        </div> --}}
+                        {{-- <div class="col-lg-12">
                             <form method="POST" id="order_notes" name="order_notes">
                                 <div class="form-group">
                                     <label for="exampleFormControlTextarea1" class="ms-2">Fullfil</label>
@@ -427,7 +460,7 @@
                                 </div>
 
                             </form>
-                        </div>
+                        </div> --}}
                         <div class="card mb-4">
                             <!-- Shipping information -->
                             <div class="card-body">
@@ -437,8 +470,10 @@
                                 <h3 class=" h6">Address</h3>
                                 <address>
                                     <strong>{{ $customer->contact->firstName }} {{ $customer->contact->lastName }}</strong><br>
-                                    {{ $customer->contact->address1 }}, {{ $customer->contact->address2 }}<br>
-                                    {{ $customer->contact->city }},
+                                    {{ !empty($customer->contact->address1) ? $customer->contact->address1 : $customer->contact->postalAddress1 }}, {{ !empty($customer->contact->address2) ? $customer->contact->address2 :   $customer->contact->postalAddress2}}<br>
+                                    {{ !empty($customer->contact->state) ? $customer->contact->state : $customer->contact->postalState }},
+                                    {{ !empty($customer->contact->city) ? $customer->contact->city : $customer->contact->postalCity }},
+                                    {{ !empty($customer->contact->postCode) ? $customer->contact->postCode : $customer->contact->postalPostCode }},
                                     <p title="Phone" class="mb-0">P: ({{ $customer->contact->mobile }})</p>
                                     <p title="Phone">{{ $customer->contact->email }}</p>
                                 </address>
@@ -456,7 +491,14 @@
     <link rel="stylesheet" href="{{ asset('admin/admin_lte.css') }}">
 
     <style type="text/css">
-         
+        .order-status-select {
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 14px;
+        } 
+        .order-status-select:focus-visible {
+            outline: none;
+        }
         .itemQuantityDiv {
             display: flex;
             justify-content: center;
@@ -768,6 +810,7 @@
             $('.delete_item_body').removeClass('d-none');
             $('.add_product_row').removeClass('d-none');
             $('.add_colspan').attr('colspan', '5');
+            $('.order-status-drop-down').removeClass('d-none');
         }
         //cancel order changes
         function cancel_order_changes(id) {
@@ -783,6 +826,7 @@
             $('.delete_item_body').addClass('d-none');
             $('.add_colspan').attr('colspan', '4');
             $('.add_product_row').addClass('d-none');
+            $('.order-status-drop-down').addClass('d-none');
         }
         //prevent input from starting with 0
         $(".itemQuantity").on("input", function() {
@@ -1048,7 +1092,7 @@
 
         function fullFillOrder() {
             var status = $("#status").val();
-            var order_id = $("#order_id").val();
+            var order_id = $("#orderID").val();
             var delay = 7000;
             $('#progress-bar').removeClass('d-none');
             
@@ -1098,6 +1142,32 @@
                     else if (response.status === 'failed') {
                         alert('This order is already in process. Please wait for a while.');
                         location.reload();
+                    }
+                }
+            });
+        }
+
+        function update_order_status (order_id , paid) {
+            $('.order-status-spinner').removeClass('d-none');
+            $('.update_order').attr('disabled' , true);
+            var order_status_id = $('#order_status_id').val();
+            var payment_status = paid;  
+            jQuery.ajax({
+                url: "{{ url('admin/order/update-order-status') }}",
+                method: 'post',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "order_id": order_id,
+                    "order_status_id": order_status_id,
+                    "payment_status": payment_status
+                },
+                success: function(response) {
+                    console.log(response);
+                    if (response.success == true) {
+                        $('.order-status-spinner').addClass('d-none');
+                        cancel_order_changes(order_id);
+                        window.location.href="/admin/order-detail/" + order_id;
+
                     }
                 }
             });

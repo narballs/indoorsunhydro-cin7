@@ -822,5 +822,133 @@ class OrderController extends Controller
         }
         return redirect()->back()->with('success', 'Order marked as paid successfully.');
     }
+
+
+    // uppdate order status manually 
+    public function update_order_status_by_admin(Request $request) {
+        $order_id = $request->order_id;
+        $payment_status = $request->payment_status;
+        $order_status_id = $request->order_status_id;
+        $order = ApiOrder::where('id', $order_id)->first();
+        $previous_order_status = OrderStatus::where('id', $order->order_status_id)->first();
+        $current_order_status = OrderStatus::where('id', $order_status_id)->first();
+        $order->update([
+            'order_status_id' => $order_status_id,
+            'payment_status' => $payment_status
+        ]);
+
+
+        $update_order_status_comment = new OrderComment;
+        $update_order_status_comment->order_id = $order_id;
+        $update_order_status_comment->comment = 'Order status updated manually from' . ' ' . (!empty($previous_order_status->status) ? $previous_order_status->status : '') . ' ' . 'to' . ' ' .  (!empty($current_order_status->status) ? $current_order_status->status : '');
+        $update_order_status_comment->save();
+
+        $order_items = ApiOrderItem::with('order.texClasses', 'product.options')->where('order_id', $order_id)->get();
+        $user = User::where('id', $order->user_id)->first();
+        $all_ids = UserHelper::getAllMemberIds($user);
+        $contact_ids = Contact::whereIn('id', $all_ids)->pluck('contact_id')->toArray();
+        $customer = ApiOrder::with(['createdby'])->whereIn('memberId', $contact_ids)
+        ->with('contact' , function($query) {
+            $query->orderBy('company');
+        })
+        ->with('apiOrderItem.product')
+        ->where('id' , $order_id)
+        ->first();
+        $currentOrder = ApiOrder::where('id', $order_id)->with(
+            'contact',
+            'user.contact',
+            'apiOrderItem.product.options',
+            'texClasses'
+        )->first();
+        $count = $order_items->count();
+        $best_products = Product::where('status', '!=', 'Inactive')->orderBy('views', 'DESC')->limit(4)->get();
+        $addresses = [
+            'billing_address' => [
+                'firstName' => $customer->contact->firstName,
+                'lastName' => $customer->contact->lastName,
+                'address1' => $customer->contact->address1,
+                'address2' => $customer->contact->address2,
+                'city' => $customer->contact->city,
+                'state' => $customer->contact->state,
+                'zip' => $customer->contact->postCode,
+                'mobile' => $customer->contact->mobile,
+                'phone' => $customer->contact->phone,
+            ],
+            'shipping_address' => [
+                'postalAddress1' => $customer->contact->postalAddress1,
+                'postalAddress2' => $customer->contact->postalAddress2,
+                'phone' => $customer->contact->postalCity,
+                'postalCity' => $customer->contact->postalState,
+                'postalState' => $customer->contact->postalPostCode,
+                'postalPostCode' => $customer->contact->postalPostCode
+            ],
+            'best_product' => $best_products,
+            'user_email' =>   $customer->contact->email,
+            'currentOrder' => $currentOrder,
+            'count' => $count,
+            'order_id' => $order_id,
+            'company' => $currentOrder->contact->company, 
+            'order_status' => 'updated',
+        ];
+
+        $name = $customer->contact->firstName;
+        $email =  $customer->contact->email;
+        $reference  =  $currentOrder->reference;
+        $template = 'emails.admin-order-received';
+        $admin_users = DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
+
+        $admin_users = $admin_users->toArray();
+
+        $users_with_role_admin = User::select("email")
+            ->whereIn('id', $admin_users)
+            ->get();
+        $data = [
+            'name' =>  $name,
+            'email' => $email,
+            'subject' => 'New order received',
+            'reference' => $reference,
+            'order_items' => $order_items,
+            'dateCreated' => Carbon::now(),
+            'addresses' => $addresses,
+            'best_product' => $best_products,
+            'user_email' => $email,
+            'currentOrder' => $currentOrder,
+            'count' => $count,
+            'from' => SettingHelper::getSetting('noreply_email_address')
+        ];
+
+        if (!empty($users_with_role_admin)) {
+            foreach ($users_with_role_admin as $role_admin) {
+                $subject = 'Indoorsun Hydro order' .'#'.$currentOrder->id. ' ' . 'status has been updated';
+                $adminTemplate = 'emails.admin-order-received';
+                $data['subject'] = $subject;
+                $data['email'] = $role_admin->email;
+                MailHelper::sendMailNotification('emails.admin-order-received', $data);
+            }
+        }
+        $data['subject'] = 'Your Indoorsun Hydro order' .'#'.$currentOrder->id. ' ' .'status has been updated';
+        $data['email'] = $email;
+        MailHelper::sendMailNotification('emails.admin-order-received', $data);
+
+
+        $email_sent_to_users = [];
+        $all_members = Contact::whereIn('id', $all_ids)->get();
+        foreach ($all_members as $member) {
+            $member_user = User::find($member->user_id);
+            if (!empty($member_user) && $member_user->hasRole(['Order Approver'])) {
+                if (isset($email_sent_to_users[$member_user->id])) {
+                    continue;
+                }
+
+                $email_sent_to_users[$member_user->id] = $member_user;
+                $data['name'] = $member_user->firstName;
+                $data['subject'] =  '#'.$currentOrder->id. ' ' .'Order status updated';
+                $data['email'] = $member_user->email;
+                MailHelper::sendMailNotification('emails.user-order-received', $data);
+            }
+        }
+        
+        return response()->json(['success' => true , 'message' => 'Order status updated successfully.']);
+    }
 }
 

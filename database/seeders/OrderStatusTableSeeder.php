@@ -25,7 +25,8 @@ class OrderStatusTableSeeder extends Seeder
             ['status' => 'APPROVED'],
             ['status' => 'VOID'],
             ['status' => 'New'],
-            ['status' => 'FullFilled']
+            ['status' => 'FullFilled'],
+            ['status' => 'Paid - Preparing for Shipping']
         ];
         foreach($statuses as $status) {
 

@@ -266,24 +266,14 @@
                                                 @endif
                                             </td>
                                             <td data-label="Payment Status :" class="td_padding_row">
-                                                @if($order->contact->paymentTerms == 'Pay in Advanced')
+                                                @if(!empty($order->contact->paymentTerms) && strtolower($order->contact->paymentTerms) === 'pay in advanced')
                                                     @if($order->payment_status == 'paid')
                                                         <span class="badge badge-success p-1">Paid</span>
                                                     @else
                                                         <span class="badge badge-danger p-1">Unpaid</span>
                                                     @endif
                                                 @else
-                                                    @if (strtolower($order->payment_status) == 'paid' && $order->shipstation_orderId != null)
-                                                        <span class="badge badge-success bg_success">Paid</span>
-                                                    @elseif (strtolower($order->payment_status) == '' && $order->shipstation_orderId != null)
-                                                        <form action="{{url('order/mark/paid')}}" method="post">
-                                                            @csrf
-                                                            <input type="hidden" name="order_id" id="mark_paid_order_id" value="{{ $order->id }}">
-                                                            <button class="badge badge-primary p-2 border-0">
-                                                                Mark as Paid
-                                                            </button>
-                                                        </form>
-                                                    @endif
+                                                    {{!empty($order->contact->paymentTerms) ? $order->contact->paymentTerms : '' }}                                                   
                                                 @endif
                                             </td>
                                             <td data-label="Payment Gateway :" class="td_padding_row">

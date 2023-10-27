@@ -332,6 +332,7 @@ class CheckoutController extends Controller
                     'currentOrder' => $currentOrder,
                     'count' => $count,
                     'order_id' => $order_id,
+                    'company' => !empty($currentOrder->user->contact) ?  $currentOrder->user->contact[0]->company : '',
                 ];
 
                 $name = $contact->firstName;

@@ -14,9 +14,9 @@
                 <div class="col-md-6 py-3">
                     @include('my-account.my-account-side-bar')
                 </div>
-                <div class="col-md-6 py-3 text-right">
+                {{-- <div class="col-md-6 py-3 text-right">
                     <button type="button" class="btn my_account_add_a_new_address"> Add a new address +</button>
-                </div>
+                </div> --}}
             </div>
             <div class="col-md-12 p-0">
                 <div class="card">
@@ -36,28 +36,15 @@
                                     {{ $address_user->contact[0]['lastName'] }}
                                 </p>
                                 <p class="my_account_address_items">
-                                    @if(!empty($address_user->contact[0]['address1'] || $address_user->contact[0]['postalAddress1']))
-                                        {{ $address_user->contact[0]['address1'] ? $address_user->contact[0]['address1'] . "," : $address_user->contact[0]['postalAddress1'] . ","}}
-                                    @endif
+                                    {{ !empty($address_user->contact[0]['postalAddress1']) ? $address_user->contact[0]['postalAddress1'] . "," : '' . ","}}
                                 </p>
                                 <p class="my_account_address_items">
-                                    @if(!empty($address_user->contact[0]['address2'] || $address_user->contact[0]['postalAddress2']))
-                                        {{ $address_user->contact[0]['address2'] ?  $address_user->contact[0]['address2'] . "," : $address_user->contact[0]['postalAddress2'] . ","}}
-                                    @endif
-
+                                    {{ $address_user->contact[0]['postalAddress2'] ?  $address_user->contact[0]['postalAddress2'] . "," : '' . ","}}
                                 </p>
                                 <p class="my_account_address_items">
-                                    @if(!empty($address_user->contact[0]['city'] || $address_user->contact[0]['postalCity']))
-                                        {{ $address_user->contact[0]['city'] ?  $address_user->contact[0]['city'] . "," :  $address_user->contact[0]['postalCity'] . "," }}
-                                    @endif
-                                    
-                                    @if(!empty($address_user->contact[0]['state'] || $address_user->contact[0]['postalState']))
-                                        {{ $address_user->contact[0]['state'] ?  $address_user->contact[0]['state'] . "," :  $address_user->contact[0]['postalState'] . "," }}
-                                    @endif
-                                    
-                                    @if(!empty($address_user->contact[0]['postCode'] || $address_user->contact[0]['postalPostCode']))
-                                        {{ $address_user->contact[0]['postCode'] ?  $address_user->contact[0]['postCode'] :  $address_user->contact[0]['postalPostCode'] }}
-                                    @endif
+                                    {{ $address_user->contact[0]['postalCity'] ?  $address_user->contact[0]['postalCity'] . "," :  '' . "," }}
+                                    {{ $address_user->contact[0]['postalState'] ?  $address_user->contact[0]['postalState'] . "," :  '' . "," }}
+                                    {{ $address_user->contact[0]['postalPostCode'] ?  $address_user->contact[0]['postalPostCode'] :  '' }}
                                 </p>
                                 <p class="my_account_address_items">
                                     <span class="my_account_address_items">
@@ -88,28 +75,15 @@
                                     {{ $address_user->contact[0]['lastName'] }}
                                 </p>
                                 <p class="my_account_address_items">
-                                    @if(!empty($address_user->contact[0]['address1'] || $address_user->contact[0]['postalAddress1']))
-                                        {{ $address_user->contact[0]['address1'] ? $address_user->contact[0]['address1'] . "," : $address_user->contact[0]['postalAddress1'] . ","}}
-                                    @endif
+                                    {{ !empty($address_user->contact[0]['address1']) ? $address_user->contact[0]['address1'] . "," : $address_user->contact[0]['postalAddress1'] . ","}}
                                 </p>
                                 <p class="my_account_address_items">
-                                    @if(!empty($address_user->contact[0]['address2'] || $address_user->contact[0]['postalAddress2']))
-                                        {{ $address_user->contact[0]['address2'] ?  $address_user->contact[0]['address2'] . "," : $address_user->contact[0]['postalAddress2'] . ","}}
-                                    @endif
-
+                                    {{ !empty($address_user->contact[0]['address2']) ?  $address_user->contact[0]['address2'] . "," : $address_user->contact[0]['postalAddress2'] . ","}}
                                 </p>
                                 <p class="my_account_address_items">
-                                    @if(!empty($address_user->contact[0]['city'] || $address_user->contact[0]['postalCity']))
-                                        {{ $address_user->contact[0]['city'] ?  $address_user->contact[0]['city'] . "," :  $address_user->contact[0]['postalCity'] . "," }}
-                                    @endif
-                                    
-                                    @if(!empty($address_user->contact[0]['state'] || $address_user->contact[0]['postalState']))
-                                        {{ $address_user->contact[0]['state'] ?  $address_user->contact[0]['state'] . "," :  $address_user->contact[0]['postalState'] . "," }}
-                                    @endif
-                                    
-                                    @if(!empty($address_user->contact[0]['postCode'] || $address_user->contact[0]['postalPostCode']))
-                                        {{ $address_user->contact[0]['postCode'] ?  $address_user->contact[0]['postCode']:  $address_user->contact[0]['postalPostCode'] }}
-                                    @endif
+                                    {{ !empty($address_user->contact[0]['city']) ?  $address_user->contact[0]['city'] . "," :  $address_user->contact[0]['postalCity'] . "," }}
+                                    {{ !empty($address_user->contact[0]['state']) ?  $address_user->contact[0]['state'] . "," :  $address_user->contact[0]['postalState'] . "," }}
+                                    {{ !empty($address_user->contact[0]['postCode']) ?  $address_user->contact[0]['postCode']:  $address_user->contact[0]['postalPostCode'] }}
                                 </p>
                                 <p class="my_account_address_items">
                                     <span class="my_account_address_items">
@@ -125,7 +99,7 @@
                                 </p>
                                 <p>
                                     <button type="button" class="btn p-0 change_billing_address_btn"
-                                        data-bs-toggle="modal" data-bs-target="#address_modal_id">
+                                        data-bs-toggle="modal" data-bs-target="#address_modal_id_shipping">
                                         Change Shipping address
                                     </button>
                                 </p>
@@ -134,7 +108,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-12 my-4 p-0">
+            {{-- <div class="col-md-12 my-4 p-0">
                 <div class="card">
                     <div class="card-header">
                         <p class="additional_address_entries py-4 mb-0">
@@ -175,19 +149,7 @@
                                     @endphp
                                     <tbody>
                                         @foreach ($secondary_contacts as $key => $contact)
-                                            {{-- @php
-                                                $contacts_array = [
-                                                    'id' => $contact->id,
-                                                    'contact_id' => $contact->contact_id,
-                                                    'is_parent' => $contact->is_parent,
-                                                    'is_default' => $contact->is_default,
-                                                    'secondary_id' => $contact->secondary_id,
-                                                    'user_id' => $contact->user_id,
-                                                ];
-                                                array_push($ids_array, $contacts_array);
-                                                $contacts_data = implode(',', $ids_array);
-                                                dd($contacts_data);
-                                            @endphp --}}
+                                            
                                             <tr class="py-5">
                                                 <td class="table-items align-middle pt-0 pb-0">
                                                     <div class="custom-control custom-checkbox tabel-checkbox d-flex align-items-center">
@@ -273,7 +235,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
         </div>
     </div>
 </div>
