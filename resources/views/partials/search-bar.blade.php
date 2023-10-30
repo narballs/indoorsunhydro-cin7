@@ -8,19 +8,34 @@
         <div class="col-md-5 col-lg-5 col-xl-5 top-reach-bar d-flex align-items-center justify-content-center">
             <div class="col-md-12">
                 <div class="row">
-                    <form class="" method="get" action="{{route('product_search')}}">
+                    <form class="content_class" method="get" action="{{route('product_search')}}">
                         <input type="hidden" id="is_search" name="is_search" value="1">
-                        <div class="input-group ">
-                            <input type="text" style="border:2px solid #7BC533 !important;" class="form-control remove_shadow_search" placeholder="What are you searching for" aria-label="Search"
-                                aria-describedby="basic-addon2" id="search" name="value"
-                                value="{{ isset($searched_value) ? $searched_value : '' }}">
-                            <span class="input-group-text" id="search-addon" style="border:2px solid #7BC533 !important;">
-                                <button class="btn-info" type="submit" id="search" style="background: transparent;border:none">
-                                    {{-- <i class="text-white" data-feather="search" style="width: 20px; !important;"></i> --}}
-                                    <i class="fa fa-search" style="font-size:16px;"></i>
-                                </button>
-                            </span>
+                        <div class="col-md-12">
+                            <div class="input-group ">
+                                <input type="text" style="border:2px solid #7BC533 !important;" class="form-control remove_shadow_search" placeholder="What are you searching for" aria-label="Search"
+                                    aria-describedby="basic-addon2" id="search" name="value"
+                                    value="{{ isset($searched_value) ? $searched_value : '' }}">
+                                <span class="input-group-text" id="search-addon" style="border:2px solid #7BC533 !important;">
+                                    <button class="btn-info" type="submit" id="search" style="background: transparent;border:none">
+                                        {{-- <i class="text-white" data-feather="search" style="width: 20px; !important;"></i> --}}
+                                        <i class="fa fa-search" style="font-size:16px;"></i>
+                                    </button>
+                                </span>
+                            </div>
                         </div>
+                    
+                        {{-- <div class="col-md-4 mt-2">
+                            <input type="radio" class="main_search_filter" name="main_search_filter" value="title" {{(empty($filter_value_main) || ($filter_value_main != 'description' && $filter_value_main != 'title')) ? 'checked' : ''}}>
+                            <label for="">Search Product Title Only</label>
+                        </div>
+                        <div class="col-md-4 mt-2 p-0">
+                            <input type="radio" class="main_search_filter" name="main_search_filter" value="description" {{!empty($filter_value_main) && ($filter_value_main == 'description') ? 'checked' : ''}}>
+                            <label for="">Search Description Only</label>
+                        </div>
+                        <div class="col-md-4 mt-2 p-0">
+                            <input type="radio" class="main_search_filter" name="main_search_filter" value="title_description" {{!empty($filter_value_main) && ($filter_value_main == 'title_description') ? 'checked' : ''}}>
+                            <label for="">Search Title & Description</label>
+                        </div> --}}
                     </form>
                 </div>
             </div>
@@ -78,3 +93,13 @@
         @include('partials.nav')
     </div>
 </div>
+
+
+<style>
+    .main_search_filter{
+        /* accent-color: #7BC533; */
+    }
+    .content_class {
+        display: contents;
+    }
+</style>
