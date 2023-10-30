@@ -1060,10 +1060,7 @@ class ProductController extends Controller
                 $q->where('status', '!=', 'Disabled');
             }])
             ->orWhere(function (Builder $query) use ($searchvalue) {
-                $query->where('name', 'LIKE', '%' . $searchvalue . '%')
-                ->orWhereRaw('REVERSE(name) LIKE REVERSE(?)', ['%'.$searchvalue.'%'])
-                ->orWhereRaw('REVERSE(name) LIKE ?', ['%'.$searchvalue.'%'])
-                ->orWhereRaw('REVERSE(name) LIKE ?', ['%'.' ', '%'.$searchvalue.'%']);
+                $query->where('name', 'LIKE', '%' . $searchvalue . '%');
             })
             ->where('status', '!=', 'Inactive')
             ->paginate($per_page);
@@ -1074,8 +1071,7 @@ class ProductController extends Controller
                 $q->where('status', '!=', 'Disabled');
             }])
             ->orWhere(function (Builder $query) use ($searchvalue) {
-                $query->where('description', 'LIKE', '%' . $searchvalue . '%')
-                ->orWhere('description' , 'LIKE' , ['%'.' ', '%'.$searchvalue.'%']);
+                $query->where('description', 'LIKE', '%' . $searchvalue . '%');
             })
             ->where('status', '!=', 'Inactive')
             ->paginate($per_page);
