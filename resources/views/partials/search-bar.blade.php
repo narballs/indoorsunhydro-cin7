@@ -24,7 +24,7 @@
                             </div>
                         </div>
                     
-                        <div class="col-md-4 mt-2">
+                        {{-- <div class="col-md-4 mt-2">
                             <input type="radio" class="main_search_filter" name="main_search_filter" value="title" {{(empty($filter_value_main) || ($filter_value_main != 'description' && $filter_value_main != 'title')) ? 'checked' : ''}}>
                             <label for="">Search Product Title Only</label>
                         </div>
@@ -35,7 +35,7 @@
                         <div class="col-md-4 mt-2 p-0">
                             <input type="radio" class="main_search_filter" name="main_search_filter" value="title_description" {{!empty($filter_value_main) && ($filter_value_main == 'title_description') ? 'checked' : ''}}>
                             <label for="">Search Title & Description</label>
-                        </div>
+                        </div> --}}
                     </form>
                 </div>
             </div>
