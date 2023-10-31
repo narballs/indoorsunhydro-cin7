@@ -332,7 +332,7 @@
                                                                                         <div class="col-md-12">
                                                                                             <input id="file_upload" name="permit_image" style="display:none;" type="file" >
                                                                                             <h6 class="drop_your_files_here text-center"> Drop your file here or  
-                                                                                                <label for="files" class="browse">Browse <span class="text-danger">*</span></label>
+                                                                                                <label for="files" class="browse">Browse</label>
                                                                                                 <p class="size_info mb-0">Maximum size: 50MB</p>
                                                                                                 <div class="text-danger wholesale_inputs text-center" id="file_upload_errors"></div>
                                                                                             </h6>
@@ -1578,9 +1578,9 @@
             if (phone_delivery == '') {
                 $('#phone_delivery_errors').html('Phone number is required');
             }
-            if ((file_upload == '')  && $('#edit_image_input').val() == '') {
-                $('#file_upload_errors').html('Permit image is required');
-            }
+            // if ((file_upload == '')  && $('#edit_image_input').val() == '') {
+            //     $('#file_upload_errors').html('Permit image is required');
+            // }
 
             var phoneValidation = isNumber(document.getElementById('phone'));
             var mobileValidation = isNumber(document.getElementById('mobile'));
@@ -1602,7 +1602,8 @@
             if (account_pay_phone == false) {
                 $('#account_payable_phone_errors').html('Phone number is invalid');
             }
-            if (company_name != '' && first_name != '' && last_name != '' && phone != ''  && mobile != ''  && email != '' && email_validation == true && account_payable_name != '' && account_payable_phone != '' && account_payable_email != '' && account_pay_email_validation == true && first_name_billing != '' && last_name_billing != '' && company_name_billing != '' && street_address_billing != '' && city_billing != '' && state_billing != '' && postal_code_billing != '' && phone_billing != '' && first_name_delivery != '' && last_name_delivery != '' && company_name_delivery != '' && street_address_delivery != '' && city_delivery != '' && state_delivery != '' && postal_code_delivery != '' && phone_delivery != '' && (file_upload != '' || $('#edit_image_input').val() != '') && account_pay_phone == true && phoneValidation == true && phone_billing_validation == true && phone_delivery_validation == true && mobileValidation == true) { 
+            // if (company_name != '' && first_name != '' && last_name != '' && phone != ''  && mobile != ''  && email != '' && email_validation == true && account_payable_name != '' && account_payable_phone != '' && account_payable_email != '' && account_pay_email_validation == true && first_name_billing != '' && last_name_billing != '' && company_name_billing != '' && street_address_billing != '' && city_billing != '' && state_billing != '' && postal_code_billing != '' && phone_billing != '' && first_name_delivery != '' && last_name_delivery != '' && company_name_delivery != '' && street_address_delivery != '' && city_delivery != '' && state_delivery != '' && postal_code_delivery != '' && phone_delivery != '' && (file_upload != '' || $('#edit_image_input').val() != '') && account_pay_phone == true && phoneValidation == true && phone_billing_validation == true && phone_delivery_validation == true && mobileValidation == true) { 
+            if (company_name != '' && first_name != '' && last_name != '' && phone != ''  && mobile != ''  && email != '' && email_validation == true && account_payable_name != '' && account_payable_phone != '' && account_payable_email != '' && account_pay_email_validation == true && first_name_billing != '' && last_name_billing != '' && company_name_billing != '' && street_address_billing != '' && city_billing != '' && state_billing != '' && postal_code_billing != '' && phone_billing != '' && first_name_delivery != '' && last_name_delivery != '' && company_name_delivery != '' && street_address_delivery != '' && city_delivery != '' && state_delivery != '' && postal_code_delivery != '' && phone_delivery != '' && account_pay_phone == true && phoneValidation == true && phone_billing_validation == true && phone_delivery_validation == true && mobileValidation == true) { 
                 return true;
             } else {
                 return false;

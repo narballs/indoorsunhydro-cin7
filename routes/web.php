@@ -51,6 +51,7 @@ Route::get('/wholesale/account/create', [UserController::class, 'create_wholesal
 Route::get('/wholesale/account/thankyou/{id}', [UserController::class, 'wholesaleuser_thankyou'])->name('wholesaleuser_thankyou');
 Route::get('/wholesale/account/edit/{id}', [UserController::class, 'edit_wholesale_account'])->name('edit_wholesale_account');
 Route::post('/wholesale/account/check/email', [UserController::class, 'wholesale_user_check_email'])->name('wholesale_user_check_email');
+Route::post('/wholesale/generate/pdf/{id}', [UserController::class, 'wholesale_application_generate_pdf'])->name('wholesale_application_generate_pdf');
 
 
 

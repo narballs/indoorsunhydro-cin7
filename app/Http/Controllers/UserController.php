@@ -47,6 +47,9 @@ use Illuminate\Support\Facades\File;
 use App\Services\ZendeskService;
 use Zendesk\API\HttpClient as ZendeskClient;
 use Illuminate\Auth\Events\Validated;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\View;
+use PDF;
 
 class UserController extends Controller
 {
@@ -2137,6 +2140,11 @@ class UserController extends Controller
             }
 
             else {
+                if (empty($permit_image_name)) {
+                    $permit_image = '';
+                } else {
+                    $permit_image = $permit_image_name;
+                } 
                 
                 $wholesale_appication = WholesaleApplicationInformation::create([
                     'company' => $request->company_name,
@@ -2150,7 +2158,7 @@ class UserController extends Controller
                     'payable_name' => $request->account_payable_name,
                     'payable_email' => $request->account_payable_email,
                     'payable_phone' => $request->account_payable_phone,
-                    'permit_image' => $permit_image_name,
+                    'permit_image' => $permit_image,
                 ]);
     
                 $wholesale_appication->save();
@@ -2437,7 +2445,8 @@ class UserController extends Controller
             ]);
             return response()->json([
                 'status' => true,
-                'message' => 'Data saved for now !'
+                'message' => 'Data saved for now !',
+                'id' => $wholesale_appication->id
             ],200);
         }
         
@@ -2533,5 +2542,21 @@ class UserController extends Controller
                 'message' => 'Contact Not Found !'
             ],200);
         }
+    }
+
+    public function wholesale_application_generate_pdf($id) {
+        $wholesale_application =  WholesaleApplicationInformation::with('wholesale_application_address' , 'wholesale_application_regulation_detail' , 'wholesale_application_authorization_detail' , 'wholesale_application_card')
+        ->where('id' , $id)->orderBy('id' , 'Desc')->first()->toArray();
+        $html = view('admin.wholesale_applications.generate_pdf', compact('wholesale_application'))->render();
+        $pdf = PDF::loadHTML($html)->setOptions(
+            [
+                'defaultFont' => 'sans-serif',
+                'isPhpEnabled' => true, 
+                'isHtml5ParserEnabled' => true, 
+                'isPhpEnabled' => true, 
+                'isPhpEnabled' => true
+            ]
+        );
+        return $pdf->download('document.pdf');
     }
 }

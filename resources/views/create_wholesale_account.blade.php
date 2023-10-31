@@ -96,7 +96,7 @@
                                                                         </div>
                                                                         @if(empty($id))
                                                                         <div class="col-md-6 text-right">
-                                                                            <button class="step_next btn" data-toggle="" data-target="" type="button" id="show_previous_data_button"> Show Previous Data </button>
+                                                                            <button class="step_next btn" data-toggle="" data-target="" type="button" id="show_previous_data_button" onclick="show_previous_data_pop_up()"> Show Previous Data </button>
                                                                         </div>
                                                                         @endif
                                                                     </div>
@@ -353,7 +353,7 @@
                                                                                         <div class="col-md-12">
                                                                                             <input id="file_upload" name="permit_image" style="display:none;" type="file" >
                                                                                             <h6 class="drop_your_files_here text-center"> Drop your file here or  
-                                                                                                <label for="files" class="browse">Browse <span class="text-danger">*</span></label>
+                                                                                                <label for="files" class="browse">Browse</label>
                                                                                                 <p class="size_info mb-0">Maximum size: 50MB</p>
                                                                                                 <div class="text-danger wholesale_inputs text-center" id="file_upload_errors"></div>
                                                                                             </h6>
@@ -380,7 +380,7 @@
                                                                 </div>
                                                                 <div class="col-md-6">
                                                                 @if(empty($id))
-                                                                <button id="save_for_now" type="button"  class="step_next btn" data-toggle="" data-target="">Save for now</button>
+                                                                <button id="save_for_now" type="button"  class="save_for_now_btn btn" data-toggle="" data-target="">Save for now</button>
                                                                 @endif
                                                                 <button type="button" id="step1_next" onclick="check_validation_step1()" class="step_next btn">
                                                                     Next
@@ -561,9 +561,9 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="text-right">
-                                                                    @if(empty($id))
+                                                                    {{-- @if(empty($id))
                                                                         <button id="save_for_now" type="button"  class="step_next btn" data-toggle="" data-target="">Save for now</button>
-                                                                    @endif
+                                                                    @endif --}}
                                                                     <button type="button" id="step2_next" class="step_next btn" onclick="check_validation_step2()">
                                                                         Next
                                                                     </button>
@@ -683,9 +683,9 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="text-right">
-                                                                    @if(empty($id))
+                                                                    {{-- @if(empty($id))
                                                                         <button id="save_for_now" type="button"  class="step_next btn" data-toggle="" data-target="">Save for now</button>
-                                                                    @endif
+                                                                    @endif --}}
                                                                     <button type="button" id="step3_next" class="step_next btn" onclick="check_validation_step3()">
                                                                         Next
                                                                     </button>
@@ -884,7 +884,7 @@
                 </div>
               </div>
         </div>
-        <div class="modal fade" id="previous_data_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal fade" id="previous_data_modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                   <div class="modal-header">
@@ -1037,6 +1037,31 @@
         }
 
         .step_next:hover {
+            border-radius: 4px;
+            border: 0.846px solid #7CC633;
+            background: #7CC633;
+            box-shadow: 0px 0.84611px 1.69222px 0px rgba(16, 24, 40, 0.05);
+            color: #FFF;
+            font-family: 'Poppins';
+            font-size: 15.212px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: 20.307px; /* 133.492% */
+        }
+        .save_for_now_btn {
+            border-radius: 4px;
+            border: 0.846px solid #7CC633;
+            background: #7CC633;
+            box-shadow: 0px 0.84611px 1.69222px 0px rgba(16, 24, 40, 0.05);
+            color: #FFF;
+            font-family: 'Poppins';
+            font-size: 15.212px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: 20.307px; /* 133.492% */
+        }
+
+        .save_for_now_btn:hover {
             border-radius: 4px;
             border: 0.846px solid #7CC633;
             background: #7CC633;
@@ -1526,13 +1551,13 @@
                 $('html, body').animate({ scrollTop: 0 }, 800);
                 return false; // Prevent the default anchor behavior
             });
-            $(document).on('keypress' , '#email_address' ,function(){
-                if(event.keyCode == 13) {
-                    save_email_for_now(); 
-                } else {
-                    return false;
-                }
-            });
+            // $(document).on('keypress' , '#email_address' ,function(){
+            //     if(event.keyCode == 13) {
+            //         save_email_for_now(); 
+            //     } else {
+            //         return false;
+            //     }
+            // });
             function save_progress_step1() {
                 var validation = validation_message_step_1();
                 if (validation == true) {
@@ -1630,20 +1655,34 @@
             }
             // save email for now 
             
-            $(document).on('click', '#save_for_now' ,function() {
-                if ($('#email').val() == '') {
-                    $('#save_for_now').attr('data-toggle', 'modal')
-                    $('#save_for_now').attr('data-target', '#save_for_now_modal')
-                    $('#save_for_now_modal').modal('show');
-                } else {
-                    $('#save_for_now').attr('data-toggle', '')
-                    $('#save_for_now').attr('data-target', '')
-                    $('#save_for_now_modal').modal('hide');
+            // $(document).on('click', '#save_for_now' ,function() {
+            //     if ($('#email').val() == '') {
+            //         $('#save_for_now').attr('data-toggle', 'modal')
+            //         $('#save_for_now').attr('data-target', '#save_for_now_modal')
+            //         $('#save_for_now_modal').modal('show');
+            //     } else {
+            //         $('#save_for_now').attr('data-toggle', '')
+            //         $('#save_for_now').attr('data-target', '')
+            //         $('#save_for_now_modal').modal('hide');
 
-                    save_progress_step1();
-                }
-            });
+            //         save_progress_step1();
+            //     }
+            // });
         });
+
+        $('#save_for_now').click(function() {
+            if ($('#email').val() == '') {
+                $('#save_for_now').attr('data-toggle', 'modal')
+                $('#save_for_now').attr('data-target', '#save_for_now_modal')
+                $('#save_for_now_modal').modal('show');
+            } else {
+                $('#save_for_now').attr('data-toggle', '')
+                $('#save_for_now').attr('data-target', '')
+                $('#save_for_now_modal').modal('hide');
+
+                save_progress_step1();
+            }
+        })
 
         function save_email_for_now() {
             $('#wholesale_spinner').removeClass('d-none');
@@ -1678,6 +1717,7 @@
                             $('.success_message').removeClass('d-none');
                             setTimeout(() => {
                                 $('#successMessage').html(response.message);
+                                window.location.href = "/wholesale/account/create/";
                             }, 1000);
                         } else if (response.status == false) {
                             $('#email_address_errors').html('Email Already Exists')
@@ -1878,9 +1918,9 @@
             if (phone_delivery == '') {
                 $('#phone_delivery_errors').html('Phone number is required');
             }
-            if ((file_upload == '')  && $('#edit_image_input').val() == '') {
-                $('#file_upload_errors').html('Permit image is required');
-            }
+            // if ((file_upload == '')  && $('#edit_image_input').val() == '') {
+            //     $('#file_upload_errors').html('Permit image is required');
+            // }
             var phoneValidation = isNumber(document.getElementById('phone'));
             var mobileValidation = isNumber(document.getElementById('mobile'));
             var phone_billing_validation = isNumber(document.getElementById('phone_billing'));
@@ -1901,7 +1941,8 @@
             if (account_pay_phone == false) {
                 $('#account_payable_phone_errors').html('Phone number is invalid');
             }
-            if (company_name != '' && first_name != '' && last_name != '' && phone != ''  && mobile != ''  && email != '' && email_validation == true && account_payable_name != '' && account_payable_phone != '' && account_payable_email != '' && account_pay_email_validation == true && first_name_billing != '' && last_name_billing != '' && company_name_billing != '' && street_address_billing != '' && city_billing != '' && state_billing != '' && postal_code_billing != '' && phone_billing != '' && first_name_delivery != '' && last_name_delivery != '' && company_name_delivery != '' && street_address_delivery != '' && city_delivery != '' && state_delivery != '' && postal_code_delivery != '' && phone_delivery != '' && (file_upload != '' || $('#edit_image_input').val() != '') && account_pay_phone == true && phoneValidation == true && phone_billing_validation == true && phone_delivery_validation == true && mobileValidation == true) { 
+            // if (company_name != '' && first_name != '' && last_name != '' && phone != ''  && mobile != ''  && email != '' && email_validation == true && account_payable_name != '' && account_payable_phone != '' && account_payable_email != '' && account_pay_email_validation == true && first_name_billing != '' && last_name_billing != '' && company_name_billing != '' && street_address_billing != '' && city_billing != '' && state_billing != '' && postal_code_billing != '' && phone_billing != '' && first_name_delivery != '' && last_name_delivery != '' && company_name_delivery != '' && street_address_delivery != '' && city_delivery != '' && state_delivery != '' && postal_code_delivery != '' && phone_delivery != '' && (file_upload != '' || $('#edit_image_input').val() != '') && account_pay_phone == true && phoneValidation == true && phone_billing_validation == true && phone_delivery_validation == true && mobileValidation == true) { 
+            if (company_name != '' && first_name != '' && last_name != '' && phone != ''  && mobile != ''  && email != '' && email_validation == true && account_payable_name != '' && account_payable_phone != '' && account_payable_email != '' && account_pay_email_validation == true && first_name_billing != '' && last_name_billing != '' && company_name_billing != '' && street_address_billing != '' && city_billing != '' && state_billing != '' && postal_code_billing != '' && phone_billing != '' && first_name_delivery != '' && last_name_delivery != '' && company_name_delivery != '' && street_address_delivery != '' && city_delivery != '' && state_delivery != '' && postal_code_delivery != '' && phone_delivery != '' && account_pay_phone == true && phoneValidation == true && phone_billing_validation == true && phone_delivery_validation == true && mobileValidation == true) { 
                 return true;
             } else {
                 return false;
@@ -2302,9 +2343,13 @@
                 $('#show_previous_data_button').attr('data-target', '#previous_data_modal')
                 $('#previous_data_modal').modal('show');
             });
-
-            
         });
+
+        function show_previous_data_pop_up() {
+            $('#show_previous_data_button').attr('data-toggle', 'modal')
+            $('#show_previous_data_button').attr('data-target', '#previous_data_modal')
+            $('#previous_data_modal').modal('show');
+        }
 
         function isNumber(element) {
             var getID = element.id;
