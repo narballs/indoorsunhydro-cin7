@@ -1056,32 +1056,36 @@ class ProductController extends Controller
             } 
         }
 
-        foreach ($explode_search_value as $searchvalue) {
-
-            if ($filter_value_main === 'title') {
-                $products = Product::with(['product_views','apiorderItem' , 'options' => function ($q) {
-                    $q->where('status', '!=', 'Disabled');
-                }])
-                ->orWhere(function (Builder $query) use ($searchvalue) {
+        if ($filter_value_main === 'title') {
+            $main_query = Product::with(['product_views','apiorderItem' , 'options' => function ($q) {
+                $q->where('status', '!=', 'Disabled');
+            }])
+            ->where(function (Builder $query) use ($explode_search_value) {
+                foreach ($explode_search_value as $searchvalue) {
                     $query->where('name', 'LIKE', '%' . $searchvalue . '%');
-                })
-                ->where('status', '!=', 'Inactive')
-                ->paginate($per_page);
-            }
+                }
+            })
+            ->where('status', '!=', 'Inactive')
+            ->paginate($per_page);
+            $products = $main_query;
         }
 
-        foreach ($explode_search_value as $searchvalue) {
-            if ($filter_value_main === 'description') {
-                $products = Product::with(['product_views','apiorderItem' , 'options' => function ($q) {
-                    $q->where('status', '!=', 'Disabled');
-                }])
-                ->orWhere(function (Builder $query) use ($searchvalue) {
+
+        if ($filter_value_main === 'description') {
+            $main_query = Product::with(['product_views','apiorderItem' , 'options' => function ($q) {
+                $q->where('status', '!=', 'Disabled');
+            }])
+            ->where(function (Builder $query) use ($explode_search_value) {
+                foreach ($explode_search_value as $searchvalue) {
                     $query->where('description', 'LIKE', '%' . $searchvalue . '%');
-                })
-                ->where('status', '!=', 'Inactive')
-                ->paginate($per_page);
-            }
+                }
+            })
+            ->where('status', '!=', 'Inactive')
+            ->paginate($per_page);
+            $products = $main_query;
         }
+
+        
         $searched_value = $request->value;
 
         $category_id = $selected_category_id;
