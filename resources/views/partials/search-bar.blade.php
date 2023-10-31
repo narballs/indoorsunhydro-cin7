@@ -24,17 +24,21 @@
                             </div>
                         </div>
                     
-                        <div class="col-md-4 mt-2">
-                            <input type="radio" class="main_search_filter" name="main_search_filter" value="title" {{(!empty($filter_value_main) || empty($filter_value_main) || ($filter_value_main != 'description' && $filter_value_main != 'title')) ? 'checked' : ''}}>
-                            <label for="">Search Product Title Only</label>
-                        </div>
-                        <div class="col-md-4 mt-2 p-0">
-                            <input type="radio" class="main_search_filter" name="main_search_filter" value="description" {{!empty($filter_value_main) && ($filter_value_main == 'description') ? 'checked' : ''}}>
-                            <label for="">Search Description Only</label>
-                        </div>
-                        <div class="col-md-4 mt-2 p-0">
-                            <input type="radio" class="main_search_filter" name="main_search_filter" value="title_description" {{!empty($filter_value_main) && ($filter_value_main == 'title_description') ? 'checked' : ''}}>
-                            <label for="">Search Title & Description</label>
+                        <div class="col-md-12">
+                            <div class="row mt-2">
+                                <div class="col-lg-12 col-md-12 custom-col-6 col-xl-4 d-flex-align-items-center">
+                                    <input type="radio" class="main_search_filter ml-1" name="main_search_filter" value="title" {{(!empty($filter_value_main) || empty($filter_value_main) || ($filter_value_main != 'description' && $filter_value_main != 'title')) ? 'checked' : ''}}>
+                                    <label class="main_filter_label mb-0" for="">Search Product Title</label>
+                                </div>
+                                <div class="col-lg-12 col-md-12 custom-col-6 col-xl-4 d-flex-align-items-center">
+                                    <input type="radio" class="main_search_filter ml-1" name="main_search_filter" value="description" {{!empty($filter_value_main) && ($filter_value_main == 'description') ? 'checked' : ''}}>
+                                    <label class="main_filter_label mb-0" for="">Search Description</label>
+                                </div>
+                                <div class="col-lg-12 col-md-12 custom-col-6 col-xl-4 d-flex-align-items-center">
+                                    <input type="radio" class="main_search_filter ml-1" name="main_search_filter" value="title_description" {{!empty($filter_value_main) && ($filter_value_main == 'title_description') ? 'checked' : ''}}>
+                                    <label class="main_filter_label mb-0" for="">Search Title & Description</label>
+                                </div>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -101,5 +105,16 @@
     }
     .content_class {
         display: contents;
+    }
+    .main_filter_label {
+        font-size: 15px !important;
+        font-weight: 600 !important;
+    }
+    @media screen and  (min-width: 1200px) and (max-width : 1752px) {
+        .custom-col-6 {
+            -webkit-box-flex: 0;
+            flex: 0 0 50%;
+            max-width: 50%;
+        }
     }
 </style>
