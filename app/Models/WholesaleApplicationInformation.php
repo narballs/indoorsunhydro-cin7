@@ -43,6 +43,5 @@ class WholesaleApplicationInformation extends Model
     {
         return $this->hasOne(WholesaleApplicationCard::class , 'wholesale_application_id');
     }
-
     
 }

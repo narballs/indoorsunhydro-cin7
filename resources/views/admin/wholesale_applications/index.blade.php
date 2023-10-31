@@ -57,7 +57,12 @@
                             <td>{{$wholesale_application->email}}</td>
                             <td>{{$wholesale_application->company}}</td>
                             <td>
-                                <a href="{{route('wholesale-applications.show' , $wholesale_application->id)}}" class="btn btn-sm btn-info text-white">Detail</a>
+                                <form action="{{route('wholesale_application_generate_pdf' , $wholesale_application->id)}}" method="post">
+                                    @csrf
+                                    <a href="{{route('wholesale-applications.show' , $wholesale_application->id)}}" class="btn btn-sm btn-info text-white">Detail</a>
+                                    <button type="submit" class="btn btn-sm btn-primary text-white">Generate Pdf</button>
+                                </form>
+
                             </td>
                         </tr>
                         @endforeach
