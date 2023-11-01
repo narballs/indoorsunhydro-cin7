@@ -393,6 +393,10 @@ return [
             'url'  => 'admin/discounts',
             'classes' => 'd-none',
         ],
+        [
+            'text'    => 'Recycle Bin',
+            'url'  => 'admin/recycle-bin',
+        ],
 
         [
             'text'       => 'Logout',

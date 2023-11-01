@@ -385,11 +385,17 @@ class ContactController extends Controller
     public function customer_delete($id)
     {
         $customer =  Contact::find($id);
-        $customer->delete();
         $user_id = $customer->user_id;
-        $user = User::find($user_id);
-        $user->delete();
-        return redirect()->back()->with('success', 'Customer Deleted Successfully');
+        if (!empty($user_id)) {
+            $user = User::find($user_id);
+            $user->delete();
+            $customer->delete();
+            return redirect()->back()->with('success', 'Customer Deleted Successfully');
+        } else {
+            $customer->delete();
+            return redirect()->back()->with('error', 'Customer deleted from Contacts but not found is Users');
+        }
+        
     }
 
     public function customer_edit($id)
