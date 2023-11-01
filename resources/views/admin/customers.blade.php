@@ -6,11 +6,19 @@
 
 @section('content')
     @if (\Session::has('success'))
-        <div class="alert alert-success">
-            <ul>
-                <li>{!! \Session::get('success') !!}</li>
-            </ul>
-        </div>
+    <div class="alert alert-success alert-dismissible fade show mt-2" role="alert">
+        {!! \Session::get('success') !!}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    @elseif (\Session::has('error'))
+    <div class="alert alert-danger alert-dismissible fade show mt-2" role="alert">
+        {!! \Session::get('error') !!}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
     @endif
     <div class="table-wrapper">
         <div class="card-body product_secion_main_body">

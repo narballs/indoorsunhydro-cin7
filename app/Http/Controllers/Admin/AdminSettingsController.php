@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Middleware\IsAdmin;
 use App\Models\AdminSetting;
 use App\Models\Contact;
+use App\Models\User;
 
 class AdminSettingsController extends Controller
 {
@@ -194,6 +195,43 @@ class AdminSettingsController extends Controller
                 'success' => false,
                 'msg' => 'No customer found'
             ]);
+        }
+    }
+
+    // Recycle  Bin 
+    public function recycle_bin() {
+        $deletedContacts = Contact::onlyTrashed()->paginate(10);
+        return view('admin.recycle_bin.index', compact('deletedContacts'));
+    }
+
+    // restore contact
+    public function restore_contact($id) {
+        $contact = Contact::withTrashed()->findOrFail($id);
+        $contact->restore();
+        $user = User::withTrashed()->where('id', $contact->user_id)->first();
+        if (!empty($user)) {
+
+            $user->restore();
+        }
+        if (!empty($contact) && !empty($user)) {
+            return redirect()->route('recycle_bin')->with('success', 'Contact restored successfully.');
+        } elseif(!empty($contact) && empty($user)) {
+            return redirect()->route('recycle_bin')->with('success', 'Contact restored successfully.');
+        } else {
+            return redirect()->route('recycle_bin')->with('error', 'Contact not restored.');
+        }
+    }
+
+    // delete contact permanently
+    public function delete_contact_permanently($id) {
+        $contact = Contact::withTrashed()->findOrFail($id);
+        $user = User::withTrashed()->where('id', $contact->user_id)->first();
+        $contact->forceDelete();
+        $user->forceDelete();
+        if ($contact && $user) {
+            return redirect()->route('recycle_bin')->with('success', 'Contact deleted permanently.');
+        } else {
+            return redirect()->route('recycle_bin')->with('error', 'Contact not deleted.');
         }
     }
 }

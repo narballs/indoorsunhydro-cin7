@@ -99,7 +99,8 @@
             <span>
                 <a href=" {{ url('admin/customer-delete/' . $contact->id) }}" class="delete deleteIcon a_class"
                     id="{{ $contact->id }}" title="" data-toggle="tooltip" data-original-title="Delete">
-                    <img src="/theme/img/delete.png" alt="" class="img-fluid">
+                    <img src="/theme/img/delete.png" alt="" class="img-fluid" onclick="return confirm('Are you sure you want to delete this Contact?');">
+                    
                 </a>
             </span>
         </div>
