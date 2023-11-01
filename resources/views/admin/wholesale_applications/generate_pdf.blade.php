@@ -72,7 +72,9 @@
                                                 {{ !empty($wholesale_application['phone'] ) ? $wholesale_application['phone'] : '-'}}
                                             </td>
                                             <td>
-                                                <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('/wholesale/images/'.$wholesale_application['permit_image']))) }}" alt="" width="100px" class="img-fluid">
+                                                @if(!empty($wholesale_application['permit_image']))
+                                                    <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('/wholesale/images/'.$wholesale_application['permit_image']))) }}" alt="" width="100px" class="img-fluid">
+                                                @endif
                                             </td>
                                         </tr>
                                     </tbody>
