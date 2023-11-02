@@ -1041,20 +1041,24 @@ class ProductController extends Controller
         $filter_value_main = $request->main_search_filter;
         $explode_search_value = explode(' ', $searchvalue);
         
-        foreach ($explode_search_value as $searchvalue) {
-            if ($filter_value_main === 'title_description') {
-                $products = Product::with(['product_views','apiorderItem' , 'options' => function ($q) {
-                    $q->where('status', '!=', 'Disabled');
-                }])
-                ->orWhere(function (Builder $query) use ($searchvalue) {
-                    $query->where('name', 'LIKE', '%' . $searchvalue . '%')
-                    ->orWhere('code', 'LIKE', '%' . $searchvalue . '%')
-                    ->orWhere('description', 'LIKE', '%' . $searchvalue . '%');
-                })
-                ->where('status', '!=', 'Inactive')
-                ->paginate($per_page);
-            } 
-        }
+        if ($filter_value_main === 'title_description') {
+            $main_query = Product::with(['product_views','apiorderItem' , 'options' => function ($q) {
+                $q->where('status', '!=', 'Disabled');
+            }])
+            ->where(function (Builder $query) use ($explode_search_value) {
+                foreach ($explode_search_value as $searchvalue) {
+                    $query->where('name', 'LIKE', '%' . $searchvalue . '%');
+                }
+            })
+            ->orWhere(function (Builder $query) use ($explode_search_value) {
+                foreach ($explode_search_value as $searchvalue) {
+                    $query->where('description', 'LIKE', '%' . $searchvalue . '%');
+                }
+            })
+            ->where('status', '!=', 'Inactive')
+            ->paginate($per_page);
+            $products = $main_query;
+        } 
 
         if ($filter_value_main === 'title') {
             $main_query = Product::with(['product_views','apiorderItem' , 'options' => function ($q) {
