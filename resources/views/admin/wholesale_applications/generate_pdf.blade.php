@@ -1,27 +1,13 @@
-@extends('adminlte::page')
-@section('title', 'Dashboard')
-@section('content_header')
-@stop
-@section('content')
-    
+
     <div class="table-wrapper">
         <div class="card-body product_secion_main_body">
             <div class="row border-bottom product_section_header">
                 <div class="col-md-12">
                     <div class="row">
                         <div class="col-md-6 mobile_heading">
-                            <p class="product_heading">
+                            <h2>
                                 Wholesale Application Detail
-                            </p>
-                        </div>
-                        <div class="col-md-6 mobile_heading d-flex align-items-center justify-content-end">
-                            <p class="product_heading">
-                                <form action="{{route('wholesale_application_generate_pdf' , $wholesale_application->id)}}" method="post" class="mx-2">
-                                    @csrf
-                                    <a href="{{ route('wholesale-applications.index') }}" class="btn btn-primary btn-sm float-right text-white">Back</a>
-                                    <button type="submit" class="btn btn-sm btn-info text-white mr-2">Generate Pdf</button>
-                                </form>
-                            </p>
+                            </h2>
                         </div>
                     </div>
                 </div>
@@ -32,9 +18,9 @@
             <div class="row1 border-bottom">
                 <div class="col-md-12">
                     <div class="card-header p-3 ml-2 border-0">
-                        <h5 class="text-bold mb-0">
+                        <h4 class="text-bold mb-0">
                             Company Information
-                        </h5>
+                        </h4>
                     </div>
                     <div class="card-body pt-0">
                         <div class="table-responsive">
@@ -68,28 +54,26 @@
                                     <tbody>
                                         <tr>
                                             <td>
-                                                {{ !empty($wholesale_application->company) ? $wholesale_application->company : '-'}}
+                                                {{ !empty($wholesale_application['company']) ? $wholesale_application['company'] : '-'}}
                                             </td>
                                             <td>
-                                                {{ !empty($wholesale_application->first_name ) ? $wholesale_application->first_name : '-'}}
+                                                {{ !empty($wholesale_application['first_name'] ) ? $wholesale_application['first_name'] : '-'}}
                                             </td>
                                             <td>
-                                                {{ !empty($wholesale_application->last_name ) ? $wholesale_application->last_name  : '-'}}
+                                                {{ !empty($wholesale_application['last_name'] ) ? $wholesale_application['last_name'] : '-'}}
                                             </td>
                                             <td>
-                                                {{ !empty($wholesale_application->email ) ? $wholesale_application->email : '-'}}
+                                                {{ !empty($wholesale_application['email'] ) ? $wholesale_application['email'] : '-'}}
                                             </td>
                                             <td>
-                                                {{ !empty($wholesale_application->mobile ) ? $wholesale_application->mobile : '-'}}
+                                                {{ !empty($wholesale_application['mobile'] ) ? $wholesale_application['mobile'] : '-'}}
                                             </td>
                                             <td>
-                                                {{ !empty($wholesale_application->phone ) ? $wholesale_application->phone : '-'}}
+                                                {{ !empty($wholesale_application['phone'] ) ? $wholesale_application['phone'] : '-'}}
                                             </td>
                                             <td>
-                                                @if(!empty($wholesale_application->permit_image))
-                                                <img src="{{ asset('/wholesale/images/'.$wholesale_application->permit_image) }}" alt="" width="100px" class="img-fluid">
-                                                @else
-                                                {{'-'}}
+                                                @if(!empty($wholesale_application['permit_image']))
+                                                    <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('/wholesale/images/'.$wholesale_application['permit_image']))) }}" alt="" width="100px" class="img-fluid">
                                                 @endif
                                             </td>
                                         </tr>
@@ -128,16 +112,16 @@
                                     <tbody>
                                         <tr>
                                             <td>
-                                                {{ !empty($wholesale_application->parent_company) ? $wholesale_application->parent_company : '-'}}
+                                                {{ !empty($wholesale_application['parent_company']) ? $wholesale_application['parent_company'] : '-'}}
                                             </td>
                                             <td>
-                                                {{ !empty($wholesale_application->payable_name) ? $wholesale_application->payable_name : '-' }}
+                                                {{ !empty($wholesale_application['payable_name']) ? $wholesale_application['payable_name'] : '-' }}
                                             </td>
                                             <td>
-                                                {{ !empty($wholesale_application->payable_phone) ? $wholesale_application->payable_phone : '-' }}
+                                                {{ !empty($wholesale_application['payable_phone']) ? $wholesale_application['payable_phone'] : '-' }}
                                             </td>
                                             <td>
-                                                {{ !empty($wholesale_application->payable_email) ? $wholesale_application->payable_email : '-' }}
+                                                {{ !empty($wholesale_application['payable_email']) ? $wholesale_application['payable_email'] : '-' }}
                                             </td>
                                         </tr>
                                     </tbody>
@@ -146,13 +130,13 @@
                         </div>
                     </div>
                 </div>
-                @if(count($wholesale_application->wholesale_application_address) > 0)
+                @if(!empty($wholesale_application['wholesale_application_address']))
     
-                    @foreach ($wholesale_application->wholesale_application_address as $address)
+                    @foreach ($wholesale_application['wholesale_application_address'] as $address)
                     <div class="col-md-12">        
                         <div class="card-header border-0">
                             <h4 class="card-title text-bold">
-                                {{$address->type}}
+                                {{$address['type']}}
                             </h4>
                         </div>
                         <div class="card-body pt-0">
@@ -193,31 +177,31 @@
                                         <tbody>
                                             <tr>
                                                 <td>
-                                                    {{!empty($address->first_name) ? $address->first_name : '-'}}
+                                                    {{!empty($address['first_name']) ? $address['first_name'] : '-'}}
                                                 </td>
                                                 <td>
-                                                    {{!empty($address->last_name) ? $address->last_name : '-'}}
+                                                    {{!empty($address['last_name']) ? $address['last_name'] : '-'}}
                                                 </td>
                                                 <td>
-                                                    {{!empty($address->company_name) ? $address->company_name :  '-'}}
+                                                    {{!empty($address['company_name']) ? $address['company_name'] :  '-'}}
                                                 </td>
                                                 <td>
-                                                    {{!empty($address->street_address) ? $address->street_address :  '-'}}
+                                                    {{!empty($address['street_address']) ? $address['street_address'] :  '-'}}
                                                 </td>
                                                 <td>
-                                                    {{!empty($address->address2) ? $address->address2  :  '-'}}
+                                                    {{!empty($address['address2']) ? $address['address2'] :  '-'}}
                                                 </td>
                                                 <td>
-                                                    {{!empty($address->city) ? $address->city :  '-'}}
+                                                    {{!empty($address['city']) ? $address['city'] :  '-'}}
                                                 </td>
                                                 <td>
-                                                    {{!empty($address->state) ? $address->state :  '-'}}
+                                                    {{!empty($address['state']) ? $address['state'] :  '-'}}
                                                 </td>
                                                 <td>
-                                                    {{!empty($address->postal_code) ? $address->postal_code :  '-'}}
+                                                    {{!empty($address['postal_code']) ? $address['postal_code'] :  '-'}}
                                                 </td>
                                                 <td>
-                                                    {{!empty($address->phone) ? $address->phone :  '-'}}
+                                                    {{!empty($address['phone']) ? $address['phone'] :  '-'}}
                                                 </td>
                                                 
                                             </tr>
@@ -233,19 +217,47 @@
             <div class="row2 border-bottom">
                 <div class="card-header border-0">
                     <div class="col-md-12 p-0">
-                        <div class="row p-2">
-                            <div class="col-md-6">
+                        <table class="divs_table">
+                            <tr>
+                                <td style="width: 60%;">
+                                    <div class="col-md-6" >
+                                        <p class="mb-0">COTFA-230-D REV.2 (8-17)</p>
+                                        <h2 class="card-title text-bold">
+                                            PARTIAL EXEMPTION CERTIFICATE QUALIFIED SALES AND PURCHASES OF FARM EQUIPMENT AND MACHINERY
+                                        </h2>
+                                    </div>
+                                </td>
+                                <td style="width: 40%;">
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-12 d-flex justify-content-end">
+                                                <h4 class="card-title text-bold">
+                                                    STATE OF CALIFORNIA
+                                                </h4>
+                                            </div>
+                                            <div class="col-md-12 d-flex justify-content-end">
+                                                <h4 class="card-title text-bold">
+                                                    CALIFORNIA DEPARTMENT OF TAX AND FEE ADMINISTRATION
+                                                </h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        {{-- <div class="row p-2" style="display: flex;">
+                            <div class="col-md-6" style="width: 50%;">
                                 <p class="mb-0">COTFA-230-D REV.2 (8-17)</p>
-                                <h1 class="card-title text-bold">
+                                <h2 class="card-title text-bold">
                                     PARTIAL EXEMPTION CERTIFICATE QUALIFIED SALES AND PURCHASES OF FARM EQUIPMENT AND MACHINERY
-                                </h1>
+                                </h2>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6" style="width: 50%;">
                                 <div class="row">
                                     <div class="col-md-12 d-flex justify-content-end">
-                                        <h5 class="card-title text-bold">
+                                        <h4 class="card-title text-bold">
                                             STATE OF CALIFORNIA
-                                        </h5>
+                                        </h4>
                                     </div>
                                     <div class="col-md-12 d-flex justify-content-end">
                                         <h4 class="card-title text-bold">
@@ -254,12 +266,12 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
-                @if(!empty($wholesale_application->wholesale_application_regulation_detail))
+                @if(!empty($wholesale_application['wholesale_application_regulation_detail']))
                 @php
-                    $regulation_detail = $wholesale_application->wholesale_application_regulation_detail;
+                    $regulation_detail = $wholesale_application['wholesale_application_regulation_detail'];
                 @endphp
                     <div class="card-body pt-0">
                         <div class="col-md-12 p-0">
@@ -311,34 +323,34 @@
                                     <tbody>
                                         <tr>
                                             <td>
-                                                {{!empty($regulation_detail->seller_name) ? $regulation_detail->seller_name : '-'}}
+                                                {{!empty($regulation_detail['seller_name']) ? $regulation_detail['seller_name'] :  '-'}}
                                             </td>
                                             <td>
-                                                {{!empty($regulation_detail->seller_address) ? $regulation_detail->seller_address : '-'}}
+                                                {{!empty($regulation_detail['seller_address']) ? $regulation_detail['seller_address'] :  '-'}}
                                             </td>
                                             <td>
-                                                {{!empty($regulation_detail->purchaser_company_name) ? $regulation_detail->purchaser_company_name : '-'}}
+                                                {{!empty($regulation_detail['purchaser_company_name']) ? $regulation_detail['purchaser_company_name'] :  '-'}}
                                             </td>
                                             <td>
-                                                {{!empty($regulation_detail->equipment_type) ? $regulation_detail->equipment_type : '-'}}
+                                                {{!empty($regulation_detail['equipment_type']) ? $regulation_detail['equipment_type'] :  '-'}}
                                             </td>
                                             <td>
-                                                {{!empty($regulation_detail->purchaser_signature) ? $regulation_detail->purchaser_signature : '-'}}
+                                                {{!empty($regulation_detail['purchaser_signature']) ? $regulation_detail['purchaser_signature'] :  '-'}}
                                             </td>
                                             <td>
-                                                {{!empty($regulation_detail->title) ? $regulation_detail->title : '-'}}
+                                                {{!empty($regulation_detail['title']) ? $regulation_detail['title'] :  '-'}}
                                             </td>
                                             <td>
-                                                {{!empty($regulation_detail->regulation_permit_number) ? $regulation_detail->regulation_permit_number : '-'}}
+                                                {{!empty($regulation_detail['regulation_permit_number']) ? $regulation_detail['regulation_permit_number'] :  '-'}}
                                             </td>
                                             <td>
-                                                {{!empty($regulation_detail->purchaser_address) ? $regulation_detail->purchaser_address : '-'}}
+                                                {{!empty($regulation_detail['purchaser_address']) ? $regulation_detail['purchaser_address'] :  '-'}}
                                             </td>
                                             <td>
-                                                {{!empty($regulation_detail->purchaser_phone) ? $regulation_detail->purchaser_phone : '-'}}
+                                                {{!empty($regulation_detail['purchaser_phone']) ? $regulation_detail['purchaser_phone'] :  '-'}}
                                             </td>
                                             <td>
-                                                {{!empty($regulation_detail->purchase_date) ? $regulation_detail->purchase_date : '-'}}
+                                                {{!empty($regulation_detail['purchase_date']) ? $regulation_detail['purchase_date'] :  '-'}}
                                             </td>
                                         </tr>
                                     </tbody>
@@ -352,12 +364,12 @@
                                         Certificate Eligibility:
                                     </h4>
                                     <p>
-                                        <input type="checkbox" value="{{$regulation_detail->certificate_eligibility_1}}" checked disabled>
+                                        <input type="checkbox" value="{{$regulation_detail['certificate_eligibility_1']}}" checked disabled>
                                         I, as the undersigned purchaser, hereby certify I am engaged in an agricultural business described in Codes 0111 to 0291 of the Standard Industrial Classification (SIC) Manual, or I perform an agricultural service described in Codes 0711 to 0783 of the SIC Manual for such classified persons. The property purchased or leased will be used primarily in producing and harvesting agricultural products in accordance with Revenue & Taxation Code Section 6356.5.
                                     </p>
             
                                     <p>
-                                        <input type="checkbox" value="{{$regulation_detail->certificate_eligibility_2}}" checked disabled>
+                                        <input type="checkbox" value="{{$regulation_detail['certificate_eligibility_2']}}" checked disabled>
                                         I understand that if such property is not used in the manner qualifying for the partial exemption, or if I am not a qualified person, as applicable, that I am required by the sales and use tax law to report and pay the state tax measured by the sales price/rentals payable of the property to/by me. I also understand that this partial exemption certificate is in effect as of the date shown below and will remain in effect until revoked in writing.
                                     </p>
                                 </div>
@@ -404,14 +416,14 @@
                             </h4>
                         </div>
                     </div>
-                    @if(!empty($wholesale_application->wholesale_application_authorization_detail))
+                    @if(!empty($wholesale_application['wholesale_application_authorization_detail']))
                     @php
-                        $authorization_detail = $wholesale_application->wholesale_application_authorization_detail; 
+                        $authorization_detail = $wholesale_application['wholesale_application_authorization_detail']; 
                     @endphp
                         <div class="card-body p-2">
                             <div class="col-md-12">
                                 <p class="">
-                                    I (we) hereby authorize <strong>{{$authorization_detail->authorize_name}}</strong> (THE COMPANY) to initiate entries to my (our) checking/savings accounts at the financial institution listed below (THE FINANCIAL INSTITUTION), and, if necessary, initiate adjustments for any transactions credited/debited in error. This authority will remain in effect until THE COMPANY is notified by me (us) in writing to cancel it in such time as to afford THE COMPANY and THE FINANCIAL INSTITUTION a reasonable opportunity to act on it.
+                                    I (we) hereby authorize <strong>{{$authorization_detail['authorize_name']}}</strong> (THE COMPANY) to initiate entries to my (our) checking/savings accounts at the financial institution listed below (THE FINANCIAL INSTITUTION), and, if necessary, initiate adjustments for any transactions credited/debited in error. This authority will remain in effect until THE COMPANY is notified by me (us) in writing to cancel it in such time as to afford THE COMPANY and THE FINANCIAL INSTITUTION a reasonable opportunity to act on it.
                                 </p>
                             </div>
                             <div class="col-md-12">
@@ -452,31 +464,31 @@
                                         <tbody>
                                             <tr>
                                                 <td>
-                                                    {{!empty($authorization_detail->financial_institute_name) ? $authorization_detail->financial_institute_name : '-'}}
+                                                    {{!empty($authorization_detail['financial_institute_name']) ? $authorization_detail['financial_institute_name'] :  '-'}}
                                                 </td>
                                                 <td>
-                                                    {{!empty($authorization_detail->financial_institute_address) ? $authorization_detail->financial_institute_address : '-'}}
+                                                    {{!empty($authorization_detail['financial_institute_address']) ? $authorization_detail['financial_institute_address'] :  '-'}}
                                                 </td>
                                                 <td>
-                                                    {{!empty($authorization_detail->financial_institute_signature) ? $authorization_detail->financial_institute_signature : '-'}}
+                                                    {{!empty($authorization_detail['financial_institute_signature']) ? $authorization_detail['financial_institute_signature'] :  '-'}}
                                                 </td>
                                                 <td>
-                                                    {{!empty($authorization_detail->set_amount) ?  $authorization_detail->set_amount : '-'}}
+                                                    {{!empty($authorization_detail['set_amount']) ? $authorization_detail['set_amount'] :  '-'}}
                                                 </td>
                                                 <td>
-                                                    {{!empty($authorization_detail->maximum_amount) ?  $authorization_detail->maximum_amount : '-'}}
+                                                    {{!empty($authorization_detail['maximum_amount']) ? $authorization_detail['maximum_amount'] :  '-'}}
                                                 </td>
                                                 <td>
-                                                    {{!empty($authorization_detail->financial_institute_routine_number) ? $authorization_detail->financial_institute_routine_number : '-'}}
+                                                    {{!empty($authorization_detail['financial_institute_routine_number']) ? $authorization_detail['financial_institute_routine_number'] :  '-'}}
                                                 </td>
                                                 <td>
-                                                    {{!empty($authorization_detail->financial_institute_account_number) ? $authorization_detail->financial_institute_account_number : '-'}}
+                                                    {{!empty($authorization_detail['financial_institute_account_number']) ? $authorization_detail['financial_institute_account_number'] :  '-'}}
                                                 </td>
                                                 <td>
-                                                    {{!empty($authorization_detail->financial_institute_permit_number) ? $authorization_detail->financial_institute_permit_number : '-'}}
+                                                    {{!empty($authorization_detail['financial_institute_permit_number']) ? $authorization_detail['financial_institute_permit_number'] :  '-'}}
                                                 </td>
                                                 <td>
-                                                    {{!empty($authorization_detail->financial_institute_phone_number) ? $authorization_detail->financial_institute_phone_number  : '-'}}
+                                                    {{!empty($authorization_detail['financial_institute_phone_number']) ? $authorization_detail['financial_institute_phone_number'] :  '-'}}
                                                 </td>
                                         </tbody>
                                     </table>
@@ -495,9 +507,9 @@
                             </h2>
                         </div>
                     </div>
-                    @if(!empty($wholesale_application->wholesale_application_card))
+                    @if(!empty($wholesale_application['wholesale_application_card']))
                     @php
-                        $card_detail = $wholesale_application->wholesale_application_card; 
+                        $card_detail = $wholesale_application['wholesale_application_card']; 
                     @endphp
                         <div class="card-body p-2">
                             <div class="col-md-12 d-flex p-0">
@@ -549,26 +561,26 @@
                                         <tbody>
                                             <tr>
                                                 <td>
-                                                    {{!empty($card_detail->card_type) ? $card_detail->card_type : '-'}}
+                                                    {{!empty($card_detail['card_type']) ? $card_detail['card_type'] :  '-'}}
                                                 </td>
                                                 <td>
-                                                    {{!empty($card_detail->cardholder_name) ? $card_detail->cardholder_name : '-'}}
+                                                    {{!empty($card_detail['cardholder_name']) ? $card_detail['cardholder_name'] :  '-'}}
                                                 </td>
                                                 <td>
-                                                    {{!empty($card_detail->card_number) ? $card_detail->card_number : '-'}}
+                                                    {{!empty($card_detail['card_number']) ? $card_detail['card_number'] :  '-'}}
                                                 </td>
                                                 <td>
-                                                    {{!empty($card_detail->expiration_date) ? $card_detail->expiration_date : '-'}}
+                                                    {{!empty($card_detail['expiration_date']) ? $card_detail['expiration_date'] :  '-'}}
                                                 </td>
                                                 <td>
-                                                    {{!empty($card_detail->cardholder_zip_code) ? $card_detail->cardholder_zip_code : '-'}}
+                                                    {{!empty($card_detail['cardholder_zip_code']) ? $card_detail['cardholder_zip_code'] :  '-'}}
                                                 </td>
                                                 
                                                 <td>
-                                                    {{!empty($card_detail->customer_signature) ? $card_detail->customer_signature : '-'}}
+                                                    {{!empty($card_detail['customer_signature']) ? $card_detail['customer_signature'] :  '-'}}
                                                 </td>
                                                 <td>
-                                                    {{!empty($card_detail->date) ? $card_detail->date : '-'}}
+                                                    {{!empty($card_detail['date']) ? $card_detail['date'] :  '-'}}
                                                 </td>
                                         </tbody>
                                     </table>
@@ -576,7 +588,7 @@
                             </div>
                             <div class="col-md-12">
                                 <p>
-                                    I <strong> {{$card_detail->authorize_card_name}}</strong>  , authorize  <strong>{{$card_detail->authorize_card_text}}</strong>
+                                    I <strong> {{$card_detail['authorize_card_name']}}</strong>  , authorize  <strong>{{$card_detail['authorize_card_text']}}</strong>
                                     to charge my credit card above for agreed upon purchases, I understand that my information will be saved to file for future transactions on my account.
                                 </p>
                             </div>
@@ -590,258 +602,35 @@
             <h4 class="text-center">No Record Found</h4>
         </div>
         @endif
-    @stop
+    </div>
 
-
-    @section('css')
-    <link rel="stylesheet" href="/css/admin_custom.css">
-    <link rel="stylesheet" href="{{ asset('admin/admin_lte.css') }}">
-    <style type="text/css">
-        @media(min-width:280px) and (max-width: 425px) {
-            .main-header {
-                border-bottom: none;
-                width: 25%;
-                height: 0px !important;
-                margin-top: 20px !important;
-            }
-
-            .mobile_heading {
-                position: absolute;
-                left: 10rem;
-                top: -3rem;
-                width: 0px !important;
-
-            }
-
-            .search_row_admin-interface {
-                position: absolute;
-                top: 1rem;
-                left: 1rem;
-                width: 95%;
-            }
-
-            .mobile_fulfill_div {
-                margin-top: 3.563rem
-            }
-
-            .fullfill_btn_mbl {
-                position: absolute;
-                left: 3.3rem;
-            }
-
-            .create_new_btn_mbl {
-                margin-right: 0.5rem;
-            }
-
-            .product_section_header {
-                border-bottom: none !important;
-            }
-
-            .sm-d-none {
-                display: none !important;
-            }
-
-            .bx-mobile {
-                display: flex !important;
-                justify-content: space-around !important;
-                align-items: center !important;
-            }
-
-            .mobile-screen-selected {
-                width: 30%;
-            }
-
-            .mobile-screen-ordrs-btn {
-                width: 70%;
-            }
-
-            .product_table_body {
-                padding-right: 13px !important;
-                margin-top: -17px;
-                padding-left: 0px !important;
-            }
-
-            .select-row-items {
-                padding-left: 12px !important;
-                display: flex;
-                justify-content: start;
-                align-items: center !important;
-                color: #222222 !important;
-                font-style: normal !important;
-                font-weight: 500 !important;
-                font-size: 0.826rem !important;
-                padding-top: 0px !important;
-            }
-
-            .product_heading {
-                color: #242424 !important;
-                font-size: 18px !important;
-                font-weight: 500;
-                line-height: 24px;
-                letter-spacing: 0.252px;
-                font-family: 'Poppins', sans-serif !important;
-                margin-left: -5px !important;
-                margin-top: 26px !important;
-            }
-
-            .create_bnt {
-                padding: 9px 24px !important;
-                margin-top: 114px !important;
-            }
-
-            .fillter-mobile-screen {
-                width: 100% !important;
-            }
-
-            .filter-row-mobile-secreen {
-                margin-top: 7px !important;
-                padding-left: 41px !important;
-
-            }
-
-            .product_search {
-                background: #FFFFFF !important;
-                border-radius: 7.25943px !important;
-                margin-top: -7px;
-                margin-left: 32px !important;
-                padding-right: 16px !important;
-            }
-
-            .mobile-screen {
-                widows: 100% !important;
-            }
-
-            .mobile_screen_Previous_btn {
-                width: 25% !important;
-            }
-
-            .mobile_screen_pagination_number {
-                width: 50% !important;
-            }
-
-            .mobile_screen_Previous_next {
-                width: 25% !important;
-                margin-top: 11px !important;
-            }
-
-            .main-sidebar {
-                background-color: #fff !important;
-                box-shadow: none !important;
-                border-right: 1px solid #EAECF0 !important;
-                top: -21px !important;
-            }
-        }
-        .text-successs {
-            color: #7CC633 !important;
-            font-family: 'Poppins', sans-serif !important;
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
         }
 
-        .badge-success {
-            background: rgb(186 235 137 / 20%);
-            color: #319701;
-            padding: 6px !important;
-            font-style: normal;
-            font-weight: 500;
-            font-size: 11.3289px;
-
+        table, th, td {
+            border: 1px solid black;
         }
 
-        .bg_success {
-            /* background: rgb(186 235 137 / 20%) !important; */
-            color: #319701 !important;
-            padding: 6px !important;
-            font-style: normal;
-            font-weight: 500;
-            font-size: 11.3289px;
+        th, td {
+            padding: 8px;
+            text-align: left;
         }
 
-        .badge-warning {
-            background-color: #f1e8cb;
-            color: #b58903 !important;
-            padding: 6px !important;
-            font-style: normal;
-            font-weight: 500;
-            font-size: 11.3289px;
+        /* Define the font size for the entire document */
+        body {
+            font-size: 13px;
+            font-family: 'Times New Roman', Times, serif;
         }
-
-        .badge-danger {
-            color: #fff;
-            background-color: rgba(220, 78, 65, 0.12);
-            color: #DC4E41;
-            padding: 6px !important;
-            font-style: normal;
-            font-weight: 500;
-            font-size: 11.3289px;
+        .divs_table {
+            width: 100%;
+            border: none !important;
         }
-
-        .bg_danger {
-            color: #DC4E41 !important;
-            padding: 6px !important;
-            font-style: normal;
-            font-weight: 500;
-            font-size: 11.3289px;
-        }
-        .custom-checkbox {
-            min-height: 1rem;
-            padding-left: 0;
-            margin-right: 0;
-            cursor: pointer;
-        }
-
-        .custom-checkbox .custom-control-indicator {
-            content: "";
-            display: inline-block;
-            position: relative;
-            width: 30px;
-            height: 10px;
-            background-color: #818181;
-            border-radius: 15px;
-            margin-right: 10px;
-            -webkit-transition: background .3s ease;
-            transition: background .3s ease;
-            vertical-align: middle;
-            margin: 0 16px;
-            box-shadow: none;
-        }
-
-        .custom-checkbox .custom-control-indicator:after {
-            content: "";
-            position: absolute;
-            display: inline-block;
-            width: 18px;
-            height: 18px;
-            background-color: #f1f1f1;
-            border-radius: 21px;
-            box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4);
-            left: -2px;
-            top: -4px;
-            -webkit-transition: left .3s ease, background .3s ease, box-shadow .1s ease;
-            transition: left .3s ease, background .3s ease, box-shadow .1s ease;
-        }
-
-        .custom-checkbox .custom-control-input:checked~.custom-control-indicator {
-            background-color: #28a745;
-            background-image: none;
-            box-shadow: none !important;
-        }
-
-        .custom-checkbox .custom-control-input:checked~.custom-control-indicator:after {
-            background-color: #28a745;
-            left: 15px;
-        }
-
-        .custom-checkbox .custom-control-input:focus~.custom-control-indicator {
-            box-shadow: none !important;
-        }
-        .rules_regulation_div {
-            border-radius: 7px;
-            border: 1px solid #FEF08A;
-            background: #FEF9C3;
-        }
-
+        
     </style>
-@stop
-
-
-@section('js')
-@stop
+    
+   
+        

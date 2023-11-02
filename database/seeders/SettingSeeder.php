@@ -187,6 +187,11 @@ class SettingSeeder extends Seeder
                 'type' => 'yes/no',
                 'option_value' => 'No',
             ],
+            [
+                'option_name' => 'empty_trash_time_for_contacts', 
+                'type' => 'text',
+                'option_value' => '10',
+            ],
         ];
 
         foreach($setting as $setting) {

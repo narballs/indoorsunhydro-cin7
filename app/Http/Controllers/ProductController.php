@@ -1037,36 +1037,64 @@ class ProductController extends Controller
         $searchvalue = $request->value;
         $value = $searchvalue;
 
+        // new filters
+        $filter_value_main = $request->main_search_filter;
+        $explode_search_value = explode(' ', $searchvalue);
+        
+        if ($filter_value_main === 'title_description') {
+            $main_query = Product::with(['product_views','apiorderItem' , 'options' => function ($q) {
+                $q->where('status', '!=', 'Disabled');
+            }])
+            ->where(function (Builder $query) use ($explode_search_value) {
+                foreach ($explode_search_value as $searchvalue) {
+                    $query->where('name', 'LIKE', '%' . $searchvalue . '%');
+                }
+            })
+            ->orWhere(function (Builder $query) use ($explode_search_value) {
+                foreach ($explode_search_value as $searchvalue) {
+                    $query->where('description', 'LIKE', '%' . $searchvalue . '%');
+                }
+            })
+            ->where('status', '!=', 'Inactive')
+            ->paginate($per_page);
+            $products = $main_query;
+        } 
 
-        // $searchvalue = preg_split('/\s+/', $searchvalue, -1, PREG_SPLIT_NO_EMPTY);
-        // if (!empty($is_search)) {
-        //     foreach ($searchvalue as $value) {
-        //         $products = Product::with(['options' => function ($q) {
-        //             $q->where('status', '!=', 'Disabled');
-        //         }])->orWhere(function (Builder $query) use ($value) {
-        //             $query->where('name', 'LIKE', '%' . $value . '%')
-        //             ->orWhere('code', 'LIKE', '%' . $value . '%');
-        //         })
-        //         ->where('status', '!=', 'Inactive')
-        //         ->paginate($per_page);
-        //     };
-        // }
-        $products = Product::with(['product_views','apiorderItem' , 'options' => function ($q) {
-                        $q->where('status', '!=', 'Disabled');
-                    }])->orWhere(function (Builder $query) use ($searchvalue) {
-                        $query->where('name', 'LIKE', '%' . $searchvalue . '%')
-                        ->orWhere('code', 'LIKE', '%' . $searchvalue . '%')
-                        ->orWhere('description', 'LIKE', '%' . $searchvalue . '%');
-                    })
-                    ->where('status', '!=', 'Inactive')
-                    ->paginate($per_page);
+        if ($filter_value_main === 'title') {
+            $main_query = Product::with(['product_views','apiorderItem' , 'options' => function ($q) {
+                $q->where('status', '!=', 'Disabled');
+            }])
+            ->where(function (Builder $query) use ($explode_search_value) {
+                foreach ($explode_search_value as $searchvalue) {
+                    $query->where('name', 'LIKE', '%' . $searchvalue . '%');
+                }
+            })
+            ->where('status', '!=', 'Inactive')
+            ->paginate($per_page);
+            $products = $main_query;
+        }
+
+
+        if ($filter_value_main === 'description') {
+            $main_query = Product::with(['product_views','apiorderItem' , 'options' => function ($q) {
+                $q->where('status', '!=', 'Disabled');
+            }])
+            ->where(function (Builder $query) use ($explode_search_value) {
+                foreach ($explode_search_value as $searchvalue) {
+                    $query->where('description', 'LIKE', '%' . $searchvalue . '%');
+                }
+            })
+            ->where('status', '!=', 'Inactive')
+            ->paginate($per_page);
+            $products = $main_query;
+        }
+
         
         $searched_value = $request->value;
 
         $category_id = $selected_category_id;
-        $user_id = Auth::id();
+        $user_id = Auth::id();;
         $lists = BuyList::where('user_id', $user_id)->get();
-        //$contact = Contact::where('user_id', $user_id)->first();
         $contact = '';
         if ($user_id != null) {
             $contact = Contact::where('user_id', $user_id)->first();
@@ -1098,7 +1126,8 @@ class ProductController extends Controller
             'searched_value',
             'lists',
             'contact_id',
-            'pricing'
+            'pricing',
+            'filter_value_main'
         ));
     }
 

@@ -51,6 +51,7 @@ Route::get('/wholesale/account/create', [UserController::class, 'create_wholesal
 Route::get('/wholesale/account/thankyou/{id}', [UserController::class, 'wholesaleuser_thankyou'])->name('wholesaleuser_thankyou');
 Route::get('/wholesale/account/edit/{id}', [UserController::class, 'edit_wholesale_account'])->name('edit_wholesale_account');
 Route::post('/wholesale/account/check/email', [UserController::class, 'wholesale_user_check_email'])->name('wholesale_user_check_email');
+Route::post('/wholesale/generate/pdf/{id}', [UserController::class, 'wholesale_application_generate_pdf'])->name('wholesale_application_generate_pdf');
 
 
 
@@ -317,6 +318,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/site', [UserController::class, 'switch_admin'])->name('switch_admin');
     Route::resource('admin/inventory-locations', AdminInventoryLocationController::class);
     Route::resource('admin/wholesale-applications', WholesaleApplicationController::class);
+    Route::get('/admin/recycle-bin', [AdminSettingsController::class, 'recycle_bin'])->name('recycle_bin');
+    Route::post('/admin/restore/contact/{id}', [AdminSettingsController::class, 'restore_contact'])->name('restore_contact');
+    Route::post('/admin/delete/contact/permanent/{id}', [AdminSettingsController::class, 'delete_contact_permanently'])->name('delete_contact_permanently');
 
 
     //crud for admin settings

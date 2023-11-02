@@ -25,7 +25,7 @@
                     <div class="row">
                         <div class="col-md-6 mobile_heading">
                             <p class="product_heading">
-                                Wholesale Applications
+                                Recycle Bin
                             </p>
                         </div>
                     </div>
@@ -38,7 +38,7 @@
                     <thead>
                         <tr>
                             <th>S.No</th>
-                            <th>Applicant Name</th>
+                            <th>Name</th>
                             <th>Email</th>
                             <th>Company</th>
                             <th>Action</th>
@@ -49,26 +49,32 @@
                         @php
                             $i =1; 
                         @endphp
-                        @if(count($wholesale_applications) > 0 )
-                        @foreach ($wholesale_applications as $wholesale_application)
+                        @if(count($deletedContacts) > 0 )
+                        @foreach ($deletedContacts as $deletedContact)
                         <tr>
                             <td>{{ $i++ }}</td>
-                            <td>{{ $wholesale_application->first_name . ' ' . $wholesale_application->last_name}}</td>
-                            <td>{{$wholesale_application->email}}</td>
-                            <td>{{$wholesale_application->company}}</td>
+                            <td>{{ !empty($deletedContact->firstName) ? $deletedContact->firstName : '' . ' ' . !empty($deletedContact->lastName) ? $deletedContact->lastName : ''}}</td>
+                            <td>{{$deletedContact->email}}</td>
+                            <td>{{!empty($deletedContact->company) ? $deletedContact->company : ''}}</td>
                             <td>
-                                <form action="{{route('wholesale_application_generate_pdf' , $wholesale_application->id)}}" method="post">
-                                    @csrf
-                                    <a href="{{route('wholesale-applications.show' , $wholesale_application->id)}}" class="btn btn-sm btn-info text-white">Detail</a>
-                                    <button type="submit" class="btn btn-sm btn-primary text-white">Generate Pdf</button>
-                                </form>
-
+                                <div class="row">
+                                    <form action="{{route('restore_contact' , $deletedContact->id)}}" method="post">
+                                        @csrf
+                                        <button type="submit" class="btn btn-sm btn-primary text-white" onclick="return confirm('Are you sure you want to restore this Contact?');">Restore Contact</button>
+                                    </form>
+    
+                                    <form action="{{route('delete_contact_permanently' , $deletedContact->id)}}" method="post" class="ml-2">
+                                        @csrf
+                                        <button type="submit" class="btn btn-sm btn-danger text-white" onclick="return confirm('Are you sure you want to delete this Contact Permanently?');">Delete Contact</button>
+                                    </form>
+    
+                                </div>
                             </td>
                         </tr>
                         @endforeach
                         @else
                         <tr>
-                            <td colspan="3">No Applications Found</td>
+                            <td colspan="3">No Contacts Found</td>
                         </tr>
                         @endif
                     </tbody>
@@ -76,7 +82,7 @@
             </div>
             <div class="row">
                 <div class="col-md-10">
-                    {{ $wholesale_applications->links('pagination.custom_pagination') }}
+                    {{ $deletedContacts->links('pagination.custom_pagination') }}
                 </div>
             </div>
         </div>
