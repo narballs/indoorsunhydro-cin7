@@ -290,7 +290,7 @@ class CheckoutController extends Controller
                 $order_items = ApiOrderItem::with('order.texClasses', 'product.options')
                 ->where('order_id', $order_id)
                 ->get();
-                $contact = Contact::where('user_id', auth()->id())->first();
+                
                 $check_shipstation_create_order_status = AdminSetting::where('option_name', 'create_order_in_shipstation')->first();
                 if (!empty($check_shipstation_create_order_status) && strtolower($check_shipstation_create_order_status->option_value) == 'yes') {
                     $order_contact = Contact::where('contact_id', $currentOrder->memberId)->orWhere('parent_id' , $currentOrder->memberId)->first();
@@ -304,40 +304,45 @@ class CheckoutController extends Controller
                         }
                     }
                 }
+                $customer_email  = $payment_succeeded->data->object->billing_details->email;
+                if (!empty($customer_email))
+                    $contact = Contact::where('email', $customer_email)->first();
+                }
                 $user_email = Auth::user();
                 $count = $order_items->count();
                 $best_products = Product::where('status', '!=', 'Inactive')->orderBy('views', 'DESC')->limit(4)->get();
-                $addresses = [
-                    'billing_address' => [
-                        'firstName' => $contact->firstName,
-                        'lastName' => $contact->lastName,
-                        'address1' => $contact->address1,
-                        'address2' => $contact->address2,
-                        'city' => $contact->city,
-                        'state' => $contact->state,
-                        'zip' => $contact->postCode,
-                        'mobile' => $contact->mobile,
-                        'phone' => $contact->phone,
-                    ],
-                    'shipping_address' => [
-                        'postalAddress1' => $contact->postalAddress1,
-                        'postalAddress2' => $contact->postalAddress2,
-                        'phone' => $contact->postalCity,
-                        'postalCity' => $contact->postalState,
-                        'postalState' => $contact->postalPostCode,
-                        'postalPostCode' => $contact->postalPostCode
-                    ],
-                    'best_product' => $best_products,
-                    'user_email' =>   $user_email,
-                    'currentOrder' => $currentOrder,
-                    'count' => $count,
-                    'order_id' => $order_id,
-                    'company' => !empty($currentOrder->user->contact) ?  $currentOrder->user->contact[0]->company : '',
-                ];
+                if (!empty($contact)) {
+                    $addresses = [
+                        'billing_address' => [
+                            'firstName' => $contact->firstName,
+                            'lastName' => $contact->lastName,
+                            'address1' => $contact->address1,
+                            'address2' => $contact->address2,
+                            'city' => $contact->city,
+                            'state' => $contact->state,
+                            'zip' => $contact->postCode,
+                            'mobile' => $contact->mobile,
+                            'phone' => $contact->phone,
+                        ],
+                        'shipping_address' => [
+                            'postalAddress1' => $contact->postalAddress1,
+                            'postalAddress2' => $contact->postalAddress2,
+                            'phone' => $contact->postalCity,
+                            'postalCity' => $contact->postalState,
+                            'postalState' => $contact->postalPostCode,
+                            'postalPostCode' => $contact->postalPostCode
+                        ],
+                        'best_product' => $best_products,
+                        'user_email' =>   $user_email,
+                        'currentOrder' => $currentOrder,
+                        'count' => $count,
+                        'order_id' => $order_id,
+                        'company' => !empty($currentOrder->user->contact) ?  $currentOrder->user->contact[0]->company : '',
+                    ];
+                }
 
                 $name = $contact->firstName;
                 $email =  $contact->email;
-                $customer_email  = $payment_succeeded->data->object->billing_details->email;
                 $reference  =  $currentOrder->reference;
                 $template = 'emails.admin-order-received';
                 $admin_users = DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
@@ -376,29 +381,7 @@ class CheckoutController extends Controller
                     $data['email'] = $customer_email;
                     $data['subject'] = 'Your order has been received';
                     MailHelper::sendMailNotification('emails.admin-order-received', $data);
-
-                    print_r($data);
                 }
-
-                // $email_sent_to_users = [];
-                // $user = User::where('id',  Auth::id())->first();
-                // $all_ids = UserHelper::getAllMemberIds($user);
-                // $all_members = Contact::whereIn('id', $all_ids)->get();
-                // foreach ($all_members as $member) {
-                //     $member_user = User::find($member->user_id);
-                //     if (!empty($member_user) && $member_user->hasRole(['Order Approver'])) {
-                //         if (isset($email_sent_to_users[$member_user->id])) {
-                //             continue;
-                //         }
-
-                //         $email_sent_to_users[$member_user->id] = $member_user;
-                //         $data['name'] = $member_user->firstName;
-                //         $data['subject'] = 'New order awaiting approval';
-                //         $data['email'] = $member_user->email;
-                //         MailHelper::sendMailNotification('emails.user-order-received', $data);
-                //     }
-                // }
-                
             break;
             case 'charge.failed':
                 $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
