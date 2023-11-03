@@ -175,6 +175,12 @@
                                                         @endif
 
                                                         @if(empty($customer->contact_id))
+                                                            {{ $get_secondary_contact->postalCity ? $get_secondary_contact->postalCity : $get_secondary_contact->city }}
+                                                        @else
+                                                            {{ $customer->postalCity ? $customer->postalCity : $customer->vity }}
+                                                        @endif
+
+                                                        @if(empty($customer->contact_id))
                                                             {{ $get_secondary_contact->postalState ? $get_secondary_contact->postalState : $get_secondary_contact->state }}
                                                         @else
                                                             {{ $customer->postalState ? $customer->postalState : $customer->state }}
@@ -206,7 +212,11 @@
                                                         @else
                                                             {{ $customer->postCode ? $customer->postCode :$customer->postalPostCode }},
                                                         @endif
-                                                        
+                                                        @if(empty($customer->contact_id))
+                                                            {{ $get_secondary_contact->city ? $get_secondary_contact->city : $get_secondary_contact->postalCity }}
+                                                        @else
+                                                            {{ $customer->city ? $customer->city : $customer->postalCity }}
+                                                        @endif
                                                         @if(empty($customer->contact_id))
                                                             {{ $get_secondary_contact->state ? $get_secondary_contact->state : $get_secondary_contact->postalState }}
                                                         @else
