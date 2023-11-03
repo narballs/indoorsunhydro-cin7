@@ -337,6 +337,7 @@ class CheckoutController extends Controller
 
                 $name = $contact->firstName;
                 $email =  $contact->email;
+                $customer_email  = $payment_succeeded->data->object->billing_details->email;
                 $reference  =  $currentOrder->reference;
                 $template = 'emails.admin-order-received';
                 $admin_users = DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
@@ -371,8 +372,8 @@ class CheckoutController extends Controller
                     }
                 }
 
-                if (!empty($email)) {
-                    $data['email'] = $email;
+                if (!empty($customer_email)) {
+                    $data['email'] = $customer_email;
                     $data['subject'] = 'Your order has been received';
                     MailHelper::sendMailNotification('emails.user-order-received', $data);
                 }
