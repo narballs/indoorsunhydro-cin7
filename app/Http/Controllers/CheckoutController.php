@@ -290,7 +290,7 @@ class CheckoutController extends Controller
                 $order_items = ApiOrderItem::with('order.texClasses', 'product.options')
                 ->where('order_id', $order_id)
                 ->get();
-                $contact = Contact::where('user_id', auth()->id())->first();
+                
                 $check_shipstation_create_order_status = AdminSetting::where('option_name', 'create_order_in_shipstation')->first();
                 if (!empty($check_shipstation_create_order_status) && strtolower($check_shipstation_create_order_status->option_value) == 'yes') {
                     $order_contact = Contact::where('contact_id', $currentOrder->memberId)->orWhere('parent_id' , $currentOrder->memberId)->first();
@@ -303,6 +303,10 @@ class CheckoutController extends Controller
                             ]);
                         }
                     }
+                }
+                $customer_email  = $payment_succeeded->data->object->billing_details->email;
+                if (!empty($customer_email)) {
+                    $contact = Contact::where('email', $customer_email)->first();
                 }
                 $user_email = Auth::user();
                 $count = $order_items->count();
@@ -334,10 +338,8 @@ class CheckoutController extends Controller
                     'order_id' => $order_id,
                     'company' => !empty($currentOrder->user->contact) ?  $currentOrder->user->contact[0]->company : '',
                 ];
-
                 $name = $contact->firstName;
                 $email =  $contact->email;
-                $auth_user_email = $contact->email;
                 $reference  =  $currentOrder->reference;
                 $template = 'emails.admin-order-received';
                 $admin_users = DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
@@ -363,8 +365,6 @@ class CheckoutController extends Controller
                     'from' => SettingHelper::getSetting('noreply_email_address')
                 ];
 
-                
-
                 if (!empty($users_with_role_admin)) {
                     foreach ($users_with_role_admin as $role_admin) {
                         $subject = 'New order received';
@@ -374,12 +374,11 @@ class CheckoutController extends Controller
                     }
                 }
 
-                if ($auth_user_email) {
-                    $data['email'] = $auth_user_email;
+                if (!empty($customer_email)) {
+                    $data['email'] = $customer_email;
                     $data['subject'] = 'Your order has been received';
                     MailHelper::sendMailNotification('emails.admin-order-received', $data);
                 }
-                
             break;
             case 'charge.failed':
                 $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
