@@ -589,10 +589,10 @@ class ContactController extends Controller
             );
             $api_contact = $res->getBody()->getContents();
 
-
             $api_contact = json_decode($api_contact);
             $pricing = preg_replace('/\R/', '', $api_contact->priceColumn);
-            Contact::where('contact_id', $contact_id)->update([
+            $contact_update = Contact::where('contact_id', $contact_id)->first();    
+            $contact_update->update([
                 'email'  => $api_contact->email,
                 'firstName' => $api_contact->firstName,
                 'lastName' => $api_contact->lastName,
@@ -601,9 +601,14 @@ class ContactController extends Controller
                 'phone' => $api_contact->phone,
                 'mobile' => $api_contact->mobile,
                 'website' => $api_contact->website,
+                'address1' => $api_contact->address1,
+                'address2' => $api_contact->address2,
+                'postCode' => $api_contact->postCode,
+                'state' => $api_contact->state,
+                'city' => $api_contact->city,
                 'postalAddress1' => $api_contact->postalAddress1,
                 'postalAddress2' => $api_contact->postalAddress2,
-                'postCode' => $api_contact->postCode,
+                'postalPostCode' => $api_contact->postalPostCode,
                 'postalState' => $api_contact->postalState,
                 'postalCity' => $api_contact->postalCity,
                 'status' => $api_contact->isActive,
