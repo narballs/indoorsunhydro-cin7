@@ -375,24 +375,24 @@ class CheckoutController extends Controller
                     }
                 }
 
-                $email_sent_to_users = [];
-                $user = User::where('id',  Auth::id())->first();
-                $all_ids = UserHelper::getAllMemberIds($user);
-                $all_members = Contact::whereIn('id', $all_ids)->get();
-                foreach ($all_members as $member) {
-                    $member_user = User::find($member->user_id);
-                    if (!empty($member_user) && $member_user->hasRole(['Order Approver'])) {
-                        if (isset($email_sent_to_users[$member_user->id])) {
-                            continue;
-                        }
+                // $email_sent_to_users = [];
+                // $user = User::where('id',  Auth::id())->first();
+                // $all_ids = UserHelper::getAllMemberIds($user);
+                // $all_members = Contact::whereIn('id', $all_ids)->get();
+                // foreach ($all_members as $member) {
+                //     $member_user = User::find($member->user_id);
+                //     if (!empty($member_user) && $member_user->hasRole(['Order Approver'])) {
+                //         if (isset($email_sent_to_users[$member_user->id])) {
+                //             continue;
+                //         }
 
-                        $email_sent_to_users[$member_user->id] = $member_user;
-                        $data['name'] = $member_user->firstName;
-                        $data['subject'] = 'New order awaiting approval';
-                        $data['email'] = $member_user->email;
-                        MailHelper::sendMailNotification('emails.user-order-received', $data);
-                    }
-                }
+                //         $email_sent_to_users[$member_user->id] = $member_user;
+                //         $data['name'] = $member_user->firstName;
+                //         $data['subject'] = 'New order awaiting approval';
+                //         $data['email'] = $member_user->email;
+                //         MailHelper::sendMailNotification('emails.user-order-received', $data);
+                //     }
+                // }
                 
             break;
             case 'charge.failed':
