@@ -362,10 +362,6 @@ class CheckoutController extends Controller
                     'from' => SettingHelper::getSetting('noreply_email_address')
                 ];
 
-                $data['email'] = $email;
-                $data['subject'] = 'Your order has been received';
-                MailHelper::sendMailNotification('emails.admin-order-received', $data);
-
                 if (!empty($users_with_role_admin)) {
                     foreach ($users_with_role_admin as $role_admin) {
                         $subject = 'New order received';
@@ -373,6 +369,12 @@ class CheckoutController extends Controller
                         $data['email'] = $role_admin->email;
                         MailHelper::sendMailNotification('emails.admin-order-received', $data);
                     }
+                }
+
+                if (!empty($email)) {
+                    $data['email'] = $email;
+                    $data['subject'] = 'Your order has been received';
+                    MailHelper::sendMailNotification('emails.user-order-received', $data);
                 }
 
                 // $email_sent_to_users = [];
