@@ -305,7 +305,7 @@ class CheckoutController extends Controller
                     }
                 }
                 $customer_email  = $payment_succeeded->data->object->billing_details->email;
-                if (!empty($customer_email))
+                if (!empty($customer_email)) {
                     $contact = Contact::where('email', $customer_email)->first();
                 }
                 $user_email = Auth::user();
