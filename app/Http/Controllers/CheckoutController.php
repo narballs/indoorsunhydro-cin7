@@ -311,36 +311,33 @@ class CheckoutController extends Controller
                 $user_email = Auth::user();
                 $count = $order_items->count();
                 $best_products = Product::where('status', '!=', 'Inactive')->orderBy('views', 'DESC')->limit(4)->get();
-                if (!empty($contact)) {
-                    $addresses = [
-                        'billing_address' => [
-                            'firstName' => $contact->firstName,
-                            'lastName' => $contact->lastName,
-                            'address1' => $contact->address1,
-                            'address2' => $contact->address2,
-                            'city' => $contact->city,
-                            'state' => $contact->state,
-                            'zip' => $contact->postCode,
-                            'mobile' => $contact->mobile,
-                            'phone' => $contact->phone,
-                        ],
-                        'shipping_address' => [
-                            'postalAddress1' => $contact->postalAddress1,
-                            'postalAddress2' => $contact->postalAddress2,
-                            'phone' => $contact->postalCity,
-                            'postalCity' => $contact->postalState,
-                            'postalState' => $contact->postalPostCode,
-                            'postalPostCode' => $contact->postalPostCode
-                        ],
-                        'best_product' => $best_products,
-                        'user_email' =>   $user_email,
-                        'currentOrder' => $currentOrder,
-                        'count' => $count,
-                        'order_id' => $order_id,
-                        'company' => !empty($currentOrder->user->contact) ?  $currentOrder->user->contact[0]->company : '',
-                    ];
-                }
-
+                $addresses = [
+                    'billing_address' => [
+                        'firstName' => $contact->firstName,
+                        'lastName' => $contact->lastName,
+                        'address1' => $contact->address1,
+                        'address2' => $contact->address2,
+                        'city' => $contact->city,
+                        'state' => $contact->state,
+                        'zip' => $contact->postCode,
+                        'mobile' => $contact->mobile,
+                        'phone' => $contact->phone,
+                    ],
+                    'shipping_address' => [
+                        'postalAddress1' => $contact->postalAddress1,
+                        'postalAddress2' => $contact->postalAddress2,
+                        'phone' => $contact->postalCity,
+                        'postalCity' => $contact->postalState,
+                        'postalState' => $contact->postalPostCode,
+                        'postalPostCode' => $contact->postalPostCode
+                    ],
+                    'best_product' => $best_products,
+                    'user_email' =>   $user_email,
+                    'currentOrder' => $currentOrder,
+                    'count' => $count,
+                    'order_id' => $order_id,
+                    'company' => !empty($currentOrder->user->contact) ?  $currentOrder->user->contact[0]->company : '',
+                ];
                 $name = $contact->firstName;
                 $email =  $contact->email;
                 $reference  =  $currentOrder->reference;
