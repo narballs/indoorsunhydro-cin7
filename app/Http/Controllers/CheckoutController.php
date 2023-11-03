@@ -375,7 +375,9 @@ class CheckoutController extends Controller
                 if (!empty($customer_email)) {
                     $data['email'] = $customer_email;
                     $data['subject'] = 'Your order has been received';
-                    MailHelper::sendMailNotification('emails.user-order-received', $data);
+                    MailHelper::sendMailNotification('emails.admin-order-received', $data);
+
+                    print_r($data);
                 }
 
                 // $email_sent_to_users = [];
