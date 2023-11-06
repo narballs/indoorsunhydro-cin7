@@ -21,6 +21,9 @@
                                 @endif
                             </div>
                         </div>
+                        @php
+                            $enable_wholesale_registration = App\Models\AdminSetting::where('option_name', 'enable_wholesale_registration')->first();
+                        @endphp
                         <div class="col-md-7 col-xl-9 col-lg-9 mx-auto">
                             <a href="{{ '/user/' }}" class="text-white d-flex align-items-end">
                                 @if (Auth::user())
@@ -48,7 +51,7 @@
                                                 <ul class="navbar-nav me-auto ps-lg-0 row" style="">
                                                     <!-- Navbar dropdown -->
                                                     <div class="row">
-                                                        <div class="col-md-11 col-lg-10 col-xl-10 d-flex align-items-center">
+                                                        <div class="col-md-12 col-lg-12 col-xl-12 d-flex align-items-center">
                                                             <li
                                                                 class="nav-item dropdown position-static width_fix adjust_arrow_color">
                                                                 @if (!empty($session_contact_company))
@@ -134,12 +137,18 @@
                                                                     <span>Account</span>
                                                                 </a>
                                                             </li>
+
                                                             <li class="d_menu_company">
                                                                 <a class="login-in-register top-header-items"
                                                                     href="{{ route('logout') }}"
                                                                     onclick="event.preventDefault(); document.getElementById('frm-logout').submit();">
                                                                     <span>Logout</span>
                                                                 </a>
+                                                            </li>
+                                                            <li class="d_menu_company">
+                                                                @if(strtolower($enable_wholesale_registration->option_value) == 'yes')
+                                                                    <a href="{{route('create_wholesale_account')}}" class="login-in-register top-header-items" title="Apply For Wholesale Account" >{!! \Illuminate\Support\Str::limit('Apply For Wholesale Account', 14) !!}</a>
+                                                                @endif
                                                             </li>
                                                         </div>
                                                     </div>
@@ -150,16 +159,9 @@
                                 @else
                                     <div class="register-counter-details login_link d-flex">
                                         <p class="mb-0 p-2 login-in-register top-header-items ">Login or Register</p>
-                                        @php
-                                            $enable_wholesale_registration = App\Models\AdminSetting::where('option_name', 'enable_wholesale_registration')->first();
-                                        @endphp
+                                        
                                         @if(strtolower($enable_wholesale_registration->option_value) == 'yes')
-                                        {{-- <form action="{{ route('create_wholesale_account') }}" method="post">
-                                            @csrf
-                                            <input type="hidden" name="wholesale_application_id" value="{{isset($wholesale_application) ? $wholesale_application->id : ''}}">
-                                            <input type="submit" class="mb-0 p-2 login-in-register top-header-items border-0 bg-transparent" value="Apply for Wholesale Account">
-                                        </form> --}}
-                                        <a href="{{route('create_wholesale_account')}}" class="mb-0 p-2 login-in-register top-header-items" >Apply for Wholesale Account</a>
+                                            <a href="{{route('create_wholesale_account')}}" class="mb-0 p-2 login-in-register top-header-items" >Apply for Wholesale Account</a>
                                         @endif
                                     </div>
                                 @endif

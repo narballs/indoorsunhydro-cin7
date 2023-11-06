@@ -324,6 +324,7 @@
         var email = $('input[name=email]').val();
         var contact_id = $('#contact_id_val').val();
         var secondary_id = $('input[name=secondary_id]').val();
+        var companyName = $('#companyName').val();
         
         jQuery.ajax({
             method: 'GET',
@@ -343,6 +344,7 @@
                 "email": email,
                 'contact_id': contact_id,
                 'secondary_id': secondary_id,
+                'company_name': companyName,
                 'type': type
             },
             success: function(response) {
@@ -1070,7 +1072,7 @@
                         <div class="mb-3">
                             <label for="company">Company Name(optional)</label>
                             <div class="input-group">
-                                <input type="text" class="form-control bg-light" name="company"
+                                <input type="text" class="form-control bg-light" name="company" id="companyName"
                                     placeholder="Enter you company name" value="{{ $user_address->company }}" required>
 
                             </div>
@@ -1218,7 +1220,7 @@
                         <div class="mb-3">
                             <label for="company">Company Name(optional)</label>
                             <div class="input-group">
-                                <input type="text" class="form-control bg-light" name="company"
+                                <input type="text" class="form-control bg-light" name="company" id="companyName"
                                     placeholder="Enter you company name" value="{{ $user_address->company }}" required>
 
                             </div>

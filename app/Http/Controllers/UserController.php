@@ -1376,6 +1376,7 @@ class UserController extends Controller
         $requesterName = $request->first_name . ' ' . $request->last_name;
         $requesterEmail = $request->email;
         
+        $company_name = !empty($request->company_name) ? $request->company_name : '';
         $address1 = $request->address;
         $address2 = $request->address2;
         $city = $request->town_city;
@@ -1383,7 +1384,7 @@ class UserController extends Controller
         $zip = $request->zip;
 
         $user_message = $requesterName . ' ' . 'requested to change his profile information.';
-        $description = $user_message  . "\n" . "Address 1: " . $address1 . "\n" . "Address 2: " . $address2 . "\n" . "City: " . $city . "\n" . "State: " . $state . "\n" . "Zip: " . $zip . "\n";
+        $description = $user_message  . "\n" . "Company : " . $company_name . "\n" . "Address 1: " . $address1 . "\n" . "Address 2: " . $address2 . "\n" . "City: " . $city . "\n" . "State: " . $state . "\n" . "Zip: " . $zip . "\n";
         
         $ticketData = [
             'subject' => $subject,
@@ -1904,7 +1905,20 @@ class UserController extends Controller
     // crreate wholesale account
 
     public function create_wholesale_account (Request $request) {
-        return view('create_wholesale_account');
+        if (auth()->user()) {
+            $email = auth()->user()->email;
+            $wholesale_application = WholesaleApplicationInformation::where('email' , $email)->first();
+            if (!empty($wholesale_application)) {
+                $id = $wholesale_application->id;
+                return redirect()->route('edit_wholesale_account' , $id);
+                
+            } else {
+                return view('create_wholesale_account');
+            }
+        } else {
+
+            return view('create_wholesale_account');
+        }
     }
 
     // edit wholesale account
