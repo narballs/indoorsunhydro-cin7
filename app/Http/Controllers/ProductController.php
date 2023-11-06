@@ -1072,6 +1072,9 @@ class ProductController extends Controller
                     $query->where('name', 'LIKE', '%' . $searchvalue . '%');
                 }
             })
+            ->orWhere(function (Builder $query) use ($searchvalue) {
+                $query->where('code', 'LIKE', '%' . $searchvalue . '%');
+            })
             ->where('status', '!=', 'Inactive')
             ->paginate($per_page);
             $products = $main_query;
@@ -1086,6 +1089,9 @@ class ProductController extends Controller
                 foreach ($explode_search_value as $searchvalue) {
                     $query->where('description', 'LIKE', '%' . $searchvalue . '%');
                 }
+            })
+            ->orWhere(function (Builder $query) use ($searchvalue) {
+                $query->where('code', 'LIKE', '%' . $searchvalue . '%');
             })
             ->where('status', '!=', 'Inactive')
             ->paginate($per_page);
