@@ -5093,12 +5093,12 @@ select.list-dt:focus {
     }
 
     .mbl_drop_cmpny {
-        width: 35%;
+        width: 30%;
     }
 
     .mbl_drop_othr {
-        width: 65%;
-        display: flex;
+        width: 70%;
+        /* display: flex; */
         align-items: center;
         justify-content: end;
     }
