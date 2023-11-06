@@ -1905,7 +1905,20 @@ class UserController extends Controller
     // crreate wholesale account
 
     public function create_wholesale_account (Request $request) {
-        return view('create_wholesale_account');
+        if (auth()->user()) {
+            $email = auth()->user()->email;
+            $wholesale_application = WholesaleApplicationInformation::where('email' , $email)->first();
+            if (!empty($wholesale_application)) {
+                $id = $wholesale_application->id;
+                return redirect()->route('edit_wholesale_account' , $id);
+                
+            } else {
+                return view('create_wholesale_account');
+            }
+        } else {
+
+            return view('create_wholesale_account');
+        }
     }
 
     // edit wholesale account

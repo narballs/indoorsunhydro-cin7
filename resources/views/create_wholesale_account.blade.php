@@ -1558,7 +1558,119 @@
             //         return false;
             //     }
             // });
-            function save_progress_step1() {
+            // function save_progress_step1() {
+            //     var validation = validation_message_step_1();
+            //     if (validation == true) {
+            //         $('#wholesale_spinner').removeClass('d-none');
+            //         $.ajaxSetup({
+            //             headers: {
+            //                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            //             }
+            //         });
+            //         var data = new FormData();
+            //         var files = $('input[name="permit_image"]')[0].files[0];
+            //         data.append('permit_image',files);
+            //         data.append('company_name', $('#company_name').val());
+            //         data.append('first_name', $('#first_name').val());
+            //         data.append('last_name', $('#last_name').val());
+            //         data.append('phone', $('#phone').val());
+            //         data.append('mobile', $('#mobile').val());
+            //         data.append('email',$('#email').val());
+            //         data.append('parent_company', $('#parent_company').val());
+            //         data.append('account_payable_name', $('#account_payable_name').val());
+            //         data.append('account_payable_phone', $('#account_payable_phone').val());
+            //         data.append('account_payable_email', $('#account_payable_email').val());
+            //         data.append('first_name_billing', $('#first_name_billing').val());
+            //         data.append('last_name_billing', $('#last_name_billing').val());
+            //         data.append('company_name_billing', $('#company_name_billing').val());
+            //         data.append('street_address_billing', $('#street_address_billing').val());
+            //         data.append('address2_billing', $('#address_2_billing').val());
+            //         data.append('city_billing', $('#city_billing').val());
+            //         data.append('state_billing', $('#state_billing').val());
+            //         data.append('postal_code_billing', $('#postal_code_billing').val());
+            //         data.append('phone_billing', $('#phone_billing').val());
+            //         data.append('first_name_delivery', $('#first_name_delivery').val());
+            //         data.append('last_name_delivery', $('#last_name_delivery').val());
+            //         data.append('company_name_delivery', $('#company_name_delivery').val());
+            //         data.append('street_address_delivery', $('#street_address_delivery').val());
+            //         data.append('address2_delivery', $('#address_2_delivery').val());
+            //         data.append('city_delivery', $('#city_delivery').val());
+            //         data.append('state_delivery', $('#state_delivery').val());
+            //         data.append('postal_code_delivery', $('#postal_code_delivery').val());
+            //         data.append('phone_delivery', $('#phone_delivery').val());
+            //         data.append('authorization_name', $('#authorization_name').val());
+            //         data.append('financial_institution_name', $('#financial_institution_name').val());
+            //         data.append('financial_institution_address', $('#financial_institution_address').val());
+            //         data.append('financial_institution_signature', $('#financial_institution_signature').val());
+            //         data.append('set_amount', $('#set_amount').val());
+            //         data.append('maximum_amount', $('#maximum_amount').val());
+            //         data.append('institute_routine_number', $('#institute_routine_number').val());
+            //         data.append('saving_account_number', $('#saving_account_number').val());
+            //         data.append('autorization_permit_number', $('#autorization_permit_number').val());
+            //         data.append('autorization_phone_number', $('#autorization_phone_number').val());
+            //         data.append('seller_name', $('#seller_name').val());
+            //         data.append('seller_address', $('#seller_address').val());
+            //         data.append('under_signed_checkbox', $('#under_signed_checkbox').val());
+            //         data.append('under_property_checkbox', $('#under_property_checkbox').val());
+            //         data.append('company_name_seller', $('#company_name_seller').val());
+            //         data.append('signature', $('#signature').val());
+            //         data.append('title', $('#title').val());
+            //         data.append('address', $('#address').val());
+            //         data.append('permit_number', $('#permit_number').val());
+            //         data.append('phone_number', $('#phone_number').val());
+            //         data.append('date', $('#date').val());
+            //         data.append('type_of_farm', $('#type_of_farm').val());
+                
+            //         $.ajax({
+            //             type:'POST',
+            //             url:"{{ route('save_for_now') }}",
+            //             data:data,
+            //             contentType: false,
+            //             processData: false,
+            //             success:function(response){
+            //                 if (response.status == true) {
+            //                     $('#wholesale_spinner').addClass('d-none');
+            //                     $('#save_for_now').attr('data-toggle', '')
+            //                     $('#save_for_now').attr('data-target', '')
+            //                     $('.success_message').removeClass('d-none');
+            //                     $('#successMessage').html('Data saved For now');
+            //                     setTimeout(() => {
+            //                         window.location.href = '/wholesale/account/create'
+            //                     }, 1000);
+            //                 } else {
+            //                     $('.success_message').removeClass('d-none');
+            //                     $('#successMessage').html('Email Already Exist');
+            //                     setTimeout(() => {
+            //                         window.location.href = "/wholesale/account/edit/" + response.id;
+            //                     }, 1000);
+            //                 }
+            //             },
+            //             error: function (response) {
+            //             }
+            //         });
+            //     } else {
+            //         $('.success_message').removeClass('d-none');
+            //         $('#successMessage').html('Please Enter the Corrrect Data');
+            //     }
+            // }
+            // save email for now 
+            
+            // $(document).on('click', '#save_for_now' ,function() {
+            //     if ($('#email').val() == '') {
+            //         $('#save_for_now').attr('data-toggle', 'modal')
+            //         $('#save_for_now').attr('data-target', '#save_for_now_modal')
+            //         $('#save_for_now_modal').modal('show');
+            //     } else {
+            //         $('#save_for_now').attr('data-toggle', '')
+            //         $('#save_for_now').attr('data-target', '')
+            //         $('#save_for_now_modal').modal('hide');
+
+            //         save_progress_step1();
+            //     }
+            // });
+        });
+
+        function save_progress_step1() {
                 var validation = validation_message_step_1();
                 if (validation == true) {
                     $('#wholesale_spinner').removeClass('d-none');
@@ -1653,22 +1765,6 @@
                     $('#successMessage').html('Please Enter the Corrrect Data');
                 }
             }
-            // save email for now 
-            
-            // $(document).on('click', '#save_for_now' ,function() {
-            //     if ($('#email').val() == '') {
-            //         $('#save_for_now').attr('data-toggle', 'modal')
-            //         $('#save_for_now').attr('data-target', '#save_for_now_modal')
-            //         $('#save_for_now_modal').modal('show');
-            //     } else {
-            //         $('#save_for_now').attr('data-toggle', '')
-            //         $('#save_for_now').attr('data-target', '')
-            //         $('#save_for_now_modal').modal('hide');
-
-            //         save_progress_step1();
-            //     }
-            // });
-        });
 
         $('#save_for_now').click(function() {
             if ($('#email').val() == '') {

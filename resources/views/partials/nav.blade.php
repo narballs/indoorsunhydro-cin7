@@ -3,6 +3,7 @@
     $pages = NavHelper::getPages();
     $faqs = NavHelper::getFaqs();
     $blogs = NavHelper::getBlogs();
+    $enable_wholesale_registration = App\Models\AdminSetting::where('option_name', 'enable_wholesale_registration')->first();
 ?>
 <div class="col-xl-12 col-lg-12 col-md-12  col-sm-6 col-xs-6 p-0 header-top mb-2">
     <nav class="navbar navbar-expand-sm navbar-light bg-transparent pb-0 justify-content-start">
@@ -131,9 +132,9 @@
 {{-- mobile view start --}}
 <div class="container-fluid mobile-view p-0">
     <div class="row">
-        <div class="bg-white d-flex" style="border-bottom:1px solid #E9E9E9;padding:0.1rem;">
+        <div class="bg-white d-flex justify-content-between" style="border-bottom:1px solid #E9E9E9;padding:0.1rem;">
             @if (Auth::user())
-                <div class="mbl_drop_cmpny mx-3">
+                <div class="mbl_drop_cmpny mx-3 col-xs-5">
                     @php
                         $session_contact_company = Session::get('company');
                     @endphp
@@ -195,19 +196,30 @@
                 </div>
                 <div class="mbl_drop_othr">
                     <div class="d-flex justify-content-between">
-                        <div class="col-sm-6">
+                        <div class="col-sm-4 p-0">
                             <a class="font-mobile-class" href="{{ url('my-account') }}">Account</a>
                         </div>
-                        <div class="col-sm-6">
+                        <div class="col-sm-4 p-0">
                             <a class="font-mobile-class" href="{{ route('logout') }}"onclick="event.preventDefault(); document.getElementById('frm-logout').submit();">
                                 Logout
                             </a>
                         </div>
+                        @if(strtolower($enable_wholesale_registration->option_value) == 'yes')
+                            <div class="col-sm-4 p-0">
+                                <a class="font-mobile-class" href="{{route('create_wholesale_account')}}">{!! \Illuminate\Support\Str::limit('Apply For Wholesale Account', 10) !!}</a>
+                            </div>
+                        @endif
+                        
                     </div>
                 </div>
                 @else
-                <div class="col-sm-6">
-                    <a class="font-mobile-class float-right" href="{{ '/user/' }}">Login or Register</a>
+                @if(strtolower($enable_wholesale_registration->option_value) == 'yes')
+                    <div class="col-xs-8 mx-2">
+                        <a class="font-mobile-class" href="{{route('create_wholesale_account')}}">Apply for Wholesale Account</a>
+                    </div>
+                @endif
+                <div class="col-xs-4 mx-2">
+                    <a class="font-mobile-class" href="{{ '/user/' }}">Login or Register</a>
                 </div>
             @endif
         </div>
