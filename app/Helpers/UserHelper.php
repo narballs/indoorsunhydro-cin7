@@ -283,7 +283,7 @@ class UserHelper
         if (!$user_id) {
             $cart_items = $request->session()->get('cart');
             
-        } elseif (empty($company) || (!$company)) {
+        } elseif (empty($company) || (!$company) && (!empty($user_id))) {
             $cart_items = $request->session()->get('cart');
         } else {
             $getSelectedContact = Contact::where('company' , $company)->where('user_id' , $user_id)->first();
