@@ -83,6 +83,42 @@
                         </div>
                     </div>
                 </div>
+                @if(!empty($wholesale_application['permit_images']))
+                <div class="col-md-12">
+                    <div class="card-header border-bottom-0">
+                        <h4 class="card-title text-bold">
+                            Attachments
+                        </h4>
+                    </div>
+                    <div class="card-body pt-0">
+                        <div class="col-md-12 shadow border p-2">
+                            <div class="row justify-content-between align-items-center" style="display: flex !important;
+                            align-items: center;
+                            justify-content: space-between;">
+                            <table class="table table-border">
+                                <thead class="bg-light">
+                                    @for ($i = 0; $i < count($wholesale_application['permit_images']); $i++)
+                                        th
+                                        <th>
+                                            Attachment {{$i+1}}
+                                        </th>
+                                    @endfor
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        @foreach ($wholesale_application['permit_images'] as $image)    
+                                        <td>
+                                            <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('/wholesale/images/'.$image['permit_image']))) }}" alt="" width="100px" class="img-thumbnail image-zoom" style="max-height: 8rem !important;">
+                                        </td>
+                                        @endforeach
+                                    </tr>
+                                </tbody>
+                            </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endif
                 <div class="col-md-12">
                     <div class="card-header border-bottom-0">
                         <h4 class="card-title text-bold">
