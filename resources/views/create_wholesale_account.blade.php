@@ -380,7 +380,7 @@
                                                                 </div>
                                                                 <div class="col-md-6">
                                                                 @if(empty($id))
-                                                                <button id="save_for_now" type="button"  class="save_for_now_btn btn" data-toggle="" data-target="">Save for now</button>
+                                                                    <button id="save_for_now" type="button"  class="save_for_now_btn btn" data-toggle="" data-target="">Save for now</button>
                                                                 @endif
                                                                 <button type="button" id="step1_next" onclick="check_validation_step1()" class="step_next btn">
                                                                     Next
@@ -561,9 +561,9 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="text-right">
-                                                                    {{-- @if(empty($id))
-                                                                        <button id="save_for_now" type="button"  class="step_next btn" data-toggle="" data-target="">Save for now</button>
-                                                                    @endif --}}
+                                                                    @if(empty($id))
+                                                                        <button id="save_for_now_step_2" type="button"  class="step_next btn" data-toggle="" data-target="">Save for now</button>
+                                                                    @endif
                                                                     <button type="button" id="step2_next" class="step_next btn" onclick="check_validation_step2()">
                                                                         Next
                                                                     </button>
@@ -683,9 +683,9 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="text-right">
-                                                                    {{-- @if(empty($id))
-                                                                        <button id="save_for_now" type="button"  class="step_next btn" data-toggle="" data-target="">Save for now</button>
-                                                                    @endif --}}
+                                                                    @if(empty($id))
+                                                                        <button id="save_for_now_step_3" type="button"  class="step_next btn" data-toggle="" data-target="">Save for now</button>
+                                                                    @endif
                                                                     <button type="button" id="step3_next" class="step_next btn" onclick="check_validation_step3()">
                                                                         Next
                                                                     </button>
@@ -844,6 +844,9 @@
                                                                 <span class="sr-only">Loading...</span>
                                                             </div>
                                                             <div class="col-md-12 text-right">
+                                                                @if(empty($id))
+                                                                    <button id="save_for_now_step_4" type="button"  class="save_for_now_btn btn" data-toggle="" data-target="">Save for now</button>
+                                                                @endif
                                                                 <button type="button" id="step4_next" class="step_next btn" onclick="check_validation_step4()">
                                                                     Next
                                                                 </button>
@@ -1785,7 +1788,47 @@
 
                 save_progress_step1();
             }
-        })
+        });
+        $('#save_for_now_step_2').click(function() {
+            if ($('#email').val() == '') {
+                $('#save_for_now_step_2').attr('data-toggle', 'modal')
+                $('#save_for_now_step_2').attr('data-target', '#save_for_now_modal')
+                $('#save_for_now_modal').modal('show');
+            } else {
+                $('#save_for_now_step_2').attr('data-toggle', '')
+                $('#save_for_now_step_2').attr('data-target', '')
+                $('#save_for_now_modal').modal('hide');
+
+                save_progress_step1();
+            }
+        });
+        $('#save_for_now_step_3').click(function() {
+            if ($('#email').val() == '') {
+                $('#save_for_now_step_3').attr('data-toggle', 'modal')
+                $('#save_for_now_step_3').attr('data-target', '#save_for_now_modal')
+                $('#save_for_now_modal').modal('show');
+            } else {
+                $('#save_for_now_step_3').attr('data-toggle', '')
+                $('#save_for_now_step_3').attr('data-target', '')
+                $('#save_for_now_modal').modal('hide');
+
+                save_progress_step1();
+            }
+        });
+
+        $('#save_for_now_step_4').click(function() {
+            if ($('#email').val() == '') {
+                $('#save_for_now_step_4').attr('data-toggle', 'modal')
+                $('#save_for_now_step_4').attr('data-target', '#save_for_now_modal')
+                $('#save_for_now_modal').modal('show');
+            } else {
+                $('#save_for_now_step_4').attr('data-toggle', '')
+                $('#save_for_now_step_4').attr('data-target', '')
+                $('#save_for_now_modal').modal('hide');
+
+                save_progress_step1();
+            }
+        });
 
         function save_email_for_now() {
             $('#wholesale_spinner').removeClass('d-none');
@@ -2070,6 +2113,11 @@
             $('.edit_view_image').addClass('d-none');
             var all_files = e.target.files;
             if (all_files.length > 0) {
+                if (all_files.length > 4) {
+                    $('#file_upload_errors').html('You can upload max 5 images');
+                    $('#file_upload').val('');
+                    return false;
+                }
                 for (let index = 0; index < all_files.length; index++) {
                     var file_element = all_files[index];
                     if (file_element.size > 419430400) {

@@ -43,5 +43,8 @@ class WholesaleApplicationInformation extends Model
     {
         return $this->hasOne(WholesaleApplicationCard::class , 'wholesale_application_id');
     }
-    
+    public function permit_images()
+    {
+        return $this->hasMany(WholesaleApplicationImage::class , 'wholesale_application_id');
+    }
 }

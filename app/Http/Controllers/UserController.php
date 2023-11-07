@@ -1946,31 +1946,33 @@ class UserController extends Controller
         DB::beginTransaction();
         try {
 
+            $images_array = [];
              //save data step 1 
             $permit_image_name = null;
             if ($request->hasFile('permit_image')) {
-                 $images = $request->file('permit_image');
-                 if (!empty($images)) {
-                     foreach ($images as $image) {
-                         $permit_image_name = time() . random_int(100000, 999999) . '.' . $image->getClientOriginalExtension();
-                         $destinationPath = public_path('wholesale/images');
-                         File::makeDirectory($destinationPath, $mode = 0777, true, true);
-                         $image->move($destinationPath, $permit_image_name);
-                         $images_array[] = $permit_image_name;
-     
-                     }
-                 }
+                $images = $request->file('permit_image');
+                if (!empty($images)) {
+                    foreach ($images as $image) {
+                        $permit_image_name = time() . random_int(100000, 999999) . '.' . $image->getClientOriginalExtension();
+                        $destinationPath = public_path('wholesale/images');
+                        File::makeDirectory($destinationPath, $mode = 0777, true, true);
+                        $image->move($destinationPath, $permit_image_name);
+                        array_push($images_array, $permit_image_name);
+                        // $images_array[] = $permit_image_name;
+    
+                    }
+                }
             }
             
             $wholesale_application_id = $request->wholesale_application_id;
 
             if (!empty($wholesale_application_id)) {
                 $update_wholesale_appication = WholesaleApplicationInformation::where('id' , $wholesale_application_id)->first();
-                if (empty($permit_image_name)) {
-                    $permit_image = $update_wholesale_appication->permit_image;
-                } else {
-                    $permit_image = $permit_image_name;
-                } 
+                // if (empty($permit_image_name)) {
+                //     $permit_image = $update_wholesale_appication->permit_image;
+                // } else {
+                //     $permit_image = $permit_image_name;
+                // } 
                 $update_wholesale_appication->update([
                     'company' => $request->company_name,
                     'first_name' => $request->first_name,
@@ -1985,11 +1987,27 @@ class UserController extends Controller
                     // 'permit_image' => $permit_image,
                 ]);
 
+                if(!empty($images_array)) {
+                    if (count($images_array) > 0 ) {
+                        $delete_previous_images = WholesaleApplicationImage::where('wholesale_application_id' , $wholesale_application_id)->get();
+                        if (count($delete_previous_images) > 0) {
+                            foreach ($delete_previous_images as $delete_previous_image) {
+                                $delete_previous_image->delete();
+                            }
+                        }
+                        foreach ($images_array as $image) {
+                            WholesaleApplicationImage::create([
+                                'wholesale_application_id' => $wholesale_application_id,
+                                'permit_image' => $image,
+                            ]); 
+                        }
+                    }
+                }
 
                 
 
                 $update_wholesale_appication_address_billing = WholesaleApplicationAddress::where('wholesale_application_id' , $wholesale_application_id)->where('type' , 'Billing Address')->first();
-                if(!empty($update_wholesale_appication_address_billing)) {
+                if (!empty($update_wholesale_appication_address_billing)) {
                     $update_wholesale_appication_address_billing->update([
                         'wholesale_application_id' => $wholesale_application_id,
                         'type' => 'Billing Address',
@@ -2335,6 +2353,7 @@ class UserController extends Controller
 
     public function save_for_now(Request $request) {
         $permit_image_name = null;
+        $images_array = [];
         if ($request->hasFile('permit_image')) {
             $images = $request->file('permit_image');
             if (!empty($images)) {
@@ -2343,7 +2362,7 @@ class UserController extends Controller
                     $destinationPath = public_path('wholesale/images');
                     File::makeDirectory($destinationPath, $mode = 0777, true, true);
                     $image->move($destinationPath, $permit_image_name);
-                    $images_array[] = $permit_image_name;
+                    array_push($images_array, $permit_image_name);
 
                 }
             }
@@ -2585,7 +2604,7 @@ class UserController extends Controller
     }
 
     public function wholesale_application_generate_pdf($id) {
-        $wholesale_application =  WholesaleApplicationInformation::with('wholesale_application_address' , 'wholesale_application_regulation_detail' , 'wholesale_application_authorization_detail' , 'wholesale_application_card')
+        $wholesale_application =  WholesaleApplicationInformation::with('permit_images' ,  'wholesale_application_address' , 'wholesale_application_regulation_detail' , 'wholesale_application_authorization_detail' , 'wholesale_application_card')
         ->where('id' , $id)->orderBy('id' , 'Desc')->first()->toArray();
         $html = view('admin.wholesale_applications.generate_pdf', compact('wholesale_application'))->render();
         $pdf = PDF::loadHTML($html)->setOptions(

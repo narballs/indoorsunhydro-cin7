@@ -60,9 +60,6 @@
                                             <th>
                                                 Phone
                                             </th>
-                                            <th>
-                                                Permit Image
-                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -85,13 +82,6 @@
                                             <td>
                                                 {{ !empty($wholesale_application->phone ) ? $wholesale_application->phone : '-'}}
                                             </td>
-                                            <td>
-                                                @if(!empty($wholesale_application->permit_image))
-                                                <img src="{{ asset('/wholesale/images/'.$wholesale_application->permit_image) }}" alt="" width="100px" class="img-fluid">
-                                                @else
-                                                {{'-'}}
-                                                @endif
-                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -99,6 +89,28 @@
                         </div>
                     </div>
                 </div>
+                @if(count($wholesale_application->permit_images) > 0)
+                <div class="col-md-12">
+                    <div class="card-header border-bottom-0">
+                        <h4 class="card-title text-bold">
+                            Attachments
+                        </h4>
+                    </div>
+                    <div class="card-body pt-0">
+                        <div class="col-md-12 shadow border p-2">
+                            <div class="row justify-content-between align-items-center">
+                                @foreach ($wholesale_application->permit_images as $image)    
+                                <div class="col-md-2">
+                                    <a href="{{ asset('/wholesale/images/'.$image->permit_image) }}">
+                                        <img src="{{ asset('/wholesale/images/'.$image->permit_image) }}" alt="" id="image_zoom_{{$image->id}}" class="img-thumbnail image-zoom" style="max-height: 8rem !important;">
+                                    </a>
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endif
                 <div class="col-md-12">
                     <div class="card-header border-bottom-0">
                         <h4 class="card-title text-bold">
@@ -841,7 +853,5 @@
 
     </style>
 @stop
-
-
 @section('js')
 @stop
