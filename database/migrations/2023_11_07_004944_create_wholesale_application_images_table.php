@@ -16,7 +16,7 @@ class CreateWholesaleApplicationImagesTable extends Migration
         Schema::create('wholesale_application_images', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('wholesale_application_id');
-            $table->string('permit_image');
+            $table->string('permit_image')->nullable();
             $table->timestamps();
         });
     }

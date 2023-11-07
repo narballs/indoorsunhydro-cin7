@@ -338,9 +338,20 @@
                                                                                             </h6>
                                                                                         </div>
                                                                                         <input type="hidden" name="" id="edit_image_input" value="{{!empty($wholesale_application->permit_image) ? $wholesale_application->permit_image : ''}}">
-                                                                                        @if(!empty($wholesale_application->permit_image))
-                                                                                            <a href="{{asset('wholesale/images/' . $wholesale_application->permit_image)}}" id="permit_img_src" class="btn-sm btn btn-primary edit_view_image w-50">View Image</a>
-                                                                                        @endif
+                                                                                        <div class="row">
+                                                                                            @php
+                                                                                            if (count($wholesale_appication_images) > 0 ) {
+                                                                                                    foreach($wholesale_appication_images as $wholesale_appication_image) {
+                                                                                            @endphp
+                                                                                                    <div class="col-md-6">
+                                                                                                        <a href="{{asset('wholesale/images/' . $wholesale_appication_image->permit_image)}}" id="permit_img_src" class="btn-sm btn btn-primary edit_view_image w-100 mb-1">View Image</a>
+                                                                                                    </div>
+                                                                                                
+                                                                                            @php
+                                                                                                }
+                                                                                            }
+                                                                                         @endphp
+                                                                                        </div>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
