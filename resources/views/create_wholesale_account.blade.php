@@ -351,7 +351,7 @@
                                                                                 <div class="col-md-6">
                                                                                     <div class="row justify-content-center">
                                                                                         <div class="col-md-12">
-                                                                                            <input id="file_upload" name="permit_image" style="display:none;" type="file" >
+                                                                                            <input id="file_upload" name="permit_image[]" style="display:none;" type="file" multiple max="">
                                                                                             <h6 class="drop_your_files_here text-center"> Drop your file here or  
                                                                                                 <label for="files" class="browse">Browse</label>
                                                                                                 <p class="size_info mb-0">Maximum size: 50MB</p>
@@ -1680,8 +1680,15 @@
                         }
                     });
                     var data = new FormData();
-                    var files = $('input[name="permit_image"]')[0].files[0];
-                    data.append('permit_image',files);
+                    var totalfiles = document.getElementById('file_upload').files.length;
+                    if (totalfiles > 0) {
+                        for (var index = 0; index < totalfiles; index++) {
+                            data.append("permit_image[]", document.getElementById('file_upload').files[index]);
+                        }
+                    }
+                    // var files = $('input[name="permit_image"]')[0].files;
+                    // console.log(files);
+                    // data.append('permit_image',files);
                     data.append('company_name', $('#company_name').val());
                     data.append('first_name', $('#first_name').val());
                     data.append('last_name', $('#last_name').val());
@@ -2061,18 +2068,22 @@
 
         $("#file_upload").change(function(e) {
             $('.edit_view_image').addClass('d-none');
-            var filename = e.target.files[0];
-            console.log(filename);
-            if (filename.size > 419430400) {
-                $('#file_upload_errors').html('File size should be less than 50MB');
-                $('#file_upload').val('');
-                return false;
+            var all_files = e.target.files;
+            if (all_files.length > 0) {
+                for (let index = 0; index < all_files.length; index++) {
+                    var file_element = all_files[index];
+                    if (file_element.size > 419430400) {
+                        $('#file_upload_errors').html('File size should be less than 50MB');
+                        $('#file_upload').val('');
+                        return false;
+                    }
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        $('#file_upload_errors').html('');
+                        $('#file_upload').val(e.target.file_element);
+                    }
+                }
             }
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                $('#file_upload_errors').html('');
-                $('#file_upload').val(e.target.files[0]);
-            }            
         });
 
         //check vaidation for step 2

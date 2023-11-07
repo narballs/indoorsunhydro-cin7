@@ -43,6 +43,7 @@ use App\Models\WholesaleApplicationAddress;
 use App\Models\WholesaleApplicationAuthorizationDetail;
 use App\Models\WholesaleApplicationRegulationDetail;
 use App\Models\WholesaleApplicationCard;
+use App\Models\WholesaleApplicationImage;
 use Illuminate\Support\Facades\File;
 use App\Services\ZendeskService;
 use Zendesk\API\HttpClient as ZendeskClient;
@@ -2322,12 +2323,19 @@ class UserController extends Controller
 
     public function save_for_now(Request $request) {
         $permit_image_name = null;
-        if($request->hasFile('permit_image')) {
-            $image = $request->file('permit_image');
-            $permit_image_name = time() . '.' . $image->getClientOriginalExtension();
-            $destinationPath = public_path('wholesale/images');
-            File::makeDirectory($destinationPath, $mode = 0777, true, true);
-            $image->move($destinationPath, $permit_image_name);
+        if ($request->hasFile('permit_image')) {
+            $images = $request->file('permit_image');
+            if (!empty($images)) {
+                foreach ($images as $image) {
+                    $permit_image_name = time() . random_int(100000, 999999) . '.' . $image->getClientOriginalExtension();
+                    $destinationPath = public_path('wholesale/images');
+                    File::makeDirectory($destinationPath, $mode = 0777, true, true);
+                    $image->move($destinationPath, $permit_image_name);
+                    $images_array[] = $permit_image_name;
+
+                }
+                dd($images_array);
+            }
         }
         DB::beginTransaction();
         try {
