@@ -1792,8 +1792,19 @@
                     }
                 });
             } else {
-                $('.success_message').removeClass('d-none');
-                $('#successMessage').html('Please Enter the Corrrect Data');
+                $('#step1').addClass('active');
+                $('#step1').addClass('show');
+                $('.step_1_nav_link').addClass('active');
+                $('#step2').removeClass('active');
+                $('#step2').removeClass('show');
+                $('.step_2_nav_link').removeClass('active');
+                $('#step3').removeClass('active');
+                $('#step3').removeClass('show');
+                $('.step_3_nav_link').removeClass('active');
+                $('#step4').removeClass('active');
+                $('#step4').removeClass('show');
+                $('.step_4_nav_link').removeClass('active');
+                return false;
             }
         }
 
