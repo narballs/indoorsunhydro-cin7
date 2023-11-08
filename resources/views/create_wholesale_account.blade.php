@@ -2146,23 +2146,27 @@
             $('.edit_view_image').addClass('d-none');
             var all_files = e.target.files;
             if (all_files.length > 0) {
-                if (all_files.length > 4) {
+                if (all_files.length > 5) {
                     $('#file_upload_errors').html('You can upload max 5 images');
                     $('#file_upload').val('');
                     return false;
                 }
-                for (let index = 0; index < all_files.length; index++) {
-                    var file_element = all_files[index];
-                    if (file_element.size > 419430400) {
-                        $('#file_upload_errors').html('File size should be less than 50MB');
-                        $('#file_upload').val('');
-                        return false;
+                else {
+                    $('#file_upload_errors').html('');    
+                    for (let index = 0; index < all_files.length; index++) {
+                        var file_element = all_files[index];
+                        if (file_element.size > 419430400) {
+                            $('#file_upload_errors').html('File size should be less than 50MB');
+                            $('#file_upload').val('');
+                            return false;
+                        }
+                        var reader = new FileReader();
+                        reader.onload = function(e) {
+                            $('#file_upload_errors').html('');
+                            $('#file_upload').val(e.target.file_element);
+                        }
                     }
-                    var reader = new FileReader();
-                    reader.onload = function(e) {
-                        $('#file_upload_errors').html('');
-                        $('#file_upload').val(e.target.file_element);
-                    }
+
                 }
             }
         });

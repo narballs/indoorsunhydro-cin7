@@ -343,7 +343,7 @@
                                                                                             if (count($wholesale_appication_images) > 0 ) {
                                                                                                     foreach($wholesale_appication_images as $wholesale_appication_image) {
                                                                                             @endphp
-                                                                                                    <div class="col-md-3">
+                                                                                                    <div class="col-md-2 p-0 ml-2">
                                                                                                         <a href="{{asset('wholesale/images/' . $wholesale_appication_image->permit_image)}}" id="permit_img_src" class="btn-sm btn btn-primary edit_view_image w-100 mb-2">View Image</a>
                                                                                                     </div>
                                                                                                 
@@ -1644,18 +1644,22 @@
                     $('#file_upload').val('');
                     return false;
                 }
-                for (let index = 0; index < all_files.length; index++) {
-                    var file_element = all_files[index];
-                    if (file_element.size > 419430400) {
-                        $('#file_upload_errors').html('File size should be less than 50MB');
-                        $('#file_upload').val('');
-                        return false;
+                else {
+                    $('#file_upload_errors').html('');    
+                    for (let index = 0; index < all_files.length; index++) {
+                        var file_element = all_files[index];
+                        if (file_element.size > 419430400) {
+                            $('#file_upload_errors').html('File size should be less than 50MB');
+                            $('#file_upload').val('');
+                            return false;
+                        }
+                        var reader = new FileReader();
+                        reader.onload = function(e) {
+                            $('#file_upload_errors').html('');
+                            $('#file_upload').val(e.target.file_element);
+                        }
                     }
-                    var reader = new FileReader();
-                    reader.onload = function(e) {
-                        $('#file_upload_errors').html('');
-                        $('#file_upload').val(e.target.file_element);
-                    }
+
                 }
             }
         });
