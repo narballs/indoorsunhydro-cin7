@@ -1795,6 +1795,7 @@
                 $('#step1').addClass('active');
                 $('#step1').addClass('show');
                 $('.step_1_nav_link').addClass('active');
+                $('#save_for_now_spinner').addClass('d-none');
                 $('#step2').removeClass('active');
                 $('#step2').removeClass('show');
                 $('.step_2_nav_link').removeClass('active');
