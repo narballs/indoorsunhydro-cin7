@@ -1639,7 +1639,7 @@
             $('.edit_view_image').addClass('d-none');
             var all_files = e.target.files;
             if (all_files.length > 0) {
-                if (all_files.length > 4) {
+                if (all_files.length > 5) {
                     $('#file_upload_errors').html('You can upload max 5 images');
                     $('#file_upload').val('');
                     return false;
