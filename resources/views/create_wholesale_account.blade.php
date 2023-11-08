@@ -378,13 +378,16 @@
                                                                         </button>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-md-6">
-                                                                @if(empty($id))
-                                                                    <button id="save_for_now" type="button"  class="save_for_now_btn btn" data-toggle="" data-target="">Save for now</button>
-                                                                @endif
-                                                                <button type="button" id="step1_next" onclick="check_validation_step1()" class="step_next btn">
-                                                                    Next
-                                                                </button>
+                                                                <div class="col-md-6 d-flex align-items-center justify-content-end">
+                                                                    @if(empty($id))
+                                                                        <div class="spinner-border text-success d-none" role="status" id="save_for_now_spinner">
+                                                                            <span class="sr-only">Loading...</span>
+                                                                        </div>
+                                                                        <button id="save_for_now" type="button"  class="save_for_now_btn btn ml-2" data-toggle="" data-target="">Save for now</button>
+                                                                    @endif
+                                                                    <button type="button" id="step1_next" onclick="check_validation_step1()" class="step_next btn ml-2">
+                                                                        Next
+                                                                    </button>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -560,11 +563,14 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="text-right">
+                                                                <div class="col-md-12 text-right d-flex justify-content-end align-items-center">
                                                                     @if(empty($id))
-                                                                        <button id="save_for_now_step_2" type="button"  class="step_next btn" data-toggle="" data-target="">Save for now</button>
+                                                                        <div class="spinner-border text-success d-none mr-2" role="status" id="save_for_now_spinner">
+                                                                            <span class="sr-only">Loading...</span>
+                                                                        </div>
+                                                                        <button id="save_for_now_step_2" type="button"  class="step_next btn ml-3" data-toggle="" data-target="">Save for now</button>
                                                                     @endif
-                                                                    <button type="button" id="step2_next" class="step_next btn" onclick="check_validation_step2()">
+                                                                    <button type="button" id="step2_next" class="step_next btn ml-3" onclick="check_validation_step2()">
                                                                         Next
                                                                     </button>
                                                                 </div>
@@ -682,11 +688,14 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="text-right">
+                                                                <div class="col-md-12 text-right d-flex justify-content-end align-items-center">
                                                                     @if(empty($id))
-                                                                        <button id="save_for_now_step_3" type="button"  class="step_next btn" data-toggle="" data-target="">Save for now</button>
+                                                                        <div class="spinner-border text-success d-none mr-2" role="status" id="save_for_now_spinner">
+                                                                            <span class="sr-only">Loading...</span>
+                                                                        </div>
+                                                                        <button id="save_for_now_step_3" type="button"  class="step_next btn ml-3" data-toggle="" data-target="">Save for now</button>
                                                                     @endif
-                                                                    <button type="button" id="step3_next" class="step_next btn" onclick="check_validation_step3()">
+                                                                    <button type="button" id="step3_next" class="step_next btn ml-3" onclick="check_validation_step3()">
                                                                         Next
                                                                     </button>
                                                                 </div>
@@ -843,11 +852,20 @@
                                                             <div class="spinner-grow d-none" id="wholesale_spinner" role="status">
                                                                 <span class="sr-only">Loading...</span>
                                                             </div>
-                                                            <div class="col-md-12 text-right">
+                                                            <div class="col-md-12 text-right d-flex justify-content-end align-items-center">
+                                                                {{-- <div class="alert alert-info alert-dismissible fade show success_message_4 mb-0 p-1 d-none" role="alert">
+                                                                    <p id="successMessage_4" class="mb-0"></p>
+                                                                    <button type="button" class="close btn-sm p-1" data-dismiss="alert" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div> --}}
                                                                 @if(empty($id))
-                                                                    <button id="save_for_now_step_4" type="button"  class="save_for_now_btn btn" data-toggle="" data-target="">Save for now</button>
+                                                                    <div class="spinner-border text-success d-none mr-2" role="status" id="save_for_now_spinner">
+                                                                        <span class="sr-only">Loading...</span>
+                                                                    </div>
+                                                                    <button id="save_for_now_step_4" type="button"  class="save_for_now_btn btn ml-3" data-toggle="" data-target="">Save for now</button>
                                                                 @endif
-                                                                <button type="button" id="step4_next" class="step_next btn" onclick="check_validation_step4()">
+                                                                <button type="button" id="step4_next" class="step_next btn ml-3" onclick="check_validation_step4()">
                                                                     Next
                                                                 </button>
                                                             </div>
@@ -1751,15 +1769,18 @@
                     processData: false,
                     success:function(response){
                         if (response.status == true) {
+                            $('#save_for_now_spinner').addClass('d-none');
                             $('#wholesale_spinner').addClass('d-none');
                             $('#save_for_now').attr('data-toggle', '')
                             $('#save_for_now').attr('data-target', '')
                             $('.success_message').removeClass('d-none');
                             $('#successMessage').html('Data saved For now');
+                           
                             setTimeout(() => {
                                 window.location.href = '/wholesale/account/create'
                             }, 1000);
                         } else {
+                            $('#save_for_now_spinner').addClass('d-none');
                             $('.success_message').removeClass('d-none');
                             $('#successMessage').html('Email Already Exist');
                             setTimeout(() => {
@@ -1785,7 +1806,7 @@
                 $('#save_for_now').attr('data-toggle', '')
                 $('#save_for_now').attr('data-target', '')
                 $('#save_for_now_modal').modal('hide');
-
+                $('#save_for_now_spinner').removeClass('d-none');
                 save_progress_step1();
             }
         });
@@ -1798,7 +1819,7 @@
                 $('#save_for_now_step_2').attr('data-toggle', '')
                 $('#save_for_now_step_2').attr('data-target', '')
                 $('#save_for_now_modal').modal('hide');
-
+                $('#save_for_now_spinner').removeClass('d-none');
                 save_progress_step1();
             }
         });
@@ -1811,7 +1832,7 @@
                 $('#save_for_now_step_3').attr('data-toggle', '')
                 $('#save_for_now_step_3').attr('data-target', '')
                 $('#save_for_now_modal').modal('hide');
-
+                $('#save_for_now_spinner').removeClass('d-none');
                 save_progress_step1();
             }
         });
@@ -1825,7 +1846,7 @@
                 $('#save_for_now_step_4').attr('data-toggle', '')
                 $('#save_for_now_step_4').attr('data-target', '')
                 $('#save_for_now_modal').modal('hide');
-
+                $('#save_for_now_spinner').removeClass('d-none');
                 save_progress_step1();
             }
         });
