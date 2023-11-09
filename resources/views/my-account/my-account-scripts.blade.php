@@ -312,6 +312,15 @@
         } else {
             $('#address_loader').removeClass('d-none');
         }
+        var companyName = $('.companyName:checked').val();
+        if (companyName == '' || companyName == null) {
+            $('#error_company').html('Please select company');
+            $('#address_loader').addClass('d-none');
+            $('#address_loader_shipping').addClass('d-none');
+           return false;
+        } else {
+            $('#error_company').html('');
+        }
         var first_name = $('input[name=firstName]').val();
         var last_name = $('input[name=lastName]').val();
         var company_name = $('input[name=company]').val();
@@ -324,7 +333,7 @@
         var email = $('input[name=email]').val();
         var contact_id = $('#contact_id_val').val();
         var secondary_id = $('input[name=secondary_id]').val();
-        var companyName = $('.companyName:checked').val();
+        
         
         jQuery.ajax({
             method: 'GET',
@@ -1099,7 +1108,7 @@
                                         @endphp
                                         @if($company->type != "Supplier")
                                             <div class="col-md-12">
-                                                <input type="radio" {{!empty($session_company) && $session_company === $company->company ? 'checked' : ''}} value="{{ $company->company }}" name="company" id="companyName" {{ $disabled }} {{ $muted }}>
+                                                <input type="radio" {{!empty($session_company) && $session_company === $company->company ? 'checked' : ''}} value="{{ $company->company }}" class="companyName" name="company" id="companyName" {{ $disabled }} {{ $muted }}>
                                                 <label for="" {{ $disabled }} {{ $muted }}>{{ $company->company }}
                                                     <span
                                                     style="font-size: 9px;font-family: 'Poppins';"
