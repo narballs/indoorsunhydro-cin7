@@ -331,8 +331,7 @@
                 $('#error_company_billing').html('');
             }
         }
-
-        return false;
+        
         var companyName = $('.companyName:checked').val();
         var first_name = $('input[name=firstName]').val();
         var last_name = $('input[name=lastName]').val();
