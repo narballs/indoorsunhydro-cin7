@@ -94,10 +94,10 @@
                                                                                 Company Information 
                                                                             </h6>
                                                                         </div>
-                                                                        @if(empty($id))
-                                                                        <div class="col-md-6 text-right">
-                                                                            <button class="step_next btn" data-toggle="" data-target="" type="button" id="show_previous_data_button" onclick="show_previous_data_pop_up()"> Show Previous Data </button>
-                                                                        </div>
+                                                                        @if(empty($id) && (!Auth::user()))
+                                                                            <div class="col-md-6 text-right">
+                                                                                <button class="step_next btn" data-toggle="" data-target="" type="button" id="show_previous_data_button" onclick="show_previous_data_pop_up()"> Show Previous Data </button>
+                                                                            </div>
                                                                         @endif
                                                                     </div>
                                                                 </div>
