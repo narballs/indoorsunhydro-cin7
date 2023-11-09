@@ -314,7 +314,7 @@
         }
         var companyName = $('.companyName:checked').val();
         if (companyName == '' || companyName == null) {
-            $('#error_company').html('Please select company');
+            $('#error_company').html('Please select location');
             $('#address_loader').addClass('d-none');
             $('#address_loader_shipping').addClass('d-none');
            return false;
