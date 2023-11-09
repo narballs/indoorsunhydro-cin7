@@ -1107,7 +1107,7 @@ class UserController extends Controller
         $user_address = Contact::where('user_id', $user_id)->first();
         $secondary_contacts = Contact::whereIn('id', $all_ids)->paginate(10);
         $secondary_contacts_data = Contact::whereIn('id', $all_ids)->get();
-        $pluck_default_user = Contact::whereIn('id', $all_ids)->where('is_default' , 1)->first();
+        $pluck_default_user = Contact::whereIn('id', $all_ids)->first();
         $list = BuyList::where('id', 20)->with('list_products.product.options')->first();
         $contact = Contact::where('email', $user_address->email)->first();
         $companies = Contact::where('user_id', $user_id)->get();
