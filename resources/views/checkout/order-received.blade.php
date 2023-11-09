@@ -883,7 +883,7 @@
 														{{$order_contact->postalAddress1 ? $order_contact->postalAddress1 . ',' : $order_contact->address1 . ','}}
 													</p>
 													<p class="order-confirmation-page-address-line-one-title mb-1">
-														{{$order_contact->postalAddress2 ? $order_contact->postalAddress2: $order_contact->address2 . ','}}
+														{{$order_contact->postalAddress2 ? $order_contact->postalAddress2: $order_contact->address2 ? $order_contact->address2 . ',' : ''}}
 													</p>
 													<p class="order-confirmation-page-address-line-one-title">
 														{{$order_contact->postalCity ? $order_contact->postalCity . ',' : $order_contact->city . ','}}
@@ -908,7 +908,7 @@
 														{{$order_contact->address1 ? $order_contact->address1 . ',' : $order_contact->postalAddress1 . ','}}
 													</p>
 													<p class="order-confirmation-page-address-line-one-title mb-1">
-														{{$order_contact->address2 ? $order_contact->address2 . ',' : $order_contact->postalAddress2 . ','}}
+														{{$order_contact->address2 ? $order_contact->address2: $order_contact->postalAddress2 ? $order_contact->postalAddress2 . ',' : ''}}
 													</p>
 													<p class="order-confirmation-page-address-line-one-title">
 														{{$order_contact->city ? $order_contact->city . ',' : $order_contact->postalCity . ','}}
