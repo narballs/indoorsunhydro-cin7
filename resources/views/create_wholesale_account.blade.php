@@ -94,10 +94,10 @@
                                                                                 Company Information 
                                                                             </h6>
                                                                         </div>
-                                                                        @if(empty($id))
-                                                                        <div class="col-md-6 text-right">
-                                                                            <button class="step_next btn" data-toggle="" data-target="" type="button" id="show_previous_data_button" onclick="show_previous_data_pop_up()"> Show Previous Data </button>
-                                                                        </div>
+                                                                        @if(empty($id) && (!Auth::user()))
+                                                                            <div class="col-md-6 text-right">
+                                                                                <button class="step_next btn" data-toggle="" data-target="" type="button" id="show_previous_data_button" onclick="show_previous_data_pop_up()"> Show Previous Data </button>
+                                                                            </div>
                                                                         @endif
                                                                     </div>
                                                                 </div>
@@ -351,7 +351,7 @@
                                                                                 <div class="col-md-6">
                                                                                     <div class="row justify-content-center">
                                                                                         <div class="col-md-12">
-                                                                                            <input id="file_upload" name="permit_image" style="display:none;" type="file" >
+                                                                                            <input id="file_upload" name="permit_image[]" style="display:none;" type="file" multiple max="">
                                                                                             <h6 class="drop_your_files_here text-center"> Drop your file here or  
                                                                                                 <label for="files" class="browse">Browse</label>
                                                                                                 <p class="size_info mb-0">Maximum size: 50MB</p>
@@ -378,13 +378,16 @@
                                                                         </button>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-md-6">
-                                                                @if(empty($id))
-                                                                <button id="save_for_now" type="button"  class="save_for_now_btn btn" data-toggle="" data-target="">Save for now</button>
-                                                                @endif
-                                                                <button type="button" id="step1_next" onclick="check_validation_step1()" class="step_next btn">
-                                                                    Next
-                                                                </button>
+                                                                <div class="col-md-6 d-flex align-items-center justify-content-end">
+                                                                    @if(empty($id))
+                                                                        <div class="spinner-border text-success d-none" role="status" id="save_for_now_spinner">
+                                                                            <span class="sr-only">Loading...</span>
+                                                                        </div>
+                                                                        <button id="save_for_now" type="button"  class="save_for_now_btn btn ml-2" data-toggle="" data-target="">Save for now</button>
+                                                                    @endif
+                                                                    <button type="button" id="step1_next" onclick="check_validation_step1()" class="step_next btn ml-2">
+                                                                        Next
+                                                                    </button>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -560,11 +563,14 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="text-right">
-                                                                    {{-- @if(empty($id))
-                                                                        <button id="save_for_now" type="button"  class="step_next btn" data-toggle="" data-target="">Save for now</button>
-                                                                    @endif --}}
-                                                                    <button type="button" id="step2_next" class="step_next btn" onclick="check_validation_step2()">
+                                                                <div class="col-md-12 text-right d-flex justify-content-end align-items-center">
+                                                                    @if(empty($id))
+                                                                        <div class="spinner-border text-success d-none mr-2" role="status" id="save_for_now_spinner">
+                                                                            <span class="sr-only">Loading...</span>
+                                                                        </div>
+                                                                        <button id="save_for_now_step_2" type="button"  class="step_next btn ml-3" data-toggle="" data-target="">Save for now</button>
+                                                                    @endif
+                                                                    <button type="button" id="step2_next" class="step_next btn ml-3" onclick="check_validation_step2()">
                                                                         Next
                                                                     </button>
                                                                 </div>
@@ -682,11 +688,14 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="text-right">
-                                                                    {{-- @if(empty($id))
-                                                                        <button id="save_for_now" type="button"  class="step_next btn" data-toggle="" data-target="">Save for now</button>
-                                                                    @endif --}}
-                                                                    <button type="button" id="step3_next" class="step_next btn" onclick="check_validation_step3()">
+                                                                <div class="col-md-12 text-right d-flex justify-content-end align-items-center">
+                                                                    @if(empty($id))
+                                                                        <div class="spinner-border text-success d-none mr-2" role="status" id="save_for_now_spinner">
+                                                                            <span class="sr-only">Loading...</span>
+                                                                        </div>
+                                                                        <button id="save_for_now_step_3" type="button"  class="step_next btn ml-3" data-toggle="" data-target="">Save for now</button>
+                                                                    @endif
+                                                                    <button type="button" id="step3_next" class="step_next btn ml-3" onclick="check_validation_step3()">
                                                                         Next
                                                                     </button>
                                                                 </div>
@@ -843,8 +852,20 @@
                                                             <div class="spinner-grow d-none" id="wholesale_spinner" role="status">
                                                                 <span class="sr-only">Loading...</span>
                                                             </div>
-                                                            <div class="col-md-12 text-right">
-                                                                <button type="button" id="step4_next" class="step_next btn" onclick="check_validation_step4()">
+                                                            <div class="col-md-12 text-right d-flex justify-content-end align-items-center">
+                                                                {{-- <div class="alert alert-info alert-dismissible fade show success_message_4 mb-0 p-1 d-none" role="alert">
+                                                                    <p id="successMessage_4" class="mb-0"></p>
+                                                                    <button type="button" class="close btn-sm p-1" data-dismiss="alert" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div> --}}
+                                                                @if(empty($id))
+                                                                    <div class="spinner-border text-success d-none mr-2" role="status" id="save_for_now_spinner">
+                                                                        <span class="sr-only">Loading...</span>
+                                                                    </div>
+                                                                    <button id="save_for_now_step_4" type="button"  class="save_for_now_btn btn ml-3" data-toggle="" data-target="">Save for now</button>
+                                                                @endif
+                                                                <button type="button" id="step4_next" class="step_next btn ml-3" onclick="check_validation_step4()">
                                                                     Next
                                                                 </button>
                                                             </div>
@@ -1671,100 +1692,122 @@
         });
 
         function save_progress_step1() {
-                var validation = validation_message_step_1();
-                if (validation == true) {
-                    $('#wholesale_spinner').removeClass('d-none');
-                    $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        }
-                    });
-                    var data = new FormData();
-                    var files = $('input[name="permit_image"]')[0].files[0];
-                    data.append('permit_image',files);
-                    data.append('company_name', $('#company_name').val());
-                    data.append('first_name', $('#first_name').val());
-                    data.append('last_name', $('#last_name').val());
-                    data.append('phone', $('#phone').val());
-                    data.append('mobile', $('#mobile').val());
-                    data.append('email',$('#email').val());
-                    data.append('parent_company', $('#parent_company').val());
-                    data.append('account_payable_name', $('#account_payable_name').val());
-                    data.append('account_payable_phone', $('#account_payable_phone').val());
-                    data.append('account_payable_email', $('#account_payable_email').val());
-                    data.append('first_name_billing', $('#first_name_billing').val());
-                    data.append('last_name_billing', $('#last_name_billing').val());
-                    data.append('company_name_billing', $('#company_name_billing').val());
-                    data.append('street_address_billing', $('#street_address_billing').val());
-                    data.append('address2_billing', $('#address_2_billing').val());
-                    data.append('city_billing', $('#city_billing').val());
-                    data.append('state_billing', $('#state_billing').val());
-                    data.append('postal_code_billing', $('#postal_code_billing').val());
-                    data.append('phone_billing', $('#phone_billing').val());
-                    data.append('first_name_delivery', $('#first_name_delivery').val());
-                    data.append('last_name_delivery', $('#last_name_delivery').val());
-                    data.append('company_name_delivery', $('#company_name_delivery').val());
-                    data.append('street_address_delivery', $('#street_address_delivery').val());
-                    data.append('address2_delivery', $('#address_2_delivery').val());
-                    data.append('city_delivery', $('#city_delivery').val());
-                    data.append('state_delivery', $('#state_delivery').val());
-                    data.append('postal_code_delivery', $('#postal_code_delivery').val());
-                    data.append('phone_delivery', $('#phone_delivery').val());
-                    data.append('authorization_name', $('#authorization_name').val());
-                    data.append('financial_institution_name', $('#financial_institution_name').val());
-                    data.append('financial_institution_address', $('#financial_institution_address').val());
-                    data.append('financial_institution_signature', $('#financial_institution_signature').val());
-                    data.append('set_amount', $('#set_amount').val());
-                    data.append('maximum_amount', $('#maximum_amount').val());
-                    data.append('institute_routine_number', $('#institute_routine_number').val());
-                    data.append('saving_account_number', $('#saving_account_number').val());
-                    data.append('autorization_permit_number', $('#autorization_permit_number').val());
-                    data.append('autorization_phone_number', $('#autorization_phone_number').val());
-                    data.append('seller_name', $('#seller_name').val());
-                    data.append('seller_address', $('#seller_address').val());
-                    data.append('under_signed_checkbox', $('#under_signed_checkbox').val());
-                    data.append('under_property_checkbox', $('#under_property_checkbox').val());
-                    data.append('company_name_seller', $('#company_name_seller').val());
-                    data.append('signature', $('#signature').val());
-                    data.append('title', $('#title').val());
-                    data.append('address', $('#address').val());
-                    data.append('permit_number', $('#permit_number').val());
-                    data.append('phone_number', $('#phone_number').val());
-                    data.append('date', $('#date').val());
-                    data.append('type_of_farm', $('#type_of_farm').val());
-                
-                    $.ajax({
-                        type:'POST',
-                        url:"{{ route('save_for_now') }}",
-                        data:data,
-                        contentType: false,
-                        processData: false,
-                        success:function(response){
-                            if (response.status == true) {
-                                $('#wholesale_spinner').addClass('d-none');
-                                $('#save_for_now').attr('data-toggle', '')
-                                $('#save_for_now').attr('data-target', '')
-                                $('.success_message').removeClass('d-none');
-                                $('#successMessage').html('Data saved For now');
-                                setTimeout(() => {
-                                    window.location.href = '/wholesale/account/create'
-                                }, 1000);
-                            } else {
-                                $('.success_message').removeClass('d-none');
-                                $('#successMessage').html('Email Already Exist');
-                                setTimeout(() => {
-                                    window.location.href = "/wholesale/account/edit/" + response.id;
-                                }, 1000);
-                            }
-                        },
-                        error: function (response) {
-                        }
-                    });
-                } else {
-                    $('.success_message').removeClass('d-none');
-                    $('#successMessage').html('Please Enter the Corrrect Data');
+            var validation = validation_message_step_1();
+            if (validation == true) {
+                $('#wholesale_spinner').removeClass('d-none');
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                var data = new FormData();
+                var totalfiles = document.getElementById('file_upload').files.length;
+                if (totalfiles > 0) {
+                    for (var index = 0; index < totalfiles; index++) {
+                        data.append("permit_image[]", document.getElementById('file_upload').files[index]);
+                    }
                 }
+                // var files = $('input[name="permit_image"]')[0].files;
+                // console.log(files);
+                // data.append('permit_image',files);
+                data.append('company_name', $('#company_name').val());
+                data.append('first_name', $('#first_name').val());
+                data.append('last_name', $('#last_name').val());
+                data.append('phone', $('#phone').val());
+                data.append('mobile', $('#mobile').val());
+                data.append('email',$('#email').val());
+                data.append('parent_company', $('#parent_company').val());
+                data.append('account_payable_name', $('#account_payable_name').val());
+                data.append('account_payable_phone', $('#account_payable_phone').val());
+                data.append('account_payable_email', $('#account_payable_email').val());
+                data.append('first_name_billing', $('#first_name_billing').val());
+                data.append('last_name_billing', $('#last_name_billing').val());
+                data.append('company_name_billing', $('#company_name_billing').val());
+                data.append('street_address_billing', $('#street_address_billing').val());
+                data.append('address2_billing', $('#address_2_billing').val());
+                data.append('city_billing', $('#city_billing').val());
+                data.append('state_billing', $('#state_billing').val());
+                data.append('postal_code_billing', $('#postal_code_billing').val());
+                data.append('phone_billing', $('#phone_billing').val());
+                data.append('first_name_delivery', $('#first_name_delivery').val());
+                data.append('last_name_delivery', $('#last_name_delivery').val());
+                data.append('company_name_delivery', $('#company_name_delivery').val());
+                data.append('street_address_delivery', $('#street_address_delivery').val());
+                data.append('address2_delivery', $('#address_2_delivery').val());
+                data.append('city_delivery', $('#city_delivery').val());
+                data.append('state_delivery', $('#state_delivery').val());
+                data.append('postal_code_delivery', $('#postal_code_delivery').val());
+                data.append('phone_delivery', $('#phone_delivery').val());
+                data.append('authorization_name', $('#authorization_name').val());
+                data.append('financial_institution_name', $('#financial_institution_name').val());
+                data.append('financial_institution_address', $('#financial_institution_address').val());
+                data.append('financial_institution_signature', $('#financial_institution_signature').val());
+                data.append('set_amount', $('#set_amount').val());
+                data.append('maximum_amount', $('#maximum_amount').val());
+                data.append('institute_routine_number', $('#institute_routine_number').val());
+                data.append('saving_account_number', $('#saving_account_number').val());
+                data.append('autorization_permit_number', $('#autorization_permit_number').val());
+                data.append('autorization_phone_number', $('#autorization_phone_number').val());
+                data.append('seller_name', $('#seller_name').val());
+                data.append('seller_address', $('#seller_address').val());
+                data.append('under_signed_checkbox', $('#under_signed_checkbox').val());
+                data.append('under_property_checkbox', $('#under_property_checkbox').val());
+                data.append('company_name_seller', $('#company_name_seller').val());
+                data.append('signature', $('#signature').val());
+                data.append('title', $('#title').val());
+                data.append('address', $('#address').val());
+                data.append('permit_number', $('#permit_number').val());
+                data.append('phone_number', $('#phone_number').val());
+                data.append('date', $('#date').val());
+                data.append('type_of_farm', $('#type_of_farm').val());
+            
+                $.ajax({
+                    type:'POST',
+                    url:"{{ route('save_for_now') }}",
+                    data:data,
+                    contentType: false,
+                    processData: false,
+                    success:function(response){
+                        if (response.status == true) {
+                            $('#save_for_now_spinner').addClass('d-none');
+                            $('#wholesale_spinner').addClass('d-none');
+                            $('#save_for_now').attr('data-toggle', '')
+                            $('#save_for_now').attr('data-target', '')
+                            $('.success_message').removeClass('d-none');
+                            $('#successMessage').html('Data saved For now');
+                           
+                            setTimeout(() => {
+                                window.location.href = '/wholesale/account/create'
+                            }, 1000);
+                        } else {
+                            $('#save_for_now_spinner').addClass('d-none');
+                            $('.success_message').removeClass('d-none');
+                            $('#successMessage').html('Email Already Exist');
+                            setTimeout(() => {
+                                window.location.href = "/wholesale/account/edit/" + response.id;
+                            }, 1000);
+                        }
+                    },
+                    error: function (response) {
+                    }
+                });
+            } else {
+                $('#step1').addClass('active');
+                $('#step1').addClass('show');
+                $('.step_1_nav_link').addClass('active');
+                $('#save_for_now_spinner').addClass('d-none');
+                $('#step2').removeClass('active');
+                $('#step2').removeClass('show');
+                $('.step_2_nav_link').removeClass('active');
+                $('#step3').removeClass('active');
+                $('#step3').removeClass('show');
+                $('.step_3_nav_link').removeClass('active');
+                $('#step4').removeClass('active');
+                $('#step4').removeClass('show');
+                $('.step_4_nav_link').removeClass('active');
+                return false;
             }
+        }
 
         $('#save_for_now').click(function() {
             if ($('#email').val() == '') {
@@ -1775,10 +1818,50 @@
                 $('#save_for_now').attr('data-toggle', '')
                 $('#save_for_now').attr('data-target', '')
                 $('#save_for_now_modal').modal('hide');
-
+                $('#save_for_now_spinner').removeClass('d-none');
                 save_progress_step1();
             }
-        })
+        });
+        $('#save_for_now_step_2').click(function() {
+            if ($('#email').val() == '') {
+                $('#save_for_now_step_2').attr('data-toggle', 'modal')
+                $('#save_for_now_step_2').attr('data-target', '#save_for_now_modal')
+                $('#save_for_now_modal').modal('show');
+            } else {
+                $('#save_for_now_step_2').attr('data-toggle', '')
+                $('#save_for_now_step_2').attr('data-target', '')
+                $('#save_for_now_modal').modal('hide');
+                $('#save_for_now_spinner').removeClass('d-none');
+                save_progress_step1();
+            }
+        });
+        $('#save_for_now_step_3').click(function() {
+            if ($('#email').val() == '') {
+                $('#save_for_now_step_3').attr('data-toggle', 'modal')
+                $('#save_for_now_step_3').attr('data-target', '#save_for_now_modal')
+                $('#save_for_now_modal').modal('show');
+            } else {
+                $('#save_for_now_step_3').attr('data-toggle', '')
+                $('#save_for_now_step_3').attr('data-target', '')
+                $('#save_for_now_modal').modal('hide');
+                $('#save_for_now_spinner').removeClass('d-none');
+                save_progress_step1();
+            }
+        });
+
+        $('#save_for_now_step_4').click(function() {
+            if ($('#email').val() == '') {
+                $('#save_for_now_step_4').attr('data-toggle', 'modal')
+                $('#save_for_now_step_4').attr('data-target', '#save_for_now_modal')
+                $('#save_for_now_modal').modal('show');
+            } else {
+                $('#save_for_now_step_4').attr('data-toggle', '')
+                $('#save_for_now_step_4').attr('data-target', '')
+                $('#save_for_now_modal').modal('hide');
+                $('#save_for_now_spinner').removeClass('d-none');
+                save_progress_step1();
+            }
+        });
 
         function save_email_for_now() {
             $('#wholesale_spinner').removeClass('d-none');
@@ -2061,18 +2144,31 @@
 
         $("#file_upload").change(function(e) {
             $('.edit_view_image').addClass('d-none');
-            var filename = e.target.files[0];
-            console.log(filename);
-            if (filename.size > 419430400) {
-                $('#file_upload_errors').html('File size should be less than 50MB');
-                $('#file_upload').val('');
-                return false;
+            var all_files = e.target.files;
+            if (all_files.length > 0) {
+                if (all_files.length > 5) {
+                    $('#file_upload_errors').html('You can upload max 5 images');
+                    $('#file_upload').val('');
+                    return false;
+                }
+                else {
+                    $('#file_upload_errors').html('');    
+                    for (let index = 0; index < all_files.length; index++) {
+                        var file_element = all_files[index];
+                        if (file_element.size > 419430400) {
+                            $('#file_upload_errors').html('File size should be less than 50MB');
+                            $('#file_upload').val('');
+                            return false;
+                        }
+                        var reader = new FileReader();
+                        reader.onload = function(e) {
+                            $('#file_upload_errors').html('');
+                            $('#file_upload').val(e.target.file_element);
+                        }
+                    }
+
+                }
             }
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                $('#file_upload_errors').html('');
-                $('#file_upload').val(e.target.files[0]);
-            }            
         });
 
         //check vaidation for step 2
@@ -2328,8 +2424,14 @@
 
                 $('#wholesale_spinner').removeClass('d-none');
                 var data = new FormData();
-                var files = $('input[name="permit_image"]')[0].files[0];
-                data.append('permit_image',files);
+                // var files = $('input[name="permit_image"]')[0].files[0];
+                // data.append('permit_image',files);
+                var totalfiles = document.getElementById('file_upload').files.length;
+                if (totalfiles > 0) {
+                    for (var index = 0; index < totalfiles; index++) {
+                        data.append("permit_image[]", document.getElementById('file_upload').files[index]);
+                    }
+                }
                 data.append('card_type',$('input[name="card_type"]:checked').val());
                 data.append('cardholder_name', $('#cardholder_name').val());
                 data.append('card_number', $('#card_number').val());

@@ -190,7 +190,7 @@ class CheckoutController extends Controller
         
         $user = User::where('id', $user_id)->first();
         $all_ids = UserHelper::getAllMemberIds($user);
-        $order_contact_query = Contact::whereIn('id', $all_ids)->where('is_default' , 1)->first();
+        $order_contact_query = Contact::whereIn('id', $all_ids)->first();
         if (!empty($order_contact_query)) {
             $order_contact = Contact::where('id', $order_contact_query->id)->first();
         } else {

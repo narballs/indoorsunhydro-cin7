@@ -5,6 +5,15 @@
 @import url('https://fonts.googleapis.com/css?family=Mukta');
 @import url('https://fonts.cdnfonts.com/css/regular');
 
+@media only screen and (min-width: 768) and (max-width : 895px)  {
+    .continue_account_wholesale {
+        margin-top: 0rem !important;
+    }
+    .dont-have-an-account-pra {
+        margin-bottom: 0rem !important;
+        padding-bottom: 0rem !important;
+    }
+}
 .top_placeholder_style {
     top: -10px !important;
 }

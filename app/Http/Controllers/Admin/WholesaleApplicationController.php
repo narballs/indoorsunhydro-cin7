@@ -73,7 +73,7 @@ class WholesaleApplicationController extends Controller
      */
     public function show($id)
     {
-        $wholesale_application =  WholesaleApplicationInformation::with('wholesale_application_address' , 'wholesale_application_regulation_detail' , 'wholesale_application_authorization_detail' , 'wholesale_application_card')
+        $wholesale_application =  WholesaleApplicationInformation::with('permit_images', 'wholesale_application_address' , 'wholesale_application_regulation_detail' , 'wholesale_application_authorization_detail' , 'wholesale_application_card')
         ->where('id' , $id)
         ->orderBy('id' , 'Desc')->first();
         return view('admin.wholesale_applications.show' , compact('wholesale_application'));

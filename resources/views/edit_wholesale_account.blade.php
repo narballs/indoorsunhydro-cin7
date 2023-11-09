@@ -327,10 +327,10 @@
                                                                         </div>
                                                                         <div class="col-md-12">
                                                                             <div class="row justify-content-center files-div">
-                                                                                <div class="col-md-6">
+                                                                                <div class="col-md-12">
                                                                                     <div class="row justify-content-center">
                                                                                         <div class="col-md-12">
-                                                                                            <input id="file_upload" name="permit_image" style="display:none;" type="file" >
+                                                                                            <input id="file_upload" name="permit_image[]" style="display:none;" type="file" multiple>
                                                                                             <h6 class="drop_your_files_here text-center"> Drop your file here or  
                                                                                                 <label for="files" class="browse">Browse</label>
                                                                                                 <p class="size_info mb-0">Maximum size: 50MB</p>
@@ -338,9 +338,20 @@
                                                                                             </h6>
                                                                                         </div>
                                                                                         <input type="hidden" name="" id="edit_image_input" value="{{!empty($wholesale_application->permit_image) ? $wholesale_application->permit_image : ''}}">
-                                                                                        @if(!empty($wholesale_application->permit_image))
-                                                                                            <a href="{{asset('wholesale/images/' . $wholesale_application->permit_image)}}" id="permit_img_src" class="btn-sm btn btn-primary edit_view_image w-50">View Image</a>
-                                                                                        @endif
+                                                                                        <div class="row justify-content-center">
+                                                                                            @php
+                                                                                            if (count($wholesale_appication_images) > 0 ) {
+                                                                                                    foreach($wholesale_appication_images as $wholesale_appication_image) {
+                                                                                            @endphp
+                                                                                                    <div class="col-md-2 p-0 ml-2">
+                                                                                                        <a href="{{asset('wholesale/images/' . $wholesale_appication_image->permit_image)}}" id="permit_img_src" class="btn-sm btn btn-primary edit_view_image w-100 mb-2">View Image</a>
+                                                                                                    </div>
+                                                                                                
+                                                                                            @php
+                                                                                                }
+                                                                                            }
+                                                                                         @endphp
+                                                                                        </div>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -1626,18 +1637,31 @@
 
         $("#file_upload").change(function(e) {
             $('.edit_view_image').addClass('d-none');
-            var filename = e.target.files[0];
-            console.log(filename);
-            if (filename.size > 419430400) {
-                $('#file_upload_errors').html('File size should be less than 50MB');
-                $('#file_upload').val('');
-                return false;
+            var all_files = e.target.files;
+            if (all_files.length > 0) {
+                if (all_files.length > 5) {
+                    $('#file_upload_errors').html('You can upload max 5 images');
+                    $('#file_upload').val('');
+                    return false;
+                }
+                else {
+                    $('#file_upload_errors').html('');    
+                    for (let index = 0; index < all_files.length; index++) {
+                        var file_element = all_files[index];
+                        if (file_element.size > 419430400) {
+                            $('#file_upload_errors').html('File size should be less than 50MB');
+                            $('#file_upload').val('');
+                            return false;
+                        }
+                        var reader = new FileReader();
+                        reader.onload = function(e) {
+                            $('#file_upload_errors').html('');
+                            $('#file_upload').val(e.target.file_element);
+                        }
+                    }
+
+                }
             }
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                $('#file_upload_errors').html('');
-                $('#file_upload').val(e.target.files[0]);
-            }            
         });
 
         //check vaidation for step 2
@@ -1893,8 +1917,12 @@
 
                 $('#wholesale_spinner').removeClass('d-none');
                 var data = new FormData();
-                var files = $('input[name="permit_image"]')[0].files[0];
-                data.append('permit_image',files);
+                var totalfiles = document.getElementById('file_upload').files.length;
+                if (totalfiles > 0) {
+                    for (var index = 0; index < totalfiles; index++) {
+                        data.append("permit_image[]", document.getElementById('file_upload').files[index]);
+                    }
+                }
                 data.append('card_type',$('input[name="card_type"]:checked').val());
                 data.append('cardholder_name', $('#cardholder_name').val());
                 data.append('card_number', $('#card_number').val());
