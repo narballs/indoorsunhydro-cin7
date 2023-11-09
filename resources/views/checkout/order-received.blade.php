@@ -877,35 +877,18 @@
 									</p>
 									<div class="row">
 										<div class="col-md-12">
-											{{-- <p class="order-confirmation-page-first-name-last-name-user-name pt-3">
-												{{$order_contact->first_name ? $order_contact->first_name : $order_contact->firstName}}
-												{{$order_contact->last_name ? $order_contact->last_name : $order_contact->lastName}}
-											</p> --}}
 											<div class="row">
 												<div class="col-md-12">
-													{{-- <p class="order-confirmation-page-address-line-one-title">
-														Address line 1
-													</p> --}}
-													
 													<p class="order-confirmation-page-address-line-one-title mb-1">
-														@if(!empty($order_contact->address1 || $order_contact->postalAddress1))
-															{{$order_contact->address1 ? $order_contact->address1 . ',' : $order_contact->postalAddress1 . ','}}
-														@endif
+														{{$order_contact->postalAddress1 ? $order_contact->postalAddress1 . ',' : $order_contact->address1 . ','}}
 													</p>
-													
-													{{-- <p class="order-confirmation-page-address-line-tow-title mb-1">
-														Address line 2
-													</p> --}}
-													
 													<p class="order-confirmation-page-address-line-one-title mb-1">
-														@if(!empty($order_contact->address2 || $order_contact->postalAddress2))
-															{{$order_contact->address2 ? $order_contact->address2: $order_contact->postalAddress2 }}
-														@endif
+														{{$order_contact->postalAddress2 ? $order_contact->postalAddress2: $order_contact->address2 }}
 													</p>
 													<p class="order-confirmation-page-address-line-one-title">
-														{{$order_contact->city ? $order_contact->city . ',' : $order_contact->postalCity . ','}}
-														{{$order_contact->state ? $order_contact->state . ',' : $order_contact->postalState . ','}}
-														{{$order_contact->postCode ? $order_contact->postCode : $order_contact->postalPostCode}}
+														{{$order_contact->postalCity ? $order_contact->postalCity . ',' : $order_contact->city . ','}}
+														{{$order_contact->postalState ? $order_contact->postalState . ',' : $order_contact->state . ','}}
+														{{$order_contact->postalPostCode ? $order_contact->postalPostCode : $order_contact->postCode}}
 													</p>
 													
 												</div>
@@ -922,14 +905,10 @@
 											<div class="row">
 												<div class="col-md-12">
 													<p class="order-confirmation-page-address-line-one-title mb-1">
-														@if(!empty($order_contact->address1 || $order_contact->postalAddress1))
-															{{$order_contact->address1 ? $order_contact->address1 . ',' : $order_contact->postalAddress1 . ','}}
-														@endif
+														{{$order_contact->address1 ? $order_contact->address1 . ',' : $order_contact->postalAddress1 . ','}}
 													</p>
 													<p class="order-confirmation-page-address-line-one-title mb-1">
-														@if(!empty($order_contact->address2 || $order_contact->postalAddress2))
-															{{$order_contact->address2 ? $order_contact->address2 . ',' : $order_contact->postalAddress2 . ','}}
-														@endif
+														{{$order_contact->address2 ? $order_contact->address2 . ',' : $order_contact->postalAddress2 . ','}}
 													</p>
 													<p class="order-confirmation-page-address-line-one-title">
 														{{$order_contact->city ? $order_contact->city . ',' : $order_contact->postalCity . ','}}
