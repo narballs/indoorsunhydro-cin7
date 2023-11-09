@@ -307,20 +307,33 @@
     // }
 
     function updateContact(type , user_id) {
+        
         if (type === 'update shipping address') {
             $('#address_loader_shipping').removeClass('d-none');
+            var companyNameShipping = $('.companyNameShipping:checked').val();
+            if (companyNameShipping == '' || companyNameShipping == null) {
+                $('#error_company_shipping').html('Please select location');
+                $('#address_loader_shipping').addClass('d-none');
+                return false;
+            } 
+            else {
+                $('#error_company_shipping').html('');
+            }
         } else {
             $('#address_loader').removeClass('d-none');
+            var companyNameBilling = $('.companyNameBilling:checked').val();
+            if (companyNameBilling == '' || companyNameBilling == null) {
+                $('#error_company_billing').html('Please select location');
+                $('#address_loader').addClass('d-none');
+                return false;
+            } 
+            else {
+                $('#error_company_billing').html('');
+            }
         }
+
+        return false;
         var companyName = $('.companyName:checked').val();
-        if (companyName == '' || companyName == null) {
-            $('#error_company').html('Please select location');
-            $('#address_loader').addClass('d-none');
-            $('#address_loader_shipping').addClass('d-none');
-           return false;
-        } else {
-            $('#error_company').html('');
-        }
         var first_name = $('input[name=firstName]').val();
         var last_name = $('input[name=lastName]').val();
         var company_name = $('input[name=company]').val();
@@ -1108,7 +1121,7 @@
                                         @endphp
                                         @if($company->type != "Supplier")
                                             <div class="col-md-12">
-                                                <input type="radio" {{!empty($session_company) && $session_company === $company->company ? 'checked' : ''}} value="{{ $company->company }}" class="companyName" name="company" id="companyName" {{ $disabled }} {{ $muted }}>
+                                                <input type="radio" {{!empty($session_company) && $session_company === $company->company ? 'checked' : ''}} value="{{ $company->company }}" class="companyName companyNameBilling" name="company" id="companyName" {{ $disabled }} {{ $muted }}>
                                                 <label for="" {{ $disabled }} {{ $muted }}>{{ $company->company }}
                                                     <span
                                                     style="font-size: 9px;font-family: 'Poppins';"
@@ -1122,7 +1135,7 @@
                                 @endif
                                 </div>
                             </div>
-                            <div id="error_company" class="text-danger"> </div>
+                            <div id="error_company_billing" class="text-danger"> </div>
                         </div>
 
                         <div class="mb-3">
@@ -1291,7 +1304,7 @@
                                         @endphp
                                         @if($company->type != "Supplier")
                                             <div class="col-md-12">
-                                                <input type="radio" {{!empty($session_company) && $session_company === $company->company ? 'checked' : ''}} value="{{ $company->company }}" name="company" class="companyName" id="companyName" {{ $disabled }} {{ $muted }}>
+                                                <input type="radio" {{!empty($session_company) && $session_company === $company->company ? 'checked' : ''}} value="{{ $company->company }}" name="company" class="companyName companyNameShipping" id="companyName" {{ $disabled }} {{ $muted }}>
                                                 <label for="" {{ $disabled }} {{ $muted }}>{{ $company->company }}
                                                     <span
                                                     style="font-size: 9px;font-family: 'Poppins';"
@@ -1305,7 +1318,7 @@
                                 @endif
                                 </div>
                             </div>
-                            <div id="error_company" class="text-danger"> </div>
+                            <div id="error_company_shipping" class="text-danger"> </div>
                         </div>
 
                         <div class="mb-3">
