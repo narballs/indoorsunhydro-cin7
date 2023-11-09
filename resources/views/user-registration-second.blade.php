@@ -10,6 +10,15 @@
     </div>
 @endif
 <style>
+    @media screen and (min-width: 768) and (max-width : 895px)  {
+        .continue_account_wholesale {
+            margin-top: 0rem !important;
+        }
+        .dont-have-an-account-pra {
+            margin-bottom: 0rem !important;
+            padding-bottom: 0rem !important;
+        }
+    }
     select.form-control:not([size]):not([multiple]) {
         height: calc(2.25rem + 2px);
         width: 100%;
@@ -49,7 +58,7 @@
             font-family: 'Poppins';
             font-style: normal;
             font-weight: 600 !important;
-            font-size: 24px !important;
+            font-size: 17px !important;
             line-height: 36px;
             letter-spacing: 0.05em;
             text-transform: uppercase;
@@ -421,16 +430,16 @@
                     </div>
                     <div class="row justify-content-center">
                         <div class="col-md-8">
-                            <p class="text-center col-md-12 pb-2  dont-have-an-account-pra">Thank you for registering, please allow us
-                                sometime
-                                to
-                                review your subbmission. Please continue to build a cart while you wait for account approval.</p>
+                            <p class="text-center col-md-12 pb-2  dont-have-an-account-pra">Please allow us
+                                sometime to review your submission. You are currently eligible for retail prices. To buy at wholesale prices, continue
+                                filling out your application at the link below
+                            </p>
                         </div>
                     </div>
                     
-                    <div class="col-md-12 text-center mt-5">
-                        <a href="{{ url('/') }}" class="continue_sign_up_shopping d-flex justify-content-center">
-                            <input style="color: #7BC533;" type="button" value="CONTINUE SHOPPING" class="continue-shoping-mbl border-0 sing-up-label d-flex justify-content-center align-items-center w-50 mb-0 p-0"></a>
+                    <div class="col-md-12 text-center mt-5 continue_account_wholesale">
+                        <a href="{{ route('create_wholesale_account') }}" class="continue_sign_up_shopping d-flex justify-content-center">
+                            <input style="color: #7BC533;" type="button" value="Apply For Wholesale account" class="continue-shoping-mbl border-0 sing-up-label d-flex justify-content-center align-items-center w-50 mb-0 p-0"></a>
                     </div>
                 </div>
             </div>
