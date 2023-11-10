@@ -230,7 +230,7 @@
                                                                 </div>
                                                                 <div class="col-md-12">
                                                                     <div class="form-group">
-                                                                        <label class="wholesale_form_labels" for="address_2">Address2 <span class="text-danger">*</span></label>
+                                                                        <label class="wholesale_form_labels" for="address_2">Address2</label>
                                                                         @if (!empty($id))
                                                                             <input type="text" name="address_2_billing" value="{{$wholesale_application_address_billing->address_2}}" class="form-control wholesale_inputs" id="address_2_billing" onchange="remove_error(this)" placeholder="Enter your second address here">
                                                                         @elseif (!empty($contact) && !empty($contact->postalAddress2))
@@ -335,20 +335,45 @@
                                                                 <div class="col-md-12">
                                                                     <div class="form-group">
                                                                         <label class="wholesale_form_labels" for="street_address">Street Address <span class="text-danger">*</span></label>
+                                                                        @if (!empty($id))
+                                                                            <input type="text" name="street_address_delivery" value="{{$wholesale_application_address_delivery->street_address}}" class="form-control wholesale_inputs" id="street_address_delivery" onchange="remove_error(this)" placeholder="Enter your street address here">
+                                                                        @elseif (!empty($contact) && !empty($contact->address1))
+                                                                            <input type="text" name="street_address_delivery" value="{{$contact->address1}}" class="form-control wholesale_inputs" id="street_address_delivery" onchange="remove_error(this)" placeholder="Enter your street address here">
+                                                                        @elseif (!empty($contact) && !empty($contact->postalAddress1))
+                                                                            <input type="text" name="street_address_delivery" value="{{$contact->postalAddress1}}" class="form-control wholesale_inputs" id="street_address_delivery" onchange="remove_error(this)" placeholder="Enter your street address here">
+                                                                        @else
+                                                                            <input type="text" name="street_address_delivery" value="" class="form-control wholesale_inputs" id="street_address_delivery" onchange="remove_error(this)" placeholder="Enter your street address here">
+                                                                        @endif
                                                                         <input type="text" name="street_address_delivery" value="{{!empty($id) ? $wholesale_application_address_delivery->street_address : !empty($contact) ? $contact->address1 : ''}}" class="form-control wholesale_inputs" id="street_address_delivery" onchange="remove_error(this)" placeholder="Enter your street address here">
                                                                         <div class="text-danger wholesale_inputs" id="street_address_delivery_errors"></div>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-12">
                                                                     <div class="form-group">
-                                                                        <label class="wholesale_form_labels" for="address_2">Address2 <span class="text-danger">*</span></label>
-                                                                        <input type="text" name="address_2_delivery" value="{{!empty($id) ? $wholesale_application_address_delivery->address_2 : !empty($contact) ? $contact->address2 : ''}}" class="form-control wholesale_inputs" id="address_2_delivery" onchange="remove_error(this)" placeholder="Enter your second address here">
+                                                                        <label class="wholesale_form_labels" for="address_2">Address2</label>
+                                                                        @if (!empty($id))
+                                                                            <input type="text" name="address_2_delivery" value="{{$wholesale_application_address_delivery->address_2}}" class="form-control wholesale_inputs" id="address_2_delivery" onchange="remove_error(this)" placeholder="Enter your second address here">
+                                                                        @elseif (!empty($contact) && !empty($contact->address2))
+                                                                            <input type="text" name="address_2_delivery" value="{{$contact->address2}}" class="form-control wholesale_inputs" id="address_2_delivery" onchange="remove_error(this)" placeholder="Enter your second address here">
+                                                                        @elseif (!empty($contact) && !empty($contact->postalAddress2))
+                                                                            <input type="text" name="address_2_delivery" value="{{$contact->postalAddress2}}" class="form-control wholesale_inputs" id="address_2_delivery" onchange="remove_error(this)" placeholder="Enter your second address here">
+                                                                        @else
+                                                                            <input type="text" name="address_2_delivery" value="" class="form-control wholesale_inputs" id="address_2_delivery" onchange="remove_error(this)" placeholder="Enter your second address here">
+                                                                        @endif
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-12">
                                                                     <div class="form-group">
                                                                         <label class="wholesale_form_labels" for="city">Town/City <span class="text-danger">*</span></label>
-                                                                        <input type="text" name="city_delivery" value="{{!empty($id) ? $wholesale_application_address_delivery->city : !empty($contact) ? $contact->city : ''}}" class="form-control wholesale_inputs" id="city_delivery" onchange="remove_error(this)" placeholder="Enter your town/city name here">
+                                                                        @if (!empty($id))
+                                                                            <input type="text" name="city_delivery" value="{{$wholesale_application_address_delivery->city}}" class="form-control wholesale_inputs" id="city_delivery" onchange="remove_error(this)" placeholder="Enter your town/city name here">
+                                                                        @elseif (!empty($contact) && !empty($contact->city))
+                                                                            <input type="text" name="city_delivery" value="{{$contact->city}}" class="form-control wholesale_inputs" id="city_delivery" onchange="remove_error(this)" placeholder="Enter your town/city name here">
+                                                                        @elseif (!empty($contact) && !empty($contact->postalCity))
+                                                                            <input type="text" name="city_delivery" value="{{$contact->postalCity}}" class="form-control wholesale_inputs" id="city_delivery" onchange="remove_error(this)" placeholder="Enter your town/city name here">
+                                                                        @else
+                                                                            <input type="text" name="city_delivery" value="" class="form-control wholesale_inputs" id="city_delivery" onchange="remove_error(this)" placeholder="Enter your town/city name here">
+                                                                        @endif
                                                                         <div class="text-danger wholesale_inputs" id="city_delivery_errors"></div>
                                                                     </div>
                                                                 </div>
@@ -357,14 +382,30 @@
                                                                         <div class="col-md-6">
                                                                             <div class="form-group">
                                                                                 <label class="wholesale_form_labels" for="state">State <span class="text-danger">*</span></label>
-                                                                                <input type="text" name="state_delivery" id="state_delivery" value="{{!empty($id) ? $wholesale_application_address_delivery->state : !empty($contact) ? $contact->state : ''}}" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="Enter your state name">
+                                                                                @if (!empty($id))
+                                                                                    <input type="text" name="state_delivery" id="state_delivery" value="{{$wholesale_application_address_delivery->state}}" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="Enter your state name">
+                                                                                @elseif (!empty($contact) && !empty($contact->state))
+                                                                                    <input type="text" name="state_delivery" id="state_delivery" value="{{$contact->state}}" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="Enter your state name">
+                                                                                @elseif (!empty($contact) && !empty($contact->postalState))
+                                                                                    <input type="text" name="state_delivery" id="state_delivery" value="{{$contact->postalState}}" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="Enter your state name">
+                                                                                @else
+                                                                                    <input type="text" name="state_delivery" id="state_delivery" value="" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="Enter your state name">
+                                                                                @endif
                                                                                 <div class="text-danger wholesale_inputs" id="state_delivery_errors"></div>
                                                                             </div>
                                                                         </div>
                                                                         <div class="col-md-6">
                                                                             <div class="form-group">
                                                                                 <label class="wholesale_form_labels" for="postal_code">Zip/Postal <span class="text-danger">*</span></label>
-                                                                                <input type="text" name="postal_code_delivery" id="postal_code_delivery" value="{{!empty($id) ? $wholesale_application_address_delivery->postal_code : !empty($contact) ? $contact->postCode : ''}}" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="Enter zip/postal code here">
+                                                                                @if (!empty($id))
+                                                                                    <input type="text" name="postal_code_delivery" id="postal_code_delivery" value="{{$wholesale_application_address_delivery->postal_code}}" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="Enter zip/postal code here">
+                                                                                @elseif (!empty($contact) && !empty($contact->postCode))
+                                                                                    <input type="text" name="postal_code_delivery" id="postal_code_delivery" value="{{$contact->postCode}}" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="Enter zip/postal code here">
+                                                                                @elseif (!empty($contact) && !empty($contact->postalPostCode))
+                                                                                    <input type="text" name="postal_code_delivery" id="postal_code_delivery" value="{{$contact->postalPostCode}}" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="Enter zip/postal code here">
+                                                                                @else
+                                                                                    <input type="text" name="postal_code_delivery" id="postal_code_delivery" value="" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="Enter zip/postal code here">
+                                                                                @endif
                                                                                 <div class="text-danger wholesale_inputs" id="postal_code_delivery_errors"></div>
                                                                             </div>
                                                                         </div>
