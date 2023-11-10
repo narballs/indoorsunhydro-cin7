@@ -1908,13 +1908,15 @@ class UserController extends Controller
     public function create_wholesale_account (Request $request) {
         if (auth()->user()) {
             $email = auth()->user()->email;
+            $user_id = auth()->user()->id;
+            $contact = Contact::where('user_id' , $user_id)->first();
             $wholesale_application = WholesaleApplicationInformation::where('email' , $email)->first();
             if (!empty($wholesale_application)) {
                 $id = $wholesale_application->id;
                 return redirect()->route('edit_wholesale_account' , $id);
                 
             } else {
-                return view('create_wholesale_account');
+                return view('create_wholesale_account' , compact('contact'));
             }
         } else {
 
