@@ -344,7 +344,6 @@
                                                                         @else
                                                                             <input type="text" name="street_address_delivery" value="" class="form-control wholesale_inputs" id="street_address_delivery" onchange="remove_error(this)" placeholder="Enter your street address here">
                                                                         @endif
-                                                                        <input type="text" name="street_address_delivery" value="{{!empty($id) ? $wholesale_application_address_delivery->street_address : !empty($contact) ? $contact->address1 : ''}}" class="form-control wholesale_inputs" id="street_address_delivery" onchange="remove_error(this)" placeholder="Enter your street address here">
                                                                         <div class="text-danger wholesale_inputs" id="street_address_delivery_errors"></div>
                                                                     </div>
                                                                 </div>
