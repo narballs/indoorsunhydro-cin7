@@ -57,12 +57,22 @@
                             <td>{{$wholesale_application->email}}</td>
                             <td>{{$wholesale_application->company}}</td>
                             <td>
-                                <form action="{{route('wholesale_application_generate_pdf' , $wholesale_application->id)}}" method="post">
-                                    @csrf
-                                    <a href="{{route('wholesale-applications.show' , $wholesale_application->id)}}" class="btn btn-sm btn-info text-white">Detail</a>
-                                    <button type="submit" class="btn btn-sm btn-primary text-white">Generate Pdf</button>
-                                </form>
-
+                                <div class="d-flex">
+                                    <form action="{{route('wholesale_application_generate_pdf' , $wholesale_application->id)}}" method="post">
+                                        @csrf
+                                        <a href="{{route('wholesale-applications.show' , $wholesale_application->id)}}" class="btn btn-sm btn-info text-white">Detail</a>
+                                        <button type="submit" class="btn btn-sm btn-secondary text-white">Generate Pdf</button>
+                                    </form>
+                                    @if ($wholesale_application->status == 1)
+                                        <label for="" class="btn btn-sm btn-success ml-1 approved_label">Approved</label>
+                                    @else
+                                        <form action="{{route('wholesale_application_approve')}}" method="post" class="ml-1">
+                                            @csrf
+                                            <input type="hidden" value="{{$wholesale_application->id}}" name="wholesale_application_id">
+                                            <button type="submit" class="btn btn-sm btn-primary text-white" onclick="return confirm('Are you sure , you want to Approve this application?');">In Progress</button>
+                                        </form>
+                                    @endif
+                                </div>
                             </td>
                         </tr>
                         @endforeach
@@ -220,6 +230,10 @@
                 border-right: 1px solid #EAECF0 !important;
                 top: -21px !important;
             }
+        }
+        .approved_label {
+            font-weight: 500 !important;
+            color: #FFFFFF !important;
         }
         .text-successs {
             color: #7CC633 !important;

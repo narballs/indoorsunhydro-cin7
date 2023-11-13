@@ -318,6 +318,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/site', [UserController::class, 'switch_admin'])->name('switch_admin');
     Route::resource('admin/inventory-locations', AdminInventoryLocationController::class);
     Route::resource('admin/wholesale-applications', WholesaleApplicationController::class);
+    Route::post('/admin/wholesale-application/approve', [WholesaleApplicationController::class, 'wholesale_application_approve'])->name('wholesale_application_approve');
     Route::get('/admin/recycle-bin', [AdminSettingsController::class, 'recycle_bin'])->name('recycle_bin');
     Route::post('/admin/restore/contact/{id}', [AdminSettingsController::class, 'restore_contact'])->name('restore_contact');
     Route::post('/admin/delete/contact/permanent/{id}', [AdminSettingsController::class, 'delete_contact_permanently'])->name('delete_contact_permanently');
