@@ -29,21 +29,6 @@
                         </div>
                         <!-- Content Area -->
                         <div class="col-md-9 bg-light p-4">
-                            @if (\Session::has('success'))
-                                <div class="alert alert-success alert-dismissible fade show mt-2" role="alert">
-                                    {!! \Session::get('success') !!}
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                @elseif (\Session::has('error'))
-                                <div class="alert alert-danger alert-dismissible fade show mt-2" role="alert">
-                                    {!! \Session::get('error') !!}
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                            @endif
                             <div class="row justify-content-center">
                                 <div class="col-md-10 p-4">
                                     <div class="important_notice mt-2  mb-3">
@@ -70,6 +55,9 @@
                                         </div>
                                     </div>
                                     <form action="{{route('store_wholesale_account')}}" id="wholesaleForm" method="post" enctype="multipart/form-data">
+                                        <div class="success_message d-none">
+                                            <div class="alert alert-success " id="successMessage"></div>
+                                        </div>
                                         <input type="hidden" name="wholesale_application_id" id="whs_id" value="{{isset($id) ? $id : ''}}">
                                         <div class="" id="">
                                             <ul class="" id="wholesale_form_error"></ul>
@@ -88,23 +76,14 @@
                                                             {{-- first row --}}
                                                             <div class="row mb-2">
                                                                 <div class="sub-head-step-form mb-2">
-                                                                    <div class="row">
-                                                                        <div class="col-md-6">
-                                                                            <h6 class="step_1_sub_heading">
-                                                                                Company Information 
-                                                                            </h6>
-                                                                        </div>
-                                                                        @if(empty($id) && (!Auth::user()))
-                                                                            <div class="col-md-6 text-right">
-                                                                                <button class="step_next btn" data-toggle="" data-target="" type="button" id="show_previous_data_button" onclick="show_previous_data_pop_up()"> Show Previous Data </button>
-                                                                            </div>
-                                                                        @endif
-                                                                    </div>
+                                                                    <h6 class="step_1_sub_heading">
+                                                                        Company Information
+                                                                    </h6>
                                                                 </div>
                                                                 <div class="col-md-12">
                                                                     <div class="form-group">
                                                                         <label class="wholesale_form_labels" for="company_name">Company Name <span class="text-danger">*</span></label>
-                                                                        <input type="text" name="company" class="form-control wholesale_inputs" id="company_name" value='{{!empty($id) ?  $wholesale_application->company : !empty($contact) ? $contact->company : ""}}' placeholder="Enter your Company Name" onchange="remove_error(this)">
+                                                                        <input type="text" name="company" class="form-control wholesale_inputs" id="company_name" disabled value="{{!empty($wholesale_application->company) ?  $wholesale_application->company : ''}}" placeholder="Enter your Company Name" onchange="remove_error(this)">
                                                                         <div class="text-danger wholesale_inputs" id="company_name_errors"></div>
                                                                     </div>
                                                                 </div>
@@ -113,11 +92,11 @@
                                                                         <label class="wholesale_form_labels" for="">Name <span class="text-danger">*</span></label>
                                                                         <div class="row">
                                                                             <div class="col-md-6">
-                                                                                <input type="text" name="first_name" id="first_name" class="form-control wholesale_inputs" value="{{!empty($id) ?  $wholesale_application->first_name : !empty($contact) ? $contact->firstName  : ''}}" onchange="remove_error(this)" placeholder="First name">
+                                                                                <input type="text" name="first_name" id="first_name" class="form-control wholesale_inputs" disabled value="{{!empty($wholesale_application->first_name) ?  $wholesale_application->first_name : ''}}" onchange="remove_error(this)" placeholder="First name">
                                                                                 <div class="text-danger wholesale_inputs" id="first_name_errors"></div>
                                                                             </div>
                                                                             <div class="col-md-6">
-                                                                                <input type="text" name="last_name" id="last_name" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="Last name" value="{{!empty($id) ?  $wholesale_application->last_name : !empty($contact) ? $contact->lastName : ''}}">
+                                                                                <input type="text" name="last_name" id="last_name" class="form-control wholesale_inputs" disabled onchange="remove_error(this)" placeholder="Last name" value="{{!empty($wholesale_application->last_name) ?  $wholesale_application->last_name : ''}}">
                                                                                 <div class="text-danger wholesale_inputs" id="last_name_errors"></div>
                                                                             </div>
                                                                         </div>
@@ -127,15 +106,15 @@
                                                                     <div class="row">
                                                                         <div class="col-md-6">
                                                                             <div class="form-group">
-                                                                                <label class="wholesale_form_labels numberError" for="phone">Phone <span class="text-danger">*</span></label>
-                                                                                <input type="text" name="phone" value="{{!empty($id) ?  $wholesale_application->phone : !empty($contact) ? $contact->phone : '' }}" id="phone" class="allow_numeric form-control wholesale_inputs" onkeyup="isNumber(this)" onchange="remove_error(this)" placeholder="+1 (000) 000-0000">
+                                                                                <label class="wholesale_form_labels" for="phone">Phone <span class="text-danger">*</span></label>
+                                                                                <input type="text" name="phone" disabled value="{{!empty($wholesale_application->phone) ?  $wholesale_application->phone : ''}}" id="phone" onkeyup="isNumber(this)" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="+1 (000) 000-0000">
                                                                                 <div class="text-danger wholesale_inputs" id="phone_errors"></div>
                                                                             </div>
                                                                         </div>
                                                                         <div class="col-md-6">
                                                                             <div class="form-group">
                                                                                 <label class="wholesale_form_labels" for="mobile">Mobile <span class="text-danger">*</span></label>
-                                                                                <input type="text" name="mobile" id="mobile" class="allow_numeric form-control wholesale_inputs" value="{{!empty($id) ?  $wholesale_application->mobile : !empty($contact) ? $contact->phone : ''}}" onkeyup="isNumber(this)" onchange="remove_error(this)" placeholder="+1 (000) 000-0000">
+                                                                                <input type="text" name="mobile" disabled id="mobile" class="form-control wholesale_inputs" value="{{!empty($wholesale_application->mobile) ?  $wholesale_application->mobile : ''}}" onkeyup="isNumber(this)" onchange="remove_error(this)" placeholder="+1 (000) 000-0000">
                                                                                 <div class="text-danger wholesale_inputs" id="mobile_errors"></div>
                                                                             </div>
                                                                         </div>
@@ -144,7 +123,7 @@
                                                                 <div class="col-md-12">
                                                                     <div class="form-group">
                                                                         <label class="wholesale_form_labels" for="email">Email <span class="text-danger">*</span></label>
-                                                                        <input type="email" class="form-control wholesale_inputs" id="email" onkeyup="isEmail(this)" value="{{!empty($id) ?  $wholesale_application->email : !empty($contact) ? $contact->email : ''}}" name="email" onchange="remove_error(this)" onkeydown="validate_email()" placeholder="Enter your Email">
+                                                                        <input type="email" disabled class="form-control wholesale_inputs" id="email" onkeyup="isEmail(this)"  value="{{!empty($wholesale_application->email) ?  $wholesale_application->email : ''}}" name="email" onchange="remove_error(this)" placeholder="Enter your Email">
                                                                         <div class="text-danger wholesale_inputs" id="email_errors"></div>
                                                                     </div>
                                                                 </div>
@@ -159,27 +138,27 @@
                                                                 <div class="col-md-12">
                                                                     <div class="form-group">
                                                                         <label class="wholesale_form_labels" for="parent_company">Parent Company <span class="text-danger">*</span></label>
-                                                                        <input type="text" name="parent_company" class="form-control wholesale_inputs" value="{{!empty($id) ?  $wholesale_application->parent_company : !empty($contact) ? $contact->company : ''}}" id="parent_company" onchange="remove_error(this)" placeholder="Enter parent company name (if applicable)">
+                                                                        <input type="text" name="parent_company" disabled class="form-control wholesale_inputs" value="{{!empty($wholesale_application->parent_company) ?  $wholesale_application->parent_company : ''}}" id="parent_company" onchange="remove_error(this)" placeholder="Enter parent company name (if applicable)">
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-12">
                                                                     <div class="form-group">
                                                                         <label class="wholesale_form_labels" for="account_payable_name">Accounts payable Name <span class="text-danger">*</span></label>
-                                                                        <input type="text" class="form-control wholesale_inputs" id="account_payable_name" name="payable_name" value="{{!empty($id) ?  $wholesale_application->payable_name : !empty($contact) ? $contact->firstName .''. $contact->lastName : ''}}" onchange="remove_error(this)" placeholder="Accounts payable Name">
+                                                                        <input type="text" class="form-control wholesale_inputs" id="account_payable_name" disabled name="payable_name" value="{{!empty($wholesale_application->payable_name) ?  $wholesale_application->payable_name : ''}}" onchange="remove_error(this)" placeholder="Accounts payable Name">
                                                                         <div class="text-danger wholesale_inputs" id="account_payable_name_errors"></div>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-12">
                                                                     <div class="form-group">
                                                                         <label class="wholesale_form_labels" for="account_payable_phone">Accounts payable Phone <span class="text-danger">*</span></label>
-                                                                        <input type="text" class="form-control wholesale_inputs" id="account_payable_phone" onkeyup="isNumber(this)" name="payable_phone" value="{{!empty($id) ?  $wholesale_application->payable_phone : !empty($contact) ? $contact->phone : ''}}" onchange="remove_error(this)" placeholder="Accounts payable Phone">
+                                                                        <input type="text" class="form-control wholesale_inputs" id="account_payable_phone" disabled onkeyup="isNumber(this)" name="payable_phone" value="{{!empty($wholesale_application->payable_phone ) ?  $wholesale_application->payable_phone : ''}}" onchange="remove_error(this)" placeholder="Accounts payable Phone">
                                                                         <div class="text-danger wholesale_inputs" id="account_payable_phone_errors"></div>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-12">
                                                                     <div class="form-group">
                                                                         <label class="wholesale_form_labels" for="account_payable_email">Accounts payable Email <span class="text-danger">*</span></label>
-                                                                        <input type="email" class="form-control wholesale_inputs" id="account_payable_email" onkeyup="isEmail(this)" value="{{!empty($id) ?  $wholesale_application->payable_email : !empty($contact) ? $contact->email : ''}}" name="payable_email" onchange="remove_error(this)" placeholder="Accounts payable Email">
+                                                                        <input type="email" class="form-control wholesale_inputs" id="account_payable_email" disabled onkeyup="isEmail(this)"  value="{{!empty($wholesale_application->payable_email) ?  $wholesale_application->payable_email : ''}}" name="payable_email" onchange="remove_error(this)" placeholder="Accounts payable Email">
                                                                         <div class="text-danger wholesale_inputs" id="account_payable_email_errors"></div>
                                                                     </div>
                                                                 </div>
@@ -196,11 +175,11 @@
                                                                         <label class="wholesale_form_labels" for="">Name <span class="text-danger">*</span></label>
                                                                         <div class="row">
                                                                             <div class="col-md-6">
-                                                                                <input type="text" name="first_name_billing" value="{{!empty($id) ? $wholesale_application_address_billing->first_name : !empty($contact) ? $contact->firstName : '' }}" id="first_name_billing" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="First name">
+                                                                                <input type="text" name="first_name_billing" disabled value="{{!empty($wholesale_application_address_billing->first_name) ? $wholesale_application_address_billing->first_name : '' }}" id="first_name_billing" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="First name">
                                                                                 <div class="text-danger wholesale_inputs" id="first_name_billing_errors"></div>
                                                                             </div>
                                                                             <div class="col-md-6">
-                                                                                <input type="text" name="last_name_billing" id="last_name_billing" value="{{!empty($id) ? $wholesale_application_address_billing->last_name : !empty($contact) ? $contact->lastName : '' }}" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="Last name">
+                                                                                <input type="text" name="last_name_billing" id="last_name_billing" disabled value="{{!empty($wholesale_application_address_billing->last_name) ? $wholesale_application_address_billing->last_name : '' }}" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="Last name">
                                                                                 <div class="text-danger wholesale_inputs" id="last_name_billing_errors"></div>
                                                                             </div>
                                                                         </div>
@@ -209,51 +188,27 @@
                                                                 <div class="col-md-12">
                                                                     <div class="form-group">
                                                                         <label class="wholesale_form_labels" for="company_name">Company Name <span class="text-danger">*</span></label>
-                                                                        <input type="text" name="company_name_billing" value="{{!empty($id) ? $wholesale_application_address_billing->company_name : !empty($contact) ? $contact->company : '' }}" class="form-control wholesale_inputs" id="company_name_billing" onchange="remove_error(this)" placeholder="Enter your Company Name">
+                                                                        <input type="text" name="company_name_billing" disabled value="{{!empty($wholesale_application_address_billing->company_name) ? $wholesale_application_address_billing->company_name : '' }}" class="form-control wholesale_inputs" id="company_name_billing" onchange="remove_error(this)" placeholder="Enter your Company Name">
                                                                         <div class="text-danger wholesale_inputs" id="company_name_billing_errors"></div>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-12">
                                                                     <div class="form-group">
                                                                         <label class="wholesale_form_labels" for="street_address">Street Address <span class="text-danger">*</span></label>
-                                                                        @if (!empty($id))
-                                                                            <input type="text" name="street_address_billing" value="{{$wholesale_application_address_billing->street_address}}" class="form-control wholesale_inputs" id="street_address_billing" onchange="remove_error(this)" placeholder="Enter your street address here">
-                                                                        @elseif (!empty($contact) && !empty($contact->postalAddress1))
-                                                                            <input type="text" name="street_address_billing" value="{{$contact->postalAddress1}}" class="form-control wholesale_inputs" id="street_address_billing" onchange="remove_error(this)" placeholder="Enter your street address here">
-                                                                        @elseif (!empty($contact) && !empty($contact->address1))    
-                                                                            <input type="text" name="street_address_billing" value="{{$contact->address1}}" class="form-control wholesale_inputs" id="street_address_billing" onchange="remove_error(this)" placeholder="Enter your street address here">
-                                                                        @else
-                                                                            <input type="text" name="street_address_billing" value="" class="form-control wholesale_inputs" id="street_address_billing" onchange="remove_error(this)" placeholder="Enter your street address here">
-                                                                        @endif    
+                                                                        <input type="text" name="street_address_billing" disabled value="{{!empty($wholesale_application_address_billing->street_address) ? $wholesale_application_address_billing->street_address : '' }}" class="form-control wholesale_inputs" id="street_address_billing" onchange="remove_error(this)" placeholder="Enter your street address here">
                                                                         <div class="text-danger wholesale_inputs" id="street_address_billing_errors"></div>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-12">
                                                                     <div class="form-group">
-                                                                        <label class="wholesale_form_labels" for="address_2">Address2</label>
-                                                                        @if (!empty($id))
-                                                                            <input type="text" name="address_2_billing" value="{{$wholesale_application_address_billing->address_2}}" class="form-control wholesale_inputs" id="address_2_billing" onchange="remove_error(this)" placeholder="Enter your second address here">
-                                                                        @elseif (!empty($contact) && !empty($contact->postalAddress2))
-                                                                            <input type="text" name="address_2_billing" value="{{$contact->postalAddress2}}" class="form-control wholesale_inputs" id="address_2_billing" onchange="remove_error(this)" placeholder="Enter your second address here">
-                                                                        @elseif (!empty($contact) && !empty($contact->address2))
-                                                                            <input type="text" name="address_2_billing" value="{{$contact->address2}}" class="form-control wholesale_inputs" id="address_2_billing" onchange="remove_error(this)" placeholder="Enter your second address here">
-                                                                        @else
-                                                                            <input type="text" name="address_2_billing" value="" class="form-control wholesale_inputs" id="address_2_billing" onchange="remove_error(this)" placeholder="Enter your second address here">
-                                                                        @endif
+                                                                        <label class="wholesale_form_labels" for="address_2">Address2 <span class="text-danger">*</span></label>
+                                                                        <input type="text" name="address_2_billing" disabled value="{{!empty($wholesale_application_address_billing->address_2) ? $wholesale_application_address_billing->address_2 : '' }}" class="form-control wholesale_inputs" id="address_2_billing" onchange="remove_error(this)" placeholder="Enter your second address here">
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-12">
                                                                     <div class="form-group">
                                                                         <label class="wholesale_form_labels" for="city">Town/City <span class="text-danger">*</span></label>
-                                                                        @if (!empty($id))
-                                                                            <input type="text" name="city_billing" value="{{ $wholesale_application_address_billing->city }}" class="form-control wholesale_inputs" id="city_billing" onchange="remove_error(this)" placeholder="Enter your town/city name here">
-                                                                        @elseif (!empty($contact) && !empty($contact->postalCity))
-                                                                            <input type="text" name="city_billing" value="{{ $contact->postalCity }}" class="form-control wholesale_inputs" id="city_billing" onchange="remove_error(this)" placeholder="Enter your town/city name here">
-                                                                        @elseif (!empty($contact) && !empty($contact->city))
-                                                                            <input type="text" name="city_billing" value="{{ $contact->city }}" class="form-control wholesale_inputs" id="city_billing" onchange="remove_error(this)" placeholder="Enter your town/city name here">
-                                                                        @else
-                                                                            <input type="text" name="city_billing" value="" class="form-control wholesale_inputs" id="city_billing" onchange="remove_error(this)" placeholder="Enter your town/city name here">
-                                                                        @endif
+                                                                        <input type="text" name="city_billing" disabled value="{{!empty($wholesale_application_address_billing->city) ? $wholesale_application_address_billing->city : '' }}" class="form-control wholesale_inputs" id="city_billing" onchange="remove_error(this)" placeholder="Enter your town/city name here">
                                                                         <div class="text-danger wholesale_inputs" id="city_billing_errors"></div>
                                                                     </div>
                                                                 </div>
@@ -262,30 +217,14 @@
                                                                         <div class="col-md-6">
                                                                             <div class="form-group">
                                                                                 <label class="wholesale_form_labels" for="state">State <span class="text-danger">*</span></label>
-                                                                                @if (!empty($id))
-                                                                                    <input type="text" name="state_billing" id="state_billing" value="{{$wholesale_application_address_billing->state}}" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="Enter your state name">
-                                                                                @elseif (!empty($contact) && !empty($contact->postalState))
-                                                                                    <input type="text" name="state_billing" id="state_billing" value="{{$contact->postalState}}" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="Enter your state name">
-                                                                                @elseif (!empty($contact) && !empty($contact->state))
-                                                                                    <input type="text" name="state_billing" id="state_billing" value="{{$contact->state}}" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="Enter your state name">
-                                                                                @else
-                                                                                    <input type="text" name="state_billing" id="state_billing" value="" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="Enter your state name">
-                                                                                @endif
+                                                                                <input type="text" name="state_billing" id="state_billing" disabled value="{{!empty($wholesale_application_address_billing->state) ? $wholesale_application_address_billing->state : '' }}" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="Enter your state name">
                                                                                 <div class="text-danger wholesale_inputs" id="state_billing_errors"></div>
                                                                             </div>
                                                                         </div>
                                                                         <div class="col-md-6">
                                                                             <div class="form-group">
                                                                                 <label class="wholesale_form_labels" for="postal_code">Zip/Postal <span class="text-danger">*</span></label>
-                                                                                @if (!empty($id))
-                                                                                    <input type="text" name="postal_code_billing" id="postal_code_billing" value="{{$wholesale_application_address_billing->postal_code}}" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="Enter zip/postal code here">
-                                                                                @elseif (!empty($contact) && !empty($contact->postalPostCode))
-                                                                                    <input type="text" name="postal_code_billing" id="postal_code_billing" value="{{$contact->postalPostCode}}" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="Enter zip/postal code here">
-                                                                                @elseif (!empty($contact) && !empty($contact->postCode))
-                                                                                    <input type="text" name="postal_code_billing" id="postal_code_billing" value="{{$contact->postCode}}" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="Enter zip/postal code here">
-                                                                                @else
-                                                                                    <input type="text" name="postal_code_billing" id="postal_code_billing" value="" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="Enter zip/postal code here">
-                                                                                @endif
+                                                                                <input type="text" name="postal_code_billing" id="postal_code_billing" disabled value="{{!empty($wholesale_application_address_billing->postal_code) ? $wholesale_application_address_billing->postal_code : '' }}" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="Enter zip/postal code here">
                                                                                 <div class="text-danger wholesale_inputs" id="postal_code_billing_errors"></div>
                                                                             </div>
                                                                         </div>
@@ -296,7 +235,7 @@
                                                                         <div class="col-md-6">
                                                                             <div class="form-group">
                                                                                 <label class="wholesale_form_labels" for="phone">Phone <span class="text-danger">*</span></label>
-                                                                                <input type="text" name="phone" id="phone_billing" onkeyup="isNumber(this)" value="{{!empty($id) ? $wholesale_application_address_billing->phone : !empty($contact) ? $contact->mobile : '' }}" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="+1 (000) 000-0000">
+                                                                                <input type="text" name="phone" id="phone_billing" onkeyup="isNumber(this)" disabled value="{{!empty($wholesale_application_address_billing->phone) ? $wholesale_application_address_billing->phone : ''}}" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="+1 (000) 000-0000">
                                                                                 <div class="text-danger wholesale_inputs" id="phone_billing_errors"></div>
                                                                             </div>
                                                                         </div>
@@ -315,11 +254,11 @@
                                                                         <label class="wholesale_form_labels" for="">Name <span class="text-danger">*</span></label>
                                                                         <div class="row">
                                                                             <div class="col-md-6">
-                                                                                <input type="text" name="first_name_delivery" id="first_name_delivery" value="{{!empty($id) ? $wholesale_application_address_delivery->first_name : !empty($contact) ? $contact->firstName : ''}}" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="First name">
+                                                                                <input type="text" name="first_name_delivery" id="first_name_delivery" disabled value="{{!empty($wholesale_application_address_delivery->first_name) ? $wholesale_application_address_delivery->first_name : ''}}" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="First name">
                                                                                 <div class="text-danger wholesale_inputs" id="first_name_delivery_errors"></div>
                                                                             </div>
                                                                             <div class="col-md-6">
-                                                                                <input type="text" name="last_name_delivery" id="last_name_delivery" value="{{!empty($id) ? $wholesale_application_address_delivery->last_name : !empty($contact) ? $contact->lastName : ''}}" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="Last name">
+                                                                                <input type="text" name="last_name_delivery" id="last_name_delivery" disabled value="{{!empty($wholesale_application_address_delivery->last_name) ? $wholesale_application_address_delivery->last_name : ''}}" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="Last name">
                                                                                 <div class="text-danger wholesale_inputs" id="last_name_delivery_errors"></div>
                                                                             </div>
                                                                         </div>
@@ -328,51 +267,27 @@
                                                                 <div class="col-md-12">
                                                                     <div class="form-group">
                                                                         <label class="wholesale_form_labels" for="company_name">Company Name <span class="text-danger">*</span></label>
-                                                                        <input type="text" name="company_name_delivery" value="{{!empty($id) ? $wholesale_application_address_delivery->company_name : !empty($contact) ? $contact->company : ''}}" class="form-control wholesale_inputs" id="company_name_delivery" onchange="remove_error(this)" placeholder="Enter your Company Name">
+                                                                        <input type="text" name="company_name_delivery" disabled value="{{!empty($wholesale_application_address_delivery->company_name) ? $wholesale_application_address_delivery->company_name : ''}}" class="form-control wholesale_inputs" id="company_name_delivery" onchange="remove_error(this)" placeholder="Enter your Company Name">
                                                                         <div class="text-danger wholesale_inputs" id="company_name_delivery_errors"></div>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-12">
                                                                     <div class="form-group">
                                                                         <label class="wholesale_form_labels" for="street_address">Street Address <span class="text-danger">*</span></label>
-                                                                        @if (!empty($id))
-                                                                            <input type="text" name="street_address_delivery" value="{{$wholesale_application_address_delivery->street_address}}" class="form-control wholesale_inputs" id="street_address_delivery" onchange="remove_error(this)" placeholder="Enter your street address here">
-                                                                        @elseif (!empty($contact) && !empty($contact->address1))
-                                                                            <input type="text" name="street_address_delivery" value="{{$contact->address1}}" class="form-control wholesale_inputs" id="street_address_delivery" onchange="remove_error(this)" placeholder="Enter your street address here">
-                                                                        @elseif (!empty($contact) && !empty($contact->postalAddress1))
-                                                                            <input type="text" name="street_address_delivery" value="{{$contact->postalAddress1}}" class="form-control wholesale_inputs" id="street_address_delivery" onchange="remove_error(this)" placeholder="Enter your street address here">
-                                                                        @else
-                                                                            <input type="text" name="street_address_delivery" value="" class="form-control wholesale_inputs" id="street_address_delivery" onchange="remove_error(this)" placeholder="Enter your street address here">
-                                                                        @endif
+                                                                        <input type="text" name="street_address_delivery" disabled value="{{!empty($wholesale_application_address_delivery->street_address) ? $wholesale_application_address_delivery->street_address : ''}}" class="form-control wholesale_inputs" id="street_address_delivery" onchange="remove_error(this)" placeholder="Enter your street address here">
                                                                         <div class="text-danger wholesale_inputs" id="street_address_delivery_errors"></div>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-12">
                                                                     <div class="form-group">
-                                                                        <label class="wholesale_form_labels" for="address_2">Address2</label>
-                                                                        @if (!empty($id))
-                                                                            <input type="text" name="address_2_delivery" value="{{$wholesale_application_address_delivery->address_2}}" class="form-control wholesale_inputs" id="address_2_delivery" onchange="remove_error(this)" placeholder="Enter your second address here">
-                                                                        @elseif (!empty($contact) && !empty($contact->address2))
-                                                                            <input type="text" name="address_2_delivery" value="{{$contact->address2}}" class="form-control wholesale_inputs" id="address_2_delivery" onchange="remove_error(this)" placeholder="Enter your second address here">
-                                                                        @elseif (!empty($contact) && !empty($contact->postalAddress2))
-                                                                            <input type="text" name="address_2_delivery" value="{{$contact->postalAddress2}}" class="form-control wholesale_inputs" id="address_2_delivery" onchange="remove_error(this)" placeholder="Enter your second address here">
-                                                                        @else
-                                                                            <input type="text" name="address_2_delivery" value="" class="form-control wholesale_inputs" id="address_2_delivery" onchange="remove_error(this)" placeholder="Enter your second address here">
-                                                                        @endif
+                                                                        <label class="wholesale_form_labels" for="address_2">Address2 <span class="text-danger">*</span></label>
+                                                                        <input type="text" name="address_2_delivery" disabled value="{{!empty($wholesale_application_address_delivery->address_2) ? $wholesale_application_address_delivery->address_2 : ''}}" class="form-control wholesale_inputs" id="address_2_delivery" onchange="remove_error(this)" placeholder="Enter your second address here">
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-12">
                                                                     <div class="form-group">
                                                                         <label class="wholesale_form_labels" for="city">Town/City <span class="text-danger">*</span></label>
-                                                                        @if (!empty($id))
-                                                                            <input type="text" name="city_delivery" value="{{$wholesale_application_address_delivery->city}}" class="form-control wholesale_inputs" id="city_delivery" onchange="remove_error(this)" placeholder="Enter your town/city name here">
-                                                                        @elseif (!empty($contact) && !empty($contact->city))
-                                                                            <input type="text" name="city_delivery" value="{{$contact->city}}" class="form-control wholesale_inputs" id="city_delivery" onchange="remove_error(this)" placeholder="Enter your town/city name here">
-                                                                        @elseif (!empty($contact) && !empty($contact->postalCity))
-                                                                            <input type="text" name="city_delivery" value="{{$contact->postalCity}}" class="form-control wholesale_inputs" id="city_delivery" onchange="remove_error(this)" placeholder="Enter your town/city name here">
-                                                                        @else
-                                                                            <input type="text" name="city_delivery" value="" class="form-control wholesale_inputs" id="city_delivery" onchange="remove_error(this)" placeholder="Enter your town/city name here">
-                                                                        @endif
+                                                                        <input type="text" name="city_delivery" disabled value="{{!empty($wholesale_application_address_delivery->city) ? $wholesale_application_address_delivery->city : ''}}" class="form-control wholesale_inputs" id="city_delivery" onchange="remove_error(this)" placeholder="Enter your town/city name here">
                                                                         <div class="text-danger wholesale_inputs" id="city_delivery_errors"></div>
                                                                     </div>
                                                                 </div>
@@ -381,30 +296,14 @@
                                                                         <div class="col-md-6">
                                                                             <div class="form-group">
                                                                                 <label class="wholesale_form_labels" for="state">State <span class="text-danger">*</span></label>
-                                                                                @if (!empty($id))
-                                                                                    <input type="text" name="state_delivery" id="state_delivery" value="{{$wholesale_application_address_delivery->state}}" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="Enter your state name">
-                                                                                @elseif (!empty($contact) && !empty($contact->state))
-                                                                                    <input type="text" name="state_delivery" id="state_delivery" value="{{$contact->state}}" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="Enter your state name">
-                                                                                @elseif (!empty($contact) && !empty($contact->postalState))
-                                                                                    <input type="text" name="state_delivery" id="state_delivery" value="{{$contact->postalState}}" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="Enter your state name">
-                                                                                @else
-                                                                                    <input type="text" name="state_delivery" id="state_delivery" value="" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="Enter your state name">
-                                                                                @endif
+                                                                                <input type="text" name="state_delivery" id="state_delivery" disabled value="{{!empty($wholesale_application_address_delivery->state) ? $wholesale_application_address_delivery->state : ''}}" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="Enter your state name">
                                                                                 <div class="text-danger wholesale_inputs" id="state_delivery_errors"></div>
                                                                             </div>
                                                                         </div>
                                                                         <div class="col-md-6">
                                                                             <div class="form-group">
                                                                                 <label class="wholesale_form_labels" for="postal_code">Zip/Postal <span class="text-danger">*</span></label>
-                                                                                @if (!empty($id))
-                                                                                    <input type="text" name="postal_code_delivery" id="postal_code_delivery" value="{{$wholesale_application_address_delivery->postal_code}}" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="Enter zip/postal code here">
-                                                                                @elseif (!empty($contact) && !empty($contact->postCode))
-                                                                                    <input type="text" name="postal_code_delivery" id="postal_code_delivery" value="{{$contact->postCode}}" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="Enter zip/postal code here">
-                                                                                @elseif (!empty($contact) && !empty($contact->postalPostCode))
-                                                                                    <input type="text" name="postal_code_delivery" id="postal_code_delivery" value="{{$contact->postalPostCode}}" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="Enter zip/postal code here">
-                                                                                @else
-                                                                                    <input type="text" name="postal_code_delivery" id="postal_code_delivery" value="" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="Enter zip/postal code here">
-                                                                                @endif
+                                                                                <input type="text" name="postal_code_delivery" id="postal_code_delivery" disabled value="{{!empty($wholesale_application_address_delivery->postal_code) ? $wholesale_application_address_delivery->postal_code : ''}}" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="Enter zip/postal code here">
                                                                                 <div class="text-danger wholesale_inputs" id="postal_code_delivery_errors"></div>
                                                                             </div>
                                                                         </div>
@@ -415,7 +314,7 @@
                                                                         <div class="col-md-6">
                                                                             <div class="form-group">
                                                                                 <label class="wholesale_form_labels" for="phone">Phone <span class="text-danger">*</span></label>
-                                                                                <input type="text" name="phone_delivery" id="phone_delivery" onkeyup="isNumber(this)" value="{{!empty($id) ? $wholesale_application_address_delivery->phone : !empty($contact) ? $contact->mobile : ''}}" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="+1 (000) 000-0000">
+                                                                                <input type="text" name="phone_delivery" id="phone_delivery" onkeyup="isNumber(this)" disabled value="{{!empty($wholesale_application_address_delivery->phone) ? $wholesale_application_address_delivery->phone : ''}}" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="+1 (000) 000-0000">
                                                                                 <div class="text-danger wholesale_inputs" id="phone_delivery_errors"></div>
                                                                             </div>
                                                                         </div>
@@ -428,20 +327,31 @@
                                                                         </div>
                                                                         <div class="col-md-12">
                                                                             <div class="row justify-content-center files-div">
-                                                                                <div class="col-md-6">
+                                                                                <div class="col-md-12">
                                                                                     <div class="row justify-content-center">
                                                                                         <div class="col-md-12">
-                                                                                            <input id="file_upload" name="permit_image[]" style="display:none;" type="file" multiple max="">
+                                                                                            <input id="file_upload" name="permit_image[]" style="display:none;" type="file" multiple>
                                                                                             <h6 class="drop_your_files_here text-center"> Drop your file here or  
                                                                                                 <label for="files" class="browse">Browse</label>
                                                                                                 <p class="size_info mb-0">Maximum size: 50MB</p>
                                                                                                 <div class="text-danger wholesale_inputs text-center" id="file_upload_errors"></div>
                                                                                             </h6>
                                                                                         </div>
-                                                                                        <input type="hidden" name="" id="edit_image_input" value="{{!empty($id) ? $wholesale_application->permit_image : ''}}">
-                                                                                        @if(!empty($id))
-                                                                                            <a href="{{asset('wholesale/images/' . $wholesale_application->permit_image)}}" id="permit_img_src" class="btn-sm btn btn-primary edit_view_image w-50">View Image</a>
-                                                                                        @endif
+                                                                                        <input type="hidden" name="" id="edit_image_input" disabled value="{{!empty($wholesale_application->permit_image) ? $wholesale_application->permit_image : ''}}">
+                                                                                        <div class="row justify-content-center">
+                                                                                            @php
+                                                                                            if (count($wholesale_appication_images) > 0 ) {
+                                                                                                    foreach($wholesale_appication_images as $wholesale_appication_image) {
+                                                                                            @endphp
+                                                                                                    <div class="col-md-2 p-0 ml-2">
+                                                                                                        <a href="{{asset('wholesale/images/' . $wholesale_appication_image->permit_image)}}" id="permit_img_src" class="btn-sm btn btn-primary edit_view_image w-100 mb-2">View Image</a>
+                                                                                                    </div>
+                                                                                                
+                                                                                            @php
+                                                                                                }
+                                                                                            }
+                                                                                         @endphp
+                                                                                        </div>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -449,26 +359,13 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="row">
-                                                                <div class="col-md-6">
-                                                                    <div class="alert alert-info alert-dismissible fade show success_message mb-0 p-1 d-none" role="alert">
-                                                                        <p id="successMessage" class="mb-0"></p>
-                                                                        <button type="button" class="close btn-sm p-1" data-dismiss="alert" aria-label="Close">
-                                                                        <span aria-hidden="true">&times;</span>
-                                                                        </button>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-6 d-flex align-items-center justify-content-end">
-                                                                    @if(empty($id))
-                                                                        <div class="spinner-border text-success d-none" role="status" id="save_for_now_spinner">
-                                                                            <span class="sr-only">Loading...</span>
-                                                                        </div>
-                                                                        <button id="save_for_now" type="button"  class="save_for_now_btn btn ml-2" data-toggle="" data-target="">Save for now</button>
-                                                                    @endif
-                                                                    <button type="button" id="step1_next" onclick="check_validation_step1()" class="step_next btn ml-2">
-                                                                        Next
-                                                                    </button>
-                                                                </div>
+                                                            <div class="text-right">
+                                                                @if(empty($id))
+                                                                    <button id="save_for_now" type="button"  class="step_next btn" data-toggle="" data-target="">Save for now</button>
+                                                                @endif
+                                                                <button type="button" id="step1_next" onclick="check_validation_step1()" class="d-none step_next btn">
+                                                                    Next
+                                                                </button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -515,15 +412,15 @@
                                                                 <div class="row mb-3">
                                                                     <div class="col-md-12">
                                                                         <div class="form-group">
-                                                                            <label class="wholesale_form_labels" for="seller_name">Seller’s / Lessor’s name<span class="text-danger">*</span> </label>
-                                                                            <input type="text" name="seller_name" value="{{!empty($id) ? $wholesale_regulation->seller_name : ''}}" class="form-control wholesale_inputs" id="seller_name" onchange="remove_error(this)" placeholder="Enter seller’s or lessor’s full name">
+                                                                            <label class="wholesale_form_labels" for="seller_name">Seller’s / Lessor’s name<span class="text-danger">*</span></label>
+                                                                            <input type="text" name="seller_name" disabled value="{{!empty($wholesale_regulation->seller_name) ? $wholesale_regulation->seller_name : ''}}" class="form-control wholesale_inputs" id="seller_name" onchange="remove_error(this)" placeholder="Enter seller’s or lessor’s full name">
                                                                             <div class="text-danger wholesale_inputs" id="seller_name_errors"></div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-12">
                                                                         <div class="form-group">
-                                                                            <label class="wholesale_form_labels" for="seller_address">Seller’s / Lessor’s address <span class="text-danger">*</span> </label>
-                                                                            <input type="text" name="seller_address"  value="{{!empty($id) ? $wholesale_regulation->seller_address : ''}}" class="form-control wholesale_inputs" id="seller_address" onchange="remove_error(this)" placeholder="Enter seller’s or lessor’s address (street, city, state, zip code)">
+                                                                            <label class="wholesale_form_labels" for="seller_address">Seller’s / Lessor’s address <span class="text-danger">*</span></label>
+                                                                            <input type="text" name="seller_address"  disabled value="{{!empty($wholesale_regulation->seller_address) ? $wholesale_regulation->seller_address : ''}}" class="form-control wholesale_inputs" id="seller_address" onchange="remove_error(this)" placeholder="Enter seller’s or lessor’s address (street, city, state, zip code)">
                                                                             <div class="text-danger wholesale_inputs" id="seller_address_errors"></div>
                                                                         </div>
                                                                     </div>
@@ -535,7 +432,7 @@
                                                                     <div class="col-md-12">
                                                                         <div class="undertaking_div p-2 d-flex">
                                                                             <div class="col-md-1">
-                                                                                <input type="checkbox" name="certificate_eligibility_1"  onchange="remove_error(this)" value="{{!empty($id) ? $wholesale_regulation->certificate_eligibility_1 : ''}}"  {{!empty($wholesale_regulation->certificate_eligibility_1) ? 'checked=checked' : ''}} id="under_signed_checkbox" class="under_signed_checkbox mt-1">
+                                                                                <input type="checkbox" name="certificate_eligibility_1"  onchange="remove_error(this)" disabled value="{{!empty($wholesale_regulation->certificate_eligibility_1) ? $wholesale_regulation->certificate_eligibility_1 : ''}}"  {{!empty($wholesale_regulation->certificate_eligibility_1) ? 'checked=checked' : ''}} id="under_signed_checkbox" class="under_signed_checkbox mt-1">
                                                                                 
                                                                             </div>
                                                                             <div class="col-md-11 pl-0">
@@ -552,14 +449,14 @@
                                                                     <div class="col-md-12 mb-2">
                                                                         <div class="form-group">
                                                                             <label class="wholesale_form_labels" for="type_of_farm">Type of Farm Equipment and Machinery (or parts thereof) <span class="text-danger">*</span></label>
-                                                                            <input type="text" name="equipment_type" class="form-control wholesale_inputs" value="{{!empty($id) ? $wholesale_regulation->equipment_type : ''}}" id="type_of_farm" onchange="remove_error(this)" placeholder="type of farm equipment or machinery being bought">
+                                                                            <input type="text" name="equipment_type" class="form-control wholesale_inputs" disabled value="{{!empty($wholesale_regulation->equipment_type) ? $wholesale_regulation->equipment_type : ''}}" id="type_of_farm" onchange="remove_error(this)" placeholder="type of farm equipment or machinery being bought">
                                                                             <div class="text-danger wholesale_inputs" id="type_of_farm_errors"></div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-12 mb-3">
                                                                         <div class="undertaking_div p-2 d-flex">
                                                                             <div class="col-md-1">
-                                                                                <input type="checkbox" name="certificate_eligibility_2" onchange="remove_error(this)" value="{{!empty($id) ? $wholesale_regulation->certificate_eligibility_2 : ''}}"  {{!empty($wholesale_regulation->certificate_eligibility_2) ? 'checked=checked' : ''}} id="under_property_checkbox" class="under_signed_checkbox mt-1">
+                                                                                <input type="checkbox" name="certificate_eligibility_2" onchange="remove_error(this)" disabled value="{{!empty($wholesale_regulation->certificate_eligibility_2) ? $wholesale_regulation->certificate_eligibility_2 : ''}}"  {{!empty($wholesale_regulation->certificate_eligibility_2) ? 'checked=checked' : ''}} id="under_property_checkbox" class="under_signed_checkbox mt-1">
                                                                             
                                                                             </div>
                                                                             <div class="col-md-11 pl-0">
@@ -573,48 +470,48 @@
                                                                     <div class="col-md-12 mb-2">
                                                                         <div class="form-group">
                                                                             <label class="wholesale_form_labels" for="purchaser_company_name">Purchaser’s name or company name (if applicable) <span class="text-danger">*</span></label>
-                                                                            <input type="text" name="purchaser_company_name" value="{{!empty($id) ? $wholesale_regulation->purchaser_company_name : ''}}" class="form-control wholesale_inputs" id="company_name_seller" onchange="remove_error(this)" placeholder="Enter in the Purchaser’s name or company’s name">
+                                                                            <input type="text" name="purchaser_company_name" disabled value="{{!empty($wholesale_regulation->purchaser_company_name) ? $wholesale_regulation->purchaser_company_name : ''}}" class="form-control wholesale_inputs" id="company_name_seller" onchange="remove_error(this)" placeholder="Enter in the Purchaser’s name or company’s name">
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-12 mb-2">
                                                                         <div class="form-group">
                                                                             <label class="wholesale_form_labels" for="signature">Signature  <span class="text-danger">*</span></label>
-                                                                            <input type="text" name="purchaser_signature" class="form-control wholesale_inputs"  value="{{!empty($id) ? $wholesale_regulation->purchaser_signature : ''}}" id="signature" onchange="remove_error(this)" placeholder="(signature of the purchaser, purchaser’s employee, or authorized representative or the the purchaser)">
+                                                                            <input type="text" name="purchaser_signature" class="form-control wholesale_inputs"  disabled value="{{!empty($wholesale_regulation->purchaser_signature) ? $wholesale_regulation->purchaser_signature : ''}}" id="signature" onchange="remove_error(this)" placeholder="(signature of the purchaser, purchaser’s employee, or authorized representative or the the purchaser)">
                                                                             <div class="text-danger wholesale_inputs" id="signature_errors"></div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-12 mb-2">
                                                                         <div class="form-group">
                                                                             <label class="wholesale_form_labels" for="title">Title  <span class="text-danger">*</span></label>
-                                                                            <input type="text" name="title" class="form-control wholesale_inputs" id="title" value="{{!empty($id) ? $wholesale_regulation->title : ''}}" onchange="remove_error(this)" placeholder="Title">
+                                                                            <input type="text" name="title" class="form-control wholesale_inputs" id="title" disabled value="{{!empty($wholesale_regulation->title) ? $wholesale_regulation->title : ''}}" onchange="remove_error(this)" placeholder="Title">
                                                                             <div class="text-danger wholesale_inputs" id="title_errors"></div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-12 mb-2">
                                                                         <div class="form-group">
                                                                             <label class="wholesale_form_labels" for="address"> Address <span class="text-danger">*</span></label>
-                                                                            <input type="text" name="purchaser_address" class="form-control wholesale_inputs" id="address" value="{{!empty($id) ? $wholesale_regulation->purchaser_address : ''}}" onchange="remove_error(this)" placeholder="(street, city, state, zip code)">
+                                                                            <input type="text" name="purchaser_address" class="form-control wholesale_inputs" id="address" disabled value="{{!empty($wholesale_regulation->purchaser_address) ? $wholesale_regulation->purchaser_address : ''}}" onchange="remove_error(this)" placeholder="(street, city, state, zip code)">
                                                                             <div class="text-danger wholesale_inputs" id="address_errors"></div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
                                                                         <div class="form-group">
-                                                                            <label class="wholesale_form_labels" for="permit_number">Permit number</label>
-                                                                            <input type="text" name="regulation_permit_number" id="permit_number" class="form-control wholesale_inputs" value="{{!empty($id) ? $wholesale_regulation->regulation_permit_number : ''}}" onchange="remove_error(this)" placeholder="Permit number (if applicable)">
+                                                                            <label class="wholesale_form_labels" for="permit_number">Permit number (if applicable) </label>
+                                                                            <input type="text" name="regulation_permit_number" id="permit_number" class="form-control wholesale_inputs" disabled value="{{!empty($wholesale_regulation->regulation_permit_number) ? $wholesale_regulation->regulation_permit_number : ''}}" onchange="remove_error(this)" placeholder="Permit number (if applicable)">
                                                                             <div class="text-danger wholesale_inputs" id="permit_number_errors"></div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
                                                                         <div class="form-group">
                                                                             <label class="wholesale_form_labels" for="phone">Phone <span class="text-danger">*</span></label>
-                                                                            <input type="text" name="purchaser_phone" id="phone_number" class="form-control wholesale_inputs" onkeyup="isNumber(this)" value="{{!empty($id) ? $wholesale_regulation->purchaser_phone : ''}}" onchange="remove_error(this)" placeholder="+1 (000) 000-0000">
+                                                                            <input type="text" name="purchaser_phone" id="phone_number" class="form-control wholesale_inputs" onkeyup="isNumber(this)" disabled value="{{!empty($wholesale_regulation->purchaser_phone) ? $wholesale_regulation->purchaser_phone : ''}}" onchange="remove_error(this)" placeholder="+1 (000) 000-0000">
                                                                             <div class="text-danger wholesale_inputs" id="phone_number_errors"></div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-6 mb-2">
                                                                         <div class="form-group">
                                                                             <label class="wholesale_form_labels" for="phone">Date <span class="text-danger">*</span></label>
-                                                                            <input type="date" name="purchase_date" id="date" value="{{!empty($id) ? $wholesale_regulation->purchase_date : ''}}" onchange="remove_error(this)" class="form-control wholesale_inputs">
+                                                                            <input type="date" name="purchase_date" id="date" disabled value="{{!empty($wholesale_regulation->purchase_date) ? $wholesale_regulation->purchase_date : ''}}" onchange="remove_error(this)" class="form-control wholesale_inputs">
                                                                             <div class="text-danger wholesale_inputs" id="date_errors"></div>
                                                                         </div>
                                                                     </div>
@@ -643,14 +540,8 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-md-12 text-right d-flex justify-content-end align-items-center">
-                                                                    @if(empty($id))
-                                                                        <div class="spinner-border text-success d-none mr-2" role="status" id="save_for_now_spinner">
-                                                                            <span class="sr-only">Loading...</span>
-                                                                        </div>
-                                                                        <button id="save_for_now_step_2" type="button"  class="step_next btn ml-3" data-toggle="" data-target="">Save for now</button>
-                                                                    @endif
-                                                                    <button type="button" id="step2_next" class="step_next btn ml-3" onclick="check_validation_step2()">
+                                                                <div class="text-right">
+                                                                    <button type="button" id="step2_next" class="d-none step_next btn" onclick="check_validation_step2()">
                                                                         Next
                                                                     </button>
                                                                 </div>
@@ -683,7 +574,7 @@
                                                                     </div>
                                                                     <div class="col-md-8">
                                                                         <div class="form-group mb-0">
-                                                                            <input type="text" name="authorize_name" class="form-control wholesale_inputs" value="{{!empty($id) ? $wholesale_authorization->authorize_name : ''}}" id="authorization_name" onchange="remove_error(this)" placeholder="Enter text here">
+                                                                            <input type="text" name="authorize_name" class="form-control wholesale_inputs" disabled value="{{!empty($wholesale_authorization->authorize_name) ? $wholesale_authorization->authorize_name : ''}}" id="authorization_name" onchange="remove_error(this)" placeholder="Enter text here">
                                                                             <div class="text-danger wholesale_inputs" id="authorization_name_errors"></div>
                                                                         </div>
                                                                     </div>
@@ -695,62 +586,62 @@
                                                                     <div class="col-md-12">
                                                                         <div class="form-group">
                                                                             <label class="wholesale_form_labels" for="financial_institution_name">Name of Financial Institution <span class="text-danger">*</span></label>
-                                                                            <input type="text" name="financial_institute_name" class="form-control wholesale_inputs"  value="{{!empty($id) ? $wholesale_authorization->financial_institute_name : ''}}" id="financial_institution_name" onchange="remove_error(this)" placeholder="Enter the name of financial Institute">
+                                                                            <input type="text" name="financial_institute_name" class="form-control wholesale_inputs"  disabled value="{{!empty($wholesale_authorization->financial_institute_name) ? $wholesale_authorization->financial_institute_name : ''}}" id="financial_institution_name" onchange="remove_error(this)" placeholder="Enter the name of financial Institute">
                                                                             <div class="text-danger wholesale_inputs" id="financial_institution_name_errors"></div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-12">
                                                                         <div class="form-group">
                                                                             <label class="wholesale_form_labels" for="financial_institution_address"> Address <span class="text-danger">*</span></label>
-                                                                            <input type="text" name="financial_institute_address" value="{{!empty($id) ? $wholesale_authorization->financial_institute_address : ''}}" class="form-control wholesale_inputs" id="financial_institution_address" onchange="remove_error(this)" placeholder="Address of Financial Institute (Branch, city, state, zip code)">
+                                                                            <input type="text" name="financial_institute_address" disabled value="{{!empty($wholesale_authorization->financial_institute_address) ? $wholesale_authorization->financial_institute_address : ''}}" class="form-control wholesale_inputs" id="financial_institution_address" onchange="remove_error(this)" placeholder="Address of Financial Institute (Branch, city, state, zip code)">
                                                                             <div class="text-danger wholesale_inputs" id="financial_institution_address_errors"></div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-12">
                                                                         <div class="form-group">
                                                                             <label class="wholesale_form_labels" for="financial_institution_signature">Signature  <span class="text-danger">*</span></label>
-                                                                            <input type="text" name="financial_institute_signature" value="{{!empty($id) ? $wholesale_authorization->financial_institute_signature : ''}}" class="form-control wholesale_inputs" id="financial_institution_signature" onchange="remove_error(this)" placeholder="Signature">
+                                                                            <input type="text" name="financial_institute_signature" disabled value="{{!empty($wholesale_authorization->financial_institute_signature) ? $wholesale_authorization->financial_institute_signature : ''}}" class="form-control wholesale_inputs" id="financial_institution_signature" onchange="remove_error(this)" placeholder="Signature">
                                                                             <div class="text-danger wholesale_inputs" id="financial_institution_signature_errors"></div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
-                                                                            <label class="wholesale_form_labels" for="set_amount">Set amount</label>
-                                                                            <input type="text" name="set_amount" value="{{!empty($id) ? $wholesale_authorization->set_amount : ''}}" class="form-control wholesale_inputs" id="set_amount" onchange="remove_error(this)" placeholder="Set Amount">
+                                                                            <label class="wholesale_form_labels" for="set_amount">Set amount </label>
+                                                                            <input type="text" name="set_amount" disabled value="{{!empty($wholesale_authorization->set_amount) ? $wholesale_authorization->set_amount : ''}}" class="form-control wholesale_inputs" id="set_amount" onchange="remove_error(this)" placeholder="Set Amount">
                                                                             <div class="text-danger wholesale_inputs" id="set_amount_errors"></div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
-                                                                            <label class="wholesale_form_labels" for="maximum_amount">Maximum amount</label>
-                                                                            <input type="text" name="maximum_amount" value="{{!empty($id) ? $wholesale_authorization->maximum_amount : ''}}" class="form-control wholesale_inputs" id="maximum_amount" onchange="remove_error(this)" placeholder="Maximum Amount">
+                                                                            <label class="wholesale_form_labels" for="maximum_amount">Maximum amount </label>
+                                                                            <input type="text" name="maximum_amount" disabled value="{{!empty($wholesale_authorization->maximum_amount) ? $wholesale_authorization->maximum_amount : ''}}" class="form-control wholesale_inputs" id="maximum_amount" onchange="remove_error(this)" placeholder="Maximum Amount">
                                                                             <div class="text-danger wholesale_inputs" id="maximum_amount_errors"></div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-12">
                                                                         <div class="form-group">
                                                                             <label class="wholesale_form_labels" for="institute_routine_number">Financial institute routine number <span class="text-danger">*</span></label>
-                                                                            <input type="text" name="financial_institute_routine_number" value="{{!empty($id) ? $wholesale_authorization->financial_institute_routine_number : ''}}" class="form-control wholesale_inputs" id="institute_routine_number" onchange="remove_error(this)" placeholder="Enter Financial institute routine number">
+                                                                            <input type="text" name="financial_institute_routine_number" disabled value="{{!empty($wholesale_authorization->financial_institute_routine_number) ? $wholesale_authorization->financial_institute_routine_number : ''}}" class="form-control wholesale_inputs" id="institute_routine_number" onchange="remove_error(this)" placeholder="Enter Financial institute routine number">
                                                                             <div class="text-danger wholesale_inputs" id="institute_routine_number_errors"></div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-12">
                                                                         <div class="form-group">
                                                                             <label class="wholesale_form_labels" for="saving_account_number">Checking/Saving account number <span class="text-danger">*</span></label>
-                                                                            <input type="text" name="financial_institute_account_number" value="{{!empty($id) ? $wholesale_authorization->financial_institute_account_number : ''}}" class="form-control wholesale_inputs" id="saving_account_number" onchange="remove_error(this)" placeholder="Enter Checking/Saving account number">
+                                                                            <input type="text" name="financial_institute_account_number" disabled value="{{!empty($wholesale_authorization->financial_institute_account_number) ? $wholesale_authorization->financial_institute_account_number : ''}}" class="form-control wholesale_inputs" id="saving_account_number" onchange="remove_error(this)" placeholder="Enter Checking/Saving account number">
                                                                             <div class="text-danger wholesale_inputs" id="saving_account_number_errors"></div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
-                                                                            <label class="wholesale_form_labels" for="autorization_permit_number">Permit number</label>
-                                                                            <input type="text" name="financial_institute_permit_number" id="autorization_permit_number" value="{{!empty($id) ? $wholesale_authorization->financial_institute_permit_number : ''}}" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="Permit number (if applicable)">
+                                                                            <label class="wholesale_form_labels" for="autorization_permit_number">Permit number (if applicable)</label>
+                                                                            <input type="text" name="financial_institute_permit_number" id="autorization_permit_number" disabled value="{{!empty($wholesale_authorization->financial_institute_permit_number) ? $wholesale_authorization->financial_institute_permit_number : ''}}" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="Permit number (if applicable)">
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
                                                                             <label class="wholesale_form_labels" for="autorization_phone_number">Phone <span class="text-danger">*</span></label>
-                                                                            <input type="text" name="financial_institute_phone_number" id="autorization_phone_number" onkeyup="isNumber(this)" value="{{!empty($id) ? $wholesale_authorization->financial_institute_phone_number : ''}}" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="+1 (000) 000-0000">
+                                                                            <input type="text" name="financial_institute_phone_number" id="autorization_phone_number" onkeyup="isNumber(this)" disabled value="{{!empty($wholesale_authorization->financial_institute_phone_number) ? $wholesale_authorization->financial_institute_phone_number : ''}}" class="form-control wholesale_inputs" onchange="remove_error(this)" placeholder="+1 (000) 000-0000">
                                                                             <div class="text-danger wholesale_inputs" id="autorization_phone_number_errors"></div>
                                                                         </div>
                                                                     </div>
@@ -768,14 +659,8 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-md-12 text-right d-flex justify-content-end align-items-center">
-                                                                    @if(empty($id))
-                                                                        <div class="spinner-border text-success d-none mr-2" role="status" id="save_for_now_spinner">
-                                                                            <span class="sr-only">Loading...</span>
-                                                                        </div>
-                                                                        <button id="save_for_now_step_3" type="button"  class="step_next btn ml-3" data-toggle="" data-target="">Save for now</button>
-                                                                    @endif
-                                                                    <button type="button" id="step3_next" class="step_next btn ml-3" onclick="check_validation_step3()">
+                                                                <div class="text-right">
+                                                                    <button type="button" id="step3_next" class="d-none step_next btn" onclick="check_validation_step3()">
                                                                         Next
                                                                     </button>
                                                                 </div>
@@ -828,24 +713,24 @@
                                                                 <div class="form-group">
                                                                     <label class="wholesale_form_labels mb-0" for="card_type">Card Type <span class="text-danger">*</span></label>
                                                                     <div class="row justify-content-between pl-3 pt-2 pr-3">
-                                                                        <div id="card_type_master" class="col-md-2 d-flex border justify-content-center align-items-center m-0 wholesale-custom-radio  {{!empty($id) && $wholesale_application_card->card_type == 'master_card' ? 'selected'  : ''}}" onclick="selectRadio(this)">
-                                                                            <input type="radio" name="card_type" class="radio_check_wholesale hidden-radio border-0" onchange="remove_error_card_type(this)" value="{{!empty($id) && $wholesale_application_card->card_type == 'master_card' ? 'master_card'  : ''}}"  {{!empty($id) && $wholesale_application_card->card_type == 'master_card' ? 'checked'  : ''}}  id="master_card">
+                                                                        <div id="card_type_master" class="col-md-2 d-flex border justify-content-center align-items-center m-0 wholesale-custom-radio  {{!empty($wholesale_application_card->card_type) && $wholesale_application_card->card_type == 'master_card' ? 'selected'  : ''}}" onclick="selectRadio(this)">
+                                                                            <input type="radio" name="card_type" class="radio_check_wholesale hidden-radio border-0" onchange="remove_error_card_type(this)" disabled value="{{!empty($wholesale_application_card->card_type) && $wholesale_application_card->card_type == 'master_card' ? 'master_card'  : ''}}"  {{!empty($wholesale_application_card->card_type) && $wholesale_application_card->card_type == 'master_card' ? 'checked'  : ''}}  id="master_card">
                                                                             <span class="master-radio-label"></span>
                                                                         </div>
-                                                                        <div id="card_type_visa" class="col-md-2 d-flex border justify-content-center align-items-center m-0 wholesale-custom-radio {{!empty($id) && $wholesale_application_card->card_type == 'visa_card' ? 'selected'  : ''}}" onclick="selectRadio(this)">
-                                                                            <input type="radio" name="card_type" class="radio_check_wholesale hidden-radio border-0" onchange="remove_error_card_type(this)" value="{{!empty($id) && $wholesale_application_card->card_type == 'visa_card' ? 'visa_card'  : ''}}"  {{!empty($id) && $wholesale_application_card->card_type == 'visa_card' ? 'checked'  : ''}} id="visa_card">
+                                                                        <div id="card_type_visa" class="col-md-2 d-flex border justify-content-center align-items-center m-0 wholesale-custom-radio {{!empty($wholesale_application_card->card_type) && $wholesale_application_card->card_type == 'visa_card' ? 'selected'  : ''}}" onclick="selectRadio(this)">
+                                                                            <input type="radio" name="card_type" class="radio_check_wholesale hidden-radio border-0" onchange="remove_error_card_type(this)" disabled value="{{!empty($wholesale_application_card->card_type) && $wholesale_application_card->card_type == 'visa_card' ? 'visa_card'  : ''}}"  {{!empty($wholesale_application_card->card_type) && $wholesale_application_card->card_type == 'visa_card' ? 'checked'  : ''}} id="visa_card">
                                                                             <span class="visa-radio-label"></span>
                                                                         </div>
-                                                                        <div id="card_type_discover" class="col-md-2 d-flex border justify-content-center align-items-center m-0 wholesale-custom-radio {{!empty($id) && $wholesale_application_card->card_type == 'discover_card' ? 'selected'  : ''}}" onclick="selectRadio(this)">
-                                                                            <input type="radio" name="card_type" class="radio_check_wholesale hidden-radio border-0" onchange="remove_error_card_type(this)" value="{{!empty($id) && $wholesale_application_card->card_type == 'discover_card' ? 'discover_card'  : ''}}"  {{!empty($id) && $wholesale_application_card->card_type == 'discover_card' ? 'checked'  : ''}} id="discover_card">
+                                                                        <div id="card_type_discover" class="col-md-2 d-flex border justify-content-center align-items-center m-0 wholesale-custom-radio {{!empty($wholesale_application_card->card_type) && $wholesale_application_card->card_type == 'discover_card' ? 'selected'  : ''}}" onclick="selectRadio(this)">
+                                                                            <input type="radio" name="card_type" class="radio_check_wholesale hidden-radio border-0" onchange="remove_error_card_type(this)" disabled value="{{!empty($wholesale_application_card->card_type) && $wholesale_application_card->card_type == 'discover_card' ? 'discover_card'  : ''}}"  {{!empty($wholesale_application_card->card_type) && $wholesale_application_card->card_type == 'discover_card' ? 'checked'  : ''}} id="discover_card">
                                                                             <span class="discover-radio-label"></span>
                                                                         </div>
-                                                                        <div id="card_type_american" class="col-md-2 d-flex border justify-content-center align-items-center m-0 wholesale-custom-radio {{!empty($id) && $wholesale_application_card->card_type == 'american_express_card' ? 'selected'  : ''}}" onclick="selectRadio(this)">
-                                                                            <input type="radio" name="card_type" class="radio_check_wholesale hidden-radio border-0" onchange="remove_error_card_type(this)" value="{{!empty($id) && $wholesale_application_card->card_type == 'american_express_card' ? 'american_express_card'  : ''}}"  {{!empty($id) && $wholesale_application_card->card_type == 'american_express_card' ? 'checked'  : ''}} id="american_express_card">
+                                                                        <div id="card_type_american" class="col-md-2 d-flex border justify-content-center align-items-center m-0 wholesale-custom-radio {{!empty($wholesale_application_card->card_type) && $wholesale_application_card->card_type == 'american_express_card' ? 'selected'  : ''}}" onclick="selectRadio(this)">
+                                                                            <input type="radio" name="card_type" class="radio_check_wholesale hidden-radio border-0" onchange="remove_error_card_type(this)" disabled value="{{!empty($wholesale_application_card->card_type) && $wholesale_application_card->card_type == 'american_express_card' ? 'american_express_card'  : ''}}"  {{!empty($wholesale_application_card->card_type) && $wholesale_application_card->card_type == 'american_express_card' ? 'checked'  : ''}} id="american_express_card">
                                                                             <span class="american-radio-label"></span>
                                                                         </div>
-                                                                        <div id="card_type_other" class="col-md-2 d-flex border justify-content-center align-items-center m-0 wholesale-custom-radio {{!empty($id) && $wholesale_application_card->card_type == 'other_card' ? 'selected'  : ''}}"  onclick="selectRadio(this)">
-                                                                            <input type="radio" name="card_type" class="radio_check_wholesale hidden-radio border-0" onchange="remove_error_card_type(this)" value="{{!empty($id) && $wholesale_application_card->card_type == 'other_card' ? 'other_card'  : ''}}"  {{!empty($id) && $wholesale_application_card->card_type == 'other_card' ? 'checked'  : ''}} id="other_card">
+                                                                        <div id="card_type_other" class="col-md-2 d-flex border justify-content-center align-items-center m-0 wholesale-custom-radio {{!empty($wholesale_application_card->card_type) && $wholesale_application_card->card_type == 'other_card' ? 'selected'  : ''}}"  onclick="selectRadio(this)">
+                                                                            <input type="radio" name="card_type" class="radio_check_wholesale hidden-radio border-0" onchange="remove_error_card_type(this)" disabled value="{{!empty($wholesale_application_card->card_type) && $wholesale_application_card->card_type == 'other_card' ? 'other_card'  : ''}}"  {{!empty($wholesale_application_card->card_type) && $wholesale_application_card->card_type == 'other_card' ? 'checked'  : ''}} id="other_card">
                                                                             <span class="other-radio-label">OTHER</span>
                                                                         </div>
                                                                         <div class="text-danger wholesale_inputs" id="card_type_errors"></div>
@@ -854,15 +739,15 @@
                                                             </div>
                                                             <div class="col-md-12">
                                                                 <div class="form-group">
-                                                                    <label class="wholesale_form_labels" for="cardholder_name">Cardholder name (as shown on card) <span class="text-danger">*</span></label>
-                                                                    <input type="text" name="cardholder_name"  value="{{!empty($id) ? $wholesale_application_card->cardholder_name : ''}}" class="form-control wholesale_inputs" id="cardholder_name" onchange="remove_error(this)" placeholder="Enter card holder name">
+                                                                    <label class="wholesale_form_labels" for="cardholder_name">Cardholder name (as shown on card)<span class="text-danger">*</span></label>
+                                                                    <input type="text" name="cardholder_name"  disabled value="{{!empty($wholesale_application_card->cardholder_name) ? $wholesale_application_card->cardholder_name : ''}}" class="form-control wholesale_inputs" id="cardholder_name" onchange="remove_error(this)" placeholder="Enter card holder name">
                                                                     <div class="text-danger wholesale_inputs" id="cardholder_name_errors"></div>
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-12">
                                                                 <div class="form-group">
-                                                                    <label class="wholesale_form_labels" for="card_number">Card Number <span class="text-danger">*</span></label>
-                                                                    <input type="text" name="card_number" class="form-control wholesale_inputs ccFormatMonitor"  value="{{!empty($id) ? $wholesale_application_card->card_number : ''}}" id="card_number" onchange="remove_error(this)" placeholder="Enter card number">
+                                                                    <label class="wholesale_form_labels" for="card_number">Card Number<span class="text-danger">*</span></label>
+                                                                    <input type="text" name="card_number" class="form-control wholesale_inputs ccFormatMonitor"  disabled value="{{!empty($wholesale_application_card->card_number) ? $wholesale_application_card->card_number : ''}}" id="card_number" onchange="remove_error(this)" placeholder="Enter card number">
                                                                     <div class="text-danger wholesale_inputs" id="card_number_errors"></div>
                                                                 </div>
                                                             </div>
@@ -870,15 +755,15 @@
                                                                 <div class="row">
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
-                                                                            <label class="wholesale_form_labels" for="expiration_date">Expiration Date <span class="text-danger">*</span></label>
-                                                                            <input type="text" name="expiration_date" class="form-control wholesale_inputs inputExpDate" id="expiration_date"  value="{{!empty($id) ? $wholesale_application_card->expiration_date : ''}}" maxlength='7' onchange="remove_error(this)" placeholder="MM / YY">
+                                                                            <label class="wholesale_form_labels" for="expiration_date">Expiration Date<span class="text-danger">*</span></label>
+                                                                            <input type="text" name="expiration_date" class="form-control wholesale_inputs inputExpDate" id="expiration_date"  disabled value="{{!empty($wholesale_application_card->expiration_date) ? $wholesale_application_card->expiration_date : ''}}" maxlength='7' onchange="remove_error(this)" placeholder="MM / YY">
                                                                             <div class="text-danger wholesale_inputs" id="expiration_date_errors"></div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
-                                                                            <label class="wholesale_form_labels" for="card_holder_zip_code">Cardholder ZIP Code <span class="text-danger">*</span></label>
-                                                                            <input type="text" name="cardholder_zip_code" class="form-control wholesale_inputs" id="card_holder_zip_code" value="{{!empty($id) ? $wholesale_application_card->cardholder_zip_code : ''}}" onchange="remove_error(this)" placeholder="Zip code from credit card billing address">
+                                                                            <label class="wholesale_form_labels" for="card_holder_zip_code">Cardholder ZIP Code<span class="text-danger">*</span></label>
+                                                                            <input type="text" name="cardholder_zip_code" class="form-control wholesale_inputs" id="card_holder_zip_code" disabled value="{{!empty($wholesale_application_card->cardholder_zip_code) ? $wholesale_application_card->cardholder_zip_code : ''}}" onchange="remove_error(this)" placeholder="Zip code from credit card billing address">
                                                                             <div class="text-danger wholesale_inputs" id="cardholder_zip_code_errors"></div>
                                                                         </div>
                                                                     </div>
@@ -889,13 +774,12 @@
                                                                     <div class="col-md-12">
                                                                         <div class="form-group mb-0 d-flex align-items-center">
                                                                             <label class="mb-0 text-center align-middle credit_card_undertaking">
-                                                                                I<span class="text-danger">*</span>,
-                                                                            </label>
-                                                                            <input type="text" name="authorize_card_name" class="form-control wholesale_inputs w-50 ml-2" value="{{!empty($id) ? $wholesale_application_card->authorize_card_name : ''}}" id="undertaking_name" onchange="remove_error(this)" placeholder="Enter text here">
-                                                                            <label class="mb-0 ml-2 text-center align-middle w-25 credit_card_undertaking">
+                                                                                I<span class="text-danger">*</span>, </label>
+                                                                            <input type="text" name="authorize_card_name" class="form-control wholesale_inputs w-50 ml-2" disabled value="{{!empty($wholesale_application_card->authorize_card_name) ? $wholesale_application_card->authorize_card_name : ''}}" id="undertaking_name" onchange="remove_error(this)" placeholder="Enter text here">
+                                                                            <label class="mb-0 text-center align-middle w-25 credit_card_undertaking">
                                                                                 , authorize
-                                                                             <span class="text-danger">*</span></label>
-                                                                            <input type="text" name="authorize_card_text" class="form-control wholesale_inputs w-50" value="{{!empty($id) ? $wholesale_application_card->authorize_card_text : ''}}" id="authorize_text" onchange="remove_error(this)" placeholder="Enter text here">
+                                                                            <span class="text-danger">*</span></label>
+                                                                            <input type="text" name="authorize_card_text" class="form-control wholesale_inputs w-50" disabled value="{{!empty($wholesale_application_card->authorize_card_text) ? $wholesale_application_card->authorize_card_text : ''}}" id="authorize_text" onchange="remove_error(this)" placeholder="Enter text here">
                                                                         </div>
                                                                         <div class="row">
                                                                             <div class="col-md-6">
@@ -916,14 +800,14 @@
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
                                                                             <label class="wholesale_form_labels" for="customer_signature">Customer Signature <span class="text-danger">*</span></label>
-                                                                            <input type="text" name="customer_signature" value="{{!empty($id) ? $wholesale_application_card->customer_signature : ''}}" class="form-control wholesale_inputs" id="customer_signature" onchange="remove_error(this)" placeholder="Enter Signature">
+                                                                            <input type="text" name="customer_signature" disabled value="{{!empty($wholesale_application_card->customer_signature) ? $wholesale_application_card->customer_signature : ''}}" class="form-control wholesale_inputs" id="customer_signature" onchange="remove_error(this)" placeholder="Enter Signature">
                                                                             <div class="text-danger wholesale_inputs" id="customer_signature_errors"></div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
                                                                             <label class="wholesale_form_labels" for="date_wholesale"> Date <span class="text-danger">*</span></label>
-                                                                            <input type="date" name="date" value="{{!empty($id) ? $wholesale_application_card->date : ''}}" class="form-control wholesale_inputs" onchange="remove_error(this)" id="date_wholesale">
+                                                                            <input type="date" name="date" disabled value="{{!empty($wholesale_application_card->date) ? $wholesale_application_card->date : ''}}" class="form-control wholesale_inputs" onchange="remove_error(this)" id="date_wholesale">
                                                                             <div class="text-danger wholesale_inputs" id="date_wholesale_errors"></div>
                                                                         </div>
                                                                     </div>
@@ -932,20 +816,8 @@
                                                             <div class="spinner-grow d-none" id="wholesale_spinner" role="status">
                                                                 <span class="sr-only">Loading...</span>
                                                             </div>
-                                                            <div class="col-md-12 text-right d-flex justify-content-end align-items-center">
-                                                                {{-- <div class="alert alert-info alert-dismissible fade show success_message_4 mb-0 p-1 d-none" role="alert">
-                                                                    <p id="successMessage_4" class="mb-0"></p>
-                                                                    <button type="button" class="close btn-sm p-1" data-dismiss="alert" aria-label="Close">
-                                                                    <span aria-hidden="true">&times;</span>
-                                                                    </button>
-                                                                </div> --}}
-                                                                @if(empty($id))
-                                                                    <div class="spinner-border text-success d-none mr-2" role="status" id="save_for_now_spinner">
-                                                                        <span class="sr-only">Loading...</span>
-                                                                    </div>
-                                                                    <button id="save_for_now_step_4" type="button"  class="save_for_now_btn btn ml-3" data-toggle="" data-target="">Save for now</button>
-                                                                @endif
-                                                                <button type="button" id="step4_next" class="step_next btn ml-3" onclick="check_validation_step4()">
+                                                            <div class="col-md-12 text-right">
+                                                                <button type="button" id="step4_next" class="d-none step_next btn" onclick="check_validation_step4()">
                                                                     Next
                                                                 </button>
                                                             </div>
@@ -959,56 +831,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal fade" id="save_for_now_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Please Enter Your Email Address</h5>
-                    <button type="button" class="close close_modal" data-dismiss="modal" aria-label="Close" onclick="close_modal()">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="email_address">Email Address</label>
-                            <input type="email" name="email_address" id="email_address" class="form-control" onkeyup="isEmail(this)" placeholder="Enter your email address" required="required" onchange="remove_error(this)">
-                            <div class="text-danger wholesale_inputs" id="email_address_errors"></div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary close_modal" data-dismiss="modal" onclick="close_modal()">Close</button>
-                        <button type="button" class="btn btn-primary" id="saveEmail_fornow" onclick="save_email_for_now()">Save changes</button>
-                    </div>
-                </div>
-              </div>
-        </div>
-        <div class="modal fade" id="previous_data_modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Please Enter Your Email Address</h5>
-                    <button type="button" class="close close_previous_data_modal" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <form action="{{route('wholesale_user_check_email')}}" method="post">
-                  <div class="modal-body">
-                        @csrf
-                        <div class="form-group">
-                            <label for="email_address">Email Address</label>
-                            <input type="email" name="email_address_previous" id="email_address_previous" class="form-control" placeholder="Enter your email address" required="required" onchange="remove_error(this)">
-                            <div class="text-danger wholesale_inputs" id="email_address_previous_errors"></div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary close_previous_data_modal" data-dismiss="modal" >Close</button>
-                        {{-- <button type="button" class="btn btn-primary" id="show_previous_data_by_email" >Save changes</button> --}}
-                        <button type="submit" class="btn btn-primary" id="" >Save changes</button>
-                    </div>
-                </form>
                 </div>
             </div>
         </div>
@@ -1108,7 +930,6 @@
             font-weight: 600;
             line-height: 20.283px; /* 126.766% */
             letter-spacing: 0.08px;
-            cursor: pointer;
         }
         .files-div {
             border: 1px dashed #E1E1E1;
@@ -1138,31 +959,6 @@
         }
 
         .step_next:hover {
-            border-radius: 4px;
-            border: 0.846px solid #7CC633;
-            background: #7CC633;
-            box-shadow: 0px 0.84611px 1.69222px 0px rgba(16, 24, 40, 0.05);
-            color: #FFF;
-            font-family: 'Poppins';
-            font-size: 15.212px;
-            font-style: normal;
-            font-weight: 500;
-            line-height: 20.307px; /* 133.492% */
-        }
-        .save_for_now_btn {
-            border-radius: 4px;
-            border: 0.846px solid #7CC633;
-            background: #7CC633;
-            box-shadow: 0px 0.84611px 1.69222px 0px rgba(16, 24, 40, 0.05);
-            color: #FFF;
-            font-family: 'Poppins';
-            font-size: 15.212px;
-            font-style: normal;
-            font-weight: 500;
-            line-height: 20.307px; /* 133.492% */
-        }
-
-        .save_for_now_btn:hover {
             border-radius: 4px;
             border: 0.846px solid #7CC633;
             background: #7CC633;
@@ -1382,7 +1178,7 @@
     @include('partials.product-footer')
     @include('partials.footer')
     <script>
-        $('.browse').click(function(){ $('#file_upload').trigger('click'); });
+        // $('.browse').click(function(){ $('#file_upload').trigger('click'); });
         var app;
         (function() {
             'use strict';
@@ -1646,392 +1442,8 @@
 
     <script>
         
-        // save for now functionality
-        $(document).ready(function() {
-            $('.step_next').click(function() {
-                $('html, body').animate({ scrollTop: 0 }, 800);
-                return false; // Prevent the default anchor behavior
-            });
-            // $(document).on('keypress' , '#email_address' ,function(){
-            //     if(event.keyCode == 13) {
-            //         save_email_for_now(); 
-            //     } else {
-            //         return false;
-            //     }
-            // });
-            // function save_progress_step1() {
-            //     var validation = validation_message_step_1();
-            //     if (validation == true) {
-            //         $('#wholesale_spinner').removeClass('d-none');
-            //         $.ajaxSetup({
-            //             headers: {
-            //                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            //             }
-            //         });
-            //         var data = new FormData();
-            //         var files = $('input[name="permit_image"]')[0].files[0];
-            //         data.append('permit_image',files);
-            //         data.append('company_name', $('#company_name').val());
-            //         data.append('first_name', $('#first_name').val());
-            //         data.append('last_name', $('#last_name').val());
-            //         data.append('phone', $('#phone').val());
-            //         data.append('mobile', $('#mobile').val());
-            //         data.append('email',$('#email').val());
-            //         data.append('parent_company', $('#parent_company').val());
-            //         data.append('account_payable_name', $('#account_payable_name').val());
-            //         data.append('account_payable_phone', $('#account_payable_phone').val());
-            //         data.append('account_payable_email', $('#account_payable_email').val());
-            //         data.append('first_name_billing', $('#first_name_billing').val());
-            //         data.append('last_name_billing', $('#last_name_billing').val());
-            //         data.append('company_name_billing', $('#company_name_billing').val());
-            //         data.append('street_address_billing', $('#street_address_billing').val());
-            //         data.append('address2_billing', $('#address_2_billing').val());
-            //         data.append('city_billing', $('#city_billing').val());
-            //         data.append('state_billing', $('#state_billing').val());
-            //         data.append('postal_code_billing', $('#postal_code_billing').val());
-            //         data.append('phone_billing', $('#phone_billing').val());
-            //         data.append('first_name_delivery', $('#first_name_delivery').val());
-            //         data.append('last_name_delivery', $('#last_name_delivery').val());
-            //         data.append('company_name_delivery', $('#company_name_delivery').val());
-            //         data.append('street_address_delivery', $('#street_address_delivery').val());
-            //         data.append('address2_delivery', $('#address_2_delivery').val());
-            //         data.append('city_delivery', $('#city_delivery').val());
-            //         data.append('state_delivery', $('#state_delivery').val());
-            //         data.append('postal_code_delivery', $('#postal_code_delivery').val());
-            //         data.append('phone_delivery', $('#phone_delivery').val());
-            //         data.append('authorization_name', $('#authorization_name').val());
-            //         data.append('financial_institution_name', $('#financial_institution_name').val());
-            //         data.append('financial_institution_address', $('#financial_institution_address').val());
-            //         data.append('financial_institution_signature', $('#financial_institution_signature').val());
-            //         data.append('set_amount', $('#set_amount').val());
-            //         data.append('maximum_amount', $('#maximum_amount').val());
-            //         data.append('institute_routine_number', $('#institute_routine_number').val());
-            //         data.append('saving_account_number', $('#saving_account_number').val());
-            //         data.append('autorization_permit_number', $('#autorization_permit_number').val());
-            //         data.append('autorization_phone_number', $('#autorization_phone_number').val());
-            //         data.append('seller_name', $('#seller_name').val());
-            //         data.append('seller_address', $('#seller_address').val());
-            //         data.append('under_signed_checkbox', $('#under_signed_checkbox').val());
-            //         data.append('under_property_checkbox', $('#under_property_checkbox').val());
-            //         data.append('company_name_seller', $('#company_name_seller').val());
-            //         data.append('signature', $('#signature').val());
-            //         data.append('title', $('#title').val());
-            //         data.append('address', $('#address').val());
-            //         data.append('permit_number', $('#permit_number').val());
-            //         data.append('phone_number', $('#phone_number').val());
-            //         data.append('date', $('#date').val());
-            //         data.append('type_of_farm', $('#type_of_farm').val());
-                
-            //         $.ajax({
-            //             type:'POST',
-            //             url:"{{ route('save_for_now') }}",
-            //             data:data,
-            //             contentType: false,
-            //             processData: false,
-            //             success:function(response){
-            //                 if (response.status == true) {
-            //                     $('#wholesale_spinner').addClass('d-none');
-            //                     $('#save_for_now').attr('data-toggle', '')
-            //                     $('#save_for_now').attr('data-target', '')
-            //                     $('.success_message').removeClass('d-none');
-            //                     $('#successMessage').html('Data saved For now');
-            //                     setTimeout(() => {
-            //                         window.location.href = '/wholesale/account/create'
-            //                     }, 1000);
-            //                 } else {
-            //                     $('.success_message').removeClass('d-none');
-            //                     $('#successMessage').html('Email Already Exist');
-            //                     setTimeout(() => {
-            //                         window.location.href = "/wholesale/account/edit/" + response.id;
-            //                     }, 1000);
-            //                 }
-            //             },
-            //             error: function (response) {
-            //             }
-            //         });
-            //     } else {
-            //         $('.success_message').removeClass('d-none');
-            //         $('#successMessage').html('Please Enter the Corrrect Data');
-            //     }
-            // }
-            // save email for now 
-            
-            // $(document).on('click', '#save_for_now' ,function() {
-            //     if ($('#email').val() == '') {
-            //         $('#save_for_now').attr('data-toggle', 'modal')
-            //         $('#save_for_now').attr('data-target', '#save_for_now_modal')
-            //         $('#save_for_now_modal').modal('show');
-            //     } else {
-            //         $('#save_for_now').attr('data-toggle', '')
-            //         $('#save_for_now').attr('data-target', '')
-            //         $('#save_for_now_modal').modal('hide');
 
-            //         save_progress_step1();
-            //     }
-            // });
-        });
-
-        function save_progress_step1() {
-            var validation = validation_message_step_1();
-            if (validation == true) {
-                $('#wholesale_spinner').removeClass('d-none');
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
-                var data = new FormData();
-                var totalfiles = document.getElementById('file_upload').files.length;
-                if (totalfiles > 0) {
-                    for (var index = 0; index < totalfiles; index++) {
-                        data.append("permit_image[]", document.getElementById('file_upload').files[index]);
-                    }
-                }
-                // var files = $('input[name="permit_image"]')[0].files;
-                // console.log(files);
-                // data.append('permit_image',files);
-                data.append('company_name', $('#company_name').val());
-                data.append('first_name', $('#first_name').val());
-                data.append('last_name', $('#last_name').val());
-                data.append('phone', $('#phone').val());
-                data.append('mobile', $('#mobile').val());
-                data.append('email',$('#email').val());
-                data.append('parent_company', $('#parent_company').val());
-                data.append('account_payable_name', $('#account_payable_name').val());
-                data.append('account_payable_phone', $('#account_payable_phone').val());
-                data.append('account_payable_email', $('#account_payable_email').val());
-                data.append('first_name_billing', $('#first_name_billing').val());
-                data.append('last_name_billing', $('#last_name_billing').val());
-                data.append('company_name_billing', $('#company_name_billing').val());
-                data.append('street_address_billing', $('#street_address_billing').val());
-                data.append('address2_billing', $('#address_2_billing').val());
-                data.append('city_billing', $('#city_billing').val());
-                data.append('state_billing', $('#state_billing').val());
-                data.append('postal_code_billing', $('#postal_code_billing').val());
-                data.append('phone_billing', $('#phone_billing').val());
-                data.append('first_name_delivery', $('#first_name_delivery').val());
-                data.append('last_name_delivery', $('#last_name_delivery').val());
-                data.append('company_name_delivery', $('#company_name_delivery').val());
-                data.append('street_address_delivery', $('#street_address_delivery').val());
-                data.append('address2_delivery', $('#address_2_delivery').val());
-                data.append('city_delivery', $('#city_delivery').val());
-                data.append('state_delivery', $('#state_delivery').val());
-                data.append('postal_code_delivery', $('#postal_code_delivery').val());
-                data.append('phone_delivery', $('#phone_delivery').val());
-                data.append('authorization_name', $('#authorization_name').val());
-                data.append('financial_institution_name', $('#financial_institution_name').val());
-                data.append('financial_institution_address', $('#financial_institution_address').val());
-                data.append('financial_institution_signature', $('#financial_institution_signature').val());
-                data.append('set_amount', $('#set_amount').val());
-                data.append('maximum_amount', $('#maximum_amount').val());
-                data.append('institute_routine_number', $('#institute_routine_number').val());
-                data.append('saving_account_number', $('#saving_account_number').val());
-                data.append('autorization_permit_number', $('#autorization_permit_number').val());
-                data.append('autorization_phone_number', $('#autorization_phone_number').val());
-                data.append('seller_name', $('#seller_name').val());
-                data.append('seller_address', $('#seller_address').val());
-                data.append('under_signed_checkbox', $('#under_signed_checkbox').val());
-                data.append('under_property_checkbox', $('#under_property_checkbox').val());
-                data.append('company_name_seller', $('#company_name_seller').val());
-                data.append('signature', $('#signature').val());
-                data.append('title', $('#title').val());
-                data.append('address', $('#address').val());
-                data.append('permit_number', $('#permit_number').val());
-                data.append('phone_number', $('#phone_number').val());
-                data.append('date', $('#date').val());
-                data.append('type_of_farm', $('#type_of_farm').val());
-            
-                $.ajax({
-                    type:'POST',
-                    url:"{{ route('save_for_now') }}",
-                    data:data,
-                    contentType: false,
-                    processData: false,
-                    success:function(response){
-                        if (response.status == true) {
-                            $('#save_for_now_spinner').addClass('d-none');
-                            $('#wholesale_spinner').addClass('d-none');
-                            $('#save_for_now').attr('data-toggle', '')
-                            $('#save_for_now').attr('data-target', '')
-                            $('.success_message').removeClass('d-none');
-                            $('#successMessage').html('Data saved For now');
-                           
-                            setTimeout(() => {
-                                window.location.href = '/wholesale/account/create'
-                            }, 1000);
-                        } else {
-                            $('#save_for_now_spinner').addClass('d-none');
-                            $('.success_message').removeClass('d-none');
-                            $('#successMessage').html('Email Already Exist');
-                            setTimeout(() => {
-                                window.location.href = "/wholesale/account/edit/" + response.id;
-                            }, 1000);
-                        }
-                    },
-                    error: function (response) {
-                    }
-                });
-            } else {
-                $('#step1').addClass('active');
-                $('#step1').addClass('show');
-                $('.step_1_nav_link').addClass('active');
-                $('#save_for_now_spinner').addClass('d-none');
-                $('#step2').removeClass('active');
-                $('#step2').removeClass('show');
-                $('.step_2_nav_link').removeClass('active');
-                $('#step3').removeClass('active');
-                $('#step3').removeClass('show');
-                $('.step_3_nav_link').removeClass('active');
-                $('#step4').removeClass('active');
-                $('#step4').removeClass('show');
-                $('.step_4_nav_link').removeClass('active');
-                return false;
-            }
-        }
-
-        $('#save_for_now').click(function() {
-            if ($('#email').val() == '') {
-                $('#save_for_now').attr('data-toggle', 'modal')
-                $('#save_for_now').attr('data-target', '#save_for_now_modal')
-                $('#save_for_now_modal').modal('show');
-            } else {
-                $('#save_for_now').attr('data-toggle', '')
-                $('#save_for_now').attr('data-target', '')
-                $('#save_for_now_modal').modal('hide');
-                $('#save_for_now_spinner').removeClass('d-none');
-                save_progress_step1();
-            }
-        });
-        $('#save_for_now_step_2').click(function() {
-            if ($('#email').val() == '') {
-                $('#save_for_now_step_2').attr('data-toggle', 'modal')
-                $('#save_for_now_step_2').attr('data-target', '#save_for_now_modal')
-                $('#save_for_now_modal').modal('show');
-            } else {
-                $('#save_for_now_step_2').attr('data-toggle', '')
-                $('#save_for_now_step_2').attr('data-target', '')
-                $('#save_for_now_modal').modal('hide');
-                $('#save_for_now_spinner').removeClass('d-none');
-                save_progress_step1();
-            }
-        });
-        $('#save_for_now_step_3').click(function() {
-            if ($('#email').val() == '') {
-                $('#save_for_now_step_3').attr('data-toggle', 'modal')
-                $('#save_for_now_step_3').attr('data-target', '#save_for_now_modal')
-                $('#save_for_now_modal').modal('show');
-            } else {
-                $('#save_for_now_step_3').attr('data-toggle', '')
-                $('#save_for_now_step_3').attr('data-target', '')
-                $('#save_for_now_modal').modal('hide');
-                $('#save_for_now_spinner').removeClass('d-none');
-                save_progress_step1();
-            }
-        });
-
-        $('#save_for_now_step_4').click(function() {
-            if ($('#email').val() == '') {
-                $('#save_for_now_step_4').attr('data-toggle', 'modal')
-                $('#save_for_now_step_4').attr('data-target', '#save_for_now_modal')
-                $('#save_for_now_modal').modal('show');
-            } else {
-                $('#save_for_now_step_4').attr('data-toggle', '')
-                $('#save_for_now_step_4').attr('data-target', '')
-                $('#save_for_now_modal').modal('hide');
-                $('#save_for_now_spinner').removeClass('d-none');
-                save_progress_step1();
-            }
-        });
-
-        function save_email_for_now() {
-            $('#wholesale_spinner').removeClass('d-none');
-            var email = $('#email_address').val();
-            if(email == '') {
-                $('#wholesale_spinner').addClass('d-none');
-                $('#email_address_errors').html('Email is required');
-                return false;
-            }
-            else if (isEmail(document.getElementById('email_address')) == false) {
-                $('#wholesale_spinner').addClass('d-none');
-                $('#email_address_errors').html('Email is not valid');
-                return false;
-            }
-            
-            else {
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
-                $.ajax({
-                    type:'POST',
-                    url:"{{ route('save_email_for_now') }}",
-                    data:{email:email},
-                    success:function(response){
-                        if (response.status == true) {
-                            $('#wholesale_spinner').addClass('d-none');
-                            $('#save_for_now').attr('data-toggle', '');
-                            $('#save_for_now').attr('data-target', '');
-                            $('#save_for_now_modal').modal('hide');
-                            $('.success_message').removeClass('d-none');
-                            setTimeout(() => {
-                                $('#successMessage').html(response.message);
-                                window.location.href = "/wholesale/account/create/";
-                            }, 1000);
-                        } else if (response.status == false) {
-                            $('#email_address_errors').html('Email Already Exists')
-                            setTimeout(() => {
-                                window.location.href = "/wholesale/account/edit/" + response.id;
-                            }, 1000);
-
-                        }
-                    },
-                    error: function (response) {
-                    }
-                });
-            }
-        }
-
-        function validate_email() {
-            var email = $('#email').val();
-            var Email_input = $('#email');
-            if (isEmail(Email_input == false)) {
-                $('#email_errors').html('Email is not valid');
-                return false;
-            } else {
-                $('#email_errors').html('');
-                    $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
-                var result = $.ajax({
-                    type:'POST',
-                    url:"{{ route('validate_email') }}",
-                    data:{email:email},
-                    success: function(response){
-                        if (response.status == true) {
-                            window.location.href = "/wholesale/account/edit/" + response.id;
-                        } else {
-                            return false;
-                        }
-                    }
-                });
-            }
-            
-        }
-
-        // close modal
-        function close_modal() {
-            $(document).on('click', '.close_modal' ,function() {
-                $('#save_for_now').attr('data-toggle', '')
-                $('#save_for_now').attr('data-target', '')
-                $('#save_for_now_modal').modal('hide');
-            });
-        }
-        
-
-        // remove error message when filled
+         // remove error message when filled
 
         function remove_error_card_type(element) {
             var name = $(element).attr('name');
@@ -2044,18 +1456,21 @@
 
 
         function selectRadio(element) {
-            $('#card_type_errors').html('');
-            $('.wholesale-custom-radio').removeClass('selected');
-            let all_inputs = $('.hidden-radio');
-            all_inputs.removeAttr('checked');
-            all_inputs.each(function() {
-                $(this).val('');
-            });
-            var radioInput = $(element).find('.hidden-radio');
-            var getRadioId = radioInput.attr('id');
-            var assign_value = $('#' + getRadioId).val(getRadioId)
-            $('#' + getRadioId).attr('checked', 'checked');
-            $(element).addClass('selected');
+            // $('#card_type_errors').html('');
+            // $('.wholesale-custom-radio').removeClass('selected');
+            // let all_inputs = $('.hidden-radio');
+            // all_inputs.removeAttr('checked');
+            // all_inputs.each(function() {
+            //     $(this).attr('disabled', 'disabled');
+            // });
+            // var radioInput = $(element).find('.hidden-radio');
+            // var getRadioId = radioInput.attr('id');
+            // var assign_value = $('#' + getRadioId).val(getRadioId)
+            // $('#' + getRadioId).attr('checked', 'checked');
+            // $(element).addClass('selected');
+
+            // let all_inputs = $('.hidden-radio');
+
         }
 
         
@@ -2090,7 +1505,6 @@
             var postal_code_delivery = $('#postal_code_delivery').val();
             var phone_delivery = $('#phone_delivery').val();
             var file_upload = $('#file_upload').val();
-            
             if (company_name == '') {
                 $('#company_name_errors').html('Company name is required');
             } 
@@ -2106,7 +1520,6 @@
             if (mobile == '') {
                 $('#mobile_errors').html('Mobile number is required');
             }
-           
             if (email == '') {
                 $('#email_errors').html('Email is required');
             }
@@ -2124,6 +1537,7 @@
                 $('#account_payable_email_errors').html('Account payable email is required');
             }
             var account_pay_email_validation = isEmail(document.getElementById('account_payable_email'));
+            
             if (account_pay_email_validation == false) {
                 $('#account_payable_email_errors').html('Account payable email is not valid');
             }
@@ -2180,6 +1594,7 @@
             // if ((file_upload == '')  && $('#edit_image_input').val() == '') {
             //     $('#file_upload_errors').html('Permit image is required');
             // }
+
             var phoneValidation = isNumber(document.getElementById('phone'));
             var mobileValidation = isNumber(document.getElementById('mobile'));
             var phone_billing_validation = isNumber(document.getElementById('phone_billing'));
@@ -2210,7 +1625,7 @@
 
         function check_validation_step1 () {
             
-            var validation =validation_message_step_1();
+            var validation = validation_message_step_1();
             if (validation == true) {
                 $('#step1').removeClass('active');
                 $('#step1').removeClass('show');
@@ -2284,7 +1699,6 @@
             var permit_number = $('#permit_number').val();
             var phone_number = $('#phone_number').val();
             var date = $('#date').val();
-            
             var type_of_farm = $('#type_of_farm').val();
             if (seller_name == '') {
                 $('#seller_name_errors').html('Seller name is required');
@@ -2324,6 +1738,7 @@
             if (type_of_farm == '') {
                 $('#type_of_farm_errors').html('Type of farm or Equipments is required');
             }
+
             var phone_number_validation = isNumber(document.getElementById('phone_number'));
             if (phone_number_validation == false) {
                 $('#phone_number_errors').html('Phone number is invalid');
@@ -2360,7 +1775,6 @@
             var institute_routine_number = $('#institute_routine_number').val();
             var saving_account_number = $('#saving_account_number').val();
             var autorization_phone_number = $('#autorization_phone_number').val();
-           
 
             if (authorization_name == '') {
                 $('#authorization_name_errors').html('Authorization name is required');
@@ -2383,6 +1797,7 @@
             if (autorization_phone_number == '') {
                 $('#autorization_phone_number_errors').html('Phone number is required');
             }
+
             var autorization_phone_number_validation = isNumber(document.getElementById('autorization_phone_number'));
             if (autorization_phone_number_validation == false) {
                 $('#autorization_phone_number_errors').html('Phone number is invalid');
@@ -2504,8 +1919,6 @@
 
                 $('#wholesale_spinner').removeClass('d-none');
                 var data = new FormData();
-                // var files = $('input[name="permit_image"]')[0].files[0];
-                // data.append('permit_image',files);
                 var totalfiles = document.getElementById('file_upload').files.length;
                 if (totalfiles > 0) {
                     for (var index = 0; index < totalfiles; index++) {
@@ -2607,40 +2020,21 @@
             }
         }
 
-       
-        // show preview data
-        $(document).ready(function() {
-            $(document).on('click', '.close_previous_data_modal' ,function() {
-                $('.close_previous_data_modal').attr('data-toggle', '')
-                $('.close_previous_data_modal').attr('data-target', '')
-                $('#previous_data_modal').modal('hide');
-            });
-
-            $(document).on('click', '#show_previous_data_button' ,function() {
-                $('#show_previous_data_button').attr('data-toggle', 'modal')
-                $('#show_previous_data_button').attr('data-target', '#previous_data_modal')
-                $('#previous_data_modal').modal('show');
-            });
-        });
-
-        function show_previous_data_pop_up() {
-            $('#show_previous_data_button').attr('data-toggle', 'modal')
-            $('#show_previous_data_button').attr('data-target', '#previous_data_modal')
-            $('#previous_data_modal').modal('show');
-        }
 
         function isNumber(element) {
             var getID = element.id;
             var phoneNumber = element.value;
             var regex = /^\+\d{1,3} \(\d{3}\) \d{3}-\d{4}$/;
             if (regex.test(phoneNumber)) {
+                console.log('true number')
                 return true;
             } else {
+                console.log('false number')
                 $('#' + getID + '_errors').html(`Please Enter a valid data`);
                 return false;
             }
         }
-        
+
         function isEmail(element) {
             var getID = element.id;
             var phoneNumber = element.value;

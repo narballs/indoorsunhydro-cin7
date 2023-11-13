@@ -121,6 +121,7 @@ Route::get('/get-lists-names/', [ProductController::class, 'getListNames']);
 Route::post('/create-list/', [ProductController::class, 'createList']);
 Route::post('/delete/favorite/product', [ProductController::class, 'delete_favorite_product']);
 Route::get('/child/categories/{parent_id}', [ProductController::class, 'get_child_categories']);
+Route::get('wholesale-application/view/{id}', [UserController::class, 'view_wholesale_account'])->name('view_wholesale_account');
 Route::group(['prefix' => 'my-account/'], function () {
     Route::get('my-favorites', [UserController::class, 'myFavorites'])->name('my_favorites');
     Route::get('my-orders', [UserController::class, 'myOrders'])->name('myOrders');
@@ -318,6 +319,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/site', [UserController::class, 'switch_admin'])->name('switch_admin');
     Route::resource('admin/inventory-locations', AdminInventoryLocationController::class);
     Route::resource('admin/wholesale-applications', WholesaleApplicationController::class);
+    Route::post('/admin/wholesale-application/approve', [WholesaleApplicationController::class, 'wholesale_application_approve'])->name('wholesale_application_approve');
     Route::get('/admin/recycle-bin', [AdminSettingsController::class, 'recycle_bin'])->name('recycle_bin');
     Route::post('/admin/restore/contact/{id}', [AdminSettingsController::class, 'restore_contact'])->name('restore_contact');
     Route::post('/admin/delete/contact/permanent/{id}', [AdminSettingsController::class, 'delete_contact_permanently'])->name('delete_contact_permanently');

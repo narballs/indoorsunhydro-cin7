@@ -30,6 +30,7 @@
                                     <div>
                                         @php
                                             $session_contact_company = Session::get('company');
+                                            $wholesale_application_status = App\Models\WholesaleApplicationInformation::where('email' , Auth::user()->email)->first();
                                         @endphp
                                         <form style="display:none;" id="frm-logout" action="{{ route('logout') }}"
                                             method="POST">
@@ -147,7 +148,11 @@
                                                             </li>
                                                             <li class="d_menu_company">
                                                                 @if(strtolower($enable_wholesale_registration->option_value) == 'yes')
-                                                                    <a href="{{route('create_wholesale_account')}}" class="login-in-register top-header-items" title="Apply For Wholesale Account" >{!! \Illuminate\Support\Str::limit('Apply For Wholesale Account', 14) !!}</a>
+                                                                    @if (!empty($wholesale_application_status) && ($wholesale_application_status->status == 0)) 
+                                                                        <a href="{{route('create_wholesale_account')}}" class="login-in-register top-header-items" title="Continue Wholesale Application" >{!! \Illuminate\Support\Str::limit('Continue Wholesale Application', 14) !!}</a>
+                                                                    @elseif (!empty($wholesale_application_status) && ($wholesale_application_status->status == 1))
+                                                                        <a href="{{route('view_wholesale_account' , $wholesale_application_status->id)}}" class="login-in-register top-header-items" title="View Wholesale Application" >{!! \Illuminate\Support\Str::limit('View Wholesale Application', 14) !!}</a>
+                                                                    @endif
                                                                 @endif
                                                             </li>
                                                         </div>

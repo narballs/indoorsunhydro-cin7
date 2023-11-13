@@ -1908,13 +1908,15 @@ class UserController extends Controller
     public function create_wholesale_account (Request $request) {
         if (auth()->user()) {
             $email = auth()->user()->email;
+            $user_id = auth()->user()->id;
+            $contact = Contact::where('user_id' , $user_id)->first();
             $wholesale_application = WholesaleApplicationInformation::where('email' , $email)->first();
             if (!empty($wholesale_application)) {
                 $id = $wholesale_application->id;
                 return redirect()->route('edit_wholesale_account' , $id);
                 
             } else {
-                return view('create_wholesale_account');
+                return view('create_wholesale_account' , compact('contact'));
             }
         } else {
 
@@ -1932,6 +1934,17 @@ class UserController extends Controller
         $wholesale_application_card = WholesaleApplicationCard::where('wholesale_application_id' , $id)->first();
         $wholesale_appication_images = WholesaleApplicationImage::where('wholesale_application_id' , $id)->get();
         return view('edit_wholesale_account', compact('id','wholesale_application' ,'wholesale_appication_images', 'wholesale_application_address_billing' , 'wholesale_application_address_delivery' , 'wholesale_regulation' , 'wholesale_authorization' , 'wholesale_application_card'));
+    }
+    // edit wholesale account
+    public function view_wholesale_account ($id) {
+        $wholesale_application = WholesaleApplicationInformation::where('id' , $id)->first();
+        $wholesale_application_address_billing = WholesaleApplicationAddress::where('wholesale_application_id' , $id)->where('type' , 'Billing Address')->first();
+        $wholesale_application_address_delivery = WholesaleApplicationAddress::where('wholesale_application_id' , $id)->where('type' , 'Delievery Address')->first();
+        $wholesale_regulation = WholesaleApplicationRegulationDetail::where('wholesale_application_id' , $id)->first();
+        $wholesale_authorization = WholesaleApplicationAuthorizationDetail::where('wholesale_application_id' , $id)->first();
+        $wholesale_application_card = WholesaleApplicationCard::where('wholesale_application_id' , $id)->first();
+        $wholesale_appication_images = WholesaleApplicationImage::where('wholesale_application_id' , $id)->get();
+        return view('view_wholesale_account', compact('id','wholesale_application' ,'wholesale_appication_images', 'wholesale_application_address_billing' , 'wholesale_application_address_delivery' , 'wholesale_regulation' , 'wholesale_authorization' , 'wholesale_application_card'));
     }
 
      // edit wholesale account
@@ -1984,6 +1997,7 @@ class UserController extends Controller
                     'payable_name' => $request->account_payable_name,
                     'payable_email' => $request->account_payable_email,
                     'payable_phone' => $request->account_payable_phone,
+                    'status' => 0
                     // 'permit_image' => $permit_image,
                 ]);
 
@@ -2194,6 +2208,7 @@ class UserController extends Controller
                     'payable_name' => $request->account_payable_name,
                     'payable_email' => $request->account_payable_email,
                     'payable_phone' => $request->account_payable_phone,
+                    'status' => 0
                     // 'permit_image' => $permit_image,
                 ]);
     
@@ -2390,6 +2405,7 @@ class UserController extends Controller
                     'payable_name' => $request->account_payable_name,
                     'payable_email' => $request->account_payable_email,
                     'payable_phone' => $request->account_payable_phone,
+                    'status' => 0
                     // 'permit_image' => $permit_image_name,
                 ]);
                 $wholesale_appication->save();

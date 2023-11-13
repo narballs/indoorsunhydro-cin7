@@ -4,6 +4,7 @@
     $faqs = NavHelper::getFaqs();
     $blogs = NavHelper::getBlogs();
     $enable_wholesale_registration = App\Models\AdminSetting::where('option_name', 'enable_wholesale_registration')->first();
+    
 ?>
 <div class="col-xl-12 col-lg-12 col-md-12  col-sm-6 col-xs-6 p-0 header-top mb-2">
     <nav class="navbar navbar-expand-sm navbar-light bg-transparent pb-0 justify-content-start">
@@ -137,6 +138,7 @@
                 <div class="mbl_drop_cmpny mx-3 col-xs-5">
                     @php
                         $session_contact_company = Session::get('company');
+                        $wholesale_application_status = App\Models\WholesaleApplicationInformation::where('email' , Auth::user()->email)->first();
                     @endphp
                     <form style="display:none;" id="frm-logout" action="{{ route('logout') }}" method="POST">
                         {{ csrf_field() }}
@@ -205,9 +207,15 @@
                             </a>
                         </div>
                         @if(strtolower($enable_wholesale_registration->option_value) == 'yes')
-                            <div class="col-sm-4 p-0">
-                                <a class="font-mobile-class" href="{{route('create_wholesale_account')}}">{!! \Illuminate\Support\Str::limit('Apply For Wholesale Account', 10) !!}</a>
-                            </div>
+                            @if (!empty($wholesale_application_status) && ($wholesale_application_status->status == 1))
+                                <div class="col-sm-4 p-0">
+                                    <a class="font-mobile-class" href="{{route('view_wholesale_account' , $wholesale_application_status->id)}}">{!! \Illuminate\Support\Str::limit('View Wholesale Application', 10) !!}</a>
+                                </div>
+                            @elseif (!empty($wholesale_application_status) && ($wholesale_application_status->status == 0))
+                                <div class="col-sm-4 p-0">
+                                    <a class="font-mobile-class" href="{{route('create_wholesale_account')}}">{!! \Illuminate\Support\Str::limit('Continue Wholesale Application', 10) !!}</a>
+                                </div>
+                            @endif
                         @endif
                         
                     </div>

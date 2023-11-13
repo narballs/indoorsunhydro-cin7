@@ -21,7 +21,8 @@ class WholesaleApplicationInformation extends Model
         'payable_phone',
         'payable_email',
         'permit_image',
-        'parent_company'
+        'parent_company',
+        'status',
     ];
 
     public function wholesale_application_address()

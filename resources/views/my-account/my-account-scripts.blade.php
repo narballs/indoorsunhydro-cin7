@@ -307,11 +307,32 @@
     // }
 
     function updateContact(type , user_id) {
+        
         if (type === 'update shipping address') {
             $('#address_loader_shipping').removeClass('d-none');
+            var companyNameShipping = $('.companyNameShipping:checked').val();
+            if (companyNameShipping == '' || companyNameShipping == null) {
+                $('#error_company_shipping').html('Please select location');
+                $('#address_loader_shipping').addClass('d-none');
+                return false;
+            } 
+            else {
+                $('#error_company_shipping').html('');
+            }
         } else {
             $('#address_loader').removeClass('d-none');
+            var companyNameBilling = $('.companyNameBilling:checked').val();
+            if (companyNameBilling == '' || companyNameBilling == null) {
+                $('#error_company_billing').html('Please select location');
+                $('#address_loader').addClass('d-none');
+                return false;
+            } 
+            else {
+                $('#error_company_billing').html('');
+            }
         }
+        
+        var companyName = $('.companyName:checked').val();
         var first_name = $('input[name=firstName]').val();
         var last_name = $('input[name=lastName]').val();
         var company_name = $('input[name=company]').val();
@@ -324,7 +345,7 @@
         var email = $('input[name=email]').val();
         var contact_id = $('#contact_id_val').val();
         var secondary_id = $('input[name=secondary_id]').val();
-        var companyName = $('#companyName').val();
+        
         
         jQuery.ajax({
             method: 'GET',
@@ -1070,15 +1091,50 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="company">Company Name(optional)</label>
+                            <label for="company">Select Location</label>
+                            @php
+                                $companies = Session::get('companies');
+                                $session_company = Session::get('company');
+                            @endphp
                             <div class="input-group">
-                                <input type="text" class="form-control bg-light" name="company" id="companyName"
-                                    placeholder="Enter you company name" value="{{ $user_address->company }}" required>
-
+                                <div class="row">
+                                    @if ($companies)
+                                    @foreach ($companies as $company)
+                                        @php
+                                            if ($company->contact_id) {
+                                                $contact_id = $company->contact_id;
+                                                $primary = '(primary)';
+                                            } else {
+                                                $contact_id = $company->secondary_id;
+                                                $primary = '(secondary)';
+                                            }
+                                            if ($company->status == 0) {
+                                                $disabled = 'disabled';
+                                                $disable_text = '(Disabled)';
+                                                $muted = 'text-muted';
+                                            } else {
+                                                $disabled = '';
+                                                $disable_text = '';
+                                                $muted = '';
+                                            }
+                                        @endphp
+                                        @if($company->type != "Supplier")
+                                            <div class="col-md-12">
+                                                <input type="radio" {{!empty($session_company) && $session_company === $company->company ? 'checked' : ''}} value="{{ $company->company }}" class="companyName companyNameBilling" name="company" id="companyName" {{ $disabled }} {{ $muted }}>
+                                                <label for="" {{ $disabled }} {{ $muted }}>{{ $company->company }}
+                                                    <span
+                                                    style="font-size: 9px;font-family: 'Poppins';"
+                                                    class="{{ $muted }}">{{ $primary }}
+                                                </span>
+                                                </label>
+                                            </div>
+                                        @endif
+                                        {{-- <input type="text" class="form-control bg-light" name="company" id="companyName" placeholder="Enter you company name" value="{{ $user_address->company }}" required> --}}
+                                    @endforeach
+                                @endif
+                                </div>
                             </div>
-                            <div id="error_company" class="text-danger">
-
-                            </div>
+                            <div id="error_company_billing" class="text-danger"> </div>
                         </div>
 
                         <div class="mb-3">
@@ -1218,15 +1274,50 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="company">Company Name(optional)</label>
+                            <label for="company">Select Location</label>
+                            @php
+                                $companies = Session::get('companies');
+                                $session_company = Session::get('company');
+                            @endphp
                             <div class="input-group">
-                                <input type="text" class="form-control bg-light" name="company" id="companyName"
-                                    placeholder="Enter you company name" value="{{ $user_address->company }}" required>
-
+                                <div class="row">
+                                    @if ($companies)
+                                    @foreach ($companies as $company)
+                                        @php
+                                            if ($company->contact_id) {
+                                                $contact_id = $company->contact_id;
+                                                $primary = '(primary)';
+                                            } else {
+                                                $contact_id = $company->secondary_id;
+                                                $primary = '(secondary)';
+                                            }
+                                            if ($company->status == 0) {
+                                                $disabled = 'disabled';
+                                                $disable_text = '(Disabled)';
+                                                $muted = 'text-muted';
+                                            } else {
+                                                $disabled = '';
+                                                $disable_text = '';
+                                                $muted = '';
+                                            }
+                                        @endphp
+                                        @if($company->type != "Supplier")
+                                            <div class="col-md-12">
+                                                <input type="radio" {{!empty($session_company) && $session_company === $company->company ? 'checked' : ''}} value="{{ $company->company }}" name="company" class="companyName companyNameShipping" id="companyName" {{ $disabled }} {{ $muted }}>
+                                                <label for="" {{ $disabled }} {{ $muted }}>{{ $company->company }}
+                                                    <span
+                                                    style="font-size: 9px;font-family: 'Poppins';"
+                                                    class="{{ $muted }}">{{ $primary }}
+                                                </span>
+                                                </label>
+                                            </div>
+                                        @endif
+                                        {{-- <input type="text" class="form-control bg-light" name="company" id="companyName" placeholder="Enter you company name" value="{{ $user_address->company }}" required> --}}
+                                    @endforeach
+                                @endif
+                                </div>
                             </div>
-                            <div id="error_company" class="text-danger">
-
-                            </div>
+                            <div id="error_company_shipping" class="text-danger"> </div>
                         </div>
 
                         <div class="mb-3">
