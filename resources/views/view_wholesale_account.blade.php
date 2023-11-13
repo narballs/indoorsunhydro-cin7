@@ -31,29 +31,7 @@
                         <div class="col-md-9 bg-light p-4">
                             <div class="row justify-content-center">
                                 <div class="col-md-10 p-4">
-                                    <div class="important_notice mt-2  mb-3">
-                                        <div class="row p-3">
-                                            <div class="col-md-1">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" class="mt-1" height="16" viewBox="0 0 16 16" fill="none">
-                                                    <g clip-path="url(#clip0_107_29812)">
-                                                    <path d="M8.00016 14.6666C11.6821 14.6666 14.6668 11.6819 14.6668 7.99998C14.6668 4.31808 11.6821 1.33331 8.00016 1.33331C4.31826 1.33331 1.3335 4.31808 1.3335 7.99998C1.3335 11.6819 4.31826 14.6666 8.00016 14.6666Z" stroke="#242424" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-                                                    <path d="M8 10.6667V8" stroke="#242424" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-                                                    <path d="M8 5.33331H8.00667" stroke="#242424" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-                                                    </g>
-                                                    <defs>
-                                                    <clipPath id="clip0_107_29812">
-                                                        <rect width="16" height="16" fill="white"/>
-                                                    </clipPath>
-                                                    </defs>
-                                                </svg>
-                                            </div>
-                                            <div class="col-md-11 pl-0">
-                                                <p class="notice_para mb-0 font-weight-bold text-danger">
-                                                    Please complete all the steps for Application Consideration!
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    
                                     <form action="{{route('store_wholesale_account')}}" id="wholesaleForm" method="post" enctype="multipart/form-data">
                                         <div class="success_message d-none">
                                             <div class="alert alert-success " id="successMessage"></div>
