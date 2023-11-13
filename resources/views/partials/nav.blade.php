@@ -215,6 +215,10 @@
                                 <div class="col-sm-4 p-0">
                                     <a class="font-mobile-class" href="{{route('create_wholesale_account')}}">{!! \Illuminate\Support\Str::limit('Continue Wholesale Application', 10) !!}</a>
                                 </div>
+                            @elseif (empty($wholesale_application_status))
+                                <div class="col-sm-4 p-0">
+                                    <a class="font-mobile-class" href="{{route('create_wholesale_account')}}">{!! \Illuminate\Support\Str::limit('Apply for Wholesale Account', 10) !!}</a>
+                                </div>
                             @endif
                         @endif
                         

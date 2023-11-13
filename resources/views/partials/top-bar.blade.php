@@ -152,6 +152,8 @@
                                                                         <a href="{{route('create_wholesale_account')}}" class="login-in-register top-header-items" title="Continue Wholesale Application" >{!! \Illuminate\Support\Str::limit('Continue Wholesale Application', 14) !!}</a>
                                                                     @elseif (!empty($wholesale_application_status) && ($wholesale_application_status->status == 1))
                                                                         <a href="{{route('view_wholesale_account' , $wholesale_application_status->id)}}" class="login-in-register top-header-items" title="View Wholesale Application" >{!! \Illuminate\Support\Str::limit('View Wholesale Application', 14) !!}</a>
+                                                                    @elseif (empty($wholesale_application_status))
+                                                                        <a href="{{route('create_wholesale_account')}}" class="login-in-register top-header-items" title="Apply for Wholesale Account" >{!! \Illuminate\Support\Str::limit('Apply for Wholesale Account', 14) !!}</a>
                                                                     @endif
                                                                 @endif
                                                             </li>
