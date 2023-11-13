@@ -121,6 +121,7 @@ Route::get('/get-lists-names/', [ProductController::class, 'getListNames']);
 Route::post('/create-list/', [ProductController::class, 'createList']);
 Route::post('/delete/favorite/product', [ProductController::class, 'delete_favorite_product']);
 Route::get('/child/categories/{parent_id}', [ProductController::class, 'get_child_categories']);
+Route::get('wholesale-application/view/{id}', [UserController::class, 'view_wholesale_account'])->name('view_wholesale_account');
 Route::group(['prefix' => 'my-account/'], function () {
     Route::get('my-favorites', [UserController::class, 'myFavorites'])->name('my_favorites');
     Route::get('my-orders', [UserController::class, 'myOrders'])->name('myOrders');
