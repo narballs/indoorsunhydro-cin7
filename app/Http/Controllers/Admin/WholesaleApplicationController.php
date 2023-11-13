@@ -79,6 +79,14 @@ class WholesaleApplicationController extends Controller
         return view('admin.wholesale_applications.show' , compact('wholesale_application'));
     }
 
+    public function wholesale_application_approve (Request $request) {
+        $id = $request->wholesale_application_id;
+        $wholesale_application = WholesaleApplicationInformation::find($id);
+        $wholesale_application->status = 1;
+        $wholesale_application->save();
+        return redirect()->back()->with('success', 'Wholesale Application Approved Successfully');
+    }
+
     /**
      * Show the form for editing the specified resource.
      *

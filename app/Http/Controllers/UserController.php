@@ -1986,6 +1986,7 @@ class UserController extends Controller
                     'payable_name' => $request->account_payable_name,
                     'payable_email' => $request->account_payable_email,
                     'payable_phone' => $request->account_payable_phone,
+                    'status' => 0
                     // 'permit_image' => $permit_image,
                 ]);
 
@@ -2196,6 +2197,7 @@ class UserController extends Controller
                     'payable_name' => $request->account_payable_name,
                     'payable_email' => $request->account_payable_email,
                     'payable_phone' => $request->account_payable_phone,
+                    'status' => 0
                     // 'permit_image' => $permit_image,
                 ]);
     
@@ -2392,6 +2394,7 @@ class UserController extends Controller
                     'payable_name' => $request->account_payable_name,
                     'payable_email' => $request->account_payable_email,
                     'payable_phone' => $request->account_payable_phone,
+                    'status' => 0
                     // 'permit_image' => $permit_image_name,
                 ]);
                 $wholesale_appication->save();
