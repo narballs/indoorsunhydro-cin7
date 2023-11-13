@@ -209,7 +209,7 @@
                         @if(strtolower($enable_wholesale_registration->option_value) == 'yes')
                             @if (!empty($wholesale_application_status) && ($wholesale_application_status->status == 1))
                                 <div class="col-sm-4 p-0">
-                                    <a class="font-mobile-class" href="{{route('create_wholesale_account')}}">{!! \Illuminate\Support\Str::limit('View Wholesale Application', 10) !!}</a>
+                                    <a class="font-mobile-class" href="{{route('view_wholesale_account' , $wholesale_application_status->id)}}">{!! \Illuminate\Support\Str::limit('View Wholesale Application', 10) !!}</a>
                                 </div>
                             @elseif (!empty($wholesale_application_status) && ($wholesale_application_status->status == 0))
                                 <div class="col-sm-4 p-0">
