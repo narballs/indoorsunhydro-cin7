@@ -419,12 +419,7 @@ class OrderController extends Controller
                             $data['email'] = $parent_email->email;
 
                             MailHelper::sendMailNotification('emails.credit-limit-reached', $data);
-                        } else {
-                            $data['subject'] = 'Credit limit reached';
-                            $data['email'] = $customer->contact->email;
-
-                            MailHelper::sendMailNotification('emails.credit-limit-reached', $data);
-                        }
+                        } 
                     } else {
                         $data['subject'] = 'Your Indoorsun Hydro order' .'#'.$currentOrder->id. ' ' .'has been received';
                         $data['email'] = $email;
