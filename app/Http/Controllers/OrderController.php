@@ -395,7 +395,7 @@ class OrderController extends Controller
                         'dateCreated' => $dateCreated,
                         'addresses' => $addresses,
                         'best_product' => $best_products,
-                        'user_email' => $user_email,
+                        'user_email' => $email,
                         'currentOrder' => $currentOrder,
                         'count' => $count,
                         'from' => SettingHelper::getSetting('noreply_email_address')
@@ -410,7 +410,7 @@ class OrderController extends Controller
                             MailHelper::sendMailNotification('emails.admin-order-received', $data);
                         }
                     }
-                    $credit_limit = $contact->credit_limit;
+                    $credit_limit = $customer->$contact->credit_limit;
                     $parent_email = Contact::where('contact_id', $active_contact_id)->first();
 
                     if ($credit_limit < $cart_total) {
