@@ -419,10 +419,6 @@ class OrderController extends Controller
                             $data['email'] = $parent_email->email;
 
                             MailHelper::sendMailNotification('emails.credit-limit-reached', $data);
-                        } else {
-                            $data['subject'] = 'Credit limit reached';
-                            $data['email'] = $is_primary->email;
-                            MailHelper::sendMailNotification('emails.credit-limit-reached', $data);
                         }
                     } else {
 
