@@ -259,7 +259,7 @@
                                             line-height: 19px;
                                             color: #5C5C5C;
                                             ">
-                                                {{$user_email->email}}
+                                                {{$user_email}}
                                             </span><br>
                                             <span class="thank-you-page-user-detaiss" style=" font-family: 'Poppins';
                                             font-style: normal;
@@ -308,7 +308,7 @@
                                             font-size: 15px;
                                             line-height: 19px;
                                             color: #5C5C5C;">
-                                                {{$user_email->email}}
+                                                {{$user_email}}
                                             </span><br>
                                             <span class="thank-you-page-user-detaiss" style=" font-family: 'Poppins';
                                             font-style: normal;
