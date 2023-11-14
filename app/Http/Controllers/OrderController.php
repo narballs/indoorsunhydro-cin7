@@ -410,7 +410,7 @@ class OrderController extends Controller
                             MailHelper::sendMailNotification('emails.admin-order-received', $data);
                         }
                     }
-                    $credit_limit = $customer->$contact->credit_limit;
+                    $credit_limit = $customer->contact->credit_limit;
                     $parent_email = Contact::where('contact_id', $active_contact_id)->first();
 
                     if ($credit_limit < $cart_total) {
