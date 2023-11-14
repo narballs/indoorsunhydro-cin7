@@ -430,8 +430,8 @@ class OrderController extends Controller
 
 
                     $email_sent_to_users = [];
-                    $user = User::where('id',  Auth::id())->first();
-                    $all_ids = UserHelper::getAllMemberIds($user);
+                    // $user = User::where('id',  Auth::id())->first();
+                    // $all_ids = UserHelper::getAllMemberIds($user);
                     $all_members = Contact::whereIn('id', $all_ids)->get();
                     foreach ($all_members as $member) {
                         $member_user = User::find($member->user_id);
