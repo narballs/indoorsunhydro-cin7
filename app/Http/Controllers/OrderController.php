@@ -316,14 +316,24 @@ class OrderController extends Controller
                     $order_items = ApiOrderItem::with('order.texClasses', 'product.options')
                         ->where('order_id', $order_id)
                         ->get();
-                    $user_default = User::where('id', Auth::id())->first();
-                    $all_ids = UserHelper::getAllMemberIds($user_default);
-                    $check_default_user = Contact::whereIn('id', $all_ids)->where('is_default' , 1)->first();
-                    if (!empty($check_default_user)) {
-                        $contact = Contact::where('id', $check_default_user->id)->first();
-                    } else {
-                        $contact = Contact::where('user_id', auth()->id())->first();
-                    }
+                    // $user_default = User::where('id', Auth::id())->first();
+                    // $all_ids = UserHelper::getAllMemberIds($user_default);
+                    // $check_default_user = Contact::whereIn('id', $all_ids)->where('is_default' , 1)->first();
+                    // if (!empty($check_default_user)) {
+                    //     $contact = Contact::where('id', $check_default_user->id)->first();
+                    // } else {
+                    //     $contact = Contact::where('user_id', auth()->id())->first();
+                    // }
+                    $user = User::where('id', $currentOrder->user_id)->first();
+                    $all_ids = UserHelper::getAllMemberIds($user);
+                    $contact_ids = Contact::whereIn('id', $all_ids)->pluck('contact_id')->toArray();
+                    $customer = ApiOrder::with(['createdby'])->whereIn('memberId', $contact_ids)
+                    ->with('contact' , function($query) {
+                        $query->orderBy('company');
+                    })
+                    ->with('apiOrderItem.product')
+                    ->where('id' , $order_id)
+                    ->first();
                     $check_shipstation_create_order_status = AdminSetting::where('option_name', 'create_order_in_shipstation')->first();
                     if (!empty($check_shipstation_create_order_status) && strtolower($check_shipstation_create_order_status->option_value) == 'yes') {
                         $shiping_order = UserHelper::shipping_order($order_id , $currentOrder , $order_contact);
@@ -339,35 +349,34 @@ class OrderController extends Controller
                     $best_products = Product::where('status', '!=', 'Inactive')->orderBy('views', 'DESC')->limit(4)->get();
                     $addresses = [
                         'billing_address' => [
-                            'firstName' => $contact->firstName,
-                            'lastName' => $contact->lastName,
-                            'address1' => $contact->address1,
-                            'address2' => $contact->address2,
-                            'city' => $contact->city,
-                            'state' => $contact->state,
-                            'zip' => $contact->postCode,
-                            'mobile' => $contact->mobile,
-                            'phone' => $contact->phone,
+                            'firstName' => $customer->contact->firstName,
+                            'lastName' => $customer->contact->lastName,
+                            'address1' => $customer->contact->address1,
+                            'address2' => $customer->contact->address2,
+                            'city' => $customer->contact->city,
+                            'state' => $customer->contact->state,
+                            'zip' => $customer->contact->postCode,
+                            'mobile' => $customer->contact->mobile,
+                            'phone' => $customer->contact->phone,
                         ],
                         'shipping_address' => [
-                            'postalAddress1' => $contact->postalAddress1,
-                            'postalAddress2' => $contact->postalAddress2,
-                            'phone' => $contact->postalCity,
-                            'postalCity' => $contact->postalState,
-                            'postalState' => $contact->postalPostCode,
-                            'postalPostCode' => $contact->postalPostCode
+                            'postalAddress1' => $customer->contact->postalAddress1,
+                            'postalAddress2' => $customer->contact->postalAddress2,
+                            'phone' => $customer->contact->postalCity,
+                            'postalCity' => $customer->contact->postalState,
+                            'postalState' => $customer->contact->postalPostCode,
+                            'postalPostCode' => $customer->contact->postalPostCode
                         ],
                         'best_product' => $best_products,
-                        'user_email' =>   $user_email,
+                        'user_email' =>   $customer->contact->email,
                         'currentOrder' => $currentOrder,
                         'count' => $count,
                         'order_id' => $order_id,
-                        'company' => $currentOrder->contact->company,
-                        'order_status' => '', 
+                        'company' => $currentOrder->contact->company, 
+                        'order_status' => '',
                     ];
-
-                    $name = $contact->firstName;
-                    $email =  $contact->email;
+                    $name = $customer->contact->firstName;
+                    $email =  $customer->contact->email;
                     $reference  =  $currentOrder->reference;
                     $template = 'emails.admin-order-received';
                     $admin_users = DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
