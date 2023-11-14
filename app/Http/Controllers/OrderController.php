@@ -425,15 +425,16 @@ class OrderController extends Controller
                             $data['email'] = $email;
 
                             MailHelper::sendMailNotification('emails.credit-limit-reached', $data);
-                        }  
+                        }
+                        
+                        $data['subject'] = 'Your Indoorsun Hydro order' .'#'.$currentOrder->id. ' ' .'has been received';
+                        $data['email'] = $email;
+                        MailHelper::sendMailNotification('emails.admin-order-received', $data);
                     } else {
                         $data['subject'] = 'Your Indoorsun Hydro order' .'#'.$currentOrder->id. ' ' .'has been received';
                         $data['email'] = $email;
-                        
-                    }
-                    MailHelper::sendMailNotification('emails.admin-order-received', $data);
-
-                    $email_sent_to_users = [];
+                        MailHelper::sendMailNotification('emails.admin-order-received', $data);
+                    }$email_sent_to_users = [];
                     // $user = User::where('id',  Auth::id())->first();
                     // $all_ids = UserHelper::getAllMemberIds($user);
                     $all_members = Contact::whereIn('id', $all_ids)->get();
