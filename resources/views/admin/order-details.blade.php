@@ -384,31 +384,21 @@
                                                 <strong>{{ $customer->contact->firstName }}&nbsp;{{ $customer->contact->lastName }}</strong><br>
                                             @endif
                                             @if(!empty($customer->contact->postalAddress1))
-                                                {{$customer->contact->postalAddress1}} <br>
-                                            @else
-                                                {{$customer->contact->address1}} <br>
+                                                {{$customer->contact->postalAddress1 . ','}} <br>
                                             @endif
                                             @if(!empty($customer->contact->postalAddress2))
-                                                {{$customer->contact->postalAddress2}} 
-                                            @else
-                                                {{$customer->contact->address2}}
+                                                {{$customer->contact->postalAddress2 . ','}} 
                                             @endif
                                             @if(!empty($customer->contact->postalCity))
-                                                {{$customer->contact->postalCity}},
-                                            @else
-                                                {{$customer->contact->city}},
+                                                {{$customer->contact->postalCity . ','}}
                                             @endif
                                             @if(!empty($customer->contact->postalState))
-                                                {{$customer->contact->postalState}}
-                                            @else
-                                                {{$customer->contact->state}}
+                                                {{$customer->contact->postalState . ','}}
                                             @endif
                                             @if(!empty($customer->contact->postalPostCode))
                                                 {{$customer->contact->postalPostCode}}
-                                            @else
-                                                {{$customer->contact->postCode}}
                                             @endif
-                                            <p title="Phone" class="m-0">P:({{ $customer->contact->mobile }})</p>
+                                            <p title="Phone" class="mb-0">P: {{ !empty($customer->contact->mobile) ? '('. $customer->contact->mobile . ')' : '('. $customer->contact->phone . ')' }}</p>
                                         </address>
                                     </div>
                                 </div>
@@ -470,12 +460,12 @@
                                 <h3 class=" h6">Address</h3>
                                 <address>
                                     <strong>{{ $customer->contact->firstName }} {{ $customer->contact->lastName }}</strong><br>
-                                    {{ !empty($customer->contact->address1) ? $customer->contact->address1 : $customer->contact->postalAddress1 }}, 
-                                    {{ !empty($customer->contact->address2) ? $customer->contact->address2 :   $customer->contact->postalAddress2}}<br>
-                                    {{ !empty($customer->contact->state) ? $customer->contact->state : $customer->contact->postalState }},
-                                    {{ !empty($customer->contact->city) ? $customer->contact->city : $customer->contact->postalCity }},
-                                    {{ !empty($customer->contact->postCode) ? $customer->contact->postCode : $customer->contact->postalPostCode }},
-                                    <p title="Phone" class="mb-0">P: ({{ $customer->contact->mobile }})</p>
+                                    {{ !empty($customer->contact->address1) ? $customer->contact->address1 . ',' : '' }}
+                                    {{ !empty($customer->contact->address2) ? $customer->contact->address2 . ',': ''}}<br>
+                                    {{ !empty($customer->contact->state) ? $customer->contact->state . ',' : '' }}
+                                    {{ !empty($customer->contact->city) ? $customer->contact->city . ',' : '' }}
+                                    {{ !empty($customer->contact->postCode) ? $customer->contact->postCode . ',' : '' }}
+                                    <p title="Phone" class="mb-0">P: {{ !empty($customer->contact->mobile) ? '('. $customer->contact->mobile . ')' : '('. $customer->contact->phone . ')' }}</p>
                                     <p title="Phone">{{ $customer->contact->email }}</p>
                                 </address>
                             </div>

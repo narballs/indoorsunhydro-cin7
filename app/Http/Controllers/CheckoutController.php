@@ -187,7 +187,6 @@ class CheckoutController extends Controller
                 'apiOrderItem.product.options',
                 'texClasses'
             )->first();
-        
         $user = User::where('id', $user_id)->first();
         $all_ids = UserHelper::getAllMemberIds($user);
         $order_contact_query = Contact::whereIn('id', $all_ids)->first();
@@ -196,6 +195,12 @@ class CheckoutController extends Controller
         } else {
             $order_contact = Contact::where('contact_id', $order->memberId)->first();
         }
+
+
+        if (!empty($order_contact) && $order_contact->is_parent == 0) {
+            $order_contact = Contact::where('contact_id', $order_contact->parent_id)->first();
+        }
+         
         $createdDate = $order->created_at;
         $formatedDate = $createdDate->format('F  j, Y h:i:s A');
         $orderitems = ApiOrderItem::where('order_id', $id)->with('product')->get();
