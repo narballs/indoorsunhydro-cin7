@@ -36,14 +36,14 @@
                                     {{ $address_user->contact[0]['lastName'] }}
                                 </p>
                                 <p class="my_account_address_items">
-                                    {{ !empty($address_user->contact[0]['postalAddress1']) ? $address_user->contact[0]['postalAddress1'] . "," : '' . ","}}
+                                    {{ !empty($address_user->contact[0]['postalAddress1']) ? $address_user->contact[0]['postalAddress1'] . "," : '' }}
                                 </p>
                                 <p class="my_account_address_items">
-                                    {{ $address_user->contact[0]['postalAddress2'] ?  $address_user->contact[0]['postalAddress2'] . "," : '' . ","}}
+                                    {{ $address_user->contact[0]['postalAddress2'] ?  $address_user->contact[0]['postalAddress2'] . "," : '' }}
                                 </p>
                                 <p class="my_account_address_items">
-                                    {{ $address_user->contact[0]['postalCity'] ?  $address_user->contact[0]['postalCity'] . "," :  '' . "," }}
-                                    {{ $address_user->contact[0]['postalState'] ?  $address_user->contact[0]['postalState'] . "," :  '' . "," }}
+                                    {{ $address_user->contact[0]['postalCity'] ?  $address_user->contact[0]['postalCity'] . "," :  ''  }}
+                                    {{ $address_user->contact[0]['postalState'] ?  $address_user->contact[0]['postalState'] . "," :  ''  }}
                                     {{ $address_user->contact[0]['postalPostCode'] ?  $address_user->contact[0]['postalPostCode'] :  '' }}
                                 </p>
                                 <p class="my_account_address_items">
@@ -75,15 +75,15 @@
                                     {{ $address_user->contact[0]['lastName'] }}
                                 </p>
                                 <p class="my_account_address_items">
-                                    {{ !empty($address_user->contact[0]['address1']) ? $address_user->contact[0]['address1'] . "," : $address_user->contact[0]['postalAddress1'] . ","}}
+                                    {{ !empty($address_user->contact[0]['address1']) ? $address_user->contact[0]['address1'] . "," : ''}}
                                 </p>
                                 <p class="my_account_address_items">
-                                    {{ !empty($address_user->contact[0]['address2']) ?  $address_user->contact[0]['address2'] . "," : $address_user->contact[0]['postalAddress2'] . ","}}
+                                    {{ !empty($address_user->contact[0]['address2']) ?  $address_user->contact[0]['address2'] . "," : ''}}
                                 </p>
                                 <p class="my_account_address_items">
-                                    {{ !empty($address_user->contact[0]['city']) ?  $address_user->contact[0]['city'] . "," :  $address_user->contact[0]['postalCity'] . "," }}
-                                    {{ !empty($address_user->contact[0]['state']) ?  $address_user->contact[0]['state'] . "," :  $address_user->contact[0]['postalState'] . "," }}
-                                    {{ !empty($address_user->contact[0]['postCode']) ?  $address_user->contact[0]['postCode']:  $address_user->contact[0]['postalPostCode'] }}
+                                    {{ !empty($address_user->contact[0]['city']) ?  $address_user->contact[0]['city'] . "," :  '' }}
+                                    {{ !empty($address_user->contact[0]['state']) ?  $address_user->contact[0]['state'] . "," : '' }}
+                                    {{ !empty($address_user->contact[0]['postCode']) ?  $address_user->contact[0]['postCode']:  '' }}
                                 </p>
                                 <p class="my_account_address_items">
                                     <span class="my_account_address_items">

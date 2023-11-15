@@ -74,7 +74,74 @@
                 <td>
                     <table width="100%" align="left" border="0">
                         <tr>
-                            <td width="60%">
+                            <td width="40%" style="vertical-align: top;">
+                                <table border="0" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <td style="color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
+                                                BILLING ADDRESS
+                                            </td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
+                                                {{ $addresses['billing_address']['firstName'] .' ' . ' '.$addresses['billing_address']['lastName'] }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
+                                                @if ($addresses['shipping_address']['postalAddress1'] != null)
+                                                {{$addresses['shipping_address']['postalAddress1']}}
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
+                                                @if ($addresses['shipping_address']['postalAddress2'] != null)
+                                                {{$addresses['shipping_address']['postalAddress2']}}
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
+                                                @if ($addresses['shipping_address']['postalCity'] != null)
+                                                {{$addresses['shipping_address']['postalCity']}}
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
+                                                @if ($addresses['shipping_address']['postalState'] != null)
+                                                {{$addresses['shipping_address']['postalState']}}
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        <tr style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
+                                            <td>
+                                                @if ($addresses['shipping_address']['postalPostCode'] != null)
+                                                {{$addresses['shipping_address']['postalPostCode']}}
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        <tr style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
+                                            <td>
+                                                @if ($addresses['billing_address']['mobile'] != null)
+                                                {{$addresses['billing_address']['mobile']}}
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        <tr style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
+                                            <td>
+                                                @if ($addresses['billing_address']['phone'] != null)
+                                                {{$addresses['billing_address']['phone']}}
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                            <td align="center" width="40%" style="vertical-align: top;">
                                 <table border="0" width="100%">
                                     <thead>
                                         <tr>
@@ -92,45 +159,35 @@
                                         <tr>
                                             <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
                                                 @if ($addresses['billing_address']['address1'] != null)
-                                                    {{$addresses['billing_address']['address1']}}
-                                                @elseif ($addresses['shipping_address']['postalAddress1]'] != null)
-                                                    {{$addresses['shipping_address']['postalAddress1]']}}
+                                                {{$addresses['billing_address']['address1']}}
                                                 @endif
                                             </td>
                                         </tr>
                                         <tr>
                                             <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
                                                 @if ($addresses['billing_address']['address2'] != null)
-                                                    {{$addresses['billing_address']['address2']}}
-                                                @elseif ($addresses['shipping_address']['postalAddress2'] != null)
-                                                    {{$addresses['shipping_address']['postalAddress2']}}
+                                                {{$addresses['billing_address']['address2']}}
                                                 @endif
                                             </td>
                                         </tr>
                                         <tr>
                                             <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
                                                 @if ($addresses['billing_address']['city'] != null)
-                                                    {{$addresses['billing_address']['city']}}
-                                                @elseif ($addresses['shipping_address']['postalCity'] != null)
-                                                    {{$addresses['shipping_address']['postalCity']}}
+                                                {{$addresses['billing_address']['city']}}
                                                 @endif
                                             </td>
                                         </tr>
                                         <tr>
                                             <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
                                                 @if ($addresses['billing_address']['state'] != null)
-                                                    {{$addresses['billing_address']['state']}}
-                                                @elseif ($addresses['shipping_address']['postalState'] != null)
-                                                    {{$addresses['shipping_address']['postalState']}}
+                                                {{$addresses['billing_address']['state']}}
                                                 @endif
                                             </td>
                                         </tr>
                                         <tr style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
                                             <td>
                                                 @if ($addresses['billing_address']['zip'] != null)
-                                                    {{$addresses['billing_address']['zip']}}
-                                                @elseif ($addresses['shipping_address']['postalPostCode'] != null)
-                                                    {{$addresses['shipping_address']['postalPostCode']}}
+                                                {{$addresses['billing_address']['zip']}}
                                                 @endif
                                             </td>
                                         </tr>
@@ -144,13 +201,14 @@
                                         <tr style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
                                             <td>
                                                 @if ($addresses['billing_address']['phone'] != null)
-                                                    {{$addresses['billing_address']['phone']}}
+                                                {{$addresses['billing_address']['phone']}}
                                                 @endif
                                             </td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </td>
+                            
                             <td align="right" width="20" style="vertical-align:top;">
                                 <table border="0" width="100%">
                                     <thead>
