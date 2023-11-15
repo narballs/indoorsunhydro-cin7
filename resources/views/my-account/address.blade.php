@@ -32,19 +32,19 @@
                                     Default Billing Address
                                 </p>
                                 <p class="my_account_address_items">
-                                    {{ $address_user->contact[0]['firstName'] }}
-                                    {{ $address_user->contact[0]['lastName'] }}
+                                    {{ $address_user['firstName'] }}
+                                    {{ $address_user['lastName'] }}
                                 </p>
                                 <p class="my_account_address_items">
-                                    {{ !empty($address_user->contact[0]['postalAddress1']) ? $address_user->contact[0]['postalAddress1'] . "," : '' }}
+                                    {{ !empty($address_user['postalAddress1']) ? $address_user['postalAddress1'] . "," : '' . ","}}
                                 </p>
                                 <p class="my_account_address_items">
-                                    {{ $address_user->contact[0]['postalAddress2'] ?  $address_user->contact[0]['postalAddress2'] . "," : '' }}
+                                    {{ $address_user['postalAddress2'] ?  $address_user['postalAddress2'] . "," : '' . ","}}
                                 </p>
                                 <p class="my_account_address_items">
-                                    {{ $address_user->contact[0]['postalCity'] ?  $address_user->contact[0]['postalCity'] . "," :  ''  }}
-                                    {{ $address_user->contact[0]['postalState'] ?  $address_user->contact[0]['postalState'] . "," :  ''  }}
-                                    {{ $address_user->contact[0]['postalPostCode'] ?  $address_user->contact[0]['postalPostCode'] :  '' }}
+                                    {{ $address_user['postalCity'] ?  $address_user['postalCity'] . "," :  '' . "," }}
+                                    {{ $address_user['postalState'] ?  $address_user['postalState'] . "," :  '' . "," }}
+                                    {{ $address_user['postalPostCode'] ?  $address_user['postalPostCode'] :  '' }}
                                 </p>
                                 <p class="my_account_address_items">
                                     <span class="my_account_address_items">
@@ -52,10 +52,10 @@
                                     </span>
                                     <span class="mobileFormat">
                                         <span>
-                                            @if ($address_user->contact[0]['phone'])
-                                                {{ $address_user->contact[0]['phone'] }}
+                                            @if ($address_user['phone'])
+                                                {{ $address_user['phone'] }}
                                             @else
-                                                {{ $address_user->contact[0]['mobile'] }}
+                                                {{ $address_user['mobile'] }}
                                             @endif
                                         </span>
                                 </p>
@@ -71,29 +71,29 @@
                                     Default Shipping Address
                                 </p>
                                 <p class="my_account_address_items">
-                                    {{ $address_user->contact[0]['firstName'] }}
-                                    {{ $address_user->contact[0]['lastName'] }}
+                                    {{ $address_user['firstName'] }}
+                                    {{ $address_user['lastName'] }}
                                 </p>
                                 <p class="my_account_address_items">
-                                    {{ !empty($address_user->contact[0]['address1']) ? $address_user->contact[0]['address1'] . "," : ''}}
+                                    {{ !empty($address_user['address1']) ? $address_user['address1'] . "," : ''}}
                                 </p>
                                 <p class="my_account_address_items">
-                                    {{ !empty($address_user->contact[0]['address2']) ?  $address_user->contact[0]['address2'] . "," : ''}}
+                                    {{ !empty($address_user['address2']) ?  $address_user['address2'] . "," : ''}}
                                 </p>
                                 <p class="my_account_address_items">
-                                    {{ !empty($address_user->contact[0]['city']) ?  $address_user->contact[0]['city'] . "," :  '' }}
-                                    {{ !empty($address_user->contact[0]['state']) ?  $address_user->contact[0]['state'] . "," : '' }}
-                                    {{ !empty($address_user->contact[0]['postCode']) ?  $address_user->contact[0]['postCode']:  '' }}
+                                    {{ !empty($address_user['city']) ?  $address_user['city'] . "," :  '' }}
+                                    {{ !empty($address_user['state']) ?  $address_user['state'] . "," :  '' }}
+                                    {{ !empty($address_user['postCode']) ?  $address_user['postCode']: '' }}
                                 </p>
                                 <p class="my_account_address_items">
                                     <span class="my_account_address_items">
                                         Tel:
                                     </span>
                                     <span class="mobileFormat">
-                                        @if ($address_user->contact[0]['phone'])
-                                            {{ $address_user->contact[0]['phone'] }}
+                                        @if ($address_user['phone'])
+                                            {{ $address_user['phone'] }}
                                         @else
-                                            {{ $address_user->contact[0]['mobile'] }}
+                                            {{ $address_user['mobile'] }}
                                         @endif
                                     </span>
                                 </p>
