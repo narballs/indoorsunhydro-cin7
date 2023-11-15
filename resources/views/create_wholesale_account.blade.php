@@ -2632,7 +2632,8 @@
         function isNumber(element) {
             var getID = element.id;
             var phoneNumber = element.value;
-            var regex = /^\+\d{1,3} \(\d{3}\) \d{3}-\d{4}$/;
+            // var regex = /^\+\d{1,3} \(\d{3}\) \d{3}-\d{4}$/;
+            var regex = /^[0-9-+.,() ]*$/;
             if (regex.test(phoneNumber)) {
                 return true;
             } else {
