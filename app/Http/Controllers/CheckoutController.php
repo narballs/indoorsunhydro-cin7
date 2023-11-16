@@ -37,7 +37,7 @@ class CheckoutController extends Controller
 {
     public function index(Request $request)
     {
-        $user_id = auth()->id();
+        $user_id = auth()->user()->id;
         $selected_company = Session::get('company');
         if (!$selected_company) {
             Session::flash('message', "Please select a company for which you want to make an order for");
@@ -78,16 +78,25 @@ class CheckoutController extends Controller
             $contact_id = session()->get('contact_id');
             $user = User::where('id', $user_id)->first();
             $all_ids = UserHelper::getAllMemberIds($user);
-            $pluck_default_user = Contact::whereIn('id', $all_ids)->where('is_default' , 1)->first();
+            $pluck_default_user = Contact::whereIn('id', $all_ids)->first();
+            // if (!empty($pluck_default_user)) {
+            //     $user_address = Contact::where('id' ,$pluck_default_user->id)->first();
+            // } else {
+            //     if ($contact->secondary_id) {
+            //         $parent_id = Contact::where('secondary_id', $contact->secondary_id)->first();
+            //         $user_address = Contact::where('user_id', $user_id)->where('secondary_id', $parent_id->secondary_id)->first();
+            //     } else {
+            //         $user_address = Contact::where('user_id', $user_id)->where('contact_id', $contact_id)
+            //         ->orWhere('contact_id' , $contact->contact_id)->first();
+            //     }
+            // }
+            // dd($user_address);
             if (!empty($pluck_default_user)) {
-                $user_address = Contact::where('id' ,$pluck_default_user->id)->first();
-            } else {
-                if ($contact->secondary_id) {
-                    $parent_id = Contact::where('secondary_id', $contact->secondary_id)->first();
-                    $user_address = Contact::where('user_id', $user_id)->where('secondary_id', $parent_id->secondary_id)->first();
+                if (!empty($pluck_default_user->contact_id)) {
+                    $user_address = Contact::where('contact_id', $pluck_default_user->contact_id)->first();
                 } else {
-                    $user_address = Contact::where('user_id', $user_id)->where('contact_id', $contact_id)->orWhere('contact_id' , $contact->contact_id)->first();
-                }
+                    $user_address = Contact::where('contact_id', $pluck_default_user->parent_id)->first();
+                }   
             }
             if (($user_address->postCode == null && $user_address->postalPostCode == null) || ($user_address->postalAddress1 == null && $user_address->address1 == null)) {
                 return redirect()->back()->with('address_message', "Please update your address before proceeding to checkout" );
