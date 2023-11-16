@@ -263,7 +263,7 @@ class ContactController extends Controller
 
         $site_id = SettingHelper::getSetting('site_id');
         $contact_price_columns = ContactPriceColumn::where('site_id', $site_id)->pluck('price_column')->toArray();
-        $get_secondary_contact = Contact::where('parent_id', $customer->contact_id)->first();
+        $get_secondary_contact = Contact::where('contact_id', $customer->parent_id)->first();
 
         return view('admin/customer-details', compact(
             'customer',
