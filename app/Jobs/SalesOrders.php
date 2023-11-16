@@ -110,7 +110,7 @@ class SalesOrders implements ShouldQueue
                 'contact_email' => '',
                 'reference' => $reference,
                 // 'primary_order_id' => $get_id->id,
-                'subject' => 'Order ' .' '. '#'.$primary_order_id . ' ' . 'fulfilled',
+                'subject' => 'Order ' .' '. '#'.$primary_order_id->id . ' ' . 'fulfilled',
                 'from' => SettingHelper::getSetting('noreply_email_address'),
                 'content' => 'Order fulfilled has been fulfilled.'
             ];
