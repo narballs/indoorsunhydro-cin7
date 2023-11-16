@@ -1039,7 +1039,8 @@ class ProductController extends Controller
 
         // new filters
         $filter_value_main = $request->main_search_filter;
-        $explode_search_value = explode(' ', $searchvalue);
+        $replace_special_characters = preg_replace('/[\'^£$%&*()}{@#~?><>,|=_+¬-]/', ' ', $searchvalue);
+        $explode_search_value = explode(' ', $replace_special_characters);
         
         if ($filter_value_main === 'title_description') {
             $main_query = Product::with(['product_views','apiorderItem' , 'options' => function ($q) {
