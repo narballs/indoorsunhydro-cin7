@@ -171,7 +171,7 @@
                                                             {{ $get_secondary_contact->postalPostCode ? $get_secondary_contact->postalPostCode . ","  : '' }}
 
                                                         @else
-                                                            {{ $customer->postalPostCode ? $customer->postalPostCode . ","  : '' }},
+                                                            {{ $customer->postalPostCode ? $customer->postalPostCode . ","  : '' }}
                                                         @endif
 
                                                         @if(empty($customer->contact_id))
