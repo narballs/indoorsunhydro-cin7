@@ -199,33 +199,34 @@ $cart_price = 0;
                         </div>
                         <div class="row">
                             <div class="col-md-12">
-                                <p class="user-first-name-thank-you-page"> {{ $user_address->first_name ? $user_address->first_name : $user_address->firstName }}{{ $user_address->last_name ? $user_address->last_name : $user_address->lastName }}
+                                <p class="user-first-name-thank-you-page"> {{ $user_address->firstName ? $user_address->firstName : '' }}
+                                    {{ $user_address->lastName ? $user_address->lastName : '' }}
                                 </p>
                             </div>
                             <div class="col-md-6">
                                 <p class="user-address-thank-you-page-title">Address line 1</p>
-                                <p class="user-address-thank-you-page-item">{{ $user_address->address1 ? $user_address->address1 :  $user_address->postalAddress1}}</p>
+                                <p class="user-address-thank-you-page-item">{{ $user_address->address1 ? $user_address->address1 : ''}}</p>
                                 <div class="row">
                                     <div class="col-md-4">
                                         <p class="user-address-thank-you-page-title">City</p>
-                                        <p class="user-address-thank-you-page-item">{{ $user_address->city ? $user_address->city : $user_address->postalCity }}
+                                        <p class="user-address-thank-you-page-item">{{ $user_address->city ? $user_address->city : '' }}
                                         </p>
                                     </div>
                                     <div class="col-md-4">
                                         <p class="user-address-thank-you-page-title">State</p>
-                                        <p class="user-address-thank-you-page-item">{{ $user_address->state ? $user_address->state : $user_address->postalState }}
+                                        <p class="user-address-thank-you-page-item">{{ $user_address->state ? $user_address->state : '' }}
                                         </p>
                                     </div>
                                     <div class="col-md-4">
                                         <p class="user-address-thank-you-page-title">Zip</p>
-                                        <p class="user-address-thank-you-page-item">{{ $user_address->postCode ? $user_address->postCode : $user_address->postalPostCode }}
+                                        <p class="user-address-thank-you-page-item">{{ $user_address->postCode ? $user_address->postCode : '' }}
                                         </p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <p class="user-address-thank-you-page-title">Address line 2</p>
-                                <p class="user-address-thank-you-page-item">{{ $user_address->address2 ? $user_address->address2 : $user_address->postalAddress2 }}</p>
+                                <p class="user-address-thank-you-page-item">{{ $user_address->address2 ? $user_address->address2 : '' }}</p>
                             </div>
                         </div>
                     </div>
@@ -234,33 +235,34 @@ $cart_price = 0;
                         <p class="billing-address-thank-you-page-heading billing-border">Billing Address</p>
                         <div class="row">
                             <div class="col-md-12">
-                                <p class="user-first-name-thank-you-page"> {{ $user_address->first_name ? $user_address->first_name : $user_address->firstName }}{{ $user_address->last_name ? $user_address->last_name : $user_address->lastName }}
+                                <p class="user-first-name-thank-you-page"> {{ $user_address->firstName ? $user_address->firstName : '' }}
+                                    {{ $user_address->lastName ? $user_address->lastName : '' }}
                                 </p>
                             </div>
                             <div class="col-md-6">
                                 <p class="user-address-thank-you-page-title">Address line 1</p>
-                                <p class="user-address-thank-you-page-item">{{ $user_address->address1 ? $user_address->address1 :  $user_address->postalAddress1}}</p>
+                                <p class="user-address-thank-you-page-item">{{ $user_address->postalAddress1 ? $user_address->postalAddress1 : ''}}</p>
                                 <div class="row">
                                     <div class="col-md-4">
                                         <p class="user-address-thank-you-page-title">City</p>
-                                        <p class="user-address-thank-you-page-item">{{ $user_address->city ? $user_address->city : $user_address->postalCity }}
+                                        <p class="user-address-thank-you-page-item">{{ $user_address->postalCity ? $user_address->postalCity : '' }}
                                         </p>
                                     </div>
                                     <div class="col-md-4">
                                         <p class="user-address-thank-you-page-title">State</p>
-                                        <p class="user-address-thank-you-page-item">{{ $user_address->state ? $user_address->state : $user_address->postalState }}
+                                        <p class="user-address-thank-you-page-item">{{ $user_address->postalState ? $user_address->postalState : '' }}
                                         </p>
                                     </div>
                                     <div class="col-md-4">
                                         <p class="user-address-thank-you-page-title">Zip</p>
-                                        <p class="user-address-thank-you-page-item">{{ $user_address->postCode ? $user_address->postCode : $user_address->postalPostCode }}
+                                        <p class="user-address-thank-you-page-item">{{ $user_address->postalPostCode ? $user_address->postalPostCode : '' }}
                                         </p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <p class="user-address-thank-you-page-title">Address line 2</p>
-                                <p class="user-address-thank-you-page-item">{{ $user_address->address2 ? $user_address->address2 : $user_address->postalAddress2 }}</p>
+                                <p class="user-address-thank-you-page-item">{{ $user_address->postalAddress2 ? $user_address->postalAddress2 : '' }}</p>
                             </div>
                         </div>
                     </div>
