@@ -102,7 +102,7 @@ class SalesOrders implements ShouldQueue
             ->get();
         $order_status = OrderStatus::where('status', 'FullFilled')->first();
         if (!empty($order_id) && !empty($reference)) {
-            // $get_id = ApiOrder::where('order_id', $order_id)->where('reference', $reference)->first();
+            $primary_order_id = ApiOrder::where('id', $order_id)->where('reference', $reference)->first();
             $data = [
                 'order_id' => $order_id,
                 'name' =>  'Admin',
@@ -110,7 +110,7 @@ class SalesOrders implements ShouldQueue
                 'contact_email' => '',
                 'reference' => $reference,
                 // 'primary_order_id' => $get_id->id,
-                'subject' => 'Order ' .' '. 'fulfilled',
+                'subject' => 'Order ' .' '. '#'.$primary_order_id . ' ' . 'fulfilled',
                 'from' => SettingHelper::getSetting('noreply_email_address'),
                 'content' => 'Order fulfilled has been fulfilled.'
             ];
