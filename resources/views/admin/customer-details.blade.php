@@ -154,36 +154,36 @@
                                                 <div class="col-md-10 bg-light">
                                                     <div>
                                                         @if(empty($customer->contact_id))
-                                                            {{$get_secondary_contact->postalAddress1 ? $get_secondary_contact->postalAddress1  : $get_secondary_contact->address1 }}
+                                                            {{$get_secondary_contact->postalAddress1 ? $get_secondary_contact->postalAddress1 . ","  : '' }}
                                                         @else
-                                                            {{$customer->postalAddress1 ? $customer->postalAddress1  : $customer->address1 }}
+                                                            {{$customer->postalAddress1 ? $customer->postalAddress1 . ","  : '' }}
                                                         @endif
                                                     </div>
                                                     <div>
                                                         @if(empty($customer->contact_id))
-                                                            {{$get_secondary_contact->postalAddress2 ? $get_secondary_contact->postalAddress2  : $get_secondary_contact->address2 }}
+                                                            {{$get_secondary_contact->postalAddress2 ? $get_secondary_contact->postalAddress2  . ","  : '' }}
                                                         @else
-                                                            {{$customer->postalAddress2 ? $customer->postalAddress2  : $customer->address2 }}
+                                                            {{$customer->postalAddress2 ? $customer->postalAddress2  . ","  : '' }}
                                                         @endif
                                                     </div>
                                                     <div>
                                                         @if(empty($customer->contact_id))
-                                                            {{ $get_secondary_contact->postalPostCode ? $get_secondary_contact->postalPostCode :$get_secondary_contact->postCode }},
+                                                            {{ $get_secondary_contact->postalPostCode ? $get_secondary_contact->postalPostCode . ","  : '' }}
 
                                                         @else
-                                                            {{ $customer->postalPostCode ? $customer->postalPostCode :$customer->postCode }},
+                                                            {{ $customer->postalPostCode ? $customer->postalPostCode . ","  : '' }}
                                                         @endif
 
                                                         @if(empty($customer->contact_id))
-                                                            {{ $get_secondary_contact->postalCity ? $get_secondary_contact->postalCity : $get_secondary_contact->city }}
+                                                            {{ $get_secondary_contact->postalCity ? $get_secondary_contact->postalCity . ","  : '' }}
                                                         @else
-                                                            {{ $customer->postalCity ? $customer->postalCity : $customer->vity }}
+                                                            {{ $customer->postalCity ? $customer->postalCity . ","  : '' }}
                                                         @endif
 
                                                         @if(empty($customer->contact_id))
-                                                            {{ $get_secondary_contact->postalState ? $get_secondary_contact->postalState : $get_secondary_contact->state }}
+                                                            {{ $get_secondary_contact->postalState ? $get_secondary_contact->postalState   : '' }}
                                                         @else
-                                                            {{ $customer->postalState ? $customer->postalState : $customer->state }}
+                                                            {{ $customer->postalState ? $customer->postalState  : '' }}
                                                         @endif
                                                     </div>
                                                 </div>
@@ -193,34 +193,34 @@
                                                 <div class="col-md-10 bg-light">
                                                     <div>
                                                         @if(empty($customer->contact_id))
-                                                            {{$get_secondary_contact->address1 ? $get_secondary_contact->address1  : $get_secondary_contact->postalAddress1 }}
+                                                            {{$get_secondary_contact->address1 ? $get_secondary_contact->address1  . ","  : '' }}
                                                         @else
-                                                            {{$customer->address1 ? $customer->address1  : $customer->postalAddress1 }}
+                                                            {{$customer->address1 ? $customer->address1  . ","  : '' }}
                                                         @endif
                                                     </div>
                                                     <div>
                                                         @if(empty($customer->contact_id))
-                                                            {{$get_secondary_contact->address2 ? $get_secondary_contact->address2  : $get_secondary_contact->postalAddress2 }}
+                                                            {{$get_secondary_contact->address2 ? $get_secondary_contact->address2  . ","  : ''}}
                                                         @else
-                                                            {{$customer->address2 ? $customer->address2  : $customer->postalAddress2 }}
+                                                            {{$customer->address2 ? $customer->address2  . ","  : '' }}
                                                         @endif
                                                     </div>
                                                     <div>
                                                         @if(empty($customer->contact_id))
-                                                            {{ $get_secondary_contact->postCode ? $get_secondary_contact->postCode :$get_secondary_contact->postalPostCode }},
+                                                            {{ $get_secondary_contact->postCode ? $get_secondary_contact->postCode . ","  : '' }}
 
                                                         @else
-                                                            {{ $customer->postCode ? $customer->postCode :$customer->postalPostCode }},
+                                                            {{ $customer->postCode ? $customer->postCode . ","  : '' }}
                                                         @endif
                                                         @if(empty($customer->contact_id))
-                                                            {{ $get_secondary_contact->city ? $get_secondary_contact->city : $get_secondary_contact->postalCity }}
+                                                            {{ $get_secondary_contact->city ? $get_secondary_contact->city . ","  : '' }}
                                                         @else
-                                                            {{ $customer->city ? $customer->city : $customer->postalCity }}
+                                                            {{ $customer->city ? $customer->city . ","  : '' }}
                                                         @endif
                                                         @if(empty($customer->contact_id))
-                                                            {{ $get_secondary_contact->state ? $get_secondary_contact->state : $get_secondary_contact->postalState }}
+                                                            {{ $get_secondary_contact->state ? $get_secondary_contact->state  : '' }}
                                                         @else
-                                                            {{ $customer->state ? $customer->state : $customer->postalState }}
+                                                            {{ $customer->state ? $customer->state : '' }}
                                                         @endif
                                                     </div>
                                                 </div>
