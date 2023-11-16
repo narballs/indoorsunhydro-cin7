@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ \App\Helpers\SettingHelper::getSetting('website_name') }}</title>
+</head>
+<body>
+    <p>Hi Admin,</p>
+    <p>
+        A new user has been registered on {{ \App\Helpers\SettingHelper::getSetting('website_name') }}.
+    </p>
+    <p>
+        <strong>Name:</strong> {{ $user->first_name .' '. $user->last_name }}<br>
+        <strong>Email:</strong> {{ $user->email }}<br>
+    </p>
+</body>
+</html>

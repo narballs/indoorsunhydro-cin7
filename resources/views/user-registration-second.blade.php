@@ -416,6 +416,9 @@
                                     </div>
                                     <div id="address-info-error" class="text-danger"></div>
                                     <div class="col-md-12 margin-top-adjust-address mt-3">
+                                        <div class="spinner-border d-none" role="status" id="sign_up_loader" style="position: absolute;top:18%;left:87% !important;color:#131313;">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
                                         <input type="button" value="SAVE AND CONTINUE"
                                             class="step-btn-signup btn-login  w-100" onclick="thankYou()">
                                     </div>
@@ -745,7 +748,7 @@
         $('#thankyou-bold').css('font-weight', '700');
         $('#user_first_name').removeClass('d-none');
         $('#user_last_name').removeClass('d-none');
-
+        $('#sign_up_loader').removeClass('d-none');
         var street_address = $('input[name=street_address]').val();
         var suit_apartment = $('input[name=suit_apartment]').val();
         var state = $('#state-dd').val();
@@ -782,6 +785,7 @@
             },
             success: function(response) {
                 if (response.success == true) {
+                    $('#sign_up_loader').addClass('d-none');
                     $('#timer').attr('src', '/theme/img/round-border.png');
                     $('#timer-main').attr('src', '/theme/img/location.png');
                     $('#finish-round').attr('src', '/theme/img/round-solid.png');
@@ -797,6 +801,7 @@
                     $('login-form-section').addClass('d-none');
                     $('#company_info_sidebar').addClass('d-none');
                     $('#address_info_sidebar').addClass('d-none');
+                    
                 }else{
                     var error_message = response.responseJSON;
                     console.log(error_message);
