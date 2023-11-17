@@ -97,6 +97,7 @@ class UserHelper
                 'company' => $active_company,
             ]);
             $getSelectedContact = Contact::where('company' , $active_company)->where('user_id' , $user_id)->first();
+            dd($getSelectedContact , 'contact_array' ,  $contact_id , $active_contact_id , $active_company , $user_id , $getSelectedContact->user_id);
             $cartItems = Cart::where('user_id' , $getSelectedContact->user_id)->get();
             $all_cart_items = [];
             $getPriceColumn = UserHelper::getUserPriceColumn(false , $getSelectedContact->user_id);
