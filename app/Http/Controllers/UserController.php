@@ -63,6 +63,8 @@ class UserController extends Controller
         $this->middleware('permission:user-show', ['only' => ['show']]);
     }
 
+    
+
     public function index(Request $request)
     {
         $page = $request->page;
@@ -383,8 +385,8 @@ class UserController extends Controller
 
                     return redirect()->route('admin.view');
                 } else {
-                    $companies = Contact::where('user_id', auth()->user()->id)->where('status' , '!=' , 0)->get();
-
+                    $companies = Contact::where('user_id', auth()->user()->id)->get();
+                    dd($companies);
                     if ($companies->count() == 1) {
                         if ($companies[0]->contact_id == null) {
                             UserHelper::switch_company($companies[0]->secondary_id);
@@ -416,8 +418,10 @@ class UserController extends Controller
                             } else {
                                 UserHelper::switch_company($companies[0]->contact_id);
                             }
-                            Session::put('companies', $companies);
-                            return redirect()->route('my_account');
+                            // Session::put('companies', $companies);
+                            $previousUrl = session('previous_url', '/'); 
+                            return redirect()->intended($previousUrl);
+                            // return redirect()->route('my_account');
                         } else {
                             $companies = Contact::where('user_id', auth()->user()->id)->get();
                             Session::put('companies', $companies);
