@@ -312,6 +312,10 @@ return [
 
 
         [
+            'text' => 'Dashboard',
+            'url'  => 'admin/dashboard',
+        ],
+        [
             'text' => 'Orders',
             'url'  => 'admin/orders',
         ],

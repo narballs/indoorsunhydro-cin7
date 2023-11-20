@@ -173,6 +173,12 @@ class SyncSuppliers extends Command
                                 $secondary_contact = Contact::where('secondary_id', $apiSecondaryContact->id)
                                     ->where('parent_id', $contact->contact_id)
                                     ->first();
+                                $deleteing_secondary_contact = Contact::where('parent_id' , $contact->contact_id)->get();
+                                foreach($deleteing_secondary_contact as $deleteing_secondary_contact){
+                                    if ($deleteing_secondary_contact->secondary_id != $apiSecondaryContact->id) {
+                                        $deleteing_secondary_contact->delete();
+                                    }
+                                }
                                 if ($secondary_contact) {
 
                                     $secondary_contact->secondary_id = $apiSecondaryContact->id;
@@ -275,6 +281,12 @@ class SyncSuppliers extends Command
                         ]);
                         if ($api_contact->secondaryContacts) {
                             foreach ($api_contact->secondaryContacts as $secondaryContact) {
+                                $deleteing_secondary_contact = Contact::where('parent_id' , $api_contact->id)->get();
+                                foreach($deleteing_secondary_contact as $deleteing_secondary_contact){
+                                    if ($deleteing_secondary_contact->secondary_id != $secondaryContact->id) {
+                                        $deleteing_secondary_contact->delete();
+                                    }
+                                }
                                 $secondaryContact = new Contact([
                                     'secondary_id' => $secondaryContact->id,
                                     'parent_id'  => $api_contact->id,
