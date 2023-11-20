@@ -231,18 +231,18 @@
                                             background: #fbfbfb;
                                             border-radius: 10px;
                                             padding-left: 39px;">
-                                            <p class="thank-you-page-billing-address " style=" font-family: 'Poppins';
+                                            {{-- <p class="thank-you-page-billing-address " style=" font-family: 'Poppins';
                                             font-style: normal;
                                             font-weight: 600;
                                             font-size: 30px;
                                             line-height: 36px;
-                                            color: #000000;">Billing Address</p>
+                                            color: #000000;">Billing Address</p> --}}
                                             <p class="thank-you-page-delivery-address" style="font-family: 'Poppins';
                                             font-style: normal;
                                             font-weight: 700;
                                             font-size: 18px;
                                             line-height: 22px;
-                                            color: #5C5C5C;">Delivery Address</p>
+                                            color: #5C5C5C;">Billing Address</p>
                                             <span class="thank-you-page-user-detais" style="font-family: 'Poppins';
                                             font-style: normal;
                                             font-weight: 400;
@@ -275,7 +275,7 @@
                                             font-size: 15px;
                                             line-height: 19px;
                                             color: #5C5C5C;">
-                                                {{$addresses['shipping_address']['postalAddress1']}}
+                                                {{$addresses['shipping_address']['postalAddress2']}}
                                             </span><br>
                                             <span class="thank-you-page-user-detaiss" style=" font-family: 'Poppins';
                                             font-style: normal;
@@ -291,7 +291,7 @@
                                             font-weight: 700;
                                             font-size: 18px;
                                             line-height: 22px;
-                                            color: #5C5C5C;">Billing Address</p>
+                                            color: #5C5C5C;">Delivery Address</p>
                                             <span class="thank-you-page-user-detais" style=" font-family: 'Poppins';
                                             font-style: normal;
                                             font-weight: 400;
