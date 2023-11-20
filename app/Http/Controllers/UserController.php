@@ -386,7 +386,6 @@ class UserController extends Controller
                     return redirect()->route('admin.view');
                 } else {
                     $companies = Contact::where('user_id', auth()->user()->id)->get();
-                    dd($companies);
                     if ($companies->count() == 1) {
                         if ($companies[0]->contact_id == null) {
                             UserHelper::switch_company($companies[0]->secondary_id);
