@@ -650,7 +650,7 @@
 									Email
 								</p>
 								<p class="order-confirmation-page-order-number-item">
-									{{$order->user->email}}
+									{{$order_contact->email}}
 								</p>
 							</div>
 							<div class="col-md-3">
@@ -705,7 +705,7 @@
 											Email
 										</p>
 										<p class="order-confirmation-page-order-number-item">
-											{{$order->user->email}}
+											{{$order_contact->email}}
 										</p>
 									</div>
 								</div>
@@ -772,7 +772,7 @@
 										Email
 									</p>
 									<p class="order-confirmation-page-order-number-item">
-										{{$order->user->email}}
+										{{$order_contact->email}}
 									</p>
 								</div>
 
@@ -837,7 +837,7 @@
 										Email
 									</p>
 									<p class="order-confirmation-page-email-item">
-										{{$order->user->email}}
+										{{$order_contact->email}}
 									</p>
 								</div>
 								<div class="d-flex justify-content-between">
