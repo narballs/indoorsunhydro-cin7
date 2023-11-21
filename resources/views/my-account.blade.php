@@ -73,9 +73,10 @@
                                                 
                                                 @if(count($order_submitters) > 0)
                                                     <select name="submitter_filter" class="custom-select submitter_filter date_filter_mbl" id="inputGroupSelect01" onchange="submitter_filter()">
-                                                        @foreach ($order_submitters as $order_submitter)
-                                                            <option value="{{ !empty($order_submitter->contact_id) ? $order_submitter->contact_id : $order_submitter->secondary_id}}" {{isset($submitter_filter) && (!empty($submitter_filter)) && ($submitter_filter == $order_submitter->contact_id || $submitter_filter == $order_submitter->secondary_id) ? 'selected="selected"' : ''}}>{{$order_submitter->firstName . ' ' . $order_submitter->lastName}}</option>
-                                                        @endforeach
+                                                            <option value="all"  {{$submitter_filter === 'all' ? 'selected' : ''}}>All</option>
+                                                            @foreach ($order_submitters as $order_submitter)
+                                                                <option value="{{ !empty($order_submitter->contact_id) ? $order_submitter->contact_id : $order_submitter->secondary_id}}" {{isset($submitter_filter) && (!empty($submitter_filter)) && ($submitter_filter == $order_submitter->contact_id || $submitter_filter == $order_submitter->secondary_id) ? 'selected' : ''}}>{{$order_submitter->firstName . ' ' . $order_submitter->lastName}}</option>
+                                                            @endforeach
                                                     </select>
                                                 @endif
                                             </span>
