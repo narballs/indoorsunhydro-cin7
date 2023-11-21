@@ -207,14 +207,15 @@ class CheckoutController extends Controller
         $user = User::where('id', $user_id)->first();
         $all_ids = UserHelper::getAllMemberIds($user);
         $order_contact_query = Contact::whereIn('id', $all_ids)->first();
-        if (!empty($order_contact_query)) {
-            $order_contact = Contact::where('id', $order_contact_query->id)->first();
-        } else {
-            $order_contact = Contact::where('contact_id', $order->memberId)->first();
-        }
-
-
-        if (!empty($order_contact) && $order_contact->is_parent == 0) {
+        // dd($order_contact_query);
+        // if (!empty($order_contact_query)) {
+        //     $order_contact = Contact::where('id', $order_contact_query->id)->first();
+        // } else {
+        //     $order_contact = Contact::where('contact_id', $order->memberId)->first();
+        // }
+        
+        $order_contact = Contact::where('contact_id', $order->memberId)->first();
+        if (empty($order_contact) && $order_contact->is_parent == 0) {
             $order_contact = Contact::where('contact_id', $order_contact->parent_id)->first();
         }
          
