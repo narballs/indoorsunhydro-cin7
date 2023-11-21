@@ -283,9 +283,27 @@
                                             font-size: 15px;
                                             line-height: 19px;
                                             color: #5C5C5C;">
+                                                {{$addresses['shipping_address']['postalCity']}}
+
+                                            </span><br>
+                                            <span class="thank-you-page-user-detaiss" style=" font-family: 'Poppins';
+                                            font-style: normal;
+                                            font-weight: 400;
+                                            font-size: 15px;
+                                            line-height: 19px;
+                                            color: #5C5C5C;">
+                                                {{$addresses['shipping_address']['postalState']}}
+
+                                            </span><br>
+                                            <span class="thank-you-page-user-detaiss" style=" font-family: 'Poppins';
+                                            font-style: normal;
+                                            font-weight: 400;
+                                            font-size: 15px;
+                                            line-height: 19px;
+                                            color: #5C5C5C;">
                                                 {{$addresses['shipping_address']['postalPostCode']}}
 
-                                            </span>
+                                            </span><br>
                                             <p class="thank-you-page-delivery-address mt-4" style="font-family: 'Poppins';
                                             font-style: normal;
                                             font-weight: 700;
@@ -324,7 +342,23 @@
                                             font-size: 15px;
                                             line-height: 19px;
                                             color: #5C5C5C;">
-                                                {{$addresses['billing_address']['address1']}}
+                                                {{$addresses['billing_address']['address2']}}
+                                            </span><br>
+                                            <span class="thank-you-page-user-detaiss" style=" font-family: 'Poppins';
+                                            font-style: normal;
+                                            font-weight: 400;
+                                            font-size: 15px;
+                                            line-height: 19px;
+                                            color: #5C5C5C;">
+                                                {{$addresses['billing_address']['city']}}
+                                            </span><br>
+                                            <span class="thank-you-page-user-detaiss" style="  font-family: 'Poppins';
+                                            font-style: normal;
+                                            font-weight: 400;
+                                            font-size: 15px;
+                                            line-height: 19px;
+                                            color: #5C5C5C">
+                                                {{$addresses['billing_address']['state']}}
                                             </span><br>
                                             <span class="thank-you-page-user-detaiss" style="  font-family: 'Poppins';
                                             font-style: normal;
