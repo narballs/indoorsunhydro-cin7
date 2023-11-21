@@ -1117,7 +1117,23 @@ class UserController extends Controller
             ->with('list_products.product.options.price')
             ->where('title', 'My Favorites')
             ->get();
+        $selected_company = Session::get('company');
+        $get_contact = Contact::where('user_id', $user_id)
+        ->where('status', 1)
+        ->where('company', $selected_company)
+        ->with('states')
+        ->with('cities')
+        ->first();
 
+        if (!empty($get_contact->contact_id)) {
+            $address_user = Contact::where('user_id', $user_id)->where('contact_id' , $get_contact->contact_id)->first();
+        } else {
+            if (!empty($get_contact->secondary_id)) {
+                $parent = Contact::where('secondary_id', $get_contact->secondary_id)->first();
+                $address_user = Contact::where('contact_id', $parent->parent_id)->first();
+            }
+        }
+        
         $user = User::where('id', $user_id)->first();
         $all_ids = UserHelper::getAllMemberIds($user);
         $user_address = Contact::where('user_id', $user_id)->first();
@@ -1127,13 +1143,13 @@ class UserController extends Controller
         $list = BuyList::where('id', 20)->with('list_products.product.options')->first();
         $contact = Contact::where('email', $user_address->email)->first();
         $companies = Contact::where('user_id', $user_id)->get();
-        if (!empty($pluck_default_user)) {
-            if (!empty($pluck_default_user->contact_id)) {
-                $address_user = Contact::where('contact_id', $pluck_default_user->contact_id)->first();
-            } else {
-                $address_user = Contact::where('contact_id', $pluck_default_user->parent_id)->first();
-            }   
-        }
+        // if (!empty($pluck_default_user)) {
+        //     if (!empty($pluck_default_user->contact_id)) {
+        //         $address_user = Contact::where('contact_id', $pluck_default_user->contact_id)->first();
+        //     } else {
+        //         $address_user = Contact::where('contact_id', $pluck_default_user->parent_id)->first();
+        //     }   
+        // }
         
         if ($contact) {
             $parent = Contact::where('contact_id', $contact->parent_id)->get();
