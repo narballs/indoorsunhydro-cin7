@@ -885,7 +885,7 @@ class UserController extends Controller
             $secondary_submitters = $user_orders_query->distinct('secondaryId')->pluck('secondaryId')->toArray();
             $order_submitters_array = array_merge($primary_submitters, $secondary_submitters);
             $order_submitters = Contact::whereIn('contact_id', $order_submitters_array)->orWhereIn('secondary_id' , $order_submitters_array)->get();
-            if (!empty($submitter_filter)) {
+            if (!empty($submitter_filter) && $submitter_filter != 'all') {
                 $user_orders = ApiOrder::with(['createdby'])->whereIn('memberId', $contact_ids)
                 ->with('contact' , function($query) {
                     $query->orderBy('company');
@@ -893,6 +893,9 @@ class UserController extends Controller
                 ->with('apiOrderItem.product')
                 ->where('primaryId' , $submitter_filter)
                 ->orWhere('secondaryId' , $submitter_filter)->paginate(10);
+            }
+            if (empty($submitter_filter)) {
+                $submitter_filter = 'all';
             } 
             $custom_roles_with_company = DB::table('custom_roles')
                 ->where('user_id', $user_id)
