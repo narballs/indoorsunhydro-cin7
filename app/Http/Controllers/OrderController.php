@@ -366,9 +366,9 @@ class OrderController extends Controller
                         'shipping_address' => [
                             'postalAddress1' => $customer->contact->postalAddress1,
                             'postalAddress2' => $customer->contact->postalAddress2,
-                            'postalCity' => $customer->contact->postalState,
-                            'postalState' => $customer->contact->postalPostCode,
-                            'postalPostCode' => $customer->contact->postalPostCode
+                            'postalCity' => $customer->contact->postalCity,
+                            'postalState' => $customer->contact->postalState,
+                            'postalPostCode' => $customer->contact->postalPostCode,
                         ],
                         'best_product' => $best_products,
                         'user_email' =>   $customer->contact->email,
