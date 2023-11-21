@@ -76,17 +76,29 @@ Route::get('send-mail', function () {
     dd("Email is Sent.");
 });
 
-Route::get('/products/{id}/{slug}', [ProductController::class, 'showProductByCategory']);
-Route::get('/products/', [ProductController::class, 'showAllProducts']);
-Route::get('/product-detail/{id}/{option_id}/{slug}', [ProductController::class, 'showProductDetail']);
+//  ----------  added middleware for capture previous url before login -------------
+ 
+Route::middleware(['web', 'capture.previous.url'])->group(function () {
+    Route::get('/products/{id}/{slug}', [ProductController::class, 'showProductByCategory']);
+    Route::get('/products/', [ProductController::class, 'showAllProducts']);
+    Route::get('/product-detail/{id}/{option_id}/{slug}', [ProductController::class, 'showProductDetail']);
+    Route::get('/product-brand/{name}', [ProductController::class, 'showProductByBrands']);
+    Route::get('/contact-us/', [ContactUsController::class, 'index']);
+    Route::get('/page/{slug}', [HomeController::class, 'show_page']);
+    Route::get('admin/page/blog/detail/{slug}', [PagesController::class, 'blog_detail'])->name('blog_detail');
+});
+
+//  ----------  end middleware for capture previous url before login -------------
+
 Route::group(['middleware' => ['alreadyloggedin']], function () {
     Route::get('/user/', [UserController::class, 'userRegistration'])->name('user');
 });
-Route::post('api/fetch-cities', [UserController::class, 'fetchCity']);
+
 Route::post('/login/', [UserController::class, 'process_login'])->name('login');
+Route::get('/my-account/', [UserController::class, 'my_account'])->name('my_account');
 Route::post('/user-contact/', [UserController::class, 'save_contact'])->name('save_contact');
 Route::post('/update-contact/', [UserController::class, 'update_contact'])->name('update_contact');
-Route::get('/my-account/', [UserController::class, 'my_account'])->name('my_account');
+
 Route::get('/my-qoutes/', [UserController::class, 'my_qoutes'])->name('my_qoutes');
 Route::get('/my-qoutes-details/{id}', [UserController::class, 'my_qoutes_details'])->name('my_qoutes_details');
 Route::get('/my-qoute-edit/{id}', [UserController::class, 'my_qoute_edit'])->name('my_qoute_edit');
@@ -230,14 +242,13 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::group(['middleware' => ['auth']], function () {
 });
 Route::get('/products/{id}/{slug}', [ProductController::class, 'showProductByCategory']);
-Route::get('/products/', [ProductController::class, 'showAllProducts']);
-Route::get('/product-detail/{id}/{option_id}/{slug}', [ProductController::class, 'showProductDetail']);
+Route::get('/products/', [ProductController::class, 'showAllProducts']);Route::get('/product-detail/{id}/{option_id}/{slug}', [ProductController::class, 'showProductDetail']);
 Route::get('/user/', [UserController::class, 'userRegistration'])->name('user');
 Route::post('api/fetch-cities', [UserController::class, 'fetchCity']);
-Route::post('/login/', [UserController::class, 'process_login'])->name('login');
-Route::post('/user-contact/', [UserController::class, 'save_contact'])->name('save_contact');
-Route::post('/update-contact/', [UserController::class, 'update_contact'])->name('update_contact');
-Route::get('/my-account/', [UserController::class, 'my_account'])->name('my_account');
+// Route::post('/login/', [UserController::class, 'process_login'])->name('login');
+// Route::post('/user-contact/', [UserController::class, 'save_contact'])->name('save_contact');
+// Route::post('/update-contact/', [UserController::class, 'update_contact'])->name('update_contact');
+
 Route::get('select-companies-to-order', [UserController::class, 'choose_company']);
 Route::get('/my-qoutes/', [UserController::class, 'my_qoutes'])->name('my_qoutes');
 Route::get('/my-qoutes-details/{id}', [UserController::class, 'my_qoutes_details'])->name('my_qoutes_details');
@@ -248,24 +259,24 @@ Route::post('/register/basic/create', [UserController::class, 'process_signup'])
 Route::post('/switch-company/', [UserController::class, 'switch_company'])->name('switch-company');
 Route::post('/register/basic/invitation', [UserController::class, 'invitation_signup'])->name('invitation.signup');
 Route::post('/logout', [UserController::class, 'logout'])->name('logout');
-
-Route::get('/product-brand/{name}', [ProductController::class, 'showProductByBrands']);
-Route::post('add-to-cart/', [ProductController::class, 'addToCart'])->name('add.to.cart');
-Route::get('/remove/{id}', [ProductController::class, 'removeProductByCategory']);
 Route::get('cart', [ProductController::class, 'cart'])->name('cart');
-Route::post('update-cart', [ProductController::class, 'updateCart'])->name('update.cart');
-Route::get('checkout', [CheckoutController::class, 'index'])->name('checkout');
-Route::post('order', [OrderController::class, 'store'])->name('order');
-Route::get('/thankyou/{id}', [CheckoutController::class, 'thankyou'])->name('thankyou');
-Route::post('order-status-update', [OrderController::class, 'updateStatus'])->name('order.status.update');
+
+// Route::get('/product-brand/{name}', [ProductController::class, 'showProductByBrands']);
+// Route::post('add-to-cart/', [ProductController::class, 'addToCart'])->name('add.to.cart');
+// Route::get('/remove/{id}', [ProductController::class, 'removeProductByCategory']);
+// Route::post('update-cart', [ProductController::class, 'updateCart'])->name('update.cart');
+// Route::get('checkout', [CheckoutController::class, 'index'])->name('checkout');
+// Route::post('order', [OrderController::class, 'store'])->name('order');
+// Route::get('/thankyou/{id}', [CheckoutController::class, 'thankyou'])->name('thankyou');
+// Route::post('order-status-update', [OrderController::class, 'updateStatus'])->name('order.status.update');
 //Route::post('change-password', [ChangePasswordController::class, 'store'])->name('change.password');
-Route::get('/contact-us/', [ContactUsController::class, 'index']);
-Route::post('/contact-us-store/', [ContactUsController::class, 'store'])->name('contact.us.store');
-Route::get('/create-cart/{id}', [CreateCartController::class, 'create_cart'])->name('create.cart');
-Route::post('/add-to-wish-list/', [ProductController::class, 'addToWishList']);
-Route::get('/get-wish-lists/', [ProductController::class, 'getWishLists']);
-Route::get('/get-lists-names/', [ProductController::class, 'getListNames']);
-Route::post('/create-list/', [ProductController::class, 'createList']);
+// Route::get('/contact-us/', [ContactUsController::class, 'index']);
+// Route::post('/contact-us-store/', [ContactUsController::class, 'store'])->name('contact.us.store');
+// Route::get('/create-cart/{id}', [CreateCartController::class, 'create_cart'])->name('create.cart');
+// Route::post('/add-to-wish-list/', [ProductController::class, 'addToWishList']);
+// Route::get('/get-wish-lists/', [ProductController::class, 'getWishLists']);
+// Route::get('/get-lists-names/', [ProductController::class, 'getListNames']);
+// Route::post('/create-list/', [ProductController::class, 'createList']);
 Route::post('/multi-favorites-to-cart/', [ProductController::class, 'multi_favorites_to_cart']);
 Route::get('/order/items/{id}', [ProductController::class, 'order_items']);
 Route::post('/buy/order/items', [ProductController::class, 'buy_again_order_items']);

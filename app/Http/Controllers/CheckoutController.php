@@ -76,9 +76,10 @@ class CheckoutController extends Controller
             $states = UsState::all();
             $payment_methods = PaymentMethod::with('options')->get();
             $contact_id = session()->get('contact_id');
+
             $user = User::where('id', $user_id)->first();
             $all_ids = UserHelper::getAllMemberIds($user);
-            $pluck_default_user = Contact::whereIn('id', $all_ids)->first();
+            $pluck_default_user = Contact::whereIn('id', $all_ids)->where('contact_id' , $contact_id)->first();
             // if (!empty($pluck_default_user)) {
             //     $user_address = Contact::where('id' ,$pluck_default_user->id)->first();
             // } else {
@@ -91,22 +92,29 @@ class CheckoutController extends Controller
             //     }
             // }
             // dd($user_address);
-            if (!empty($pluck_default_user)) {
-                if (!empty($pluck_default_user->contact_id)) {
-                    $user_address = Contact::where('contact_id', $pluck_default_user->contact_id)->first();
-                } else {
-                    $user_address = Contact::where('contact_id', $pluck_default_user->parent_id)->first();
-                }   
+            // if (!empty($pluck_default_user)) {
+            //     if (!empty($pluck_default_user->contact_id)) {
+            //         $user_address = Contact::where('contact_id', $pluck_default_user->contact_id)->first();
+            //     } else {
+            //         $user_address = Contact::where('contact_id', $pluck_default_user->parent_id)->first();
+            //     }   
+            // }
+            if (!empty($contact->contact_id)) {
+                $user_address = Contact::where('user_id', $user_id)->where('contact_id' , $contact->contact_id)->first();
+            } else {
+                if (!empty($contact->secondary_id)) {
+                    $parent = Contact::where('secondary_id', $contact->secondary_id)->first();
+                    $user_address = Contact::where('contact_id', $parent->parent_id)->first();
+                }
             }
-            if (($user_address->postCode == null && $user_address->postalPostCode == null) || ($user_address->postalAddress1 == null && $user_address->address1 == null)) {
-                return redirect()->back()->with('address_message', "Please update your address before proceeding to checkout" );
+            if (empty($user_address) && ($user_address->postalAddress1 == null  && $user_address->postalPostCode == null)) {
+                return redirect()->back()->with('address_message', "Please contact support to update your billing address" );
             }
-
             $tax_class = TaxClass::where('name', $user_address->tax_class)->first();
             $tax_class_none = TaxClass::where('name', 'none')->first();
             
             $matchZipCode = null;
-            if ($user_address->postalPostCode != null || $user_address->postCode != null) {
+            if (empty($user_address) && ($user_address->postalPostCode != null || $user_address->postCode != null)) {
                 $matchZipCode = OperationalZipCode::where('status' , 'active')->where('zip_code', $user_address->postalPostCode)->orWhere('zip_code' , $user_address->postCode)->first();
             }
             
@@ -199,14 +207,15 @@ class CheckoutController extends Controller
         $user = User::where('id', $user_id)->first();
         $all_ids = UserHelper::getAllMemberIds($user);
         $order_contact_query = Contact::whereIn('id', $all_ids)->first();
-        if (!empty($order_contact_query)) {
-            $order_contact = Contact::where('id', $order_contact_query->id)->first();
-        } else {
-            $order_contact = Contact::where('contact_id', $order->memberId)->first();
-        }
-
-
-        if (!empty($order_contact) && $order_contact->is_parent == 0) {
+        // dd($order_contact_query);
+        // if (!empty($order_contact_query)) {
+        //     $order_contact = Contact::where('id', $order_contact_query->id)->first();
+        // } else {
+        //     $order_contact = Contact::where('contact_id', $order->memberId)->first();
+        // }
+        
+        $order_contact = Contact::where('contact_id', $order->memberId)->first();
+        if (empty($order_contact) && $order_contact->is_parent == 0) {
             $order_contact = Contact::where('contact_id', $order_contact->parent_id)->first();
         }
          

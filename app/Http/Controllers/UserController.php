@@ -63,6 +63,8 @@ class UserController extends Controller
         $this->middleware('permission:user-show', ['only' => ['show']]);
     }
 
+    
+
     public function index(Request $request)
     {
         $page = $request->page;
@@ -383,8 +385,7 @@ class UserController extends Controller
 
                     return redirect()->route('admin.view');
                 } else {
-                    $companies = Contact::where('user_id', auth()->user()->id)->where('status' , '!=' , 0)->get();
-
+                    $companies = Contact::where('user_id', auth()->user()->id)->get();
                     if ($companies->count() == 1) {
                         if ($companies[0]->contact_id == null) {
                             UserHelper::switch_company($companies[0]->secondary_id);
@@ -416,8 +417,10 @@ class UserController extends Controller
                             } else {
                                 UserHelper::switch_company($companies[0]->contact_id);
                             }
-                            Session::put('companies', $companies);
-                            return redirect()->route('my_account');
+                            // Session::put('companies', $companies);
+                            $previousUrl = session('previous_url', '/'); 
+                            return redirect()->intended($previousUrl);
+                            // return redirect()->route('my_account');
                         } else {
                             $companies = Contact::where('user_id', auth()->user()->id)->get();
                             Session::put('companies', $companies);
@@ -1114,7 +1117,23 @@ class UserController extends Controller
             ->with('list_products.product.options.price')
             ->where('title', 'My Favorites')
             ->get();
+        $selected_company = Session::get('company');
+        $get_contact = Contact::where('user_id', $user_id)
+        ->where('status', 1)
+        ->where('company', $selected_company)
+        ->with('states')
+        ->with('cities')
+        ->first();
 
+        if (!empty($get_contact->contact_id)) {
+            $address_user = Contact::where('user_id', $user_id)->where('contact_id' , $get_contact->contact_id)->first();
+        } else {
+            if (!empty($get_contact->secondary_id)) {
+                $parent = Contact::where('secondary_id', $get_contact->secondary_id)->first();
+                $address_user = Contact::where('contact_id', $parent->parent_id)->first();
+            }
+        }
+        
         $user = User::where('id', $user_id)->first();
         $all_ids = UserHelper::getAllMemberIds($user);
         $user_address = Contact::where('user_id', $user_id)->first();
@@ -1124,13 +1143,13 @@ class UserController extends Controller
         $list = BuyList::where('id', 20)->with('list_products.product.options')->first();
         $contact = Contact::where('email', $user_address->email)->first();
         $companies = Contact::where('user_id', $user_id)->get();
-        if (!empty($pluck_default_user)) {
-            if (!empty($pluck_default_user->contact_id)) {
-                $address_user = Contact::where('contact_id', $pluck_default_user->contact_id)->first();
-            } else {
-                $address_user = Contact::where('contact_id', $pluck_default_user->parent_id)->first();
-            }   
-        }
+        // if (!empty($pluck_default_user)) {
+        //     if (!empty($pluck_default_user->contact_id)) {
+        //         $address_user = Contact::where('contact_id', $pluck_default_user->contact_id)->first();
+        //     } else {
+        //         $address_user = Contact::where('contact_id', $pluck_default_user->parent_id)->first();
+        //     }   
+        // }
         
         if ($contact) {
             $parent = Contact::where('contact_id', $contact->parent_id)->get();
