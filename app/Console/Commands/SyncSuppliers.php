@@ -168,7 +168,7 @@ class SyncSuppliers extends Command
                         $contact->notes = $api_contact->notes;
                         $contact->save();
 
-                        if ($api_contact->secondaryContacts) {
+                        if (!empty($api_contact->secondaryContacts)) {
                             foreach ($api_contact->secondaryContacts as $apiSecondaryContact) {
                                 $secondary_contact = Contact::where('secondary_id', $apiSecondaryContact->id)
                                     ->where('parent_id', $contact->contact_id)
@@ -238,6 +238,11 @@ class SyncSuppliers extends Command
                                     'user_notes' => 'Sync from Cin7 at ' . Carbon::now()->toDateTimeString() . 'is Secondary Contacts ' . 'and primary account is ' . $api_contact->email,
                                 ]);
                                 $UserLog->save();
+                            }
+                        } else {
+                            $deleteing_secondary_contact = Contact::where('parent_id' , $contact->contact_id)->get();
+                            foreach($deleteing_secondary_contact as $deleteing_secondary_contact){
+                                $deleteing_secondary_contact->delete();
                             }
                         }
                     } else {
