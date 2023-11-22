@@ -400,8 +400,8 @@ class CheckoutController extends Controller
                         }
                     }
     
-                    if (!empty($customer_email)) {
-                        $data['email'] = $customer_email;
+                    if (!empty($customer_email->email)) {
+                        $data['email'] = $customer_email->email;
                         $data['subject'] = 'Your order has been received';
                         MailHelper::sendMailNotification('emails.admin-order-received', $data);
                     }
