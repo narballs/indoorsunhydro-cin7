@@ -794,13 +794,13 @@ class UserController extends Controller
             $contact_ids = Contact::whereIn('id', $all_ids)
                 ->pluck('contact_id')
                 ->toArray();
+            
             $user_orders_query = ApiOrder::with(['createdby'])->whereIn('memberId', $contact_ids)
                 ->with('contact' , function($query) {
                     $query->orderBy('company');
                 })
                 ->with('apiOrderItem.product');
-            
-            
+           
             if (!empty($request->sort_by)) {
                 $sort_by = $request->sort_by;
                 if ($sort_by == 'recent') {
@@ -815,7 +815,6 @@ class UserController extends Controller
             } else {
                 $user_orders = $user_orders_query->orderBy('created_at' , 'Desc')->paginate(10);
             }
-
             // main order search
             $search = $request->search;
             if (!empty($search)) {
@@ -879,6 +878,25 @@ class UserController extends Controller
                 ->orderBy('created_at' , 'Desc')
                 ->paginate(10);
             }
+
+            //order submitters
+            $submitter_filter = $request->submitter_filter;
+            $primary_submitters = $user_orders_query->distinct('primaryId')->pluck('primaryId')->toArray();
+            $secondary_submitters = $user_orders_query->distinct('secondaryId')->pluck('secondaryId')->toArray();
+            $order_submitters_array = array_merge($primary_submitters, $secondary_submitters);
+            $order_submitters = Contact::whereIn('contact_id', $order_submitters_array)->orWhereIn('secondary_id' , $order_submitters_array)->get();
+            if (!empty($submitter_filter) && $submitter_filter != 'all') {
+                $user_orders = ApiOrder::with(['createdby'])->whereIn('memberId', $contact_ids)
+                ->with('contact' , function($query) {
+                    $query->orderBy('company');
+                })
+                ->with('apiOrderItem.product')
+                ->where('primaryId' , $submitter_filter)
+                ->orWhere('secondaryId' , $submitter_filter)->paginate(10);
+            }
+            if (empty($submitter_filter)) {
+                $submitter_filter = 'all';
+            } 
             $custom_roles_with_company = DB::table('custom_roles')
                 ->where('user_id', $user_id)
                 ->where('company', $selected_company)
@@ -935,7 +953,8 @@ class UserController extends Controller
                 'contact_id',
                 'search',
                 'date_filter',
-                'frequent_products'
+                'frequent_products',
+                'order_submitters','submitter_filter'
             ));
         }
     }
