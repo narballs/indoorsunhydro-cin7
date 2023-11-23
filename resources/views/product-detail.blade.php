@@ -78,7 +78,7 @@
                                                         @if ($productOption->stockAvailable > 0)
                                                         <span class="rounded-pill cursor product-detail-quantity d-flex justify-content-center align-items-center"
                                                             data-toggle="popover-hover" data-bs-container="body" data-placement="top" data-bs-placement="top"
-                                                            data-bs-content="Top popover" style=" cursor: pointer;"><span class="">
+                                                            data-bs-content="Top popover" style=" cursor: pointer;"><span class="stock_number">
                                                                 {{$productOption->stockAvailable}}</span></span>
                                                         <div>
                                                             <small class="dis-price">&nbsp;</small>
@@ -122,14 +122,14 @@
                                         <div class="col-md-3">
                                             <div class="quantity" style="width:144px">
                                                 <input type="number" name="quantity" id="quantity" min="1"
-                                                    max="{{$productOption->stockAvailable}}" step="1" value="1">
+                                                    max="{{$productOption->stockAvailable}}" step="1" value="1" class="desktopqtyprd">
                                                 <input type="hidden" name="p_id" id="p_id"
                                                     value="{{$productOption->products->id}}">
                                                 <input type="hidden" name="option_id" id="option_id"
                                                     value="{{$productOption->option_id}}">
                                                 <div class="quantity-nav">
                                                     <div class="quantity-div quantity-up"></div>
-                                                    <div class="quantity-div quantity-down"></div>
+                                                    <div class="quantity-div quantity-down greyed"></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -289,7 +289,7 @@
                                         <div class="quantity-div quantity-up up_qty_mbl">
                                             <i class="fa fa-angle-up text-dark u_btn mt-1"></i>
                                         </div>
-                                        <div class="quantity-div quantity-down down_qty_mbl">
+                                        <div class="quantity-div quantity-down down_qty_mbl greyed">
                                             <i class="fa fa-angle-down text-dark d_btn mt-1"></i>
                                         </div>
                                     </div>
@@ -497,7 +497,11 @@
 
 @include('partials.product-footer')
 @include('partials.footer')
-
+<style>
+    .greyed {
+        background: #eaeaea;
+    }
+</style>
 <script>
     jQuery(document).ready(function(){
         jQuery(document).on('click', '#ajaxSubmit' , function(e) {
@@ -571,6 +575,15 @@
                 var newVal = oldValue + 1;
                 }
                 spinner.find("input[id=quantity]").val(newVal);
+                let stock = jQuery(".stock_number").html();
+                let stock_number = parseInt(stock);
+                if (newVal === stock_number) {
+                    btnUp.addClass('greyed');
+
+                } else {
+                    btnUp.removeClass('greyed');
+                    btnDown.removeClass('greyed');
+                }
             //   spinner.find("input[id=quantity").trigger("change");
             });
 
@@ -583,6 +596,16 @@
                 var newVal = oldValue - 1;
                 }
                 spinner.find("input[id=quantity]").val(newVal);
+                let stock = jQuery(".stock_number").html();
+                let stock_number = parseInt(stock);
+                if (newVal !== stock_number) {
+                    btnUp.removeClass('greyed');
+                    btnDown.removeClass('greyed');
+
+                } 
+                if (newVal == 1) {
+                    btnDown.addClass('greyed');
+                }
             //   spinner.find("input").trigger("change");
             });
 
@@ -658,6 +681,15 @@
                     var newVal = oldValue + 1;
                 }
                 input.val(newVal);
+                let stock = jQuery(".stock_number").html();
+                let stock_number = parseInt(stock);
+                if (newVal === stock_number) {
+                    btnUp.addClass('greyed');
+
+                } else {
+                    btnUp.removeClass('greyed');
+                    btnDown.removeClass('greyed');
+                }
             //   spinner.find("input[id=quantity").trigger("change");
             });
 
@@ -670,6 +702,16 @@
                 var newVal = oldValue - 1;
                 }
                 input.val(newVal);
+                let stock = jQuery(".stock_number").html();
+                let stock_number = parseInt(stock);
+                if (newVal !== stock_number) {
+                    btnUp.removeClass('greyed');
+                    btnDown.removeClass('greyed');
+
+                } 
+                if (newVal == 1) {
+                    btnDown.addClass('greyed');
+                }
             //   spinner.find("input").trigger("change");
             });
 
