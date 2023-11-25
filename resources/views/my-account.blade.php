@@ -414,8 +414,8 @@
                                         @endif
                                     @endforeach
                                     <div class="w-100 justify-content-center p-2 mt-3 mb-2">
-                                        {{-- {{ $user_orders->appends(Request::all())->links() }} --}}
-                                        {{ $user_orders->appends(Request::all())->links('pagination.front_custom_pagination') }}
+                                        {{ $user_orders->appends(Request::all())->links() }}
+                                        {{-- {{ $user_orders->appends(Request::all())->links('pagination.front_custom_pagination') }} --}}
                                     </div>
                                 </div>
                                 <div class="col-md-3 col-xl-4 p-3" style="max-height: 100rem;overflow-y:scroll">
