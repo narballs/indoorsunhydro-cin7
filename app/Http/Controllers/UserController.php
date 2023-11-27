@@ -1972,8 +1972,10 @@ class UserController extends Controller
                 return view('create_wholesale_account' , compact('contact'));
             }
         } else {
-
-            return view('create_wholesale_account');
+            $data['setting'] = AdminSetting::where('option_name' , 'enable_sign_up')->first();
+            $data['states'] = UsState::get(["state_name", "id"]);
+            // return view('create_wholesale_account');
+            return view('sign-up-wholesale-account' , $data);
         }
     }
 
