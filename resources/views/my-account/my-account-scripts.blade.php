@@ -311,6 +311,7 @@
         if (type === 'update shipping address') {
             $('#address_loader_shipping').removeClass('d-none');
             var companyNameShipping = $('.companyNameShipping:checked').val();
+            var company_name = companyNameShipping;
             if (companyNameShipping == '' || companyNameShipping == null) {
                 $('#error_company_shipping').html('Please select location');
                 $('#address_loader_shipping').addClass('d-none');
@@ -322,6 +323,7 @@
         } else {
             $('#address_loader').removeClass('d-none');
             var companyNameBilling = $('.companyNameBilling:checked').val();
+            var company_name = companyNameBilling;
             if (companyNameBilling == '' || companyNameBilling == null) {
                 $('#error_company_billing').html('Please select location');
                 $('#address_loader').addClass('d-none');
@@ -331,11 +333,13 @@
                 $('#error_company_billing').html('');
             }
         }
+
+        console.log(company_name);
         
         var companyName = $('.companyName:checked').val();
         var first_name = $('input[name=firstName]').val();
         var last_name = $('input[name=lastName]').val();
-        var company_name = $('input[name=company]').val();
+        // var company_name = $('input[name=company]').val();
         var phone = $('input[name=phone]').val();
         var address = $('input[name=address]').val();
         var address2 = $('input[name=address2]').val();
@@ -365,7 +369,7 @@
                 "email": email,
                 'contact_id': contact_id,
                 'secondary_id': secondary_id,
-                'company_name': companyName,
+                // 'company_name': companyName,
                 'type': type
             },
             success: function(response) {
@@ -1303,7 +1307,7 @@
                                         @endphp
                                         @if($company->type != "Supplier")
                                             <div class="col-md-12">
-                                                <input type="radio" {{!empty($session_company) && $session_company === $company->company ? 'checked' : ''}} value="{{ $company->company }}" name="company" class="companyName companyNameShipping" id="companyName" {{ $disabled }} {{ $muted }}>
+                                                <input type="radio" {{!empty($session_company) && $session_company === $company->company ? 'checked' : ''}} value="{{ $company->company }}" name="company" onclick="change_company_shipping(this)" class="companyName companyNameShipping" id="companyName" {{ $disabled }} {{ $muted }}>
                                                 <label for="" {{ $disabled }} {{ $muted }}>{{ $company->company }}
                                                     <span
                                                     style="font-size: 9px;font-family: 'Poppins';"
@@ -1414,3 +1418,15 @@
     </div>
 </div>
 {{-- <a class="ms-3" data-bs-toggle="modal" href="#address_modal_id" role="button"><img src="/theme/img/edit_pen.png"></a> --}}
+
+
+<script>
+    function change_company_shipping (e) {
+        $('.companyNameShipping').prop('checked', false);
+        $(e).prop('checked', true);
+    }
+    function change_company_billing (e) {
+        $('.companyNameBilling').prop('checked', false);
+        $(e).prop('checked', true);
+    }
+</script>

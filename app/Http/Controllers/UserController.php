@@ -1371,6 +1371,7 @@ class UserController extends Controller
 
     public function address_user_my_account(Request $request)
     {
+        
         // $user_id = auth()->id();
         // $secondary_id = $request->secondary_id;
         // $contact_id = $request->contact_id;
