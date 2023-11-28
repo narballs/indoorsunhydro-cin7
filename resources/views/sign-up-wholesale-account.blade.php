@@ -244,6 +244,8 @@
                             </div>
                         </div>
                         <div id="signup_error" class="text-danger"></div>
+
+                        <div class="row d-flex"> <p class="mb-0">Already a user ?<a class="ml-1 mr-1" href="{{url('user')}}">Sign in</a>to see your wholesale application</p></div>
                     </div>
                 </div>
                 <div class="login-info-box text-white d-block" id="login_sidebar_wholesale">
@@ -258,14 +260,14 @@
 
                 <div class="login-info-box text-white d-none" id="company_info_sidebar">
                     <h2 class=" dont-have-an-account text-center">Company Info</h2>
-                    <p class=" dont-have-an-account-pra" id="account">Your
+                    <p class=" dont-have-an-account-pra" id="account">
                         Please tell us some information about your company and website
                     </p>
                 </div>
 
                 <div class="login-info-box text-white d-none" id="address_info_sidebar">
                     <h2 class=" dont-have-an-account text-center">Address Info</h2>
-                    <p class=" dont-have-an-account-pra" id="account">Your
+                    <p class=" dont-have-an-account-pra" id="account">
                         Knowing where you are located is also helpful to approve your
                             account
                             faster.
