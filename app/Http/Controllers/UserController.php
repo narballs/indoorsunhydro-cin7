@@ -423,8 +423,12 @@ class UserController extends Controller
                             // return redirect()->route('my_account');
                         } else {
                             $companies = Contact::where('user_id', auth()->user()->id)->get();
-                            Session::put('companies', $companies);
-
+                            // Session::put('companies', $companies);
+                            if ($companies[0]->contact_id == null) {
+                                UserHelper::switch_company($companies[0]->secondary_id);
+                            } else {
+                                UserHelper::switch_company($companies[0]->contact_id);
+                            }
                             return view('reset-password', compact('user'));
                         }
                     }
@@ -1437,8 +1441,8 @@ class UserController extends Controller
         $state = $request->state;
         $zip = $request->zip;
 
-        $user_message = $requesterName . ' ' . 'requested to change his profile information.';
-        $description = $user_message  . "\n" . "Company : " . $company_name . "\n" . "Address 1: " . $address1 . "\n" . "Address 2: " . $address2 . "\n" . "City: " . $city . "\n" . "State: " . $state . "\n" . "Zip: " . $zip . "\n";
+        $user_message = $requesterName . ' ' . 'requested to change his/her profile information.';
+        $description = $user_message  . "\n" .  "Request Type : " . $subject . "\n" . "Company : " . $company_name . "\n" . "Address 1: " . $address1 . "\n" . "Address 2: " . $address2 . "\n" . "City: " . $city . "\n" . "State: " . $state . "\n" . "Zip: " . $zip . "\n";
         
         $ticketData = [
             'subject' => $subject,
