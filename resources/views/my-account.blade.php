@@ -63,7 +63,7 @@
                                                 </select>
                                             </span>
                                         </div>
-                                        <div class="col-md-4 d-flex filter2_mbl">
+                                        <div class="col-md-5 d-flex filter2_mbl">
                                             <span>
                                                 <p class="total_order_my_account mt-2">
                                                     Submitter
@@ -72,16 +72,26 @@
                                             <span class="select_months_my_account mx-2" style="margin-top: 0px !important;">
                                                 
                                                 @if(count($order_submitters) > 0)
+                                                   
                                                     <select name="submitter_filter" class="custom-select submitter_filter date_filter_mbl" id="inputGroupSelect01" onchange="submitter_filter()">
                                                             <option value="all"  {{$submitter_filter === 'all' ? 'selected' : ''}}>All</option>
                                                             @foreach ($order_submitters as $order_submitter)
-                                                                <option value="{{ !empty($order_submitter->contact_id) ? $order_submitter->contact_id : $order_submitter->secondary_id}}" {{isset($submitter_filter) && (!empty($submitter_filter)) && ($submitter_filter == $order_submitter->contact_id || $submitter_filter == $order_submitter->secondary_id) ? 'selected' : ''}}>{{$order_submitter->firstName . ' ' . $order_submitter->lastName}} ({{$order_submitter->company}})</option>
+                                                                @php
+                                                                    $parent_contact = null;
+                                                                    if (!empty($order_submitter->secondary_id)) {
+                                                                        $secondary_contact_data = App\Models\Contact::where('secondary_id', $order_submitter->secondary_id)->where('is_parent' , 0)->first();
+                                                                        if (!empty($secondary_contact_data)) {
+                                                                            $parent_contact = App\Models\Contact::where('contact_id', $secondary_contact_data->parent_id)->where('is_parent' , 1)->first();
+                                                                        }
+                                                                    }
+                                                                @endphp
+                                                                <option value="{{ !empty($order_submitter->contact_id) ? $order_submitter->contact_id : $order_submitter->secondary_id}}" {{isset($submitter_filter) && (!empty($submitter_filter)) && ($submitter_filter == $order_submitter->contact_id || $submitter_filter == $order_submitter->secondary_id) ? 'selected' : ''}}>{{$order_submitter->firstName . ' ' . $order_submitter->lastName}} (@if(!empty($order_submitter->contact_id)){{ $order_submitter->company}} @elseif (!empty($parent_contact->company)) {{$parent_contact->company}} @endif )</option>
                                                             @endforeach
                                                     </select>
                                                 @endif
                                             </span>
                                         </div>
-                                        <div class="col-md-3 d-flex filter2_mbl">
+                                        <div class="col-md-2 d-flex filter2_mbl">
                                             <ul class="nav ">
                                                 <li class="text-center">
                                                     <select id="handle_sort_by" name="sort_by" class="py-1" onchange="handleSortBY()">
