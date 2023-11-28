@@ -3,11 +3,11 @@
         <div class="d-flex">
             <div style="width: 15%">
                 @if ($paginator->onFirstPage())
-                    <li class="disabled btn btn-flat prev_btn_css_front_end_mbl"><span
+                    <li class="disabled btn btn-flat prev_btn_css_front_end_mbl" style="list-style: none;"><span
                             class="prev_next_btn"><i class="fa fa-angle-left" style="color: #ffffff;"></i></span>
                     </li>
                 @else
-                    <li class="">
+                    <li class="" style="list-style: none;">
                         <a class="btn btn-flat prev_btn_css_front_end_mbl" href="{{ $paginator->previousPageUrl() }}" rel="prev">
                             <span class="prev_next_btn"><i class="fa fa-angle-left" style="color: #ffffff;"></i></span></span>
                         </a>
@@ -35,13 +35,13 @@
             <div class="pagination mt-0 pagination-sm justify-content-end" style="width: 15%" >
                 @if ($paginator->hasMorePages())
                     <li>
-                        <a class="btn btn-flat next_btn_css_front_end_mbl" href="{{ $paginator->nextPageUrl() }}" rel="next">
+                        <a class="btn btn-flat next_btn_css_front_end_mbl" style="list-style: none;" href="{{ $paginator->nextPageUrl() }}" rel="next">
                             <span class="prev_next_btn mr-1"><i class="fa fa-angle-right" style="color: #ffffff;"></i></span>
                             </i>
                         </a>
                     </li>
                 @else
-                    <li class="disabled btn btn-flat next_btn_css_front_end_mbl">
+                    <li class="disabled btn btn-flat next_btn_css_front_end_mbl" style="list-style: none;">
                         <span class="mr-1 prev_next_btn"><i class="fa fa-angle-right" style="color: #ffffff;"></i></span>
                         
                         </i>

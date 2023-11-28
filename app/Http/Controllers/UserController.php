@@ -937,7 +937,7 @@ class UserController extends Controller
                 $query->with(['createdby'])->whereIn('memberId', $contact_ids);
             })
             ->groupBy('product_id')
-            ->take(5)
+            // ->take(5)
             ->get();
             return view('my-account', compact(
                 'user',
@@ -1972,8 +1972,10 @@ class UserController extends Controller
                 return view('create_wholesale_account' , compact('contact'));
             }
         } else {
-
-            return view('create_wholesale_account');
+            $data['setting'] = AdminSetting::where('option_name' , 'enable_sign_up')->first();
+            $data['states'] = UsState::get(["state_name", "id"]);
+            // return view('create_wholesale_account');
+            return view('sign-up-wholesale-account' , $data);
         }
     }
 

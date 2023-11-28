@@ -36,14 +36,14 @@
                                     {{ $address_user['lastName'] }}
                                 </p>
                                 <p class="my_account_address_items">
-                                    {{ !empty($address_user['postalAddress1']) ? $address_user['postalAddress1'] . "," : '' . ","}}
+                                    {{ !empty($address_user['postalAddress1']) ? $address_user['postalAddress1'] . "," : ''}}
                                 </p>
                                 <p class="my_account_address_items">
-                                    {{ $address_user['postalAddress2'] ?  $address_user['postalAddress2'] . "," : '' . ","}}
+                                    {{ $address_user['postalAddress2'] ?  $address_user['postalAddress2'] . "," : ''}}
                                 </p>
                                 <p class="my_account_address_items">
-                                    {{ $address_user['postalCity'] ?  $address_user['postalCity'] . "," :  '' . "," }}
-                                    {{ $address_user['postalState'] ?  $address_user['postalState'] . "," :  '' . "," }}
+                                    {{ $address_user['postalCity'] ?  $address_user['postalCity'] . "," :  '' }}
+                                    {{ $address_user['postalState'] ?  $address_user['postalState'] . "," :  '' }}
                                     {{ $address_user['postalPostCode'] ?  $address_user['postalPostCode'] :  '' }}
                                 </p>
                                 <p class="my_account_address_items">
