@@ -423,8 +423,12 @@ class UserController extends Controller
                             // return redirect()->route('my_account');
                         } else {
                             $companies = Contact::where('user_id', auth()->user()->id)->get();
-                            Session::put('companies', $companies);
-
+                            // Session::put('companies', $companies);
+                            if ($companies[0]->contact_id == null) {
+                                UserHelper::switch_company($companies[0]->secondary_id);
+                            } else {
+                                UserHelper::switch_company($companies[0]->contact_id);
+                            }
                             return view('reset-password', compact('user'));
                         }
                     }
