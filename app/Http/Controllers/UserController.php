@@ -1441,7 +1441,7 @@ class UserController extends Controller
         $state = $request->state;
         $zip = $request->zip;
 
-        $user_message = $requesterName . ' ' . 'requested to change his profile information.';
+        $user_message = $requesterName . ' ' . 'requested to change his/her profile information.';
         $description = $user_message  . "\n" .  "Request Type : " . $subject . "\n" . "Company : " . $company_name . "\n" . "Address 1: " . $address1 . "\n" . "Address 2: " . $address2 . "\n" . "City: " . $city . "\n" . "State: " . $state . "\n" . "Zip: " . $zip . "\n";
         
         $ticketData = [
