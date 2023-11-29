@@ -950,7 +950,6 @@ class UserController extends Controller
             ->with('states')
             ->with('cities')
             ->first();
-
             if (!empty($get_contact->contact_id)) {
                 $address_user = Contact::where('user_id', $user_id)->where('contact_id' , $get_contact->contact_id)->first();
             } else {
@@ -1565,16 +1564,22 @@ class UserController extends Controller
         Session::forget('company');
         Session::forget('companies');
         Session::forget('cart');
-        $admin = User::role('Admin')->first();
+        $admin = User::role('Admin')->where('id' , auth()->user()->id)->first();
         Auth::loginUsingId($admin->id);
         $companies = Contact::where('user_id', $admin->id)->get();
-        if ($companies->count() == 1) {
-            
-            if ($companies[0]->contact_id == null) {
-                UserHelper::switch_company($companies[0]->secondary_id);
-            } else {
-                UserHelper::switch_company($companies[0]->contact_id);
+        if ($companies->count() >= 1) {
+            foreach ($companies as $company) {
+                if ($company->contact_id == null) {
+                    UserHelper::switch_company($company->secondary_id);
+                } else {
+                    UserHelper::switch_company($company->contact_id);
+                }
             }
+            // if ($companies[0]->contact_id == null) {
+            //     UserHelper::switch_company($companies[0]->secondary_id);
+            // } else {
+            //     UserHelper::switch_company($companies[0]->contact_id);
+            // }
         }
         Session::put('companies', $companies);
         return redirect('/');
