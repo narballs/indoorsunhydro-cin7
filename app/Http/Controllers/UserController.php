@@ -1371,7 +1371,6 @@ class UserController extends Controller
 
     public function address_user_my_account(Request $request)
     {
-        
         // $user_id = auth()->id();
         // $secondary_id = $request->secondary_id;
         // $contact_id = $request->contact_id;
@@ -1635,17 +1634,21 @@ class UserController extends Controller
         $user_id =  auth()->user()->id;
         $contact_id = $request->companyId;
         $contact = Contact::where('contact_id', $contact_id)->first();
+        $company_type = null;
         $active_contact_id = null;
         $active_company = null;
+        $get_company_address = null;
         $cart = [];
         if (!empty($contact)) {
             $active_contact_id = $contact->contact_id;
             $active_company = $contact->company;
+            $company_type = 'primary';
             
         } else {
             $contact = Contact::where('secondary_id', $contact_id)->first();
             $active_contact_id = $contact->secondary_id;
             $active_company = $contact->company;
+            $company_type = 'secondary';
             
         }
         Session::put([
@@ -1682,10 +1685,20 @@ class UserController extends Controller
         }
 
         Session::put('cart', $cart_data);
+        if ($company_type == 'primary') {
+            $get_company_address = Contact::where('contact_id', $active_contact_id)->first();
+        } 
 
+        if ($company_type == 'secondary') {
+            $secondary_contact_user = Contact::where('secondary_id', $active_contact_id)->first();
+            $get_company_address = Contact::where('contact_id', $secondary_contact_user->parent_id)->where('is_parent' , 1)->first();
+
+        }
         return response()->json([
             'status' => '204',
-            'message' => 'Company Switch Successfully !'
+            'message' => 'Company Switch Successfully !',
+            'success' => true,
+            'update_address' => $get_company_address
         ]);
     }
 
