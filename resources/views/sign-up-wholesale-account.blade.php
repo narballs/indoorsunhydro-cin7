@@ -245,7 +245,7 @@
                         </div>
                         <div id="signup_error" class="text-danger"></div>
 
-                        <div class="row d-flex"> <p class="mb-0">Already a user ?<a class="ml-1 mr-1" href="{{url('user')}}">Sign in</a>to see your wholesale application</p></div>
+                        {{-- <div class="row d-flex"> <p class="mb-0">Already a user ?<a class="ml-1 mr-1" href="{{url('user')}}">Sign in</a>to see your wholesale application</p></div> --}}
                     </div>
                 </div>
                 <div class="login-info-box text-white d-block" id="login_sidebar_wholesale">
