@@ -306,108 +306,7 @@
     //     });
     // }
 
-    function updateContact(type , user_id) {
-        
-        if (type === 'update shipping address') {
-            $('#address_loader_shipping').removeClass('d-none');
-            var companyNameShipping = $('.companyNameShipping:checked').val();
-            var company_name = companyNameShipping;
-            if (companyNameShipping == '' || companyNameShipping == null) {
-                $('#error_company_shipping').html('Please select location');
-                $('#address_loader_shipping').addClass('d-none');
-                return false;
-            } 
-            else {
-                $('#error_company_shipping').html('');
-            }
-        } else {
-            $('#address_loader').removeClass('d-none');
-            var companyNameBilling = $('.companyNameBilling:checked').val();
-            var company_name = companyNameBilling;
-            if (companyNameBilling == '' || companyNameBilling == null) {
-                $('#error_company_billing').html('Please select location');
-                $('#address_loader').addClass('d-none');
-                return false;
-            } 
-            else {
-                $('#error_company_billing').html('');
-            }
-        }
-
-        console.log(company_name);
-        
-        var companyName = $('.companyName:checked').val();
-        var first_name = $('input[name=firstName]').val();
-        var last_name = $('input[name=lastName]').val();
-        // var company_name = $('input[name=company]').val();
-        var phone = $('input[name=phone]').val();
-        var address = $('input[name=address]').val();
-        var address2 = $('input[name=address2]').val();
-        var town_city = $('input[name=town_city]').val();
-        var state = document.getElementById("state").value;
-        var zip = $('input[name=zip]').val();
-        var email = $('input[name=email]').val();
-        var contact_id = $('#contact_id_val').val();
-        var secondary_id = $('input[name=secondary_id]').val();
-        
-        
-        jQuery.ajax({
-            method: 'GET',
-            url: "{{ url('/my-account-user-addresses/') }}",
-            data: {
-                "_token": "{{ csrf_token() }}",
-                "user_id": user_id,
-                "first_name": first_name,
-                "last_name": last_name,
-                "company_name": company_name,
-                "phone": phone,
-                "address": address,
-                "address2": address2,
-                "town_city": town_city,
-                "state": state,
-                "zip": zip,
-                "email": email,
-                'contact_id': contact_id,
-                'secondary_id': secondary_id,
-                // 'company_name': companyName,
-                'type': type
-            },
-            success: function(response) {
-                console.log(response.data.ticket.id );
-                if (response.data.ticket.id != '' || response.data.ticket.id != null) {
-                    $('#address_loader').addClass('d-none');
-                    $('#address_loader_shipping').addClass('d-none');
-                    $('.modal-backdrop').remove()
-                    if (type === 'update shipping address') { 
-                        $('#success_msg_shipping').removeClass('d-none');
-                        $('#success_msg_shipping').html(response.msg);
-                    } else {
-
-                        $('#success_msg').removeClass('d-none');
-                        $('#success_msg').html(response.msg);
-                    }
-                    setTimeout(function() {
-                        window.location.href = "{{ url('my-account/address') }}";
-                    }, 2000);
-                }   else {
-                    $('#address_loader').addClass('d-none');
-                    $('#address_loader_shipping').addClass('d-none');
-                    $('.modal-backdrop').remove();
-                    if (type === 'update shipping address') {  
-                        $('#error_msg_shipping').removeClass('d-none');
-                        $('#error_msg_shipping').html('Something went wrong');
-                    } else {
-
-                        $('#error_msg').removeClass('d-none');
-                        $('#error_msg').html('Something went wrong');
-                    }
-                    setTimeout(function() {
-                        window.location.href = "{{ url('my-account/address') }}";
-                    }, 2000);
-                }
-            }
-        });
-    }
+    
 
     function createList(type) {
         if (type == 1) {
@@ -1047,6 +946,146 @@
         });
     }
 
+    function updateContact(type , user_id) {
+        
+        if (type === 'update shipping address') {
+            $('#address_loader_shipping').removeClass('d-none');
+            var companyNameShipping = $('.companyNameShipping:checked').val();
+            var first_name_shipping = $('#shipping_first_name').val();
+            var last_name_shipping = $('#shipping_last_name').val();
+            var shipping_address_1 = $('.shipping_address_1').val();
+            var shipping_address_2 = $('.shipping_address_2').val();
+            var shipping_city = $('.shipping_city').val();
+            var shipping_state = $('.shipping_state').val();
+            var post_code = $('.shipping_post_code').val();
+            var shipping_email = $('.shipping_email').val();
+            var shipping_phone = $('.shipping_phone').val();
+
+            var company_name = companyNameShipping;
+            var first_name = first_name_shipping;
+            var last_name = last_name_shipping;
+            var address = shipping_address_1;
+            var address2 = shipping_address_2;
+            var town_city = shipping_city;
+            var state = shipping_state;
+            var zip = post_code;
+            var email = shipping_email;
+            var phone = shipping_phone;
+
+            if (companyNameShipping == '' || companyNameShipping == null) {
+                $('#error_company_shipping').html('Please select location');
+                $('#address_loader_shipping').addClass('d-none');
+                return false;
+            } 
+            else {
+                $('#error_company_shipping').html('');
+            }
+        } else {
+            $('#address_loader').removeClass('d-none');
+            var companyNameBilling = $('.companyNameBilling:checked').val();
+            var first_name_billing = $('#billing_first_name').val();
+            var last_name_billing = $('#billing_last_name').val();
+            var billing_address_1 = $('.billing_address_1').val();
+            var billing_address_2 = $('.billing_address_2').val();
+            var billing_city = $('.billing_city').val();
+            var billing_state = $('.billing_state').val();
+            var post_code = $('.billing_post_code').val();
+            var billing_email = $('.billing_email').val();
+            var billing_phone = $('.billing_phone').val();
+
+            var company_name = companyNameBilling;
+            var first_name = first_name_billing;
+            var last_name = last_name_billing;
+            var address = billing_address_1;
+            var address2 = billing_address_2;
+            var town_city = billing_city;
+            var state = billing_state;
+            var zip = post_code;
+            var email = billing_email;
+            var phone = billing_phone;
+
+            if (companyNameBilling == '' || companyNameBilling == null) {
+                $('#error_company_billing').html('Please select location');
+                $('#address_loader').addClass('d-none');
+                return false;
+            } 
+            else {
+                $('#error_company_billing').html('');
+            }
+        }
+        
+        var companyName = $('.companyName:checked').val();
+        // var first_name = $('input[name=firstName]').val();
+        // var last_name = $('input[name=lastName]').val();
+        // var phone = $('input[name=phone]').val();
+        // var address = $('input[name=address]').val();
+        // var address2 = $('input[name=address2]').val();
+        // var town_city = $('input[name=town_city]').val();
+        // var state = document.getElementById("state").value;
+        // var zip = $('input[name=zip]').val();
+        // var email = $('input[name=email]').val();
+        var contact_id = $('#contact_id_val').val();
+        var secondary_id = $('input[name=secondary_id]').val();
+        
+        
+        jQuery.ajax({
+            method: 'GET',
+            url: "{{ url('/my-account-user-addresses/') }}",
+            data: {
+                "_token": "{{ csrf_token() }}",
+                "user_id": user_id,
+                "first_name": first_name,
+                "last_name": last_name,
+                "company_name": company_name,
+                "phone": phone,
+                "address": address,
+                "address2": address2,
+                "town_city": town_city,
+                "state": state,
+                "zip": zip,
+                "email": email,
+                'contact_id': contact_id,
+                'secondary_id': secondary_id,
+                // 'company_name': companyName,
+                'type': type
+            },
+            success: function(response) {
+                console.log(response.data.ticket.id );
+                if (response.data.ticket.id != '' || response.data.ticket.id != null) {
+                    $('#address_loader').addClass('d-none');
+                    $('#address_loader_shipping').addClass('d-none');
+                    $('.modal-backdrop').remove()
+                    if (type === 'update shipping address') { 
+                        $('#success_msg_shipping').removeClass('d-none');
+                        $('#success_msg_shipping').html(response.msg);
+                    } else {
+
+                        $('#success_msg').removeClass('d-none');
+                        $('#success_msg').html(response.msg);
+                    }
+                    setTimeout(function() {
+                        window.location.href = "{{ url('my-account/address') }}";
+                    }, 2000);
+                }   else {
+                    $('#address_loader').addClass('d-none');
+                    $('#address_loader_shipping').addClass('d-none');
+                    $('.modal-backdrop').remove();
+                    if (type === 'update shipping address') {  
+                        $('#error_msg_shipping').removeClass('d-none');
+                        $('#error_msg_shipping').html('Something went wrong');
+                    } else {
+
+                        $('#error_msg').removeClass('d-none');
+                        $('#error_msg').html('Something went wrong');
+                    }
+                    setTimeout(function() {
+                        window.location.href = "{{ url('my-account/address') }}";
+                    }, 2000);
+                }
+            }
+        });
+    }
+
    
    
 </script>
@@ -1065,20 +1104,20 @@
                 <div class="update-address-section" id="address-form-update">
 
                     <form class="needs-validation mt-4 novalidate" action="{{ url('order') }}" method="POST">
-                        @if(!empty($user_address->contact_id))
-                        <input type="hidden" value="{{$user_address->contact_id}}" name="contact_id" id="contact_id_val">
-                        @elseif(!empty($user_address->secondary_id))
-                        <input type="hidden" value="{{$user_address->secondary_id}}" name="secondary_id" id="secondary_id_val">
+                        @if(!empty($address_user->contact_id))
+                        <input type="hidden" value="{{$address_user->contact_id}}" name="contact_id" id="contact_id_val">
+                        @elseif(!empty($address_user->secondary_id))
+                        <input type="hidden" value="{{$address_user->secondary_id}}" name="secondary_id" id="secondary_id_val">
                         @endif
                         @csrf
                         <div class="alert alert-success mt-3 d-none" id="success_msg"></div>
                         <div class="alert alert-danger mt-3 d-none" id="error_msg"></div>
-                        <input type="hidden" name="email" value="{{$user_address->email}}">
+                        <input type="hidden" name="email" id="billing_email" value="{{$address_user->email}}">
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="firstName">First name</label>
-                                <input type="text" class="form-control bg-light" name="firstName"
-                                    placeholder="First name" value="{{ $user_address->firstName }}" required>
+                                <input type="text" class="form-control bg-light" name="firstName" id="billing_first_name"
+                                    placeholder="First name" value="{{ $address_user->firstName }}" required>
                                 <div id="error_first_name" class="text-danger">
 
                                 </div>
@@ -1086,8 +1125,8 @@
 
                             <div class="col-md-6 mb-3">
                                 <label for="lastName">Last name</label>
-                                <input type="text" class="form-control bg-light" name="lastName" placeholder=""
-                                    value="{{ $user_address->lastName }}" required>
+                                <input type="text" class="form-control bg-light" name="lastName" id="billing_last_name" placeholder=""
+                                    value="{{ $address_user->lastName }}" required>
                                 <div id="error_last_name" class="text-danger">
 
                                 </div>
@@ -1124,7 +1163,7 @@
                                         @endphp
                                         @if($company->type != "Supplier")
                                             <div class="col-md-12">
-                                                <input type="radio" {{!empty($session_company) && $session_company === $company->company ? 'checked' : ''}} value="{{ $company->company }}" class="companyName companyNameBilling" name="company" id="companyName" {{ $disabled }} {{ $muted }}>
+                                                <input  onclick="change_company_billing(this  , {{ $contact_id }})" type="radio" {{!empty($session_company) && $session_company === $company->company ? 'checked' : ''}} value="{{ $company->company }}" class="companyName companyNameBilling" name="company" id="companyName" {{ $disabled }} {{ $muted }}>
                                                 <label for="" {{ $disabled }} {{ $muted }}>{{ $company->company }}
                                                     <span
                                                     style="font-size: 9px;font-family: 'Poppins';"
@@ -1133,7 +1172,7 @@
                                                 </label>
                                             </div>
                                         @endif
-                                        {{-- <input type="text" class="form-control bg-light" name="company" id="companyName" placeholder="Enter you company name" value="{{ $user_address->company }}" required> --}}
+                                        {{-- <input type="text" class="form-control bg-light" name="company" id="companyName" placeholder="Enter you company name" value="{{ $address_user->company }}" required> --}}
                                     @endforeach
                                 @endif
                                 </div>
@@ -1149,23 +1188,23 @@
 
                         <div class="mb-3">
                             <label for="address">Street Address</label>
-                            <input type="text" class="form-control bg-light" name="address" id="address1"
-                            value="{{ !empty($user_address->postalAddress1) ?  $user_address->postalAddress1 : '' }}" placeholder="House number and street name"
+                            <input type="text" class="form-control bg-light billing_address_1 " name="address" id="address1"
+                            value="{{ !empty($address_user->postalAddress1) ?  $address_user->postalAddress1 : '' }}" placeholder="House number and street name"
                             required>
                             <div id="error_address1" class="text-danger"></div>
                         </div>
                         <div class="mb-3">
                             <label for="address2">Address 2 <span class="text-muted">(Optional)</span></label>
-                            <input type="text" class="form-control bg-light" name="address2"
-                                value="{{ !empty($user_address->postalAddress2) ?  $user_address->postalAddress2 : '' }}"
+                            <input type="text" class="form-control bg-light billing_address_2" name="address2"
+                                value="{{ !empty($address_user->postalAddress2) ?  $address_user->postalAddress2 : '' }}"
                                 placeholder="Apartment, suite, unit etc (optional)">
                                 <div id="error_address2" class="text-danger"></div>
                         </div>
                        
                         <div class="mb-3">
                             <label for="town">Town/City <span class="text-muted">(Optional)</span></label>
-                            <input type="text" class="form-control bg-light" name="town_city"
-                                value="{{ !empty($user_address->postalCity) ? $user_address->postalCity : '' }}" placeholder="Enter your town">
+                            <input type="text" class="form-control bg-light billing_city" name="town_city"
+                                value="{{ !empty($address_user->postalCity) ? $address_user->postalCity : '' }}" placeholder="Enter your town">
                                 <div id="error_city" class="text-danger"></div>
                         </div>
                         
@@ -1173,10 +1212,11 @@
                             <div class="col-md-6 mb-3">
                                 <label for="state">State</label>
 
-                                <select class="form-control bg-light" name="state" id="state">
+                                <select class="form-control bg-light billing_state"  name="state" id="state">
+                                    @if (empty($address_user->postalState)) <option value="">Select State</option>@endif
                                     @foreach ($states as $state)
                                         <?php
-                                        if ($user_address->postalState == $state->state_name) {
+                                        if ($address_user->postalState == $state->state_name) {
                                             $selected = 'selected';
                                         } else {
                                             $selected = '';
@@ -1187,15 +1227,14 @@
                                         </option>
                                     @endforeach
                                 </select>
-                                <!--    <input type="text" class="form-control bg-light" name="state" value="{{ $user_address->postalState }}" placeholder="Enter State" value="" required> -->
                                 <div class="invalid-feedback">
                                     Valid first name is required.
                                 </div>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="zip">Zip</label>
-                                <input type="text" class="form-control bg-light" name="zip"
-                                    placeholder="Enter zip code" value="{{ !empty($user_address->postalPostCode) ? $user_address->postalPostCode : $user_address->postCode }}"
+                                <input type="text" class="form-control bg-light billing_post_code" name="zip"
+                                    placeholder="Enter zip code" value="{{ !empty($address_user->postalPostCode) ? $address_user->postalPostCode : ''}}"
                                     required>
                                 <div id="error_zip" class="text-danger">
 
@@ -1207,17 +1246,14 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="phone">Phone</label>
-                                <input type="text" class="form-control bg-light" name="phone"
-                                    placeholder="Enter your phone" value="{{ $user_address->phone }}" required>
+                                <input type="text" class="form-control bg-light billing_phone" name="phone"
+                                    placeholder="Enter your phone" value="{{ $address_user->phone }}" required>
                                 <div id="error_phone" class="text-danger"></div>
 
 
 
                             </div>
 
-                            <!-- <div>
-                      <button calss="btn btn-primary" onclick="updateContact('{{ auth()->user()->id }}')">Update</button>
-                  </div> -->
                         </div>
                     </form>
                 </div>
@@ -1248,20 +1284,20 @@
                 <div class="update-address-section" id="address-form-update">
 
                     <form class="needs-validation mt-4 novalidate" action="{{ url('order') }}" method="POST">
-                        @if(!empty($user_address->contact_id))
-                        <input type="hidden" value="{{$user_address->contact_id}}" name="contact_id" id="contact_id_val">
-                        @elseif(!empty($user_address->secondary_id))
-                        <input type="hidden" value="{{$user_address->secondary_id}}" name="secondary_id" id="secondary_id_val">
+                        @if(!empty($address_user->contact_id))
+                        <input type="hidden" value="{{$address_user->contact_id}}" name="contact_id" id="contact_id_val">
+                        @elseif(!empty($address_user->secondary_id))
+                        <input type="hidden" value="{{$address_user->secondary_id}}" name="secondary_id" id="secondary_id_val">
                         @endif
                         @csrf
                         <div class="alert alert-success mt-3 d-none" id="success_msg_shipping"></div>
                         <div class="alert alert-danger mt-3 d-none" id="error_msg_shipping"></div>
-                        <input type="hidden" name="email" value="{{$user_address->email}}">
+                        <input type="hidden" name="email" id="shipping_email" value="{{$address_user->email}}">
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="firstName">First name</label>
-                                <input type="text" class="form-control bg-light" name="firstName"
-                                    placeholder="First name" value="{{ $user_address->firstName }}" required>
+                                <input type="text" class="form-control bg-light" id="shipping_first_name" name="firstName"
+                                    placeholder="First name" value="{{ $address_user->firstName }}" required>
                                 <div id="error_first_name" class="text-danger">
 
                                 </div>
@@ -1269,8 +1305,8 @@
 
                             <div class="col-md-6 mb-3">
                                 <label for="lastName">Last name</label>
-                                <input type="text" class="form-control bg-light" name="lastName" placeholder=""
-                                    value="{{ $user_address->lastName }}" required>
+                                <input type="text" class="form-control bg-light" id="shipping_last_name" name="lastName" placeholder=""
+                                    value="{{ $address_user->lastName }}" required>
                                 <div id="error_last_name" class="text-danger">
 
                                 </div>
@@ -1307,7 +1343,7 @@
                                         @endphp
                                         @if($company->type != "Supplier")
                                             <div class="col-md-12">
-                                                <input type="radio" {{!empty($session_company) && $session_company === $company->company ? 'checked' : ''}} value="{{ $company->company }}" name="company" onclick="change_company_shipping(this)" class="companyName companyNameShipping" id="companyName" {{ $disabled }} {{ $muted }}>
+                                                <input type="radio"  {{!empty($session_company) && $session_company === $company->company ? 'checked' : ''}} value="{{ $company->company }}" name="company" onclick="change_company_shipping(this  , {{ $contact_id }})" class="companyName companyNameShipping" id="companyName" {{ $disabled }} {{ $muted }}>
                                                 <label for="" {{ $disabled }} {{ $muted }}>{{ $company->company }}
                                                     <span
                                                     style="font-size: 9px;font-family: 'Poppins';"
@@ -1316,7 +1352,6 @@
                                                 </label>
                                             </div>
                                         @endif
-                                        {{-- <input type="text" class="form-control bg-light" name="company" id="companyName" placeholder="Enter you company name" value="{{ $user_address->company }}" required> --}}
                                     @endforeach
                                 @endif
                                 </div>
@@ -1332,23 +1367,23 @@
 
                         <div class="mb-3">
                             <label for="address">Street Address</label>
-                            <input type="text" class="form-control bg-light" name="address" id="address1"
-                            value="{{ !empty($user_address->address1) ? $user_address->address1 : $user_address->postalAddress1 }}" placeholder="House number and street name"
+                            <input type="text" class="form-control bg-light shipping_address_1" name="address"  id="address1"
+                            value="{{ !empty($address_user->address1) ? $address_user->address1 : '' }}" placeholder="House number and street name"
                             required>
                             <div id="error_address1" class="text-danger"></div>
                         </div>
                         <div class="mb-3">
                             <label for="address2">Address 2 <span class="text-muted">(Optional)</span></label>
-                            <input type="text" class="form-control bg-light" name="address2"
-                                value="{{ !empty($user_address->address2) ? $user_address->address2 : $user_address->postalAddress2 }}"
+                            <input type="text" class="form-control bg-light shipping_address_2" name="address2"
+                                value="{{ !empty($address_user->address2) ? $address_user->address2 : '' }}"
                                 placeholder="Apartment, suite, unit etc (optional)">
                                 <div id="error_address2" class="text-danger"></div>
                         </div>
                        
                         <div class="mb-3">
                             <label for="town">Town/City <span class="text-muted">(Optional)</span></label>
-                            <input type="text" class="form-control bg-light" name="town_city"
-                                value="{{ !empty($user_address->city) ?  $user_address->city  : $user_address->postalCity}}" placeholder="Enter your town">
+                            <input type="text" class="form-control bg-light shipping_city" name="town_city"
+                                value="{{ !empty($address_user->city) ?  $address_user->city  : ''}}" placeholder="Enter your town">
                                 <div id="error_city" class="text-danger"></div>
                         </div>
                         
@@ -1356,10 +1391,11 @@
                             <div class="col-md-6 mb-3">
                                 <label for="state">State</label>
 
-                                <select class="form-control bg-light" name="state" id="state">
+                                <select class="form-control bg-light" class="shipping_state" name="state" id="state">
+                                    @if (empty($address_user->state)) <option value="">Select State</option>@endif
                                     @foreach ($states as $state)
                                         <?php
-                                        if ($user_address->state == $state->state_name || $user_address->postalState == $state->state_name) {
+                                        if ($address_user->state == $state->state_name) {
                                             $selected = 'selected';
                                         } else {
                                             $selected = '';
@@ -1370,15 +1406,14 @@
                                         </option>
                                     @endforeach
                                 </select>
-                                <!--    <input type="text" class="form-control bg-light" name="state" value="{{ $user_address->postalState }}" placeholder="Enter State" value="" required> -->
                                 <div class="invalid-feedback">
                                     Valid first name is required.
                                 </div>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="zip">Zip</label>
-                                <input type="text" class="form-control bg-light" name="zip"
-                                    placeholder="Enter zip code" value="{{ !empty($user_address->postCode) ?  $user_address->postCode : $user_address->postalState}}"
+                                <input type="text" class="form-control bg-light shipping_post_code" name="zip"
+                                    placeholder="Enter zip code" value="{{ !empty($address_user->postCode) ?  $address_user->postCode: ''}}"
                                     required>
                                 <div id="error_zip" class="text-danger">
 
@@ -1390,17 +1425,13 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="phone">Phone</label>
-                                <input type="text" class="form-control bg-light" name="phone"
-                                    placeholder="Enter your phone" value="{{ $user_address->phone }}" required>
+                                <input type="text" class="form-control bg-light shipping_phone" name="phone"
+                                    placeholder="Enter your phone" value="{{ $address_user->phone }}" required>
                                 <div id="error_phone" class="text-danger"></div>
 
 
 
                             </div>
-
-                            <!-- <div>
-                      <button calss="btn btn-primary" onclick="updateContact('{{ auth()->user()->id }}')">Update</button>
-                  </div> -->
                         </div>
                     </form>
                 </div>
@@ -1421,12 +1452,56 @@
 
 
 <script>
-    function change_company_shipping (e) {
+    function change_company_shipping (e , contact_id) {
         $('.companyNameShipping').prop('checked', false);
         $(e).prop('checked', true);
+        var company = contact_id;
+        jQuery.ajax({
+            url: "{{ url('/switch-company/') }}",
+            method: 'POST',
+            data: {
+                "_token": "{{ csrf_token() }}",
+                'companyId': company
+            },
+            success: function(response) {
+                if (response.success == true) {
+                    $('#shipping_first_name').val(response.update_address.firstName);
+                    $('#shipping_last_name').val(response.update_address.lastName);
+                    $('.shipping_address_1').val(response.update_address.address1);
+                    $('.shipping_address_2').val(response.update_address.address2);
+                    $('.shipping_city').val(response.update_address.city);
+                    $('.shipping_state').val(response.update_address.state);
+                    $('.shipping_post_code').val(response.update_address.postCode);
+                    $('.shipping_phone').val(response.update_address.phone);
+                }
+            }
+        });
     }
-    function change_company_billing (e) {
+    function change_company_billing (e ,contact_id) {
         $('.companyNameBilling').prop('checked', false);
         $(e).prop('checked', true);
+        var company = contact_id;
+        jQuery.ajax({
+            url: "{{ url('/switch-company/') }}",
+            method: 'POST',
+            data: {
+                "_token": "{{ csrf_token() }}",
+                'companyId': company
+            },
+            success: function(response) {
+                console.log(response);
+                if (response.success == true) {
+                    $('#billing_first_name').val(response.update_address.firstName);
+                    $('#billing_last_name').val(response.update_address.lastName);
+                    $('.billing_address_1').val(response.update_address.postalAddress1);
+                    $('.billing_address_2').val(response.update_address.postalAddress2);
+                    $('.billing_city').val(response.update_address.postalCity);
+                    $('.billing_state').val(response.update_address.postalState);
+                    $('.billing_post_code').val(response.update_address.postalPostCode);
+                    $('.billing_phone').val(response.update_address.phone);
+                }
+            }
+        });
     }
+    
 </script>

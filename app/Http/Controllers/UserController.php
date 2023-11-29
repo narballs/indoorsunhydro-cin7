@@ -943,6 +943,22 @@ class UserController extends Controller
             ->groupBy('product_id')
             // ->take(5)
             ->get();
+
+            $get_contact = Contact::where('user_id', $user_id)
+            ->where('status', 1)
+            ->where('company', $selected_company)
+            ->with('states')
+            ->with('cities')
+            ->first();
+            if (!empty($get_contact->contact_id)) {
+                $address_user = Contact::where('user_id', $user_id)->where('contact_id' , $get_contact->contact_id)->first();
+            } else {
+                if (!empty($get_contact->secondary_id)) {
+                    $parent = Contact::where('secondary_id', $get_contact->secondary_id)->first();
+                    $address_user = Contact::where('contact_id', $parent->parent_id)->first();
+                }
+            }
+        
             return view('my-account', compact(
                 'user',
                 'user_address',
@@ -958,7 +974,7 @@ class UserController extends Controller
                 'search',
                 'date_filter',
                 'frequent_products',
-                'order_submitters','submitter_filter'
+                'order_submitters','submitter_filter','address_user'
             ));
         }
     }
@@ -1371,7 +1387,6 @@ class UserController extends Controller
 
     public function address_user_my_account(Request $request)
     {
-        
         // $user_id = auth()->id();
         // $secondary_id = $request->secondary_id;
         // $contact_id = $request->contact_id;
@@ -1549,16 +1564,22 @@ class UserController extends Controller
         Session::forget('company');
         Session::forget('companies');
         Session::forget('cart');
-        $admin = User::role('Admin')->first();
+        $admin = User::role('Admin')->where('id' , auth()->user()->id)->first();
         Auth::loginUsingId($admin->id);
         $companies = Contact::where('user_id', $admin->id)->get();
-        if ($companies->count() == 1) {
-            
-            if ($companies[0]->contact_id == null) {
-                UserHelper::switch_company($companies[0]->secondary_id);
-            } else {
-                UserHelper::switch_company($companies[0]->contact_id);
+        if ($companies->count() >= 1) {
+            foreach ($companies as $company) {
+                if ($company->contact_id == null) {
+                    UserHelper::switch_company($company->secondary_id);
+                } else {
+                    UserHelper::switch_company($company->contact_id);
+                }
             }
+            // if ($companies[0]->contact_id == null) {
+            //     UserHelper::switch_company($companies[0]->secondary_id);
+            // } else {
+            //     UserHelper::switch_company($companies[0]->contact_id);
+            // }
         }
         Session::put('companies', $companies);
         return redirect('/');
@@ -1635,17 +1656,21 @@ class UserController extends Controller
         $user_id =  auth()->user()->id;
         $contact_id = $request->companyId;
         $contact = Contact::where('contact_id', $contact_id)->first();
+        $company_type = null;
         $active_contact_id = null;
         $active_company = null;
+        $get_company_address = null;
         $cart = [];
         if (!empty($contact)) {
             $active_contact_id = $contact->contact_id;
             $active_company = $contact->company;
+            $company_type = 'primary';
             
         } else {
             $contact = Contact::where('secondary_id', $contact_id)->first();
             $active_contact_id = $contact->secondary_id;
             $active_company = $contact->company;
+            $company_type = 'secondary';
             
         }
         Session::put([
@@ -1682,10 +1707,20 @@ class UserController extends Controller
         }
 
         Session::put('cart', $cart_data);
+        if ($company_type == 'primary') {
+            $get_company_address = Contact::where('contact_id', $active_contact_id)->first();
+        } 
 
+        if ($company_type == 'secondary') {
+            $secondary_contact_user = Contact::where('secondary_id', $active_contact_id)->first();
+            $get_company_address = Contact::where('contact_id', $secondary_contact_user->parent_id)->where('is_parent' , 1)->first();
+
+        }
         return response()->json([
             'status' => '204',
-            'message' => 'Company Switch Successfully !'
+            'message' => 'Company Switch Successfully !',
+            'success' => true,
+            'update_address' => $get_company_address
         ]);
     }
 
