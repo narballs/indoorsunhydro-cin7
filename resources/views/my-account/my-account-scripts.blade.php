@@ -1112,12 +1112,12 @@
                         @csrf
                         <div class="alert alert-success mt-3 d-none" id="success_msg"></div>
                         <div class="alert alert-danger mt-3 d-none" id="error_msg"></div>
-                        <input type="hidden" name="email" id="billing_email" value="{{$address_user->email}}">
+                        <input type="hidden" name="email" id="billing_email" value="{{!empty($address_user->email) ? $address_user->email : ''}}">
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="firstName">First name</label>
                                 <input type="text" class="form-control bg-light" name="firstName" id="billing_first_name"
-                                    placeholder="First name" value="{{ $address_user->firstName }}" required>
+                                    placeholder="First name" value="{{!empty($address_user->firstName) ? $address_user->firstName : ''}}" required>
                                 <div id="error_first_name" class="text-danger">
 
                                 </div>
@@ -1126,7 +1126,7 @@
                             <div class="col-md-6 mb-3">
                                 <label for="lastName">Last name</label>
                                 <input type="text" class="form-control bg-light" name="lastName" id="billing_last_name" placeholder=""
-                                    value="{{ $address_user->lastName }}" required>
+                                    value="{{!empty($address_user->lastName) ? $address_user->lastName : ''}}" required>
                                 <div id="error_last_name" class="text-danger">
 
                                 </div>
@@ -1216,7 +1216,7 @@
                                     @if (empty($address_user->postalState)) <option value="">Select State</option>@endif
                                     @foreach ($states as $state)
                                         <?php
-                                        if ($address_user->postalState == $state->state_name) {
+                                        if (!empty($address_user->postalState) && ($address_user->postalState == $state->state_name)) {
                                             $selected = 'selected';
                                         } else {
                                             $selected = '';
@@ -1247,7 +1247,7 @@
                             <div class="col-md-6 mb-3">
                                 <label for="phone">Phone</label>
                                 <input type="text" class="form-control bg-light billing_phone" name="phone"
-                                    placeholder="Enter your phone" value="{{ $address_user->phone }}" required>
+                                    placeholder="Enter your phone" value="{{!empty($address_user->phone) ? $address_user->phone  : ''}}" required>
                                 <div id="error_phone" class="text-danger"></div>
 
 
@@ -1292,12 +1292,12 @@
                         @csrf
                         <div class="alert alert-success mt-3 d-none" id="success_msg_shipping"></div>
                         <div class="alert alert-danger mt-3 d-none" id="error_msg_shipping"></div>
-                        <input type="hidden" name="email" id="shipping_email" value="{{$address_user->email}}">
+                        <input type="hidden" name="email" id="shipping_email" value="{{!empty($address_user->email) ? $address_user->email : ''}}">
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="firstName">First name</label>
                                 <input type="text" class="form-control bg-light" id="shipping_first_name" name="firstName"
-                                    placeholder="First name" value="{{ $address_user->firstName }}" required>
+                                    placeholder="First name" value="{{!empty($address_user->firstName) ? $address_user->firstName  : ''}}" required>
                                 <div id="error_first_name" class="text-danger">
 
                                 </div>
@@ -1306,7 +1306,7 @@
                             <div class="col-md-6 mb-3">
                                 <label for="lastName">Last name</label>
                                 <input type="text" class="form-control bg-light" id="shipping_last_name" name="lastName" placeholder=""
-                                    value="{{ $address_user->lastName }}" required>
+                                    value="{{!empty($address_user->lastName) ? $address_user->lastName : '' }}" required>
                                 <div id="error_last_name" class="text-danger">
 
                                 </div>
@@ -1395,7 +1395,7 @@
                                     @if (empty($address_user->state)) <option value="">Select State</option>@endif
                                     @foreach ($states as $state)
                                         <?php
-                                        if ($address_user->state == $state->state_name) {
+                                        if (!empty($address_user->state ) && ($address_user->state == $state->state_name)) {
                                             $selected = 'selected';
                                         } else {
                                             $selected = '';
@@ -1426,7 +1426,7 @@
                             <div class="col-md-6 mb-3">
                                 <label for="phone">Phone</label>
                                 <input type="text" class="form-control bg-light shipping_phone" name="phone"
-                                    placeholder="Enter your phone" value="{{ $address_user->phone }}" required>
+                                    placeholder="Enter your phone" value="{{!empty($address_user->phone) ? $address_user->phone : '' }}" required>
                                 <div id="error_phone" class="text-danger"></div>
 
 
