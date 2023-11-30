@@ -788,40 +788,7 @@ class ProductController extends Controller
         if (empty($contact)) {
             abort(404);
         }
-        // if (!$user_id) {
-        //     $cart_items = $request->session()->get('cart');
-            
-        // } elseif (empty($company) || (!$company)) {
-        //     $cart_items = $request->session()->get('cart');
-        // } else {
-        //     $getSelectedContact = Contact::where('company' , $company)->where('user_id' , $user_id)->first();
-        //     $cartItems = Cart::where('user_id' , $getSelectedContact->user_id)->get();
-        //     $cart_items = [];
-        //     $getPriceColumn = UserHelper::getUserPriceColumn(false , $getSelectedContact->user_id);
-        //     if (count($cartItems) > 0) {
-        //         foreach ($cartItems as $cartItem) {
-        //             $productPricing = Pricingnew::where('option_id' , $cartItem['option_id'])->first();
-        //             $productPrice = $productPricing->$getPriceColumn;
-        //             $cart = Cart::where('user_id' , $user_id)->where('product_id' , $cartItem['product_id'])->first();
-        //             if (!empty($cart)) {
-        //                 $cart->price = $productPrice;
-        //                 $cart->save();
-        //             }
-        //             $cart_items[$cartItem['qoute_id']] = [
-        //                 "product_id" => $cartItem['product_id'],
-        //                 "name" => $cartItem['name'],
-        //                 "quantity" => $cartItem['quantity'],
-        //                 "price" => $cart['price'],
-        //                 "code" => $cartItem['code'],
-        //                 "image" => $cartItem['image'],
-        //                 'option_id' => $cartItem['option_id'],
-        //                 "slug" => $cartItem['slug'],
-        //             ];
-        //         }
-        //         session()->forget('cart');
-        //         Session::put('cart', $cart_items);
-        //     }
-        // }
+        
         $cart_items = UserHelper::switch_price_tier($request);
         $tax_class = TaxClass::where('name', $contact->tax_class)->first();
         if (!empty($cart_items)) {
@@ -859,6 +826,20 @@ class ProductController extends Controller
                     if (!empty($cart)) {
                         $cart->quantity = $quantity;
                         $cart->save();
+                    }
+                }
+                else {
+                    if ($request->session()->has('cart_hash')) {
+                        $cart_hash = $request->session()->get('cart_hash');
+                        $cart = Cart::where('qoute_id', $product_id)
+                            ->where('user_id', 0)
+                            ->where('cart_hash', $cart_hash)
+                            ->first();
+
+                        if (!empty($cart)) {
+                            $cart->quantity = $quantity;
+                            $cart->save();
+                        }
                     }
                 }
             }
