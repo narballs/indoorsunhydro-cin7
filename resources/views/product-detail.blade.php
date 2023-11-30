@@ -134,7 +134,10 @@
                                             </div>
                                         </div>
                                         <div class="col-md-9 d-flex justify-content-end">
-                                            <?php $enable_add_to_cart = App\Helpers\SettingHelper::enableAddToCart($productOption); ?>
+                                            <?php 
+                                                // $enable_add_to_cart = App\Helpers\SettingHelper::enableAddToCart($productOption);
+                                                $enable_add_to_cart = true;
+                                             ?>
                                             @if ($enable_add_to_cart)
                                                 <button 
                                                     class="button-cards product-detail-button-cards text-uppercase"
@@ -297,7 +300,10 @@
                             </div>
                             <div class="mt-3 p_detail_cart_row">
                                 <div style="">
-                                    <?php $enable_add_to_cart = App\Helpers\SettingHelper::enableAddToCart($productOption); ?>
+                                    <?php 
+                                        // $enable_add_to_cart = App\Helpers\SettingHelper::enableAddToCart($productOption);
+                                        $enable_add_to_cart = true;
+                                     ?>
                                     @if ($enable_add_to_cart)
                                         <button class="button-cards product-detail-button-cards text-uppercase ajaxSubmit_mbl w-100" type="button" id="ajaxSubmit_mbl">
                                             <a class="text-white">Add to cart</a>
@@ -569,11 +575,12 @@
 
             btnUp.click(function () {
                 var oldValue = parseFloat(input.val());
-                if (oldValue >= max) {
-                var newVal = oldValue;
-                } else {
-                var newVal = oldValue + 1;
-                }
+                // if (oldValue >= max) {
+                // var newVal = oldValue;
+                // } else {
+                // var  = oldValue + 1;
+                // }
+                newVal = oldValue + 1;
                 spinner.find("input[id=quantity]").val(newVal);
                 let stock = jQuery(".stock_number").html();
                 let stock_number = parseInt(stock);
@@ -675,11 +682,12 @@
 
             btnUp.click(function () {
                 var oldValue = parseFloat(input.val());
-                if (oldValue >= max) {
-                    var newVal = oldValue;
-                } else {
-                    var newVal = oldValue + 1;
-                }
+                // if (oldValue >= max) {
+                //     var newVal = oldValue;
+                // } else {
+                //     var newVal = oldValue + 1;
+                // }
+                var newVal = oldValue + 1;
                 input.val(newVal);
                 let stock = jQuery(".stock_number").html();
                 let stock_number = parseInt(stock);
