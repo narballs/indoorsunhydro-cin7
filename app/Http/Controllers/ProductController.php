@@ -838,46 +838,33 @@ class ProductController extends Controller
 
     public function updateCart(Request $request)
     {
-
-        // $items = $request->post('items_quantity');
-
-        // $cart_items = session()->get('cart');
-        // if (!empty($items)) {
-        //     foreach ($items as $item) {
-        //         $product_id = $item['id'];
-
-
-        //         $cart_item = isset($cart_items[$product_id]) ? $cart_items[$product_id] : array();
-
-        //         if (!empty($cart_item) && $cart_item['quantity'] != $item['quantity']) {
-        //             Session::put('cart.' . $product_id . '.quantity', $item['quantity']);
-        //             $qoute = Cart::where('qoute_id', $product_id)->first();
-        //             $qoute->quantity = $item['quantity'];
-        //             $qoute->save();
-        //         }
-        //     }
-        // }
-        $item = $request->post('items_quantity');
-        // dd($request->all());
-
+        $quantity = $request->post('items_quantity');
         $cart_items = session()->get('cart');
-        if (!empty($item)) {
 
+        $user_id = auth()->id();
+        
+        if (!empty($quantity)) {
             $product_id = $request->post('product_id');
-
-
             $cart_item = isset($cart_items[$product_id]) ? $cart_items[$product_id] : array();
 
-            if (!empty($cart_item) && $cart_item['quantity'] != $item) {
-                Session::put('cart.' . $product_id . '.quantity', $item);
+            if (!empty($cart_item) && $cart_item['quantity'] != $quantity) {
+                Session::put('cart.' . $product_id . '.quantity', $quantity);
                 $cart_items = session()->get('cart');
-                $qoute = Cart::where('qoute_id', $product_id)->first();
-                $qoute->quantity = $item;
-                $qoute->save();
+                
+                if (!empty($user_id)) {
+                    $cart = Cart::where('qoute_id', $product_id)
+                        ->where('user_id', $user_id)
+                        ->first();
+
+                    if (!empty($cart)) {
+                        $cart->quantity = $quantity;
+                        $cart->save();
+                    }
+                }
             }
         }
+        
         $cart_item = session()->get('cart');
-
         return response()->json([
             'status' => 'success',
             'cart_items' => $cart_items,
