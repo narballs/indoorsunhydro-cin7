@@ -943,7 +943,7 @@ class UserController extends Controller
             ->groupBy('product_id')
             // ->take(5)
             ->get();
-
+            
             $get_contact = Contact::where('user_id', $user_id)
             ->where('status', 1)
             ->where('company', $selected_company)
@@ -1028,6 +1028,21 @@ class UserController extends Controller
             return $user_orders;
         }
         $wishlist = BuyList::with('list_products')->where('user_id', $user_id)->first();
+        $selected_company = Session::get('company');
+        $get_contact = Contact::where('user_id', $user_id)
+            ->where('status', 1)
+            ->where('company', $selected_company)
+            ->with('states')
+            ->with('cities')
+            ->first();
+            if (!empty($get_contact->contact_id)) {
+                $address_user = Contact::where('user_id', $user_id)->where('contact_id' , $get_contact->contact_id)->first();
+            } else {
+                if (!empty($get_contact->secondary_id)) {
+                    $parent = Contact::where('secondary_id', $get_contact->secondary_id)->first();
+                    $address_user = Contact::where('contact_id', $parent->parent_id)->first();
+                }
+            }
         return view('my-account.my-favorites', compact(
             'lists',
             'user',
@@ -1036,7 +1051,8 @@ class UserController extends Controller
             'parent',
             'companies',
             'states',
-            'per_page'
+            'per_page',
+            'address_user'
         ));
         // return $images;
     }
@@ -1252,6 +1268,21 @@ class UserController extends Controller
             $parent = "";
         }
         $states = UsState::all();
+        $selected_company = Session::get('company');
+        $get_contact = Contact::where('user_id', $user_id)
+        ->where('status', 1)
+        ->where('company', $selected_company)
+        ->with('states')
+        ->with('cities')
+        ->first();
+        if (!empty($get_contact->contact_id)) {
+            $address_user = Contact::where('user_id', $user_id)->where('contact_id' , $get_contact->contact_id)->first();
+        } else {
+            if (!empty($get_contact->secondary_id)) {
+                $parent = Contact::where('secondary_id', $get_contact->secondary_id)->first();
+                $address_user = Contact::where('contact_id', $parent->parent_id)->first();
+            }
+        }
         return view('my-account.account_profile', compact(
             'lists',
             'user',
@@ -1260,7 +1291,8 @@ class UserController extends Controller
             'parent',
             'companies',
             'states',
-            'user_profile'
+            'user_profile',
+            'address_user'
         ));
     }
 
@@ -1323,6 +1355,21 @@ class UserController extends Controller
                 }
             }
         }
+        $selected_company = Session::get('company');
+        $get_contact = Contact::where('user_id', $user_id)
+        ->where('status', 1)
+        ->where('company', $selected_company)
+        ->with('states')
+        ->with('cities')
+        ->first();
+        if (!empty($get_contact->contact_id)) {
+            $address_user = Contact::where('user_id', $user_id)->where('contact_id' , $get_contact->contact_id)->first();
+        } else {
+            if (!empty($get_contact->secondary_id)) {
+                $parent = Contact::where('secondary_id', $get_contact->secondary_id)->first();
+                $address_user = Contact::where('contact_id', $parent->parent_id)->first();
+            }
+        }
 
         return view('my-account.additional_users', compact(
             'lists',
@@ -1333,7 +1380,8 @@ class UserController extends Controller
             'companies',
             'states',
             'contact_id',
-            'all_companies'
+            'all_companies',
+            'address_user'
         ));
     }
 
