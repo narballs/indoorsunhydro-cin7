@@ -349,12 +349,11 @@ class CheckoutController extends Controller
                             'phone' => $contact->phone,
                         ],
                         'shipping_address' => [
-                            'postalAddress1' => $contact->postalAddress1,
-                            'postalAddress2' => $contact->postalAddress2,
-                            'phone' => $contact->postalCity,
-                            'postalCity' => $contact->postalState,
-                            'postalState' => $contact->postalPostCode,
-                            'postalPostCode' => $contact->postalPostCode
+                            'postalAddress1' =>$contact->postalAddress1,
+                            'postalAddress2' =>$contact->postalAddress2,
+                            'postalCity' =>$contact->postalCity,
+                            'postalState' =>$contact->postalState,
+                            'postalPostCode' =>$contact->postalPostCode,
                         ],
                         'best_product' => $best_products,
                         'user_email' =>   $user_email,
