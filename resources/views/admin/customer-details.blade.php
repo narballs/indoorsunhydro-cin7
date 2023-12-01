@@ -168,22 +168,21 @@
                                                     </div>
                                                     <div>
                                                         @if(empty($customer->contact_id))
-                                                            {{ $get_secondary_contact->postalPostCode ? $get_secondary_contact->postalPostCode . ","  : '' }}
-
-                                                        @else
-                                                            {{ $customer->postalPostCode ? $customer->postalPostCode . ","  : '' }}
-                                                        @endif
-
-                                                        @if(empty($customer->contact_id))
-                                                            {{ $get_secondary_contact->postalCity ? $get_secondary_contact->postalCity . ","  : '' }}
+                                                        {{ $get_secondary_contact->postalCity ? $get_secondary_contact->postalCity . ","  : '' }}
                                                         @else
                                                             {{ $customer->postalCity ? $customer->postalCity . ","  : '' }}
                                                         @endif
 
                                                         @if(empty($customer->contact_id))
-                                                            {{ $get_secondary_contact->postalState ? $get_secondary_contact->postalState   : '' }}
+                                                            {{ $get_secondary_contact->postalState ? $get_secondary_contact->postalState   . ","  : '' }}
                                                         @else
-                                                            {{ $customer->postalState ? $customer->postalState  : '' }}
+                                                            {{ $customer->postalState ? $customer->postalState . ","  : '' }}
+                                                        @endif
+                                                        @if(empty($customer->contact_id))
+                                                            {{ $get_secondary_contact->postalPostCode ? $get_secondary_contact->postalPostCode   : '' }}
+
+                                                        @else
+                                                            {{ $customer->postalPostCode ? $customer->postalPostCode  : '' }}
                                                         @endif
                                                     </div>
                                                 </div>
@@ -206,21 +205,22 @@
                                                         @endif
                                                     </div>
                                                     <div>
-                                                        @if(empty($customer->contact_id))
-                                                            {{ $get_secondary_contact->postCode ? $get_secondary_contact->postCode . ","  : '' }}
-
-                                                        @else
-                                                            {{ $customer->postCode ? $customer->postCode . ","  : '' }}
-                                                        @endif
+                                                        
                                                         @if(empty($customer->contact_id))
                                                             {{ $get_secondary_contact->city ? $get_secondary_contact->city . ","  : '' }}
                                                         @else
                                                             {{ $customer->city ? $customer->city . ","  : '' }}
                                                         @endif
                                                         @if(empty($customer->contact_id))
-                                                            {{ $get_secondary_contact->state ? $get_secondary_contact->state  : '' }}
+                                                            {{ $get_secondary_contact->state ? $get_secondary_contact->state  . ","  : '' }}
                                                         @else
-                                                            {{ $customer->state ? $customer->state : '' }}
+                                                            {{ $customer->state ? $customer->state . ","  : '' }}
+                                                        @endif
+                                                        @if(empty($customer->contact_id))
+                                                            {{ $get_secondary_contact->postCode ? $get_secondary_contact->postCode : '' }}
+
+                                                        @else
+                                                            {{ $customer->postCode ? $customer->postCode: '' }}
                                                         @endif
                                                     </div>
                                                 </div>
