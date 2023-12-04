@@ -52,7 +52,7 @@ class PermanentDeleteContacts extends Command
             if (count($contacts) > 0) {
                 $this->info('Processing contacts...');
                 foreach ($contacts as $contact) {
-                    $contact->forceDelete();
+                    $contact->delete();
                 }
             } else {
                 $this->info('No contacts to delete.');
@@ -62,7 +62,7 @@ class PermanentDeleteContacts extends Command
             if (count($users) > 0) {
                 $this->info('Processing users...');
                 foreach ($users as $user) {
-                    $user->forceDelete();
+                    $user->delete();
                 }
             } else {
                 $this->info('No users to delete.');

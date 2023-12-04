@@ -226,8 +226,8 @@ class AdminSettingsController extends Controller
     public function delete_contact_permanently($id) {
         $contact = Contact::withTrashed()->findOrFail($id);
         $user = User::withTrashed()->where('id', $contact->user_id)->first();
-        $contact->forceDelete();
-        $user->forceDelete();
+        $contact->delete();
+        $user->delete();
         if ($contact && $user) {
             return redirect()->route('recycle_bin')->with('success', 'Contact deleted permanently.');
         } else {
