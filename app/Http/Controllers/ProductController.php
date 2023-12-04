@@ -482,7 +482,6 @@ class ProductController extends Controller
             ->where('contact_id', $contact_id)
             ->with('list_products')
             ->get();
-
         return view('product-detail', compact(
             'productOption',
             'pname',

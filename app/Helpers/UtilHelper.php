@@ -7,6 +7,7 @@ use GuzzleHttp\Client;
 use App\Models\DailyApiLog;
 use App\Models\AdminSetting;
 use App\Models\ProductStock;
+use App\Models\ProductOption;
 use App\Models\InventoryLocation;
 
 use App\Helpers\SettingHelper;
@@ -89,7 +90,7 @@ class UtilHelper
 
     public static function updateProductStock($product, $option_id) {
         $setting = AdminSetting::where('option_name', 'check_product_stock')->first();
-
+        $total_stock = 0;
         $stock_updated = false;
 
         if (empty($setting) || ($setting->option_value !=  'Yes')) {
@@ -107,8 +108,8 @@ class UtilHelper
                 $url,
                 [
                     'auth' => [
-                        $cin7_auth_username,
-                        $cin7_auth_password
+                        'IndoorSunHydroUS',
+                        'faada8a7a5ef4f90abaabb63e078b5c1'
                     ]
                 ]
             );
@@ -124,12 +125,10 @@ class UtilHelper
             // $skip_branches = [172, 173, 174];
             $skip_branches = $inactive_inventory_locations;
             $branch_ids = [];
-
             foreach ($location_inventories as $location_inventory) {
                 if (in_array($location_inventory->branchId, $skip_branches)) {
                     continue;
                 }
-
                 $product_stock = ProductStock::where('branch_id' , $location_inventory->branchId)
                     ->where('product_id' ,  $product->product_id)
                     ->where('option_id' , $option_id)
@@ -138,20 +137,38 @@ class UtilHelper
                 if (!empty($product_stock)) {
                     $product_stock->available_stock = $location_inventory->available;
                     $product_stock->save();
-
+                    
                     $branch_ids[] = $location_inventory->branchId;
+                    if (!in_array($location_inventory->branchId, $skip_branches)) {
+                        $total_stock += $location_inventory->available;
+                    }
                 }
                 else {
-                    ProductStock::create([
+                    $product_stock = ProductStock::create([
                         'available_stock' => $location_inventory->available,
                         'branch_id' => $location_inventory->branchId,
                         'product_id' => $product->product_id,
                         'branch_name' => $location_inventory->branchName,
                         'option_id' => $option_id
                     ]);
+                    if (!in_array($location_inventory->branchId, $skip_branches)) {
+                        $total_stock += $location_inventory->available;
+                    }
+                    // $total_stock += $product_stock->available_stock;
                 }
 
                 $stock_updated = true;
+            }
+            $product_options = ProductOption::where('product_id', $product->product_id)
+            ->where('option_id', $option_id)
+            ->first();
+
+            if (!empty($product_options)) {
+                $product_options->stockAvailable = $total_stock;
+                $product_options->save();
+            } else {
+                $product_options->stockAvailable = $total_stock;
+                $product_options->save();
             }
 
             if (!empty($branch_ids)) {
