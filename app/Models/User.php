@@ -27,7 +27,8 @@ class User extends Authenticatable
         'password',
         'new_password',
         'new_hash',
-        'allow_access'
+        'allow_access',
+        'is_deleted',
     ];
 
     /**

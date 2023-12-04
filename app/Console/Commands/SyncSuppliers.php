@@ -176,6 +176,9 @@ class SyncSuppliers extends Command
                                 $deleteing_secondary_contact = Contact::where('parent_id' , $contact->contact_id)->get();
                                 foreach($deleteing_secondary_contact as $deleteing_secondary_contact){
                                     if ($deleteing_secondary_contact->secondary_id != $apiSecondaryContact->id) {
+                                        $deleteing_secondary_contact->update([
+                                            'is_deleted' => now()
+                                        ]);
                                         $deleteing_secondary_contact->delete();
                                     }
                                 }
@@ -242,6 +245,9 @@ class SyncSuppliers extends Command
                         } else {
                             $deleteing_secondary_contact = Contact::where('parent_id' , $contact->contact_id)->get();
                             foreach($deleteing_secondary_contact as $deleteing_secondary_contact){
+                                $deleteing_secondary_contact->update([
+                                    'is_deleted' => now()
+                                ]);
                                 $deleteing_secondary_contact->delete();
                             }
                         }
@@ -289,6 +295,9 @@ class SyncSuppliers extends Command
                                 $deleteing_secondary_contact = Contact::where('parent_id' , $api_contact->id)->get();
                                 foreach($deleteing_secondary_contact as $deleteing_secondary_contact){
                                     if ($deleteing_secondary_contact->secondary_id != $secondaryContact->id) {
+                                        $deleteing_secondary_contact->update([
+                                            'is_deleted' => now()
+                                        ]);
                                         $deleteing_secondary_contact->delete();
                                     }
                                 }

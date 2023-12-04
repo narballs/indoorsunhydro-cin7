@@ -77,7 +77,9 @@ class UserController extends Controller
         $secondaryUserSearch = $request->secondaryUserSearch;
         $usersData = $request->usersData;
         $secondaryUser = $request->secondaryUser;
-        $user_query = User::with('contact');
+        $user_query = User::withTrashed()->with('contact' , function($query) {
+            $query->withTrashed();
+        });
         if (!empty($usersData)) {
             if ($usersData == 'admin-user') {
                 $user_query = $user_query->role(['Admin']);
@@ -287,6 +289,11 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
+        $user = User::find($id);
+        if (!empty($user)) {
+            $user->is_deleted = now();
+            $user->save();
+        }
         User::find($id)->delete();
         return redirect()->route('users.index')
             ->with('success', 'User deleted successfully');
