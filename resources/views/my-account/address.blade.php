@@ -32,8 +32,8 @@
                                     Default Billing Address
                                 </p>
                                 <p class="my_account_address_items">
-                                    {{ !empty($$address_user['firstName']) ? $address_user['firstName'] : '' }}
-                                    {{ !empty($$address_user['lastName']) ? $address_user['lastName'] : '' }}
+                                    {{ !empty($address_user['firstName']) ? $address_user['firstName'] : '' }}
+                                    {{ !empty($address_user['lastName']) ? $address_user['lastName'] : '' }}
                                 </p>
                                 <p class="my_account_address_items">
                                     {{ !empty($address_user['postalAddress1']) ? $address_user['postalAddress1'] . "," : ''}}
@@ -71,8 +71,8 @@
                                     Default Shipping Address
                                 </p>
                                 <p class="my_account_address_items">
-                                    {{ !empty($$address_user['firstName']) ? $address_user['firstName'] : '' }}
-                                    {{ !empty($$address_user['lastName']) ? $address_user['lastName'] : '' }}
+                                    {{ !empty($address_user['firstName']) ? $address_user['firstName'] : '' }}
+                                    {{ !empty($address_user['lastName']) ? $address_user['lastName'] : '' }}
                                 </p>
                                 <p class="my_account_address_items">
                                     {{ !empty($address_user['address1']) ? $address_user['address1'] . "," : ''}}
