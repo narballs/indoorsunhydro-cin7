@@ -54,8 +54,8 @@
                                         <span>
                                             @if (!empty($address_user['phone']))
                                                 {{ $address_user['phone'] }}
-                                            @else
-                                                {{ $address_user['mobile'] }}
+                                            @elseif (!empty($address_user['mobile']))
+                                                {{$address_user['mobile']}}
                                             @endif
                                         </span>
                                 </p>
@@ -92,8 +92,8 @@
                                     <span class="mobileFormat">
                                         @if (!empty($address_user['phone']))
                                             {{ $address_user['phone'] }}
-                                        @else
-                                            {{ $address_user['mobile'] }}
+                                        @elseif (!empty($address_user['mobile']))
+                                            {{$address_user['mobile']}}
                                         @endif
                                     </span>
                                 </p>
