@@ -77,7 +77,9 @@ class UserController extends Controller
         $secondaryUserSearch = $request->secondaryUserSearch;
         $usersData = $request->usersData;
         $secondaryUser = $request->secondaryUser;
-        $user_query = User::withTrashed()->with('contact');
+        $user_query = User::withTrashed()->with('contact' , function($query) {
+            $query->withTrashed();
+        });
         if (!empty($usersData)) {
             if ($usersData == 'admin-user') {
                 $user_query = $user_query->role(['Admin']);
