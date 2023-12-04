@@ -47,7 +47,6 @@ class Contact extends Model
         'balance_owing',
         'tax_class',
         'paymentTerms',
-        'is_deleted',
     ];
 
     public function orders()

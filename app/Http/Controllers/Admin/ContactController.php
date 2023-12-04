@@ -71,7 +71,7 @@ class ContactController extends Controller
         $sort_by_email = $request->get('sort_by_email');
         $activeCustomer = $request->get('active-customer');
         $pendingApproval = $request->get('pending-approval');
-        $contact_query = Contact::withTrashed()->where('type', 'Customer');
+        $contact_query = Contact::where('type', 'Customer');
         if (!empty($activeCustomer)) {
             if ($activeCustomer == 'active-customer') {
                 $contact_query = $contact_query->where('contact_id', '!=', null);
@@ -385,13 +385,9 @@ class ContactController extends Controller
     public function customer_delete($id)
     {
         $customer =  Contact::find($id);
-        $customer->is_deleted = now();
-        $customer->save();
         $user_id = $customer->user_id;
         if (!empty($user_id)) {
             $user = User::find($user_id);
-            $user->is_deleted = now();
-            $user->save();
             $user->delete();
             $customer->delete();
             return redirect()->back()->with('success', 'Customer Deleted Successfully');

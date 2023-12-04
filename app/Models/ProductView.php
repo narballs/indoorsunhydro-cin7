@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ProductView extends Model
 {
     use HasFactory;
-    protected $fillable = ['product_id', 'user_id'];
+    protected $fillable = ['product_id'];
 
     public function product()
     {

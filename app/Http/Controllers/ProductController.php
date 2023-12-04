@@ -437,9 +437,6 @@ class ProductController extends Controller
             // adding product views to separate table
             $product_view = new ProductView();
             $product_view->product_id = $product->id;
-            if (Auth::id() != null) {
-                $product_view->user_id = Auth::id();
-            }
             $product_view->save();
         }
         
@@ -482,6 +479,7 @@ class ProductController extends Controller
             ->where('contact_id', $contact_id)
             ->with('list_products')
             ->get();
+
         return view('product-detail', compact(
             'productOption',
             'pname',
