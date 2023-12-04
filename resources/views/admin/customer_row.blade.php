@@ -1,4 +1,4 @@
-<tr id="row-{{ $contact->id }}" class="customer-row border-bottom">
+<tr id="row-{{ $contact->id }}"  data-deleted="{{$contact->deleted_at}}" title="{{!empty($contact->deleted_at) ? $contact->deleted_at : ''}}" class="customer-row main_contacts_row border-bottom {{!empty($contact->deleted_at) ? 'delete_grey' : ''}}">
     <td class="d-flex table-items">
         <div class="custom-control custom-checkbox tabel-checkbox">
             <input class="custom-control-input custom-control-input-success sub_chk all_checkboxes" data-id="{{ $contact->id }}"
@@ -82,25 +82,27 @@
             </span>
         </td>
     @endif
-    <td class="created_by toggleClass td_padding_row">
+    <td class="created_by toggleClass td_padding_row pl-0">
         <div class="d-flex aling-items-center order-table-actions">
-            <span>
+            <span class="ml-0">
                 <a href="{{ url('admin/customer-detail/' . $contact->id) }}" class="view a_class" title=""
                     data-toggle="tooltip" data-original-title="View">
-                    <img src="/theme/img/view.png" alt="" class="img-fluid">
+                    {{-- <img src="/theme/img/view.png" alt="" class="img-fluid"> --}}
+                    <i class="fas fa-eye" style="color: lightgray"></i>
                 </a>
             </span>
-            <span>
+            <span class="ml-1">
                 <a href="{{ url('admin/customer-edit/' . $contact->id) }}" class="edit a_class" title=""
-                    data-toggle="tooltip" data-original-title="Edit"><img src="/theme/img/edit.png" alt=""
-                        class="img-fluid">
+                    data-toggle="tooltip" data-original-title="Edit">
+                    {{-- <img src="/theme/img/edit.png" alt="" class="img-fluid"> --}}
+                    <i class="fas fa-pen" style="color: lightgray"></i>
                 </a>
             </span>
-            <span>
+            <span class="ml-1">
                 <a href=" {{ url('admin/customer-delete/' . $contact->id) }}" class="delete deleteIcon a_class"
                     id="{{ $contact->id }}" title="" data-toggle="tooltip" data-original-title="Delete">
-                    <img src="/theme/img/delete.png" alt="" class="img-fluid" onclick="return confirm('Are you sure you want to delete this Contact?');">
-                    
+                    {{-- <img src="/theme/img/delete.png" alt="" class="img-fluid" onclick="return confirm('Are you sure you want to delete this Contact?');"> --}}
+                    <i class="fas fa-trash" style="color: lightgray" onclick="return confirm('Are you sure you want to delete this Contact?');"></i>
                 </a>
             </span>
         </div>
