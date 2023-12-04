@@ -171,9 +171,6 @@
     <link rel="stylesheet" href="/theme/css/admin_custom.css">
     <link rel="stylesheet" href="{{ asset('admin/admin_lte.css') }}">
     <style>
-        .delete_grey {
-            background-color: #e7e7e7;
-        }
         @media(min-width:280px) and (max-width: 425px) {
             .main-header {
                 border-bottom: none;
@@ -562,7 +559,6 @@
             }
         }
 
-        
         $(document).on('click', '#selectAll', function(e) {
             // var table = $(e.target).closest('table');
             // $('td input[class="all_checkboxes"]', table).prop('checked', this.checked);

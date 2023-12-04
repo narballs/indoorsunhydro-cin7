@@ -26,7 +26,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('sync:supplier')->hourly();
         $schedule->command('AutoOrder:Sync')->everyThreeMinutes();
 
-        // $schedule->command('Delete:ContactsPermanently')->daily();
+        $schedule->command('Delete:ContactsPermanently')->daily();
 
         // Disabling for now
         //$schedule->command('Sync:Stock')->hourly();
