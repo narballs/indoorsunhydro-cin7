@@ -437,6 +437,9 @@ class ProductController extends Controller
             // adding product views to separate table
             $product_view = new ProductView();
             $product_view->product_id = $product->id;
+            if (Auth::id() != null) {
+                $product_view->user_id = Auth::id();
+            }
             $product_view->save();
         }
         
