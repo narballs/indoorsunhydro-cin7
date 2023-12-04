@@ -146,7 +146,7 @@
                                                 continue;
                                             }
                                         @endphp
-                                        <tr id="row-{{ $user->id }}" class="user-row border-bottom">
+                                        <tr id="row-{{ $user->id }}" data-deleted="{{$contact->deleted_at}}" title="{{!empty($contact->deleted_at) ? $contact->deleted_at : ''}}" class="user-row border-bottom {{!empty($contact->deleted_at) ? 'delete_grey' : ''}}">
                                             <td class="d-flex user-table-items">
                                                 <span class="tabel-checkbox-user">
                                                     <input type="checkbox" name="test" class="checkbox-table"
@@ -334,6 +334,9 @@
     <link rel="stylesheet" href="/theme/css/admin_custom.css">
     <link rel="stylesheet" href="{{ asset('admin/admin_lte.css') }}">
     <style>
+        .delete_grey {
+            background-color: #e7e7e7;
+        }
         .text-dark {
             color: #000 !important;
         }
