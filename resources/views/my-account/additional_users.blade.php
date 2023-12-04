@@ -36,7 +36,7 @@
                                                 </div>
                                                 <div class="card-body">
                                                     @php
-                                                       $secondary_contacts = App\Models\Contact::with('allow_user')->where('company', $company->company)->get();
+                                                       $secondary_contacts = App\Models\Contact::withTrashed()->with('allow_user')->where('company', $company->company)->get();
                                                     @endphp
                                                     <div class="table-responsive">
                                                         <table class="table address-table-items-data m-0 ">
@@ -67,7 +67,7 @@
                                                             </thead>
                                                             <tbody>
                                                                 @foreach ($secondary_contacts as $key => $contact)
-                                                                    <tr>
+                                                                    <tr class="{{!empty($contact->is_deleted) ? 'bg-deleted' : ''}}" title="{{$contact->is_deleted}}">
                                                                         <td class="table-items justify-content-start align-items-lg-center user_table_items pt-0 align-middle">
                                                                             <div class="custom-control custom-checkbox tabel-checkbox d-flex align-items-center">
                                                                                 {{-- <input
@@ -174,6 +174,11 @@
         </div>
     </div>
 </div>
+<style>
+    .bg-deleted {
+        background-color: #d3d3d3 !important;
+    }
+</style>
 <script>
      function allow_access(id) {
         var allow_access = document.querySelector('#allow_access'+id);
