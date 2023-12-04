@@ -620,9 +620,9 @@
                                                                     </div>
                                                                     <div class="col-md-12">
                                                                         <div class="form-group">
-                                                                            <label class="wholesale_form_labels" for="institute_routine_number">Financial institute routine number <span class="text-danger">*</span></label>
-                                                                            <input type="text" name="financial_institute_routine_number" value="{{!empty($wholesale_authorization->financial_institute_routine_number) ? $wholesale_authorization->financial_institute_routine_number : ''}}" class="form-control wholesale_inputs" id="institute_routine_number" onchange="remove_error(this)" placeholder="Enter Financial institute routine number">
-                                                                            <div class="text-danger wholesale_inputs" id="institute_routine_number_errors"></div>
+                                                                            <label class="wholesale_form_labels" for="institute_routing_number">Financial institute routing number <span class="text-danger">*</span></label>
+                                                                            <input type="text" name="financial_institute_routing_number" value="{{!empty($wholesale_authorization->financial_institute_routing_number) ? $wholesale_authorization->financial_institute_routing_number : ''}}" class="form-control wholesale_inputs" id="institute_routing_number" onchange="remove_error(this)" placeholder="Enter Financial institute routing number">
+                                                                            <div class="text-danger wholesale_inputs" id="institute_routing_number_errors"></div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-12">
@@ -645,7 +645,7 @@
                                                                             <div class="text-danger wholesale_inputs" id="autorization_phone_number_errors"></div>
                                                                         </div>
                                                                     </div>
-                                                                    <div class="col-md-12">
+                                                                    {{-- <div class="col-md-12">
                                                                         <div class="form-group">
                                                                             <div class="row">
                                                                                 <label class="wholesale_form_labels" for="numebers">These numbers are located on the bottom of your check as follows</label>
@@ -657,7 +657,7 @@
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                    </div>
+                                                                    </div> --}}
                                                                 </div>
                                                                 <div class="text-right">
                                                                     <button type="button" id="step3_next" class="step_next btn" onclick="check_validation_step3()">
@@ -1770,7 +1770,7 @@
             var financial_institution_signature = $('#financial_institution_signature').val();
             var set_amount = $('#set_amount').val();
             var maximum_amount = $('#maximum_amount').val();
-            var institute_routine_number = $('#institute_routine_number').val();
+            var institute_routing_number = $('#institute_routing_number').val();
             var saving_account_number = $('#saving_account_number').val();
             var autorization_phone_number = $('#autorization_phone_number').val();
 
@@ -1786,8 +1786,8 @@
             if (financial_institution_signature == '') {
                 $('#financial_institution_signature_errors').html('Signature is required');
             }
-            if (institute_routine_number == '') {
-                $('#institute_routine_number_errors').html('Institute routine number is required');
+            if (institute_routing_number == '') {
+                $('#institute_routing_number_errors').html('Institute routing number is required');
             }
             if (saving_account_number == '') {
                 $('#saving_account_number_errors').html('Saving account number is required');
@@ -1801,7 +1801,7 @@
                 $('#autorization_phone_number_errors').html('Phone number is invalid');
             }
 
-            if (authorization_name != '' && financial_institution_name != '' && financial_institution_address != '' && financial_institution_signature != ''  && institute_routine_number != '' && saving_account_number != '' && autorization_phone_number != '' && autorization_phone_number_validation == true) {
+            if (authorization_name != '' && financial_institution_name != '' && financial_institution_address != '' && financial_institution_signature != ''  && institute_routing_number != '' && saving_account_number != '' && autorization_phone_number != '' && autorization_phone_number_validation == true) {
                 return true;
             } else {
                 return false;
@@ -1938,7 +1938,7 @@
                 data.append('financial_institution_signature', $('#financial_institution_signature').val());
                 data.append('set_amount', $('#set_amount').val());
                 data.append('maximum_amount', $('#maximum_amount').val());
-                data.append('institute_routine_number', $('#institute_routine_number').val());
+                data.append('institute_routing_number', $('#institute_routing_number').val());
                 data.append('saving_account_number', $('#saving_account_number').val());
                 data.append('autorization_permit_number', $('#autorization_permit_number').val());
                 data.append('autorization_phone_number', $('#autorization_phone_number').val());

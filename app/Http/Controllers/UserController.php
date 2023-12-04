@@ -786,6 +786,7 @@ class UserController extends Controller
     public function my_account(Request $request)
     {
         $sort_by = '';
+        $address_user = null;
         $contact_id = session()->get('contact_id');
         $user_id = auth()->id();
         if (!auth()->user()) {
@@ -950,6 +951,7 @@ class UserController extends Controller
             ->with('states')
             ->with('cities')
             ->first();
+
             if (!empty($get_contact->contact_id)) {
                 $address_user = Contact::where('user_id', $user_id)->where('contact_id' , $get_contact->contact_id)->first();
             } else {
@@ -984,6 +986,7 @@ class UserController extends Controller
     {
         $lists = [];
         $per_page = '';
+        $address_user = null;
         $user_id = Auth::id();
         if (!$user_id) {
             return redirect('/user/');
@@ -1247,6 +1250,7 @@ class UserController extends Controller
     //account details
     public function account_profile(Request  $request)
     {
+        $address_user = null;
         $user_id = Auth::id();
         if (!$user_id) {
             return redirect('/user/');
@@ -1299,6 +1303,7 @@ class UserController extends Controller
     //additional users
     public function additional_users(Request  $request)
     {
+        $address_user = null;
         $user_id = Auth::id();
         if (!$user_id) {
             return redirect('/user/');
