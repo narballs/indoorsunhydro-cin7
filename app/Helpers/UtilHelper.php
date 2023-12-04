@@ -108,8 +108,8 @@ class UtilHelper
                 $url,
                 [
                     'auth' => [
-                        'IndoorSunHydroUS',
-                        'faada8a7a5ef4f90abaabb63e078b5c1'
+                        $cin7_auth_username,
+                        $cin7_auth_password
                     ]
                 ]
             );
