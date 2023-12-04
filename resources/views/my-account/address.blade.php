@@ -39,12 +39,12 @@
                                     {{ !empty($address_user['postalAddress1']) ? $address_user['postalAddress1'] . "," : ''}}
                                 </p>
                                 <p class="my_account_address_items">
-                                    {{ $address_user['postalAddress2'] ?  $address_user['postalAddress2'] . "," : ''}}
+                                    {{ !empty($address_user['postalAddress2']) ?  $address_user['postalAddress2'] . "," : ''}}
                                 </p>
                                 <p class="my_account_address_items">
-                                    {{ $address_user['postalCity'] ?  $address_user['postalCity'] . "," :  '' }}
-                                    {{ $address_user['postalState'] ?  $address_user['postalState'] . "," :  '' }}
-                                    {{ $address_user['postalPostCode'] ?  $address_user['postalPostCode'] :  '' }}
+                                    {{ !empty($address_user['postalCity']) ?  $address_user['postalCity'] . "," :  '' }}
+                                    {{ !empty($address_user['postalState']) ?  $address_user['postalState'] . "," :  '' }}
+                                    {{ !empty($address_user['postalPostCode']) ?  $address_user['postalPostCode'] :  '' }}
                                 </p>
                                 <p class="my_account_address_items">
                                     <span class="my_account_address_items">
@@ -52,7 +52,7 @@
                                     </span>
                                     <span class="mobileFormat">
                                         <span>
-                                            @if ($address_user['phone'])
+                                            @if (!empty($address_user['phone']))
                                                 {{ $address_user['phone'] }}
                                             @else
                                                 {{ $address_user['mobile'] }}
@@ -90,7 +90,7 @@
                                         Tel:
                                     </span>
                                     <span class="mobileFormat">
-                                        @if ($address_user['phone'])
+                                        @if (!empty($address_user['phone']))
                                             {{ $address_user['phone'] }}
                                         @else
                                             {{ $address_user['mobile'] }}
