@@ -31,6 +31,41 @@
     <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{asset('theme/bootstrap5/js/bootstrap_alpha.min.js')}}"></script>
+    <style>
+        .carousel-indicators li {
+            background-color: grey;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        .carousel-indicators .active{
+            background-color: #7BC533;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+        }
+        .left-right-angle-button-slider {
+            background: #ffffff;
+            border: 1px solid #BDBDBD;
+            border-radius: 50%;
+            display: flex;
+            width: 50%;
+            height: 50;
+            padding: 0rem;
+            align-items: center;
+            text-align: center;
+            vertical-align: middle;
+            justify-content: center;
+        }
+        .left-right-angle-button-slider:hover {
+            text-decoration: none;
+            text-underline-position: none;
+        }
+        .recent_view_header {
+            background-color: #008BD3;
+        }
+    </style>
 </head>
 <div class="spinner-border text-success hide_default" role="status" id="spinner-global">
     <span class="sr-only">Loading...</span>
