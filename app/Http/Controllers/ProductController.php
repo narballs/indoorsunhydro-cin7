@@ -138,7 +138,33 @@ class ProductController extends Controller
             ->with('list_products')
             ->get();
 
-
+        $product_views = null;
+        if (auth()->user()) {
+            $product_views = ProductView::with('product.options', 'product.options.defaultPrice','product.brand', 'product.options.products','product.categories' ,'product.apiorderItem')
+            ->whereHas('product' , function($query) {
+                $query->where('status' , '!=' , 'Inactive');
+            })
+            ->select('product_id' , DB::raw('count(*) as entry_count'))
+            ->whereNotNull('user_id')
+            ->where('user_id' , auth()->id())
+            ->orderBy('entry_count' , 'DESC')
+            ->groupBy('product_id')
+            ->get();
+            
+        } else {
+            $product_views = null;
+        }
+        $product_views_chunks_desktop = null;
+        $product_views_chunks_mobile = null;
+        $product_views_chunks_ipad = null;
+        if (!empty($product_views) && count($product_views) > 0 ) {
+            $product_views_chunks_desktop = $product_views->chunk(4);
+            $product_views_chunks_desktop->toArray();
+            $product_views_chunks_ipad = $product_views->chunk(2);
+            $product_views_chunks_ipad->toArray();
+            $product_views_chunks_mobile = $product_views->chunk(1);
+            $product_views_chunks_mobile->toArray();
+        }
         return view('categories', compact(
             'products',
             'brands',
@@ -155,7 +181,10 @@ class ProductController extends Controller
             'childeren_id',
             'contact_id',
             'pricing',
-            'user_buy_list_options'
+            'user_buy_list_options',
+            'product_views_chunks_desktop',
+        'product_views_chunks_mobile' , 
+        'product_views_chunks_ipad'
             // 'product_buy_list'
         ));
     }
@@ -371,7 +400,10 @@ class ProductController extends Controller
             'childerens',
             'childeren_id',
             'user_buy_list_options',
-            'contact_id','product_views_chunks_desktop', 'product_views_chunks_mobile' , 'product_views_chunks_ipad'
+            'contact_id',
+            'product_views_chunks_desktop', 
+            'product_views_chunks_mobile' , 
+            'product_views_chunks_ipad',
             // 'db_price_column'
         ));
     }
@@ -430,13 +462,24 @@ class ProductController extends Controller
 
     public function showProductDetail($id, $option_id)
     {
-
-        $product = Product::where('id', $id)->where('status', '!=', 'Inactive')->first();
+        $similar_products = null;
+        $product = Product::with('categories' , 'brand')
+        ->where('id', $id)
+        ->where('status', '!=', 'Inactive')->first();
         if (empty($product)) {
             session()->flash('error', 'This product is not available! Please search another product.');
             return redirect('/products');
         }
-
+        if (!empty($product->category_id) && !empty($product->brand_id) && !empty($product)) {
+            $get_similar_products = Product::with('options', 'options.defaultPrice','brand', 'options.products','categories' ,'apiorderItem')
+            ->where('category_id', $product->category_id)
+            ->where('id', '!=', $product->id)
+            ->where('status', '!=', 'Inactive')
+            ->get();
+            $similar_products_chunks = $get_similar_products->chunk(4);
+            $similar_products_chunks->toArray();
+            $similar_products = $similar_products_chunks;
+        }
 
         $location_inventories = [];
         $available_stock = [];
@@ -519,7 +562,8 @@ class ProductController extends Controller
             'lists',
             'contact_id',
             'stock_updated',
-            'product_stocks'
+            'product_stocks',
+            'similar_products'
         ));
 
         
@@ -533,7 +577,56 @@ class ProductController extends Controller
         if (!empty($category_ids)) {
             $products = Product::with('product_views','apiorderItem')->whereIn('category_id', $category_ids)->get();
         }
-        return view('categories', compact('products'));
+        $user_id = Auth::id();
+        $contact_id = session()->get('contact_id');
+        $user_list = BuyList::where('user_id', $user_id)
+            ->where('contact_id', $contact_id)
+            ->first();
+
+
+        $user_buy_list_options = [];
+
+        if (!empty($user_list)) {
+            $user_buy_list_options = ProductBuyList::where('list_id', $user_list->id)->pluck('option_id', 'option_id')->toArray();
+        }
+        $lists = BuyList::where('user_id', $user_id)
+            ->where('contact_id', $contact_id)
+            ->with('list_products')
+            ->get();
+        $product_views = null;
+        if (auth()->user()) {
+            $product_views = ProductView::with('product.options', 'product.options.defaultPrice','product.brand', 'product.options.products','product.categories' ,'product.apiorderItem')
+            ->whereHas('product' , function($query) {
+                $query->where('status' , '!=' , 'Inactive');
+            })
+            ->select('product_id' , DB::raw('count(*) as entry_count'))
+            ->whereNotNull('user_id')
+            ->where('user_id' , auth()->id())
+            ->orderBy('entry_count' , 'DESC')
+            ->groupBy('product_id')
+            ->get();
+            
+        } else {
+            $product_views = null;
+        }
+        $product_views_chunks_desktop = null;
+        $product_views_chunks_mobile = null;
+        $product_views_chunks_ipad = null;
+        if (!empty($product_views) && count($product_views) > 0 ) {
+            $product_views_chunks_desktop = $product_views->chunk(4);
+            $product_views_chunks_desktop->toArray();
+            $product_views_chunks_ipad = $product_views->chunk(2);
+            $product_views_chunks_ipad->toArray();
+            $product_views_chunks_mobile = $product_views->chunk(1);
+            $product_views_chunks_mobile->toArray();
+        }
+        return view('categories', compact('products',
+        'user_buy_list_options',
+        'contact_id',
+        'lists', 
+        'product_views_chunks_desktop',
+        'product_views_chunks_mobile' , 
+        'product_views_chunks_ipad'));
     }
 
     public function showProductByBrands(Request $request, $name)
@@ -695,22 +788,68 @@ class ProductController extends Controller
         $lists = BuyList::where('user_id', $user_id)->get();
         $category_id = $selected_category_id;
 
+        $contact_id = session()->get('contact_id');
+        $user_list = BuyList::where('user_id', $user_id)
+            ->where('contact_id', $contact_id)
+            ->first();
+
+
+        $user_buy_list_options = [];
+
+        if (!empty($user_list)) {
+            $user_buy_list_options = ProductBuyList::where('list_id', $user_list->id)->pluck('option_id', 'option_id')->toArray();
+        }
+
+        $product_views = null;
+        if (auth()->user()) {
+            $product_views = ProductView::with('product.options', 'product.options.defaultPrice','product.brand', 'product.options.products','product.categories' ,'product.apiorderItem')
+            ->whereHas('product' , function($query) {
+                $query->where('status' , '!=' , 'Inactive');
+            })
+            ->select('product_id' , DB::raw('count(*) as entry_count'))
+            ->whereNotNull('user_id')
+            ->where('user_id' , auth()->id())
+            ->orderBy('entry_count' , 'DESC')
+            ->groupBy('product_id')
+            ->get();
+            
+        } else {
+            $product_views = null;
+        }
+        $product_views_chunks_desktop = null;
+        $product_views_chunks_mobile = null;
+        $product_views_chunks_ipad = null;
+        if (!empty($product_views) && count($product_views) > 0 ) {
+            $product_views_chunks_desktop = $product_views->chunk(4);
+            $product_views_chunks_desktop->toArray();
+            $product_views_chunks_ipad = $product_views->chunk(2);
+            $product_views_chunks_ipad->toArray();
+            $product_views_chunks_mobile = $product_views->chunk(1);
+            $product_views_chunks_mobile->toArray();
+        }
+
+
         return view(
             'products-by-brand',
             compact(
                 'products',
-                'brands',
-                'price_creteria',
-                'categories',
-                'per_page',
-                'stock',
-                'category_id',
-                'parent_category_slug',
-                'brand_id',
-                'per_page',
-                'name',
-                'lists',
-                'pricing'
+            'brands',
+            'price_creteria',
+            'categories',
+            'per_page',
+            'stock',
+            'category_id',
+            'parent_category_slug',
+            'brand_id',
+            'per_page',
+            'name',
+            'lists',
+            'pricing',
+            'user_buy_list_options',
+            'contact_id',
+            'product_views_chunks_desktop', 
+            'product_views_chunks_mobile' , 
+            'product_views_chunks_ipad'
             )
         );
     }

@@ -6,8 +6,11 @@ use App\Models\Category;
 use App\Models\Page;
 use App\Models\Product;
 use App\Models\ProductView;
+use App\Models\BuyList;
+use App\Models\ProductBuyList;
 use Session;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 
@@ -28,11 +31,16 @@ class HomeController extends Controller
        //  $cart = session::get('cart');
        
        //   exit;
+        $contact_id = null;
+        $contact_id = session()->get('contact_id');
         $categories = Category::orderBy('name', 'ASC')
             ->with('products')->where('is_active', 1)
             ->get();
         $product_views = null;
         $product_views_chunks = null;
+        $user_id = Auth::id();
+        $user_buy_list_options = [];
+        $lists = '';
         $pages = Page::where('status', 1)->get();
         if (auth()->user()) {
             $product_views = ProductView::with('product.options', 'product.options.defaultPrice','product.brand', 'product.options.products','product.categories' ,'product.apiorderItem')
@@ -41,7 +49,7 @@ class HomeController extends Controller
             })
             ->select('product_id' , DB::raw('count(*) as entry_count'))
             ->whereNotNull('user_id')
-            ->where('user_id' , auth()->id())
+            ->where('user_id' , $user_id)
             ->orderBy('entry_count' , 'DESC')
             ->groupBy('product_id')
             ->get();
@@ -53,7 +61,18 @@ class HomeController extends Controller
             $product_views_chunks = $product_views->chunk(4);
             $product_views_chunks->toArray();
         }
-        return view('index', compact('categories' , 'product_views_chunks'));
+        $user_list = BuyList::where('user_id', $user_id)
+            ->where('contact_id', $contact_id)
+            ->first();
+        if (!empty($user_list)) {
+            $user_buy_list_options = ProductBuyList::where('list_id', $user_list->id)->pluck('option_id', 'option_id')->toArray();
+        }
+
+        $lists = BuyList::where('user_id', $user_id)
+            ->where('contact_id', $contact_id)
+            ->with('list_products')
+            ->get();
+        return view('index', compact('categories' , 'product_views_chunks','lists','user_buy_list_options' , 'contact_id'));
     }
 
     public function show_page($slug) {
