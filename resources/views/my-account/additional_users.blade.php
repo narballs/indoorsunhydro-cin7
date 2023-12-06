@@ -67,7 +67,7 @@
                                                             </thead>
                                                             <tbody>
                                                                 @foreach ($secondary_contacts as $key => $contact)
-                                                                    <tr class="{{!empty($contact->is_deleted) ? 'bg-deleted' : ''}}" title="{{$contact->is_deleted}}">
+                                                                    <tr class="{{!empty($contact->is_deleted) ? 'bg-deleted' : ''}}" title="{{!empty($contact->is_deleted) ?  'deleted on ' . $contact->is_deleted : ''}}">
                                                                         <td class="table-items justify-content-start align-items-lg-center user_table_items pt-0 align-middle">
                                                                             <div class="custom-control custom-checkbox tabel-checkbox d-flex align-items-center">
                                                                                 {{-- <input

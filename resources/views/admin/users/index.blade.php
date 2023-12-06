@@ -146,7 +146,7 @@
                                                 continue;
                                             }
                                         @endphp
-                                        <tr id="row-{{ $user->id }}" data-deleted="{{$contact->deleted_at}}" title="{{!empty($contact->deleted_at) ? $contact->deleted_at : ''}}" class="user-row border-bottom {{!empty($contact->deleted_at) ? 'delete_grey' : ''}}">
+                                        <tr id="row-{{ $user->id }}" data-deleted="{{$contact->deleted_at}}" title="{{!empty($contact->deleted_at) ? 'deleted on ' . $contact->deleted_at : ''}}" class="user-row border-bottom {{!empty($contact->deleted_at) ? 'delete_grey' : ''}}">
                                             <td class="d-flex user-table-items">
                                                 <span class="tabel-checkbox-user">
                                                     <input type="checkbox" name="test" class="checkbox-table"
