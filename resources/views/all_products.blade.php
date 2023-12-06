@@ -118,6 +118,7 @@
                 @include('product_row')
             @endforeach
         @endforeach
+       
     </div>
     <div class="row">
         <div class="container">
@@ -127,7 +128,15 @@
         </div>
     </div>
 </div>
-
+<div class="row desktop-view">
+    @if (!empty($product_views_chunks_desktop) && count($product_views_chunks_desktop) > 0)
+        @php
+            $product_views_chunks = null;
+            $product_views_chunks = $product_views_chunks_desktop;
+        @endphp
+        @include('partials.recent_products_slider')
+    @endif
+</div>
 {{-- moible view --}}
 <div class="container mobile-view">
     <div class="row mt-3">
@@ -259,6 +268,15 @@
         
     {{-- </div> --}}
 </div>
+<div class="row mobile-view">
+    @if (!empty($product_views_chunks_mobile) && count($product_views_chunks_mobile) > 0)
+    @php
+        $product_views_chunks = null;
+        $product_views_chunks = $product_views_chunks_mobile;
+    @endphp
+        @include('partials.recent_products_slider')
+    @endif
+</div>
 {{-- mobile view end --}}
 
 {{-- ipad view start --}}
@@ -370,6 +388,15 @@
     </div>
 </div>
 {{-- ipid view end --}}
+<div class="row ipad-view">
+    @if (!empty($product_views_chunks_ipad) && count($product_views_chunks_ipad) > 0)
+    @php
+        $product_views_chunks = null;
+        $product_views_chunks = $product_views_chunks_ipad;
+    @endphp
+        @include('partials.recent_products_slider')
+    @endif
+</div>
 
 
 {{-- pop up filter mobile --}}

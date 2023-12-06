@@ -110,6 +110,15 @@
    </div>
 </div>
 
+<div class="row mobile-view">
+   @if (!empty($product_views_chunks_mobile) && count($product_views_chunks_mobile) > 0)
+   @php
+       $product_views_chunks = null;
+       $product_views_chunks = $product_views_chunks_mobile;
+   @endphp
+       @include('partials.recent_products_slider')
+   @endif
+</div>
 
 
 {{-- pop up filter mobile --}}

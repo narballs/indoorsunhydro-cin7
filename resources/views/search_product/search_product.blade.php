@@ -15,6 +15,8 @@
 @include('search_product.desktop_view')
 @include('search_product.mobile_view')
 @include('search_product.ipade_view')
+
+
 <script>
 	function showAllItems() {
       $('#all-items').val('all-items');
@@ -174,10 +176,9 @@
 @include('partials.product-footer')
 <!-- End of .container -->
 @include('partials.footer')
-
-
 <script>
 	$(document).ready(function() {
       $('.pagination').addClass('pagination-sm');
    });
 </script>
+
