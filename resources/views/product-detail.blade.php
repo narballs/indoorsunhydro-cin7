@@ -189,14 +189,6 @@
             </div>
         </div>
     </div>
-    
-    @if (!empty($similar_products) && count($similar_products) > 0)
-        @php
-            $product_views_chunks = $similar_products;
-        @endphp
-        @include('partials.similar_products_slider')
-    @endif
-    
 </div>
 
 <div id="popover-form">
@@ -508,7 +500,12 @@
     </form>
 </div>
 {{-- ipad view end --}}
-
+@if (!empty($similar_products) && count($similar_products) > 0)
+    @php
+        $product_views_chunks = $similar_products;
+    @endphp
+    @include('partials.similar_products_slider')
+@endif
 @include('partials.product-footer')
 @include('partials.footer')
 <style>

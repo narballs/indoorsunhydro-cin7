@@ -1260,6 +1260,49 @@ class ProductController extends Controller
         } else {
             $pricing = 'RetailUSD';
         }
+
+
+        // recent view products
+
+        $contact_id = session()->get('contact_id');
+        $user_list = BuyList::where('user_id', $user_id)
+            ->where('contact_id', $contact_id)
+            ->first();
+
+
+        $user_buy_list_options = [];
+
+        if (!empty($user_list)) {
+            $user_buy_list_options = ProductBuyList::where('list_id', $user_list->id)->pluck('option_id', 'option_id')->toArray();
+        }
+
+        $product_views = null;
+        if (auth()->user()) {
+            $product_views = ProductView::with('product.options', 'product.options.defaultPrice','product.brand', 'product.options.products','product.categories' ,'product.apiorderItem')
+            ->whereHas('product' , function($query) {
+                $query->where('status' , '!=' , 'Inactive');
+            })
+            ->select('product_id' , DB::raw('count(*) as entry_count'))
+            ->whereNotNull('user_id')
+            ->where('user_id' , auth()->id())
+            ->orderBy('entry_count' , 'DESC')
+            ->groupBy('product_id')
+            ->get();
+            
+        } else {
+            $product_views = null;
+        }
+        $product_views_chunks_desktop = null;
+        $product_views_chunks_mobile = null;
+        $product_views_chunks_ipad = null;
+        if (!empty($product_views) && count($product_views) > 0 ) {
+            $product_views_chunks_desktop = $product_views->chunk(4);
+            $product_views_chunks_desktop->toArray();
+            $product_views_chunks_ipad = $product_views->chunk(2);
+            $product_views_chunks_ipad->toArray();
+            $product_views_chunks_mobile = $product_views->chunk(1);
+            $product_views_chunks_mobile->toArray();
+        }
         return view('search_product.search_product', compact(
             'products',
             'brands',
@@ -1274,7 +1317,11 @@ class ProductController extends Controller
             'lists',
             'contact_id',
             'pricing',
-            'filter_value_main'
+            'filter_value_main',
+            'user_buy_list_options',
+            'product_views_chunks_desktop', 
+            'product_views_chunks_mobile' , 
+            'product_views_chunks_ipad',
         ));
     }
 

@@ -22,7 +22,7 @@
                                                 @php
                                                     $product = $recent_products->product; 
                                                 @endphp
-                                                <div class="col-md-6 col-lg-4 col-xl-3 d-flex align-self-stretch mt-2 product_row_mobile_responsive pt-1">
+                                                <div class="col-md-6 col-lg-4 col-xl-3 d-flex align-self-stretch mt-2 product_row_mobile_responsive pt-1 slider_class">
                                                     <div class="p-2 shadow-sm  w-100 h-100" style="background-color: #fff;
                                                     background-clip: border-box;
                                                     border: 1px solid rgba(0,0,0,.125);
