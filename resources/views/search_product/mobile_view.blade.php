@@ -110,17 +110,6 @@
    </div>
 </div>
 
-<div class="row mobile-view">
-   @if (!empty($product_views_chunks_mobile) && count($product_views_chunks_mobile) > 0)
-   @php
-       $product_views_chunks = null;
-       $product_views_chunks = $product_views_chunks_mobile;
-   @endphp
-       @include('partials.recent_products_slider')
-   @endif
-</div>
-
-
 {{-- pop up filter mobile --}}
 
 <div class="modal fade" id="filter_model" tabindex="-1" aria-labelledby="filter_content" aria-hidden="true" data-bs-backdrop="static" style="left:2rem;">

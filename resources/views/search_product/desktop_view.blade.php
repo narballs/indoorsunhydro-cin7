@@ -104,12 +104,3 @@
    </div>
 </div>
 </div>
-<div class="row desktop-view">
-   @if (!empty($product_views_chunks_desktop) && count($product_views_chunks_desktop) > 0)
-   @php
-       $product_views_chunks = null;
-       $product_views_chunks = $product_views_chunks_desktop;
-   @endphp
-       @include('partials.recent_products_slider')
-   @endif
-</div>
