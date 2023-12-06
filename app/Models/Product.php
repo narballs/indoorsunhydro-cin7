@@ -56,5 +56,9 @@ class Product extends Model
     {
         return $this->hasMany('App\Models\ProductView', 'product_id', 'id');
     }
+    public function product_stock()
+    {
+        return $this->hasMany('App\Models\ProductStock', 'product_id', 'id');
+    }
 
 }
