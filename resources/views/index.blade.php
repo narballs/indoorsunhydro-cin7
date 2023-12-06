@@ -4,6 +4,7 @@
         @include('partials.top-bar')
         @include('partials.search-bar')
         @include('partials.banner')
+        
         <div class="bg-light pb-5">
             <div class="container-sm bg-light">
                 <div class="row mx-0">
@@ -170,10 +171,8 @@
                 </div>
             </div>
             {{-- recent viewed products --}}
-            @if (!empty($product_views_chunks) && count($product_views_chunks) > 0)
-                <div class="w-100 home-page-product-section mt-3">
-                    @include('partials.recent_products_slider')
-                </div>
+            @if (auth()->user())
+                @include('partials.recent_products_slider')
             @endif
         </div>
 

@@ -57,10 +57,7 @@ class HomeController extends Controller
         } else {
             $product_views = null;
         }
-        if (!empty($product_views) && count($product_views) > 0 ) {
-            $product_views_chunks = $product_views->chunk(4);
-            $product_views_chunks->toArray();
-        }
+        
         $user_list = BuyList::where('user_id', $user_id)
             ->where('contact_id', $contact_id)
             ->first();
@@ -72,7 +69,7 @@ class HomeController extends Controller
             ->where('contact_id', $contact_id)
             ->with('list_products')
             ->get();
-        return view('index', compact('categories' , 'product_views_chunks','lists','user_buy_list_options' , 'contact_id'));
+        return view('index', compact('categories' , 'product_views','lists','user_buy_list_options' , 'contact_id'));
     }
 
     public function show_page($slug) {

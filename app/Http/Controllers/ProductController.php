@@ -154,17 +154,7 @@ class ProductController extends Controller
         } else {
             $product_views = null;
         }
-        $product_views_chunks_desktop = null;
-        $product_views_chunks_mobile = null;
-        $product_views_chunks_ipad = null;
-        if (!empty($product_views) && count($product_views) > 0 ) {
-            $product_views_chunks_desktop = $product_views->chunk(4);
-            $product_views_chunks_desktop->toArray();
-            $product_views_chunks_ipad = $product_views->chunk(2);
-            $product_views_chunks_ipad->toArray();
-            $product_views_chunks_mobile = $product_views->chunk(1);
-            $product_views_chunks_mobile->toArray();
-        }
+        
         return view('categories', compact(
             'products',
             'brands',
@@ -182,9 +172,7 @@ class ProductController extends Controller
             'contact_id',
             'pricing',
             'user_buy_list_options',
-            'product_views_chunks_desktop',
-        'product_views_chunks_mobile' , 
-        'product_views_chunks_ipad'
+            'product_views'
             // 'product_buy_list'
         ));
     }
@@ -373,17 +361,7 @@ class ProductController extends Controller
         } else {
             $product_views = null;
         }
-        $product_views_chunks_desktop = null;
-        $product_views_chunks_mobile = null;
-        $product_views_chunks_ipad = null;
-        if (!empty($product_views) && count($product_views) > 0 ) {
-            $product_views_chunks_desktop = $product_views->chunk(4);
-            $product_views_chunks_desktop->toArray();
-            $product_views_chunks_ipad = $product_views->chunk(2);
-            $product_views_chunks_ipad->toArray();
-            $product_views_chunks_mobile = $product_views->chunk(1);
-            $product_views_chunks_mobile->toArray();
-        }
+        
 
         return view('all_products', compact(
             'products',
@@ -401,9 +379,7 @@ class ProductController extends Controller
             'childeren_id',
             'user_buy_list_options',
             'contact_id',
-            'product_views_chunks_desktop', 
-            'product_views_chunks_mobile' , 
-            'product_views_chunks_ipad',
+            'product_views'
             // 'db_price_column'
         ));
     }
@@ -471,15 +447,12 @@ class ProductController extends Controller
             return redirect('/products');
         }
         if (!empty($product->category_id) && !empty($product->brand_id) && !empty($product)) {
-            $get_similar_products = Product::with('options', 'options.defaultPrice','brand', 'options.products','categories' ,'apiorderItem')
+            $similar_products = Product::with('options', 'options.defaultPrice','brand', 'options.products','categories' ,'apiorderItem')
             ->where('category_id', $product->category_id)
             ->where('id', '!=', $product->id)
             ->where('status', '!=', 'Inactive')
             ->take(16)
             ->get();
-            $similar_products_chunks = $get_similar_products->chunk(4);
-            $similar_products_chunks->toArray();
-            $similar_products = $similar_products_chunks;
         }
 
         $location_inventories = [];
@@ -610,24 +583,12 @@ class ProductController extends Controller
         } else {
             $product_views = null;
         }
-        $product_views_chunks_desktop = null;
-        $product_views_chunks_mobile = null;
-        $product_views_chunks_ipad = null;
-        if (!empty($product_views) && count($product_views) > 0 ) {
-            $product_views_chunks_desktop = $product_views->chunk(4);
-            $product_views_chunks_desktop->toArray();
-            $product_views_chunks_ipad = $product_views->chunk(2);
-            $product_views_chunks_ipad->toArray();
-            $product_views_chunks_mobile = $product_views->chunk(1);
-            $product_views_chunks_mobile->toArray();
-        }
+        
         return view('categories', compact('products',
         'user_buy_list_options',
         'contact_id',
         'lists', 
-        'product_views_chunks_desktop',
-        'product_views_chunks_mobile' , 
-        'product_views_chunks_ipad'));
+        'product_views'));
     }
 
     public function showProductByBrands(Request $request, $name)
@@ -817,17 +778,7 @@ class ProductController extends Controller
         } else {
             $product_views = null;
         }
-        $product_views_chunks_desktop = null;
-        $product_views_chunks_mobile = null;
-        $product_views_chunks_ipad = null;
-        if (!empty($product_views) && count($product_views) > 0 ) {
-            $product_views_chunks_desktop = $product_views->chunk(4);
-            $product_views_chunks_desktop->toArray();
-            $product_views_chunks_ipad = $product_views->chunk(2);
-            $product_views_chunks_ipad->toArray();
-            $product_views_chunks_mobile = $product_views->chunk(1);
-            $product_views_chunks_mobile->toArray();
-        }
+        
 
 
         return view(
@@ -848,9 +799,7 @@ class ProductController extends Controller
             'pricing',
             'user_buy_list_options',
             'contact_id',
-            'product_views_chunks_desktop', 
-            'product_views_chunks_mobile' , 
-            'product_views_chunks_ipad'
+            'product_views', 
             )
         );
     }
@@ -1293,17 +1242,7 @@ class ProductController extends Controller
         } else {
             $product_views = null;
         }
-        $product_views_chunks_desktop = null;
-        $product_views_chunks_mobile = null;
-        $product_views_chunks_ipad = null;
-        if (!empty($product_views) && count($product_views) > 0 ) {
-            $product_views_chunks_desktop = $product_views->chunk(4);
-            $product_views_chunks_desktop->toArray();
-            $product_views_chunks_ipad = $product_views->chunk(2);
-            $product_views_chunks_ipad->toArray();
-            $product_views_chunks_mobile = $product_views->chunk(1);
-            $product_views_chunks_mobile->toArray();
-        }
+        
         return view('search_product.search_product', compact(
             'products',
             'brands',
@@ -1320,9 +1259,7 @@ class ProductController extends Controller
             'pricing',
             'filter_value_main',
             'user_buy_list_options',
-            'product_views_chunks_desktop', 
-            'product_views_chunks_mobile' , 
-            'product_views_chunks_ipad',
+            'product_views'
         ));
     }
 

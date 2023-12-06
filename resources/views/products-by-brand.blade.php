@@ -153,15 +153,6 @@
       @endforeach
    </div>
 </div>
-<div class="row desktop-view">
-   @if (!empty($product_views_chunks_desktop) && count($product_views_chunks_desktop) > 0)
-       @php
-           $product_views_chunks = null;
-           $product_views_chunks = $product_views_chunks_desktop;
-       @endphp
-       @include('partials.recent_products_slider')
-   @endif
-</div>
 <div class="container mobile-view">
    <div class="row mt-3">
       <p class="d-flex justify-content-start align-items-center mb-0">
@@ -327,15 +318,6 @@
       </div>
    </div>
 </div>
-<div class="row mobile-view">
-   @if (!empty($product_views_chunks_mobile) && count($product_views_chunks_mobile) > 0)
-       @php
-           $product_views_chunks = null;
-           $product_views_chunks = $product_views_chunks_mobile;
-       @endphp
-       @include('partials.recent_products_slider')
-   @endif
-</div>
 <div class="container ipad-view">
    <form id="form-filter">
       <div class="col-md-12">
@@ -476,15 +458,10 @@
       @endforeach
    </div>
 </div>
-<div class="row ipad-view">
-   @if (!empty($product_views_chunks_ipad) && count($product_views_chunks_ipad) > 0)
-       @php
-           $product_views_chunks = null;
-           $product_views_chunks = $product_views_chunks_ipad;
-       @endphp
-       @include('partials.recent_products_slider')
-   @endif
-</div>
+
+@if (auth()->user())
+   @include('partials.recent_products_slider')
+@endif
 {{-- pop up filter mobile --}}
 
 <div class="modal fade" id="filter_model" tabindex="-1" aria-labelledby="filter_content" aria-hidden="true" data-bs-backdrop="static">
