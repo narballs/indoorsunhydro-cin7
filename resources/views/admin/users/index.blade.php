@@ -286,7 +286,7 @@
                             <tfoot>
                                 <tr>
                                     <td colspan="10" class="mobile-screen">
-                                        {{-- {{ $data->links('pagination.custom_pagination') }} --}}
+                                        {{ $data->links('pagination.custom_pagination') }}
                                     </td>
                                 </tr>
                             </tfoot>
