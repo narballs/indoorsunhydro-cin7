@@ -475,6 +475,7 @@ class ProductController extends Controller
             ->where('category_id', $product->category_id)
             ->where('id', '!=', $product->id)
             ->where('status', '!=', 'Inactive')
+            ->take(16)
             ->get();
             $similar_products_chunks = $get_similar_products->chunk(4);
             $similar_products_chunks->toArray();
