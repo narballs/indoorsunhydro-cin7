@@ -1383,6 +1383,18 @@ class UserController extends Controller
             }
         }
 
+        // $secondary_contacts_data = [];
+        // if (count($all_companies) > 0) {
+        //     foreach($all_companies as $companies) {
+        //         $get_secondary_contacts_data =  Contact::withTrashed()->with('allow_user')->where('company', $companies->company)->get();
+        //         if (count($get_secondary_contacts_data)) {
+        //             foreach ($get_secondary_contacts_data as $get_secondary_contact_data) {
+        //                 array_push($secondary_contacts_data , $get_secondary_contact_data);
+        //             }
+        //         }
+        //     }
+        // }
+
         return view('my-account.additional_users', compact(
             'lists',
             'user',
@@ -1393,7 +1405,8 @@ class UserController extends Controller
             'states',
             'contact_id',
             'all_companies',
-            'address_user'
+            'address_user',
+            // 'secondary_contacts_data'
         ));
     }
 

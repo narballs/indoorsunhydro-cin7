@@ -44,10 +44,6 @@
                                                                 <tr class="table-header-background">
                                                                     <td class="table-row-item">
                                                                         <div class="custom-control custom-checkbox tabel-checkbox d-flex align-items-center">
-                                                                            {{-- <input
-                                                                                class="custom-control-input custom-control-input-success checkbox-table"
-                                                                                type="checkbox" id="selectAll" value="">
-                                                                            <label for="selectAll" class="custom-control-label"></label> --}}
                                                                             <span class="table-row-heading-order">
                                                                                 <i class="fas fa-arrow-up" style="font-size:14.5px ;"></i>
                                                                             </span>
@@ -66,16 +62,22 @@
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
+                                                                <?php $processed_contacts = []; ?>
                                                                 @foreach ($secondary_contacts as $key => $contact)
+                                                                    <?php 
+                                                                        
+                                                                        if (!empty($contact->is_deleted)) {
+                                                                            if (!isset($processed_contacts[$contact->email])) {
+                                                                                $processed_contacts[$contact->email] = $contact->email;
+                                                                            }
+                                                                            else {
+                                                                                continue;
+                                                                            }
+                                                                        }
+                                                                    ?>
                                                                     <tr class="{{!empty($contact->is_deleted) ? 'bg-deleted' : ''}}" title="{{!empty($contact->is_deleted) ?  'deleted on ' . $contact->is_deleted : ''}}">
                                                                         <td class="table-items justify-content-start align-items-lg-center user_table_items pt-0 align-middle">
                                                                             <div class="custom-control custom-checkbox tabel-checkbox d-flex align-items-center">
-                                                                                {{-- <input
-                                                                                    class="custom-control-input custom-control-input-success sub_chk"
-                                                                                    data-id="{{ $contact->id }}" type="checkbox"
-                                                                                    id="separate_check_{{ $contact->id }}"> --}}
-                                                                                {{-- <label for="separate_check_{{ $contact->id }}"
-                                                                                    class="custom-control-label"></label> --}}
                                                                                 <span> {{ $key + 1 }}</span>
                                                                             </div>
                                                                         </td>
@@ -97,10 +99,6 @@
                                                                             @else
                                                                             @endif
                                                                         </td>
-                                                                        {{-- <td class="my_account_all_items" style="vertical-align: middle;">
-                                                                            <a href="{{ url('send-password/fornt-end/' . $contact->user_id) }}"
-                                                                                class="btn bg-white ps-0">Send Password</a>
-                                                                        </td> --}}
                                                                         <td class="my_account_all_items" style="vertical-align: middle;">
                                                                             @if (!empty($contact['contact_id']))
                                                                                 Primary contact
