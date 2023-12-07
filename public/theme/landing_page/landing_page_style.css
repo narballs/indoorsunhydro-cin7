@@ -70,12 +70,16 @@
     background: #7CC633;
     color: #FFF;
     font-family: 'Poppins';
-    font-size: 18px;
+    /* font-size: 18px; */
     font-style: normal;
     font-weight: 600;
     line-height: normal;
     letter-spacing: 0.54px;
     text-transform: uppercase;
+}
+.landing_add_to_cart:hover {
+    background: #7CC633;
+    color: #FFF;
 }
 .landing_product_name {
     color: #FFF;
