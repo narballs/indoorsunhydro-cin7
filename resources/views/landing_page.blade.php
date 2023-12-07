@@ -6,11 +6,15 @@
             <div class="row justify-content-center">
                 <div class="col-md-10">
                     <div class="row justify-content-between">
-                        <div class="col-md-3">
-                            <img class="logo_image_main" src="{{ url('/theme/img/' . \App\Helpers\SettingHelper::getSetting('logo_name')) }}">
+                        <div class="col-md-4">
+                            <a class="navbar-brand" href="/">
+                                <img class="logo_image_main" src="{{ url('/theme/img/' . \App\Helpers\SettingHelper::getSetting('logo_name')) }}">
+                            </a>
                         </div>
-                        <div class="col-md-3">
-                            <button class="btn landing_see_all_inquiry w-50">(213) 410-5912</button>
+                        <div class="col-md-4">
+                            <div class="d-flex justify-content-end">
+                                <button class="btn landing_see_all_inquiry w-50">(213) 410-5912</button>
+                            </div>
                         </div>
                     </div>
                 </div>
