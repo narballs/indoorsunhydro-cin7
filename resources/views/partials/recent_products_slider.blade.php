@@ -12,6 +12,9 @@
         border: 1px solid #7BC533 !important;
         font-size: 14px;
     }
+    #similar_products_owl_carasoul .owl-nav.disabled {
+        display: block !important;
+    }
 </style>
 @if (!empty($product_views) && count($product_views) > 0)
     <div class="w-100  mt-3">
@@ -20,7 +23,7 @@
         </p>
         <div class="row justify-content-center">
             <div class="col-md-10">
-                <div class="owl-carousel owl-theme mt-4">
+                <div class="owl-carousel owl-theme mt-4" id="similar_products_owl_carasoul">
                     @foreach($product_views as $recent_products)
                         @foreach ($recent_products->product->options as $option)
                             @php
