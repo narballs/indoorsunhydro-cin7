@@ -116,10 +116,120 @@
         font-weight: 600;
         line-height: normal;
     }
+    .landing_page_seller_header {
+        color: #1A1A1A;
+        text-align: center;
+        font-family: 'Poppins';
+        font-size: 36px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: normal;
+    }
+    .landing_page_advantage_header {
+        color: #1A1A1A;
+        text-align: center;
+        font-family: 'Poppins';
+        font-size: 36px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: normal;
+    }
+    #owl-carousel-landing-page > .owl-nav > .owl-prev{
+        left : -200px !important;
+        top: 40%
+    }
+    #owl-carousel-landing-page > .owl-nav > .owl-next{
+        right : -200px !important;
+        top: 40%;
+    }
+    .landing_page_top_seller_add_to_cart {
+        text-decoration: none;
+        border-radius: 5px;
+        background-color: #7BC533;
+        color: #FFF;
+        font-family: 'Poppins';
+        font-style: normal;
+        font-weight: 600;
+        line-height: normal;
+        letter-spacing: 1.066px;
+        text-transform: uppercase;
+    }
+    .landing_page_top_seller_add_to_cart:hover {
+        background-color: #7BC533;
+        color: #fff;
+    }
+    .landing_adv_card {
+        border-radius: 5px;
+        border-top: 1px solid #ECECEC;
+        border-right: 1px solid #ECECEC;
+        border-bottom: 1px solid #ECECEC;
+        border-left: 1px solid #ECECEC;
+        background: #FBFBFB;
+        min-height:547px;
+    }
+    .landing_advantage_card_header {
+        color: #000;
+        text-align: center;
+        font-family: 'Poppins';
+        font-size: 24px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+    }
+    .landing_advantage_card_text {
+        color: #747474;
+        text-align: center;
+        font-family: 'Poppins';
+        /* font-size: 20px; */
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+    }
+    .landing_see_all_products {
+        border-radius: 4px;
+        background: #7CC633;
+        color: #FFF;
+        text-align: center;
+        font-family: 'Poppins';
+        /* font-size: 22px; */
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+        letter-spacing: 0.11px;
+    }
+    .landing_see_all_products:hover {
+        background: #7CC633;
+        color: #FFF;
+    }
+    .landing_see_all_inquiry {
+        border-radius: 5px;
+        background-color: #7CC633;
+        color: #FFF;
+        font-family: 'Poppins';
+        /* font-size: 16px; */
+        font-style: normal;
+        font-weight: 600;
+        line-height: normal;
+        text-transform: uppercase;
+    }
 </style>
 <body>
     <main style="overflow-x: hidden;">
         @include('partials.top-bar')
+        <div class="bg-white mb-2 mt-2">
+            <div class="row justify-content-center">
+                <div class="col-md-10">
+                    <div class="row justify-content-between">
+                        <div class="col-md-3">
+                            <img class="logo_image_main" src="{{ url('/theme/img/' . \App\Helpers\SettingHelper::getSetting('logo_name')) }}">
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn landing_see_all_inquiry w-50">(213) 410-5912</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         @include('landing_page_partials.banner')
         
         <div class="bg-white pb-5">
@@ -128,15 +238,6 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="row justify-content-center">
-                                {{-- <img src="{{asset('/theme/img/landing_page/landing_page_frame_1.png')}}" alt="">
-                                <div class="col-md-10">
-                                    <h5>Expert-Curated Range</h5>
-                                </div>
-                                <div class="col-md-12">
-                                    <p class="text-center">
-                                        Dive into hydroponic excellence: elite grow tech, precision irrigation, and eco-friendly climate control. We set the gold standard for sustainability!
-                                    </p>
-                                </div> --}}
                                 <div class="card border-0" style="width: 20rem;min-height:200px !important;">
                                     <img class="card-img-top" src="{{asset('/theme/img/landing_page/landing_page_frame_1.png')}}" alt="Card image cap">
                                     
@@ -153,23 +254,6 @@
                         </div>
                         <div class="col-md-4">
                             <div class="row justify-content-center">
-                                {{-- <img src="{{asset('/theme/img/landing_page/landing_page_frame_2.png')}}" alt="">
-                                <div class="col-md-10">
-                                    <h5>Optimized Nutrient Solutions</h5>
-                                </div>
-                                <div class="col-md-12">
-                                    <p class="text-center">
-                                        Unlock vibrant cannabis growth with our tailored nutrient mixes. Meticulously researched for robust plants, ensuring bountiful yields and unmatched quality.
-                                    </p>
-                                </div> --}}
-                                {{-- <div class="card border-0" style="width: 20rem;">
-                                    <img class="card-img-top" src="{{asset('/theme/img/landing_page/landing_page_frame_2.png')}}" alt="Card image cap">
-                                    <div class="card-body text-center">
-                                        <p class="text-center card-text">
-                                            Unlock vibrant cannabis growth with our tailored nutrient mixes. Meticulously researched for robust plants, ensuring bountiful yields and unmatched quality.
-                                        </p>
-                                    </div>
-                                </div> --}}
                                 <div class="card border-0" style="width: 20rem;min-height:200px !important;">
                                     <img class="card-img-top" src="{{asset('/theme/img/landing_page/landing_page_frame_2.png')}}" alt="Card image cap">
                                     
@@ -186,23 +270,6 @@
                         </div>
                         <div class="col-md-4">
                             <div class="row justify-content-center">
-                                {{-- <img src="{{asset('/theme/img/landing_page/landing_page_frame_3.png')}}" alt="">
-                                <div class="col-md-10">
-                                    <h5>Customer-Centric Approach</h5>
-                                </div>
-                                <div class="col-md-12">
-                                    <p class="text-center">
-                                        We're committed to lasting relationships, personalized support, and adding value to every interaction. Our expert hydroponics team is here to guide you to success.
-                                    </p>
-                                </div> --}}
-                                {{-- <div class="card border-0" style="width: 20rem;">
-                                    <img class="card-img-top" src="{{asset('/theme/img/landing_page/landing_page_frame_3.png')}}" alt="Card image cap">
-                                    <div class="card-body text-center">
-                                        <p class="text-center card-text">
-                                            We're committed to lasting relationships, personalized support, and adding value to every interaction. Our expert hydroponics team is here to guide you to success.
-                                        </p>
-                                    </div>
-                                </div> --}}
                                 <div class="card border-0" style="width: 20rem;min-height:200px !important;">
                                     <img class="card-img-top" src="{{asset('/theme/img/landing_page/landing_page_frame_3.png')}}" alt="Card image cap">
                                     
@@ -328,57 +395,10 @@
                             </div>
                         </div>
                     </div>
-                    
-                    
-                    {{-- <div class="col-md-12 home-page-product-section">
-                        <div class="row mt-3">
-                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xs-12">
-                                <a class="link-dark text-decoration-none text-white"
-                                    href="{{ url('product-brand/Trolmaster') }}">
-                                    <img class="img-fluid home-page-product-img" src="theme/img/troll_master.png">
-                                </a>
-                            </div>
-                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xs-12">
-                                <a class="link-dark text-decoration-none text-white"
-                                    href="{{ url('products/253/ac-dehumidification-humidification') }}">
-                                    <img class="img-fluid home-page-product-img" src="theme/img/quest.png">
-                                </a>
-                            </div>
-                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xs-12">
-                                <a class="link-dark text-decoration-none text-white"
-                                    href="{{ url('product-brand/Advanced Nutrients') }}">
-                                    <img class="img-fluid home-page-product-img" src="theme/img/nutrients_box.png">
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-12 home-page-product-section">
-                        <div class="row mt-3 gx-5">
-                            <div class="col-md-4">
-                                <a class="link-dark text-decoration-none text-white"
-                                    href="{{ url('products/7/lighting') }}">
-                                    <img class="img-fluid home-page-product-img" src="theme/img/lightening.png">
-                                </a>
-                            </div>
-                            <div class="col-md-4">
-                                <a class="link-dark text-decoration-none text-white"
-                                    href="{{ url('product-brand/Mills Nutrients') }}">
-                                    <img class="img-fluid home-page-product-img" src="theme/img/can.png">
-                                </a>
-                            </div>
-                            <div class="col-md-4">
-                                <a class="link-dark text-decoration-none text-white"
-                                    href="{{ url('products/7/lighting') }}">
-                                    <img class="img-fluid home-page-product-img" src="theme/img/lux_lightening.png">
-                                </a>
-                            </div>
-                        </div>
-                    </div> --}}
-                    
                 </div>
             </div>
         </div>
-
+        {{-- new products --}}
         <div class="product_slider_div">
             <div class="row justify-content-center ">
                 <div class="col-md-4 mt-5">
@@ -395,109 +415,6 @@
                                 <div class="owl-carousel owl-theme" id="owl-carousel-landing-page">
                                     @foreach($products as $product)
                                         @foreach ($product->options as $option)
-                                            {{-- <div class="item mt-2  pt-1 ">
-                                                <div class="p-2 shadow-sm  w-100" style="background-color: #fff;
-                                                background-clip: border-box;
-                                                border: 1px solid rgba(0,0,0,.125);
-                                                border-radius: 0.25rem;">
-                                                    @if ($product->images != '')
-                                                        <a href="{{ url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug) }}">
-                                                            <div class="image-height-mbl" style="height: 300px;">
-                                                                <span class="d-flex justify-content-center align-items-center">
-                                                                    <img src="{{ $product->images }}" class="img_responsive_mbl col-md-10 .image-body offset-1 mt-2"
-                                                                        style="" />
-                                                                </span>
-                                                            </div>
-                                                        </a>
-                                                    @else
-                                                        <a href="{{ url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug) }}">
-                                                            <div class="image-height-mbl"  style="height: 300px;">
-                                                                <span class="d-flex justify-content-center align-items-center">
-                                                                    <img src=" {{ asset('theme/img/image_not_available.png') }}" class="img_responsive_mbl_not_available col-md-10 .image-body offset-1 mt-2"
-                                                                    style="" />
-                                                                </span>
-                                                            </div>
-                                                        </a>
-                                                    @endif
-                                                    <div class="card-body d-flex flex-column text-center mt-2 prd_mbl_card_bdy">
-                                                        <h5 class="card-title card_product_title tooltip-product" style="font-weight: 500;font-size: 16px;" id="product_name_{{ $product->id }}">
-                                                            <a class="product-row-product-title" href="{{ url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug) }}">
-                                                                {{ \Illuminate\Support\Str::limit($product->name, 33) }}
-                                                                <div class="tooltip-product-text bg-white text-primary">
-                                                                    <div class="tooltip-arrow"></div>
-                                                                    <div class="tooltip-inner bg-white text-primary">
-                                                                        <span class="">{{$product->name}}</span>
-                                                                    </div>
-                                                                </div>
-                                                            </a>
-                                                        </h5>
-                                                        <input type="hidden" name="quantity" value="1" id="quantity">
-                                                        <input type="hidden" name="p_id" id="p_{{ $product->id }}" value="{{ $product->id }}">
-                                                        @csrf
-                                                        <div class="col-md-12 p-1 price-category-view-section">
-                                                            <?php
-                                                            $retail_price = 0;
-                                                            $user_price_column = App\Helpers\UserHelper::getUserPriceColumn();
-                                                            foreach ($option->price as $price) {
-                                                                $retail_price = $price->$user_price_column;
-                                                            }
-                                                            ?>
-                                                            <h4 text="{{ $retail_price }}" class="text-uppercase mb-0 text-center p_price_resp mt-0">
-                                                                ${{ number_format($retail_price, 2) }}</h4>
-                                                            @if ($product->categories)
-                                                                <p class="category-cart-page  mt-3 mb-2" title="{{$product->categories->name}}">
-                                                                    Category:&nbsp;&nbsp;{{ \Illuminate\Support\Str::limit($product->categories->name, 4) }}
-                                                                </p>
-                                                            @else
-                                                                <p class="category-cart-page mt-3 mb-2">
-                                                                    Category:&nbsp;&nbsp;Unassigned
-                                                                </p>
-                                                            @endif
-                                                            <?php 
-                                                                $enable_add_to_cart = App\Helpers\SettingHelper::enableAddToCart($option); 
-                                                                $last_month_views = null;
-                                                                $views_count = $product->product_views->whereBetween('created_at', [Carbon\Carbon::now()->subMonth()->startOfMonth(), Carbon\Carbon::now()->subMonth()->endOfMonth()])->count();
-                                                                if ($views_count > 20) {
-                                                                    $last_month_views = $views_count . '+ views in last month';
-                                                                } 
-                                                                else if ($views_count <= 20 && $views_count > 0) {
-                                                                    $last_month_views = $views_count . ' view(s) in last month';
-                                                                }
-                                                                
-                                                                $past_30_days = $date = Carbon\Carbon::today()->subDays(30);
-                                                                $bought_products_count = $product->apiorderItem->where('created_at','>=',$date)->count();
-                                                            ?>
-                                                            @if (!empty($last_month_views))
-                                                                <p class="text-dark mb-0 ft-size">{{$last_month_views}}</p>
-                                                            @endif
-                                                            @if ($bought_products_count > 0)
-                                                                <small class="text-dark ft-size">{{$bought_products_count . '  bought in the past month'}}</small>
-                                                            @endif
-                                                        </div>
-                                                        <div class="col-md-12 add-to-cart-button-section">
-                                                            @if ($enable_add_to_cart)
-                                                                <button 
-                                                                    class="hover_effect prd_btn_resp ajaxSubmit button-cards col w-100  mb-1" 
-                                                                    type="submit" 
-                                                                    style="max-height: 46px;" id="ajaxSubmit_{{ $product->id }}"
-                                                                    onclick="updateCart('{{ $product->id }}', '{{ $option->option_id }}')"
-                                                                >
-                                                                    Add to cart
-                                                                </button>
-                                                            @else
-                                                                <button 
-                                                                    class="prd_btn_resp ajaxSubmit mb-3 text-white bg-danger bg-gradient button-cards col w-100 autocomplete=off"
-                                                                    tabindex="-1" 
-                                                                    type="submit" 
-                                                                    style="max-height: 46px;" 
-                                                                    id="ajaxSubmit_{{ $product->id }}"
-                                                                    disabled 
-                                                                    onclick="return updateCart('{{ $product->id }}')">Out of Stock</button>
-                                                            @endif
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div> --}}
                                             <?php
                                                 $retail_price = 0;
                                                 $user_price_column = App\Helpers\UserHelper::getUserPriceColumn();
@@ -508,24 +425,18 @@
                                             <div class="item">
                                                 <div class="card border-0 d-flex align-items-center justify-content-center" style="height: 298px;">
                                                     @if ($product->images != '')
-                                                        <a href="{{ url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug) }}">
+                                                        <a href="{{ url('/products') }}">
                                                             <img class="card-img-top" style="max-height: 250px; max-width:300px;" src="{{ $product->images }}" alt="Card image cap">
                                                         </a>
                                                     @else
-                                                        <a href="{{ url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug) }}">
+                                                        <a href="{{ url('/products') }}">
                                                             <img class="card-img-top" style="max-height: 250px; max-width:300px;" src=" {{ asset('theme/img/image_not_available.png') }}" alt="Card image cap">
                                                         </a>
                                                     @endif
-                                                    {{-- <img class="card-img-top" src="{{ $product->images }}" alt="Card image cap"> --}}
-                                                    {{-- <div class="card-body text-center">
-                                                        <p class="text-center card-text">
-                                                            Unlock vibrant cannabis growth with our tailored nutrient mixes. Meticulously researched for robust plants, ensuring bountiful yields and unmatched quality.
-                                                        </p>
-                                                    </div> --}}
                                                 </div>
                                                 <div class="row mt-3 mb-5">
                                                     <div class="col-md-12">
-                                                        <h5 class="text-center landing_product_name" title="{{$product->name}}">{{ \Illuminate\Support\Str::limit($product->name, 20) }}</h5>
+                                                        <a href="{{ url('/products') }}"><h5 class="text-center landing_product_name" title="{{$product->name}}">{{ \Illuminate\Support\Str::limit($product->name, 20) }}</h5></a>
                                                         <h5 class="text-center landing_product_price">${{ number_format($retail_price, 2) }}</h5>
                                                         @php
                                                             $monthNum = date("m",strtotime($product->created_at));
@@ -538,7 +449,7 @@
                                                         <p class="text-center landing_product_created">{{'Added on '}} {{$day .' '. $monthName .' '.$year}} </p>
                                                     </div>
                                                     <div class="col-md-12 text-center">
-                                                        <button class="btn landing_add_to_cart w-75">Add to Cart</button>
+                                                        <a href="{{url('/user')}}" class="btn landing_add_to_cart w-75">Add to Cart</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -551,50 +462,150 @@
                 @endif
             </div>
         </div>
-
-            {{-- our advantages  --}}
+        {{-- best sellers --}}
+        @if (count($top_sellers) > 0)
         <div class="bg-white pb-5">
-            <div class="container-sm bg-white">
-                <div class="row">
-                    <div class="col-md-12 home-page-product-section">
-                        <div class="row advantages_div">
-                            <div class="col-md-12">
-                                <h1
-                                    class="text-center our-advantages border-0 d-flex justify-content-center align-items-center our_advantages">
-                                    Our advantages
-                                </h1>
-                            </div>
-                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xs-12 mt-5 p-0">
-                                <div class="d-flex align-items-center justify-content-center">
-                                    <img src="/theme/img/National shipping.png" class="img-fluid" alt="">
+            <div class="row justify-content-center ">
+                <div class="col-md-4 mt-5">
+                    <h5 class="text-center landing_page_seller_header">
+                       Top Sellers
+                    </h5>
+                </div>
+            </div>
+            <div class="row justify-content-center mt-3">
+                <div class="col-md-9">
+                    <div class="row">
+                        @foreach ($top_sellers as $top_seller)
+                            @php
+                                $product = $top_seller->product;
+                            @endphp
+                            @foreach ($product->options as $option)
+                                <div class="col-md-6 col-xl-3 col-lg-6 col-xs-12 col-sm-12 mt-2 pt-1 justify-content-center d-flex">
+                                    <div class="p-2 m-2 shadow-sm w-100 " style="background-color: #fff;background-clip: border-box;border: 1px solid rgba(0,0,0,.125);border-radius: 0.25rem;">
+                                        @if ($product->images != '')
+                                            <a href="{{ url('/products') }}">
+                                                <div class="image-height-mbl" style="height: 300px;">
+                                                    <span class="d-flex justify-content-center align-items-center">
+                                                        <img src="{{ $product->images }}" style="max-height: 300px; max-width:300px;" class="img_responsive_mbl col-md-10 .image-body mt-2"
+                                                            style="" />
+                                                    </span>
+                                                </div>
+                                            </a>
+                                        @else
+                                            <a href="{{ url('/products') }}">
+                                                <div class="image-height-mbl"  style="height: 300px;">
+                                                    <span class="d-flex justify-content-center align-items-center">
+                                                        <img src=" {{ asset('theme/img/image_not_available.png') }}" style="max-height: 300px; max-width:300px;" class="img_responsive_mbl_not_available col-md-10 .image-body mt-2"
+                                                        style="" />
+                                                    </span>
+                                                </div>
+                                            </a>
+                                        @endif
+                                        <div class="card-body d-flex flex-column text-center mt-2 prd_mbl_card_bdy">
+                                            <h5 class="card-title card_product_title tooltip-product" style="font-weight: 500;font-size: 16px;" id="product_name_{{ $product->id }}">
+                                                <a class="product-row-product-title" href="{{ url('/products') }}">
+                                                    {{ \Illuminate\Support\Str::limit($product->name, 50) }}
+                                                    <div class="tooltip-product-text bg-white text-primary">
+                                                        <div class="tooltip-arrow"></div>
+                                                        <div class="tooltip-inner bg-white text-primary">
+                                                            <span class="">{{$product->name}}</span>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </h5>
+                                            <div class="col-md-12 p-1">
+                                                <?php
+                                                $retail_price = 0;
+                                                $user_price_column = App\Helpers\UserHelper::getUserPriceColumn();
+                                                foreach ($option->price as $price) {
+                                                    $retail_price = $price->$user_price_column;
+                                                }
+                                                ?>
+                                                <h4 text="{{ $retail_price }}" class="text-uppercase mb-0 text-center p_price_resp mt-0">
+                                                    ${{ number_format($retail_price, 2) }}</h4>
+                                                <p class="category-cart-page  mt-3 mb-0">
+                                                    {{'No of purchases: ' . $top_seller->selling_count}}
+                                                </p>
+                                            </div>
+                                            <div class="col-md-12 add-to-cart-button-section mt-2">
+                                                <a href="{{url('/user')}}" class="btn landing_page_top_seller_add_to_cart w-100">Add to Cart</a>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-
-                                <h4 class="thumbnail-items text-center mt-5">Nationwide Shipping</h4>
-                                <p class="thumbnail-pra mt-3 nation_wide_para">with multiple warehouses you can get the supplies you need
-                                    delivered to
-                                    your door faster</p>
-                            </div>
-                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xs-12 mt-5 p-0">
-                                <div class="d-flex align-items-center justify-content-center">
-                                    <img src="/theme/img/Icon_lowest_prices.png" class="img-fluid" alt="">
-                                </div>
-                                <h4 class="thumbnail-items text-center mt-5">Lowest Prices</h4>
-                                <p class="thumbnail-pra mt-3 nation_wide_para">we purchase in bulk so you don’t have to</p>
-                            </div>
-                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xs-12 mt-5 p-0">
-                                <div class="d-flex align-items-center justify-content-center">
-                                    <img src="/theme/img/Icon_quality.png" class="img-fluid" alt="">
-                                </div>
-                                <h4 class="thumbnail-items text-center mt-5">Quality Products</h4>
-                                <p class="thumbnail-pra mt-3 nation_wide_para">we only carry products that we stand by, we honor all
-                                    manufacturer
-                                    warranties</p>
-                            </div>
-                        </div>
+                            @endforeach
+                        @endforeach
                     </div>
                 </div>
             </div>
         </div>
+        @endif
+            {{-- our advantages  --}}
+            <div class="bg-white">
+                <div class="row justify-content-center ">
+                    <div class="col-md-4 mt-5">
+                        <h5 class="text-center landing_page_advantage_header">
+                            OUR ADVANTAGES
+                        </h5>
+                    </div>
+                </div>
+                <div class="row justify-content-center mt-3">
+                    <div class="col-md-9">
+                        <div class="row">
+                            <div class="col-md-6  col-sm-6 col-xs-12 col-lg-4 col-xl-4 landing_adv_div border-0 d-flex justify-content-center">
+                                <div class="card landing_adv_card w-75">
+                                    <img class="card-img-top" style="height: 13rem;" src="{{asset('theme/img/landing_page/advantage_Frame_1.png')}}" alt="Card image cap">
+                                    <div class="card-body mt-5">
+                                        <div class="row mt-5">
+                                            <div class="col-md-12">
+                                                <h5 class="card-title text-center ">Nationwide Shipping</h5>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <p class="landing_advantage_card_text card-text">Free Shipping from $10000</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6  col-sm-6 col-xs-12 col-lg-4 col-xl-4 landing_adv_div border-0 d-flex justify-content-center">
+                                <div class="card  landing_adv_card w-75">
+                                    <img class="card-img-top" style="height: 13rem;" src="{{asset('theme/img/landing_page/advantage_Frame_2.png')}}"  alt="Card image cap">
+                                    <div class="card-body mt-5">
+                                        <div class="row mt-5">
+                                            <div class="col-md-12">
+                                                <h5 class="card-title text-center ">Lowest prices on the market</h5>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <p class="landing_advantage_card_text card-text">We ensure that we offer the lowest prices on the market.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6  col-sm-6 col-xs-12 col-lg-4 col-xl-4 landing_adv_div border-0 d-flex justify-content-center">
+                                <div class="card landing_adv_card w-75">
+                                    <img class="card-img-top" style="height: 13rem;" src="{{asset('theme/img/landing_page/advantage_Frame_3.png')}}"  alt="Card image cap">
+                                    <div class="card-body mt-5">
+                                        <div class="row mt-5">
+                                            <div class="col-md-12">
+                                                <h5 class="card-title text-center ">Quality Products</h5>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <p class="landing_advantage_card_text card-text">more than 3000 references available</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row justify-content-center ">
+                    <div class="col-md-4 mt-5 d-flex justify-content-center">
+                        <a class="btn landing_see_all_products w-50" href="{{url('/products')}}">See All Products</a>
+                    </div>
+                </div>
+            </div>
     </main>
     <style>
 
