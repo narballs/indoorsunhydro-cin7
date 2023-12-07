@@ -1,3 +1,18 @@
+<style>
+    .slider_image_div {
+        max-height: 250px;
+        min-height: 250px;
+    }
+    .ft-size-slider-product {
+        font-size: 12px;
+    }
+    .button-cards-product-slider {
+        background-color: #7BC533 !important;
+        color: #ffffff !important;
+        border: 1px solid #7BC533 !important;
+        font-size: 14px;
+    }
+</style>
 @if (!empty($product_views) && count($product_views) > 0)
     <div class="w-100  mt-3">
         <p class="recent_view_header fw-bold fs-2 my-auto border-0 text-white text-center align-middle text-uppercase p-2 mb-0">
@@ -26,7 +41,7 @@
                                             </a>
                                         @endif
                                         <a href="{{ url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug) }}">
-                                            <div class="image-height-mbl" style="height: 300px;">
+                                            <div class="image-height-mbl slider_image_div">
                                                 <span class="d-flex justify-content-center align-items-center">
                                                     <img src="{{ $product->images }}" class="img_responsive_mbl col-md-10 .image-body offset-1 mt-2"
                                                         style="" />
@@ -35,7 +50,7 @@
                                         </a>
                                     @else
                                         <a href="{{ url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug) }}">
-                                            <div class="image-height-mbl"  style="height: 300px;">
+                                            <div class="image-height-mbl slider_image_div">
                                                 <span class="d-flex justify-content-center align-items-center">
                                                     <img src=" {{ asset('theme/img/image_not_available.png') }}" class="img_responsive_mbl_not_available col-md-10 .image-body offset-1 mt-2"
                                                     style="" />
@@ -43,10 +58,10 @@
                                             </div>
                                         </a>
                                     @endif
-                                    <div class="card-body d-flex flex-column text-center mt-2 prd_mbl_card_bdy">
+                                    <div class="card-body d-flex flex-column text-center mt-2 prd_mbl_card_bdy p-0">
                                         <h5 class="card-title card_product_title tooltip-product" style="font-weight: 500;font-size: 16px;" id="product_name_{{ $product->id }}">
                                             <a class="product-row-product-title" href="{{ url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug) }}">
-                                                {{ \Illuminate\Support\Str::limit($product->name, 33) }}
+                                                {{ \Illuminate\Support\Str::limit($product->name, 20) }}
                                                 <div class="tooltip-product-text bg-white text-primary">
                                                     <div class="tooltip-arrow"></div>
                                                     <div class="tooltip-inner bg-white text-primary">
@@ -92,29 +107,26 @@
                                                 $bought_products_count = $product->apiorderItem->where('created_at','>=',$date)->count();
                                             ?>
                                             @if (!empty($last_month_views))
-                                                <p class="text-dark mb-0 ft-size">{{$last_month_views}}</p>
+                                                <p class="text-dark mb-0 ft-size ft-size-slider-product">{{$last_month_views}}</p>
                                             @endif
                                             @if ($bought_products_count > 0)
-                                                <small class="text-dark ft-size">{{$bought_products_count . '  bought in the past month'}}</small>
+                                                <small class="text-dark ft-size ft-size-slider-product">{{$bought_products_count}} {{'bought in the past month'}}</small>
                                             @endif
                                         </div>
                                         <div class="col-md-12 add-to-cart-button-section">
                                             @if ($enable_add_to_cart)
                                                 <button 
-                                                    class="hover_effect prd_btn_resp ajaxSubmit button-cards col w-100  mb-1" 
-                                                    type="submit" 
-                                                    style="max-height: 46px;" id="ajaxSubmit_{{ $product->id }}"
+                                                    class="btn hover_effect prd_btn_resp p-2 ajaxSubmit button-cards-product-slider col w-100  mb-1" 
+                                                    type="submit" id="ajaxSubmit_{{ $product->id }}"
                                                     onclick="updateCart('{{ $product->id }}', '{{ $option->option_id }}')"
                                                 >
                                                     Add to cart
                                                 </button>
                                             @else
                                                 <button 
-                                                    class="prd_btn_resp ajaxSubmit mb-3 text-white bg-danger bg-gradient button-cards col w-100 autocomplete=off"
+                                                    class="btn prd_btn_resp p-2 ajaxSubmit mb-1 text-white bg-danger bg-gradient button-cards-product-slider col w-100 autocomplete=off"
                                                     tabindex="-1" 
-                                                    type="submit" 
-                                                    style="max-height: 46px;" 
-                                                    id="ajaxSubmit_{{ $product->id }}"
+                                                    type="submit" id="ajaxSubmit_{{ $product->id }}"
                                                     disabled 
                                                     onclick="return updateCart('{{ $product->id }}')">Out of Stock</button>
                                             @endif
