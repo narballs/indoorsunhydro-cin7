@@ -36,7 +36,11 @@
                                                 </div>
                                                 <div class="card-body">
                                                     @php
-                                                       $secondary_contacts = App\Models\Contact::withTrashed()->with('allow_user')->where('company', $company->company)->get();
+                                                       $secondary_contacts = App\Models\Contact::withTrashed()
+                                                       ->with('allow_user')
+                                                       ->where('company', $company->company)
+                                                       ->groupBY('email' , DB::raw('where deleted_at' != ''))
+                                                       ->get();
                                                     @endphp
                                                     <div class="table-responsive">
                                                         <table class="table address-table-items-data m-0 ">
