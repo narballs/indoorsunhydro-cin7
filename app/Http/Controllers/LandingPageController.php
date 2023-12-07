@@ -12,9 +12,10 @@ class LandingPageController extends Controller
     public function index()
     {
         $products = Product::with('options', 'options.defaultPrice','brand', 'options.products','categories' ,'apiorderItem' , 'product_stock')
-        ->whereHas('product_stock', function ($query) {
-            $query->where('stockAvailable', '>=', 5);
-        })
+        // ->whereHas('product_stock', function ($query) {
+        //     $query->where('stockAvailable', '>=', 5);
+        // })
+        ->where('stockAvailable' ,'>=', 5)
         ->where('status' , '!=' , 'Inactive')
         ->orderby('created_at', 'desc')
         ->take(4)
