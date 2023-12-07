@@ -114,6 +114,7 @@
         /* Custom hover styles */
         
     </style>
+    <link rel="stylesheet" href="{{asset('theme/landing_page/landing_page_style.css')}}">
 </head>
 <div class="spinner-border text-success hide_default" role="status" id="spinner-global">
     <span class="sr-only">Loading...</span>
