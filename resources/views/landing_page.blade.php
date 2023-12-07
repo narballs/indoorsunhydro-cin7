@@ -340,8 +340,8 @@
                         <div class="row">
                             <div class="col-md-6  col-sm-6 col-xs-12 col-lg-4 col-xl-4 landing_adv_div border-0 d-flex justify-content-center">
                                 <div class="card landing_adv_card w-75">
-                                    <img class="card-img-top" style="height: 13rem;" src="{{asset('theme/img/landing_page/advantage_Frame_1.png')}}" alt="Card image cap">
                                     <div class="card-body mt-5">
+                                        <img class="card-img-top" style="height: 13rem;" src="{{asset('theme/img/landing_page/advantage_Frame_1.png')}}" alt="Card image cap">
                                         <div class="row mt-5">
                                             <div class="col-md-12">
                                                 <h5 class="card-title text-center ">Nationwide Shipping</h5>
@@ -355,8 +355,8 @@
                             </div>
                             <div class="col-md-6  col-sm-6 col-xs-12 col-lg-4 col-xl-4 landing_adv_div border-0 d-flex justify-content-center">
                                 <div class="card  landing_adv_card w-75">
-                                    <img class="card-img-top" style="height: 13rem;" src="{{asset('theme/img/landing_page/advantage_Frame_2.png')}}"  alt="Card image cap">
                                     <div class="card-body mt-5">
+                                        <img class="card-img-top" style="height: 13rem;" src="{{asset('theme/img/landing_page/advantage_Frame_2.png')}}"  alt="Card image cap">
                                         <div class="row mt-5">
                                             <div class="col-md-12">
                                                 <h5 class="card-title text-center ">Lowest prices on the market</h5>
@@ -370,8 +370,8 @@
                             </div>
                             <div class="col-md-6  col-sm-6 col-xs-12 col-lg-4 col-xl-4 landing_adv_div border-0 d-flex justify-content-center">
                                 <div class="card landing_adv_card w-75">
-                                    <img class="card-img-top" style="height: 13rem;" src="{{asset('theme/img/landing_page/advantage_Frame_3.png')}}"  alt="Card image cap">
                                     <div class="card-body mt-5">
+                                        <img class="card-img-top" style="height: 13rem;" src="{{asset('theme/img/landing_page/advantage_Frame_3.png')}}"  alt="Card image cap">
                                         <div class="row mt-5">
                                             <div class="col-md-12">
                                                 <h5 class="card-title text-center ">Quality Products</h5>
