@@ -1,0 +1,212 @@
+.landing_page_banner {
+    background-image: url('/theme/img/landing_page_banner.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    height: 70vh;
+}
+.landing-page-form-label {
+    color: #242424;
+    font-family: 'Poppins';
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20.307px; /* 126.917% */
+} 
+.landing-page-form-input {
+    border-radius: 4px;
+    border: 0.846px solid #E1E1E1;
+    background: #FFFFFF;
+    box-shadow: 0px 0.846px 1.692px 0px rgba(16, 24, 40, 0.05);
+    color: #828282;
+    font-family: 'Poppins';
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20.307px; /* 126.917% */
+}
+.landing_page_get_pricing {
+    border-radius: 4px;
+    background-color: #7CC633;
+    color: #FFF;
+    text-align: center;
+    font-family: 'Poppins';
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    letter-spacing: 0.08px;
+}
+.pipeline_div {
+    background: #7CC633;
+    width: 12px !important;
+    height: 126px;
+} 
+.landing_page_main_heading {
+    color: #FFF;
+    font-family: 'Poppins';
+    font-size: 60px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 120%; /* 72px */
+    letter-spacing: 1.2px;
+}
+.landing_page_banner_para {
+    color: #FFF;
+    font-family: 'Poppins';
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 176.25%; /* 42.3px */
+}
+.product_slider_div {
+    background-image: url('/theme/img/landing_page/landing_product_background_image.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+.landing_add_to_cart {
+    border-radius: 5px;
+    background: #7CC633;
+    color: #FFF;
+    font-family: 'Poppins';
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: 0.54px;
+    text-transform: uppercase;
+}
+.landing_product_name {
+    color: #FFF;
+    font-family: 'Poppins';
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+.landing_product_price {
+    color: #FFF;
+    text-align: center;
+    font-family: 'Poppins';
+    font-size: 36px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+.landing_product_created {
+    color: #FFF;
+    text-align: center;
+    font-family: 'Poppins';
+    font-size: 15.986px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    letter-spacing: 0.799px;
+    text-transform: uppercase;
+}
+.landing_page_product_header {
+    color: #FFF;
+    text-align: center;
+    font-family: 'Poppins';
+    font-size: 36px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+.landing_page_seller_header {
+    color: #1A1A1A;
+    text-align: center;
+    font-family: 'Poppins';
+    font-size: 36px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+.landing_page_advantage_header {
+    color: #1A1A1A;
+    text-align: center;
+    font-family: 'Poppins';
+    font-size: 36px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+#owl-carousel-landing-page > .owl-nav > .owl-prev{
+    left : -200px !important;
+    top: 40%
+}
+#owl-carousel-landing-page > .owl-nav > .owl-next{
+    right : -200px !important;
+    top: 40%;
+}
+.landing_page_top_seller_add_to_cart {
+    text-decoration: none;
+    border-radius: 5px;
+    background-color: #7BC533;
+    color: #FFF;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: 1.066px;
+    text-transform: uppercase;
+}
+.landing_page_top_seller_add_to_cart:hover {
+    background-color: #7BC533;
+    color: #fff;
+}
+.landing_adv_card {
+    border-radius: 5px;
+    border-top: 1px solid #ECECEC;
+    border-right: 1px solid #ECECEC;
+    border-bottom: 1px solid #ECECEC;
+    border-left: 1px solid #ECECEC;
+    background: #FBFBFB;
+    min-height:547px;
+}
+.landing_advantage_card_header {
+    color: #000;
+    text-align: center;
+    font-family: 'Poppins';
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+.landing_advantage_card_text {
+    color: #747474;
+    text-align: center;
+    font-family: 'Poppins';
+    /* font-size: 20px; */
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+.landing_see_all_products {
+    border-radius: 4px;
+    background: #7CC633;
+    color: #FFF;
+    text-align: center;
+    font-family: 'Poppins';
+    /* font-size: 22px; */
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    letter-spacing: 0.11px;
+}
+.landing_see_all_products:hover {
+    background: #7CC633;
+    color: #FFF;
+}
+.landing_see_all_inquiry {
+    border-radius: 5px;
+    background-color: #7CC633;
+    color: #FFF;
+    font-family: 'Poppins';
+    /* font-size: 16px; */
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    text-transform: uppercase;
+}

@@ -1,218 +1,4 @@
 @include('partials.header')
-<style>
-    .landing_page_banner {
-        background-image: url('/theme/img/landing_page_banner.png');
-        background-repeat: no-repeat;
-        background-size: cover;
-        background-position: center;
-        height: 70vh;
-    }
-    .landing-page-form-label {
-        color: #242424;
-        font-family: 'Poppins';
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 20.307px; /* 126.917% */
-    } 
-    .landing-page-form-input {
-        border-radius: 4px;
-        border: 0.846px solid #E1E1E1;
-        background: #FFFFFF;
-        box-shadow: 0px 0.846px 1.692px 0px rgba(16, 24, 40, 0.05);
-        color: #828282;
-        font-family: 'Poppins';
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 20.307px; /* 126.917% */
-    }
-    .landing_page_get_pricing {
-        border-radius: 4px;
-        background-color: #7CC633;
-        color: #FFF;
-        text-align: center;
-        font-family: 'Poppins';
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: normal;
-        letter-spacing: 0.08px;
-    }
-    .pipeline_div {
-        background: #7CC633;
-        width: 12px !important;
-        height: 126px;
-    } 
-    .landing_page_main_heading {
-        color: #FFF;
-        font-family: 'Poppins';
-        font-size: 60px;
-        font-style: normal;
-        font-weight: 700;
-        line-height: 120%; /* 72px */
-        letter-spacing: 1.2px;
-    }
-    .landing_page_banner_para {
-        color: #FFF;
-        font-family: 'Poppins';
-        font-size: 24px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 176.25%; /* 42.3px */
-    }
-    .product_slider_div {
-        background-image: url('/theme/img/landing_page/landing_product_background_image.png');
-        background-repeat: no-repeat;
-        background-size: cover;
-        background-position: center;
-    }
-    .landing_add_to_cart {
-        border-radius: 5px;
-        background: #7CC633;
-        color: #FFF;
-        font-family: 'Poppins';
-        font-size: 18px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: normal;
-        letter-spacing: 0.54px;
-        text-transform: uppercase;
-    }
-    .landing_product_name {
-        color: #FFF;
-        font-family: 'Poppins';
-        font-size: 24px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: normal;
-    }
-    .landing_product_price {
-        color: #FFF;
-        text-align: center;
-        font-family: 'Poppins';
-        font-size: 36px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: normal;
-    }
-    .landing_product_created {
-        color: #FFF;
-        text-align: center;
-        font-family: 'Poppins';
-        font-size: 15.986px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: normal;
-        letter-spacing: 0.799px;
-        text-transform: uppercase;
-    }
-    .landing_page_product_header {
-        color: #FFF;
-        text-align: center;
-        font-family: 'Poppins';
-        font-size: 36px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: normal;
-    }
-    .landing_page_seller_header {
-        color: #1A1A1A;
-        text-align: center;
-        font-family: 'Poppins';
-        font-size: 36px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: normal;
-    }
-    .landing_page_advantage_header {
-        color: #1A1A1A;
-        text-align: center;
-        font-family: 'Poppins';
-        font-size: 36px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: normal;
-    }
-    #owl-carousel-landing-page > .owl-nav > .owl-prev{
-        left : -200px !important;
-        top: 40%
-    }
-    #owl-carousel-landing-page > .owl-nav > .owl-next{
-        right : -200px !important;
-        top: 40%;
-    }
-    .landing_page_top_seller_add_to_cart {
-        text-decoration: none;
-        border-radius: 5px;
-        background-color: #7BC533;
-        color: #FFF;
-        font-family: 'Poppins';
-        font-style: normal;
-        font-weight: 600;
-        line-height: normal;
-        letter-spacing: 1.066px;
-        text-transform: uppercase;
-    }
-    .landing_page_top_seller_add_to_cart:hover {
-        background-color: #7BC533;
-        color: #fff;
-    }
-    .landing_adv_card {
-        border-radius: 5px;
-        border-top: 1px solid #ECECEC;
-        border-right: 1px solid #ECECEC;
-        border-bottom: 1px solid #ECECEC;
-        border-left: 1px solid #ECECEC;
-        background: #FBFBFB;
-        min-height:547px;
-    }
-    .landing_advantage_card_header {
-        color: #000;
-        text-align: center;
-        font-family: 'Poppins';
-        font-size: 24px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: normal;
-    }
-    .landing_advantage_card_text {
-        color: #747474;
-        text-align: center;
-        font-family: 'Poppins';
-        /* font-size: 20px; */
-        font-style: normal;
-        font-weight: 400;
-        line-height: normal;
-    }
-    .landing_see_all_products {
-        border-radius: 4px;
-        background: #7CC633;
-        color: #FFF;
-        text-align: center;
-        font-family: 'Poppins';
-        /* font-size: 22px; */
-        font-style: normal;
-        font-weight: 500;
-        line-height: normal;
-        letter-spacing: 0.11px;
-    }
-    .landing_see_all_products:hover {
-        background: #7CC633;
-        color: #FFF;
-    }
-    .landing_see_all_inquiry {
-        border-radius: 5px;
-        background-color: #7CC633;
-        color: #FFF;
-        font-family: 'Poppins';
-        /* font-size: 16px; */
-        font-style: normal;
-        font-weight: 600;
-        line-height: normal;
-        text-transform: uppercase;
-    }
-</style>
 <body>
     <main style="overflow-x: hidden;">
         @include('partials.top-bar')
@@ -399,6 +185,7 @@
             </div>
         </div>
         {{-- new products --}}
+        @if (!empty($products) && count($products) > 0)
         <div class="product_slider_div">
             <div class="row justify-content-center ">
                 <div class="col-md-4 mt-5">
@@ -408,60 +195,59 @@
                 </div>
             </div>
             <div class="row">
-                @if (!empty($products) && count($products) > 0)
-                    <div class="w-100">
-                        <div class="row justify-content-center">
-                            <div class="col-md-8">
-                                <div class="owl-carousel owl-theme" id="owl-carousel-landing-page">
-                                    @foreach($products as $product)
-                                        @foreach ($product->options as $option)
-                                            <?php
-                                                $retail_price = 0;
-                                                $user_price_column = App\Helpers\UserHelper::getUserPriceColumn();
-                                                foreach ($option->price as $price) {
-                                                    $retail_price = $price->$user_price_column;
-                                                }
-                                            ?>
-                                            <div class="item">
-                                                <div class="card border-0 d-flex align-items-center justify-content-center" style="height: 298px;">
-                                                    @if ($product->images != '')
-                                                        <a href="{{ url('/products') }}">
-                                                            <img class="card-img-top" style="max-height: 250px; max-width:300px;" src="{{ $product->images }}" alt="Card image cap">
-                                                        </a>
-                                                    @else
-                                                        <a href="{{ url('/products') }}">
-                                                            <img class="card-img-top" style="max-height: 250px; max-width:300px;" src=" {{ asset('theme/img/image_not_available.png') }}" alt="Card image cap">
-                                                        </a>
-                                                    @endif
+                <div class="w-100">
+                    <div class="row justify-content-center">
+                        <div class="col-md-8">
+                            <div class="owl-carousel owl-theme" id="owl-carousel-landing-page">
+                                @foreach($products as $product)
+                                    @foreach ($product->options as $option)
+                                        <?php
+                                            $retail_price = 0;
+                                            $user_price_column = App\Helpers\UserHelper::getUserPriceColumn();
+                                            foreach ($option->price as $price) {
+                                                $retail_price = $price->$user_price_column;
+                                            }
+                                        ?>
+                                        <div class="item">
+                                            <div class="card border-0 d-flex align-items-center justify-content-center" style="height: 298px;">
+                                                @if ($product->images != '')
+                                                    <a href="{{ url('/products') }}">
+                                                        <img class="card-img-top" style="max-height: 250px; max-width:300px;" src="{{ $product->images }}" alt="Card image cap">
+                                                    </a>
+                                                @else
+                                                    <a href="{{ url('/products') }}">
+                                                        <img class="card-img-top" style="max-height: 250px; max-width:300px;" src=" {{ asset('theme/img/image_not_available.png') }}" alt="Card image cap">
+                                                    </a>
+                                                @endif
+                                            </div>
+                                            <div class="row mt-3 mb-5">
+                                                <div class="col-md-12">
+                                                    <a href="{{ url('/products') }}"><h5 class="text-center landing_product_name" title="{{$product->name}}">{{ \Illuminate\Support\Str::limit($product->name, 20) }}</h5></a>
+                                                    <h5 class="text-center landing_product_price">${{ number_format($retail_price, 2) }}</h5>
+                                                    @php
+                                                        $monthNum = date("m",strtotime($product->created_at));
+                                                        $day = date("l",strtotime($product->created_at));
+                                                        $dateObj   = DateTime::createFromFormat('!m', $monthNum);
+                                                        $monthName = $dateObj->format('F');
+                                                        $day = date('d', strtotime($product->created_at)); 
+                                                        $year = date('Y', strtotime($product->created_at)); 
+                                                    @endphp
+                                                    <p class="text-center landing_product_created">{{'Added on '}} {{$day .' '. $monthName .' '.$year}} </p>
                                                 </div>
-                                                <div class="row mt-3 mb-5">
-                                                    <div class="col-md-12">
-                                                        <a href="{{ url('/products') }}"><h5 class="text-center landing_product_name" title="{{$product->name}}">{{ \Illuminate\Support\Str::limit($product->name, 20) }}</h5></a>
-                                                        <h5 class="text-center landing_product_price">${{ number_format($retail_price, 2) }}</h5>
-                                                        @php
-                                                            $monthNum = date("m",strtotime($product->created_at));
-                                                            $day = date("l",strtotime($product->created_at));
-                                                            $dateObj   = DateTime::createFromFormat('!m', $monthNum);
-                                                            $monthName = $dateObj->format('F');
-                                                            $day = date('d', strtotime($product->created_at)); 
-                                                            $year = date('Y', strtotime($product->created_at)); 
-                                                        @endphp
-                                                        <p class="text-center landing_product_created">{{'Added on '}} {{$day .' '. $monthName .' '.$year}} </p>
-                                                    </div>
-                                                    <div class="col-md-12 text-center">
-                                                        <a href="{{url('/user')}}" class="btn landing_add_to_cart w-75">Add to Cart</a>
-                                                    </div>
+                                                <div class="col-md-12 text-center">
+                                                    <a href="{{url('/user')}}" class="btn landing_add_to_cart w-75">Add to Cart</a>
                                                 </div>
                                             </div>
-                                        @endforeach
+                                        </div>
                                     @endforeach
-                                </div>
+                                @endforeach
                             </div>
                         </div>
                     </div>
-                @endif
+                </div>
             </div>
         </div>
+        @endif
         {{-- best sellers --}}
         @if (count($top_sellers) > 0)
         <div class="bg-white pb-5">
@@ -680,90 +466,6 @@
             }
         }
     </style>
-    <script>
-        function updateCart(id, option_id) {
-            jQuery.ajax({
-                url: "{{ url('/add-to-cart/') }}",
-                method: 'post',
-                data: {
-                    "_token": "{{ csrf_token() }}",
-                    p_id: jQuery('#p_' + id).val(),
-                    option_id: option_id,
-                    quantity: 1
-                },
-                success: function(response) {
-                    if (response.status == 'success') {
-                        var cart_items = response.cart_items;
-                        var cart_total = 0;
-                        var total_cart_quantity = 0;
-    
-                        for (var key in cart_items) {
-                            var item = cart_items[key];
-    
-                            var product_id = item.prd_id;
-                            var price = parseFloat(item.price);
-                            var quantity = parseFloat(item.quantity);
-    
-                            var subtotal = parseInt(price * quantity);
-                            var cart_total = cart_total + subtotal;
-                            var total_cart_quantity = total_cart_quantity + quantity;
-                            $('#subtotal_' + product_id).html('$' + subtotal);
-                            console.log(item.name);
-                            var product_name = document.getElementById("product_name_" + jQuery('#p_' + id)
-                                .val()).innerHTML;
-                        }
-                        Swal.fire({
-                            toast: true,
-                            icon: 'success',
-                            title: jQuery('#quantity').val() + ' X ' + product_name +
-                                ' added to your cart',
-                            timer: 3000,
-                            showConfirmButton: false,
-                            position: 'top',
-                            timerProgressBar: true
-                        });
-                    }
-                    $('#top_cart_quantity').html(total_cart_quantity);
-                    $('#topbar_cart_total').html('$' + parseFloat(cart_total).toFixed(2));
-                    var total = document.getElementById('#top_cart_quantity');
-                }
-            });
-    
-            return false;
-        }
-    
-        function addToList(product_id, option_id, status) {
-            var list_id = $("input[name='list_id']:checked").val();
-            var option_id = option_id;
-            $.ajax({
-                url: "{{ url('/add-to-wish-list/') }}",
-                method: 'post',
-                data: {
-                    "_token": "{{ csrf_token() }}",
-                    product_id,
-                    option_id,
-                    quantity: 1,
-                    list_id,
-                    status,
-                },
-    
-    
-                success: function(success) {
-                    if (success.success == true) {
-                        $('.fav-' + option_id).toggleClass('text-muted');
-                    } else {
-                        Swal.fire(
-                            'Warning!',
-                            'Please make sure you are logged in and selected a company.',
-                            'warning',
-                        );
-                    }
-    
-                }
-            });
-            return false;
-        }
-    </script>
     @include('partials.product-footer')
     @include('partials.footer')
     
