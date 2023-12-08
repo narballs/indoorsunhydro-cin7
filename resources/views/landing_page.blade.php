@@ -22,7 +22,7 @@
         </div>
         @include('landing_page_partials.banner')
         
-        <div class="bg-white pb-5">
+        <div class="bg-white">
             <div class="row justify-content-center mt-5">
                 <div class="col-md-10">
                     <div class="row">
@@ -188,6 +188,72 @@
                 </div>
             </div>
         </div>
+        {{-- our advantages  --}}
+        <div class="bg-white mb-3">
+            <div class="row justify-content-center ">
+                <div class="col-md-4 mt-5">
+                    <h5 class="text-center landing_page_advantage_header">
+                        OUR ADVANTAGES
+                    </h5>
+                </div>
+            </div>
+            <div class="row justify-content-center mt-3">
+                <div class="col-md-9">
+                    <div class="row">
+                        <div class="col-md-6  col-sm-6 col-xs-12 col-lg-4 col-xl-4 landing_adv_div border-0 d-flex justify-content-center">
+                            <div class="card landing_adv_card w-75">
+                                <div class="card-body mt-5">
+                                    <img class="card-img-top" style="height: 13rem;" src="{{asset('theme/img/landing_page/advantage_Frame_1.png')}}" alt="Card image cap">
+                                    <div class="row mt-5">
+                                        <div class="col-md-12">
+                                            <h5 class="card-title text-center ">Nationwide Shipping</h5>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <p class="landing_advantage_card_text card-text">Free Shipping from $10000</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6  col-sm-6 col-xs-12 col-lg-4 col-xl-4 landing_adv_div border-0 d-flex justify-content-center">
+                            <div class="card  landing_adv_card w-75">
+                                <div class="card-body mt-5">
+                                    <img class="card-img-top" style="height: 13rem;" src="{{asset('theme/img/landing_page/advantage_Frame_2.png')}}"  alt="Card image cap">
+                                    <div class="row mt-5">
+                                        <div class="col-md-12">
+                                            <h5 class="card-title text-center ">Lowest prices on the market</h5>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <p class="landing_advantage_card_text card-text">We ensure that we offer the lowest prices on the market.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6  col-sm-6 col-xs-12 col-lg-4 col-xl-4 landing_adv_div border-0 d-flex justify-content-center">
+                            <div class="card landing_adv_card w-75">
+                                <div class="card-body mt-5">
+                                    <img class="card-img-top" style="height: 13rem;" src="{{asset('theme/img/landing_page/advantage_Frame_3.png')}}"  alt="Card image cap">
+                                    <div class="row mt-5">
+                                        <div class="col-md-12">
+                                            <h5 class="card-title text-center ">Quality Products</h5>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <p class="landing_advantage_card_text card-text">more than 3000 references available</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-center ">
+                <div class="col-md-4 mt-5 d-flex justify-content-center">
+                    <a class="btn landing_see_all_products w-50" href="{{url('/products')}}">See All Products</a>
+                </div>
+            </div>
+        </div>
         {{-- new products --}}
         @if (!empty($products) && count($products) > 0)
         <div class="product_slider_div">
@@ -330,72 +396,6 @@
             </div>
         </div>
         @endif
-            {{-- our advantages  --}}
-            <div class="bg-white">
-                <div class="row justify-content-center ">
-                    <div class="col-md-4 mt-5">
-                        <h5 class="text-center landing_page_advantage_header">
-                            OUR ADVANTAGES
-                        </h5>
-                    </div>
-                </div>
-                <div class="row justify-content-center mt-3">
-                    <div class="col-md-9">
-                        <div class="row">
-                            <div class="col-md-6  col-sm-6 col-xs-12 col-lg-4 col-xl-4 landing_adv_div border-0 d-flex justify-content-center">
-                                <div class="card landing_adv_card w-75">
-                                    <div class="card-body mt-5">
-                                        <img class="card-img-top" style="height: 13rem;" src="{{asset('theme/img/landing_page/advantage_Frame_1.png')}}" alt="Card image cap">
-                                        <div class="row mt-5">
-                                            <div class="col-md-12">
-                                                <h5 class="card-title text-center ">Nationwide Shipping</h5>
-                                            </div>
-                                            <div class="col-md-12">
-                                                <p class="landing_advantage_card_text card-text">Free Shipping from $10000</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6  col-sm-6 col-xs-12 col-lg-4 col-xl-4 landing_adv_div border-0 d-flex justify-content-center">
-                                <div class="card  landing_adv_card w-75">
-                                    <div class="card-body mt-5">
-                                        <img class="card-img-top" style="height: 13rem;" src="{{asset('theme/img/landing_page/advantage_Frame_2.png')}}"  alt="Card image cap">
-                                        <div class="row mt-5">
-                                            <div class="col-md-12">
-                                                <h5 class="card-title text-center ">Lowest prices on the market</h5>
-                                            </div>
-                                            <div class="col-md-12">
-                                                <p class="landing_advantage_card_text card-text">We ensure that we offer the lowest prices on the market.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6  col-sm-6 col-xs-12 col-lg-4 col-xl-4 landing_adv_div border-0 d-flex justify-content-center">
-                                <div class="card landing_adv_card w-75">
-                                    <div class="card-body mt-5">
-                                        <img class="card-img-top" style="height: 13rem;" src="{{asset('theme/img/landing_page/advantage_Frame_3.png')}}"  alt="Card image cap">
-                                        <div class="row mt-5">
-                                            <div class="col-md-12">
-                                                <h5 class="card-title text-center ">Quality Products</h5>
-                                            </div>
-                                            <div class="col-md-12">
-                                                <p class="landing_advantage_card_text card-text">more than 3000 references available</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row justify-content-center ">
-                    <div class="col-md-4 mt-5 d-flex justify-content-center">
-                        <a class="btn landing_see_all_products w-50" href="{{url('/products')}}">See All Products</a>
-                    </div>
-                </div>
-            </div>
     </main>
     <style>
 
