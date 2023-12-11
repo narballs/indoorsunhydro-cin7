@@ -235,7 +235,7 @@ class ContactController extends Controller
             ->get();
         $user_id = $customer->user_id;
         if (!empty($customer->contact_id)) {
-            $secondary_contacts = Contact::where('parent_id', $customer->contact_id)->get();
+            $secondary_contacts = Contact::withTrashed()->where('parent_id', $customer->contact_id)->get();
         } else {
             $secondary_contacts = '';
         }
