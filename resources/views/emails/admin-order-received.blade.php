@@ -108,10 +108,6 @@
                                                 @if ($addresses['shipping_address']['postalCity'] != null)
                                                 {{$addresses['shipping_address']['postalCity']}}
                                                 @endif
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
                                                 @if ($addresses['shipping_address']['postalState'] != null)
                                                 {{$addresses['shipping_address']['postalState']}}
                                                 @endif
@@ -120,6 +116,16 @@
                                                 @endif
                                             </td>
                                         </tr>
+                                        {{-- <tr>
+                                            <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
+                                                @if ($addresses['shipping_address']['postalState'] != null)
+                                                {{$addresses['shipping_address']['postalState']}}
+                                                @endif
+                                                @if ($addresses['shipping_address']['postalPostCode'] != null)
+                                                {{$addresses['shipping_address']['postalPostCode']}}
+                                                @endif
+                                            </td>
+                                        </tr> --}}
                                         {{-- <tr style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
                                             <td>
                                                 @if ($addresses['shipping_address']['postalPostCode'] != null)
@@ -178,10 +184,6 @@
                                                 @if ($addresses['billing_address']['city'] != null)
                                                 {{$addresses['billing_address']['city']}}
                                                 @endif
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
                                                 @if ($addresses['billing_address']['state'] != null)
                                                 {{$addresses['billing_address']['state']}}
                                                 @endif
@@ -190,6 +192,16 @@
                                                 @endif
                                             </td>
                                         </tr>
+                                        {{-- <tr>
+                                            <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
+                                                @if ($addresses['billing_address']['state'] != null)
+                                                {{$addresses['billing_address']['state']}}
+                                                @endif
+                                                @if ($addresses['billing_address']['zip'] != null)
+                                                {{$addresses['billing_address']['zip']}}
+                                                @endif
+                                            </td>
+                                        </tr> --}}
                                         {{-- <tr style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
                                             <td>
                                                 @if ($addresses['billing_address']['zip'] != null)
