@@ -237,8 +237,8 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/owl.carousel.min.js"></script>
     <script>
         $('#owl-carousel-landing-page').owlCarousel({
-            rtl:true,
-            loop:true,
+            rtl:false,
+            loop:false,
             margin:10,
             dots:false,
             nav:true,
@@ -258,8 +258,8 @@
             }
         });
         $('.owl-carousel').owlCarousel({
-            rtl:true,
-            loop:true,
+            rtl:false,
+            loop:false,
             margin:10,
             nav:true,
             navText: ["<i class='fas fa-angle-left'></i>", "<i class='fas fa-angle-right'></i>"],
