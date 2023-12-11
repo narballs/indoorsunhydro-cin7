@@ -436,7 +436,7 @@ class UserController extends Controller
                             } else {
                                 UserHelper::switch_company($companies[0]->contact_id);
                             }
-                            return view('reset-password', compact('user'));
+                            return redirect('/');
                         }
                     }
                 }
