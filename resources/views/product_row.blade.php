@@ -13,19 +13,18 @@
                 </a>
             @endif
             <a href="{{ url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug) }}">
-                <div class="image-height-mbl" style="height: 300px;">
+                <div class="image-height-mbl" style="min-height: 300px;max-height:300px;">
                     <span class="d-flex justify-content-center align-items-center">
                         <img src="{{ $product->images }}" class="img_responsive_mbl col-md-10 .image-body offset-1 mt-2"
-                            style="" />
+                            style="max-height: 300px;" />
                     </span>
                 </div>
             </a>
         @else
             <a href="{{ url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug) }}">
-                <div class="image-height-mbl"  style="height: 300px;">
+                <div class="image-height-mbl"  style="min-height: 300px;max-height:300px;">
                     <span class="d-flex justify-content-center align-items-center">
-                        <img src=" {{ asset('theme/img/image_not_available.png') }}" class="img_responsive_mbl_not_available col-md-10 .image-body offset-1 mt-2"
-                        style="" />
+                        <img src=" {{ asset('theme/img/image_not_available.png') }}" class="img_responsive_mbl_not_available col-md-10 .image-body offset-1 mt-2" />
                     </span>
                 </div>
             </a>
