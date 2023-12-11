@@ -47,7 +47,7 @@
                                             <div class="image-height-mbl slider_image_div">
                                                 <span class="d-flex justify-content-center align-items-center">
                                                     <img src="{{ $product->images }}" class="img_responsive_mbl col-md-10 .image-body offset-1 mt-2"
-                                                        style="" />
+                                                        style="max-height:250px;" />
                                                 </span>
                                             </div>
                                         </a>
