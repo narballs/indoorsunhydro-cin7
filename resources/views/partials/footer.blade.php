@@ -259,44 +259,92 @@
                 },
             }
         });
-        $('.owl-carousel').owlCarousel({
-            rtl:false,
-            loop:false,
-            margin:10,
-            nav:true,
-            navText: ["<i class='fas fa-angle-left'></i>", "<i class='fas fa-angle-right'></i>"],
-            responsive:{
-                0:{
-                    items:1,
-                    nav:false,
-                    slideBy:1,
-                },
-                600:{
-                    items:2,
-                    nav:false,
-                    slideBy:2,
-                },
-                1000:{
-                    items:3,
-                    slideBy:3,
-                },
-                1200:{
-                    items:4,
-                    slideBy:4,
-                },
-                1400: {
-                    items:6,
-                    slideBy:6,
-                },
-                1800:{
-                    items:8,
-                    slideBy:8,
-                },
-                2250:{
-                    items:10,
-                    slideBy:10,
+        $(document).ready(function() {
+            function calculateItemsToShow() {
+            // Your logic to dynamically calculate the number of items
+                var screenWidth = $(window).width();
+                if (screenWidth > 0 && screenWidth < 600) {
+                    return 1;
+                } 
+                if (screenWidth >= 600 && screenWidth < 1000) {
+                    return 2;
+                }
+                if (screenWidth >= 1000 && screenWidth < 1200) {
+                    return 3;
+                }
+                if (screenWidth >= 1200 && screenWidth < 1400) {
+                    return 4;
+                }
+                if (screenWidth >= 1400 && screenWidth < 1800) {
+                    return 6;
+                }
+                if (screenWidth >= 1800 && screenWidth < 2250) {
+                    return 8;
+                }
+                if (screenWidth >= 2250) {
+                    return 10;
                 }
             }
+            function updateOptions() {
+                var totalItems = $('.similar_items_div').length;
+                var itemsToShow = calculateItemsToShow();
+                var centerItems = totalItems < itemsToShow;
+                if (totalItems >= itemsToShow) {
+                    $('#similar_products_owl_carasoul .owl-stage-outer').removeClass('d-flex');
+                }
+                $('#similar_products_owl_carasoul').owlCarousel({
+                    rtl:false,
+                    loop:false,
+                    // center: centerItems,
+                    margin:10,
+                    nav:true,
+                    navText: ["<i class='fas fa-angle-left'></i>", "<i class='fas fa-angle-right'></i>"],
+                    responsive:{
+                        0:{
+                            items:calculateItemsToShow(),
+                            nav:false,
+                            slideBy:1,
+                        },
+                        600:{
+                            items:calculateItemsToShow(),                    
+                            nav:false,
+                            slideBy:2,
+                        },
+                        1000:{
+                            items:calculateItemsToShow(),                    
+                            slideBy:3,
+                        },
+                        1200:{
+                            items:calculateItemsToShow(),                    
+                            slideBy:4,
+                        },
+                        1400: {
+                            items:calculateItemsToShow(),                    
+                            slideBy:6,
+                        },
+                        1800:{
+                            items:calculateItemsToShow(),                    
+                            slideBy:8,
+                        },
+                        2250:{
+                            items:calculateItemsToShow(),
+                            slideBy:10,
+                        }
+                    }
+                });
+            }
+            updateOptions(); // Initial setup
+
+            // Update options on window resize
+            $(window).resize(function () {
+                updateOptions();
+            });
+
+            var totalItems = $('.similar_items_div').length;
+            var itemsToShow = calculateItemsToShow();
+            var centerItems = totalItems < itemsToShow;
+            if (totalItems >= itemsToShow) {
+                $('#similar_products_owl_carasoul .owl-stage-outer').css('display', 'block');    
+            }
         });
-        
     </script>
