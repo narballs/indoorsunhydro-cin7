@@ -75,26 +75,37 @@
                                                 <div class="mt-4 mb-3"> <span class="text-uppercase text-muted brand"></span>                                                
                                                     <div class="price d-flex flex-row align-items-center">
                                                         @if ($productOption->products->status != 'Inactive')
-                                                        @if ($productOption->stockAvailable > 0)
-                                                        <span class="rounded-pill cursor product-detail-quantity d-flex justify-content-center align-items-center"
-                                                            data-toggle="popover-hover" data-bs-container="body" data-placement="top" data-bs-placement="top"
-                                                            data-bs-content="Top popover" style=" cursor: pointer;"><span class="stock_number">
-                                                                {{$productOption->stockAvailable}}</span></span>
-                                                        <div>
-                                                            <small class="dis-price">&nbsp;</small>
-                                                            <span class="instock-label">IN STOCK</span>
-                                                        </div>
+                                                            @if($stock_updated)
+                                                            <span class="rounded-pill cursor product-detail-quantity d-flex justify-content-center align-items-center"
+                                                                    data-toggle="popover-hover" data-bs-container="body" data-placement="top" data-bs-placement="top"
+                                                                    data-bs-content="Top popover" style=" cursor: pointer;"><span class="stock_number">
+                                                                        {{$total_stock}}</span></span>
+                                                                <div>
+                                                                    <small class="dis-price">&nbsp;</small>
+                                                                    <span class="instock-label">IN STOCK</span>
+                                                                </div>
+                                                            @else
+                                                                @if ($productOption->stockAvailable > 0)
+                                                                    <span class="rounded-pill cursor product-detail-quantity d-flex justify-content-center align-items-center"
+                                                                        data-toggle="popover-hover" data-bs-container="body" data-placement="top" data-bs-placement="top"
+                                                                        data-bs-content="Top popover" style=" cursor: pointer;"><span class="stock_number">
+                                                                            {{$productOption->stockAvailable}}</span></span>
+                                                                    <div>
+                                                                        <small class="dis-price">&nbsp;</small>
+                                                                        <span class="instock-label">IN STOCK</span>
+                                                                    </div>
+                                                                @else
+                                                                    <div>
+                                                                        <small class="dis-price">&nbsp;</small>
+                                                                        <span class="text-danger">{{ App\Helpers\SettingHelper::getSetting('out_of_stock_label', 'OUT OF STOCK');
+                                                                            }}</span>
+                                                                    </div>
+                                                                @endif
+                                                            @endif
                                                         @else
-                                                        <div>
-                                                            <small class="dis-price">&nbsp;</small>
-                                                            <span class="text-danger">{{ App\Helpers\SettingHelper::getSetting('out_of_stock_label', 'OUT OF STOCK');
-                                                                }}</span>
-                                                        </div>
-                                                        @endif
-                                                        @else
-                                                        <div>
-                                                            <small class="dis-price">&nbsp;</small><span class="text-danger">NOT AVAILABLE FOR SALE</span>
-                                                        </div>
+                                                            <div>
+                                                                <small class="dis-price">&nbsp;</small><span class="text-danger">NOT AVAILABLE FOR SALE</span>
+                                                            </div>
                                                         @endif
                                                     </div>
                                                 </div>
