@@ -446,7 +446,7 @@ class ProductController extends Controller
             session()->flash('error', 'This product is not available! Please search another product.');
             return redirect('/products');
         }
-        if (!empty($product->category_id) && !empty($product->brand_id) && !empty($product)) {
+        if (!empty($product->category_id) && !empty($product)) {
             $similar_products = Product::with('options', 'options.defaultPrice','brand', 'options.products','categories' ,'apiorderItem')
             ->where('category_id', $product->category_id)
             ->where('id', '!=', $product->id)
