@@ -1,10 +1,10 @@
 @include('partials.header')
-
 <body>
     <main>
         @include('partials.top-bar')
         @include('partials.search-bar')
         @include('partials.banner')
+        
         <div class="bg-light pb-5">
             <div class="container-sm bg-light">
                 <div class="row mx-0">
@@ -167,6 +167,19 @@
                             </div>
                         </div>
                     </div>
+                    
+                </div>
+            </div>
+            {{-- recent viewed products --}}
+            @if (auth()->user())
+                @include('partials.recent_products_slider')
+            @endif
+        </div>
+
+            {{-- our advantages  --}}
+        <div class="bg-white pb-5">
+            <div class="container-sm bg-white">
+                <div class="row">
                     <div class="col-md-12 home-page-product-section">
                         <div class="row advantages_div">
                             <div class="col-md-12">
@@ -179,7 +192,7 @@
                                 <div class="d-flex align-items-center justify-content-center">
                                     <img src="/theme/img/National shipping.png" class="img-fluid" alt="">
                                 </div>
-        
+
                                 <h4 class="thumbnail-items text-center mt-5">Nationwide Shipping</h4>
                                 <p class="thumbnail-pra mt-3 nation_wide_para">with multiple warehouses you can get the supplies you need
                                     delivered to
@@ -205,15 +218,169 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </main>
+    <style>
 
-    </div>
+        .hover_effect:hover {
+            background-color: #FFFFFF !important;
+            color: #7BC533 !important;
+            border: 1px solid #7BC533 !important;
+        }
+        .product_buys_count {
+            font-size: 11px;
+        }
+        .margin-for-empty {
+            margin-bottom: 1.4rem ;
+        }
+    
+        .price-category-view-section {
+            min-height: 7.7rem;
+        }
+    
+    
+        /* addign tooltip for title of product */
+        /* .tooltip-product {
+          position: relative;
+          display: inline-block;
+        } */
+        .tooltip-product-text {
+            display: none;
+            font-family: 'Poppins';
+            font-style: normal;
+            font-weight: 500;
+            position: absolute;
+            top: 47%;
+            text-align: center;
+            font-size: 12px;
+            /* box-shadow: 1px 1px 4px 4px rgba(0, 0, 0, 0.25); */
+            box-shadow: 0px 4px 4px rgba(146, 130, 130, 0.25);
+        }
+    
+        .tooltip-arrow {
+            width: 0; 
+            height: 0; 
+            border-left: 7px solid transparent;
+            border-right: 7px solid transparent;
+            border-top: 7px solid #fff !important;
+            position: absolute;
+            top: 100%;
+            left: 10%;
+        }
+        .tooltip-product:hover .tooltip-product-text {
+          display: block;
+        }
+        
+        @media screen and (max-width:350px)  and (min-width: 280px){
+            .add-to-cart-button-section {
+                padding: 0px !important;
+            }
+        }
+        @media screen and (max-width:550px)  and (min-width: 280px){
+            .product_buys_count {
+                font-size: 7.5px !important;
+            }
+            .margin-for-empty {
+                margin-bottom: 0.95rem !important;
+            }
+    
+            .ft-size {
+                font-size: 0.5rem;
+            }
+    
+            .price-category-view-section {
+                min-height: 5.7rem;
+            }
+        }
+    </style>
+    <script>
+        function updateCart(id, option_id) {
+            jQuery.ajax({
+                url: "{{ url('/add-to-cart/') }}",
+                method: 'post',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    p_id: jQuery('#p_' + id).val(),
+                    option_id: option_id,
+                    quantity: 1
+                },
+                success: function(response) {
+                    if (response.status == 'success') {
+                        var cart_items = response.cart_items;
+                        var cart_total = 0;
+                        var total_cart_quantity = 0;
+    
+                        for (var key in cart_items) {
+                            var item = cart_items[key];
+    
+                            var product_id = item.prd_id;
+                            var price = parseFloat(item.price);
+                            var quantity = parseFloat(item.quantity);
+    
+                            var subtotal = parseInt(price * quantity);
+                            var cart_total = cart_total + subtotal;
+                            var total_cart_quantity = total_cart_quantity + quantity;
+                            $('#subtotal_' + product_id).html('$' + subtotal);
+                            console.log(item.name);
+                            var product_name = document.getElementById("product_name_" + jQuery('#p_' + id)
+                                .val()).innerHTML;
+                        }
+                        Swal.fire({
+                            toast: true,
+                            icon: 'success',
+                            title: jQuery('#quantity').val() + ' X ' + product_name +
+                                ' added to your cart',
+                            timer: 3000,
+                            showConfirmButton: false,
+                            position: 'top',
+                            timerProgressBar: true
+                        });
+                    }
+                    $('#top_cart_quantity').html(total_cart_quantity);
+                    $('#topbar_cart_total').html('$' + parseFloat(cart_total).toFixed(2));
+                    var total = document.getElementById('#top_cart_quantity');
+                }
+            });
+    
+            return false;
+        }
+    
+        function addToList(product_id, option_id, status) {
+            var list_id = $("input[name='list_id']:checked").val();
+            var option_id = option_id;
+            $.ajax({
+                url: "{{ url('/add-to-wish-list/') }}",
+                method: 'post',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    product_id,
+                    option_id,
+                    quantity: 1,
+                    list_id,
+                    status,
+                },
+    
+    
+                success: function(success) {
+                    if (success.success == true) {
+                        $('.fav-' + option_id).toggleClass('text-muted');
+                    } else {
+                        Swal.fire(
+                            'Warning!',
+                            'Please make sure you are logged in and selected a company.',
+                            'warning',
+                        );
+                    }
+    
+                }
+            });
+            return false;
+        }
+    </script>
     @include('partials.product-footer')
     @include('partials.footer')
+    
 </body>
-
 <script>
     $("#superior_brands").on('click', function() {
         window.location.href = '/products/';

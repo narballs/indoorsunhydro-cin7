@@ -1,5 +1,3 @@
-
-<script src="{{asset('theme/bootstrap5/js/bootstrap_alpha.min.js')}}"></script>
 @php
 $blogs = NavHelper::getBlogs();
 $chunks = $blogs->chunk(3);

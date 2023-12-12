@@ -500,7 +500,9 @@
     </form>
 </div>
 {{-- ipad view end --}}
-
+@if (!empty($similar_products) && count($similar_products) > 0)
+    @include('partials.similar_products_slider')
+@endif
 @include('partials.product-footer')
 @include('partials.footer')
 <style>

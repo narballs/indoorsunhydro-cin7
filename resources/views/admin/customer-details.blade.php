@@ -251,7 +251,7 @@
                                                 <th></th>
                                             </tr>
                                             @foreach ($secondary_contacts as $contact)
-                                                <tr>
+                                                <tr class="{{!empty($contact->deleted_at) ? 'delete_grey' : ''}}" title="{{!empty($contact->deleted_at) ?  'deleted on ' . $contact->deleted_at : ''}}">
                                                     @if ($contact->company)
                                                         <td>
                                                             {{ $contact->company }}
@@ -437,6 +437,9 @@
     <link href="https://fonts.cdnfonts.com/css/poppins" rel="stylesheet">
 
     <style type="text/css">
+        .delete_grey {
+            background-color: #e7e7e7;
+        }
         .text-successs {
             color: #7CC633 !important;
             font-family: 'Poppins', sans-serif !important;

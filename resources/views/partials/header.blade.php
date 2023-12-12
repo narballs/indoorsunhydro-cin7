@@ -29,8 +29,92 @@
     <link href="https://fonts.cdnfonts.com/css/regular" rel="stylesheet">
 
     <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+
+    {{-- owl carasoul --}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/assets/owl.carousel.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/assets/owl.theme.default.min.css">
+
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{asset('theme/bootstrap5/js/bootstrap_alpha.min.js')}}"></script>
+    <style>
+        .carousel-indicators li {
+            background-color: grey;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        .carousel-indicators .active{
+            background-color: #7BC533;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+        }
+        .left-right-angle-button-slider {
+            background: #ffffff;
+            border: 1px solid #BDBDBD;
+            border-radius: 50%;
+            display: flex;
+            width: 50%;
+            height: 50;
+            padding: 0rem;
+            align-items: center;
+            text-align: center;
+            vertical-align: middle;
+            justify-content: center;
+        }
+        .left-right-angle-button-slider:hover {
+            text-decoration: none;
+            text-underline-position: none;
+        }
+        .recent_view_header {
+            background-color: #008BD3;
+        }
+    </style>
+    <style>
+        /* Custom styles for Owl Carousel next and prev buttons */
+        .owl-prev,
+        .owl-next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+            border: 2px solid #fff;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            background-color: #ffffff !important;
+            color: #000000 !important;
+            border: 1px solid #BDBDBD !important;
+            font-size: 20px !important;
+        }
+    
+        .owl-prev {
+            left: -100px;
+            width: 50px;
+            height: 50px;
+            vertical-align: middle;
+            align-items: center;
+            display: flex !important;
+            justify-content: center;
+            border-radius: 50px !important;
+        }
+    
+        .owl-next {
+            right: -100px;
+            width: 50px;
+            height: 50px;
+            vertical-align: middle;
+            align-items: center;
+            display: flex !important;
+            justify-content: center;
+            border-radius: 50px !important;
+        }
+    
+        /* Custom hover styles */
+        
+    </style>
+    <link rel="stylesheet" href="{{asset('theme/landing_page/landing_page_style.css')}}">
 </head>
 <div class="spinner-border text-success hide_default" role="status" id="spinner-global">
     <span class="sr-only">Loading...</span>

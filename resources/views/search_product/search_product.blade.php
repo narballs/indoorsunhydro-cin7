@@ -15,6 +15,82 @@
 @include('search_product.desktop_view')
 @include('search_product.mobile_view')
 @include('search_product.ipade_view')
+@if (auth()->user())
+   @include('partials.recent_products_slider')
+@endif
+<style>
+
+   .hover_effect:hover {
+       background-color: #FFFFFF !important;
+       color: #7BC533 !important;
+       border: 1px solid #7BC533 !important;
+   }
+   .product_buys_count {
+       font-size: 11px;
+   }
+   .margin-for-empty {
+       margin-bottom: 1.4rem ;
+   }
+
+   .price-category-view-section {
+       min-height: 7.7rem;
+   }
+
+
+   /* addign tooltip for title of product */
+   /* .tooltip-product {
+     position: relative;
+     display: inline-block;
+   } */
+   .tooltip-product-text {
+       display: none;
+       font-family: 'Poppins';
+       font-style: normal;
+       font-weight: 500;
+       position: absolute;
+       top: 47%;
+       text-align: center;
+       font-size: 12px;
+       /* box-shadow: 1px 1px 4px 4px rgba(0, 0, 0, 0.25); */
+       box-shadow: 0px 4px 4px rgba(146, 130, 130, 0.25);
+   }
+
+   .tooltip-arrow {
+       width: 0; 
+       height: 0; 
+       border-left: 7px solid transparent;
+       border-right: 7px solid transparent;
+       border-top: 7px solid #fff !important;
+       position: absolute;
+       top: 100%;
+       left: 10%;
+   }
+   .tooltip-product:hover .tooltip-product-text {
+     display: block;
+   }
+   
+   @media screen and (max-width:350px)  and (min-width: 280px){
+       .add-to-cart-button-section {
+           padding: 0px !important;
+       }
+   }
+   @media screen and (max-width:550px)  and (min-width: 280px){
+       .product_buys_count {
+           font-size: 7.5px !important;
+       }
+       .margin-for-empty {
+           margin-bottom: 0.95rem !important;
+       }
+
+       .ft-size {
+           font-size: 0.5rem;
+       }
+
+       .price-category-view-section {
+           min-height: 5.7rem;
+       }
+   }
+</style>
 <script>
 	function showAllItems() {
       $('#all-items').val('all-items');
@@ -174,10 +250,9 @@
 @include('partials.product-footer')
 <!-- End of .container -->
 @include('partials.footer')
-
-
 <script>
 	$(document).ready(function() {
       $('.pagination').addClass('pagination-sm');
    });
 </script>
+

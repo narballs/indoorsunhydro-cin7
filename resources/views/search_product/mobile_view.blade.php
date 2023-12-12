@@ -110,8 +110,6 @@
    </div>
 </div>
 
-
-
 {{-- pop up filter mobile --}}
 
 <div class="modal fade" id="filter_model" tabindex="-1" aria-labelledby="filter_content" aria-hidden="true" data-bs-backdrop="static" style="left:2rem;">

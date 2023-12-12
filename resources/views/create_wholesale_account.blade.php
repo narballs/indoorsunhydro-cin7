@@ -730,7 +730,7 @@
                                                                     <div class="col-md-12">
                                                                         <div class="form-group">
                                                                             <label class="wholesale_form_labels" for="institute_routing_number">Financial institute routing number <span class="text-danger">*</span></label>
-                                                                            <input type="text" name="financial_institute_routing_number" value="{{!empty($id) ? $wholesale_authorization->financial_institute_routing_number : ''}}" class="form-control wholesale_inputs" id="institute_routing_number" onchange="remove_error(this)" placeholder="Enter Financial institute routing number">
+                                                                            <input type="text" name="financial_institute_routing_number" value="{{!empty($id) ? $wholesale_authorization->financial_institute_routine_number : ''}}" class="form-control wholesale_inputs" id="institute_routing_number" onchange="remove_error(this)" placeholder="Enter Financial institute routing number">
                                                                             <div class="text-danger wholesale_inputs" id="institute_routing_number_errors"></div>
                                                                         </div>
                                                                     </div>
@@ -946,7 +946,7 @@
                                                                     <button id="save_for_now_step_4" type="button"  class="save_for_now_btn btn ml-3" data-toggle="" data-target="">Save for now</button>
                                                                 @endif
                                                                 <button type="button" id="step4_next" class="step_next btn ml-3" onclick="check_validation_step4()">
-                                                                    Next
+                                                                    Submit
                                                                 </button>
                                                             </div>
                                                         </div>
@@ -1705,7 +1705,7 @@
             //         data.append('financial_institution_signature', $('#financial_institution_signature').val());
             //         data.append('set_amount', $('#set_amount').val());
             //         data.append('maximum_amount', $('#maximum_amount').val());
-            //         data.append('institute_routing_number', $('#institute_routing_number').val());
+            //         data.append('institute_routine_number', $('#institute_routing_number').val());
             //         data.append('saving_account_number', $('#saving_account_number').val());
             //         data.append('autorization_permit_number', $('#autorization_permit_number').val());
             //         data.append('autorization_phone_number', $('#autorization_phone_number').val());
@@ -1824,7 +1824,7 @@
                 data.append('financial_institution_signature', $('#financial_institution_signature').val());
                 data.append('set_amount', $('#set_amount').val());
                 data.append('maximum_amount', $('#maximum_amount').val());
-                data.append('institute_routing_number', $('#institute_routing_number').val());
+                data.append('institute_routine_number', $('#institute_routing_number').val());
                 data.append('saving_account_number', $('#saving_account_number').val());
                 data.append('autorization_permit_number', $('#autorization_permit_number').val());
                 data.append('autorization_phone_number', $('#autorization_phone_number').val());
@@ -1840,6 +1840,7 @@
                 data.append('phone_number', $('#phone_number').val());
                 data.append('date', $('#date').val());
                 data.append('type_of_farm', $('#type_of_farm').val());
+                data.append('wholesale_application_id', $('#whs_id').val());
             
                 $.ajax({
                     type:'POST',
@@ -1899,7 +1900,12 @@
                 $('#save_for_now').attr('data-target', '')
                 $('#save_for_now_modal').modal('hide');
                 $('#save_for_now_spinner').removeClass('d-none');
-                save_progress_step1();
+                var validation = validation_message_step_1();
+                if (validation == true) {
+                    save_progress_step1();
+                } else {
+                    $('#save_for_now_spinner').addClass('d-none');
+                }
             }
         });
         $('#save_for_now_step_2').click(function() {
@@ -1912,7 +1918,12 @@
                 $('#save_for_now_step_2').attr('data-target', '')
                 $('#save_for_now_modal').modal('hide');
                 $('#save_for_now_spinner').removeClass('d-none');
-                save_progress_step1();
+                var validation = validation_message_step2();
+                if (validation == true) {
+                    save_progress_step1();
+                } else {
+                    $('#save_for_now_spinner').addClass('d-none');
+                }
             }
         });
         $('#save_for_now_step_3').click(function() {
@@ -1925,7 +1936,12 @@
                 $('#save_for_now_step_3').attr('data-target', '')
                 $('#save_for_now_modal').modal('hide');
                 $('#save_for_now_spinner').removeClass('d-none');
-                save_progress_step1();
+                var validation = validation_message_step3();
+                if (validation == true) {
+                    save_progress_step1();
+                } else {
+                    $('#save_for_now_spinner').addClass('d-none');
+                }
             }
         });
 
@@ -1939,7 +1955,12 @@
                 $('#save_for_now_step_4').attr('data-target', '')
                 $('#save_for_now_modal').modal('hide');
                 $('#save_for_now_spinner').removeClass('d-none');
-                save_progress_step1();
+                var validation = validation_message_step_4();
+                if (validation == true) {
+                    save_progress_step1();
+                } else {
+                    $('#save_for_now_spinner').addClass('d-none');
+                }
             }
         });
 
@@ -2527,7 +2548,7 @@
                 data.append('financial_institution_signature', $('#financial_institution_signature').val());
                 data.append('set_amount', $('#set_amount').val());
                 data.append('maximum_amount', $('#maximum_amount').val());
-                data.append('institute_routing_number', $('#institute_routing_number').val());
+                data.append('institute_routine_number', $('#institute_routing_number').val());
                 data.append('saving_account_number', $('#saving_account_number').val());
                 data.append('autorization_permit_number', $('#autorization_permit_number').val());
                 data.append('autorization_phone_number', $('#autorization_phone_number').val());

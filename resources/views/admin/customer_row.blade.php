@@ -1,4 +1,4 @@
-<tr id="row-{{ $contact->id }}"  data-deleted="{{$contact->deleted_at}}" title="{{!empty($contact->deleted_at) ? $contact->deleted_at : ''}}" class="customer-row main_contacts_row border-bottom {{!empty($contact->deleted_at) ? 'delete_grey' : ''}}">
+<tr id="row-{{ $contact->id }}"  data-deleted="{{$contact->deleted_at}}" title="{{!empty($contact->deleted_at) ?  'deleted on ' . $contact->deleted_at : ''}}" class="customer-row main_contacts_row border-bottom {{!empty($contact->deleted_at) ? 'delete_grey' : ''}}">
     <td class="d-flex table-items">
         <div class="custom-control custom-checkbox tabel-checkbox">
             <input class="custom-control-input custom-control-input-success sub_chk all_checkboxes" data-id="{{ $contact->id }}"

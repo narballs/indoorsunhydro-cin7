@@ -118,6 +118,7 @@
                 @include('product_row')
             @endforeach
         @endforeach
+       
     </div>
     <div class="row">
         <div class="container">
@@ -127,7 +128,6 @@
         </div>
     </div>
 </div>
-
 {{-- moible view --}}
 <div class="container mobile-view">
     <div class="row mt-3">
@@ -370,7 +370,9 @@
     </div>
 </div>
 {{-- ipid view end --}}
-
+@if (auth()->user())
+   @include('partials.recent_products_slider')
+@endif
 
 {{-- pop up filter mobile --}}
 
