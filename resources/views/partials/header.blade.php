@@ -112,7 +112,11 @@
         }
     
         /* Custom hover styles */
-        
+        @media screen and (max-width: 768px) {
+            #similar_products_owl_carasoul .owl-nav.disabled {
+                display: none !important;
+            }
+        }
     </style>
     <link rel="stylesheet" href="{{asset('theme/landing_page/landing_page_style.css')}}">
 </head>

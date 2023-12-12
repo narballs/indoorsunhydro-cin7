@@ -13,12 +13,14 @@
         font-size: 14px;
     }
     #similar_products_owl_carasoul .owl-nav.disabled {
-        display: block !important;
+        display: block;
     }
     #similar_products_owl_carasoul .owl-stage-outer {
         display:flex;
         justify-content: center !important;
     }
+
+    
 </style>
 @if (!empty($similar_products) && count($similar_products) > 0)
     <div class="w-100  mt-3">
@@ -27,7 +29,7 @@
         </p>
         <div class="row justify-content-center">
             <div class="col-md-10">
-                <div class="owl-carousel owl-theme mt-4" id="similar_products_owl_carasoul">
+                <div class="owl-carousel owl-theme similar_products_owl_carasoul mt-4" id="similar_products_owl_carasoul">
                     @foreach($similar_products as $similar_product)
                         @foreach ($similar_product->options as $option)
                             @php
@@ -80,6 +82,21 @@
                                         <input type="hidden" name="quantity" value="1" id="quantity">
                                         <input type="hidden" name="p_id" id="p_{{ $product->id }}" value="{{ $product->id }}">
                                         @csrf
+                                        <div class="col-md-12">
+                                            @php
+                                                $similar_product_option = App\Models\ProductOption::where('option_id', $option->option_id)->first();
+                                            @endphp
+                                            @if (!empty($similar_product_option) && $similar_product_option->stockAvailable > 0)
+                                                <div>
+                                                    <span class="text-success">{{'In Stock'}}</span>
+                                                </div>
+                                            @else
+                                                <div>
+                                                    <span class="text-danger">{{ App\Helpers\SettingHelper::getSetting('out_of_stock_label', 'OUT OF STOCK');
+                                                        }}</span>
+                                                </div>
+                                            @endif
+                                        </div>
                                         <div class="col-md-12 p-1 price-category-view-section">
                                             <?php
                                             $retail_price = 0;
