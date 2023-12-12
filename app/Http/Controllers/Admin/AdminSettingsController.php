@@ -207,10 +207,11 @@ class AdminSettingsController extends Controller
     // restore contact
     public function restore_contact($id) {
         $contact = Contact::withTrashed()->findOrFail($id);
+        $contact->is_deleted = null;
         $contact->restore();
         $user = User::withTrashed()->where('id', $contact->user_id)->first();
         if (!empty($user)) {
-
+            $user->is_deleted = null;
             $user->restore();
         }
         if (!empty($contact) && !empty($user)) {
