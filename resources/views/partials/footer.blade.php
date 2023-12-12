@@ -290,9 +290,9 @@
                 var itemsToShow = calculateItemsToShow();
                 var centerItems = totalItems < itemsToShow;
                 if (totalItems >= itemsToShow) {
-                    $('#similar_products_owl_carasoul .owl-stage-outer').removeClass('d-flex');
+                    $('.similar_products_owl_carasoul .owl-stage-outer').removeClass('d-flex');
                 }
-                $('#similar_products_owl_carasoul').owlCarousel({
+                $('.similar_products_owl_carasoul').owlCarousel({
                     rtl:false,
                     loop:false,
                     // center: centerItems,
@@ -344,7 +344,7 @@
             var itemsToShow = calculateItemsToShow();
             var centerItems = totalItems < itemsToShow;
             if (totalItems >= itemsToShow) {
-                $('#similar_products_owl_carasoul .owl-stage-outer').css('display', 'block');    
+                $('.similar_products_owl_carasoul .owl-stage-outer').css('display', 'block');    
             }
         });
     </script>

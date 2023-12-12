@@ -447,14 +447,13 @@ class ProductController extends Controller
             return redirect('/products');
         }
         if (!empty($product->category_id) && !empty($product)) {
-            $similar_products = Product::with('options', 'options.defaultPrice','brand', 'options.products','categories' ,'apiorderItem')
+            $similar_products = Product::with('options', 'options.defaultPrice','brand', 'options.products','categories' ,'apiorderItem' , 'product_stock')
             ->where('category_id', $product->category_id)
             ->where('id', '!=', $product->id)
             ->where('status', '!=', 'Inactive')
             ->take(16)
             ->get();
         }
-
         $location_inventories = [];
         $available_stock = [];
         $stock = true;
