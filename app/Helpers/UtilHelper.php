@@ -159,18 +159,7 @@ class UtilHelper
 
                 $stock_updated = true;
             }
-            $product_options = ProductOption::where('product_id', $product->product_id)
-            ->where('option_id', $option_id)
-            ->first();
-
-            if (!empty($product_options)) {
-                $product_options->stockAvailable = $total_stock;
-                $product_options->save();
-            } else {
-                $product_options->stockAvailable = $total_stock;
-                $product_options->save();
-            }
-
+            
             if (!empty($branch_ids)) {
                 ProductStock::where('product_id' ,  $product->product_id)
                     ->where('option_id' , $option_id)
