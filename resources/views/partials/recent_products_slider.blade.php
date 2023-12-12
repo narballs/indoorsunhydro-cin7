@@ -15,6 +15,10 @@
     #similar_products_owl_carasoul .owl-nav.disabled {
         display: block !important;
     }
+    #similar_products_owl_carasoul .owl-stage-outer {
+        display:flex;
+        justify-content: center !important;
+    }
 </style>
 @if (!empty($product_views) && count($product_views) > 0)
     <div class="w-100  mt-3">
