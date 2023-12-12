@@ -523,10 +523,16 @@ class ProductController extends Controller
             $user_buy_list_options = ProductBuyList::where('list_id', $user_list->id)->pluck('option_id', 'option_id')->toArray();
         }
 
-        $lists = BuyList::where('user_id', $user_id)
+        $lists = BuyList::where('user_id', $user_id) 
             ->where('contact_id', $contact_id)
             ->with('list_products')
             ->get();
+        $total_stock = 0;
+        if ($stock_updated) {
+            foreach ($product_stocks as $product_stock) {
+                $total_stock += $product_stock->available_stock;
+            }
+        }
         return view('product-detail', compact(
             'productOption',
             'pname',
@@ -537,7 +543,7 @@ class ProductController extends Controller
             'contact_id',
             'stock_updated',
             'product_stocks',
-            'similar_products'
+            'similar_products','total_stock'
         ));
 
         
