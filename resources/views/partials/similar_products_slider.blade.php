@@ -29,7 +29,7 @@
                             @php
                                 $product = $similar_product; 
                             @endphp
-                            <div class="item mt-2  pt-1 ">
+                            <div class="item mt-2  pt-1 similar_items_div ">
                                 <div class="p-2 shadow-sm  w-100" style="background-color: #fff;
                                 background-clip: border-box;
                                 border: 1px solid rgba(0,0,0,.125);
