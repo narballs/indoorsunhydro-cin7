@@ -96,7 +96,8 @@
                                                 </p>
                                             @endif
                                             <?php 
-                                                $enable_add_to_cart = App\Helpers\SettingHelper::enableAddToCart($option); 
+                                                // $enable_add_to_cart = App\Helpers\SettingHelper::enableAddToCart($option); 
+                                                $enable_add_to_cart = true;
                                                 $last_month_views = null;
                                                 $views_count = $product->product_views->whereBetween('created_at', [Carbon\Carbon::now()->subMonth()->startOfMonth(), Carbon\Carbon::now()->subMonth()->endOfMonth()])->count();
                                                 if ($views_count > 20) {
