@@ -322,25 +322,29 @@ class PagesController extends Controller
         $random_number = rand(1, 1000);
         $blog = Blog::findOrFail($id);
         $Image =  null;
-        if ($blog_image = $request->file('blog_image')) {
-            $blog_image2 = $request->file('blog_image');
-            $destinationPath = public_path('pages/blogs');
-            $Image = time() . "." . $blog_image->getClientOriginalExtension();
-            File::makeDirectory($destinationPath, $mode = 0777, true, true);
-            $imageUrl = $destinationPath.'/'.$Image;
-            $imageinter =  Image::make($blog_image2)->resize(1920,517)->save($imageUrl);
-            
-            $fileName_thumb =rand(11111111,99999999)."_".time()."_thumb_".$Image;
-            $thumbnailpath = public_path('pages/blogs/thumbnails');
-            if(!File::isDirectory($thumbnailpath)){
-                File::makeDirectory($thumbnailpath, 0777, true, true);
+
+        if( !empty($request->blog_image)) {
+            if ($request->hasFile('blog_image')) {
+                $blog_image = $request->file('blog_image');
+                $blog_image2 = $request->file('blog_image');
+                $destinationPath = public_path('pages/blogs');
+                $Image = time() . "." . $blog_image->getClientOriginalExtension();
+                File::makeDirectory($destinationPath, $mode = 0777, true, true);
+                $imageUrl = $destinationPath.'/'.$Image;
+                $imageinter =  Image::make($blog_image2)->resize(1920,517)->save($imageUrl);
+                
+                $fileName_thumb =rand(11111111,99999999)."_".time()."_thumb_".$Image;
+                $thumbnailpath = public_path('pages/blogs/thumbnails');
+                if(!File::isDirectory($thumbnailpath)){
+                    File::makeDirectory($thumbnailpath, 0777, true, true);
+                }
+                $imageUrl = $thumbnailpath.'/'.$fileName_thumb;
+                $imageinter =  Image::make($blog_image2)->fit(290,200)->save($imageUrl);
+
+
+                // $blog_image->move($destinationPath, $Image);
+                $request['blog_image'] = "$Image";
             }
-            $imageUrl = $thumbnailpath.'/'.$fileName_thumb;
-            $imageinter =  Image::make($blog_image2)->fit(290,200)->save($imageUrl);
-
-
-            // $blog_image->move($destinationPath, $Image);
-            $request['blog_image'] = "$Image";
 
         } else {
             $Image = $blog->image;
@@ -351,7 +355,7 @@ class PagesController extends Controller
                 'description' => $request->description,
                 // 'slug' => Str::slug($request->title) . '-' . $random_number,
                 'image' => $Image,
-                'thumbnail' => $fileName_thumb,
+                'thumbnail' => !empty($blog_image2) ? $fileName_thumb : $blog->thumbnail,
                 'status' => $request->status,
             ]);
             return redirect()->route('blogs.index')->with('success', 'Blog updated successfully.');
