@@ -26,7 +26,7 @@
                             @endif
                         </div>
 
-                        <div class="col-xl-10 col-md-10 col-sm-10 col-xs-10">
+                        <div class="col-xl-6 col-lg-8 col-md-8 col-sm-12 col-xs-12">
                             {!! $blog_detail->description !!}
                         </div>
                     </div>
@@ -81,5 +81,22 @@
         border-radius: 7px;
         border: 1.353px solid #7BC533;
         background: #7BC533;
+    }
+    figure {
+        text-align: center
+    }
+    .blog_detail_description p , li {
+        color: #4F4F4F;
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 45.035px; /* 225.175% */
+    }
+    .blog_detail_description h1,h2,h3,h4,h5,h6 {
+        color: #242424;
+        font-size: 32px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 44.923px; /* 140.383% */
     }
 </style>

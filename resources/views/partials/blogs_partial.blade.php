@@ -9,7 +9,7 @@
 				<div class="col-md-4 mb-3">
 					<div class="card rounded">
 						@if (!empty($blog->image))
-							<img class="card-img-top rounded-top" src="{{asset('pages/blogs/' . $blog->image)}}" alt="Blog Image">
+						<a href="{{route('blog_detail' , $blog->slug)}}"><img class="card-img-top rounded-top" style="height: 12.5rem;" alt="100%x280"  src="{{asset('pages/blogs/' . $blog->image)}}" alt="Blog Image"></a>
 						@endif
 						<div class="card-body">
 							<h5 class="card-title">{{$blog->title}}</h5>
