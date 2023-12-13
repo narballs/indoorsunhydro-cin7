@@ -85,6 +85,10 @@
     figure {
         text-align: center
     }
+    figure img {
+        max-width: 100%;
+        height: auto;
+    }
     .blog_detail_description p,li {
         color: #4F4F4F;
         font-size: 18px;
