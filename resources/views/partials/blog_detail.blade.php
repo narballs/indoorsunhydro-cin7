@@ -26,7 +26,7 @@
                             @endif
                         </div>
 
-                        <div class="col-xl-6 col-lg-8 col-md-8 col-sm-12 col-xs-12">
+                        <div class="col-xl-6 col-lg-8 col-md-8 col-sm-12 col-xs-12 blog_detail_description">
                             {!! $blog_detail->description !!}
                         </div>
                     </div>
@@ -85,7 +85,7 @@
     figure {
         text-align: center
     }
-    .blog_detail_description p , li {
+    .blog_detail_description p,li {
         color: #4F4F4F;
         font-size: 20px;
         font-style: normal;
