@@ -50,7 +50,7 @@ class HomeController extends Controller
             ->select('product_id' , DB::raw('count(*) as entry_count'))
             ->whereNotNull('user_id')
             ->where('user_id' , $user_id)
-            ->orderBy('entry_count' , 'DESC')
+            ->orderBy('created_at' , 'DESC')
             ->groupBy('product_id')
             ->get();
             
