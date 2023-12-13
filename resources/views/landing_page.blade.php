@@ -447,6 +447,10 @@
         .tooltip-product:hover .tooltip-product-text {
           display: block;
         }
+        .landing_page_get_pricing:hover {
+            background-color: #7BC533 !important;
+            color: #FFFFFF !important;
+        }
         
         @media screen and (max-width:350px)  and (min-width: 280px){
             .add-to-cart-button-section {
