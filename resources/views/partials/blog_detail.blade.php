@@ -87,16 +87,16 @@
     }
     .blog_detail_description p,li {
         color: #4F4F4F;
-        font-size: 20px;
+        font-size: 18px;
         font-style: normal;
         font-weight: 400;
-        line-height: 45.035px; /* 225.175% */
+        line-height: 35.035px; /* 225.175% */
     }
     .blog_detail_description h1,h2,h3,h4,h5,h6,strong {
         color: #242424;
-        font-size: 32px;
+        font-size: 26px;
         font-style: normal;
         font-weight: 700;
-        line-height: 44.923px; /* 140.383% */
+        line-height: 34.923px; /* 140.383% */
     }
 </style>
