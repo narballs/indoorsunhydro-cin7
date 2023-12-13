@@ -92,7 +92,7 @@
         font-weight: 400;
         line-height: 45.035px; /* 225.175% */
     }
-    .blog_detail_description h1,h2,h3,h4,h5,h6 {
+    .blog_detail_description h1,h2,h3,h4,h5,h6,strong {
         color: #242424;
         font-size: 32px;
         font-style: normal;
