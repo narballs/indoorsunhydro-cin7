@@ -152,7 +152,14 @@ class ProductController extends Controller
             ->get();
             
         } else {
-            $product_views = null;
+             $product_views = ApiOrderItem::with('product.options', 'product.options.defaultPrice','product.brand', 'product.options.products','product.categories' ,'product.apiorderItem')
+            ->whereHas('product' , function($query) {
+                $query->where('status' , '!=' , 'Inactive');
+            })
+            ->select('product_id' , DB::raw('count(*) as entry_count'))
+            ->orderBy('created_at' , 'DESC')
+            ->groupBy('product_id')
+            ->get();
         }
         
         return view('categories', compact(
@@ -359,7 +366,14 @@ class ProductController extends Controller
             ->get();
             
         } else {
-            $product_views = null;
+            $product_views = ApiOrderItem::with('product.options', 'product.options.defaultPrice','product.brand', 'product.options.products','product.categories' ,'product.apiorderItem')
+            ->whereHas('product' , function($query) {
+                $query->where('status' , '!=' , 'Inactive');
+            })
+            ->select('product_id' , DB::raw('count(*) as entry_count'))
+            ->orderBy('created_at' , 'DESC')
+            ->groupBy('product_id')
+            ->get();
         }
         
 
@@ -586,7 +600,14 @@ class ProductController extends Controller
             ->get();
             
         } else {
-            $product_views = null;
+             $product_views = ApiOrderItem::with('product.options', 'product.options.defaultPrice','product.brand', 'product.options.products','product.categories' ,'product.apiorderItem')
+            ->whereHas('product' , function($query) {
+                $query->where('status' , '!=' , 'Inactive');
+            })
+            ->select('product_id' , DB::raw('count(*) as entry_count'))
+            ->orderBy('created_at' , 'DESC')
+            ->groupBy('product_id')
+            ->get();
         }
         
         return view('categories', compact('products',
@@ -781,7 +802,14 @@ class ProductController extends Controller
             ->get();
             
         } else {
-            $product_views = null;
+             $product_views = ApiOrderItem::with('product.options', 'product.options.defaultPrice','product.brand', 'product.options.products','product.categories' ,'product.apiorderItem')
+            ->whereHas('product' , function($query) {
+                $query->where('status' , '!=' , 'Inactive');
+            })
+            ->select('product_id' , DB::raw('count(*) as entry_count'))
+            ->orderBy('created_at' , 'DESC')
+            ->groupBy('product_id')
+            ->get();
         }
         
 
@@ -1245,7 +1273,14 @@ class ProductController extends Controller
             ->get();
             
         } else {
-            $product_views = null;
+             $product_views = ApiOrderItem::with('product.options', 'product.options.defaultPrice','product.brand', 'product.options.products','product.categories' ,'product.apiorderItem')
+            ->whereHas('product' , function($query) {
+                $query->where('status' , '!=' , 'Inactive');
+            })
+            ->select('product_id' , DB::raw('count(*) as entry_count'))
+            ->orderBy('created_at' , 'DESC')
+            ->groupBy('product_id')
+            ->get();
         }
         
         return view('search_product.search_product', compact(
