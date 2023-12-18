@@ -23,7 +23,7 @@
 @if (!empty($product_views) && count($product_views) > 0)
     <div class="w-100  mt-3">
         <p class="recent_view_header fw-bold fs-2 my-auto border-0 text-white text-center align-middle text-uppercase p-2 mb-0">
-            Recently viewed products
+            @if (auth()->user()) Recently viewed products @else Best Selling Products @endif
         </p>
         <div class="row justify-content-center">
             <div class="col-md-10">

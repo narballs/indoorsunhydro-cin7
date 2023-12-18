@@ -15,9 +15,7 @@
 @include('search_product.desktop_view')
 @include('search_product.mobile_view')
 @include('search_product.ipade_view')
-@if (auth()->user())
-   @include('partials.recent_products_slider')
-@endif
+@include('partials.recent_products_slider')
 <style>
 
    .hover_effect:hover {

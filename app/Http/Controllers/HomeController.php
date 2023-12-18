@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ApiOrderItem;
 use App\Models\Category;
 use App\Models\Page;
 use App\Models\Product;
@@ -55,9 +56,15 @@ class HomeController extends Controller
             ->get();
             
         } else {
-            $product_views = null;
+            $product_views = ApiOrderItem::with('product.options', 'product.options.defaultPrice','product.brand', 'product.options.products','product.categories' ,'product.apiorderItem')
+            ->whereHas('product' , function($query) {
+                $query->where('status' , '!=' , 'Inactive');
+            })
+            ->select('product_id' , DB::raw('count(*) as entry_count'))
+            ->orderBy('created_at' , 'DESC')
+            ->groupBy('product_id')
+            ->get();
         }
-        
         $user_list = BuyList::where('user_id', $user_id)
             ->where('contact_id', $contact_id)
             ->first();
@@ -69,6 +76,9 @@ class HomeController extends Controller
             ->where('contact_id', $contact_id)
             ->with('list_products')
             ->get();
+
+
+        
         return view('index', compact('categories' , 'product_views','lists','user_buy_list_options' , 'contact_id'));
     }
 
