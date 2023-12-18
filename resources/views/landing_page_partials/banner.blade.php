@@ -7,7 +7,7 @@
                         <div class="col-md-8">
                             <div class="row">
                                 <div class="col-md-12">
-                                    <div class="row">
+                                    <div class="row align-items-center">
                                         <div class="pipeline_div p-0"></div>
                                         <div class="col-md-10">
                                             <h3 class="landing_page_main_heading">
@@ -23,8 +23,8 @@
                                 </p>
                             </div>
                         </div>
-                        <div class="col-md-3 bg-white rounded p-4">
-                            <h5 class="mb-3 landing-page-form-heading">We just need a tiny bit of info..</h5>
+                        <div class="col-md-3 p-4">
+                            {{-- <h5 class="mb-3 landing-page-form-heading">We just need a tiny bit of info..</h5>
                             <form action="">
                                 <div class="row mb-2">
                                     <div class="col-md-12">
@@ -69,7 +69,14 @@
                                         </div>
                                     </div>
                                 </div>
-                            </form>
+                            </form> --}}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group mb-0">
+                                        <a href="{{url('/user')}}" class="btn landing_page_get_pricing w-100">Sign up</a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

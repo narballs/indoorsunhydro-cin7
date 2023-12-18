@@ -2477,7 +2477,6 @@ class UserController extends Controller
     
     
                     $wholesale_application_card->save();
-    
                     DB::commit();
                     return response()->json([
                         'status' => true,
@@ -2536,6 +2535,7 @@ class UserController extends Controller
 
     public function save_for_now(Request $request) {
         $permit_image_name = null;
+        $step = $request->step;
         $images_array = [];
         if ($request->hasFile('permit_image')) {
             $images = $request->file('permit_image');
@@ -2767,6 +2767,8 @@ class UserController extends Controller
                 return response()->json([
                     'status' => true,
                     'message' => 'Wholesale Application Updated Successfully !',
+                    'step' => $step,
+                    'type' => 'edit',
                     'wholesale_application_id' => $wholesale_application_id
                 ],200);
     
@@ -2884,6 +2886,7 @@ class UserController extends Controller
                 DB::commit();
                 return response()->json([
                     'status' => true,
+                    'type' => 'create',
                     'message' => 'Data saved for now !'
                 ],200);
             }

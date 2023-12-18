@@ -171,9 +171,7 @@
                 </div>
             </div>
             {{-- recent viewed products --}}
-            @if (auth()->user())
-                @include('partials.recent_products_slider')
-            @endif
+            @include('partials.recent_products_slider')
         </div>
 
             {{-- our advantages  --}}

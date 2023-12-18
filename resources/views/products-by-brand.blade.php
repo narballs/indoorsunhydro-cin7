@@ -459,9 +459,7 @@
    </div>
 </div>
 
-@if (auth()->user())
-   @include('partials.recent_products_slider')
-@endif
+@include('partials.recent_products_slider')
 {{-- pop up filter mobile --}}
 
 <div class="modal fade" id="filter_model" tabindex="-1" aria-labelledby="filter_content" aria-hidden="true" data-bs-backdrop="static">

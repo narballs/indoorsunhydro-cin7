@@ -370,9 +370,7 @@
     </div>
 </div>
 {{-- ipid view end --}}
-@if (auth()->user())
-   @include('partials.recent_products_slider')
-@endif
+@include('partials.recent_products_slider')
 
 {{-- pop up filter mobile --}}
 

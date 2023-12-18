@@ -14,16 +14,16 @@
                             </h5>
                             <ul class="nav nav_wholesale flex-column nav-pills pl-2">
                                 <li class="nav-item p-1">
-                                    <a class="wholesale-nav-link wholesale_account_tabs step_1_nav_link active" data-toggle="pill" href="#step1">Customer Application</a>
+                                    <a class="wholesale-nav-link wholesale_account_tabs step_1_nav_link active" data-toggle="pill" data-nav ="step_1" href="#step1">Customer Application</a>
                                 </li>
                                 <li class="nav-item p-1">
-                                    <a class="wholesale-nav-link wholesale_account_tabs step_2_nav_link" data-toggle="pill" href="#step2">Regulation 1533.1</a>
+                                    <a class="wholesale-nav-link wholesale_account_tabs step_2_nav_link" data-toggle="pill" data-nav ="step_2" href="#step2">Regulation 1533.1</a>
                                 </li>
                                 <li class="nav-item p-1">
-                                    <a class="wholesale-nav-link wholesale_account_tabs step_3_nav_link" data-toggle="pill" href="#step3">ACH Authorization Form</a>
+                                    <a class="wholesale-nav-link wholesale_account_tabs step_3_nav_link" data-toggle="pill" data-nav ="step_3" href="#step3">ACH Authorization Form</a>
                                 </li>
                                 <li class="nav-item p-1">
-                                    <a class="wholesale-nav-link wholesale_account_tabs step_4_nav_link" data-toggle="pill" href="#step4">Credit Card Authorization</a>
+                                    <a class="wholesale-nav-link wholesale_account_tabs step_4_nav_link" data-toggle="pill" data-nav ="step_4" href="#step4">Credit Card Authorization</a>
                                 </li>
                             </ul>
                         </div>
@@ -361,7 +361,7 @@
                                                             </div>
                                                             <div class="text-right">
                                                                 {{-- @if(!empty($id)) --}}
-                                                                    <button id="save_for_now" type="button"  class="step_next btn" data-toggle="" data-target="">Save for now</button>
+                                                                    <button id="save_for_now" type="button" data-step="step_1"  class="step_next btn" data-toggle="" data-target="">Save for now</button>
                                                                 {{-- @endif --}}
                                                                 <button type="button" id="step1_next" onclick="check_validation_step1()" class="step_next btn">
                                                                     Next
@@ -544,7 +544,7 @@
                                                                     <div class="spinner-border text-success d-none mr-2" role="status" id="save_for_now_spinner">
                                                                         <span class="sr-only">Loading...</span>
                                                                     </div>
-                                                                    <button id="save_for_now_step_2" type="button"  class="step_next btn ml-3" data-toggle="" data-target="">Save for now</button>
+                                                                    <button id="save_for_now_step_2" type="button"  data-step="step_2" class="step_next btn ml-3" data-toggle="" data-target="">Save for now</button>
                                                                     <button type="button" id="step2_next" class="step_next btn" onclick="check_validation_step2()">
                                                                         Next
                                                                     </button>
@@ -667,7 +667,7 @@
                                                                     <div class="spinner-border text-success d-none mr-2" role="status" id="save_for_now_spinner">
                                                                         <span class="sr-only">Loading...</span>
                                                                     </div>
-                                                                    <button id="save_for_now_step_3" type="button"  class="step_next btn ml-3" data-toggle="" data-target="">Save for now</button>
+                                                                    <button id="save_for_now_step_3" type="button"  data-step="step_3" class="step_next btn ml-3" data-toggle="" data-target="">Save for now</button>
                                                                     <button type="button" id="step3_next" class="step_next btn" onclick="check_validation_step3()">
                                                                         Next
                                                                     </button>
@@ -828,7 +828,7 @@
                                                                 <div class="spinner-border text-success d-none mr-2" role="status" id="save_for_now_spinner">
                                                                     <span class="sr-only">Loading...</span>
                                                                 </div>
-                                                                <button id="save_for_now_step_4" type="button"  class="step_next btn ml-3" data-toggle="" data-target="">Save for now</button>
+                                                                <button id="save_for_now_step_4" data-step="step_4" type="button"  class="step_next btn ml-3" data-toggle="" data-target="">Save for now</button>
                                                                 <button type="button" id="step4_next" class="step_next btn" onclick="check_validation_step4()">
                                                                     Submit
                                                                 </button>
@@ -1456,6 +1456,82 @@
     <script>
         
 
+        $(document).ready(function() {
+            let url = window.location.href;
+            var step = url.split("=").pop();
+            if (step) {
+                if (step === 'step_1') {
+                    $('#step1').addClass('active');
+                    $('#step1').addClass('show');
+                    $('.step_1_nav_link').addClass('active');
+                
+                    $('#step2').removeClass('active');
+                    $('#step2').removeClass('show');
+                    $('.step_2_nav_link').removeClass('active');
+                
+                    $('#step3').removeClass('active');
+                    $('#step3').removeClass('show');
+                    $('.step_3_nav_link').removeClass('active');
+               
+                    $('#step4').removeClass('active');
+                    $('#step4').removeClass('show');
+                    $('.step_4_nav_link').removeClass('active');
+                }
+                if (step === 'step_2') {
+                    $('#step2').addClass('active');
+                    $('#step2').addClass('show');
+                    $('.step_2_nav_link').addClass('active');
+                    $('#step1').removeClass('active');
+                    $('#step1').removeClass('show');
+                    $('.step_1_nav_link').removeClass('active');
+                    $('#step3').removeClass('active');
+                    $('#step3').removeClass('show');
+                    $('.step_3_nav_link').removeClass('active');
+                    $('#step4').removeClass('active');
+                    $('#step4').removeClass('show');
+                    $('.step_4_nav_link').removeClass('active');
+                }
+                if (step === 'step_3') {
+                    $('#step1').removeClass('active');
+                    $('#step1').removeClass('show');
+                    $('.step_1_nav_link').removeClass('active');
+                
+                    $('#step2').removeClass('active');
+                    $('#step2').removeClass('show');
+                    $('.step_2_nav_link').removeClass('active');
+                
+                    $('#step3').addClass('active');
+                    $('#step3').addClass('show');
+                    $('.step_3_nav_link').addClass('active');
+               
+                    $('#step4').removeClass('active');
+                    $('#step4').removeClass('show');
+                    $('.step_4_nav_link').removeClass('active');
+                }
+                if (step === 'step_4') {
+                    $('#step1').removeClass('active');
+                    $('#step1').removeClass('show');
+                    $('.step_1_nav_link').removeClass('active');
+                
+                    $('#step2').removeClass('active');
+                    $('#step2').removeClass('show');
+                    $('.step_2_nav_link').removeClass('active');
+                
+                    $('#step3').removeClass('active');
+                    $('#step3').removeClass('show');
+                    $('.step_3_nav_link').removeClass('active');
+               
+                    $('#step4').addClass('active');
+                    $('#step4').addClass('show');
+                    $('.step_4_nav_link').addClass('active');
+                }
+            } else {
+                $('#step1').addClass('active');
+                $('#step1').addClass('show');
+                $('.step_1_nav_link').addClass('active');
+            }
+        })
+
          // remove error message when filled
 
         function remove_error_card_type(element) {
@@ -1962,7 +2038,7 @@
                         console.log(response);
                         if (response.status == true) {
                             $('#wholesale_spinner').addClass('d-none');
-                            window.location.href = '/wholesale/account/thankyou/' + response.wholesale_appication_id;
+                            window.location.href = '/wholesale/account/thankyou/' + response.wholesale_application_id;
                         } else {
                             $('#wholesale_spinner').addClass('d-none');
                             $('#wholesale_form_error').html(response.message);
@@ -2345,7 +2421,7 @@
                         console.log(response);
                         if (response.status == true) {
                             $('#wholesale_spinner').addClass('d-none');
-                            window.location.href = '/wholesale/account/thankyou/' + response.wholesale_appication_id;
+                            window.location.href = '/wholesale/account/thankyou/' + response.wholesale_application_id;
                         } else {
                             $('#wholesale_spinner').addClass('d-none');
                             $('#wholesale_form_error').html(response.message);
@@ -2392,7 +2468,7 @@
             }
         }
 
-        function save_progress_step1() {
+        function save_progress_step1(step) {
             var validation = validation_message_step_1();
             if (validation == true) {
                 $('#wholesale_spinner').removeClass('d-none');
@@ -2408,9 +2484,14 @@
                         data.append("permit_image[]", document.getElementById('file_upload').files[index]);
                     }
                 }
-                // var files = $('input[name="permit_image"]')[0].files;
-                // console.log(files);
-                // data.append('permit_image',files);
+                data.append('card_type',$('input[name="card_type"]:checked').val());
+                data.append('cardholder_name', $('#cardholder_name').val());
+                data.append('card_number', $('#card_number').val());
+                data.append('expiration_date', $('#expiration_date').val());
+                data.append('card_holder_zip_code', $('#card_holder_zip_code').val());
+                data.append('undertaking_name', $('#undertaking_name').val());
+                data.append('authorize_text', $('#authorize_text').val());
+                data.append('customer_signature', $('#customer_signature').val());
                 data.append('company_name', $('#company_name').val());
                 data.append('first_name', $('#first_name').val());
                 data.append('last_name', $('#last_name').val());
@@ -2462,6 +2543,7 @@
                 data.append('date', $('#date').val());
                 data.append('type_of_farm', $('#type_of_farm').val());
                 data.append('wholesale_application_id', $('#whs_id').val());
+                data.append('step', step);
             
                 $.ajax({
                     type:'POST',
@@ -2471,23 +2553,48 @@
                     processData: false,
                     success:function(response){
                         if (response.status == true) {
-                            $('#save_for_now_spinner').addClass('d-none');
-                            $('#wholesale_spinner').addClass('d-none');
-                            $('#save_for_now').attr('data-toggle', '')
-                            $('#save_for_now').attr('data-target', '')
-                            $('.success_message').removeClass('d-none');
-                            $('#successMessage').html('Data saved For now');
-                           
-                            setTimeout(() => {
-                                window.location.href = '/wholesale/account/create'
-                            }, 1000);
-                        } else {
-                            $('#save_for_now_spinner').addClass('d-none');
-                            $('.success_message').removeClass('d-none');
-                            $('#successMessage').html('Email Already Exist');
-                            setTimeout(() => {
-                                window.location.href = "/wholesale/account/edit/" + response.id;
-                            }, 1000);
+                            if (response.type == 'create') {
+                                $('#save_for_now_spinner').addClass('d-none');
+                                $('#wholesale_spinner').addClass('d-none');
+                                $('#save_for_now').attr('data-toggle', '')
+                                $('#save_for_now').attr('data-target', '')
+                                $('.success_message').removeClass('d-none');
+                                $('#successMessage').html('Data saved For now');
+                            
+                                setTimeout(() => {
+                                    window.location.href = '/wholesale/account/create'
+                                }, 1000);
+                            } else {
+                                $('#save_for_now_spinner').addClass('d-none');
+                                $('.success_message').removeClass('d-none');
+                                $('#successMessage').html('Email Already Exist');
+                                let url  = "/wholesale/account/edit/" + response.wholesale_application_id;
+                                setTimeout(() => {
+                                    window.location.href = "/wholesale/account/edit/" + response.wholesale_application_id + '?step=' + response.step;
+                                }, 1000);
+                                
+                                // if (step === 'step_1') {
+                                //     $('#step1').addClass('active');
+                                //     $('#step1').addClass('show');
+                                //     $('.step_1_nav_link').addClass('active');
+                                // }
+                                // if (step === 'step_2') {
+                                //     $('#step2').addClass('active');
+                                //     $('#step2').addClass('show');
+                                //     $('.step_2_nav_link').addClass('active');
+                                // }
+                                // if (step === 'step_3') {
+                                //     $('#step3').addClass('active');
+                                //     $('#step3').addClass('show');
+                                //     $('.step_3_nav_link').addClass('active');
+                                // }
+                                // if (step === 'step_4') {
+                                //     $('#step4').addClass('active');
+                                //     $('#step4').addClass('show');
+                                //     $('.step_4_nav_link').addClass('active');
+                                // }
+                                
+                            }
                         }
                     },
                     error: function (response) {
@@ -2512,6 +2619,7 @@
         }
 
         $('#save_for_now').click(function() {
+            var step_1_attr = $(this).attr('data-step');
             if ($('#email').val() == '') {
                 $('#save_for_now').attr('data-toggle', 'modal')
                 $('#save_for_now').attr('data-target', '#save_for_now_modal')
@@ -2523,13 +2631,14 @@
                 $('#save_for_now_spinner').removeClass('d-none');
                 var validation = validation_message_step_1();
                 if (validation == true) {
-                    save_progress_step1();
+                    save_progress_step1(step_1_attr);
                 } else {
                     $('#save_for_now_spinner').addClass('d-none');
                 }
             }
         });
         $('#save_for_now_step_2').click(function() {
+            var step_2_attr = $(this).attr('data-step');
             if ($('#email').val() == '') {
                 $('#save_for_now_step_2').attr('data-toggle', 'modal')
                 $('#save_for_now_step_2').attr('data-target', '#save_for_now_modal')
@@ -2541,13 +2650,15 @@
                 $('#save_for_now_spinner').removeClass('d-none');
                 var validation = validation_message_step2();
                 if (validation == true) {
-                    save_progress_step1();
+                    
+                    save_progress_step1(step_2_attr);
                 } else {
                     $('#save_for_now_spinner').addClass('d-none');
                 }
             }
         });
         $('#save_for_now_step_3').click(function() {
+            var step_3_attr = $(this).attr('data-step');
             if ($('#email').val() == '') {
                 $('#save_for_now_step_3').attr('data-toggle', 'modal')
                 $('#save_for_now_step_3').attr('data-target', '#save_for_now_modal')
@@ -2559,7 +2670,8 @@
                 $('#save_for_now_spinner').removeClass('d-none');
                 var validation = validation_message_step3();
                 if (validation == true) {
-                    save_progress_step1();
+                    
+                    save_progress_step1(step_3_attr);
                 } else {
                     $('#save_for_now_spinner').addClass('d-none');
                 }
@@ -2567,6 +2679,7 @@
         });
 
         $('#save_for_now_step_4').click(function() {
+            var step_4_attr = $(this).attr('data-step');
             if ($('#email').val() == '') {
                 $('#save_for_now_step_4').attr('data-toggle', 'modal')
                 $('#save_for_now_step_4').attr('data-target', '#save_for_now_modal')
@@ -2578,11 +2691,36 @@
                 $('#save_for_now_spinner').removeClass('d-none');
                 var validation = validation_message_step_4();
                 if (validation == true) {
-                    save_progress_step1();
+                    save_progress_step1(step_4_attr);
                 } else {
                     $('#save_for_now_spinner').addClass('d-none');
                 }
             }
+        });
+
+        // $(document).on('click' , '.wholesale_account_tabs' , function() {
+        //     let  nav_link = $(this).attr('data-nav');
+        //     var current_url = window.location.href;
+        //     var url_array = current_url.split("=");
+        //     var modified_url = url_array[0] + '=' + nav_link;
+        //     window.location = modified_url;
+        // })
+        $(document).on('click', '.wholesale_account_tabs', function(event) {
+            // Prevent the default behavior (page reload)
+            event.preventDefault();
+
+            // Extract data-nav attribute value
+            let nav_link = $(this).attr('data-nav');
+
+            // Modify the URL
+            var current_url = window.location.href;
+            var url_array = current_url.split("=");
+            var modified_url = url_array[0] + '=' + nav_link;
+
+            // Change the URL without reloading the page
+            history.pushState(null, null, modified_url);
+
+            // If you want to perform additional actions (e.g., load content), you can do it here
         });
 
      </script>

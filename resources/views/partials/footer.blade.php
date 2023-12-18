@@ -259,6 +259,28 @@
                 },
             }
         });
+        $('#similar_products_owl_carasoul_blog').owlCarousel({
+            rtl:false,
+            loop:false,
+            margin:10,
+            dots:false,
+            nav:true,
+            navText: ["<i class='fas fa-angle-left'></i>", "<i class='fas fa-angle-right'></i>"],
+            responsive:{
+                0:{
+                    items:3,
+                   
+                },
+                600:{
+                    items:3,
+                    
+                },
+                1000:{
+                    items:3,
+                   
+                },
+            }
+        });
         $(document).ready(function() {
             function calculateItemsToShow() {
             // Your logic to dynamically calculate the number of items

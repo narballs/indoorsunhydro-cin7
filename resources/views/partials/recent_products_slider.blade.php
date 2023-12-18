@@ -23,12 +23,12 @@
 @if (!empty($product_views) && count($product_views) > 0)
     <div class="w-100  mt-3">
         <p class="recent_view_header fw-bold fs-2 my-auto border-0 text-white text-center align-middle text-uppercase p-2 mb-0">
-            Recently viewed products
+            @if (auth()->user()) Recently viewed products @else Best Selling Products @endif
         </p>
         <div class="row justify-content-center">
             <div class="col-md-10">
                 <div class="owl-carousel similar_products_owl_carasoul owl-theme mt-4" id="similar_products_owl_carasoul">
-                    @foreach($product_views as $recent_products)
+                    @foreach($product_views->take(24) as $recent_products)
                         @foreach ($recent_products->product->options as $option)
                             @php
                                 $product = $recent_products->product; 
