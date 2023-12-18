@@ -227,7 +227,7 @@ class ContactController extends Controller
         $primary_contact = '';
         $secondary_contacts = '';
         $contact_is_parent = '';
-        $customer = Contact::where('id', $id)->first();
+        $customer = Contact::withTrashed()->where('id', $id)->first();
         $pricing = $customer->priceColumn;
         $logs = UserLog::where('contact_id', $customer->contact_id)
             ->orderBy('id', 'desc')
@@ -240,7 +240,7 @@ class ContactController extends Controller
             $secondary_contacts = '';
         }
 
-        $user = Contact::where('id', $id)->first();
+        $user = Contact::withTrashed()->where('id', $id)->first();
         $all_ids = UserHelper::getAllMemberIds($user);
         $contact_ids = Contact::whereIn('id', $all_ids)
             ->pluck('contact_id')
