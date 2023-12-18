@@ -1979,7 +1979,7 @@
                         console.log(response);
                         if (response.status == true) {
                             $('#wholesale_spinner').addClass('d-none');
-                            window.location.href = '/wholesale/account/thankyou/' + response.wholesale_appication_id;
+                            window.location.href = '/wholesale/account/thankyou/' + response.wholesale_application_id;
                         } else {
                             $('#wholesale_spinner').addClass('d-none');
                             $('#wholesale_form_error').html(response.message);
