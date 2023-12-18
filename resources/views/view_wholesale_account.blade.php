@@ -318,11 +318,11 @@
                                                                                         <input type="hidden" name="" id="edit_image_input" disabled value="{{!empty($wholesale_application->permit_image) ? $wholesale_application->permit_image : ''}}">
                                                                                         <div class="row justify-content-center">
                                                                                             @php
-                                                                                            if (count($wholesale_appication_images) > 0 ) {
-                                                                                                    foreach($wholesale_appication_images as $wholesale_appication_image) {
+                                                                                            if (count($wholesale_application_images) > 0 ) {
+                                                                                                    foreach($wholesale_application_images as $wholesale_application_image) {
                                                                                             @endphp
                                                                                                     <div class="col-md-2 p-0 ml-2">
-                                                                                                        <a href="{{asset('wholesale/images/' . $wholesale_appication_image->permit_image)}}" id="permit_img_src" class="btn-sm btn btn-primary edit_view_image w-100 mb-2">View Image</a>
+                                                                                                        <a href="{{asset('wholesale/images/' . $wholesale_application_image->permit_image)}}" id="permit_img_src" class="btn-sm btn btn-primary edit_view_image w-100 mb-2">View Image</a>
                                                                                                     </div>
                                                                                                 
                                                                                             @php
