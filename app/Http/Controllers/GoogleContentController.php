@@ -2,101 +2,122 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Google_Client;
 use Google_Service_ShoppingContent;
 use Google_Service_ShoppingContent_Product;
-use Google_Service_ShoppingContent_Price;
 use Google_Service_ShoppingContent_ProductsCustomBatchRequest;
+use Google_Service_ShoppingContent_ProductsCustomBatchRequestEntry;
+use Google_Service_ShoppingContent_Price;
 
 class GoogleContentController extends Controller
 {
-    public function createProductFeed()
+    public function createProductFeed(Request $request)
     {
         // Set your credentials file path
-        $credentialsPath = base_path('main_credentials.json');
-
-        // Set your Merchant Center ID
-        $merchantId = '5309938228';
-
+        $credentialsPath = base_path('localcredentials.json');
+        $merchantId  = env('merchent_id');
         // Create a Google API client
         $client = new Google_Client();
         $client->setAuthConfig($credentialsPath);
         $client->setScopes(['https://www.googleapis.com/auth/content']);
+        $appUrl = env('APP_URL');
+        $redirectUri = $appUrl .'/'.'auth/callback/google' ; // Replace with your actual redirect URI
+        $client->setRedirectUri($redirectUri);
+        if ($request->has('code')) {
+            $token = $client->fetchAccessTokenWithAuthCode($request->input('code'));
 
-        // Create a Content API service
-        $contentApi = new Google_Service_ShoppingContent($client);
+            // Use $token as needed (e.g., store it for future API requests)
+            $accessToken = $token['access_token'];
 
-        // Create an array of products (you can dynamically fetch this from your database or another source)
-        $products = [
-            [
-                'id' => '1',
-                'title' => 'Indoor Plant',
-                'description' => 'Beautiful indoor plant for your home',
-                'link' => 'https://example.com/plant',
-                'image_link' => 'https://example.com/plant_image.jpg',
-                'price' => 29.99,
-                'condition' => 'new',
-                'availability' => 'in stock',
-                'brand' => 'YourBrand',
-                'google_product_category' => 'Home & Garden > Plants > Indoor Plants',
-            ],
-            // Add more products as needed
-        ];
+            // Set access token in Google Content API service
+            $contentApi = new Google_Service_ShoppingContent($client);
+            $contentApi->setAccessToken($accessToken);
 
-        // Loop through products and create product entries
-        $productEntries = [];
-        foreach ($products as $product) {
-            $productEntry = new Google_Service_ShoppingContent_Product();
-            $productEntry->setOfferId($product['id']);
-            $productEntry->setTitle($product['title']);
-            $productEntry->setDescription($product['description']);
-            $productEntry->setLink($product['link']);
-            $productEntry->setImageLink($product['image_link']);
+            // Create an array of products (you can dynamically fetch this from your database or another source)
+            $products = [
+                [
+                    'id' => '1',
+                    'title' => 'Indoor Plant',
+                    'description' => 'Beautiful indoor plant for your home',
+                    'link' => 'https://example.com/plant',
+                    'image_link' => 'https://example.com/plant_image.jpg',
+                    'price' => 29.99,
+                    'condition' => 'new',
+                    'availability' => 'in stock',
+                    'brand' => 'YourBrand',
+                    'google_product_category' => 'Home & Garden > Plants > Indoor Plants',
+                ],
+                // Add more products as needed
+            ];
+        
+            // Create a batch request to insert the products
+            $batchRequest = new Google_Service_ShoppingContent_ProductsCustomBatchRequest();
+        
+            // Loop through products and create product entries
+            foreach ($products as $product) {
+                $productEntry = new Google_Service_ShoppingContent_Product();
+                $productEntry->setOfferId($product['id']);
+                $productEntry->setTitle($product['title']);
+                $productEntry->setDescription($product['description']);
+                $productEntry->setLink($product['link']);
+                $productEntry->setImageLink($product['image_link']);
+        
+                // Set the Price
+                $price = new Google_Service_ShoppingContent_Price();
+                $price->setValue($product['price']);
+                $price->setCurrency('USD'); // Adjust the currency as needed
+                $productEntry->setPrice($price);
+        
+                $productEntry->setCondition($product['condition']);
+                $productEntry->setAvailability($product['availability']);
+                $productEntry->setBrand($product['brand']);
+                $productEntry->setGoogleProductCategory($product['google_product_category']);
+        
+                // Create a batch request entry for each product
+                // Create a batch request entry for each product
+                $batchEntry = new Google_Service_ShoppingContent_ProductsCustomBatchRequestEntry();
+                $batchEntry->setMethod('insert');
+                $batchEntry->setProduct($productEntry);
 
-            // Set the Price
-            $price = new Google_Service_ShoppingContent_Price();
-            $price->setValue($product['price']);
-            $price->setCurrency('USD'); // Adjust the currency as needed
-            $productEntry->setPrice($price);
+                // Add the batch entry to the array
+                $batchEntries[] = $batchEntry;
+            }
+            $batchRequest->setEntries($batchEntries);
+            $batchResponse = $contentApi->products->custombatch($batchRequest, (array)$merchantId);
+            // Check if $batchResponse is an array and contains 'entries'
+            if (is_array($batchResponse) && isset($batchResponse['entries'])) {
+                $successCount = 0;
+                $errorMessages = [];
 
-            $productEntry->setCondition($product['condition']);
-            $productEntry->setAvailability($product['availability']);
-            $productEntry->setBrand($product['brand']);
-            $productEntry->setGoogleProductCategory($product['google_product_category']);
+                foreach ($batchResponse['entries'] as $entry) {
+                    if (isset($entry['errors']) && !empty($entry['errors'])) {
+                        // Handle errors
+                        foreach ($entry['errors'] as $error) {
+                            $errorMessages[] = "Product ID: " . $error['productId'] . ", Error: " . $error['message'];
+                        }
+                    } else {
+                        // Count successful product additions
+                        $successCount++;
+                    }
+                }
 
-            $productEntries[] = $productEntry;
-        }
-
-        // Create a batch request to insert the products
-        $batchRequest = new Google_Service_ShoppingContent_ProductsCustomBatchRequest();
-        $batchRequest->setEntries($productEntries);
-
-        // Execute the batch request
-        $batchResponse = $contentApi->products->custombatch($batchRequest, $merchantId);
-
-        // Check the batch response for errors
-        $successCount = 0;
-        $errorMessages = [];
-
-        foreach ($batchResponse->entries as $entry) {
-            if ($entry->getErrors()) {
-                // Handle errors
-                foreach ($entry->getErrors() as $error) {
-                    $errorMessages[] = "Product ID: " . $error->getProductId() . ", Error: " . $error->getMessage();
+                // Handle the results based on your needs
+                if ($successCount > 0) {
+                    // Redirect with success message
+                    return redirect()->route('product.feed')->with('success', "{$successCount} products added successfully.");
+                } else {
+                    // Redirect with error messages
+                    return redirect()->route('product.feed')->with('error', implode("\n", $errorMessages));
                 }
             } else {
-                // Count successful product additions
-                $successCount++;
+                // Handle the case where $batchResponse is not an array or does not contain 'entries'
+                echo 'Error: $batchResponse is not an array or does not contain "entries".';
             }
-        }
-
-        // Handle the results based on your needs
-        if ($successCount > 0) {
-            // Redirect with success message
-            return redirect()->route('product.feed')->with('success', "{$successCount} products added successfully.");
         } else {
-            // Redirect with error messages
-            return redirect()->route('product.feed')->with('error', implode("\n", $errorMessages));
+            // Redirect to Google's OAuth 2.0 server
+            $authUrl = $client->createAuthUrl();
+            return redirect()->away($authUrl);
         }
     }
 }
