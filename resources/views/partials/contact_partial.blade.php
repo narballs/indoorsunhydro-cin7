@@ -51,7 +51,7 @@
                     <img src="{{asset('/theme/img/contact_phone_icon.svg')}}" alt="">
                 </div>
                 <div class="col-md-10 icon_data_div">
-                    <p class="mb-0 address_bar ">(916) 281-3090</p>
+                    <p class="mb-0 address_bar ">{{ \App\Helpers\SettingHelper::getSetting('store_phone_number') }}</p>
                 </div>
             </div>
             <div class="row">
@@ -59,7 +59,7 @@
                     <img src="{{asset('/theme/img/contact_map_icon.svg')}}" alt="">
                 </div>
                 <div class="col-md-10 icon_data_div">
-                    <p class="mb-0 address_bar">Indoor Sun Hydro is a business located at 5671 Warehouse Way, Sacramento, CA, 95826</p>
+                    <p class="mb-0 address_bar">Indoor Sun Hydro is a business located at {{ \App\Helpers\SettingHelper::getSetting('store_address_line_1') }} , {{ \App\Helpers\SettingHelper::getSetting('store_address_line_2') }}</p>
                 </div>
             </div>
         </div>
