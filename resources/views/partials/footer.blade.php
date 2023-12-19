@@ -369,4 +369,7 @@
                 $('.similar_products_owl_carasoul .owl-stage-outer').css('display', 'block');    
             }
         });
+        function showZendesk() {
+            zE('webWidget', 'open');
+        }
     </script>
