@@ -122,6 +122,11 @@
                     </a>
                 </li>
                 @endif
+                <li class="nav-item me-4 mx-4">
+                    <a type="button" class="nav-link text-uppercase nav-item-links font_style_menu" onclick="showZendesk()">
+                       Suggestions & feature request
+                    </a>
+                </li>
                 
                 </ul>
             </div>
