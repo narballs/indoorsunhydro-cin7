@@ -9,9 +9,9 @@
 				<div class="col-md-4 mb-3">
 					<div class="card rounded">
 						@if (!empty($blog->image))
-						<a href="{{route('blog_detail' , $blog->slug)}}"><img class="card-img-top rounded-top" style="height: 12.5rem;" alt="100%x280"  src="{{asset('pages/blogs/' . $blog->image)}}" alt="Blog Image"></a>
+						<a href="{{route('blog_detail' , $blog->slug)}}"><img class="card-img-top rounded-top" alt="100%x280"  src="{{asset('pages/blogs/thumbnails/' . $blog->thumbnail)}}" alt="Blog Image"></a>
 						@endif
-						<div class="card-body">
+						<div class="card-body blog-card-body-height">
 							<h5 class="card-title">{{$blog->title}}</h5>
 							<p class="card-text mb-0">{!! \Illuminate\Support\Str::limit($blog->description, 130) !!}</p>
 							<div class="row justify-content-between">

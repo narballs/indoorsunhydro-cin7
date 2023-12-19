@@ -20,12 +20,7 @@
                             </div>
                             <div class="text-center">
                                 <h1 class="border-0">ThankYou !</h1>
-                                <p class="wholesale_form_labels">For submitting information , we will be in touched with you very shortly.</p>
-                                {{-- <form action="{{route('update_wholesale_account')}}" method="post">
-                                    @csrf
-                                    <input type="hidden" name="wholesale_application_id" value="{{$wholesale_application->id}}">
-                                    <button type="submit" class="btn btn-success">View Info</button>
-                                </form> --}}
+                                <p class="wholesale_form_labels">for submitting your information , We'll be in touch with you very shortly.</p>
                                 <a href="{{route('edit_wholesale_account' , $id)}}" class="btn btn-success">View Info</a>
                             </div>
                         </div>

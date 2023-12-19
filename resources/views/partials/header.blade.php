@@ -110,6 +110,10 @@
             justify-content: center;
             border-radius: 50px !important;
         }
+        .blog-card-body-height {
+            min-height: 13rem!important;
+            max-height:13rem !important;
+        }
     
         /* Custom hover styles */
         @media screen and (max-width: 768px) {
