@@ -26,7 +26,8 @@
         "symfony/http-client": "^5.4",
         "symfony/mailgun-mailer": "^5.4",
         "twilio/sdk": "^6.44",
-        "zendesk/zendesk_api_client_php": "^2.2"
+        "zendesk/zendesk_api_client_php": "^2.2",
+        "google/apiclient": "^2.7"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

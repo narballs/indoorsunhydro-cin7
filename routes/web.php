@@ -29,6 +29,7 @@ use App\Http\Controllers\AdminInventoryLocationController;
 use App\Http\Controllers\Admin\WholesaleApplicationController;
 use App\Http\Controllers\Admin\DiscountController;
 use App\Http\Controllers\Admin\PagesController;
+use App\Http\Controllers\GoogleContentController;
 use App\Models\TaxClass;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -45,7 +46,7 @@ use App\Models\User;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+Route::get('/create-product-feed', [GoogleContentController::class, 'createProductFeed']);
 Route::resource('landing-page', LandingPageController::class);
 Route::get('/', [HomeController::class, 'index'])->name('index');
 Route::get('/wholesale/account/create', [UserController::class, 'create_wholesale_account'])->name('create_wholesale_account');
@@ -148,6 +149,7 @@ Route::group(['prefix' => 'my-account/'], function () {
 });
 
 Route::group(['middleware' => ['auth']], function () {
+    
     Route::resource('admin/pages', PagesController::class);
     Route::post('/editor/image_upload', [PagesController::class, 'image_upload'])->name('image_upload');
     // faqs page section

@@ -42,5 +42,11 @@ return [
     'cin7' => [
         'get_contact_url' => env('Cin7_GET_CONTACT_URL'),
     ],
+    'google' => [
+        'api_key' => env('GOOGLE_API_KEY'),
+        'client_id' => env('GOOGLE_OAUTH_CLIENT_ID'),
+        'client_secret' => env('GOOGLE_OAUTH_CLIENT_SECRET'),
+        'redirect_uri' => env('GOOGLE_OAUTH_REDIRECT_URI'),
+    ],
 
 ];
