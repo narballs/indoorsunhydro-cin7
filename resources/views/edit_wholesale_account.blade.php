@@ -2491,6 +2491,7 @@
                 data.append('card_holder_zip_code', $('#card_holder_zip_code').val());
                 data.append('undertaking_name', $('#undertaking_name').val());
                 data.append('authorize_text', $('#authorize_text').val());
+                data.append('date_wholesale', $('#date_wholesale').val());
                 data.append('customer_signature', $('#customer_signature').val());
                 data.append('company_name', $('#company_name').val());
                 data.append('first_name', $('#first_name').val());
