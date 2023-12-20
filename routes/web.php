@@ -46,7 +46,12 @@ use App\Models\User;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/create-product-feed', [GoogleContentController::class, 'createProductFeed']);
+
+Route::get('/google/authorize', [GoogleContentController::class, 'authorizeGoogle'])->name('google.authorize');
+Route::get('/auth/google/callback', [GoogleContentController::class, 'handleCallback'])->name('google.callback');
+Route::get('/google/insert-products', [GoogleContentController::class, 'insertProducts'])->name('google.insertProducts');
+// Route::get('/auth/google/callback', [GoogleContentController::class, 'createProductFeed']);
+// Route::get('/google/redirect', [GoogleContentController::class, 'redirectToGoogle']);
 Route::resource('landing-page', LandingPageController::class);
 Route::get('/', [HomeController::class, 'index'])->name('index');
 Route::get('/wholesale/account/create', [UserController::class, 'create_wholesale_account'])->name('create_wholesale_account');

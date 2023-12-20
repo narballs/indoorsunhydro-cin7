@@ -176,6 +176,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         //Jenssegers\Agent\AgentServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
+        Laravel\Socialite\SocialiteServiceProvider::class,
 
     ],
 
@@ -232,7 +233,8 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'NavHelper' => App\Helpers\NavHelper::class,
-        'Agent' => Jenssegers\Agent\Facades\Agent::class
+        'Agent' => Jenssegers\Agent\Facades\Agent::class,
+        'Socialite' => Laravel\Socialite\Facades\Socialite::class,
 
 
     ],
