@@ -7,6 +7,7 @@ use Google_Service_ShoppingContent;
 use Google_Service_ShoppingContent_Product;
 use Google_Service_ShoppingContent_ProductsCustomBatchRequest;
 use Google_Service_ShoppingContent_ProductsCustomBatchRequestEntry;
+use Google_Service_ShoppingContent_Price;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -143,6 +144,19 @@ class GoogleContentController extends Controller
             $item->setOfferId($product['id']);
             $item->setTitle($product['title']);
             $item->setDescription($product['description']);
+            $item->setLink($product['link']);
+            $item->setImageLink($product['image_link']);
+    
+            // Set the Price
+            $price = new Google_Service_ShoppingContent_Price();
+            $price->setValue($product['price']);
+            $price->setCurrency('USD'); // Adjust the currency as needed
+            $item->setPrice($price);
+    
+            $item->setCondition($product['condition']);
+            $item->setAvailability($product['availability']);
+            $item->setBrand($product['brand']);
+            $item->setGoogleProductCategory($product['google_product_category']);
             $request = new Google_Service_ShoppingContent_ProductsCustomBatchRequestEntry();
             $request->setMethod('insert');
             $request->setBatchId($product['id']); // Use a unique identifier for each entry
