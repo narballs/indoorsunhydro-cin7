@@ -30,7 +30,7 @@ class GoogleContentController extends Controller
                             'description' => $product->description,
                             'link' => url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug),
                             'image_link' => !empty($product->images) ?  $product->images : asset('theme/img/image_not_available.png'),
-                            'price' => $option->defaultPrice->retailUSD,
+                            'price' => !empty($option->price[0]->retailUSD) ? $option->price[0]->retailUSD : $product->price,
                             'condition' => 'new',
                             'availability' => 'in stock',
                             'brand' => !empty($product->brand[0]->name) ? $product->brand[0]->name : 'No brand',
