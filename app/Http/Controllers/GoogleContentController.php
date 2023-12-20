@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Google_Client;
 use Google_Service_ShoppingContent;
@@ -14,6 +15,31 @@ class GoogleContentController extends Controller
 {
     public function createProductFeed(Request $request)
     {
+        
+        $product_array = [];
+        $products = Product::with('options','options.defaultPrice', 'brand', 'categories' , 'product_views','apiorderItem', 'product_stock')
+        ->where('status' , '!=' , 'Inactive')
+        ->get();
+        if (count($products) > 0) {
+            foreach ($products as $product) {
+                if (count($product->options) > 0) {
+                    foreach ($product->options as $option) {
+                        $product_array[] = [
+                            'id' => $product->id,
+                            'title' => $product->name,
+                            'description' => $product->description,
+                            'link' => url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug),
+                            'image_link' => !empty($product->images) ?  $product->images : asset('theme/img/image_not_available.png'),
+                            'price' => $option->defaultPrice->retailUSD,
+                            'condition' => 'new',
+                            'availability' => 'in stock',
+                            'brand' => !empty($product->brand[0]->name) ? $product->brand[0]->name : 'No brand',
+                            'google_product_category' => !empty($product->categories->name) ? $product->categories->name : 'No category',
+                        ];
+                    }
+                }
+            }
+        }
         // Set your credentials file path
         $credentialsPath = base_path('localcredentials.json');
         $merchantId  = env('merchent_id');
@@ -35,27 +61,27 @@ class GoogleContentController extends Controller
             $contentApi->setAccessToken($accessToken);
 
             // Create an array of products (you can dynamically fetch this from your database or another source)
-            $products = [
-                [
-                    'id' => '1',
-                    'title' => 'Indoor Plant',
-                    'description' => 'Beautiful indoor plant for your home',
-                    'link' => 'https://example.com/plant',
-                    'image_link' => 'https://example.com/plant_image.jpg',
-                    'price' => 29.99,
-                    'condition' => 'new',
-                    'availability' => 'in stock',
-                    'brand' => 'YourBrand',
-                    'google_product_category' => 'Home & Garden > Plants > Indoor Plants',
-                ],
-                // Add more products as needed
-            ];
+            // $products = [
+            //     [
+            //         'id' => '1',
+            //         'title' => 'Indoor Plant',
+            //         'description' => 'Beautiful indoor plant for your home',
+            //         'link' => 'https://example.com/plant',
+            //         'image_link' => 'https://example.com/plant_image.jpg',
+            //         'price' => 29.99,
+            //         'condition' => 'new',
+            //         'availability' => 'in stock',
+            //         'brand' => 'YourBrand',
+            //         'google_product_category' => 'Home & Garden > Plants > Indoor Plants',
+            //     ],
+            //     // Add more products as needed
+            // ];
         
             // Create a batch request to insert the products
             $batchRequest = new Google_Service_ShoppingContent_ProductsCustomBatchRequest();
         
             // Loop through products and create product entries
-            foreach ($products as $product) {
+            foreach ($product_array as $product) {
                 $productEntry = new Google_Service_ShoppingContent_Product();
                 $productEntry->setOfferId($product['id']);
                 $productEntry->setTitle($product['title']);
