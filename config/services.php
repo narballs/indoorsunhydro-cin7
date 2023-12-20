@@ -46,7 +46,11 @@ return [
         'api_key' => env('GOOGLE_API_KEY'),
         'client_id' => env('GOOGLE_OAUTH_CLIENT_ID'),
         'client_secret' => env('GOOGLE_OAUTH_CLIENT_SECRET'),
-        'redirect_uri' => env('GOOGLE_OAUTH_REDIRECT_URI'),
+        'redirect' => env('GOOGLE_OAUTH_REDIRECT_URI'),
+        'merchant_center_id' => env('GOOGLE_MERCHANT_CENTER_ID'),
+        'scopes' => [
+            'https://www.googleapis.com/auth/content', // Add other necessary scopes
+        ],
     ],
 
 ];
