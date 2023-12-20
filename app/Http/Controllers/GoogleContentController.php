@@ -52,32 +52,11 @@ class GoogleContentController extends Controller
         $client->setRedirectUri($redirectUri);
         if ($request->has('code')) {
             $token = $client->fetchAccessTokenWithAuthCode($request->input('code'));
-
-            // Use $token as needed (e.g., store it for future API requests)
             $accessToken = $token['access_token'];
-
-            // Set access token in Google Content API service
             $contentApi = new Google_Service_ShoppingContent($client);
             $contentApi->setAccessToken($accessToken);
 
-            // Create an array of products (you can dynamically fetch this from your database or another source)
-            // $products = [
-            //     [
-            //         'id' => '1',
-            //         'title' => 'Indoor Plant',
-            //         'description' => 'Beautiful indoor plant for your home',
-            //         'link' => 'https://example.com/plant',
-            //         'image_link' => 'https://example.com/plant_image.jpg',
-            //         'price' => 29.99,
-            //         'condition' => 'new',
-            //         'availability' => 'in stock',
-            //         'brand' => 'YourBrand',
-            //         'google_product_category' => 'Home & Garden > Plants > Indoor Plants',
-            //     ],
-            //     // Add more products as needed
-            // ];
-        
-            // Create a batch request to insert the products
+            
             $batchRequest = new Google_Service_ShoppingContent_ProductsCustomBatchRequest();
         
             // Loop through products and create product entries
@@ -99,14 +78,9 @@ class GoogleContentController extends Controller
                 $productEntry->setAvailability($product['availability']);
                 $productEntry->setBrand($product['brand']);
                 $productEntry->setGoogleProductCategory($product['google_product_category']);
-        
-                // Create a batch request entry for each product
-                // Create a batch request entry for each product
                 $batchEntry = new Google_Service_ShoppingContent_ProductsCustomBatchRequestEntry();
                 $batchEntry->setMethod('insert');
                 $batchEntry->setProduct($productEntry);
-
-                // Add the batch entry to the array
                 $batchEntries[] = $batchEntry;
             }
             $batchRequest->setEntries($batchEntries);
