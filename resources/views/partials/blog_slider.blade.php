@@ -25,7 +25,7 @@ $blogs = NavHelper::getBlogs();
                             <a href="{{route('blog_detail' , $blog->slug)}}"><img class="img-fluid" style="height: 12.5rem;" alt="100%x280" src="{{asset('pages/blogs/thumbnails/' . $blog['thumbnail'])}}"></a>
                         </div>
                         <div class="card-body pb-2 blog-card-body-height">
-                            <h4 class="card-title">{{$blog->title}}</h4>
+                            <h5 class="card-title">{!! \Illuminate\Support\Str::limit($blog->title, 25) !!}</h5>
                             <p class="card-text">{!! \Illuminate\Support\Str::limit($blog->description, 130) !!}</p>
                             <div class="row justify-content-between">
                                 <div class="col-md-5">
