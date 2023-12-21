@@ -38,6 +38,7 @@ class HomeController extends Controller
             ->with('products')->where('is_active', 1)
             ->get();
         $product_views = null;
+        $best_selling_products = null;
         $product_views_chunks = null;
         $user_id = Auth::id();
         $user_buy_list_options = [];
@@ -56,7 +57,9 @@ class HomeController extends Controller
             ->get();
             
         } else {
-            $product_views = ApiOrderItem::with('product.options', 'product.options.defaultPrice','product.brand', 'product.options.products','product.categories' ,'product.apiorderItem')
+            $product_views = null;
+        }
+        $best_selling_products = ApiOrderItem::with('product.options', 'product.options.defaultPrice','product.brand', 'product.options.products','product.categories' ,'product.apiorderItem')
             ->whereHas('product' , function($query) {
                 $query->where('status' , '!=' , 'Inactive');
             })
@@ -64,7 +67,6 @@ class HomeController extends Controller
             ->orderBy('created_at' , 'DESC')
             ->groupBy('product_id')
             ->get();
-        }
         $user_list = BuyList::where('user_id', $user_id)
             ->where('contact_id', $contact_id)
             ->first();
@@ -79,7 +81,7 @@ class HomeController extends Controller
 
 
         
-        return view('index', compact('categories' , 'product_views','lists','user_buy_list_options' , 'contact_id'));
+        return view('index', compact('categories' , 'product_views','best_selling_products','lists','user_buy_list_options' , 'contact_id'));
     }
 
     public function show_page($slug) {
