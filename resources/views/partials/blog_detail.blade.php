@@ -16,9 +16,9 @@
                         </div>
 
                         <div class="col-xl-6 col-lg-8 col-md-8 col-sm-12 col-xs-12 blog_detail_description">
-                            <div class="mb-5">
+                            <div class="mb-5 w-100">
                                 @if(!empty($blog_detail->image))
-                                    <img src="{{asset('/pages/blogs/' . $blog_detail->image)}}" class="img-fluid" alt="...">
+                                    <img src="{{asset('/pages/blogs/' . $blog_detail->image)}}" class="img-fluid-custom" alt="...">
                                 @endif
                             </div>
                             {!! $blog_detail->description !!}
@@ -101,5 +101,10 @@
         font-size: 1.3rem !important;
         background-color:#7BC533;
         font-weight:600;
+    }
+    .img-fluid-custom {
+        width: 100%; /* Make the image fill the entire width of its container */
+        height: auto; /* Maintain the image's aspect ratio */
+        display: block; 
     }
 </style>
