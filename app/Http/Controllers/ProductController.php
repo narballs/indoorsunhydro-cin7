@@ -152,7 +152,12 @@ class ProductController extends Controller
             ->get();
             
         } else {
-             $product_views = ApiOrderItem::with('product.options', 'product.options.defaultPrice','product.brand', 'product.options.products','product.categories' ,'product.apiorderItem')
+             $product_views = null;
+        }
+
+        $best_selling_products = null;
+
+        $best_selling_products = ApiOrderItem::with('product.options', 'product.options.defaultPrice','product.brand', 'product.options.products','product.categories' ,'product.apiorderItem')
             ->whereHas('product' , function($query) {
                 $query->where('status' , '!=' , 'Inactive');
             })
@@ -160,7 +165,6 @@ class ProductController extends Controller
             ->orderBy('created_at' , 'DESC')
             ->groupBy('product_id')
             ->get();
-        }
         
         return view('categories', compact(
             'products',
@@ -179,7 +183,8 @@ class ProductController extends Controller
             'contact_id',
             'pricing',
             'user_buy_list_options',
-            'product_views'
+            'product_views',
+            'best_selling_products'
             // 'product_buy_list'
         ));
     }
@@ -366,7 +371,12 @@ class ProductController extends Controller
             ->get();
             
         } else {
-            $product_views = ApiOrderItem::with('product.options', 'product.options.defaultPrice','product.brand', 'product.options.products','product.categories' ,'product.apiorderItem')
+            $product_views = null;
+        }
+        
+        $best_selling_products = null;
+
+        $best_selling_products = ApiOrderItem::with('product.options', 'product.options.defaultPrice','product.brand', 'product.options.products','product.categories' ,'product.apiorderItem')
             ->whereHas('product' , function($query) {
                 $query->where('status' , '!=' , 'Inactive');
             })
@@ -374,8 +384,6 @@ class ProductController extends Controller
             ->orderBy('created_at' , 'DESC')
             ->groupBy('product_id')
             ->get();
-        }
-        
 
         return view('all_products', compact(
             'products',
@@ -393,7 +401,8 @@ class ProductController extends Controller
             'childeren_id',
             'user_buy_list_options',
             'contact_id',
-            'product_views'
+            'product_views',
+            'best_selling_products'
             // 'db_price_column'
         ));
     }
@@ -468,6 +477,17 @@ class ProductController extends Controller
             ->take(16)
             ->get();
         }
+
+        $best_selling_products = null;
+        $best_selling_products = ApiOrderItem::with('product.options', 'product.options.defaultPrice','product.brand', 'product.options.products','product.categories' ,'product.apiorderItem')
+            ->whereHas('product' , function($query) {
+                $query->where('status' , '!=' , 'Inactive');
+            })
+            ->select('product_id' , DB::raw('count(*) as entry_count'))
+            ->orderBy('created_at' , 'DESC')
+            ->groupBy('product_id')
+            ->get();
+
         $location_inventories = [];
         $available_stock = [];
         $stock = true;
@@ -556,7 +576,7 @@ class ProductController extends Controller
             'contact_id',
             'stock_updated',
             'product_stocks',
-            'similar_products','total_stock'
+            'similar_products','total_stock','best_selling_products'
         ));
 
         
@@ -600,21 +620,26 @@ class ProductController extends Controller
             ->get();
             
         } else {
-             $product_views = ApiOrderItem::with('product.options', 'product.options.defaultPrice','product.brand', 'product.options.products','product.categories' ,'product.apiorderItem')
-            ->whereHas('product' , function($query) {
-                $query->where('status' , '!=' , 'Inactive');
-            })
-            ->select('product_id' , DB::raw('count(*) as entry_count'))
-            ->orderBy('created_at' , 'DESC')
-            ->groupBy('product_id')
-            ->get();
+             $product_views = null;
         }
+
+        $best_selling_products = null;
+        $best_selling_products = ApiOrderItem::with('product.options', 'product.options.defaultPrice','product.brand', 'product.options.products','product.categories' ,'product.apiorderItem')
+        ->whereHas('product' , function($query) {
+            $query->where('status' , '!=' , 'Inactive');
+        })
+        ->select('product_id' , DB::raw('count(*) as entry_count'))
+        ->orderBy('created_at' , 'DESC')
+        ->groupBy('product_id')
+        ->get();
         
         return view('categories', compact('products',
         'user_buy_list_options',
         'contact_id',
         'lists', 
-        'product_views'));
+        'product_views',
+        'best_selling_products'
+        ));
     }
 
     public function showProductByBrands(Request $request, $name)
@@ -802,16 +827,18 @@ class ProductController extends Controller
             ->get();
             
         } else {
-             $product_views = ApiOrderItem::with('product.options', 'product.options.defaultPrice','product.brand', 'product.options.products','product.categories' ,'product.apiorderItem')
-            ->whereHas('product' , function($query) {
-                $query->where('status' , '!=' , 'Inactive');
-            })
-            ->select('product_id' , DB::raw('count(*) as entry_count'))
-            ->orderBy('created_at' , 'DESC')
-            ->groupBy('product_id')
-            ->get();
+            $product_views = null;
         }
         
+        $best_selling_products = null;
+        $best_selling_products = ApiOrderItem::with('product.options', 'product.options.defaultPrice','product.brand', 'product.options.products','product.categories' ,'product.apiorderItem')
+        ->whereHas('product' , function($query) {
+            $query->where('status' , '!=' , 'Inactive');
+        })
+        ->select('product_id' , DB::raw('count(*) as entry_count'))
+        ->orderBy('created_at' , 'DESC')
+        ->groupBy('product_id')
+        ->get();
 
 
         return view(
@@ -832,7 +859,8 @@ class ProductController extends Controller
             'pricing',
             'user_buy_list_options',
             'contact_id',
-            'product_views', 
+            'product_views',
+            'best_selling_products' 
             )
         );
     }
@@ -1273,15 +1301,18 @@ class ProductController extends Controller
             ->get();
             
         } else {
-             $product_views = ApiOrderItem::with('product.options', 'product.options.defaultPrice','product.brand', 'product.options.products','product.categories' ,'product.apiorderItem')
-            ->whereHas('product' , function($query) {
-                $query->where('status' , '!=' , 'Inactive');
-            })
-            ->select('product_id' , DB::raw('count(*) as entry_count'))
-            ->orderBy('created_at' , 'DESC')
-            ->groupBy('product_id')
-            ->get();
+            $product_views = null;
         }
+
+        $best_selling_products = null;
+        $best_selling_products = ApiOrderItem::with('product.options', 'product.options.defaultPrice','product.brand', 'product.options.products','product.categories' ,'product.apiorderItem')
+        ->whereHas('product' , function($query) {
+            $query->where('status' , '!=' , 'Inactive');
+        })
+        ->select('product_id' , DB::raw('count(*) as entry_count'))
+        ->orderBy('created_at' , 'DESC')
+        ->groupBy('product_id')
+        ->get();
         
         return view('search_product.search_product', compact(
             'products',
@@ -1299,7 +1330,8 @@ class ProductController extends Controller
             'pricing',
             'filter_value_main',
             'user_buy_list_options',
-            'product_views'
+            'product_views',
+            'best_selling_products'
         ));
     }
 
