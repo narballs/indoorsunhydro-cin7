@@ -20,7 +20,7 @@
                             </div>
                             <div class="text-center">
                                 <h1 class="border-0">ThankYou !</h1>
-                                <p class="wholesale_form_labels">for submitting your information , We'll be in touch with you very shortly.</p>
+                                <p class="wholesale_form_labels">for submitting your information . We'll be in touch with you very shortly.</p>
                                 <a href="{{route('edit_wholesale_account' , $id)}}" class="btn btn-success">View Info</a>
                             </div>
                         </div>
