@@ -2,6 +2,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use Google\Service\ShoppingContent;
+use Google\Service\ShoppingContent\Price;
 use Google_Client;
 use Google_Service_ShoppingContent;
 use Google_Service_ShoppingContent_Product;
@@ -16,68 +18,6 @@ use Laravel\Socialite\Facades\Socialite;
 class GoogleContentController extends Controller
 {
     
-
-    // public function createProductFeed(Request $request)
-    // {
-    //     $merchantId = '5309938228';
-    //     $apiUrl = "https://shoppingcontent.googleapis.com/content/v2.1/5309938228/products";
-    //     $get_token = Socialite::driver('google')->user();
-    //     $productData = [];
-    //     $products = Product::with('options','options.defaultPrice', 'brand', 'categories' , 'product_views','apiorderItem', 'product_stock')
-    //     ->where('status' , '!=' , 'Inactive')
-    //     ->get();
-    //     if (count($products) > 0) {
-    //         foreach ($products as $product) {
-    //             if (count($product->options) > 0) {
-    //                 foreach ($product->options as $option) {
-    //                     $productData[] = [
-    //                         'id' => $product->id,
-    //                         'title' => $product->name,
-    //                         'description' => $product->description,
-    //                         'link' => url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug),
-    //                         'image_link' => !empty($product->images) ?  $product->images : asset('theme/img/image_not_available.png'),
-    //                         'price' => !empty($option->price[0]->retailUSD) ? $option->price[0]->retailUSD : $product->price,
-    //                         'condition' => 'new',
-    //                         'availability' => 'in stock',
-    //                         'brand' => !empty($product->brand[0]->name) ? $product->brand[0]->name : 'No brand',
-    //                         'google_product_category' => !empty($product->categories->name) ? $product->categories->name : 'No category',
-    //                     ];
-    //                 }
-    //             }
-    //         }
-    //     }
-
-        
-    //     $response = Http::withHeaders([
-    //         'Authorization' => 'Bearer ' . $get_token->token, // Replace with your actual access token
-    //         'Content-Type' => 'application/json',
-    //     ])->post($apiUrl, $productData);
-    //     dd($response);
-    //     if ($response->getStatusCode() == 200) {
-    //         $responseData = json_decode($response->getBody(), true);
-    //         return response()->json($responseData);
-    //     } else {
-    //         $errorData = json_decode($response->getBody(), true);
-    //         return response()->json($errorData, $response->getStatusCode());
-    //     }
-    // }
-
-    
-    // public function redirectToGoogle()
-    // {
-        
-    //     return Socialite::driver('google')
-    //     ->scopes([
-    //         'openid',
-    //         'profile',
-    //         'email',
-    //         'https://www.googleapis.com/auth/content', // Add other necessary scopes
-    //     ])
-    //     ->redirect();
-       
-        
-    // }
-
 
     public function authorizeGoogle()
     {
@@ -96,8 +36,12 @@ class GoogleContentController extends Controller
         $client->setClientId(config('services.google.client_id'));
         $client->setClientSecret(config('services.google.client_secret'));
         $client->setRedirectUri(config('services.google.redirect'));
-        $client->setScopes(['https://www.googleapis.com/auth/content']);
-
+        $client->setScopes([
+            'openid',
+            'profile',
+            'email',
+            'https://www.googleapis.com/auth/content', // Add other necessary scopes
+        ]);
         $code = $request->input('code');
         $token = $client->fetchAccessTokenWithAuthCode($code);
         $this->insertProducts($token , $client);
@@ -134,12 +78,11 @@ class GoogleContentController extends Controller
         // $client = new Google_Client();
         $client->setAccessToken($token['access_token']); // Use the stored access token
 
-        $service = new Google_Service_ShoppingContent($client);
+        $service = new ShoppingContent($client);
 
         $batchRequests = [];
-    
         foreach ($product_array as $index => $product) {
-            $item = new Google_Service_ShoppingContent_Product();
+            $item =  new ShoppingContent\Product();
             // Set product data
             $item->setOfferId($product['id']);
             $item->setTitle($product['title']);
@@ -148,7 +91,7 @@ class GoogleContentController extends Controller
             $item->setImageLink($product['image_link']);
     
             // Set the Price
-            $price = new Google_Service_ShoppingContent_Price();
+            $price = new Price();
             $price->setValue($product['price']);
             $price->setCurrency('USD'); // Adjust the currency as needed
             $item->setPrice($price);
@@ -157,7 +100,10 @@ class GoogleContentController extends Controller
             $item->setAvailability($product['availability']);
             $item->setBrand($product['brand']);
             $item->setGoogleProductCategory($product['google_product_category']);
-            $request = new Google_Service_ShoppingContent_ProductsCustomBatchRequestEntry();
+            $item->setChannel('local');
+            $item->setcontentLanguage('en');
+            $item->settargetCountry('US');
+            $request = new ShoppingContent\ProductsCustomBatchRequestEntry();
             $request->setMethod('insert');
             $request->setBatchId($product['id']); // Use a unique identifier for each entry
             $request->setMerchantId(config('services.google.merchant_center_id'));
@@ -166,12 +112,26 @@ class GoogleContentController extends Controller
             $batchRequests[] = $request;
         }
     
-        $batchRequest = new Google_Service_ShoppingContent_ProductsCustomBatchRequest();
+        $batchRequest = new ShoppingContent\ProductsCustomBatchRequest();
         $batchRequest->setEntries($batchRequests);
-        // set a channel if desired
-        $batchRequest->setChannel('offline');
-        $batchResponse = $service->products->custombatch($batchRequest);
-    
-        return response()->json($batchResponse);
+        
+        try {
+            $batchResponse = $service->products->custombatch($batchRequest);
+            foreach ($batchResponse->entries as $entry) {
+                // Access information about each operation
+                $product = $entry->product;
+                // Extract specific details
+                $productId = $product->id;
+                $title = $product->title;
+
+                // Output or process the information as needed
+                echo "Product ID: $productId\n";
+                echo "Title: $title\n";
+                echo "-----------------\n";
+            }
+        } catch (\Google_Service_Exception $e) {
+            // Handle exceptions (e.g., authentication issues, API errors)
+            echo "Error: " . $e->getMessage();
+        }
     }
 }

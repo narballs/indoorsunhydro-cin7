@@ -46,7 +46,7 @@ use App\Models\User;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+Route::get('/insertProductsbatch', [GoogleContentController::class, 'insertProductsbatch'])->name('insertProductsbatch');
 Route::get('/google/authorize', [GoogleContentController::class, 'authorizeGoogle'])->name('google.authorize');
 Route::get('/auth/google/callback', [GoogleContentController::class, 'handleCallback'])->name('google.callback');
 Route::get('/google/insert-products', [GoogleContentController::class, 'insertProducts'])->name('google.insertProducts');
