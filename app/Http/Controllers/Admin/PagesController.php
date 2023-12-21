@@ -272,8 +272,8 @@ class PagesController extends Controller
                 $fileName_thumb =rand(11111111,99999999)."_".time()."_thumb_".$blog_image;
                 $destinationPath = public_path('pages/blogs');
                 File::makeDirectory($destinationPath, $mode = 0777, true, true);
-                $imageUrl = $destinationPath.'/'.$blog_image;
-                $imageinter =  Image::make($image)->resize(1920,517)->save($imageUrl);
+                // $imageUrl = $destinationPath.'/'.$blog_image;
+                // $imageinter =  Image::make($image)->resize(1920,517)->save($imageUrl);
                 
                 $thumbnailpath = public_path('pages/blogs/thumbnails');
                 if(!File::isDirectory($thumbnailpath)){
@@ -282,7 +282,7 @@ class PagesController extends Controller
                 $imageUrl = $thumbnailpath.'/'.$fileName_thumb;
                 $imageinter =  Image::make($image)->fit(290,200)->save($imageUrl);
 
-                // $image->move($destinationPath, $blog_image);
+                $image->move($destinationPath, $blog_image);
             }
         } else {
             $blog_image = null;
@@ -330,8 +330,8 @@ class PagesController extends Controller
                 $destinationPath = public_path('pages/blogs');
                 $Image = time() . "." . $blog_image->getClientOriginalExtension();
                 File::makeDirectory($destinationPath, $mode = 0777, true, true);
-                $imageUrl = $destinationPath.'/'.$Image;
-                $imageinter =  Image::make($blog_image2)->resize(1920,517)->save($imageUrl);
+                // $imageUrl = $destinationPath.'/'.$Image;
+                // $imageinter =  Image::make($blog_image2)->resize(1920,517)->save($imageUrl);
                 
                 $fileName_thumb =rand(11111111,99999999)."_".time()."_thumb_".$Image;
                 $thumbnailpath = public_path('pages/blogs/thumbnails');
@@ -342,7 +342,7 @@ class PagesController extends Controller
                 $imageinter =  Image::make($blog_image2)->fit(290,200)->save($imageUrl);
 
 
-                // $blog_image->move($destinationPath, $Image);
+                $blog_image->move($destinationPath, $Image);
                 $request['blog_image'] = "$Image";
             }
 
