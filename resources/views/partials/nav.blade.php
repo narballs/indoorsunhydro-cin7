@@ -122,6 +122,11 @@
                     </a>
                 </li>
                 @endif
+                <li class="nav-item me-4 mx-4">
+                    <a type="button" class="nav-link text-uppercase nav-item-links font_style_menu" onclick="showZendesk()">
+                       Suggestions & feature request
+                    </a>
+                </li>
                 
                 </ul>
             </div>
@@ -363,11 +368,16 @@
                                 </li>
                             @endif
                             @if (session('logged_in_as_another_user'))
-                                <li class="nav-item me-3">
-                                    <a class="nav-link text-uppercase nav-item-links ps-4" href="{{ url('admin/go-back') }} ">Go Back
+                                <li class="nav-item me-4">
+                                    <a class="nav-link text-uppercase nav-item-links ps-1" href="{{ url('admin/go-back') }} ">Go Back
                                     </a>
                                 </li>
                             @endif
+                            <li class="nav-item me-4">
+                                <a type="button" class="nav-link text-uppercase nav-item-links ps-1" onclick="showZendesk()">
+                                   Suggestions & feature request
+                                </a>
+                            </li>
                             
                         </ul>
                     </div>

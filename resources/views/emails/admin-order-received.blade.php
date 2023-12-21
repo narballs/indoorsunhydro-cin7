@@ -66,6 +66,11 @@
                                 </td>
                             </tr>
                         @endif
+                        <tr>
+                            <td align="" style="text-align: center;color:#000000;font-color:#000000;font-size: 11px;font-weight:400;">
+                                Suggestions , Comments and website feature requests . <a href="{{url('/contact-us')}}">Please click here to contact us</a>
+                            </td>
+                        </tr>
                     </table>
                 </td>
             </tr>

@@ -31,6 +31,9 @@ if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php'))
 |
 */
 
+// Set the PHP memory limit
+ini_set('memory_limit', '256M');
+
 require __DIR__.'/../vendor/autoload.php';
 
 /*
