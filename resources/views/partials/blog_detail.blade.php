@@ -18,7 +18,7 @@
                         <div class="col-xl-6 col-lg-8 col-md-8 col-sm-12 col-xs-12 blog_detail_description">
                             <div class="mb-5">
                                 @if(!empty($blog_detail->image))
-                                    <img src="{{asset('/pages/blogs/' . $blog_detail->image)}}" class="img-fluid" alt="..." style="max-height:450px">
+                                    <img src="{{asset('/pages/blogs/' . $blog_detail->image)}}" class="img-fluid" alt="...">
                                 @endif
                             </div>
                             {!! $blog_detail->description !!}
