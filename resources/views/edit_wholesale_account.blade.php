@@ -201,7 +201,7 @@
                                                                 </div>
                                                                 <div class="col-md-12">
                                                                     <div class="form-group">
-                                                                        <label class="wholesale_form_labels" for="address_2">Address2 <span class="text-danger">*</span></label>
+                                                                        <label class="wholesale_form_labels" for="address_2">Address2</label>
                                                                         <input type="text" name="address_2_billing" value="{{!empty($wholesale_application_address_billing->address_2) ? $wholesale_application_address_billing->address_2 : '' }}" class="form-control wholesale_inputs" id="address_2_billing" onchange="remove_error(this)" placeholder="Enter your second address here">
                                                                     </div>
                                                                 </div>
@@ -280,7 +280,7 @@
                                                                 </div>
                                                                 <div class="col-md-12">
                                                                     <div class="form-group">
-                                                                        <label class="wholesale_form_labels" for="address_2">Address2 <span class="text-danger">*</span></label>
+                                                                        <label class="wholesale_form_labels" for="address_2">Address2</label>
                                                                         <input type="text" name="address_2_delivery" value="{{!empty($wholesale_application_address_delivery->address_2) ? $wholesale_application_address_delivery->address_2 : ''}}" class="form-control wholesale_inputs" id="address_2_delivery" onchange="remove_error(this)" placeholder="Enter your second address here">
                                                                     </div>
                                                                 </div>

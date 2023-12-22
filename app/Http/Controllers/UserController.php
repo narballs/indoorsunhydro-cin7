@@ -531,7 +531,6 @@ class UserController extends Controller
 
         $validatedData = $request->validate([
             'first_name' => 'required',
-            'last_name' => 'required',
             'password' => 'required|min:6',
             'confirm_password' => 'required|same:password'
         ]);
@@ -548,6 +547,7 @@ class UserController extends Controller
     
         $validatedData = $request->validate([
             'company_name' => 'required|regex:/^[a-zA-Z0-9\s]+$/',
+            'phone' => 'required',
         ]);
 
         if($validatedData) {

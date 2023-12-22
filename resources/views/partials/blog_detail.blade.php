@@ -98,7 +98,7 @@
         line-height: 34.923px; /* 140.383% */
     }
     .blog_header {
-        font-size: 1.3rem !important;
+        font-size: 22px !important;
         background-color:#7BC533;
         font-weight:600;
     }
