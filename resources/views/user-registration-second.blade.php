@@ -10,6 +10,35 @@
     </div>
 @endif
 <style>
+    .first_name_required::after {
+        content: "*";
+        color: red;
+        position: absolute;
+        top: 20%;
+        left: 10rem;
+    }
+    .password_required::after {
+        content: "*";
+        color: red;
+        position: absolute;
+        top: 20%;
+        left: 10rem;
+    }
+    .confirm_password_required::after {
+        content: "*";
+        color: red;
+        position: absolute;
+        top: 20%;
+        left: 15rem;
+    }
+    .phone_number_required::after {
+        content: "*";
+        color: red;
+        position: absolute;
+        top: 20%;
+        left: 8rem;
+    }
+    
     @media screen and (min-width: 768) and (max-width : 895px)  {
         .continue_account_wholesale {
             margin-top: 0rem !important;
@@ -291,7 +320,7 @@
                                                         required>
                                                     <div class="text-danger" id="company_website_errors"></div>
                                                 </div>
-                                                <div class="col-md-12 mt-3">
+                                                <div class="col-md-12 mt-3 phone_number_required">
                                                     <input type="text" placeholder="&#xf095;  Phone" id="phone"
                                                         name="phone" class="sign-up-fields p-3 company-info fontAwesome">
                                                     <div class="text-danger" id="phone_errors"></div>
@@ -317,24 +346,24 @@
                                 <div class="row justify-content-center">
                                     <div class="col-md-10">
                                         <div class="row">
-                                            <div class="col-md-6">
+                                            <div class="col-md-6 first_name_required">
                                                 <input type="text" placeholder="&#xf007;  First Name" id="user_first_name"
-                                                    name="first_name" class="fontAwesome p-3 sign-up-fields" >
-                                                <div class="text-danger" id="first_name_errors"></div>
+                                                    name="first_name" class="fontAwesome p-3 sign-up-fields" required>
                                             </div>
                                             <div class="col-md-6">
                                                 <input type="text" placeholder="&#xf007;  Last Name" id="user_last_name"
-                                                    name="last_name" class="fontAwesome p-3 sign-up-fields" >
+                                                    name="last_name" class="fontAwesome p-3 sign-up-fields">
                                                 <div class="text-danger" id="last_name_errors"></div>
                                             </div>
+                                            <div class="text-danger" id="first_name_errors"></div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-md-12 mt-3">
+                                            <div class="col-md-12 mt-3 password_required">
                                                 <input type="password" placeholder="&#xf023;  Password" id="company_name"
                                                     name="password" class="user_password_signup company-info fontAwesome p-3 sign-up-fields" >
                                                 <div class="text-danger" id="password_errors"></div>
                                             </div>
-                                            <div class="col-md-12 mt-3">
+                                            <div class="col-md-12 mt-3 confirm_password_required">
                                                 <input type="password" placeholder="&#xf023;  Confirm Password"
                                                     id="confirm_password" name="confirm_password"
                                                     class="company-info fontAwesome p-3 sign-up-fields" required >
@@ -350,7 +379,7 @@
                             <div class="row justify-content-center">
                                 <div class="col-md-10">
                                     <div class="row">
-                                        <div class="col-md-12 mt-5 text-center step-btn-signup-div">
+                                        <div class="col-md-12 mt-3 text-center step-btn-signup-div">
                                             <button type="submit" value="" class="step-btn-signup w-100 btn-login"
                                                 onclick="signup()">
                                                 SIGN UP & CONTINUE</button>
@@ -600,13 +629,13 @@
                         error_text = '';
                         $('#first_name_errors').html(error_text);
                     }
-                    if (typeof error_message.errors.last_name != 'undefined') {
-                        var error_text2 = error_message.errors.last_name;
-                        $('#last_name_errors').html(error_text2);
-                    } else {
-                        error_text2 = '';
-                        $('#last_name_errors').html(error_text2);
-                    }
+                    // if (typeof error_message.errors.last_name != 'undefined') {
+                    //     var error_text2 = error_message.errors.last_name;
+                    //     $('#last_name_errors').html(error_text2);
+                    // } else {
+                    //     error_text2 = '';
+                    //     $('#last_name_errors').html(error_text2);
+                    // }
                     if (typeof error_message.errors.password != 'undefined') {
                         var error_text3 = error_message.errors.password;
                         $('#password_errors').html(error_text3);
