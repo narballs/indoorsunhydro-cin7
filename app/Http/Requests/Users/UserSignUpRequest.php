@@ -37,6 +37,7 @@ class UserSignUpRequest extends FormRequest
             //         'required',
             //         'regex:/^[a-zA-Z ]*$/'
             //     ],
+                'first_name' => 'required',
                 'password' => 'required',
                 'confirm_password' => 'required|same:password'
             ];

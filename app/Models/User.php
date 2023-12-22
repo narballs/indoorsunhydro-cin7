@@ -54,5 +54,9 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Models\Contact', 'user_id', 'id');
     }
+    public function onlycontact()
+    {
+        return $this->hasOne('App\Models\Contact', 'user_id', 'id');
+    }
 
 }

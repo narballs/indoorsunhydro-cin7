@@ -531,7 +531,6 @@ class UserController extends Controller
 
         $validatedData = $request->validate([
             'first_name' => 'required',
-            'last_name' => 'required',
             'password' => 'required|min:6',
             'confirm_password' => 'required|same:password'
         ]);
@@ -548,6 +547,7 @@ class UserController extends Controller
     
         $validatedData = $request->validate([
             'company_name' => 'required|regex:/^[a-zA-Z0-9\s]+$/',
+            'phone' => 'required',
         ]);
 
         if($validatedData) {
@@ -641,24 +641,25 @@ class UserController extends Controller
 
     public function save_contact(CompanyInfoRequest $request)
     {
-        $validatedData = $request->validate([
-            'street_address' => [
-                'required'
-                // 'regex:/^[a-zA-Z0-9\s-]+$/'
-            ],
-            'state_id' => 'required',
-            'city_id' => 'required',
-            'zip' => [
-                'required',
-                'regex:/^\d{5}(?:[- ]?\d{4})?$/s'
+        $validatedData = $request->validate(
+            [
+                'street_address' => [
+                    'required'
+                    // 'regex:/^[a-zA-Z0-9\s-]+$/'
+                ],
+                'state_id' => 'required',
+                'city_id' => 'required',
+                'zip' => [
+                    'required',
+                    'regex:/^\d{5}(?:[- ]?\d{4})?$/s'
+                ]
             ],
             [
                 'state_id.required' => 'The state field is required.',
-            ],
-            [
                 'city_id.required' => 'The city field is required.',
-            ]
-        ]);
+            ] 
+                
+        );
         
         $user = User::create([
             'email' => strtolower($request->get('email')),

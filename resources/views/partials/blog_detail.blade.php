@@ -9,24 +9,18 @@
             <div class="">
                 <div class="container-fluid px-0 overflow-hidden">
                     <div class="row justify-content-center">
-                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12 mb-5">
-                            @if(!empty($blog_detail->image))
-                            <img src="{{asset('/pages/blogs/' . $blog_detail->image)}}" class="banner-img img-fluid w-100" alt="..." style="max-height:450px">
-                            <h2 class="position-absolute top-50 start-50 translate-middle">
-                                <div class="banner-title">
-                                    <span class="text-uppercase font-weight-bold text-white">{{$blog_detail->title}}</span>
-                                </div>
-                            </h2>
-                            @else
-                            <h2 class="card-title text-center mt-3">
-                                <div class="banner-title">
-                                    <span class="text-uppercase font-weight-bold text-dark ">{{$blog_detail->title}}</span>
-                                </div>
-                            </h2>
-                            @endif
+                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                            <p class="mt-3 mb-3 fs-2  border-0 text-white text-center align-middle text-uppercase p-2 blog_header">
+                                {{$blog_detail->title}}
+                            </p>
                         </div>
 
                         <div class="col-xl-6 col-lg-8 col-md-8 col-sm-12 col-xs-12 blog_detail_description">
+                            <div class="mb-5 w-100">
+                                @if(!empty($blog_detail->image))
+                                    <img src="{{asset('/pages/blogs/' . $blog_detail->image)}}" class="img-fluid-custom" alt="...">
+                                @endif
+                            </div>
                             {!! $blog_detail->description !!}
                         </div>
                     </div>
@@ -102,5 +96,15 @@
         font-style: normal;
         font-weight: 700;
         line-height: 34.923px; /* 140.383% */
+    }
+    .blog_header {
+        font-size: 22px !important;
+        background-color:#7BC533;
+        font-weight:600;
+    }
+    .img-fluid-custom {
+        width: 100%; /* Make the image fill the entire width of its container */
+        height: auto; /* Maintain the image's aspect ratio */
+        display: block; 
     }
 </style>
