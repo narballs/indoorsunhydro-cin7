@@ -38,6 +38,34 @@
         top: 20%;
         left: 8rem;
     }
+    .street_address_required::after {
+        content: "*";
+        color: red;
+        position: absolute;
+        top: 20%;
+        left: 26rem;
+    }
+    .city_required::after {
+        content: "*";
+        color: red;
+        position: absolute;
+        top: 20%;
+        left: 10rem;
+    }
+    .state_required::after {
+        content: "*";
+        color: red;
+        position: absolute;
+        top: 20%;
+        left: 7rem;
+    }
+    .zip_required::after {
+        content: "*";
+        color: red;
+        position: absolute;
+        top: 20%;
+        left: 6rem;
+    }
     
     @media screen and (min-width: 768) and (max-width : 895px)  {
         .continue_account_wholesale {
@@ -174,7 +202,7 @@
                 @if(!empty($setting) && $setting->option_value == 'Yes')
                 <div class="register-info-box text-center">
                     <h2 class=" dont-have-an-account">Don't have an account?</h2>
-                    <p class=" dont-have-an-account-pra">Your personal data will be used to support your experience
+                    <p class=" dont-have-an-account-pra">Personal data will be used to support your experience
                         throughout
                         this website, to
                         manage access to your account, and for other purposes described in our privacy policy.</p>
@@ -282,14 +310,14 @@
 
                 <div class="login-info-box text-white d-none" id="company_info_sidebar">
                     <h2 class=" dont-have-an-account text-center">Company Info</h2>
-                    <p class=" dont-have-an-account-pra" id="account">Your
+                    <p class=" dont-have-an-account-pra" id="account">
                         Please tell us some information about your company and website
                     </p>
                 </div>
 
                 <div class="login-info-box text-white d-none" id="address_info_sidebar">
                     <h2 class=" dont-have-an-account text-center">Address Info</h2>
-                    <p class=" dont-have-an-account-pra" id="account">Your
+                    <p class=" dont-have-an-account-pra" id="account">
                         Knowing where you are located is also helpful to approve your
                             account
                             faster.
@@ -398,22 +426,27 @@
                         <div class="row company-address justify-content-center" id="address-form-section">
                             <div class="col-md-10">
                                 <div class="row">
-                                    <div class="col-md-12 margin-top-adjust-address mt-3">
+                                    {{-- <div class="col-md-12 margin-top-adjust-address mt-3">
                                         <input type="text"
                                             placeholder="&#xf601;  Street Address, House no, Street Name"
                                             id="street_address" name="street_address"
                                             class="sign-up-fields p-3  company-info fontAwesome" required>
                                         <div class="text-danger" id="street_address_errors"></div>
+                                    </div> --}}
+                                    <div class="col-md-12 street_address_required  margin-top-adjust-address mt-3">
+                                        <input type="text" placeholder="&#xf601;  Street Address, House no, Street Name"
+                                        id="street_address" name="street_address" class="fontAwesome p-3 sign-up-fields" required>
+                                            <div class="text-danger" id="street_address_errors"></div>
                                     </div>
-                                    <div class="col-md-12 margin-top-adjust-address mt-3">
+                                    <div class="col-md-12 margin-top-adjust-address mt-2">
                                         <input type="text" placeholder="&#xf015;  Apartment, Suit, unit etc"
                                             id="street_address" name="suit_apartment"
                                             class="sign-up-fields p-3  company-info fontAwesome" required>
                                         <div class="text-danger" id="suit_apartment_errors"></div>
                                     </div>
-                                    <div class="col-md-12 margin-top-adjust-address mt-3">
+                                    <div class="col-md-12 state_required  margin-top-adjust-address mt-2">
                                         <select id="state-dd" placeholder="&#xf276;   State" name="state"
-                                            class="sign-up-fields p-3  fontAwesome">
+                                        class="fontAwesome p-3 sign-up-fields" required>
                                             <option value="" class="sign-up-fields p-3  company-info fontAwesome"
                                                 placeholder=" &#xf276;   State"> &#xf276; State</option>
                                             @if (!empty($states))
@@ -428,7 +461,7 @@
                                         </select>
                                         <div class="text-danger" id="state_errors"></div>
                                     </div>
-                                    <div class="col-md-6 margin-top-adjust-address mt-3">
+                                    <div class="col-md-6 margin-top-adjust-address mt-2 city_required">
                                         <select id="city-dd" placeholder="&#xf5a0;  Town/City" name="city"
                                             class="sign-up-fields p-3  company-info fontAwesome"> &#xf5a0;
                                             Town/City
@@ -438,7 +471,7 @@
                                         </select>
                                         <div class="text-danger" id="town_city_errors"></div>
                                     </div>
-                                    <div class="col-md-6 margin-top-adjust-address mt-3">
+                                    <div class="col-md-6 margin-top-adjust-address mt-2 zip_required">
                                         <input type="text" placeholder="&#xf041;  Zip" id="company_website"
                                             name="zip" class="sign-up-fields p-3 fontAwesome" required>
                                         <div class="text-danger" id="zip_errors"></div>
@@ -832,10 +865,9 @@
                     $('#address_info_sidebar').addClass('d-none');
                     
                 }else{
+                    $('#sign_up_loader').addClass('d-none');
                     var error_message = response.responseJSON;
-                    console.log(error_message);
                     var error_text = '';
-                    error_text += error_message.message;
                     if (typeof error_message.errors.street_address != 'undefined') {
                         error_text = error_message.errors.street_address;
                         $('#street_address_errors').html(error_text);
@@ -851,15 +883,15 @@
                         $('#suit_apartment_errors').html(error_text2);
                     }
 
-                    if (typeof error_message.errors.town_city != 'undefined') {
-                        var error_text3 = error_message.errors.town_city;
+                    if (typeof error_message.errors.city_id != 'undefined') {
+                        var error_text3 = error_message.errors.city_id;
                         $('#town_city_errors').html(error_text3);
                     } else {
                         error_text3 = '';
                         $('#town_city_errors').html(error_text3);
                     }
-                    if (typeof error_message.errors.state != 'undefined') {
-                        var error_text4 = error_message.errors.state;
+                    if (typeof error_message.errors.state_id != 'undefined') {
+                        var error_text4 = error_message.errors.state_id;
                         $('#state_errors').html(error_text4);
                     } else {
                         error_text4 = '';
@@ -877,10 +909,9 @@
 
             },
             error: function(response) {
+                $('#sign_up_loader').addClass('d-none');
                 var error_message = response.responseJSON;
-                console.log(error_message);
                 var error_text = '';
-                error_text += error_message.message;
                 if (typeof error_message.errors.street_address != 'undefined') {
                     error_text = error_message.errors.street_address;
                     $('#street_address_errors').html(error_text);
@@ -896,15 +927,15 @@
                     $('#suit_apartment_errors').html(error_text2);
                 }
 
-                if (typeof error_message.errors.town_city != 'undefined') {
-                    var error_text3 = error_message.errors.town_city;
+                if (typeof error_message.errors.city_id != 'undefined') {
+                    var error_text3 = error_message.errors.city_id;
                     $('#town_city_errors').html(error_text3);
                 } else {
                     error_text3 = '';
                     $('#town_city_errors').html(error_text3);
                 }
-                if (typeof error_message.errors.state != 'undefined') {
-                    var error_text4 = error_message.errors.state;
+                if (typeof error_message.errors.state_id != 'undefined') {
+                    var error_text4 = error_message.errors.state_id;
                     $('#state_errors').html(error_text4);
                 } else {
                     error_text4 = '';

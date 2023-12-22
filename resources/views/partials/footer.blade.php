@@ -1,6 +1,6 @@
-<input type="zendesk_first_name" id="zendesk_first_name" value="{{auth()->user() && !empty(auth()->user()->onlycontact->firstName) ? auth()->user()->onlycontact->firstName : ''}}">
-<input type="zendesk_last_name" id="zendesk_last_name" value="{{auth()->user() && !empty(auth()->user()->onlycontact->lastName) ? auth()->user()->onlycontact->lastName : ''}}">
-<input type="zendesk_email" id="zendesk_email" value="{{auth()->user() ? auth()->user()->email : ''}}">
+<input type="hidden" id="zendesk_first_name" value="{{auth()->user() && !empty(auth()->user()->onlycontact->firstName) ? auth()->user()->onlycontact->firstName : ''}}">
+<input type="hidden" id="zendesk_last_name" value="{{auth()->user() && !empty(auth()->user()->onlycontact->lastName) ? auth()->user()->onlycontact->lastName : ''}}">
+<input type="hidden" id="zendesk_email" value="{{auth()->user() ? auth()->user()->email : ''}}">
 <script src="https://unpkg.com/@popperjs/core@2"></script>
 <script src="{{ asset('//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js') }}"></script>
 <script src="{{ asset('/theme/bootstrap5/js/bootstrap.js') }}"></script>
