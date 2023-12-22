@@ -19,7 +19,34 @@
         opacity: 1 !important;
         display: block !important;
     }
-    
+    .first_name_required::after {
+        content: "*";
+        color: red;
+        position: absolute;
+        top: 20%;
+        left: 10rem;
+    }
+    .password_required::after {
+        content: "*";
+        color: red;
+        position: absolute;
+        top: 20%;
+        left: 10rem;
+    }
+    .confirm_password_required::after {
+        content: "*";
+        color: red;
+        position: absolute;
+        top: 20%;
+        left: 15rem;
+    }
+    .phone_number_required::after {
+        content: "*";
+        color: red;
+        position: absolute;
+        top: 20%;
+        left: 8rem;
+    }
     @media screen and (min-width: 768) and (max-width : 895px)  {
         .continue_account_wholesale {
             margin-top: 0rem !important;
@@ -322,26 +349,26 @@
                             <h2 class="text-center login-title" style="color: #393939;">SIGN UP</h2>
                             <form action="">
                                 <div class="row justify-content-center">
-                                    <div class="col-md-10">
+                                    div class="col-md-10">
                                         <div class="row">
-                                            <div class="col-md-6">
+                                            <div class="col-md-6 first_name_required">
                                                 <input type="text" placeholder="&#xf007;  First Name" id="user_first_name"
-                                                    name="first_name" class="fontAwesome p-3 sign-up-fields" >
-                                                <div class="text-danger" id="first_name_errors"></div>
+                                                    name="first_name" class="fontAwesome p-3 sign-up-fields" required>
                                             </div>
                                             <div class="col-md-6">
                                                 <input type="text" placeholder="&#xf007;  Last Name" id="user_last_name"
-                                                    name="last_name" class="fontAwesome p-3 sign-up-fields" >
+                                                    name="last_name" class="fontAwesome p-3 sign-up-fields">
                                                 <div class="text-danger" id="last_name_errors"></div>
                                             </div>
+                                            <div class="text-danger" id="first_name_errors"></div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-md-12 mt-3">
+                                            <div class="col-md-12 mt-3 password_required">
                                                 <input type="password" placeholder="&#xf023;  Password" id="company_name"
                                                     name="password" class="user_password_signup company-info fontAwesome p-3 sign-up-fields" >
                                                 <div class="text-danger" id="password_errors"></div>
                                             </div>
-                                            <div class="col-md-12 mt-3">
+                                            <div class="col-md-12 mt-3 confirm_password_required">
                                                 <input type="password" placeholder="&#xf023;  Confirm Password"
                                                     id="confirm_password" name="confirm_password"
                                                     class="company-info fontAwesome p-3 sign-up-fields" required >
