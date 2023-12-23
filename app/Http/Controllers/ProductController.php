@@ -1196,16 +1196,19 @@ class ProductController extends Controller
             }])
             ->where(function (Builder $query) use ($explode_search_value) {
                 foreach ($explode_search_value as $searchvalue) {
-                    $query->where('name', 'LIKE', '%' . $searchvalue . '%');
+                    $query->where('name', 'LIKE', '%' . $searchvalue . '%')
+                    ->where('status', '!=', 'Inactive');
                 }
             })
             ->orWhere(function (Builder $query) use ($explode_search_value) {
                 foreach ($explode_search_value as $searchvalue) {
-                    $query->where('description', 'LIKE', '%' . $searchvalue . '%');
+                    $query->where('description', 'LIKE', '%' . $searchvalue . '%')
+                    ->where('status', '!=', 'Inactive');
                 }
             })
             ->orWhere(function (Builder $query) use ($searchvalue) {
-                $query->where('code', 'LIKE', '%' . $searchvalue . '%');
+                $query->where('code', 'LIKE', '%' . $searchvalue . '%')
+                ->where('status', '!=', 'Inactive');
             })
             ->where('status', '!=', 'Inactive')
             ->paginate($per_page);
@@ -1218,11 +1221,13 @@ class ProductController extends Controller
             }])
             ->where(function (Builder $query) use ($explode_search_value) {
                 foreach ($explode_search_value as $searchvalue) {
-                    $query->where('name', 'LIKE', '%' . $searchvalue . '%');
+                    $query->where('name', 'LIKE', '%' . $searchvalue . '%')
+                    ->where('status', '!=', 'Inactive');
                 }
             })
             ->orWhere(function (Builder $query) use ($searchvalue) {
-                $query->where('code', 'LIKE', '%' . $searchvalue . '%');
+                $query->where('code', 'LIKE', '%' . $searchvalue . '%')
+                ->where('status', '!=', 'Inactive');
             })
             ->where('status', '!=', 'Inactive')
             ->paginate($per_page);
@@ -1236,11 +1241,13 @@ class ProductController extends Controller
             }])
             ->where(function (Builder $query) use ($explode_search_value) {
                 foreach ($explode_search_value as $searchvalue) {
-                    $query->where('description', 'LIKE', '%' . $searchvalue . '%');
+                    $query->where('description', 'LIKE', '%' . $searchvalue . '%')
+                    ->where('status', '!=', 'Inactive');
                 }
             })
             ->orWhere(function (Builder $query) use ($searchvalue) {
-                $query->where('code', 'LIKE', '%' . $searchvalue . '%');
+                $query->where('code', 'LIKE', '%' . $searchvalue . '%')
+                ->where('status', '!=', 'Inactive');
             })
             ->where('status', '!=', 'Inactive')
             ->paginate($per_page);

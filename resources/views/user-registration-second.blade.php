@@ -10,61 +10,37 @@
     </div>
 @endif
 <style>
-    .first_name_required::after {
-        content: "*";
-        color: red;
-        position: absolute;
-        top: 20%;
-        left: 10rem;
+    
+    .customplaceholderclass {
+        background: none !important;
+        font-size: 18px;
+        font-weight: 500 !important;
     }
-    .password_required::after {
-        content: "*";
-        color: red;
-        position: absolute;
-        top: 20%;
-        left: 10rem;
+    .dd_options {
+        border: 1px solid #EBEBEB;
+        background: #F5F5F5;
+        width: 100%;
+        /* color: #9A9A9A; */
+        font-size: 18px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
     }
-    .confirm_password_required::after {
+    .add_steric::after {
         content: "*";
         color: red;
+        font-family: 'Poppins';
         position: absolute;
-        top: 20%;
-        left: 15rem;
+        top: 30%;
+        left: 35%;
     }
-    .phone_number_required::after {
+    .add_steric_city::after {
         content: "*";
         color: red;
+        font-family: 'Poppins';
         position: absolute;
-        top: 20%;
-        left: 8rem;
-    }
-    .street_address_required::after {
-        content: "*";
-        color: red;
-        position: absolute;
-        top: 20%;
-        left: 26rem;
-    }
-    .city_required::after {
-        content: "*";
-        color: red;
-        position: absolute;
-        top: 20%;
-        left: 10rem;
-    }
-    .state_required::after {
-        content: "*";
-        color: red;
-        position: absolute;
-        top: 20%;
-        left: 7rem;
-    }
-    .zip_required::after {
-        content: "*";
-        color: red;
-        position: absolute;
-        top: 20%;
-        left: 6rem;
+        top: 30%;
+        left: 60%;
     }
     
     @media screen and (min-width: 768) and (max-width : 895px)  {
@@ -123,6 +99,7 @@
         }
         .sign-up-fields {
             padding:0.5rem !important;
+            font-size: 13px !important;
         }
         .register_first_step {
             margin-top: 10px !important;
@@ -130,8 +107,8 @@
         .margin-adjust-mbl {
             margin-top: 0.25rem !important;
         }
-        #user_last_name {
-            margin-top: 1rem !important;
+        .user_last_name {
+            /* margin-top: 1rem !important; */
         }
         .step-btn-signup-div {
             margin-top:0.75rem !important;
@@ -337,22 +314,27 @@
                                     <div class="row justify-content-center">
                                         <div class="col-md-10">
                                             <div class="row">
-                                                <div class="col-md-12 mt-3">
-                                                    <input type="text" placeholder="&#xf1ad; Company Name" id="company_name"
-                                                        name="company_name" class="sign-up-fields p-3 company-info fontAwesome">
-                                                    <div class="text-danger" id="company_name_errors"></div>
+                                                <div class="input-placeholder col-md-12 mt-3">
+                                                    <input type="text" name="company_name" id="company_name" required="" class="sign-up-fields p-3 pl-0 w-100">
+                                                    <div class="placeholder pl-3 fontAwesome top_placeholder_style text-dark border-0 bg-none customplaceholderclass">
+                                                        <i class="fa fa-building  ml-2 mr-2"></i>Company Name
+                                                    </div>
                                                 </div>
-                                                <div class="col-md-12 mt-3">
-                                                    <input type="text" placeholder="&#xf0ac; Company Website" id="company_website"
-                                                        name="company_website" class="sign-up-fields p-3 company-info fontAwesome"
-                                                        required>
-                                                    <div class="text-danger" id="company_website_errors"></div>
+                                                <div class="text-danger" id="company_name_errors"></div>
+                                                <div class="input-placeholder col-md-12 mt-3">
+                                                    <input type="text" name="company_website" id="company_website" required="" class="sign-up-fields p-3 pl-0 w-100">
+                                                    <div class="placeholder pl-3 fontAwesome_new top_placeholder_style text-dark border-0 bg-none customplaceholderclass">
+                                                        <i class="fa fa-globe  ml-2 mr-2"></i>Company Website
+                                                    </div>
                                                 </div>
-                                                <div class="col-md-12 mt-3 phone_number_required">
-                                                    <input type="text" placeholder="&#xf095;  Phone" id="phone"
-                                                        name="phone" class="sign-up-fields p-3 company-info fontAwesome">
-                                                    <div class="text-danger" id="phone_errors"></div>
+                                                <div class="text-danger" id="company_website_errors"></div>
+                                                <div class="input-placeholder col-md-12 mt-3">
+                                                    <input type="text" name="phone" id="phone" required="" class="sign-up-fields p-3 pl-0 w-100">
+                                                    <div class="placeholder pl-3 fontAwesome top_placeholder_style text-dark border-0 bg-none customplaceholderclass">
+                                                        <i class="fa fa-phone  ml-2 mr-2"></i>Phone
+                                                    </div>
                                                 </div>
+                                                <div class="text-danger" id="phone_errors"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -374,27 +356,33 @@
                                 <div class="row justify-content-center">
                                     <div class="col-md-10">
                                         <div class="row">
-                                            <div class="col-md-6 first_name_required">
-                                                <input type="text" placeholder="&#xf007;  First Name" id="user_first_name"
-                                                    name="first_name" class="fontAwesome p-3 sign-up-fields" required>
+                                            <div class="input-placeholder col-md-6 mb-3">
+                                                <input type="text" name="first_name" id="user_first_name" required="" class="sign-up-fields p-3 pl-0 w-100">
+                                                <div class="placeholder pl-3 fontAwesome top_placeholder_style text-dark border-0 bg-none customplaceholderclass">
+                                                    <i class="fa fa-user fa fa-user ml-2 mr-2"></i>First Name
+                                                </div>
                                             </div>
-                                            <div class="col-md-6">
-                                                <input type="text" placeholder="&#xf007;  Last Name" id="user_last_name"
-                                                    name="last_name" class="fontAwesome p-3 sign-up-fields">
-                                                <div class="text-danger" id="last_name_errors"></div>
+                                            <div class="input-placeholder col-md-6 mb-3">
+                                                <input type="text" name="last_name" id="user_last_name" required="" class="user_last_name sign-up-fields p-3 pl-0 w-100">
+                                                <div class="placeholder pl-3 fontAwesome_new top_placeholder_style text-dark border-0 bg-none customplaceholderclass">
+                                                    <i class="fa fa-user fa fa-user ml-2 mr-2"></i>Last Name
+                                                </div>
                                             </div>
                                             <div class="text-danger" id="first_name_errors"></div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-md-12 mt-3 password_required">
-                                                <input type="password" placeholder="&#xf023;  Password" id="company_name"
-                                                    name="password" class="user_password_signup company-info fontAwesome p-3 sign-up-fields" >
-                                                <div class="text-danger" id="password_errors"></div>
+                                            <div class="input-placeholder col-md-12 mb-3">
+                                                <input type="password" name="password" id="password" required="" class="user_password_signup sign-up-fields p-3 pl-0 w-100">
+                                                <div class="placeholder pl-3 fontAwesome top_placeholder_style text-dark border-0 bg-none customplaceholderclass">
+                                                    <i class="fa fa-lock fa fa-lock ml-2 mr-2"></i>Password
+                                                </div>
                                             </div>
-                                            <div class="col-md-12 mt-3 confirm_password_required">
-                                                <input type="password" placeholder="&#xf023;  Confirm Password"
-                                                    id="confirm_password" name="confirm_password"
-                                                    class="company-info fontAwesome p-3 sign-up-fields" required >
+                                            <div class="text-danger" id="password_errors"></div>
+                                            <div class="input-placeholder col-md-12">
+                                                <input type="password" name="confirm_password" id="confirm_password" required="" class="sign-up-fields p-3 pl-0 w-100">
+                                                <div class="placeholder pl-3 fontAwesome top_placeholder_style text-dark border-0 bg-none customplaceholderclass">
+                                                    <i class="fa fa-lock fa fa-lock ml-2 mr-2"></i>Confirm Password
+                                                </div>
                                             </div>
                                             <div class="text-danger" id="confirm_password_errors"></div>
                                             
@@ -426,54 +414,53 @@
                         <div class="row company-address justify-content-center" id="address-form-section">
                             <div class="col-md-10">
                                 <div class="row">
-                                    {{-- <div class="col-md-12 margin-top-adjust-address mt-3">
-                                        <input type="text"
-                                            placeholder="&#xf601;  Street Address, House no, Street Name"
-                                            id="street_address" name="street_address"
-                                            class="sign-up-fields p-3  company-info fontAwesome" required>
+                                    <div class="input-placeholder col-md-12 mt-3">
+                                        <input type="text" name="street_address" id="street_address" required="" class="sign-up-fields p-3 pl-0 w-100">
+                                        <div class="placeholder pl-3 fontAwesome top_placeholder_style text-dark border-0 bg-none customplaceholderclass">
+                                            <i class="fa fa-road  ml-2 mr-2"></i>Street Address, House no, Street Name
+                                        </div>
                                         <div class="text-danger" id="street_address_errors"></div>
-                                    </div> --}}
-                                    <div class="col-md-12 street_address_required  margin-top-adjust-address mt-3">
-                                        <input type="text" placeholder="&#xf601;  Street Address, House no, Street Name"
-                                        id="street_address" name="street_address" class="fontAwesome p-3 sign-up-fields" required>
-                                            <div class="text-danger" id="street_address_errors"></div>
                                     </div>
-                                    <div class="col-md-12 margin-top-adjust-address mt-2">
-                                        <input type="text" placeholder="&#xf015;  Apartment, Suit, unit etc"
-                                            id="street_address" name="suit_apartment"
-                                            class="sign-up-fields p-3  company-info fontAwesome" required>
-                                        <div class="text-danger" id="suit_apartment_errors"></div>
+                                    <div class="input-placeholder col-md-12 mt-2">
+                                        <input type="text" name="suit_apartment" id="suit_apartment" required="" class="sign-up-fields p-3 pl-0 w-100">
+                                        <div class="placeholder pl-3 fontAwesome_new  top_placeholder_style text-dark border-0 bg-none customplaceholderclass">
+                                            <i class="fa fa-road  ml-2 mr-2"></i>Apartment, Suit, unit 
+                                        </div>
                                     </div>
-                                    <div class="col-md-12 state_required  margin-top-adjust-address mt-2">
-                                        <select id="state-dd" placeholder="&#xf276;   State" name="state"
-                                        class="fontAwesome p-3 sign-up-fields" required>
-                                            <option value="" class="sign-up-fields p-3  company-info fontAwesome"
-                                                placeholder=" &#xf276;   State"> &#xf276; State</option>
-                                            @if (!empty($states))
-                                                @foreach ($states as $data)
-                                                    <option value="{{ $data->id }}">
-                                                        {{ $data->state_name }}
-                                                    </option>
-                                                @endforeach
-                                            @else
-                                                <option value="">No State Found</option>
-                                            @endif
-                                        </select>
+                                    <div class="input-placeholder col-md-12 mt-2 ">
+                                        <div class="add_steric">
+                                            <select id="state-dd" name="state" class="sign-up-fields p-3 pl-0 w-100" required style="">
+                                                <option value="" class="">
+                                                    Select State
+                                                </option>
+                                                @if (!empty($states))
+                                                    @foreach ($states as $data)
+                                                        <option value="{{ $data->id }}">
+                                                            {{ $data->state_name }}
+                                                        </option>
+                                                    @endforeach
+                                                @else
+                                                    <option value="">No State Found</option>
+                                                @endif
+                                            </select>
+                                        </div>
                                         <div class="text-danger" id="state_errors"></div>
                                     </div>
-                                    <div class="col-md-6 margin-top-adjust-address mt-2 city_required">
-                                        <select id="city-dd" placeholder="&#xf5a0;  Town/City" name="city"
-                                            class="sign-up-fields p-3  company-info fontAwesome"> &#xf5a0;
-                                            Town/City
-                                            <option value="" placeholder="&#xf5a0;  Town/City" name="town_city"
-                                                class="sign-up-fields p-3  company-info fontAwesome"> &#xf5a0; Town/City
-                                            </option>
-                                        </select>
+                                    <div class="input-placeholder col-md-6 mt-2">
+                                        <div class="add_steric_city">
+                                            <select id="city-dd"  name="city" class="sign-up-fields p-3 pl-0 w-100" style="" required>
+                                                <option value="" name="town_city" class="">
+                                                    Town/City 
+                                                </option>
+                                            </select>
+                                        </div>
                                         <div class="text-danger" id="town_city_errors"></div>
                                     </div>
-                                    <div class="col-md-6 margin-top-adjust-address mt-2 zip_required">
-                                        <input type="text" placeholder="&#xf041;  Zip" id="company_website"
-                                            name="zip" class="sign-up-fields p-3 fontAwesome" required>
+                                    <div class="input-placeholder col-md-6 mt-2">
+                                        <input type="text" name="zip" id="zip" required="" class="sign-up-fields p-3 pl-0 w-100">
+                                        <div class="placeholder pl-3 fontAwesome top_placeholder_style text-dark border-0 bg-none customplaceholderclass">
+                                            <i class="fa fa-zip  ml-2 mr-2"></i>Zip
+                                        </div>
                                         <div class="text-danger" id="zip_errors"></div>
                                     </div>
                                     <div id="address-info-error" class="text-danger"></div>
@@ -549,7 +536,7 @@
                     // $(".white-panel").remove();
                     
                     // $('#user_first_name').addClass('d-none');
-                    // $('#user_last_name').addClass('d-none');
+                    // $('.user_last_name').addClass('d-none');
                     $('#signup_error').html(response.msg);
 
                 }else{
@@ -809,7 +796,7 @@
         $('#address-bold').css('font-weight', 'normal');
         $('#thankyou-bold').css('font-weight', '700');
         $('#user_first_name').removeClass('d-none');
-        $('#user_last_name').removeClass('d-none');
+        $('.user_last_name').removeClass('d-none');
         $('#sign_up_loader').removeClass('d-none');
         var street_address = $('input[name=street_address]').val();
         var suit_apartment = $('input[name=suit_apartment]').val();
@@ -859,7 +846,7 @@
                     $(".white-panel").addClass('d-none');
                     $("#thanks").removeClass('d-none');
                     $('#user_first_name').removeClass('d-none');
-                    $('#user_last_name').removeClass('d-none');
+                    $('.user_last_name').removeClass('d-none');
                     $('login-form-section').addClass('d-none');
                     $('#company_info_sidebar').addClass('d-none');
                     $('#address_info_sidebar').addClass('d-none');

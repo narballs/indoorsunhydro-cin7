@@ -843,7 +843,9 @@ a {
         width: 15rem !important;
         padding-right: 13px !important;
     }
-
+    .top_placeholder_style {
+        top: 0px !important;
+    }
     .product-detail-button-cards {
         margin-left: 0px !important;
     }
@@ -5815,6 +5817,10 @@ select.list-dt:focus {
 
     .fontAwesome {
         font-family: 'Poppins', FontAwesome, 'Poppins';
+        padding: 6px;
+    }
+    .fontAwesome_new {
+        /* font-family: 'Poppins', FontAwesome, 'Poppins'; */
         padding: 6px;
     }
 
