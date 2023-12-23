@@ -200,7 +200,7 @@ class ProductController extends Controller
         $search_queries = $request->except('page');
 
         $products_query  = Product::with('options', 'brand', 'categories' , 'product_views','apiorderItem')->where('status' , '!=' , 'Inactive');
-
+        
         $selected_category_id = $request->get('selected_category');
 
         $childerens = Category::orderBy('name', 'ASC')->where('parent_id', $selected_category_id)->get();
@@ -259,9 +259,15 @@ class ProductController extends Controller
         }
 
         if (empty($search_queries)) {
-            $products = $products_query->paginate($per_page);
+            $products = $products_query->with(['product_views','apiorderItem' , 'options' => function ($q) {
+                $q->where('status', '!=', 'Disabled');
+            }])->paginate($per_page);
+            // $products = $products_query->paginate($per_page);
         } else {
-            $products = $products_query->with('options.defaultPrice', 'brand')->paginate($per_page);
+            // $products = $products_query->with('options.defaultPrice', 'brand')->paginate($per_page);
+            $products = $products_query->with(['product_views','apiorderItem' , 'options' => function ($q) {
+                $q->where('status', '!=', 'Disabled');
+            }])->paginate($per_page);
         }
 
 
@@ -330,7 +336,10 @@ class ProductController extends Controller
                 $products_query = $products_query->where('category_id', $category_id);
             } else {
             }
-            $products = $products_query->with('options.defaultPrice', 'brand')->paginate($per_page);
+            // $products = $products_query->with('options.defaultPrice', 'brand')->paginate($per_page);
+            $products = $products_query->with(['product_views','apiorderItem' , 'options' => function ($q) {
+                $q->where('status', '!=', 'Disabled');
+            }])->paginate($per_page);
         }
         $user_id = Auth::id();
         $lists = BuyList::where('user_id', $user_id)->get();
@@ -1108,9 +1117,15 @@ class ProductController extends Controller
         }
 
         if (empty($search_queries)) {
-            $products = $products_query->paginate($per_page);
+            $products = $products_query->with(['product_views','apiorderItem' , 'options' => function ($q) {
+                $q->where('status', '!=', 'Disabled');
+            }])->paginate($per_page);
+            // $products = $products_query->paginate($per_page);
         } else {
-            $products = $products_query->with('options', 'brand')->paginate($per_page);
+            // $products = $products_query->with('options', 'brand')->paginate($per_page);
+            $products = $products_query->with(['product_views','brand','apiorderItem' , 'options' => function ($q) {
+                $q->where('status', '!=', 'Disabled');
+            }])->paginate($per_page);
         }
         $brands = [];
         if (!empty($brand_ids)) {
