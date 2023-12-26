@@ -54,7 +54,6 @@ class GoogleContentController extends Controller
         $product_array = [];
         $products = Product::with('options','options.defaultPrice', 'brand', 'categories' , 'product_views','apiorderItem', 'product_stock')
         ->where('status' , '!=' , 'Inactive')
-        ->take(20)
         ->get();
         if (count($products) > 0) {
             foreach ($products as $product) {
