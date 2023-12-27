@@ -6,12 +6,7 @@
     <div class="table-wrapper">
         <div class="card-body product_secion_main_body">
             <div class="row border-bottom product_section_header">
-                {{-- @if((isset($show_alert)) && $show_alert == true)
-                    <div class="alert alert-success alert-dismissible mt-2 ml-4">
-                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                            {{'test'}}
-                    </div>
-                @endif --}}
+                
                 @if (Session::has('error'))
                     <div class="alert alert-danger alert-dismissible mt-2 ml-4">
                         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
@@ -20,6 +15,21 @@
                 @endif
                 
                 <div class="col-md-12">
+                    <div class="row justify-content-center mt-2">
+                        <div class="col-md-12">
+                            @if((isset($show_alert)) && $show_alert == true)
+                                @if (!empty($order_ids))
+                                <div class="alert alert-danger alert-dismissible mb-0 unprocess_alert p-1">
+                                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                    <a class="text-white mx-3" href="{{ url('admin/orders?show_unfulled_orders=1') }}">
+                                        click here  
+                                    </a>
+                                    <span>Order #{{ $order_ids }}</span>
+                                </div>
+                                @endif
+                            @endif
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-md-2 mobile_heading">
                             <p class="order_heading">
@@ -594,6 +604,10 @@
             font-style: normal !important;
             font-weight: 500 !important;
             font-size: 11.3289px !important;
+        }
+        .unprocess_alert .close {
+            padding: 2px !important;
+            right: 10px !important;
         }
 
         /* @media only screen and (max-width: 425px) {
