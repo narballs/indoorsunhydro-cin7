@@ -62,7 +62,7 @@
                             line-height: 22px;
                             font-weight: 400;
                             color: #333333;
-                            margin: 11px 0 26px;"> {{$order_ids}}</p>
+                            margin: 11px 0 26px;"><a href="{{url('admin/orders?show_unfulled_orders=1')}}">Order Ids : {{$order_ids}}</a></p>
                             <p style="font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Arial,'Roboto';font-size: 15px;
                         line-height: 22px;
                         font-weight: 400;

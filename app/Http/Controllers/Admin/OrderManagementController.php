@@ -92,11 +92,17 @@ class OrderManagementController extends Controller
             }
         }
 
+        $show_alert = false;
+        $show_unfulled_orders = $request->get('show_unfulled_orders');
+        if (!empty($show_unfulled_orders)) {
+            $orders_query = $orders_query->where('order_id', null)->where('isApproved', 0);
+            $show_alert = true;
+        }
         
-        $orders =  $orders_query->orderBy('id' , 'Desc')->paginate(10);
+        $orders =  $orders_query->orderBy('id' , 'Desc')->paginate(10)->withQueryString();
 
-
-        return view('admin/orders', compact('orders', 'search', 'auto_fulfill', 'auto_fullfill', 'sort_by_desc', 'sort_by_asc' , 'sort_by_created_at'));
+        
+        return view('admin/orders', compact('orders', 'search','show_alert', 'auto_fulfill', 'auto_fullfill', 'sort_by_desc', 'sort_by_asc' , 'sort_by_created_at'));
     }
 
     public function show($id)

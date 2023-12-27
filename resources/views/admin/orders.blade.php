@@ -6,13 +6,19 @@
     <div class="table-wrapper">
         <div class="card-body product_secion_main_body">
             <div class="row border-bottom product_section_header">
+                {{-- @if((isset($show_alert)) && $show_alert == true)
+                    <div class="alert alert-success alert-dismissible mt-2 ml-4">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            {{'test'}}
+                    </div>
+                @endif --}}
                 @if (Session::has('error'))
                     <div class="alert alert-danger alert-dismissible mt-2 ml-4">
                         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                         {{ Session::get('error')}}
                     </div>
                 @endif
-               
+                
                 <div class="col-md-12">
                     <div class="row">
                         <div class="col-md-2 mobile_heading">
