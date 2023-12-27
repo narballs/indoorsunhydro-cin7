@@ -72,14 +72,20 @@ class CheckOrderStatus extends Command
             $users_with_role_admin = User::select("email")
                 ->whereIn('id', $admin_users)
                 ->get();
+            $get_order_ids = [];
+            foreach ($pending_orders as $order) {
+                $get_order_ids[] = $order->id;
+            }
+            $order_ids = implode(',', $get_order_ids);
             $data = [
                 'orders' => $pending_orders,
+                'count_orders' => count($pending_orders),
                 'name' =>  'Admin',
+                'order_ids' => $order_ids,
                 'email' => '',
                 'contact_email' => '',
                 'subject' => 'Pending ' .' '. 'Orders',
                 'from' => SettingHelper::getSetting('noreply_email_address'),
-                'content' => 'Following Order are not fullfilled.'
             ];    
             if (!empty($users_with_role_admin)) {
                 foreach ($users_with_role_admin as $role_admin) {

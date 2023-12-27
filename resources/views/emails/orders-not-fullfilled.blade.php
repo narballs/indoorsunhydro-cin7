@@ -52,24 +52,10 @@
                         font-weight: 400;
                         color: #333333;
                         margin: 11px 0 26px;">
-                            {{$content}}<br>
-                            <table>
-                                
-                                <th>
-                                    <td>Reference</td>
-                                    <td>Order Date</td>
-                                    <td>Order Status</td>
-                                    <td>Order Total</td>
-                                </th>
-                                @foreach($orders as $order)
-                                <tr>
-                                    <td>{{$order->reference}}</td>
-                                    <td>{{ date('m/d/Y', strtotime($order->created_at)) }}</td>
-                                    <td>{{$order->isApproved == 0 ? 'Not FullFilled' : ''}}</td>
-                                    <td>${{ number_format($order->total_including_tax, 2) }}</td>
-                                </tr>
-                                @endforeach
-                            </table>
+                            Oooopssss.
+                            There are {{$count_orders}} orders still pending to sync with cin7
+                            Please take a look at these orders and process them manually
+                            {{$order_ids}}
                             Thanks,<br>
                             Team {{ \App\Helpers\SettingHelper::getSetting('website_name') }}
                         </p>
