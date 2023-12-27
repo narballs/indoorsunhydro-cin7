@@ -60,5 +60,9 @@ class Product extends Model
     {
         return $this->hasMany('App\Models\ProductStock', 'product_id', 'id');
     }
+    public function product_brand()
+    {
+        return $this->belongsTo('App\Models\Brand', 'brand_id', 'id');
+    }
 
 }
