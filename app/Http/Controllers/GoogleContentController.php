@@ -52,7 +52,10 @@ class GoogleContentController extends Controller
     {
         
         $product_array = [];
-        $products = Product::with('options','options.defaultPrice', 'brand', 'categories' , 'product_views','apiorderItem', 'product_stock')
+        $products = Product::with('options','options.defaultPrice', 'product_brand', 'categories' , 'product_views','apiorderItem', 'product_stock')
+        ->with(['product_views','apiorderItem' , 'options' => function ($q) {
+            $q->where('status', '!=', 'Disabled');
+        }])
         ->where('status' , '!=' , 'Inactive')
         ->get();
         if (count($products) > 0) {
@@ -62,14 +65,14 @@ class GoogleContentController extends Controller
                         $product_array[] = [
                             'id' => $product->id,
                             'title' => $product->name,
-                            'description' => strip_tags($product->description),
+                            'description' => !empty($product->description) ? strip_tags($product->description) : 'No description available',
                             'link' => url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug),
                             'image_link' => !empty($product->images) ?  $product->images : asset('theme/img/image_not_available.png'),
                             'price' => !empty($option->price[0]->retailUSD) ? $option->price[0]->retailUSD : 0,
                             'condition' => 'new',
-                            'availability' => 'in stock',
-                            'brand' => !empty($product->brand[0]->name) ? $product->brand[0]->name : 'No brand',
-                            'google_product_category' => !empty($product->categories->name) ? $product->categories->name : 'No category',
+                            'availability' => 'In stock',
+                            'brand' => !empty($product->product_brand->name) ? $product->product_brand->name : 'General brand',
+                            'google_product_category' => !empty($product->categories->name) ? $product->categories->name : 'General category',
                         ];
                     }
                 }
@@ -92,7 +95,7 @@ class GoogleContentController extends Controller
                     $product->setContentLanguage('en');
                     $product->setTargetCountry('US');
                     $product->setChannel('online');
-                    $product->setAvailability($add_product['condition']);
+                    $product->setAvailability($add_product['availability']);
                     $product->setCondition($add_product['condition']);
                     $product->setGoogleProductCategory($add_product['google_product_category']);
                     $product->setGtin('9780007350896');
