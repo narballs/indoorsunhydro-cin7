@@ -48,15 +48,27 @@
                 <td>
                     <div style="border-bottom: 1px solid gray;margin-bottom:50px">
                         <p style="font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Arial,'Roboto';font-size: 15px;
-                        line-height: 32px;
+                        line-height: 22px;
                         font-weight: 400;
                         color: #333333;
                         margin: 11px 0 26px;">
                             Oooopssss.
-                            There are {{$count_orders}} orders still pending to sync with cin7
-                            Please take a look at these orders and process them manually
-                            {{$order_ids}}
-                            Thanks,<br>
+                            There are {{$count_orders}} orders still pending to sync with cin7. </p>
+                            <p style="font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Arial,'Roboto';font-size: 15px;
+                        line-height: 22px;
+                        font-weight: 400;
+                        color: #333333;
+                        margin: 11px 0 26px;"> Please take a look at these orders and process them manually.</p>
+                            <p style="font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Arial,'Roboto';font-size: 15px;
+                            line-height: 22px;
+                            font-weight: 400;
+                            color: #333333;
+                            margin: 11px 0 26px;"> {{$order_ids}}</p>
+                            <p style="font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Arial,'Roboto';font-size: 15px;
+                        line-height: 22px;
+                        font-weight: 400;
+                        color: #333333;
+                        margin: 11px 0 26px;"> Thanks</p>
                             Team {{ \App\Helpers\SettingHelper::getSetting('website_name') }}
                         </p>
                     </div >
