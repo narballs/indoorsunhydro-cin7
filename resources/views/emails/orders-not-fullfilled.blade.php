@@ -52,7 +52,6 @@
                         font-weight: 400;
                         color: #333333;
                         margin: 11px 0 26px;">
-                            Oooopssss.
                             There are {{$count_orders}} orders still pending to sync with cin7. </p>
                             <p style="font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Arial,'Roboto';font-size: 15px;
                         line-height: 22px;
