@@ -81,37 +81,35 @@ class GoogleContentController extends Controller
                 }
             }
         }
-        $chunks = array_chunk($product_array, 100);
+        // $chunks = array_chunk($product_array, 100);
         $client->setAccessToken($token['access_token']); // Use the stored access token
 
         $service = new ShoppingContent($client);
         $result  = null;
-        if (count($chunks) > 0) {
-            foreach ($chunks as $product_chunk) {
-                foreach ($product_chunk as $index => $add_product) {
-                    $product = new ServiceProduct();
-                    $product->setOfferId($index);
-                    $product->setTitle($add_product['title']);
-                    $product->setDescription($add_product['description']);
-                    $product->setLink($add_product['link']);
-                    $product->setImageLink($add_product['image_link']);
-                    $product->setContentLanguage('en');
-                    $product->setTargetCountry('US');
-                    $product->setChannel('online');
-                    $product->setAvailability($add_product['availability']);
-                    $product->setCondition($add_product['condition']);
-                    $product->setGoogleProductCategory($add_product['google_product_category']);
-                    $product->setGtin('9780007350896');
-            
-                    $price = new Price();
-                    $price->setValue($add_product['price']);
-                    $price->setCurrency('USD');
-            
-                    $product->setPrice($price);
-                    $merchant_id = config('services.google.merchant_center_id');
+        if (!empty($product_array) > 0) {
+            foreach ($product_array as $index => $add_product) {
+                $product = new ServiceProduct();
+                $product->setOfferId($index);
+                $product->setTitle($add_product['title']);
+                $product->setDescription($add_product['description']);
+                $product->setLink($add_product['link']);
+                $product->setImageLink($add_product['image_link']);
+                $product->setContentLanguage('en');
+                $product->setTargetCountry('US');
+                $product->setChannel('online');
+                $product->setAvailability($add_product['availability']);
+                $product->setCondition($add_product['condition']);
+                $product->setGoogleProductCategory($add_product['google_product_category']);
+                $product->setGtin('9780007350896');
+        
+                $price = new Price();
+                $price->setValue($add_product['price']);
+                $price->setCurrency('USD');
+        
+                $product->setPrice($price);
+                $merchant_id = config('services.google.merchant_center_id');
 
-                    $result = $service->products->insert($merchant_id, $product);
-                }
+                $result = $service->products->insert($merchant_id, $product);
             }
             return response()->json([
                 'status' => 'success',
