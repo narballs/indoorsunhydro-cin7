@@ -84,6 +84,9 @@ class GoogleContentController extends Controller
                 }
             }
         }
+        $chunkSize = 100;
+        $productChunks = array_chunk($product_array, $chunkSize);
+
         // $chunks = array_chunk($product_array, 100);
         $client->setAccessToken($token['access_token']); // Use the stored access token
 
@@ -128,38 +131,42 @@ class GoogleContentController extends Controller
         //         'message' => 'No products found'
         //     ]);
         // }
-        $batchEntries = [];
+        // $batchEntries = [];
         $merchant_id = config('services.google.merchant_center_id');
         if (!empty($product_array)) {
-            foreach ($product_array as $index => $add_product) {
-                $product = new ServiceProduct();
-                $product->setOfferId($index);
-                $product->setTitle($add_product['title']);
-                $product->setDescription($add_product['description']);
-                $product->setLink($add_product['link']);
-                $product->setImageLink($add_product['image_link']);
-                $product->setContentLanguage('en');
-                $product->setTargetCountry('US');
-                $product->setChannel('online');
-                $product->setAvailability($add_product['availability']);
-                $product->setCondition($add_product['condition']);
-                $product->setGoogleProductCategory($add_product['google_product_category']);
-                $product->setGtin('9780007350896');
-        
-                $price = new Price();
-                $price->setValue($add_product['price']);
-                $price->setCurrency('USD');
-        
-                $product->setPrice($price);
+            foreach ($productChunks as $chunkIndex => $product_chunk) {
+                $batchEntries = [];
                 $merchant_id = config('services.google.merchant_center_id');
-
-                $entry = new ProductsCustomBatchRequestEntry();
-                $entry->setBatchId(crc32(uniqid()));
-                $entry->setMerchantId($merchant_id);
-                $entry->setProduct($product);
-                $entry->setMethod('insert');
+                foreach ($product_array as $index => $add_product) {
+                    $product = new ServiceProduct();
+                    $product->setOfferId($index);
+                    $product->setTitle($add_product['title']);
+                    $product->setDescription($add_product['description']);
+                    $product->setLink($add_product['link']);
+                    $product->setImageLink($add_product['image_link']);
+                    $product->setContentLanguage('en');
+                    $product->setTargetCountry('US');
+                    $product->setChannel('online');
+                    $product->setAvailability($add_product['availability']);
+                    $product->setCondition($add_product['condition']);
+                    $product->setGoogleProductCategory($add_product['google_product_category']);
+                    $product->setGtin('9780007350896');
             
-                $batchEntries[] = $entry;
+                    $price = new Price();
+                    $price->setValue($add_product['price']);
+                    $price->setCurrency('USD');
+            
+                    $product->setPrice($price);
+                    $merchant_id = config('services.google.merchant_center_id');
+
+                    $entry = new ProductsCustomBatchRequestEntry();
+                    $entry->setBatchId(crc32(uniqid()));
+                    $entry->setMerchantId($merchant_id);
+                    $entry->setProduct($product);
+                    $entry->setMethod('insert');
+                
+                    $batchEntries[] = $entry;
+                }
             }
             $batch->entries = $batchEntries;
             $result = json_encode(["entries" => $batch->entries]);
