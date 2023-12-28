@@ -5,8 +5,6 @@ use App\Models\Product;
 use Google\Service\ShoppingContent;
 use Google\Service\ShoppingContent\Product as ServiceProduct;
 use Google\Service\ShoppingContent\Price;
-use Google\Service\ShoppingContent\ProductsCustomBatchRequest;
-use Google\Service\ShoppingContent\ProductsCustomBatchRequestEntry;
 use Google_Client;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
@@ -43,7 +41,7 @@ class GoogleContentController extends Controller
         $code = $request->input('code');
         $token = $client->fetchAccessTokenWithAuthCode($code);
         $result  = $this->insertProducts($token , $client);
-        if ($result->getStatusCode() === 200) {
+        if ($result->getStatusCode() == 200) {
             return redirect()->route('admin.view')->with('success', 'Products inserted successfully');
         } else {
             return redirect()->route('admin.view')->with('error', 'Something went wrong');
@@ -61,7 +59,6 @@ class GoogleContentController extends Controller
         ->with('categories' , function ($q) {
             $q->where('is_active', 1);
         })
-        ->where('category_id' , '!=' , '0')
         ->where('status' , '!=' , 'Inactive')
         ->get();
         if (count($products) > 0) {
@@ -84,60 +81,14 @@ class GoogleContentController extends Controller
                 }
             }
         }
-        $chunkSize = 100;
-        $productChunks = array_chunk($product_array, $chunkSize);
-
-        // $chunks = array_chunk($product_array, 100);
+        $chunks = array_chunk($product_array, 100);
         $client->setAccessToken($token['access_token']); // Use the stored access token
 
         $service = new ShoppingContent($client);
-        $batch = new ProductsCustomBatchRequest();
-
         $result  = null;
-        // if (count($chunks) > 0) {
-        //     foreach ($chunks as $product_chunk) {
-        //         foreach ($product_array as $index => $add_product) {
-        //             $product = new ServiceProduct();
-        //             $product->setOfferId($index);
-        //             $product->setTitle($add_product['title']);
-        //             $product->setDescription($add_product['description']);
-        //             $product->setLink($add_product['link']);
-        //             $product->setImageLink($add_product['image_link']);
-        //             $product->setContentLanguage('en');
-        //             $product->setTargetCountry('US');
-        //             $product->setChannel('online');
-        //             $product->setAvailability($add_product['availability']);
-        //             $product->setCondition($add_product['condition']);
-        //             $product->setGoogleProductCategory($add_product['google_product_category']);
-        //             $product->setGtin('9780007350896');
-            
-        //             $price = new Price();
-        //             $price->setValue($add_product['price']);
-        //             $price->setCurrency('USD');
-            
-        //             $product->setPrice($price);
-        //             $merchant_id = config('services.google.merchant_center_id');
-
-        //             $result = $service->products->insert($merchant_id, $product);
-        //         }
-        //     }
-        //     return response()->json([
-        //         'status' => 'success',
-        //         'message' => 'Products inserted successfully'
-        //     ]);              
-        // } else {
-        //     return response()->json([
-        //         'status' => 'error',
-        //         'message' => 'No products found'
-        //     ]);
-        // }
-        // $batchEntries = [];
-        $merchant_id = config('services.google.merchant_center_id');
-        if (!empty($product_array)) {
-            foreach ($productChunks as $chunkIndex => $product_chunk) {
-                $batchEntries = [];
-                $merchant_id = config('services.google.merchant_center_id');
-                foreach ($product_array as $index => $add_product) {
+        if (count($chunks) > 0) {
+            foreach ($chunks as $product_chunk) {
+                foreach ($product_chunk as $index => $add_product) {
                     $product = new ServiceProduct();
                     $product->setOfferId($index);
                     $product->setTitle($add_product['title']);
@@ -159,28 +110,13 @@ class GoogleContentController extends Controller
                     $product->setPrice($price);
                     $merchant_id = config('services.google.merchant_center_id');
 
-                    $entry = new ProductsCustomBatchRequestEntry();
-                    $entry->setBatchId(crc32(uniqid()));
-                    $entry->setMerchantId($merchant_id);
-                    $entry->setProduct($product);
-                    $entry->setMethod('insert');
-                
-                    $batchEntries[] = $entry;
+                    $result = $service->products->insert($merchant_id, $product);
                 }
             }
-            $batch->entries = $batchEntries;
-            $result = json_encode(["entries" => $batch->entries]);
-            $resultArray = json_decode($result, true);
-            $batch_end_point = 'https://shoppingcontent.googleapis.com/content/v2.1/products/batch';
-
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $token['access_token'],
-                'Content-Type' => 'application/json',
-            ])->post($batch_end_point, $resultArray);
             return response()->json([
-                'status' => $response->getStatusCode(),
+                'status' => 'success',
                 'message' => 'Products inserted successfully'
-            ]);  
+            ]);              
         } else {
             return response()->json([
                 'status' => 'error',
