@@ -5,6 +5,8 @@ use App\Models\Product;
 use Google\Service\ShoppingContent;
 use Google\Service\ShoppingContent\Product as ServiceProduct;
 use Google\Service\ShoppingContent\Price;
+use Google\Service\ShoppingContent\ProductsCustomBatchRequest;
+use Google\Service\ShoppingContent\ProductsCustomBatchRequestEntry;
 use Google_Client;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
@@ -56,6 +58,10 @@ class GoogleContentController extends Controller
         ->with(['product_views','apiorderItem' , 'options' => function ($q) {
             $q->where('status', '!=', 'Disabled');
         }])
+        ->with('categories' , function ($q) {
+            $q->where('is_active', 1);
+        })
+        ->where('category_id' , '!=' , '0')
         ->where('status' , '!=' , 'Inactive')
         ->get();
         if (count($products) > 0) {
@@ -67,12 +73,12 @@ class GoogleContentController extends Controller
                             'title' => $product->name,
                             'description' => !empty($product->description) ? strip_tags($product->description) : 'No description available',
                             'link' => url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug),
-                            'image_link' => !empty($product->images) ?  $product->images : asset('theme/img/image_not_available.png'),
+                            'image_link' => !empty($product->images) ?  $product->images : url(asset('theme/img/image_not_available.png')),
                             'price' => !empty($option->price[0]->retailUSD) ? $option->price[0]->retailUSD : 0,
                             'condition' => 'new',
                             'availability' => 'In stock',
                             'brand' => !empty($product->product_brand->name) ? $product->product_brand->name : 'General brand',
-                            'google_product_category' => !empty($product->categories->name) ? $product->categories->name : 'General category',
+                            'google_product_category' => $product->category_id ,
                         ];
                     }
                 }
@@ -121,4 +127,103 @@ class GoogleContentController extends Controller
             ]);
         }
     }
+    // public function insertProducts($token, $client) {
+    //     $product_array = [];
+    //     $products = Product::with('options','options.defaultPrice', 'product_brand', 'categories' , 'product_views','apiorderItem', 'product_stock')
+    //     ->with(['product_views','apiorderItem' , 'options' => function ($q) {
+    //         $q->where('status', '!=', 'Disabled');
+    //     }])
+    //     ->with('categories' , function ($q) {
+    //         $q->where('is_active', 1);
+    //     })
+    //     ->where('category_id' , '!=' , '0')
+    //     ->where('status' , '!=' , 'Inactive')
+    //     ->take(2)
+    //     ->get();
+    //     if (count($products) > 0) {
+    //         foreach ($products as $product) {
+    //             if (count($product->options) > 0) {
+    //                 foreach ($product->options as $option) {
+    //                     $product_array[] = [
+    //                         'id' => $product->id,
+    //                         'title' => $product->name,
+    //                         'description' => !empty($product->description) ? strip_tags($product->description) : 'No description available',
+    //                         'link' => url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug),
+    //                         'image_link' => !empty($product->images) ?  $product->images : url(asset('theme/img/image_not_available.png')),
+    //                         'price' => !empty($option->price[0]->retailUSD) ? $option->price[0]->retailUSD : 0,
+    //                         'condition' => 'new',
+    //                         'availability' => 'In stock',
+    //                         'brand' => !empty($product->product_brand->name) ? $product->product_brand->name : 'General brand',
+    //                         'google_product_category' => $product->category_id ,
+    //                     ];
+    //                 }
+    //             }
+    //         }
+    //     }
+
+    //     $chunks = array_chunk($product_array, 1); // Assuming you want to send 100 products per request
+
+    //     $client->setAccessToken($token['access_token']);
+    //     $service = new ShoppingContent($client);
+
+    //     foreach ($chunks as $product_chunk) {
+    //         $entries = [];
+    //         foreach ($product_chunk as $index => $add_product) {
+    //             $product = new ServiceProduct();
+    //             $product->setOfferId($index);
+    //             $product->setTitle($add_product['title']);
+    //             $product->setDescription($add_product['description']);
+    //             $product->setLink($add_product['link']);
+    //             $product->setImageLink($add_product['image_link']);
+    //             $product->setContentLanguage('en');
+    //             $product->setTargetCountry('US');
+    //             $product->setChannel('online');
+    //             $product->setAvailability($add_product['availability']);
+    //             $product->setCondition($add_product['condition']);
+    //             $product->setGoogleProductCategory($add_product['google_product_category']);
+    //             $product->setGtin('9780007350896');
+
+    //             $price = new Price();
+    //             $price->setValue($add_product['price']);
+    //             $price->setCurrency('USD');
+
+    //             $product->setPrice($price);
+
+    //             $entry = new ProductsCustomBatchRequestEntry();
+    //             $entry->setMethod('insert');
+    //             $entry->setBatchId($index);
+    //             $entry->setMerchantId(config('services.google.merchant_center_id'));
+    //             $entry->setProduct($product);
+
+    //             $entries[] = $entry;
+    //         }
+
+    //         // Create a batch request
+    //         $batchRequest = new ProductsCustomBatchRequest();
+    //         $batchRequest->setEntries($entries);
+
+    //         // Execute the batch request
+    //         $batchResponse = $service->products->custombatch($batchRequest);
+    //         // dd($batchResponse);
+
+    //         // Process batch response
+    //         // foreach ($batchResponse->entries as $batchEntry) {
+    //         //     $product = $batchEntry->getProduct();
+    //         //     $title = $product->getTitle();
+    //         //     // Handle each response entry
+    //         //     $response = $batchEntry->getResponse();
+    //         //     if ($response && $response->getHttpStatusCode() == 200) {
+    //         //         // Product inserted successfully
+    //         //         $result = json_decode($response->getBody(), true);
+    //         //         // Handle the result as needed
+    //         //     } else {
+    //         //         // Handle errors
+    //         //         $error = $batchEntry->getErrors()[0];
+    //         //         // Handle the error as needed
+    //         //     }
+    //         // }
+    //     }
+
+    //     // Return a response or handle the result as needed
+    // }
 }
