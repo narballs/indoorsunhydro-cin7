@@ -92,11 +92,28 @@ class OrderManagementController extends Controller
             }
         }
 
+        $show_alert = false;
+        $show_unfulled_orders = $request->get('show_unfulled_orders');
+        if (!empty($show_unfulled_orders)) {
+            $orders_query = $orders_query->where('order_id', null)->where('isApproved', 0)
+            ->whereBetween('created_at', [Carbon::now()->subHours(3), Carbon::now()]);
+        }
         
-        $orders =  $orders_query->orderBy('id' , 'Desc')->paginate(10);
-
-
-        return view('admin/orders', compact('orders', 'search', 'auto_fulfill', 'auto_fullfill', 'sort_by_desc', 'sort_by_asc' , 'sort_by_created_at'));
+        $orders =  $orders_query->orderBy('id' , 'Desc')->paginate(10)->withQueryString();
+        $pending_orders = ApiOrder::with(['createdby', 'processedby', 'contact'])
+        ->where('order_id' , null)
+        ->where('isApproved' , 0)
+        ->whereBetween('created_at', [Carbon::now()->subHours(3), Carbon::now()])
+        ->orderBy('id' , 'Desc')->get();
+        $get_order_ids = [];
+        if (count($pending_orders) > 0) {
+            foreach ($pending_orders as $order) {
+                $get_order_ids[] = $order->id;
+            }
+            $show_alert = true;
+        }
+        $order_ids = implode(',', $get_order_ids);
+        return view('admin/orders', compact('orders','order_ids', 'search','pending_orders','show_alert', 'auto_fulfill', 'auto_fullfill', 'sort_by_desc', 'sort_by_asc' , 'sort_by_created_at'));
     }
 
     public function show($id)
