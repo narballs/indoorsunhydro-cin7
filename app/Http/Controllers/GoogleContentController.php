@@ -40,7 +40,6 @@ class GoogleContentController extends Controller
         ]);
         $code = $request->input('code');
         $token = $client->fetchAccessTokenWithAuthCode($code);
-        // $result  = $this->delete_feed_products($token , $client);
         $result  = $this->insertProducts($token , $client);
         if ($result->getStatusCode() == 200) {
             return redirect()->route('admin.view')->with('success', 'Products inserted successfully');
@@ -108,7 +107,7 @@ class GoogleContentController extends Controller
                     $product->setPrice($price);
                     $merchant_id = config('services.google.merchant_center_id');
 
-                    $result = $service->products->delete($merchant_id, $product);
+                    $result = $service->products->insert($merchant_id, $product);
                 }
             }
             return response()->json([
@@ -122,43 +121,4 @@ class GoogleContentController extends Controller
             ]);
         }
     }
-
-    // public function delete_feed_products($token , $client) {
-    //     $apiEndpoint = 'https://shoppingcontent.googleapis.com/content/v2.1/{merchantId}/products';
-    //     $merchant_id = config('services.google.merchant_center_id');
-    //     $apiEndpoint = str_replace('{merchantId}', $merchant_id, $apiEndpoint);
-
-    //     // Create a Guzzle client
-    //     $client->setAccessToken($token);
-    //     if ($client->isAccessTokenExpired()) {
-    //         $newToken = $client->fetchAccessTokenWithRefreshToken($client->getRefreshToken());
-    //         $client->setAccessToken($newToken);
-    //     } 
-
-    //     $response = Http::withHeaders([
-    //         'Authorization' => 'Bearer ' . $token['access_token'],
-    //         'Content-Type' => 'application/json',
-    //     ])->get($apiEndpoint);
-        
-    //     $body = $response->body();
-    //     $responseData = json_decode($body, true);
-    //     dd($responseData);
-    //     // Check the response status or handle errors accordingly
-    //     if ($response->getStatusCode() == 200) {
-            
-    //         foreach ($responseData['resources'] as $product) {
-    //             $apiEndpoint_2 = 'https://shoppingcontent.googleapis.com/content/v2.1/{merchantId}/products/{productId}';
-    //             $apiEndpoint_2 = str_replace(['{merchantId}', '{productId}'], [$merchant_id, $product['id']], $apiEndpoint_2);
-
-    //             // Send DELETE request
-    //             $response = Http::withHeaders([
-    //                 'Authorization' => 'Bearer ' . $token['access_token'],
-    //                 'Content-Type' => 'application/json',
-    //             ])->delete($apiEndpoint_2);
-    //         }
-    //     } else {
-    //         // Handle errors
-    //         echo "Error retrieving products: " . $responseData['error']['message'];
-    //     }
-    // }
 }
