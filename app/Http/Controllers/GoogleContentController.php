@@ -69,7 +69,6 @@ class GoogleContentController extends Controller
         if (count($products) > 0) {
             foreach ($products as $product) {
                 if (count($product->options) > 0) {
-                    
                     foreach ($product->options as $option) {
                         $category = 'General > General';
                         if (!empty($product->categories)) {
