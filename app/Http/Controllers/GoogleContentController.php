@@ -10,6 +10,7 @@ use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Laravel\Socialite\Facades\Socialite;
+use Intervention\Image\Facades\Image;
 
 class GoogleContentController extends Controller
 {
@@ -64,6 +65,7 @@ class GoogleContentController extends Controller
         if (count($products) > 0) {
             foreach ($products as $product) {
                 if (count($product->options) > 0) {
+                    
                     foreach ($product->options as $option) {
                         $product_array[] = [
                             'id' => $product->id,
@@ -99,9 +101,12 @@ class GoogleContentController extends Controller
                 $product->setChannel('online');
                 $product->setAvailability($add_product['availability']);
                 $product->setCondition($add_product['condition']);
+                $product->setBrand($add_product['brand']);
                 $product->setGoogleProductCategory($add_product['google_product_category']);
                 $product->setGtin('9780007350896');
-        
+                $product->setAgeGroup('adult');
+                $product->setColor('universal');
+                $product->setGender('unisex');
                 $price = new Price();
                 $price->setValue($add_product['price']);
                 $price->setCurrency('USD');
