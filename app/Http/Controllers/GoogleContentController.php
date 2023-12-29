@@ -118,7 +118,7 @@ class GoogleContentController extends Controller
                 $product->setCondition($add_product['condition']);
                 $product->setBrand($add_product['brand']);
                 $product->setGoogleProductCategory($add_product['google_product_category']);
-                $product->setGtin(rand(100000000000, 999999999999));
+                $product->setGtin(rand(1000000000000, 9999999999999));
                 $product->setAgeGroup('adult');
                 $product->setColor('universal');
                 $product->setGender('unisex');
