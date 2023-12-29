@@ -56,8 +56,12 @@ class GoogleContentController extends Controller
         $products = Product::with('options','options.defaultPrice', 'product_brand', 'categories' , 'product_views','apiorderItem', 'product_stock')
         ->with(['product_views','apiorderItem' , 'options' => function ($q) {
             $q->where('status', '!=', 'Disabled');
+            
         }])
-        ->with('categories' , function ($q) {
+        ->whereHas('options.defaultPrice', function ($q) {
+            $q->where('retailUSD', '!=', 0);
+        })
+        ->whereHas('categories' , function ($q) {
             $q->where('is_active', 1);
         })
         ->where('status' , '!=' , 'Inactive')
@@ -107,6 +111,7 @@ class GoogleContentController extends Controller
                 $product->setAgeGroup('adult');
                 $product->setColor('universal');
                 $product->setGender('unisex');
+                $product->setSizes(['Large']);
                 $price = new Price();
                 $price->setValue($add_product['price']);
                 $price->setCurrency('USD');
