@@ -71,6 +71,17 @@ class GoogleContentController extends Controller
                 if (count($product->options) > 0) {
                     
                     foreach ($product->options as $option) {
+                        $category = 'General > General';
+                        if (!empty($product->categories)) {
+                            if (!empty($product->categories->category_id) && $product->categories->parent_id == 0) {
+                                $category = $product->categories->category_id;
+                            } else if (!empty($product->categories->parent_id) && !empty($product->categories->category_id) && $product->categories->parent_id != 0) {
+                                $category = $product->categories->parent_id;
+                            }
+                        }
+                        else {
+                            $category = 'General > General';
+                        } 
                         $product_array[] = [
                             'id' => $product->id,
                             'title' => $product->name,
@@ -81,7 +92,7 @@ class GoogleContentController extends Controller
                             'condition' => 'new',
                             'availability' => 'In stock',
                             'brand' => !empty($product->product_brand->name) ? $product->product_brand->name : 'General brand',
-                            'google_product_category' => !empty($product->categories->category_id) ? $product->categories->category_id : 'General > General',
+                            'google_product_category' => $category,
                         ];
                     }
                 }
