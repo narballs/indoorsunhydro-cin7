@@ -69,7 +69,6 @@ class GoogleContentController extends Controller
         if (count($products) > 0) {
             foreach ($products as $product) {
                 if (count($product->options) > 0) {
-                    
                     foreach ($product->options as $option) {
                         $category = 'General > General';
                         if (!empty($product->categories)) {
@@ -118,7 +117,7 @@ class GoogleContentController extends Controller
                 $product->setCondition($add_product['condition']);
                 $product->setBrand($add_product['brand']);
                 $product->setGoogleProductCategory($add_product['google_product_category']);
-                $product->setGtin(rand(1000000000000, 9999999999999));
+                $product->setGtin('9780007350896');
                 $product->setAgeGroup('adult');
                 $product->setColor('universal');
                 $product->setGender('unisex');
