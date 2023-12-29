@@ -65,10 +65,22 @@ class GoogleContentController extends Controller
             $q->where('is_active', 1);
         })
         ->where('status' , '!=' , 'Inactive')
+        ->where('id' , 4953)
         ->get();
         if (count($products) > 0) {
             foreach ($products as $product) {
+                
                 if (count($product->options) > 0) {
+                    if (!empty($product->images)) {
+                        $response  = Http::get($product->images);
+                        if ($response->getStatusCode() == 200) {
+                            $image = $product->images;
+                        } else {
+                            $image = url(asset('theme/img/image_not_available.png'));
+                        }
+                    }  else {
+                        $image = url(asset('theme/img/image_not_available.png'));
+                    }
                     foreach ($product->options as $option) {
                         $category = 'General > General';
                         if (!empty($product->categories)) {
@@ -86,7 +98,7 @@ class GoogleContentController extends Controller
                             'title' => $product->name,
                             'description' => !empty($product->description) ? strip_tags($product->description) : 'No description available',
                             'link' => url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug),
-                            'image_link' => !empty($product->images) ?  $product->images : url(asset('theme/img/image_not_available.png')),
+                            'image_link' => $image,
                             'price' => !empty($option->price[0]->retailUSD) ? $option->price[0]->retailUSD : 0,
                             'condition' => 'new',
                             'availability' => 'In stock',
