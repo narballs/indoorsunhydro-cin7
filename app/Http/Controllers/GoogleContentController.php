@@ -81,7 +81,7 @@ class GoogleContentController extends Controller
                             'condition' => 'new',
                             'availability' => 'In stock',
                             'brand' => !empty($product->product_brand->name) ? $product->product_brand->name : 'General brand',
-                            'google_product_category' => $product->category_id ,
+                            'google_product_category' => !empty($product->categories->category_id) ? $product->categories->category_id : 'General > General',
                         ];
                     }
                 }
