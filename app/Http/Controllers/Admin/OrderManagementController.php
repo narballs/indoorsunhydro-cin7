@@ -91,19 +91,18 @@ class OrderManagementController extends Controller
                 $orders_query = $orders_query->orderBy('created_at' , 'Desc');
             }
         }
-
         $show_alert = false;
         $show_unfulled_orders = $request->get('show_unfulled_orders');
         if (!empty($show_unfulled_orders)) {
             $orders_query = $orders_query->where('order_id', null)->where('isApproved', 0)
-            ->whereBetween('created_at', [Carbon::now()->subHours(3), Carbon::now()]);
+            ->where('created_at', '<', now()->subHours(3))->get();
         }
         
         $orders =  $orders_query->orderBy('id' , 'Desc')->paginate(10)->withQueryString();
         $pending_orders = ApiOrder::with(['createdby', 'processedby', 'contact'])
         ->where('order_id' , null)
         ->where('isApproved' , 0)
-        ->whereBetween('created_at', [Carbon::now()->subHours(3), Carbon::now()])
+        ->where('created_at', '<', now()->subHours(3))
         ->orderBy('id' , 'Desc')->get();
         $get_order_ids = [];
         if (count($pending_orders) > 0) {
