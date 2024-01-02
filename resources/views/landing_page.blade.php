@@ -602,9 +602,9 @@
                         $('#landing_page_spinner').addClass('d-none');    
                     } else {
                         $('.error_street_address').html(error_message.errors.street_address);
-                        $('.error_state').html(error_message.errors.state);
-                        $('.error_city').html(error_message.errors.city);
-                        $('.error_zip').html(error_message.errors.zip_code);
+                        $('.error_state').html(error_message.errors.state_id);
+                        $('.error_city').html(error_message.errors.city_id);
+                        $('.error_zip').html(error_message.errors.zip);
                         $('#landing_page_spinner').addClass('d-none'); 
                     }
                     
@@ -613,9 +613,9 @@
                 error: function(response) {
                     var error_message = response.responseJSON;
                     $('.error_street_address').html(error_message.errors.street_address);
-                    $('.error_state').html(error_message.errors.state);
-                    $('.error_city').html(error_message.errors.city);
-                    $('.error_zip').html(error_message.errors.zip_code);
+                    $('.error_state').html(error_message.errors.state_id);
+                    $('.error_city').html(error_message.errors.city_id);
+                    $('.error_zip').html(error_message.errors.zip);
                     $('#landing_page_spinner').addClass('d-none');
                 }
             })

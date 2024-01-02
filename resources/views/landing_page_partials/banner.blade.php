@@ -168,7 +168,7 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label for="landing_page_form_zip_code" class="landing-page-form-label mb-1"> Zip <span class="text-danger">*</span></label>
-                                                        <input type="text" name="zip_code" id="landing_page_form_zip_code" class="form-control landing-page-form-input p-2" 
+                                                        <input type="text" name="zip" id="landing_page_form_zip_code" class="form-control landing-page-form-input p-2" 
                                                             placeholder="Zip Code">
                                                         <div class="error_zip text-danger"></div>
                                                     </div>
