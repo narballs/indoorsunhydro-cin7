@@ -398,7 +398,14 @@
         @endif
     </main>
     <style>
+        .form_1_head {
+            font-family: 'Poppins';
+            font-size: 20px;
+            font-weight: 600;
+            line-height: 24px;
+            letter-spacing: 0em;
 
+        }
         .hover_effect:hover {
             background-color: #FFFFFF !important;
             color: #7BC533 !important;
@@ -476,6 +483,173 @@
     </style>
     @include('partials.product-footer')
     @include('partials.footer')
+    <script>
+        $('#landing_page_form_1_btn').click(function(e) {
+            e.preventDefault();
+            var email = $('#landing_page_form_email').val();
+            var first_name = $('#landing_page_form_first_name').val();
+            var last_name = $('#landing_page_form_last_name').val();
+            var password = $('#landing_page_form_password').val();
+            var confirm_password = $('#landing_page_form_confirm_password').val();
+            var _token = "{{ csrf_token() }}";
+            $.ajax({
+                url: "{{ route('landing_page_personal_details') }}",
+                type: "POST",
+                data: {
+                    email: email,
+                    first_name: first_name,
+                    last_name: last_name,
+                    password: password,
+                    confirm_password: confirm_password,
+                    _token: _token
+                },
+                success: function(response) {
+                    if (response.success == true) {
+                        $('#form_1').addClass('d-none');
+                        $('#form_2').removeClass('d-none');    
+                    } else {
+                        $('.error_email').html(response.errors.email);
+                        $('.error_first_name').html(response.errors.first_name);
+                        $('.error_password').html(response.errors.password);
+                        $('.confirm_password').html(response.errors.confirm_password);
+                    }
+                    
+                    
+                },
+                error: function(response) {
+                    var error_message = response.responseJSON;
+                    $('.error_email').html(error_message.errors.email);
+                    $('.error_first_name').html(error_message.errors.first_name);
+                    $('.error_password').html(error_message.errors.password);
+                    $('.confirm_password').html(error_message.errors.confirm_password);
+                }
+            })
+        })
+        $('#landing_page_form_2_btn').click(function(e) {
+            e.preventDefault();
+            var company = $('#landing_page_form_company').val();
+            var phone = $('#landing_page_form_phone').val();
+            var company_website = $('#landing_page_form_company_website').val();
+            var _token = "{{ csrf_token() }}";
+            $.ajax({
+                url: "{{ route('landing_page_company_details') }}",
+                type: "POST",
+                data: {
+                    company: company,
+                    company_website: company_website,
+                    phone: phone,
+                    _token: _token
+                },
+                success: function(response) {
+                    if (response.success == true) {
+                        $('#form_2').addClass('d-none');
+                        $('#form_3').removeClass('d-none');    
+                    } else {
+                        $('.error_company').html(error_message.errors.company);
+                        $('.error_phone').html(error_message.errors.phone);
+                    }
+                    
+                    
+                },
+                error: function(response) {
+                    var error_message = response.responseJSON;
+                    $('.error_company').html(error_message.errors.company);
+                    $('.error_phone').html(error_message.errors.phone);
+                }
+            })
+        })
+        $('#landing_page_form_3_btn').click(function(e) {
+            e.preventDefault();
+            $('#landing_page_spinner').removeClass('d-none');
+            var street_address = $('#landing_page_form_street_address').val();
+            var address2 = $('#landing_page_form_street_address_2').val();
+            var city = $('#landing_page_form_city').val();
+            var state = $('#landing_page_form_state').val();
+            var zip_code = $('#landing_page_form_zip_code').val();
+            var company = $('#landing_page_form_company').val();
+            var phone = $('#landing_page_form_phone').val();
+            var company_website = $('#landing_page_form_company_website').val();
+            var email = $('#landing_page_form_email').val();
+            var first_name = $('#landing_page_form_first_name').val();
+            var last_name = $('#landing_page_form_last_name').val();
+            var password = $('#landing_page_form_password').val();
+            var confirm_password = $('#landing_page_form_confirm_password').val();
+            var _token = "{{ csrf_token() }}";
+            $.ajax({
+                url: "{{ route('landing_page_address_details') }}",
+                type: "POST",
+                data: {
+                    email: email,
+                    first_name: first_name,
+                    last_name: last_name,
+                    password: password,
+                    confirm_password: confirm_password,
+                    company_name: company,
+                    company_website: company_website,
+                    phone: phone,
+                    street_address: street_address,
+                    address2: address2,
+                    city_id: city,
+                    state_id: state,
+                    zip: zip_code,
+                    _token: _token
+                },
+                success: function(response) {
+                    console.log(response.success);
+                    if (response.success == true) {
+                        $('#form_3').addClass('d-none');
+                        $('#form_4').removeClass('d-none');
+                        $('#landing_page_spinner').addClass('d-none');    
+                    } else {
+                        $('.error_street_address').html(error_message.errors.street_address);
+                        $('.error_state').html(error_message.errors.state);
+                        $('.error_city').html(error_message.errors.city);
+                        $('.error_zip').html(error_message.errors.zip_code);
+                        $('#landing_page_spinner').addClass('d-none'); 
+                    }
+                    
+                    
+                },
+                error: function(response) {
+                    var error_message = response.responseJSON;
+                    $('.error_street_address').html(error_message.errors.street_address);
+                    $('.error_state').html(error_message.errors.state);
+                    $('.error_city').html(error_message.errors.city);
+                    $('.error_zip').html(error_message.errors.zip_code);
+                    $('#landing_page_spinner').addClass('d-none');
+                }
+            })
+        })
+
+        $('#landing_page_form_state').on('change', function() {
+            $('#landing_page_form_city').on('change', function() {
+                var cityId = this.value;
+                // alert(cityId);
+            });
+            var idState = this.value;
+            $("#landing_page_form_city").html('');
+            $.ajax({
+                url: "{{ url('api/fetch-cities') }}",
+                type: "POST",
+                data: {
+                    state_id: idState,
+                    // city_id: cityId,
+                    _token: '{{ csrf_token() }}'
+                },
+                dataType: 'json',
+                success: function(result) {
+                    $('#landing_page_form_city').html(
+                        '<option value=""> Town/City</option>'
+                    );
+                    $.each(result.cities, function(key, value) {
+                        $("#landing_page_form_city").append('<option value="' + value
+                            .id + '">' + value.city + '</option>');
+                    });
+                    // $('#zip-dd').html('<option value="">Select Zip</option>');
+                }
+            });
+        });
+    </script>
     
 </body>
 <script>
