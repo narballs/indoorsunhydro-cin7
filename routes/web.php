@@ -105,6 +105,11 @@ Route::get('/my-account/', [UserController::class, 'my_account'])->name('my_acco
 Route::post('/user-contact/', [UserController::class, 'save_contact'])->name('save_contact');
 Route::post('/update-contact/', [UserController::class, 'update_contact'])->name('update_contact');
 
+// save landing page details
+Route::post('landing-page/personal/details', [LandingPageController::class, 'landing_page_personal_details'])->name('landing_page_personal_details');
+Route::post('landing-page/company/details', [LandingPageController::class, 'landing_page_company_details'])->name('landing_page_company_details');
+Route::post('landing-page/address/details', [LandingPageController::class, 'landing_page_address_details'])->name('landing_page_address_details');
+
 Route::get('/my-qoutes/', [UserController::class, 'my_qoutes'])->name('my_qoutes');
 Route::get('/my-qoutes-details/{id}', [UserController::class, 'my_qoutes_details'])->name('my_qoutes_details');
 Route::get('/my-qoute-edit/{id}', [UserController::class, 'my_qoute_edit'])->name('my_qoute_edit');
