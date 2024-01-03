@@ -65,6 +65,7 @@ class GoogleContentController extends Controller
             $q->where('is_active', 1);
         })
         ->where('status' , '!=' , 'Inactive')
+        ->take(5)
         ->get();
         if (count($products) > 0) {
             foreach ($products as $product) {
@@ -97,7 +98,7 @@ class GoogleContentController extends Controller
                             'title' => $product->name,
                             'description' => !empty($product->description) ? strip_tags($product->description) : 'No description available',
                             'link' => url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug),
-                            'image_link' => $image,
+                            'image_link' => !empty($product->images) ? $product->images : url(asset('theme/img/image_not_available.png')),
                             'price' => !empty($option->price[0]->retailUSD) ? $option->price[0]->retailUSD : 0,
                             'condition' => 'new',
                             'availability' => 'In stock',
@@ -128,7 +129,7 @@ class GoogleContentController extends Controller
                 $product->setCondition($add_product['condition']);
                 $product->setBrand($add_product['brand']);
                 $product->setGoogleProductCategory($add_product['google_product_category']);
-                // $product->setGtin('9780007350896');
+                $product->setGtin('9780007350896');
                 // $product->setmultipack('5000');
                 $product->setAgeGroup('adult');
                 $product->setColor('universal');
