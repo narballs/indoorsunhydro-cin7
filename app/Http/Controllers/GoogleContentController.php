@@ -70,16 +70,16 @@ class GoogleContentController extends Controller
             foreach ($products as $product) {
                 
                 if (count($product->options) > 0) {
-                    if (!empty($product->images)) {
-                        $response  = Http::get($product->images);
-                        if ($response->getStatusCode() == 200) {
-                            $image = $product->images;
-                        } else {
-                            $image = url(asset('theme/img/image_not_available.png'));
-                        }
-                    }  else {
-                        $image = url(asset('theme/img/image_not_available.png'));
-                    }
+                    // if (!empty($product->images)) {
+                    //     $response  = Http::get($product->images);
+                    //     if ($response->getStatusCode() == 200) {
+                    //         $image = $product->images;
+                    //     } else {
+                    //         $image = url(asset('theme/img/image_not_available.png'));
+                    //     }
+                    // }  else {
+                    //     $image = url(asset('theme/img/image_not_available.png'));
+                    // }
                     foreach ($product->options as $option) {
                         $category = 'General > General';
                         if (!empty($product->categories)) {
