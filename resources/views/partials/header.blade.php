@@ -15,10 +15,10 @@
     <link rel="stylesheet" href="/theme/bootstrap5/css/bootstrap.css">
     <link rel="stylesheet" href="/theme/css/style.css">
     <link rel="stylesheet" href="/theme/css/mobile.css">
-    <link rel="apple-touch-icon" sizes="180x180" href="{{asset('theme/img/fav_icons/apple-touch-icon.png')}}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{asset('theme/img/fav_icons/favicon-32x32.png')}}">
+    <link rel="icon" sizes="" href="{{asset('theme/img/fav_icons/fav_icon_new.jpg')}}">
+    {{-- <link rel="icon" type="image/png" sizes="32x32" href="{{asset('theme/img/fav_icons/favicon-32x32.png')}}">
     <link rel="icon" type="image/png" sizes="16x16" href="{{asset('theme/img/fav_icons/favicon-16x16.png')}}">
-    <link rel="manifest" href="{{asset('theme/img/fav_icons/site.webmanifest')}}">
+    <link rel="manifest" href="{{asset('theme/img/fav_icons/site.webmanifest')}}"> --}}
     <link href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.33/sweetalert2.css">
     <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
