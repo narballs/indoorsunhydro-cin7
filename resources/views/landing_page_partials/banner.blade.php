@@ -177,15 +177,15 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-md-10">
-                                            <div class="row">
-                                                <div class="form-group landing-form-group mb-0">
-                                                    <button class="btn landing_page_btn_form_1 p-2 w-100" id="landing_page_form_3_btn">Sign up</button>
+                                        <div class="col-md-12">
+                                            <div class="form-group landing-form-group mb-0">
+                                                <button class="btn landing_page_btn_form_1 p-2 w-100" id="landing_page_form_3_btn">Sign up</button>
+                                                <div class="spinner-border d-none" id="landing_page_spinner" role="status" style="position: absolute;
+                                                top: 10%;
+                                                left: 70% !important;">
+                                                    <span class="sr-only">Loading...</span>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="spinner-border d-none" id="landing_page_spinner" role="status">
-                                            <span class="sr-only">Loading...</span>
                                         </div>
                                     </div>
                                 </form>
