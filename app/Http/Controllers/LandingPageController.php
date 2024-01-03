@@ -210,19 +210,19 @@ class LandingPageController extends Controller
             }
         }
 
-        $data = [
-            'user' => $user,
-            'subject' => 'New Register User',
-            'from' => 'noreply@indoorsunhydro.com',
-        ];
+        // $data = [
+        //     'user' => $user,
+        //     'subject' => 'New Register User',
+        //     'from' => 'noreply@indoorsunhydro.com',
+        // ];
         
-        if (!empty($users_with_role_admin)) {
-            foreach ($users_with_role_admin as $role_admin) {
-                $subject = 'New Register User';
-                $data['email'] = $role_admin->email;
-                MailHelper::sendMailNotification('emails.admin_notification', $data);
-            }
-        }
+        // if (!empty($users_with_role_admin)) {
+        //     foreach ($users_with_role_admin as $role_admin) {
+        //         $subject = 'New Register User';
+        //         $data['email'] = $role_admin->email;
+        //         MailHelper::sendMailNotification('emails.admin_notification', $data);
+        //     }
+        // }
 
         return response()->json([
             'success' => true,
