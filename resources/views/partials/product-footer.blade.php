@@ -57,6 +57,18 @@
                         <a href="{{url('/page/blogs')}}" class="text-white">Blogs</a>
                     </p>
                     <p class="card-text  sm-4-footer ms-5 mb-1">
+                        <a href="{{url('/page/terms')}}" class="text-white">Terms & Conditions</a>
+                    </p>
+                    <p class="card-text  sm-4-footer ms-5 mb-1">
+                        <a href="{{url('/page/privacy-policy')}}" class="text-white">Privacy Policy</a>
+                    </p>
+                    <p class="card-text  sm-4-footer ms-5 mb-1">
+                        <a href="{{url('/page/returns')}}" class="text-white">Return Policy</a>
+                    </p>
+                    <p class="card-text  sm-4-footer ms-5 mb-1">
+                        <a href="{{url('/page/blogs')}}" class="text-white">Blogs</a>
+                    </p>
+                    <p class="card-text  sm-4-footer ms-5 mb-1">
                         <a href="{{ url('contact-us') }}" class="text-white">Customer Support</a>
                     </p>
                     {{-- <p class="card-text  sm-4-footer ms-5">
@@ -99,6 +111,15 @@
                     <h5 class="foooter-main-head-mbl contact-us-footer mt-5 mb-4 text-uppercase">Customer Service</h5>
                     <p class="p-footer-mbl ms-4-footer mx-1"><a href="{{url('/page/blogs')}}" class="text-white">Blogs</a></p>
                     <p class="p-footer-mbl ms-4-footer mx-1"><a href="{{ url('contact-us') }}" class="text-white">Customer Support</a></p>
+                    <p class="p-footer-mbl ms-4-footer mx-1">
+                        <a href="{{url('/page/returns')}}" class="text-white">Return Policy</a>
+                    </p>
+                    <p class="p-footer-mbl ms-4-footer mx-1">
+                        <a href="{{url('/page/terms')}}" class="text-white">Terms & Conditions</a>
+                    </p>
+                    <p class="p-footer-mbl ms-4-footer mx-1">
+                        <a href="{{url('/page/privacy-policy')}}" class="text-white">Privacy Policy</a>
+                    </p>
                     {{-- <p class="p-footer-mbl ms-4-footer mx-1"><a href="{{url('/page/hydro-guide-and-tips')}}" class="text-white">Hydro Guide and Tips</a></p> --}}
 
                     <h5 class="foooter-main-head-mbl contact-us-footer mt-5 mb-4 text-uppercase">MY ACCOUNT</h5>
@@ -156,6 +177,15 @@
                             <h5 class="text-uppercase contact-us-footer mt-3">Customer Service</h5>
                             <p class="card-text justify-content-end sm-4-footer"><a href="{{url('/page/blogs')}}" class="text-white">Blogs</a></p>
                             <p class="card-text justify-content-end sm-4-footer"><a href="{{ url('/contact-us') }}" class="text-white">Customer Support</a></p>
+                            <p class="card-text justify-content-end sm-4-footer">
+                                <a href="{{url('/page/returns')}}" class="text-white">Return Policy</a>
+                            </p>
+                            <p class="card-text justify-content-end sm-4-footer">
+                                <a href="{{url('/page/terms')}}" class="text-white">Terms & Conditions</a>
+                            </p>
+                            <p class="card-text justify-content-end sm-4-footer">
+                                <a href="{{url('/page/privacy-policy')}}" class="text-white">Privacy Policy</a>
+                            </p>
                             {{-- <p class="card-text justify-content-end sm-4-footer"><a href="{{url('/page/hydro-guide-and-tips')}}" class="text-white">Hydro Guide and Tips</a></p> --}}
                             <h5 class="text-uppercase  contact-us-footer">MY ACCOUNTS</h5>
                             <p class="card-text justify-content-end sm-4-footer"><a href="{{route('my_account')}}" class="text-white">My orders</a></p>

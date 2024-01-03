@@ -51,11 +51,11 @@ class PagesController extends Controller
         $validated = $request->validate([
             'name' => 'required',
             // 'title' => 'required',
-            'banner_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            // 'banner_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             // 'description' => 'required',
         ]);
 
-
+        $banner_image = null;
         if ($request->hasFile('banner_image')) {
             $image = $request->file('banner_image');
             $banner_image = time() . '.' . $image->getClientOriginalExtension();
@@ -78,6 +78,7 @@ class PagesController extends Controller
             return redirect()->route('pages.index')->with('success', 'Page created successfully.');
         }
         catch(\Exception $e) {
+            dd($e);
             return redirect()->route('pages.index')->with('error', 'Please reduce image sizes and try again.');
         }
     }

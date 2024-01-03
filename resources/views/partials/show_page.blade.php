@@ -12,12 +12,20 @@ $blogs = NavHelper::getBlogs();;
                 <div class="container-fluid px-0 overflow-hidden">
                     <div class="row">
                         <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12 mb-3">
-                            <img src="{{asset('/pages/banners/' . $page->banner_image)}}" class="banner-img img-fluid w-100" alt="...">
-                            <h2 class="position-absolute top-50 start-50 translate-middle page-title-head">
-                                <div class="banner-title">
-                                    <span class="text-uppercase font-weight-bold text-white">{{$page->title}}</span>
-                                </div>
-                            </h2>
+                            @if (!empty($page->banner_image))
+                                <img src="{{asset('/pages/banners/' . $page->banner_image)}}" class="banner-img img-fluid w-100" alt="...">
+                                <h2 class="position-absolute top-50 start-50 translate-middle page-title-head">
+                                    <div class="banner-title">
+                                        <span class="text-uppercase font-weight-bold text-white">{{$page->title}}</span>
+                                    </div>
+                                </h2>
+                            @else
+                                <h2 class="text-center mt-4 mb-0">
+                                    <div class="banner-title">
+                                        <span class="text-uppercase font-weight-bold">{{$page->title}}</span>
+                                    </div>
+                                </h2>
+                            @endif
                             @if (strtolower($page->name) == 'blogs')
                                 <div class="position-absolute top-60 start-50 translate-middle search-div-blog">
                                     <form method="post" action="{{route('blog_search')}}">
