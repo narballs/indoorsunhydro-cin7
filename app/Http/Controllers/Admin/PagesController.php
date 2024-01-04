@@ -78,8 +78,7 @@ class PagesController extends Controller
             return redirect()->route('pages.index')->with('success', 'Page created successfully.');
         }
         catch(\Exception $e) {
-            dd($e);
-            return redirect()->route('pages.index')->with('error', 'Please reduce image sizes and try again.');
+            return redirect()->route('pages.index')->with('error', 'Something went wrong !');
         }
     }
 
@@ -147,7 +146,7 @@ class PagesController extends Controller
             // Log the exception
             Log::info('Exception: ' . $e->getMessage());
             Log::info('Stack trace: ' . $e->getTraceAsString());
-            return redirect()->route('pages.index')->with('error', 'Please reduce image sizes and try again.');
+            return redirect()->route('pages.index')->with('error', 'Something went wrong !');
             // Handle the exception (e.g., return an error response, redirect, etc.)
         }
         
@@ -301,7 +300,7 @@ class PagesController extends Controller
             return redirect()->route('blogs.index')->with('success', 'Blog created successfully.');
         }
         catch(\Exception $e) {
-            return redirect()->route('blogs.index')->with('error', 'Please reduce image sizes and try again.');
+            return redirect()->route('blogs.index')->with('error', 'Something went wrong !');
         }
     }
 
@@ -362,7 +361,7 @@ class PagesController extends Controller
             return redirect()->route('blogs.index')->with('success', 'Blog updated successfully.');
         }
         catch(\Exception $e) {
-            return redirect()->route('blogs.index')->with('error', 'Please reduce image sizes and try again.');
+            return redirect()->route('blogs.index')->with('error', 'Something went wrong !');
         }
     }
 
