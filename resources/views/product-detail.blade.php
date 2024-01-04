@@ -15,13 +15,14 @@
     @yield('content')
 </div>
 <?php //dd($location_inventories);exit;?>
-<div class="row bg-light desktop-view">
-    <div class="container mt-5 mb-5">
-        <div class="row d-flex justify-content-center">
-            <div class="col-md-12 col-sm-12 col-xl-12 col-xxl-12 col-lg-12 col-xs-12">
+<div class="row bg-light desktop-view justify-content-center w-100">
+    <div class="col-md-12 col-xl-10 col-lg-12 col-sm-12 col-xs-12 mt-3 mb-3">
+        <div class="row justify-content-center ml-1">
+            
+            <div class="col-md-12 col-sm-12 col-xl-9 col-xxl-9 col-lg-8 col-xs-12">
                 <div class="card py-3">
                     <div class="row ms-0">
-                        <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 col-xs-12">
+                        <div class="col-xl-4 col-lg-3 col-md-12 col-sm-12 col-xs-12">
                             <div class="images">
                                 @if ($productOption->products->images)
                                 <div class="text-center mt-5">
@@ -35,9 +36,9 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="col-xl-7 col-lg-7 col-md-12 col-sm-12 col-xs-12 product-detail-content">
-                            <div class="product pt-4 product-detail-content1">
-                                <div class="d-flex row">
+                        <div class="col-xl-8 col-lg-9 col-md-12 col-sm-12 col-xs-12 product-detail-content">
+                            <div class="product pt-2 product-detail-content1 w-100">
+                                <div class="d-flex row w-100">
 
                                     <?php
                                         $user_price_column = App\Helpers\UserHelper::getUserPriceColumn();
@@ -65,7 +66,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-12">
-                                        <div class="row">
+                                        <div class="row align-items-center">
                                             <div class="col-md-12">
                                                 <span class="text-danger product-detail-price" id="product_price">
                                                     ${{number_format($retail_price, 2)}}
@@ -112,14 +113,14 @@
                                             </div>
                                             <div class="col-md-6">
                                                 @if (!empty($productOption->option1) || !empty($productOption->option2) || !empty($productOption->option3))
-                                                    <div class="row">
+                                                    <div class="row align-items-center">
                                                         <div class="col-md-2">
                                                             <img src="/theme/img/box_icon.png" style="max-width: 40px;" />
                                                         </div>
                                                         <div class="col-md-10">
-                                                        <p>{{ $productOption->option1 }}</p>
-                                                        <p>{{ $productOption->option2 }}</p>
-                                                        <p>{{ $productOption->option3 }}</p> 
+                                                        <p class="mb-0">{{ $productOption->option1 }}</p>
+                                                        <p class="mb-0">{{ $productOption->option2 }}</p>
+                                                        <p class="mb-0">{{ $productOption->option3 }}</p> 
                                                         </div>
                                                     </div>
                                                 @endif
@@ -129,7 +130,7 @@
                                 </div>
                                 <form id="cart">
                                     @csrf
-                                    <div class="cart row mt-4 align-items-center">
+                                    <div class="cart row mt-3  w-100 justify-content-between">
                                         <div class="col-md-3">
                                             <div class="quantity" style="width:144px">
                                                 <input type="number" name="quantity" id="quantity" min="1"
@@ -144,21 +145,21 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-9 d-flex justify-content-end">
+                                        <div class="col-md-8 mt-2">
                                             <?php 
                                                 // $enable_add_to_cart = App\Helpers\SettingHelper::enableAddToCart($productOption);
                                                 $enable_add_to_cart = true;
                                              ?>
                                             @if ($enable_add_to_cart)
                                                 <button 
-                                                    class="button-cards product-detail-button-cards text-uppercase"
+                                                    class="w-100 ml-0 button-cards product-detail-button-cards text-uppercase"
                                                     type="button" id="ajaxSubmit"
                                                 >
                                                     <a class="text-white">Add to cart </a>
                                                 </button>
                                             @else
                                                 <button 
-                                                    class="button-cards product-detail-button-cards opacity-50 text-uppercase" 
+                                                    class="ml-0 w-100 button-cards product-detail-button-cards opacity-50 text-uppercase" 
                                                     type="submit"
                                                 >
                                                     <a class="text-white">Add to cart</a>
@@ -170,15 +171,15 @@
                                 </form>
 
                                 <div>
-                                    <div class="price">
-                                        <div class="row mt-5">
-                                            <div class="col-md-9">
+                                    <div class="price w-100">
+                                        <div class="row mt-3 w-100">
+                                            <div class="col-md-7">
                                                 <span class="category-title-heading">Category :</span>
                                                 @if($pname)
                                                 <span class="category-title mt-4 ps-2">{{$pname}}</span>
                                                 @endif
                                             </div>
-                                            <div class="col-md-3 ps-0 pe-0">
+                                            <div class="col-md-5">
                                                 <span class="category-title-heading">SKU :</span>
                                                 <span class="category-title">{{$productOption->code}}
                                                 </span>
@@ -187,14 +188,99 @@
                                     </div>
                                 </div>
 
-                                <div class="product-detail-content-dec">
-                                    <div class="category-description mt-3"><span>Description</span></div>
-                                    <span class="about product-details-description mt-3">
-                                        {{ strip_tags( $productOption->products->description ) }}
-                                    </span>
+                                <div class="product-detail-content-dec row w-100">
+                                    <div class="col-md-12">
+                                        <div class="category-description category-description mt-1  lh-lg"><span>Description</span></div>
+                                        <div class="">
+                                            <span class="about product-details-description mt-2">
+                                                {{ strip_tags( $productOption->products->description ) }}
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-xl-3 col-xxl-3 col-lg-4 col-sm-12 col-xs-12" style="max-height: 100rem;overflow-y:scroll">
+                <div class="card rounded buy_again_div">
+                    <div class="card-body">
+                        @if(!empty($similar_products))
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <p class="buy_again_heading">Similar Products</p>
+                                </div>
+                            </div>
+                            @foreach($similar_products as $similar_product)
+                                @if(!empty($similar_product->options))
+                                    @foreach ($similar_product->options as $option)
+                                        @php
+                                            $product = $similar_product; 
+                                        @endphp
+                                        <div class="row mt-4 mb-3">
+                                            <div class="col-md-12">
+                                                <div class="row">
+                                                    <div class="col-md-4 image-div image-div-account d-flex justify-content-center">
+                                                        @if(!empty($product->images))
+                                                            <img src="{{ $product->images }}" alt="" class="buy_again_product_image">
+                                                        @else
+                                                            <img src="{{ asset('/theme/img/image_not_available.png') }}" alt="" class="buy_again_product_image">
+                                                        @endif
+                                                    </div>
+                                                    <div class="col-md-8 data-div data-div-account">
+                                                        <div class="row">
+                                                            <div class="col-md-10">
+                                                                
+                                                                <p class="product_name mb-1">
+                                                                    @if(!empty($product->name))
+                                                                        <a class="product_name" id="prd_name_{{$product->id }}" href="{{ url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug) }}">{{$product->name }}</a>
+                                                                    @endif
+                                                                </p>
+                                                                
+                                                            </div>
+                                                            <?php
+                                                                $retail_price = 0;
+                                                                $user_price_column = App\Helpers\UserHelper::getUserPriceColumn();
+                                                                foreach ($option->price as $price) {
+                                                                    $retail_price = $price->$user_price_column;
+                                                                }
+                                                            ?>
+                                                            <div class="col-md-10">
+                                                                <p class="product_price mb-1">
+                                                                    ${{ number_format($retail_price, 2) }}
+                                                                </p>
+                                                            </div>
+                                                            <div class="col-md-10">
+                                                                <p class="category_name mb-1">Category:
+                                                                    @if(!empty($product->categories))
+                                                                    <a class="category_name" href="{{ url('products/' . $product->categories->id . '/' .$product->categories->slug) }}"> 
+                                                                        {{$product->categories->name}}
+                                                                    </a> 
+                                                                    @endif
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row justify-content-center mt-4">
+                                                    <div class="col-md-10">
+                                                        <button type="button" class="buy_frequent_again_btn border-0 w-100 p-2" onclick="similar_product_add_to_cart('{{ $product->id }}', '{{ $option->option_id }}')">Add to Cart</button>
+                                                    </div>
+                                                    <div class="col-md-10 mt-4 border-div d-flex align-items-center align-self-center"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @endforeach
+                                    @endif
+                            @endforeach
+                        @else
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <p class="buy_again_heading">No Similar products to show</p>
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -518,6 +604,68 @@
     .greyed {
         background: #eaeaea;
     }
+    .buy_again_heading {
+        color: #242424;
+        font-family: 'Poppins';
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+    }
+    .product_name {
+        color: #000;
+        font-family: 'Poppins';
+        font-size: 14.669px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+    }
+    .product_price {
+        color: #DC4E41;
+        font-family: 'Poppins';
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: normal;
+    }
+    .category_name {
+        color: #8A8A8A;
+        font-family: 'Poppins';
+        font-size: 11.002px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+        letter-spacing: 0.55px;
+        text-transform: uppercase;
+    }
+    .buy_frequent_again_btn {
+        flex-shrink: 0;
+        border-radius: 6px;
+        background: #7BC533;
+        box-shadow: 0px 2.474916458129883px 3.712374687194824px 0px rgba(0, 0, 0, 0.08);
+        color: #FFF;
+        text-align: center;
+        font-family: 'Poppins';
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 21.037px; /* 150.263% */
+    }
+    .border-div {
+        height: 1.237px;
+        background: #E1E1E1;
+        width: 90% !important;
+    }
+    .buy_again_div {
+        border:1px solid rgb(234 236 240);
+    }
+    .search_row_my_account_page {
+        margin-top: 0px;
+    }
+    .buy_again_product_image {
+        height: 80px;
+        width: 80px;
+    }
 </style>
 <script>
     jQuery(document).ready(function(){
@@ -766,5 +914,55 @@
             }
         });
         return false;
+    }
+    function similar_product_add_to_cart(id, option_id) {
+        jQuery.ajax({
+            url: "{{ url('/add-to-cart/') }}",
+            method: 'post',
+            data: {
+                "_token": "{{ csrf_token() }}",
+                p_id: id,
+                option_id: option_id,
+                quantity: 1,
+            },
+            success: function(response) {
+                console.log(response);
+                if (response.status == 'success') {
+                    var cart_items = response.cart_items;
+                    var cart_total = 0;
+                    var total_cart_quantity = 0;
+
+                    for (var key in cart_items) {
+                        var item = cart_items[key];
+
+                        var product_id = item.prd_id;
+                        var price = parseFloat(item.price);
+                        var quantity = parseFloat(item.quantity);
+
+                        var subtotal = parseFloat(price * quantity);
+                        var cart_total = cart_total + subtotal;
+                        var total_cart_quantity = total_cart_quantity + quantity;
+                        jQuery('#subtotal_' + product_id).html('$' + subtotal);
+                        var product_name = jQuery('#prd_name_' + id).html();
+                    }
+
+                    Swal.fire({
+                        toast: true,
+                        icon: 'success',
+                        title: 1 + ' X ' + product_name +
+                            ' added to your cart',
+                        timer: 3000,
+                        showConfirmButton: false,
+                        position: 'top',
+                        timerProgressBar: true
+                    });
+                }
+                $('#top_cart_quantity').html(total_cart_quantity);
+
+                $('#cart_items_quantity').html(total_cart_quantity);
+                $('#topbar_cart_total').html('$' + parseFloat(cart_total).toFixed(2));
+                var total = document.getElementById('#top_cart_quantity');
+            }
+        });
     }
 </script>
