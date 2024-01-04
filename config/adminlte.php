@@ -401,6 +401,10 @@ return [
             'text'    => 'Recycle Bin',
             'url'  => 'admin/recycle-bin',
         ],
+        [
+            'text'    => 'Contact Logs',
+            'url'  => 'admin/contact-logs',
+        ],
 
         [
             'text'       => 'Logout',

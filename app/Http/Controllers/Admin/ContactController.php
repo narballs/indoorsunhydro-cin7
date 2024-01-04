@@ -17,6 +17,7 @@ use App\Models\SecondaryContact;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use App\Models\UserLog;
+use App\Models\ContactLogs;
 use App\Models\ContactPriceColumn;
 
 
@@ -392,10 +393,22 @@ class ContactController extends Controller
             $user = User::find($user_id);
             $user->is_deleted = now();
             $user->save();
+            $contact_log = new ContactLogs();
+            $contact_log->user_id = $user_id;
+            $contact_log->action_by = auth()->user()->id;
+            $contact_log->action = 'Deletion';
+            $contact_log->description = !empty($customer->email) ? $customer->email : $customer->firstName .' '. $customer->lastName  . 'is ' . 'deleted by ' . auth()->user()->email;
+            $contact_log->save();
             $user->delete();
             $customer->delete();
             return redirect()->back()->with('success', 'Customer Deleted Successfully');
         } else {
+            $contact_log = new ContactLogs();
+            $contact_log->user_id = $user_id;
+            $contact_log->action_by = auth()->user()->id;
+            $contact_log->action = 'Deletion';
+            $contact_log->description =  !empty($customer->email) ? $customer->email : $customer->firstName .' '. $customer->lastName . ' '. ' is ' . 'deleted by ' . auth()->user()->email;
+            $contact_log->save();
             $customer->delete();
             return redirect()->back()->with('error', 'Customer deleted from Contacts but not found is Users');
         }
