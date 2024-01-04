@@ -25,7 +25,7 @@
                     <div class="row">
                         <div class="col-md-6 mobile_heading">
                             <p class="product_heading">
-                                Recycle Bin
+                                Contact Logs
                             </p>
                         </div>
                     </div>
