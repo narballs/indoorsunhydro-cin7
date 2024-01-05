@@ -65,7 +65,6 @@ class GoogleContentController extends Controller
             $q->where('is_active', 1);
         })
         ->where('status' , '!=' , 'Inactive')
-        ->take(10)
         ->get();
         if (count($products) > 0) {
             foreach ($products as $product) {
@@ -112,20 +111,11 @@ class GoogleContentController extends Controller
         }
         // $chunks = array_chunk($product_array, 100);
         $client->setAccessToken($token['access_token']); // Use the stored access token
-        $merchant_id = config('services.google.merchant_center_id');
+
         $service = new ShoppingContent($client);
         $result  = null;
         if (!empty($product_array) > 0) {
             foreach ($product_array as $index => $add_product) {
-                $productId = $add_product['id'];
-                try {
-                    $existingProduct = $service->products->get($merchant_id, $productId);
-                } catch (\Exception $e) {
-                    // Product doesn't exist, handle accordingly
-                    $existingProduct = null;
-                }
-        
-            // foreach ($product_array as $index => $add_product) {
                 $product = new ServiceProduct();
                 $product->setOfferId($index);
                 $product->setTitle($add_product['title']);
@@ -153,13 +143,8 @@ class GoogleContentController extends Controller
         
                 $product->setPrice($price);
                 $merchant_id = config('services.google.merchant_center_id');
-                if ($existingProduct) {
-                    // Update the existing product
-                    $result = $service->products->update($merchant_id, $productId, $product);
-                } else {
-                    $result = $service->products->insert($merchant_id, $product);
-                }
-            //     $result = $service->products->insert($merchant_id, $product);
+
+                $result = $service->products->insert($merchant_id, $product);
             }
             return response()->json([
                 'status' => 'success',
