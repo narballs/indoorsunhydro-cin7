@@ -203,7 +203,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6 col-xl-3 col-xxl-3 col-lg-4 col-sm-12 col-xs-12" style="max-height: 100rem;overflow-y:scroll">
+            <div class="col-md-6 col-xl-3 col-xxl-3 col-lg-4 col-sm-12 col-xs-12" style="max-height: 50rem; overflow-y:scroll">
                 <div class="card rounded buy_again_div">
                     <div class="card-body">
                         @if(!empty($similar_products))
