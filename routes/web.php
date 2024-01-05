@@ -346,6 +346,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/admin/recycle-bin', [AdminSettingsController::class, 'recycle_bin'])->name('recycle_bin');
     Route::post('/admin/restore/contact/{id}', [AdminSettingsController::class, 'restore_contact'])->name('restore_contact');
     Route::post('/admin/delete/contact/permanent/{id}', [AdminSettingsController::class, 'delete_contact_permanently'])->name('delete_contact_permanently');
+    Route::get('/admin/contact-logs', [AdminSettingsController::class, 'contact_logs'])->name('contact_logs');
 
 
     //crud for admin settings

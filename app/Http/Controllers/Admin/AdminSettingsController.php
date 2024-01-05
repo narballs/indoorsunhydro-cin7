@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Middleware\IsAdmin;
 use App\Models\AdminSetting;
 use App\Models\Contact;
+use App\Models\ContactLogs;
 use App\Models\User;
 
 class AdminSettingsController extends Controller
@@ -209,6 +210,12 @@ class AdminSettingsController extends Controller
         $contact = Contact::withTrashed()->findOrFail($id);
         $contact->is_deleted = null;
         $contact->restore();
+        $contact_log = new ContactLogs();
+        $contact_log->user_id = $contact->user_id;
+        $contact_log->action_by = auth()->user()->id;
+        $contact_log->action = 'Restoration';
+        $contact_log->description = !empty($contact->email) ? $contact->email : $contact->firstName .' '. $contact->lastName  . 'is ' . 'restored by ' . auth()->user()->email;
+        $contact_log->save();
         $user = User::withTrashed()->where('id', $contact->user_id)->first();
         if (!empty($user)) {
             $user->is_deleted = null;
@@ -227,6 +234,12 @@ class AdminSettingsController extends Controller
     public function delete_contact_permanently($id) {
         $contact = Contact::withTrashed()->findOrFail($id);
         $user = User::withTrashed()->where('id', $contact->user_id)->first();
+        $contact_log = new ContactLogs();
+        $contact_log->user_id = $contact->user_id;
+        $contact_log->action_by = auth()->user()->id;
+        $contact_log->action = 'Deletion';
+        $contact_log->description = !empty($contact->email) ? $contact->email : $contact->firstName .' '. $contact->lastName  . 'is ' . 'deleted by ' . auth()->user()->email;
+        $contact_log->save();
         $contact->delete();
         $user->delete();
         if ($contact && $user) {
@@ -234,5 +247,10 @@ class AdminSettingsController extends Controller
         } else {
             return redirect()->route('recycle_bin')->with('error', 'Contact not deleted.');
         }
+    }
+
+    public function contact_logs() {
+        $contact_logs = ContactLogs::with('adminuser' , 'user')->orderBY('id' , 'desc')->paginate(10);
+        return view('admin.contact_logs.index', compact('contact_logs'));
     }
 }
