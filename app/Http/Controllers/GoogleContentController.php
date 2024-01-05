@@ -132,6 +132,7 @@ class GoogleContentController extends Controller
                 $product->setGtin('');
                 // $product->setmultipack('5000');
                 $product->setMpn($add_product['code']);
+                $product->setIdentifierExists(false);
                 $product->setAgeGroup('adult');
                 $product->setColor('universal');
                 $product->setGender('unisex');
