@@ -65,6 +65,7 @@ class GoogleContentController extends Controller
             $q->where('is_active', 1);
         })
         ->where('status' , '!=' , 'Inactive')
+        ->where('barcode' , '!=' , '')
         ->get();
         if (count($products) > 0) {
             foreach ($products as $product) {
@@ -103,6 +104,7 @@ class GoogleContentController extends Controller
                             'condition' => 'new',
                             'availability' => 'In stock',
                             'brand' => !empty($product->product_brand->name) ? $product->product_brand->name : 'General brand',
+                            'barcode' => $product->barcode,
                             'google_product_category' => $category,
                         ];
                     }
@@ -127,9 +129,9 @@ class GoogleContentController extends Controller
                 $product->setChannel('online');
                 $product->setAvailability($add_product['availability']);
                 $product->setCondition($add_product['condition']);
-                // $product->setBrand($add_product['brand']);
+                $product->setBrand($add_product['brand']);
                 $product->setGoogleProductCategory($add_product['google_product_category']);
-                // $product->setGtin('');
+                $product->setGtin($add_product['barcode']);
                 // $product->setmultipack('5000');
                 $product->setIdentifierExists(false);
                 $product->setMpn($add_product['code']);
