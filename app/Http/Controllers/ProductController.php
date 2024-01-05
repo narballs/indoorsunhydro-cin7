@@ -103,7 +103,11 @@ class ProductController extends Controller
                 $sub_category_ids = Category::where('parent_id', $selected_category_id)->pluck('id')->toArray();
             }
 
-            $products = $products_query->with('options.price', 'brand')->paginate($per_page);
+            $products = $products_query->with('options.price', 'brand')
+            ->whereHas('options.defaultPrice', function ($q) {
+                $q->where('retailUSD', '!=', 0);
+            })
+            ->paginate($per_page);
 
             $queries = DB::getQueryLog();
         }
@@ -261,13 +265,21 @@ class ProductController extends Controller
         if (empty($search_queries)) {
             $products = $products_query->with(['product_views','apiorderItem' , 'options' => function ($q) {
                 $q->where('status', '!=', 'Disabled');
-            }])->paginate($per_page);
+            }])
+            ->whereHas('options.defaultPrice', function ($q) {
+                $q->where('retailUSD', '!=', 0);
+            })
+            ->paginate($per_page);
             // $products = $products_query->paginate($per_page);
         } else {
             // $products = $products_query->with('options.defaultPrice', 'brand')->paginate($per_page);
             $products = $products_query->with(['product_views','apiorderItem' , 'options' => function ($q) {
                 $q->where('status', '!=', 'Disabled');
-            }])->paginate($per_page);
+            }])
+            ->whereHas('options.defaultPrice', function ($q) {
+                $q->where('retailUSD', '!=', 0);
+            })
+            ->paginate($per_page);
         }
 
 
@@ -339,7 +351,11 @@ class ProductController extends Controller
             // $products = $products_query->with('options.defaultPrice', 'brand')->paginate($per_page);
             $products = $products_query->with(['product_views','apiorderItem' , 'options' => function ($q) {
                 $q->where('status', '!=', 'Disabled');
-            }])->paginate($per_page);
+            }])
+            ->whereHas('options.defaultPrice', function ($q) {
+                $q->where('retailUSD', '!=', 0);
+            })
+            ->paginate($per_page);
         }
         $user_id = Auth::id();
         $lists = BuyList::where('user_id', $user_id)->get();
@@ -1119,13 +1135,21 @@ class ProductController extends Controller
         if (empty($search_queries)) {
             $products = $products_query->with(['product_views','apiorderItem' , 'options' => function ($q) {
                 $q->where('status', '!=', 'Disabled');
-            }])->paginate($per_page);
+            }])
+            ->whereHas('options.defaultPrice', function ($q) {
+                $q->where('retailUSD', '!=', 0);
+            })
+            ->paginate($per_page);
             // $products = $products_query->paginate($per_page);
         } else {
             // $products = $products_query->with('options', 'brand')->paginate($per_page);
             $products = $products_query->with(['product_views','brand','apiorderItem' , 'options' => function ($q) {
                 $q->where('status', '!=', 'Disabled');
-            }])->paginate($per_page);
+            }])
+            ->whereHas('options.defaultPrice', function ($q) {
+                $q->where('retailUSD', '!=', 0);
+            })
+            ->paginate($per_page);
         }
         $brands = [];
         if (!empty($brand_ids)) {
@@ -1209,6 +1233,9 @@ class ProductController extends Controller
             $main_query = Product::with(['product_views','apiorderItem' , 'options' => function ($q) {
                 $q->where('status', '!=', 'Disabled');
             }])
+            ->whereHas('options.defaultPrice', function ($q) {
+                $q->where('retailUSD', '!=', 0);
+            })
             ->where(function (Builder $query) use ($explode_search_value) {
                 foreach ($explode_search_value as $searchvalue) {
                     $query->where('name', 'LIKE', '%' . $searchvalue . '%')
@@ -1234,6 +1261,9 @@ class ProductController extends Controller
             $main_query = Product::with(['product_views','apiorderItem' , 'options' => function ($q) {
                 $q->where('status', '!=', 'Disabled');
             }])
+            ->whereHas('options.defaultPrice', function ($q) {
+                $q->where('retailUSD', '!=', 0);
+            })
             ->where(function (Builder $query) use ($explode_search_value) {
                 foreach ($explode_search_value as $searchvalue) {
                     $query->where('name', 'LIKE', '%' . $searchvalue . '%')
@@ -1254,6 +1284,9 @@ class ProductController extends Controller
             $main_query = Product::with(['product_views','apiorderItem' , 'options' => function ($q) {
                 $q->where('status', '!=', 'Disabled');
             }])
+            ->whereHas('options.defaultPrice', function ($q) {
+                $q->where('retailUSD', '!=', 0);
+            })
             ->where(function (Builder $query) use ($explode_search_value) {
                 foreach ($explode_search_value as $searchvalue) {
                     $query->where('description', 'LIKE', '%' . $searchvalue . '%')
