@@ -133,7 +133,7 @@ class GoogleContentController extends Controller
                 $product->setGoogleProductCategory($add_product['google_product_category']);
                 $product->setGtin($add_product['barcode']);
                 // $product->setmultipack('5000');
-                $product->setIdentifierExists(false);
+                // $product->setIdentifierExists(false);
                 $product->setMpn($add_product['code']);
                 $product->setAgeGroup('adult');
                 $product->setColor('universal');
