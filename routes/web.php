@@ -30,6 +30,7 @@ use App\Http\Controllers\Admin\WholesaleApplicationController;
 use App\Http\Controllers\Admin\DiscountController;
 use App\Http\Controllers\Admin\PagesController;
 use App\Http\Controllers\GoogleContentController;
+use App\Http\Controllers\ExportController;
 use App\Models\TaxClass;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -47,6 +48,7 @@ use App\Models\User;
 |
 */
 
+Route::get('/export', [ExportController::class, 'export'])->name('export');
 Route::get('/insertProductsbatch', [GoogleContentController::class, 'insertProductsbatch'])->name('insertProductsbatch');
 Route::get('/google/authorize', [GoogleContentController::class, 'authorizeGoogle'])->name('google.authorize');
 Route::get('/auth/google/callback', [GoogleContentController::class, 'handleCallback'])->name('google.callback');
