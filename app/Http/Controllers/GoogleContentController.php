@@ -127,11 +127,11 @@ class GoogleContentController extends Controller
                 $product->setChannel('online');
                 $product->setAvailability($add_product['availability']);
                 $product->setCondition($add_product['condition']);
-                $product->setBrand($add_product['brand']);
+                // $product->setBrand($add_product['brand']);
                 $product->setGoogleProductCategory($add_product['google_product_category']);
-                $product->setGtin('');
+                // $product->setGtin('');
                 // $product->setmultipack('5000');
-                $product->setMpn($add_product['code']);
+                // $product->setMpn($add_product['code']);
                 $product->setIdentifierExists(false);
                 $product->setAgeGroup('adult');
                 $product->setColor('universal');
