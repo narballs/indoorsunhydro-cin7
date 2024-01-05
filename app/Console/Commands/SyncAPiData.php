@@ -249,6 +249,7 @@ class SyncAPiData extends Command
                         $product->category_id =  $category_id;
                         $product->images =  !empty($api_product->images[0]) ? $api_product->images[0]->link: '';
                         $product->code =  $api_product->productOptions[0]->code;
+                        $product->barcode =  $api_product->productOptions[0]->barcode;
                         $product->retail_price = $retail_price;
                         $product->stockAvailable =  $api_product->productOptions[0]->stockAvailable;
                         
@@ -408,6 +409,7 @@ class SyncAPiData extends Command
                         'category_id' => $category_id,
                         'images' => !empty($api_product->images[0]) ? $api_product->images[0]->link: '',
                         'code' => $api_product->productOptions[0]->code,
+                        'barcode' => $api_product->productOptions[0]->barcode,
                         'retail_price' => $retail_price,
                         'stockAvailable' => $api_product->productOptions[0]->stockAvailable,
                         'brand' => $api_product->brand,
