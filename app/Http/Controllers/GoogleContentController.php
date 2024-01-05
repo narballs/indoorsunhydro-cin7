@@ -95,6 +95,7 @@ class GoogleContentController extends Controller
                         $product_array[] = [
                             'id' => $product->id,
                             'title' => $product->name,
+                            'code' => $product->code,
                             'description' => !empty($product->description) ? strip_tags($product->description) : 'No description available',
                             'link' => url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug),
                             'image_link' => !empty($product->images) ? $product->images : url(asset('theme/img/image_not_available.png')),
@@ -128,8 +129,9 @@ class GoogleContentController extends Controller
                 $product->setCondition($add_product['condition']);
                 $product->setBrand($add_product['brand']);
                 $product->setGoogleProductCategory($add_product['google_product_category']);
-                $product->setGtin('9780007350896');
+                // $product->setGtin('9780007350896');
                 // $product->setmultipack('5000');
+                $product->setMpn($add_product['code']);
                 $product->setAgeGroup('adult');
                 $product->setColor('universal');
                 $product->setGender('unisex');
