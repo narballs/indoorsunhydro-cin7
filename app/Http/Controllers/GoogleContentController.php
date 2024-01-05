@@ -65,6 +65,7 @@ class GoogleContentController extends Controller
             $q->where('is_active', 1);
         })
         ->where('status' , '!=' , 'Inactive')
+        ->take(10)
         ->get();
         if (count($products) > 0) {
             foreach ($products as $product) {
