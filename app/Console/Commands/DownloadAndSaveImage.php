@@ -50,22 +50,23 @@ class DownloadAndSaveImage extends Command
                                     // Get width and height
                                     $width = $image->getWidth();
                                     $height = $image->getHeight();
-                                    if ($width > 250 || $height > 250) {
+                                    if (($width > 250 || $width < 250) ||  ($height > 250 || $height < 250)) {
                                         // Get the desired width and height
                                         $newWidth = 250; // Replace with your desired width
                                         $newHeight = 250; // Replace with your desired height
                                         // Resize the image
+
                                         $image->resize($newWidth, $newHeight);
-                                        $sourcePath = public_path('theme/img/image_not_available.png');
-                                        if (!file_exists($sourcePath)) {
-                                            mkdir($sourcePath, 0777, true);
+                                        $publicPath = public_path('theme/products/images/');
+                                        if (!file_exists($publicPath)) {
+                                            mkdir($publicPath, 0777, true);
                                         }
                                         $imageName = time() . '_' . uniqid() . '.png';
-                                        $image->save($sourcePath . $imageName);
+                                        $image->save($publicPath . $imageName);
 
                                     }
                                     else {
-                                        $sourcePath = public_path('theme/img/image_not_available.png');
+                                        $sourcePath = public_path('theme/products/images/');
                                         if (!file_exists($sourcePath)) {
                                             mkdir($sourcePath, 0777, true);
                                         }
@@ -136,7 +137,7 @@ class DownloadAndSaveImage extends Command
                                     // Get width and height
                                     $width = $image->getWidth();
                                     $height = $image->getHeight();
-                                    if ($width > 250 || $height > 250) {
+                                    if (($width > 250 || $width < 250) ||  ($height > 250 || $height < 250)) {
                                         // Get the desired width and height
                                         $newWidth = 250; // Replace with your desired width
                                         $newHeight = 250; // Replace with your desired height
