@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         Commands\SyncAPiData::class,
+        Commands\DownloadAndSaveImage::class,
     ];
     protected function schedule(Schedule $schedule)
     {
