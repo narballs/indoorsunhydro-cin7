@@ -95,7 +95,6 @@ class GoogleContentController extends Controller
                             $category = 'General > General';
                         }
                         
-                        dd( url($product->product_image->image));
                         $product_array[] = [
                             'id' => $product->id,
                             'title' => $product->name,
