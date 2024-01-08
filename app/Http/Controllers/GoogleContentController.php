@@ -93,14 +93,16 @@ class GoogleContentController extends Controller
                         }
                         else {
                             $category = 'General > General';
-                        } 
+                        }
+                        
+                        dd( url($product->product_image->image));
                         $product_array[] = [
                             'id' => $product->id,
                             'title' => $product->name,
                             'code' => $product->code,
                             'description' => !empty($product->description) ? strip_tags($product->description) : 'No description available',
                             'link' => url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug),
-                            'image_link' => !empty($product->product_image->image) ? $product->product_image->image : url(asset('theme/img/image_not_available.png')),
+                            'image_link' => !empty($product->product_image->image) ? url($product->product_image->image) : url(asset('theme/img/image_not_available.png')),
                             'price' => !empty($option->price[0]->retailUSD) ? $option->price[0]->retailUSD : 0,
                             'condition' => 'new',
                             'availability' => 'In stock',
@@ -158,6 +160,70 @@ class GoogleContentController extends Controller
                 'status' => 'error',
                 'message' => 'No products found'
             ]);
+        }
+    }
+
+
+    public function list_products() {
+        $product_array = [];
+        $products = Product::with('options','options.defaultPrice', 'product_brand','product_image','categories' , 'product_views','apiorderItem', 'product_stock')
+        ->with(['product_views','apiorderItem' , 'options' => function ($q) {
+            $q->where('status', '!=', 'Disabled');
+            
+        }])
+        ->whereHas('options.defaultPrice', function ($q) {
+            $q->where('retailUSD', '!=', 0);
+        })
+        ->whereHas('categories' , function ($q) {
+            $q->where('is_active', 1);
+        })
+        ->where('status' , '!=' , 'Inactive')
+        ->where('barcode' , '!=' , '')
+        ->get();
+        if (count($products) > 0) {
+            foreach ($products as $product) {
+                
+                if (count($product->options) > 0) {
+                    // if (!empty($product->images)) {
+                    //     $response  = Http::get($product->images);
+                    //     if ($response->getStatusCode() == 200) {
+                    //         $image = $product->images;
+                    //     } else {
+                    //         $image = url(asset('theme/img/image_not_available.png'));
+                    //     }
+                    // }  else {
+                    //     $image = url(asset('theme/img/image_not_available.png'));
+                    // }
+                    foreach ($product->options as $option) {
+                        $category = 'General > General';
+                        if (!empty($product->categories)) {
+                            if (!empty($product->categories->category_id) && $product->categories->parent_id == 0) {
+                                $category = $product->categories->category_id;
+                            } else if (!empty($product->categories->parent_id) && !empty($product->categories->category_id) && $product->categories->parent_id != 0) {
+                                $category = $product->categories->parent_id;
+                            }
+                        }
+                        else {
+                            $category = 'General > General';
+                        }
+                        
+                        $product_array[] = [
+                            'id' => $product->id,
+                            'title' => $product->name,
+                            'code' => $product->code,
+                            'description' => !empty($product->description) ? strip_tags($product->description) : 'No description available',
+                            'link' => url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug),
+                            'image_link' => !empty($product->product_image->image) ? url(asset('theme/products/images/' .$product->product_image->image)) : url(asset('theme/img/image_not_available.png')),
+                            'price' => !empty($option->price[0]->retailUSD) ? $option->price[0]->retailUSD : 0,
+                            'condition' => 'new',
+                            'availability' => 'In stock',
+                            'brand' => !empty($product->product_brand->name) ? $product->product_brand->name : 'General brand',
+                            'barcode' => $product->barcode,
+                            'google_product_category' => $category,
+                        ];
+                    }
+                }
+            }
         }
     }
 }
