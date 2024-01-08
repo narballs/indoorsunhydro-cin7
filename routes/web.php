@@ -49,6 +49,7 @@ use App\Models\User;
 */
 
 Route::get('/export', [ExportController::class, 'export'])->name('export');
+Route::get('/list_products', [GoogleContentController::class, 'list_products'])->name('list_products');
 Route::get('/insertProductsbatch', [GoogleContentController::class, 'insertProductsbatch'])->name('insertProductsbatch');
 Route::get('/google/authorize', [GoogleContentController::class, 'authorizeGoogle'])->name('google.authorize');
 Route::get('/auth/google/callback', [GoogleContentController::class, 'handleCallback'])->name('google.callback');
