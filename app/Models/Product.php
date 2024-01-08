@@ -65,4 +65,9 @@ class Product extends Model
         return $this->belongsTo('App\Models\Brand', 'brand_id', 'id');
     }
 
+    public function product_image()
+    {
+        return $this->hasOne('App\Models\ProductImage', 'product_id', 'id');
+    }
+
 }

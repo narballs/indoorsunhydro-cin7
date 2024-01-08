@@ -18,7 +18,7 @@ class DownloadAndSaveImage extends Command
 
     public function handle()
     {
-        $all_products = Product::with('options','options.defaultPrice', 'product_brand', 'categories' , 'product_views','apiorderItem', 'product_stock')
+        $all_products = Product::with('options','options.defaultPrice', 'product_brand', 'categories' , 'product_views','apiorderItem','product_image' , 'product_stock')
         ->with(['product_views','apiorderItem' , 'options' => function ($q) {
             $q->where('status', '!=', 'Disabled');
             
@@ -32,10 +32,12 @@ class DownloadAndSaveImage extends Command
         ->where('status' , '!=' , 'Inactive')
         ->where('barcode' , '!=' , '')
         ->get();
+        $productImages = [];
         if (count($all_products) > 0) {
             foreach ($all_products as $product) {
                 if (count($product->options) > 0) {
                     foreach ($product->options as $option) {
+                        
                         $product_images = ProductImage::where('product_id', $product->id)->first();
                         if (!empty($product_images)) {
                             if (!empty($product->images)) {
@@ -221,7 +223,6 @@ class DownloadAndSaveImage extends Command
                 }
             }
         }
-
         $this->info('Image downloaded and saved successfully.');
     }
 }
