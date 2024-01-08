@@ -53,7 +53,7 @@ class GoogleContentController extends Controller
     {
         
         $product_array = [];
-        $products = Product::with('options','options.defaultPrice', 'product_brand', 'categories' , 'product_views','apiorderItem', 'product_stock')
+        $products = Product::with('options','options.defaultPrice', 'product_brand','product_image','categories' , 'product_views','apiorderItem', 'product_stock')
         ->with(['product_views','apiorderItem' , 'options' => function ($q) {
             $q->where('status', '!=', 'Disabled');
             
@@ -66,6 +66,7 @@ class GoogleContentController extends Controller
         })
         ->where('status' , '!=' , 'Inactive')
         ->where('barcode' , '!=' , '')
+        ->take(10)
         ->get();
         if (count($products) > 0) {
             foreach ($products as $product) {
@@ -99,7 +100,7 @@ class GoogleContentController extends Controller
                             'code' => $product->code,
                             'description' => !empty($product->description) ? strip_tags($product->description) : 'No description available',
                             'link' => url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug),
-                            'image_link' => !empty($product->images) ? $product->images : url(asset('theme/img/image_not_available.png')),
+                            'image_link' => !empty($product->product_image->image) ? $product->product_image->image : url(asset('theme/img/image_not_available.png')),
                             'price' => !empty($option->price[0]->retailUSD) ? $option->price[0]->retailUSD : 0,
                             'condition' => 'new',
                             'availability' => 'In stock',
