@@ -8,6 +8,7 @@ use Illuminate\Console\Command;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image as ImageFacade;
+use GuzzleHttp\Exception\RequestException;
 
 class DownloadAndSaveImage extends Command
 {
@@ -37,12 +38,12 @@ class DownloadAndSaveImage extends Command
                     foreach ($product->options as $option) {
                         $product_images = ProductImage::where('product_id', $product->id)->first();
                         if (!empty($product_images)) {
-
                             if (!empty($product->images)) {
-                                $client = new Client();
-                                $response = $client->get($product->images);
-                                $imageData = $response->getBody()->getContents();
-                                if ($response->getStatusCode() == 200) {
+                                try {
+                                    $client = new Client();
+                                    $response = $client->get($product->images);
+                                    
+                                    $imageData = $response->getBody()->getContents();
                                     $image = ImageFacade::make($imageData);
                                     // Get width and height
                                     $width = $image->getWidth();
@@ -53,39 +54,70 @@ class DownloadAndSaveImage extends Command
                                         $newHeight = 250; // Replace with your desired height
                                         // Resize the image
                                         $image->resize($newWidth, $newHeight);
-                                        $publicPath = public_path('/theme/products/images/');
-                                        if (!file_exists($publicPath)) {
-                                            mkdir($publicPath, 0777, true);
+                                        $sourcePath = public_path('theme/img/image_not_available.png');
+                                        if (!file_exists($sourcePath)) {
+                                            mkdir($sourcePath, 0777, true);
                                         }
                                         $imageName = time() . '_' . uniqid() . '.png';
-                                        $image->save($publicPath . $imageName);
+                                        $image->save($sourcePath . $imageName);
 
                                     }
                                     else {
-                                        $publicPath = public_path('/theme/products/images/');
-                                        if (!file_exists($publicPath)) {
-                                            mkdir($publicPath, 0777, true);
+                                        $sourcePath = public_path('theme/img/image_not_available.png');
+                                        if (!file_exists($sourcePath)) {
+                                            mkdir($sourcePath, 0777, true);
                                         }
                                         $imageName = time() . '_' . uniqid() . '.png';
-                                        $imagePath = $publicPath . $imageName;
+                                        $imagePath = $sourcePath . $imageName;
                                         file_put_contents($imagePath, $imageData);
                                     }
 
                                     $product_images->image = $imageName;
                                     $product_images->save();
-                                } else {
-                                    $sourcePath = public_path('theme/img/image_not_available.png');
-                                    $imageName = time() . '_' . uniqid() . '.' . pathinfo($sourcePath, PATHINFO_EXTENSION);
-                                    $destinationPath = public_path('/theme/products/images/');
-                                    // Copy the file to the new location
-                                    copy($sourcePath, $destinationPath . $imageName);
-                                    $product_images->image = $imageName;
-                                    $product_images->save();
+                                } catch (RequestException $e) {
+                                    // Handle the case when a request exception occurs
+                                    if ($e->hasResponse()) {
+                                        $sourcePath = public_path('theme/img/image_not_available.png');
+                                        $imageName = time() . '_' . uniqid() . '.' . pathinfo($sourcePath, PATHINFO_EXTENSION);
+                                        $destinationPath = public_path('theme/products/images/');
+                                        // Copy the file to the new location
+                                        
+                                        // Ensure the destination directory exists
+                                        if (!file_exists($destinationPath)) {
+                                            mkdir($destinationPath, 0777, true);
+                                        }
+
+                                        // Copy the file to the new location
+                                        copy($sourcePath, $destinationPath . $imageName);
+                                        $product_images->image = $imageName;
+                                        $product_images->save();
+                                    } else {
+                                        $sourcePath = public_path('theme/img/image_not_available.png');
+                                        $imageName = time() . '_' . uniqid() . '.' . pathinfo($sourcePath, PATHINFO_EXTENSION);
+                                        $destinationPath = public_path('theme/products/images/');
+                                        // Copy the file to the new location
+                                       
+                                        // Ensure the destination directory exists
+                                        if (!file_exists($destinationPath)) {
+                                            mkdir($destinationPath, 0777, true);
+                                        }
+
+                                        // Copy the file to the new location
+                                        copy($sourcePath, $destinationPath . $imageName);
+                                        $product_images->image = $imageName;
+                                        $product_images->save();
+                                    }
                                 }
                             } else {
                                 $sourcePath = public_path('theme/img/image_not_available.png');
                                 $imageName = time() . '_' . uniqid() . '.' . pathinfo($sourcePath, PATHINFO_EXTENSION);
-                                $destinationPath = public_path('/theme/products/images/');
+                                $destinationPath = public_path('theme/products/images/');
+                                
+                                // Ensure the destination directory exists
+                                if (!file_exists($destinationPath)) {
+                                    mkdir($destinationPath, 0777, true);
+                                }
+
                                 // Copy the file to the new location
                                 copy($sourcePath, $destinationPath . $imageName);
                                 $product_images->image = $imageName;
@@ -93,10 +125,11 @@ class DownloadAndSaveImage extends Command
                             }
                         } else {
                             if (!empty($product->images)) {
-                                $client = new Client();
-                                $response = $client->get($product->images);
-                                $imageData = $response->getBody()->getContents();
-                                if ($response->getStatusCode() == 200) {
+                                try {
+                                    $client = new Client();
+                                    $response = $client->get($product->images);
+                                    
+                                    $imageData = $response->getBody()->getContents();
                                     $image = ImageFacade::make($imageData);
                                     // Get width and height
                                     $width = $image->getWidth();
@@ -107,7 +140,7 @@ class DownloadAndSaveImage extends Command
                                         $newHeight = 250; // Replace with your desired height
                                         // Resize the image
                                         $image->resize($newWidth, $newHeight);
-                                        $publicPath = public_path('/theme/products/images/');
+                                        $publicPath = public_path('theme/products/images/');
                                         if (!file_exists($publicPath)) {
                                             mkdir($publicPath, 0777, true);
                                         }
@@ -116,7 +149,7 @@ class DownloadAndSaveImage extends Command
 
                                     }
                                     else {
-                                        $publicPath = public_path('/theme/products/images/');
+                                        $publicPath = public_path('theme/products/images/');
                                         if (!file_exists($publicPath)) {
                                             mkdir($publicPath, 0777, true);
                                         }
@@ -129,22 +162,53 @@ class DownloadAndSaveImage extends Command
                                     $productImages->product_id = $product->id;
                                     $productImages->image = $imageName;
                                     $productImages->save();
+                                } catch (RequestException $e) {
+                                    // Handle the case when a request exception occurs
+                                    if ($e->hasResponse()) {
+                                        $sourcePath = public_path('theme/img/image_not_available.png');
+                                        $imageName = time() . '_' . uniqid() . '.' . pathinfo($sourcePath, PATHINFO_EXTENSION);
+                                        $destinationPath = public_path('theme/products/images/');
+                                        
+                                        // Ensure the destination directory exists
+                                        if (!file_exists($destinationPath)) {
+                                            mkdir($destinationPath, 0777, true);
+                                        }
+
+                                        // Copy the file to the new location
+                                        copy($sourcePath, $destinationPath . $imageName);
+                                        $productImages = new ProductImage();
+                                        $productImages->product_id = $product->id;
+                                        $productImages->image = $imageName;
+                                        $productImages->save();
+                                    } else {
+                                        $sourcePath = public_path('theme/img/image_not_available.png');
+                                        $imageName = time() . '_' . uniqid() . '.' . pathinfo($sourcePath, PATHINFO_EXTENSION);
+                                        $destinationPath = public_path('theme/products/images/');
+                                        
+                                        // Ensure the destination directory exists
+                                        if (!file_exists($destinationPath)) {
+                                            mkdir($destinationPath, 0777, true);
+                                        }
+
+                                        // Copy the file to the new location
+                                        copy($sourcePath, $destinationPath . $imageName);
+                                        $productImages = new ProductImage();
+                                        $productImages->product_id = $product->id;
+                                        $productImages->image = $imageName;
+                                        $productImages->save();
+                                    }
                                 }
-                                else {
-                                    $sourcePath = public_path('theme/img/image_not_available.png');
-                                    $imageName = time() . '_' . uniqid() . '.' . pathinfo($sourcePath, PATHINFO_EXTENSION);
-                                    $destinationPath = public_path('/theme/products/images/');
-                                    // Copy the file to the new location
-                                    copy($sourcePath, $destinationPath . $imageName);
-                                    $productImages = new ProductImage();
-                                    $productImages->product_id = $product->id;
-                                    $productImages->image = $imageName;
-                                    $productImages->save();
-                                }
+                               
                             } else {
                                 $sourcePath = public_path('theme/img/image_not_available.png');
                                 $imageName = time() . '_' . uniqid() . '.' . pathinfo($sourcePath, PATHINFO_EXTENSION);
-                                $destinationPath = public_path('/theme/products/images/');
+                                $destinationPath = public_path('theme/products/images/');
+                                
+                                // Ensure the destination directory exists
+                                if (!file_exists($destinationPath)) {
+                                    mkdir($destinationPath, 0777, true);
+                                }
+
                                 // Copy the file to the new location
                                 copy($sourcePath, $destinationPath . $imageName);
                                 $product_images = new ProductImage();
