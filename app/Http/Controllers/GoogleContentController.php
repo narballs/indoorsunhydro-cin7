@@ -41,12 +41,15 @@ class GoogleContentController extends Controller
         ]);
         $code = $request->input('code');
         $token = $client->fetchAccessTokenWithAuthCode($code);
-        $result  = $this->insertProducts($token , $client);
-        if ($result->getStatusCode() == 200) {
-            return redirect()->route('admin.view')->with('success', 'Products inserted successfully');
-        } else {
-            return redirect()->route('admin.view')->with('error', 'Something went wrong');
-        }
+        // $result  = $this->insertProducts($token , $client);
+        // if ($result->getStatusCode() == 200) {
+        //     return redirect()->route('admin.view')->with('success', 'Products inserted successfully');
+        // } else {
+        //     return redirect()->route('admin.view')->with('error', 'Something went wrong');
+        // }
+        $result  = $this->list_products($token , $client);
+        dd($result);
+        
     }
 
     public function insertProducts($token , $client)
@@ -158,5 +161,22 @@ class GoogleContentController extends Controller
                 'message' => 'No products found'
             ]);
         }
+    }
+
+    public function list_products($token , $client) {
+        $client = new Google_Client();
+        $client->setClientId(config('services.google.client_id'));
+        $client->setClientSecret(config('services.google.client_secret'));
+        $client->setRedirectUri(config('services.google.redirect'));
+        $client->setScopes([
+            'openid',
+            'profile',
+            'email',
+            'https://www.googleapis.com/auth/content', // Add other necessary scopes
+        ]);
+        $client->setAccessToken(session('token'));
+        $service = new ShoppingContent($client);
+        $merchant_id = config('services.google.merchant_center_id');
+        $products = $service->products->listProducts($merchant_id);
     }
 }
