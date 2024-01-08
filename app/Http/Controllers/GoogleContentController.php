@@ -174,7 +174,7 @@ class GoogleContentController extends Controller
             'email',
             'https://www.googleapis.com/auth/content', // Add other necessary scopes
         ]);
-        $client->setAccessToken(session('token'));
+        $client->setAccessToken($token['access_token']);
         $service = new ShoppingContent($client);
         $merchant_id = config('services.google.merchant_center_id');
         $products = $service->products->listProducts($merchant_id);
