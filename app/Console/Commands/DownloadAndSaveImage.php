@@ -43,13 +43,33 @@ class DownloadAndSaveImage extends Command
                                 $response = $client->get($product->images);
                                 $imageData = $response->getBody()->getContents();
                                 if ($response->getStatusCode() == 200) {
-                                    $publicPath = public_path('/theme/products/images/');
-                                    if (!file_exists($publicPath)) {
-                                        mkdir($publicPath, 0777, true);
+                                    $image = ImageFacade::make($imageData);
+                                    // Get width and height
+                                    $width = $image->getWidth();
+                                    $height = $image->getHeight();
+                                    if ($width > 250 || $height > 250) {
+                                        // Get the desired width and height
+                                        $newWidth = 250; // Replace with your desired width
+                                        $newHeight = 250; // Replace with your desired height
+                                        // Resize the image
+                                        $image->resize($newWidth, $newHeight);
+                                        $publicPath = public_path('/theme/products/images/');
+                                        if (!file_exists($publicPath)) {
+                                            mkdir($publicPath, 0777, true);
+                                        }
+                                        $imageName = time() . '_' . uniqid() . '.png';
+                                        $image->save($publicPath . $imageName);
+
                                     }
-                                    $imageName = time() . '_' . uniqid() . '.png';
-                                    $imagePath = $publicPath . $imageName;
-                                    file_put_contents($imagePath, $imageData);
+                                    else {
+                                        $publicPath = public_path('/theme/products/images/');
+                                        if (!file_exists($publicPath)) {
+                                            mkdir($publicPath, 0777, true);
+                                        }
+                                        $imageName = time() . '_' . uniqid() . '.png';
+                                        $imagePath = $publicPath . $imageName;
+                                        file_put_contents($imagePath, $imageData);
+                                    }
 
                                     $product_images->image = $imageName;
                                     $product_images->save();
@@ -77,13 +97,33 @@ class DownloadAndSaveImage extends Command
                                 $response = $client->get($product->images);
                                 $imageData = $response->getBody()->getContents();
                                 if ($response->getStatusCode() == 200) {
-                                    $publicPath = public_path('/theme/products/images/');
-                                    if (!file_exists($publicPath)) {
-                                        mkdir($publicPath, 0777, true);
+                                    $image = ImageFacade::make($imageData);
+                                    // Get width and height
+                                    $width = $image->getWidth();
+                                    $height = $image->getHeight();
+                                    if ($width > 250 || $height > 250) {
+                                        // Get the desired width and height
+                                        $newWidth = 250; // Replace with your desired width
+                                        $newHeight = 250; // Replace with your desired height
+                                        // Resize the image
+                                        $image->resize($newWidth, $newHeight);
+                                        $publicPath = public_path('/theme/products/images/');
+                                        if (!file_exists($publicPath)) {
+                                            mkdir($publicPath, 0777, true);
+                                        }
+                                        $imageName = time() . '_' . uniqid() . '.png';
+                                        $image->save($publicPath . $imageName);
+
                                     }
-                                    $imageName = time() . '_' . uniqid() . '.png';
-                                    $imagePath = $publicPath . $imageName;
-                                    file_put_contents($imagePath, $imageData);
+                                    else {
+                                        $publicPath = public_path('/theme/products/images/');
+                                        if (!file_exists($publicPath)) {
+                                            mkdir($publicPath, 0777, true);
+                                        }
+                                        $imageName = time() . '_' . uniqid() . '.png';
+                                        $imagePath = $publicPath . $imageName;
+                                        file_put_contents($imagePath, $imageData);
+                                    }
 
                                     $productImages = new ProductImage();
                                     $productImages->product_id = $product->id;
@@ -101,8 +141,6 @@ class DownloadAndSaveImage extends Command
                                     $productImages->image = $imageName;
                                     $productImages->save();
                                 }
-                                
-                                
                             } else {
                                 $sourcePath = public_path('theme/img/image_not_available.png');
                                 $imageName = time() . '_' . uniqid() . '.' . pathinfo($sourcePath, PATHINFO_EXTENSION);
