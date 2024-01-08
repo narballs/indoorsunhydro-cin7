@@ -100,7 +100,7 @@ class GoogleContentController extends Controller
                             'code' => $product->code,
                             'description' => !empty($product->description) ? strip_tags($product->description) : 'No description available',
                             'link' => url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug),
-                            'image_link' => !empty($product->product_image->image) ? url($product->product_image->image) : url(asset('theme/img/image_not_available.png')),
+                            'image_link' => !empty($product->product_image->image) ? url(asset('theme/products/images/' . $product->product_image->image)) : url(asset('theme/img/image_not_available.png')),
                             'price' => !empty($option->price[0]->retailUSD) ? $option->price[0]->retailUSD : 0,
                             'condition' => 'new',
                             'availability' => 'In stock',
