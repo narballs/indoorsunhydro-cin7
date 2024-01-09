@@ -136,10 +136,10 @@ class GoogleContentController extends Controller
                 // $product->setmultipack('5000');
                 // $product->setIdentifierExists(false);
                 $product->setMpn($add_product['code']);
-                $product->setAgeGroup('adult');
-                $product->setColor('universal');
-                $product->setGender('unisex');
-                $product->setSizes(['Large']);
+                // $product->setAgeGroup('adult');
+                // $product->setColor('universal');
+                // $product->setGender('unisex');
+                // $product->setSizes(['Large']);
                 $price = new Price();
                 $price->setValue($add_product['price']);
                 $price->setCurrency('USD');
