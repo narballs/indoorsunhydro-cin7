@@ -1060,7 +1060,8 @@
                         $('#products-container').html(html);
                         updateSimilarProductsPaginationLinks();
                     } else {
-                        console.error('Invalid or missing data in the response:', response);
+                        var html = '<div class="row"><div class="col-md-12"><p class="buy_again_heading">No similar products found</p></div></div>';
+                        $('#products-container').html(html);
                     }
                 }
             });
@@ -1073,6 +1074,7 @@
                 var page = $(this).text();
                 loadSimilarProducts(page);
             });
+            
         }
 
         function buildSimilarProductsHtml(response) {
