@@ -31,7 +31,7 @@ use App\Models\ProductStock;
 use Illuminate\Support\Facades\Session;
 
 use Illuminate\Database\Eloquent\Builder;
-
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class ProductController extends Controller
 {
@@ -606,6 +606,9 @@ class ProductController extends Controller
     }
     public function getSimilarProducts(Request $request ,$id, $option_id) {
         $similar_products = null;
+        $perPage = 4;
+        $currentPage = $request->get('page', 1);
+        $offset = ($currentPage - 1) * $perPage;
         $product = Product::with('categories' , 'brand')
         ->where('id', $id)
         ->where('status', '!=', 'Inactive')->first();
@@ -614,12 +617,21 @@ class ProductController extends Controller
             return redirect('/products');
         }
         if (!empty($product->category_id) && !empty($product)) {
-            $similar_products = Product::with('options', 'options.defaultPrice','brand', 'options.products','categories' ,'apiorderItem' , 'product_stock')
-            ->where('category_id', $product->category_id)
-            ->where('id', '!=', $product->id)
-            ->where('status', '!=', 'Inactive')
-            ->take(16)
-            ->paginate(4);
+                
+                $similar_products_query = Product::with('options', 'options.defaultPrice', 'brand', 'options.products', 'categories', 'apiorderItem', 'product_stock')
+                ->where('category_id', $product->category_id)
+                ->where('id', '!=', $product->id)
+                ->where('status', '!=', 'Inactive');
+                
+                $total_products = $similar_products_query->count();
+                $similar_products_query = $similar_products_query->take($perPage)
+                ->skip($offset)
+                ->get();
+                $total = $total_products >= 16 ? 16 : $total_products;
+                $similar_products = new LengthAwarePaginator($similar_products_query, $total, $perPage, $currentPage, [
+                    'path' => url('/products/' . $id . '/' . $option_id . '/get-similar-products'),
+                    'query' => $request->query(),
+                ]);
         }
         return $similar_products;
     }
