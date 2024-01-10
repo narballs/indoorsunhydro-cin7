@@ -484,8 +484,10 @@ class ProductController extends Controller
         ));
     }
 
-    public function showProductDetail($id, $option_id)
+    public function showProductDetail(Request $request ,$id, $option_id)
     {
+        
+        
         $similar_products = null;
         $product = Product::with('categories' , 'brand')
         ->where('id', $id)
@@ -495,12 +497,7 @@ class ProductController extends Controller
             return redirect('/products');
         }
         if (!empty($product->category_id) && !empty($product)) {
-            $similar_products = Product::with('options', 'options.defaultPrice','brand', 'options.products','categories' ,'apiorderItem' , 'product_stock')
-            ->where('category_id', $product->category_id)
-            ->where('id', '!=', $product->id)
-            ->where('status', '!=', 'Inactive')
-            ->take(16)
-            ->get();
+            $similar_products = $this->getSimilarProducts($request , $id, $option_id);
         }
 
         $best_selling_products = null;
@@ -606,6 +603,25 @@ class ProductController extends Controller
 
         
         
+    }
+    public function getSimilarProducts(Request $request ,$id, $option_id) {
+        $similar_products = null;
+        $product = Product::with('categories' , 'brand')
+        ->where('id', $id)
+        ->where('status', '!=', 'Inactive')->first();
+        if (empty($product)) {
+            session()->flash('error', 'This product is not available! Please search another product.');
+            return redirect('/products');
+        }
+        if (!empty($product->category_id) && !empty($product)) {
+            $similar_products = Product::with('options', 'options.defaultPrice','brand', 'options.products','categories' ,'apiorderItem' , 'product_stock')
+            ->where('category_id', $product->category_id)
+            ->where('id', '!=', $product->id)
+            ->where('status', '!=', 'Inactive')
+            ->take(16)
+            ->paginate(4);
+        }
+        return $similar_products;
     }
     public function showProductByCategory_slug($slug)
     {

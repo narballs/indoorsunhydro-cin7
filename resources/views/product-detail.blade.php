@@ -15,11 +15,19 @@
     @yield('content')
 </div>
 <?php //dd($location_inventories);exit;?>
+<input type="hidden" value="{{App\Helpers\UserHelper::getUserPriceColumn()}}" id="get_column">
 <div class="row bg-light desktop-view justify-content-center w-100">
     <div class="col-md-12 col-xl-10 col-lg-12 col-sm-12 col-xs-12 mt-3 mb-3">
         <div class="row justify-content-center ml-1">
-            
+            {{-- similar product partial --}}
+            <div class="col-md-8 col-xl-3 col-xxl-3 col-lg-4 col-sm-12 col-xs-12">
+                <div class="card rounded buy_again_div">
+                    @include('partials.product-detail.similar-products')
+                </div>
+            </div>
+            {{-- product detail --}}
             <div class="col-md-12 col-sm-12 col-xl-9 col-xxl-9 col-lg-8 col-xs-12">
+                
                 <div class="card py-3">
                     <div class="row ms-0">
                         <div class="col-xl-4 col-lg-3 col-md-12 col-sm-12 col-xs-12">
@@ -139,6 +147,7 @@
                                                     value="{{$productOption->products->id}}">
                                                 <input type="hidden" name="option_id" id="option_id"
                                                     value="{{$productOption->option_id}}">
+                                                    <input type="hidden" name="product_slug"  id="product_slug" value="{{$productOption->products->code}}">
                                                 <div class="quantity-nav">
                                                     <div class="quantity-div quantity-up"></div>
                                                     <div class="quantity-div quantity-down greyed"></div>
@@ -200,87 +209,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-xl-3 col-xxl-3 col-lg-4 col-sm-12 col-xs-12" style="max-height: 50rem; overflow-y:scroll">
-                <div class="card rounded buy_again_div">
-                    <div class="card-body">
-                        @if(!empty($similar_products))
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <p class="buy_again_heading">Similar Products</p>
-                                </div>
-                            </div>
-                            @foreach($similar_products as $similar_product)
-                                @if(!empty($similar_product->options))
-                                    @foreach ($similar_product->options as $option)
-                                        @php
-                                            $product = $similar_product; 
-                                        @endphp
-                                        <div class="row mt-4 mb-3">
-                                            <div class="col-md-12">
-                                                <div class="row">
-                                                    <div class="col-md-4 image-div image-div-account d-flex justify-content-center">
-                                                        @if(!empty($product->images))
-                                                            <img src="{{ $product->images }}" alt="" class="buy_again_product_image">
-                                                        @else
-                                                            <img src="{{ asset('/theme/img/image_not_available.png') }}" alt="" class="buy_again_product_image">
-                                                        @endif
-                                                    </div>
-                                                    <div class="col-md-8 data-div data-div-account">
-                                                        <div class="row">
-                                                            <div class="col-md-10">
-                                                                
-                                                                <p class="product_name mb-1">
-                                                                    @if(!empty($product->name))
-                                                                        <a class="product_name" id="prd_name_{{$product->id }}" href="{{ url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug) }}">{{$product->name }}</a>
-                                                                    @endif
-                                                                </p>
-                                                                
-                                                            </div>
-                                                            <?php
-                                                                $retail_price = 0;
-                                                                $user_price_column = App\Helpers\UserHelper::getUserPriceColumn();
-                                                                foreach ($option->price as $price) {
-                                                                    $retail_price = $price->$user_price_column;
-                                                                }
-                                                            ?>
-                                                            <div class="col-md-10">
-                                                                <p class="product_price mb-1">
-                                                                    ${{ number_format($retail_price, 2) }}
-                                                                </p>
-                                                            </div>
-                                                            <div class="col-md-10">
-                                                                <p class="category_name mb-1">Category:
-                                                                    @if(!empty($product->categories))
-                                                                    <a class="category_name" href="{{ url('products/' . $product->categories->id . '/' .$product->categories->slug) }}"> 
-                                                                        {{$product->categories->name}}
-                                                                    </a> 
-                                                                    @endif
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="row justify-content-center mt-4">
-                                                    <div class="col-md-10">
-                                                        <button type="button" class="buy_frequent_again_btn border-0 w-100 p-2" onclick="similar_product_add_to_cart('{{ $product->id }}', '{{ $option->option_id }}')">Add to Cart</button>
-                                                    </div>
-                                                    <div class="col-md-10 mt-4 border-div d-flex align-items-center align-self-center"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        @endforeach
-                                    @endif
-                            @endforeach
-                        @else
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <p class="buy_again_heading">No Similar products to show</p>
-                                </div>
-                            </div>
-                        @endif
                     </div>
                 </div>
             </div>
@@ -1072,7 +1000,6 @@
                 quantity: 1,
             },
             success: function(response) {
-                console.log(response);
                 if (response.status == 'success') {
                     var cart_items = response.cart_items;
                     var cart_total = 0;
@@ -1111,4 +1038,128 @@
             }
         });
     }
+</script>
+
+<script>
+    $(document).ready(function() {
+        var p_id= jQuery('#p_id').val();
+        var option_id=jQuery('#option_id').val();
+        var slug= jQuery('#product_slug').val();
+        loadSimilarProducts(1);
+        
+        function loadSimilarProducts(page) {
+            
+            $.ajax({
+                url: '/products/' + p_id + '/' + option_id + '/' + slug + '/get-similar-products?page=${page}',
+                method: 'GET',
+                data: { page: page },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.data.length > 0) {
+                        var html = buildSimilarProductsHtml(response);
+                        $('#products-container').html(html);
+                        updateSimilarProductsPaginationLinks();
+                    } else {
+                        console.error('Invalid or missing data in the response:', response);
+                    }
+                }
+            });
+        }
+
+        function updateSimilarProductsPaginationLinks() {
+            $('#pagination-container').on('click', '.pagination-link', function(e) { 
+                e.preventDefault();
+                var page = $(this).text();
+                loadSimilarProducts(page);
+            });
+        }
+
+        function buildSimilarProductsHtml(response) {
+            var html = '';
+            var data = response.data;
+            var header = '<div class="row"><div class="col-md-12"><p class="buy_again_heading">Similar Products</p></div></div>';
+            html += header;
+            for (var i = 0; i < data.length; i++) {
+                html += buildProductRow(data[i]);
+            }
+
+            var totalPages = response.last_page;
+            var currentPage = response.current_page;
+            var paginationHtml = $('#pagination-list').html(generatePaginationLinks(totalPages, currentPage));
+            // html += paginationHtml;
+
+            return html;
+        }
+
+        function buildProductRow(productData) {
+            var rowHtml = '<div class="row mt-4 mb-3">';
+            rowHtml += '    <div class="col-md-12">';
+            rowHtml += '        <div class="row">';
+            rowHtml += buildImageColumn(productData.images);
+            rowHtml += buildDataColumn(productData);
+            rowHtml += '        </div>';
+            rowHtml += buildButtonRow(productData);
+            rowHtml += '    </div>';
+            rowHtml += '</div>';
+
+            return rowHtml;
+        }
+
+        function buildImageColumn(imageUrl) {
+            return '            <div class="col-md-4 image-div image-div-account d-flex justify-content-center">' +
+                '                <img src="' + imageUrl + '" alt="Product Image" class="buy_again_product_image">' +
+                '            </div>';
+        }
+
+        function buildDataColumn(productData) {
+            var column = $('#get_column').val();
+            retail_price = 0;
+            for (var i = 0; i < productData.options.length; i++) {
+                retail_price = productData.options[i].default_price[column]
+                var dataHtml = '            <div class="col-md-8 data-div data-div-account">';
+                dataHtml += '                <div class="row">';
+                dataHtml += '                    <div class="col-md-10">';
+                dataHtml += '                        <p class="product_name mb-1">';
+                dataHtml += '                            <a class="product_name" id="prd_name_' + productData.id + '" href="' + '/product-detail/' + productData.id + '/' + productData.options[i].option_id +'/'+ productData.code +'">' + productData.name + '</a>';
+                dataHtml += '                        </p>';
+                dataHtml += '                    </div>';
+                dataHtml += '                    <div class="col-md-10">';
+                dataHtml += '                        <p class="product_price mb-1">$' + retail_price + '</p>';
+                dataHtml += '                    </div>';
+                dataHtml += '                    <div class="col-md-10">';
+                dataHtml += '                        <p class="category_name mb-1">Category:';
+                dataHtml += '                            <a class="category_name" href="' + '/products/' + productData.categories.id + '/' + productData.categories.slug +  '">' + productData.categories.name + '</a>';
+                dataHtml += '                        </p>';
+                dataHtml += '                    </div>';
+                dataHtml += '                </div>';
+                dataHtml += '            </div>';
+            }
+            
+            return dataHtml;
+        }
+
+        function buildButtonRow(productData) {
+            for (var i = 0; i < productData.options.length; i++) {
+                var buttonRowHtml = '        <div class="row justify-content-center mt-4">';
+                buttonRowHtml += '            <div class="col-md-10">';
+                buttonRowHtml += '                <button type="button" class="buy_frequent_again_btn border-0 w-100 p-2" onclick="similar_product_add_to_cart(\'' + productData.id + '\', \'' + productData.options[i].option_id + '\')">Add to Cart</button>';
+                buttonRowHtml += '            </div>';
+                buttonRowHtml += '            <div class="col-md-10 mt-4 border-div d-flex align-items-center align-self-center"></div>';
+                buttonRowHtml += '        </div>';
+            }
+             return buttonRowHtml;
+        }
+
+        function generatePaginationLinks(totalPages, currentPage) {
+            var paginationHtml = '';
+
+            for (var i = 1; i <= totalPages; i++) {
+                var activeClass = (i === currentPage) ? 'active' : '';
+                paginationHtml += '<li class="pagination-item"><a href="#" class="pagination-link ' + activeClass + '">' + i + '</a></li>';
+            }
+
+            return paginationHtml;
+        }
+
+    });
 </script>

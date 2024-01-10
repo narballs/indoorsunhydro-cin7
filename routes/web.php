@@ -257,7 +257,9 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::group(['middleware' => ['auth']], function () {
 });
 Route::get('/products/{id}/{slug}', [ProductController::class, 'showProductByCategory']);
-Route::get('/products/', [ProductController::class, 'showAllProducts']);Route::get('/product-detail/{id}/{option_id}/{slug}', [ProductController::class, 'showProductDetail']);
+Route::get('/products/', [ProductController::class, 'showAllProducts']);
+Route::get('/product-detail/{id}/{option_id}/{slug}', [ProductController::class, 'showProductDetail']);
+Route::get('/products/{id}/{option_id}/{slug}/get-similar-products', [ProductController::class, 'getSimilarProducts']);
 Route::get('/user/', [UserController::class, 'userRegistration'])->name('user');
 Route::post('api/fetch-cities', [UserController::class, 'fetchCity']);
 // Route::post('/login/', [UserController::class, 'process_login'])->name('login');
