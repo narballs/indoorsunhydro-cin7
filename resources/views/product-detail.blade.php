@@ -1067,8 +1067,9 @@
         }
 
         function updateSimilarProductsPaginationLinks() {
-            $('#pagination-container').on('click', '.pagination-link', function(e) { 
+            $('body').on('click', '.pagination-link', function(e) { 
                 e.preventDefault();
+                $('html, body').animate({ scrollTop: 0 }, 'slow');
                 var page = $(this).text();
                 loadSimilarProducts(page);
             });
