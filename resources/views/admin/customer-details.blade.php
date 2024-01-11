@@ -135,24 +135,24 @@
                                             </div>
                                             <div class="col-md-4 d-flex justify-content-end align-items-center">
                                                 @if (!empty($customer) && $customer->is_parent == 1)
-                                                    @if ($customer && $customer->new_register == 0)
+                                                    @if ($customer && $customer->charge_shipping == 0)
                                                     <span class="">Do not charge Shipping</span>
                                                     <label class="custom-control custom-checkbox ">
                                                         <input type="checkbox" id="{{ $customer->contact_id }}"
-                                                            value="{{ $customer->new_register }}"
+                                                            value="{{ $customer->charge_shipping }}"
                                                             class="custom-control-input general_switch"
                                                             onchange="enable_shipping_price({{ $customer->contact_id }})"
-                                                            {{ isset($customer->new_register) && $customer->new_register == 0 ? 'checked="checked"' : '' }}>
+                                                            {{ isset($customer->charge_shipping) && $customer->charge_shipping == 0 ? 'checked="checked"' : '' }}>
                                                         <span class="custom-control-indicator"></span>
                                                     </label>
                                                     @else
                                                     <span class="">Do not charge Shipping</span>
                                                     <label class="custom-control custom-checkbox ">
                                                         <input type="checkbox" id="{{ $customer->contact_id }}"
-                                                            value="{{ $customer->new_register }}"
+                                                            value="{{ $customer->charge_shipping }}"
                                                             class="custom-control-input general_switch"
                                                             onchange="disable_shipping_price({{ $customer->contact_id }})"
-                                                            {{ isset($customer->new_register) && $customer->new_register == 1 ? '' : 'checked' }}>
+                                                            {{ isset($customer->charge_shipping) && $customer->charge_shipping == 1 ? '' : 'checked' }}>
                                                         <span class="custom-control-indicator"></span>
                                                     </label>
                                                     @endif
@@ -160,24 +160,24 @@
                                                     @php
                                                        $parent_account = \App\Models\Contact::where('contact_id', $customer->parent_id)->first();   
                                                     @endphp
-                                                    @if ($parent_account && $parent_account->new_register == 0)
+                                                    @if ($parent_account && $parent_account->charge_shipping == 0)
                                                         <span class="">Do not charge Shipping</span>
                                                         <label class="custom-control custom-checkbox ">
                                                             <input type="checkbox" id="{{ $customer->contact_id }}"
-                                                                value="{{ $parent_account->new_register }}"
+                                                                value="{{ $parent_account->charge_shipping }}"
                                                                 class="custom-control-input general_switch"
                                                                 onchange="enable_shipping_price({{ $parent_account->contact_id }})"
-                                                                {{ isset($parent_account->new_register) && $parent_account->new_register == 0 ? 'checked="checked"' : '' }}>
+                                                                {{ isset($parent_account->charge_shipping) && $parent_account->charge_shipping == 0 ? 'checked="checked"' : '' }}>
                                                             <span class="custom-control-indicator"></span>
                                                         </label>
                                                     @else
                                                         <span class="">Do not charge Shipping</span>
                                                         <label class="custom-control custom-checkbox ">
                                                             <input type="checkbox" id="{{ $parent_account->contact_id }}"
-                                                                value="{{ $parent_account->new_register }}"
+                                                                value="{{ $parent_account->charge_shipping }}"
                                                                 class="custom-control-input general_switch"
                                                                 onchange="disable_shipping_price({{ $parent_account->contact_id }})"
-                                                                {{ isset($parent_account->new_register) && $parent_account->new_register == 1 ? '' : 'checked' }}>
+                                                                {{ isset($parent_account->charge_shipping) && $parent_account->charge_shipping == 1 ? '' : 'checked' }}>
                                                             <span class="custom-control-indicator"></span>
                                                         </label>
                                                     @endif
