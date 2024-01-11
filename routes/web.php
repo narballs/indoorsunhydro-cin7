@@ -257,7 +257,9 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::group(['middleware' => ['auth']], function () {
 });
 Route::get('/products/{id}/{slug}', [ProductController::class, 'showProductByCategory']);
-Route::get('/products/', [ProductController::class, 'showAllProducts']);Route::get('/product-detail/{id}/{option_id}/{slug}', [ProductController::class, 'showProductDetail']);
+Route::get('/products/', [ProductController::class, 'showAllProducts']);
+Route::get('/product-detail/{id}/{option_id}/{slug}', [ProductController::class, 'showProductDetail']);
+Route::get('/products/{id}/{option_id}/{slug}/get-similar-products', [ProductController::class, 'getSimilarProducts']);
 Route::get('/user/', [UserController::class, 'userRegistration'])->name('user');
 Route::post('api/fetch-cities', [UserController::class, 'fetchCity']);
 // Route::post('/login/', [UserController::class, 'process_login'])->name('login');
@@ -350,6 +352,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/admin/restore/contact/{id}', [AdminSettingsController::class, 'restore_contact'])->name('restore_contact');
     Route::post('/admin/delete/contact/permanent/{id}', [AdminSettingsController::class, 'delete_contact_permanently'])->name('delete_contact_permanently');
     Route::get('/admin/contact-logs', [AdminSettingsController::class, 'contact_logs'])->name('contact_logs');
+
+    // enable /disable shipping price 
+    Route::post('admin/enable-shipping-price', [ContactController::class, 'enableShippingPrice']);
+    Route::post('admin/disable-shipping-price', [ContactController::class, 'disableShippingPrice']);
 
 
     //crud for admin settings

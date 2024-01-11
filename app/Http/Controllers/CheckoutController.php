@@ -80,25 +80,7 @@ class CheckoutController extends Controller
             $user = User::where('id', $user_id)->first();
             $all_ids = UserHelper::getAllMemberIds($user);
             $pluck_default_user = Contact::whereIn('id', $all_ids)->where('contact_id' , $contact_id)->first();
-            // if (!empty($pluck_default_user)) {
-            //     $user_address = Contact::where('id' ,$pluck_default_user->id)->first();
-            // } else {
-            //     if ($contact->secondary_id) {
-            //         $parent_id = Contact::where('secondary_id', $contact->secondary_id)->first();
-            //         $user_address = Contact::where('user_id', $user_id)->where('secondary_id', $parent_id->secondary_id)->first();
-            //     } else {
-            //         $user_address = Contact::where('user_id', $user_id)->where('contact_id', $contact_id)
-            //         ->orWhere('contact_id' , $contact->contact_id)->first();
-            //     }
-            // }
-            // dd($user_address);
-            // if (!empty($pluck_default_user)) {
-            //     if (!empty($pluck_default_user->contact_id)) {
-            //         $user_address = Contact::where('contact_id', $pluck_default_user->contact_id)->first();
-            //     } else {
-            //         $user_address = Contact::where('contact_id', $pluck_default_user->parent_id)->first();
-            //     }   
-            // }
+            
             if (!empty($contact->contact_id)) {
                 $user_address = Contact::where('user_id', $user_id)->where('contact_id' , $contact->contact_id)->first();
             } else {
@@ -110,6 +92,12 @@ class CheckoutController extends Controller
             if (empty($user_address) && ($user_address->postalAddress1 == null  && $user_address->postalPostCode == null)) {
                 return redirect()->back()->with('address_message', "Please contact support to update your billing address" );
             }
+
+            $charge_shipment_fee = false;
+            if (!empty($user_address) && $user_address->charge_shipping == 1) {
+                $charge_shipment_fee = true;
+            }
+
             $tax_class = TaxClass::where('name', $user_address->tax_class)->first();
             $tax_class_none = TaxClass::where('name', 'none')->first();
             
@@ -131,50 +119,64 @@ class CheckoutController extends Controller
                 }
             }
 
-
-            // adding shipment rates
-
-            $client = new \GuzzleHttp\Client();
-            $ship_station_host_url = config('services.shipstation.host_url');
-            $ship_station_api_key = config('services.shipstation.key');
-            $ship_station_api_secret = config('services.shipstation.secret');
-            $carrier_code = AdminSetting::where('option_name', 'shipping_carrier_code')->first();
-            $service_code = AdminSetting::where('option_name', 'shipping_service_code')->first();
-            $data = [
-                'carrierCode' => $carrier_code->option_value,
-                'serviceCode' => $service_code->option_value,
-                'fromPostalCode' => '95826',
-                'toCountry' => 'US',
-                'toPostalCode' => $user_address->postalPostCode ? $user_address->postalPostCode : $user_address->postCode,
-                'weight' => [
-                    'value' => $products_weight,
-                    'units' => 'pounds'
-                ],
-            ];
             
-            $headers = [
-                'Authorization' => 'Basic ' . base64_encode($ship_station_api_key . ':' . $ship_station_api_secret),
-                'Content-Type' => 'application/json',
-            ];
-            $responseBody = null;
-            try {
-                $response = $client->post($ship_station_host_url, [
-                    'headers' => $headers,
-                    'json' => $data,
-                ]);
+            // adding shipment rates
+            if ($charge_shipment_fee == true) {
+                $client = new \GuzzleHttp\Client();
+                $ship_station_host_url = config('services.shipstation.host_url');
+                $ship_station_api_key = config('services.shipstation.key');
+                $ship_station_api_secret = config('services.shipstation.secret');
+                $carrier_code = AdminSetting::where('option_name', 'shipping_carrier_code')->first();
+                $service_code = AdminSetting::where('option_name', 'shipping_service_code')->first();
+                $carrier_code_2 = AdminSetting::where('option_name', 'shipping_carrier_code_2')->first();
+                $service_code_2 = AdminSetting::where('option_name', 'shipping_service_code_2')->first();
 
-                $statusCode = $response->getStatusCode();
-                $responseBody = $response->getBody()->getContents();
-            } catch (\Exception $e) {
-                $e->getMessage();
-            }
+                if ($products_weight > 64) {
+                    $carrier_code = $carrier_code_2->option_value;
+                    $service_code = $service_code_2->option_value;
+                } else {
+                    $carrier_code = $carrier_code->option_value;
+                    $service_code = $service_code->option_value;
+                }
 
-            $shipment_price = 0;
-            if ($responseBody != null) {
-                $shipping_response = json_decode($responseBody);
-                foreach ($shipping_response as $shipping_response) {
-                    $shipment_price = $shipping_response->shipmentCost;
-                } 
+                $data = [
+                    'carrierCode' => $carrier_code ,
+                    'serviceCode' => $service_code ,
+                    'fromPostalCode' => '95826',
+                    'toCountry' => 'US',
+                    'toPostalCode' => $user_address->postalPostCode ? $user_address->postalPostCode : $user_address->postCode,
+                    'weight' => [
+                        'value' => $products_weight,
+                        'units' => 'pounds'
+                    ],
+                ];
+                
+                $headers = [
+                    'Authorization' => 'Basic ' . base64_encode($ship_station_api_key . ':' . $ship_station_api_secret),
+                    'Content-Type' => 'application/json',
+                ];
+                $responseBody = null;
+                try {
+                    $response = $client->post($ship_station_host_url, [
+                        'headers' => $headers,
+                        'json' => $data,
+                    ]);
+
+                    $statusCode = $response->getStatusCode();
+                    $responseBody = $response->getBody()->getContents();
+                } catch (\Exception $e) {
+                    $e->getMessage();
+                }
+
+                $shipment_price = 0;
+                if ($responseBody != null) {
+                    $shipping_response = json_decode($responseBody);
+                    foreach ($shipping_response as $shipping_response) {
+                        $shipment_price = $shipping_response->shipmentCost;
+                    } 
+                }
+            } else {
+                $shipment_price = 0;
             }
             return view('checkout/index2', compact(
                 'user_address',

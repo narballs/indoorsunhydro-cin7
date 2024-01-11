@@ -87,7 +87,7 @@
                                                 style="margin-left: 12px!important;">Merged</span>
                                         </div>
                                     @endif
-                                    <div class="col-md-2 d-flex justify-content-center align-items-center">
+                                    <div class="col-md-2 d-flex justify-content-end align-items-center">
                                         @if ($customer && $customer->status == 1)
                                             <span class="badge bg-success">Active</span>
                                             <label class="custom-control custom-checkbox ">
@@ -120,7 +120,7 @@
                                                 <b>Company:</b> <span
                                                     id="refreshed_company">{{ $customer->company }}</span>
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 @if (!$customer->contact_id)
                                                     <b>Cin7 ID:</b> <span class="badge bg-info">empty</span>
                                                     <br>
@@ -132,6 +132,56 @@
                                                 <div class="col-md-12 p-0">
                                                     <b>Tax Status: {{!empty($customer->tax_class) ?  $customer->tax_class : 'Empty'}} </b>
                                                 </div>
+                                            </div>
+                                            <div class="col-md-4 d-flex justify-content-end align-items-center">
+                                                @if (!empty($customer) && $customer->is_parent == 1)
+                                                    @if ($customer && $customer->charge_shipping == 0)
+                                                    <span class="">Do not charge Shipping</span>
+                                                    <label class="custom-control custom-checkbox ">
+                                                        <input type="checkbox" id="{{ $customer->contact_id }}"
+                                                            value="{{ $customer->charge_shipping }}"
+                                                            class="custom-control-input general_switch"
+                                                            onchange="enable_shipping_price({{ $customer->contact_id }})"
+                                                            {{ isset($customer->charge_shipping) && $customer->charge_shipping == 0 ? 'checked="checked"' : '' }}>
+                                                        <span class="custom-control-indicator"></span>
+                                                    </label>
+                                                    @else
+                                                    <span class="">Do not charge Shipping</span>
+                                                    <label class="custom-control custom-checkbox ">
+                                                        <input type="checkbox" id="{{ $customer->contact_id }}"
+                                                            value="{{ $customer->charge_shipping }}"
+                                                            class="custom-control-input general_switch"
+                                                            onchange="disable_shipping_price({{ $customer->contact_id }})"
+                                                            {{ isset($customer->charge_shipping) && $customer->charge_shipping == 1 ? '' : 'checked' }}>
+                                                        <span class="custom-control-indicator"></span>
+                                                    </label>
+                                                    @endif
+                                                @elseif (!empty($customer) && $customer->is_parent == 0)
+                                                    @php
+                                                       $parent_account = \App\Models\Contact::where('contact_id', $customer->parent_id)->first();   
+                                                    @endphp
+                                                    @if ($parent_account && $parent_account->charge_shipping == 0)
+                                                        <span class="">Do not charge Shipping</span>
+                                                        <label class="custom-control custom-checkbox ">
+                                                            <input type="checkbox" id="{{ $customer->contact_id }}"
+                                                                value="{{ $parent_account->charge_shipping }}"
+                                                                class="custom-control-input general_switch"
+                                                                onchange="enable_shipping_price({{ $parent_account->contact_id }})"
+                                                                {{ isset($parent_account->charge_shipping) && $parent_account->charge_shipping == 0 ? 'checked="checked"' : '' }}>
+                                                            <span class="custom-control-indicator"></span>
+                                                        </label>
+                                                    @else
+                                                        <span class="">Do not charge Shipping</span>
+                                                        <label class="custom-control custom-checkbox ">
+                                                            <input type="checkbox" id="{{ $parent_account->contact_id }}"
+                                                                value="{{ $parent_account->charge_shipping }}"
+                                                                class="custom-control-input general_switch"
+                                                                onchange="disable_shipping_price({{ $parent_account->contact_id }})"
+                                                                {{ isset($parent_account->charge_shipping) && $parent_account->charge_shipping == 1 ? '' : 'checked' }}>
+                                                            <span class="custom-control-indicator"></span>
+                                                        </label>
+                                                    @endif
+                                                @endif
                                             </div>
                                             
                                         </div>
@@ -697,6 +747,76 @@
                 success: function(response) {
                     console.log(response);
                     if (response.msg == 'success') {
+                        window.location.reload();
+                    }
+                }
+            });
+        }
+        function enable_shipping_price(customer_id) {
+            jQuery.ajax({
+                url: "{{ url('admin/enable-shipping-price') }}",
+                method: 'post',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "contactId": customer_id
+                },
+                success: function(response) {
+                    if (response.msg == 'success') {
+                        Swal.fire({
+                            toast: true,
+                            icon: 'success',
+                            title: 'Charge Shipping Enabled',
+                            timer: 3000,
+                            showConfirmButton: false,
+                            position: 'top',
+                            timerProgressBar: true
+                        });
+                        window.location.reload();
+                    } else {
+                        Swal.fire({
+                            toast: true,
+                            icon: 'error',
+                            title: 'Something went wrong',
+                            timer: 3000,
+                            showConfirmButton: false,
+                            position: 'top',
+                            timerProgressBar: true
+                        });
+                        window.location.reload();
+                    }
+                }
+            });
+        }
+        function disable_shipping_price(customer_id) {
+            jQuery.ajax({
+                url: "{{ url('admin/disable-shipping-price') }}",
+                method: 'post',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "contactId": customer_id
+                },
+                success: function(response) {
+                    if (response.msg == 'success') {
+                        Swal.fire({
+                            toast: true,
+                            icon: 'success',
+                            title: 'Charge Shipping Disabled',
+                            timer: 3000,
+                            showConfirmButton: false,
+                            position: 'top',
+                            timerProgressBar: true
+                        });
+                        window.location.reload();
+                    } else {
+                        Swal.fire({
+                            toast: true,
+                            icon: 'error',
+                            title: 'Something went wrong',
+                            timer: 3000,
+                            showConfirmButton: false,
+                            position: 'top',
+                            timerProgressBar: true
+                        });
                         window.location.reload();
                     }
                 }

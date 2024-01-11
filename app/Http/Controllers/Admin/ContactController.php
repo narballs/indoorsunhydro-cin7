@@ -762,4 +762,45 @@ class ContactController extends Controller
             'msg' => 'success'
         ], 200);
     }
+    public function enableShippingPrice(Request $request)
+    {
+        $contact = Contact::where('contact_id', $request->contactId)->first();
+        if (!empty($contact)) {
+            if ($contact->charge_shipping == 0) {
+                $contact->charge_shipping = 1;
+            } else {
+                $contact->charge_shipping = 0;
+            }
+            $contact->save();
+    
+            return response()->json([
+                'msg' => 'success'
+            ], 200);
+        } else {
+            return response()->json([
+                'msg' => 'failed'
+            ], 200);
+        }
+       
+    }
+    public function disableShippingPrice(Request $request)
+    {
+        $contact = Contact::where('contact_id', $request->contactId)->first();
+        if (!empty($contact)) {
+            if ($contact->charge_shipping == 1) {
+                $contact->charge_shipping = 0;
+            } else {
+                $contact->charge_shipping = 1;
+            }
+            $contact->save();
+    
+            return response()->json([
+                'msg' => 'success'
+            ], 200);
+        } else {
+            return response()->json([
+                'msg' => 'failed'
+            ], 200);
+        }
+    }
 }

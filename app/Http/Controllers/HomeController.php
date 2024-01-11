@@ -53,6 +53,7 @@ class HomeController extends Controller
             ->whereNotNull('user_id')
             ->where('user_id' , $user_id)
             ->orderBy('created_at' , 'DESC')
+            ->take(10)
             ->groupBy('product_id')
             ->get();
             
@@ -66,6 +67,7 @@ class HomeController extends Controller
             ->select('product_id' , DB::raw('count(*) as entry_count'))
             ->orderBy('created_at' , 'DESC')
             ->groupBy('product_id')
+            ->take(10)
             ->get();
         $user_list = BuyList::where('user_id', $user_id)
             ->where('contact_id', $contact_id)
