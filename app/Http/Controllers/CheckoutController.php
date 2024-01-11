@@ -94,7 +94,7 @@ class CheckoutController extends Controller
             }
 
             $charge_shipment_fee = false;
-            if (!empty($user_address) && $user_address->new_register == 1) {
+            if (!empty($user_address) && $user_address->charge_shipping == 1) {
                 $charge_shipment_fee = true;
             }
 

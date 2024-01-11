@@ -766,10 +766,10 @@ class ContactController extends Controller
     {
         $contact = Contact::where('contact_id', $request->contactId)->first();
         if (!empty($contact)) {
-            if ($contact->new_register == 0) {
-                $contact->new_register = 1;
+            if ($contact->charge_shipping == 0) {
+                $contact->charge_shipping = 1;
             } else {
-                $contact->new_register = 0;
+                $contact->charge_shipping = 0;
             }
             $contact->save();
     
@@ -787,10 +787,10 @@ class ContactController extends Controller
     {
         $contact = Contact::where('contact_id', $request->contactId)->first();
         if (!empty($contact)) {
-            if ($contact->new_register == 1) {
-                $contact->new_register = 0;
+            if ($contact->charge_shipping == 1) {
+                $contact->charge_shipping = 0;
             } else {
-                $contact->new_register = 1;
+                $contact->charge_shipping = 1;
             }
             $contact->save();
     

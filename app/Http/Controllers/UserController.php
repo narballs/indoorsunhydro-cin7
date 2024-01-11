@@ -702,7 +702,7 @@ class UserController extends Controller
                 'status' => 0,
                 'tax_class' => strtolower($state_name) == strtolower('California') ? '8.75%' : 'Out of State',
                 'paymentTerms' => $request->paymentTerms,
-                'new_register' => 1,    
+                'charge_shipping' => 1,    
             ]);
 
             $contact->save();
