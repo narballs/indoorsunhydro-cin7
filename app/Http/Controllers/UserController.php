@@ -701,7 +701,8 @@ class UserController extends Controller
                 'is_parent' => 1,
                 'status' => 0,
                 'tax_class' => strtolower($state_name) == strtolower('California') ? '8.75%' : 'Out of State',
-                'paymentTerms' => $request->paymentTerms
+                'paymentTerms' => $request->paymentTerms,
+                'new_register' => 1,    
             ]);
 
             $contact->save();
