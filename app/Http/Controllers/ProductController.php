@@ -153,6 +153,7 @@ class ProductController extends Controller
             ->where('user_id' , auth()->id())
             ->orderBy('created_at' , 'DESC')
             ->groupBy('product_id')
+            ->take(10)
             ->get();
             
         } else {
@@ -168,6 +169,7 @@ class ProductController extends Controller
             ->select('product_id' , DB::raw('count(*) as entry_count'))
             ->orderBy('created_at' , 'DESC')
             ->groupBy('product_id')
+            ->take(10)
             ->get();
         
         return view('categories', compact(
@@ -393,6 +395,7 @@ class ProductController extends Controller
             ->where('user_id' , auth()->id())
             ->orderBy('created_at' , 'DESC')
             ->groupBy('product_id')
+            ->take(10)
             ->get();
             
         } else {
@@ -408,6 +411,7 @@ class ProductController extends Controller
             ->select('product_id' , DB::raw('count(*) as entry_count'))
             ->orderBy('created_at' , 'DESC')
             ->groupBy('product_id')
+            ->take(10)
             ->get();
 
         return view('all_products', compact(
@@ -508,6 +512,7 @@ class ProductController extends Controller
             ->select('product_id' , DB::raw('count(*) as entry_count'))
             ->orderBy('created_at' , 'DESC')
             ->groupBy('product_id')
+            ->take(10)
             ->get();
 
         $location_inventories = [];
@@ -670,6 +675,7 @@ class ProductController extends Controller
             ->where('user_id' , auth()->id())
             ->orderBy('created_at' , 'DESC')
             ->groupBy('product_id')
+            ->take(10)
             ->get();
             
         } else {
@@ -684,6 +690,7 @@ class ProductController extends Controller
         ->select('product_id' , DB::raw('count(*) as entry_count'))
         ->orderBy('created_at' , 'DESC')
         ->groupBy('product_id')
+        ->take(10)
         ->get();
         
         return view('categories', compact('products',
@@ -877,6 +884,7 @@ class ProductController extends Controller
             ->where('user_id' , auth()->id())
             ->orderBy('created_at' , 'DESC')
             ->groupBy('product_id')
+            ->take(10)
             ->get();
             
         } else {
@@ -891,6 +899,7 @@ class ProductController extends Controller
         ->select('product_id' , DB::raw('count(*) as entry_count'))
         ->orderBy('created_at' , 'DESC')
         ->groupBy('product_id')
+        ->take(10)
         ->get();
 
 
@@ -1381,6 +1390,7 @@ class ProductController extends Controller
             ->where('user_id' , auth()->id())
             ->orderBy('created_at' , 'DESC')
             ->groupBy('product_id')
+            ->take(10)
             ->get();
             
         } else {
@@ -1395,6 +1405,7 @@ class ProductController extends Controller
         ->select('product_id' , DB::raw('count(*) as entry_count'))
         ->orderBy('created_at' , 'DESC')
         ->groupBy('product_id')
+        ->take(10)
         ->get();
         
         return view('search_product.search_product', compact(
