@@ -353,6 +353,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/admin/delete/contact/permanent/{id}', [AdminSettingsController::class, 'delete_contact_permanently'])->name('delete_contact_permanently');
     Route::get('/admin/contact-logs', [AdminSettingsController::class, 'contact_logs'])->name('contact_logs');
 
+    // enable /disable shipping price 
+    Route::post('admin/enable-shipping-price', [ContactController::class, 'enableShippingPrice']);
+    Route::post('admin/disable-shipping-price', [ContactController::class, 'disableShippingPrice']);
+
 
     //crud for admin settings
     Route::prefix('admin')->group(function () {

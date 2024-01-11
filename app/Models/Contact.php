@@ -48,6 +48,7 @@ class Contact extends Model
         'tax_class',
         'paymentTerms',
         'is_deleted',
+        'new_register',
     ];
 
     public function orders()
