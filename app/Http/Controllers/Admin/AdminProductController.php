@@ -17,60 +17,6 @@ class AdminProductController extends Controller
         $this->middleware(['role:Admin']);
 
     }
-    
-    public function index_backup(Request $request) {
-        $search = $request->get('search');
-        $do_search = $request->get('do_search');
-        $weight_filter_type = $request->get('weight_filter_type');
-        $weight_value = $request->get('weight_value');
-        $price_filter_type = $request->get('price_filter_type');
-        $price_value = $request->get('price_value');
-        $products = Product::with('categories', 'options')->paginate(10);
-        
-        if(isset($search)) {
-            $products = Product::with('categories', 'options')->where('name', 'LIKE', '%' . $search . '%')
-            ->orWhere('code', 'like', '%' . $search . '%')
-            ->orWhere('status', 'like', '%' . $search . '%')
-            ->orWhere('retail_price', 'like', '%' . $search . '%')
-            ->paginate(10);
-        }
-
-        if (isset($weight_filter_type) && isset($weight_value)) {
-            if ($weight_filter_type == 'greater_than') {
-                $products = Product::with('categories' , 'options')
-                    ->whereHas('options' , function($query) use ($weight_value){
-                        $query->where('optionWeight', '>', $weight_value)->where('status', '!=', 'disabled');
-                })
-                ->where('status'  , '!=' , 'Inactive')
-                ->paginate(10);
-            } elseif($weight_filter_type == 'less_than') {
-                $products = Product::with('categories' , 'options')
-                    ->whereHas('options' , function($query) use ($weight_value){
-                        $query->where('optionWeight', '>', $weight_value)->where('status', '!=', 'disabled');
-                })
-                ->where('status'  , '!=' , 'Inactive')
-                ->paginate(10);
-            } elseif($weight_filter_type == 'equal_to') {
-                $products = Product::with('categories' , 'options')
-                    ->whereHas('options' , function($query) use ($weight_value){
-                        $query->where('optionWeight', '>', $weight_value)->where('status', '!=', 'disabled');
-                })
-                ->where('status'  , '!=' , 'Inactive')
-                ->paginate(10);
-            }
-        }
-       
-        
-        return view('admin/products', compact(
-            'products', 
-            'search',
-            'do_search',
-            'weight_filter_type',
-            'weight_value',
-            'price_filter_type',
-            'price_value'
-        ));
-    }
 
     public function index(Request $request) {
         $search = $request->get('search');
@@ -103,33 +49,6 @@ class AdminProductController extends Controller
                 $query->where('optionWeight', $operation, $weight_value)->where('status', '!=', 'disabled');
             });
         }
-
-        // if (isset($weight_filter_type) && isset($weight_value)) {
-        //     if ($weight_filter_type == 'greater_than') {
-        //         $products = Product::with('categories' , 'options')
-        //             ->whereHas('options' , function($query) use ($weight_value){
-        //                 $query->where('optionWeight', '>', $weight_value)->where('status', '!=', 'disabled');
-        //         })
-        //         ->where('status'  , '!=' , 'Inactive')
-        //         ->paginate(10);
-        //     } elseif($weight_filter_type == 'less_than') {
-        //         $products = Product::with('categories' , 'options')
-        //             ->whereHas('options' , function($query) use ($weight_value){
-        //                 $query->where('optionWeight', '>', $weight_value)->where('status', '!=', 'disabled');
-        //         })
-        //         ->where('status'  , '!=' , 'Inactive')
-        //         ->paginate(10);
-        //     } elseif($weight_filter_type == 'equal_to') {
-        //         $products = Product::with('categories' , 'options')
-        //             ->whereHas('options' , function($query) use ($weight_value){
-        //                 $query->where('optionWeight', '>', $weight_value)->where('status', '!=', 'disabled');
-        //         })
-        //         ->where('status'  , '!=' , 'Inactive')
-        //         ->paginate(10);
-        //     }
-        // }
-
-        
         
         $download_csv = $request->get('download_csv');
         if ($download_csv == '1') {
