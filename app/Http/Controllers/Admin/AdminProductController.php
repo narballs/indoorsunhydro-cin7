@@ -70,7 +70,7 @@ class AdminProductController extends Controller
                         $product->code,
                         $product->status,
                         $product->retail_price,
-                        isset($product->options) ? $product->options[0]->optionWeight : '',
+                        isset($product->options[0]) ? $product->options[0]->optionWeight : '',
                     ];
                 }
 
