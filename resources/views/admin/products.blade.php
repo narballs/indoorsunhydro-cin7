@@ -189,7 +189,7 @@
                                     </td>
                                     <td>
                                         <span class="product_weight">
-                                            <span class="d-flex table-items-title"> {{ isset($product->options) ? $product->options[0]->optionWeight : '' }}</span>
+                                            <span class="d-flex table-items-title"> {{ isset($product->options[0]) ? $product->options[0]->optionWeight : '' }}</span>
                                         </span>
                                     </td>
                                     <td class="created_by toggleClass td_padding_row">
