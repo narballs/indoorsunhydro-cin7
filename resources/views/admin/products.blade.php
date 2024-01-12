@@ -20,6 +20,9 @@
                             </div>
                         </div>
                         <div class="col-md-4 create_bnt d-flex justify-content-end mobile_fulfill_div">
+                            <a href="{{ request()->fullUrlWithQuery(['download_csv' => '1']) }}" class="mr-4">
+                                <button type="button" class="btn btn-sm btn-danger">Download CSV</button>
+                            </a>
                             <div class="d-flex">
                                 <span class="create_new_btn_mbl">
                                     <button type="button" class="btn create_new_product_btn">
@@ -30,16 +33,78 @@
                         </div>
                     </div>
                     <div class="row search_row_admin-interface">
-                        <div class="col-md-4 order-search">
-                            <div class="has-search ">
+                        <div class="col-md-3">
+                            <div class="has-search  order-search mt-0">
                                 <span class="fa fa-search form-control-feedback"></span>
-                                <form method="get" action="/admin/products" class="mb-2">
+                                <form method="get" action="/admin/products" class="mb-0">
                                     <input type="text" class="form-control" id="search" name="search"
                                         placeholder="Search" value="{{ isset($search) ? $search : '' }}" />
                                 </form>
                             </div>
                         </div>
+                        <div class="col-md-9">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <button class="btn btn-info" id="advanced_filter_btn">
+                                        Advanced Filters          
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                </div>
+                <div class="col-md-12">
+                    <form action="{{url('admin/products')}}" class="mb-0">
+                        <div class="row mx-4 mb-3 align-items-end">
+                            <div class="col-md-6 {{ empty($do_search) ? 'd-none' : '' }}" id="filter_main_div">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="row align-items-end">
+                                            <div class="col-md-7">
+                                                <label for="">Filter By Weight</label>
+                                                <select name="weight_filter_type" id="filter_by_weight_drop_down"  class="form-control">
+                                                    <option value="">None</option>
+                                                    <option value="equal_to" {{ (isset($weight_filter_type) && $weight_filter_type == 'equal_to') ? 'selected="selected"' : '' }}>Equal To</option>
+                                                    <option value="greater_than" {{ (isset($weight_filter_type) && $weight_filter_type == 'greater_than') ? 'selected="selected"' : '' }}>Greater Than</option>
+                                                    <option value="less_than" {{ (isset($weight_filter_type) && $weight_filter_type == 'less_than') ? 'selected="selected"' : '' }}>Less Than</option>
+                                                    {{-- <option value="greater_than_or_equal_to">Greater Than / Equal To</option> --}}
+                                                    {{-- <option value="less_than_or_equal_to">Less Than / Equal To </option> --}}
+                                                </select>
+                                            </div>
+                                            <div class="col-md-4 {{ empty($do_search) ? 'd-none' : '' }}" id="weight_input_div">
+                                                <input type="number" min="0" name="weight_value" id="weight" value="{{ isset($weight_value) ? $weight_value : '' }}" placeholder="Weight" class="form-control">
+                                            </div>
+                                        </div>                                        
+                                    </div>
+                                    <div class="col-md-4  {{ empty($do_search) ? 'd-none' : '' }}" id="filter_btn_div" style="margin-top: 30px;">
+                                        <input type="hidden" name="do_search" value="1">
+                                        <button type="submit" class="btn btn-success" id="search_advanced_filters">
+                                            Filter Products
+                                        </button>
+                                    </div>
+                                    {{-- 
+                                    <div class="col-md-6">
+                                        <div class="row align-items-end">
+                                            <div class="col-md-7">
+                                                <label for="">Filter By Price</label>
+                                                <select name="price_filter_type" id="filter_by_price_drop_down"  class="form-control">
+                                                    <option value="">None</option>
+                                                    <option value="equal_to" {{ (isset($price_filter_type) && $price_filter_type == 'equal_to') ? 'selected="selected"' : '' }}>Equal To</option>
+                                                    <option value="greater_than" {{ (isset($price_filter_type) && $price_filter_type == 'greater_than') ? 'selected="selected"' : '' }}>Greater Than</option>
+                                                    <option value="less_than" {{ (isset($price_filter_type) && $price_filter_type == 'less_than') ? 'selected="selected"' : '' }}>Less Than</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-4 {{ empty($do_search) ? 'd-none' : '' }}" id="price_input_div">
+                                                <input type="number" min="0" name="price_value" id="price" placeholder="Price" value="{{ isset($price_value) ? $price_value : '' }}" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    --}}
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </form>
                 </div>
             </div>
             <div class="card-body product_table_body">
@@ -65,10 +130,13 @@
                                     <span class="d-flex table-row-item"> Code</span>
                                 </td>
                                 <td>
-                                    <span class="d-flex table-row-item"> Fulfillment</span>
+                                    <span class="d-flex table-row-item"> Status</span>
                                 </td>
                                 <td>
                                     <span class="d-flex table-row-item"> Retail Price</span>
+                                </td>
+                                <td>
+                                    <span class="d-flex table-row-item"> Weight</span>
                                 </td>
                                 <td>
                                     <span class="d-flex table-row-item"></span>
@@ -117,6 +185,11 @@
                                     <td>
                                         <span class="product_retail_price">
                                             <span class="d-flex table-items-title"> ${{ $product->retail_price }}</span>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="product_weight">
+                                            <span class="d-flex table-items-title"> {{ isset($product->options) ? $product->options[0]->optionWeight : '' }}</span>
                                         </span>
                                     </td>
                                     <td class="created_by toggleClass td_padding_row">
@@ -364,6 +437,27 @@
                 $(document).on('click', '#selectAll', function(e) {
                     var table = $(e.target).closest('table');
                     $('td input:checkbox', table).prop('checked', this.checked);
+                });
+
+                $(document).on('click' , '#advanced_filter_btn' , function(){
+                    $('#filter_main_div').toggleClass('d-none');
+                    $('#filter_btn_div').toggleClass('d-none');
+                });
+                $('#filter_by_weight_drop_down').on('change' , function(){
+                    let value = $(this).val();
+                    if (value != '') {
+                        $('#weight_input_div').removeClass('d-none');
+                    } else {
+                        $('#weight_input_div').addClass('d-none');
+                    }
+                });
+                $('#filter_by_price_drop_down').on('change' , function(){
+                    let value = $(this).val();
+                    if (value != '') {
+                        $('#price_input_div').removeClass('d-none');
+                    } else {
+                        $('#price_input_div').addClass('d-none');
+                    }
                 });
             </script>
 
