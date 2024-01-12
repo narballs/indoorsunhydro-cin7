@@ -2,9 +2,9 @@
 	<div class="row">
 		<div class="col-xl-12 col-md-12 col-sm-12 col-xs-12" id="banner_div">
 			{{-- <img src="/theme/img/Main_banner_home.png" class="banner-img img-fluid w-100" alt="..."> --}}
-			<div class="row align-items-center justify-content-between mt-2">
+			<div class="row align-items-center justify-content-between my-5">
 				<div class="col-md-6">
-					<div class="row align-items-center justify-content-center mt-5">
+					<div class="row align-items-center justify-content-center">
 						<div class="col-md-7">
 							<img src="{{asset('theme/img/banner_images/banner_partial_1.png')}}" class="img-fluid">
 						</div>
@@ -14,7 +14,7 @@
 					</div>
 				</div>
 				<div class="col-md-6">
-					<div class="row align-items-center justify-content-center mt-5">
+					<div class="row align-items-center justify-content-center">
 						<div class="col-md-8">
 							<h5 class="text-white cultivate_quality">
 								Cultivate Quality
@@ -37,7 +37,7 @@
 	background-repeat: no-repeat;
 	background-size: cover;
 	background-position: center;
-	height: 520px;
+	/* height: 520px; */
 }
 .cultivate_quality	{
 	color: #FFF;
