@@ -30,16 +30,77 @@
                         </div>
                     </div>
                     <div class="row search_row_admin-interface">
-                        <div class="col-md-4 order-search">
-                            <div class="has-search ">
+                        <div class="col-md-3">
+                            <div class="has-search  order-search mt-0">
                                 <span class="fa fa-search form-control-feedback"></span>
-                                <form method="get" action="/admin/products" class="mb-2">
+                                <form method="get" action="/admin/products" class="mb-0">
                                     <input type="text" class="form-control" id="search" name="search"
                                         placeholder="Search" value="{{ isset($search) ? $search : '' }}" />
                                 </form>
                             </div>
                         </div>
+                        <div class="col-md-9">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <button class="btn btn-info" id="advanced_filter_btn">
+                                        Advanced Filters          
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                </div>
+                <div class="col-md-12">
+                    <form action="{{url('admin/products')}}" class="mb-0">
+                        <div class="row mx-4 mb-3 align-items-end">
+                            <div class="col-md-10 d-none" id="filter_main_div">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="row align-items-end">
+                                            <div class="col-md-7">
+                                                <label for="">Filter By Weight</label>
+                                                <select name="weight_filter_type" id="filter_by_weight_drop_down"  class="form-control">
+                                                    <option value="">None</option>
+                                                    <option value="equal_to">Equal To</option>
+                                                    <option value="greater_then">Greater Then</option>
+                                                    <option value="less_then">Less Then</option>
+                                                    {{-- <option value="greater_then_or_equal_to">Greater Then / Equal To</option> --}}
+                                                    {{-- <option value="less_then_or_equal_to">Less Then / Equal To </option> --}}
+                                                </select>
+                                            </div>
+                                            <div class="col-md-4 d-none" id="weight_input_div">
+                                                <input type="number" min="0" name="weight_value" id="weight" value="{{ isset($weight_value) ? $weight_value : '' }}" placeholder="Weight" class="form-control">
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="row align-items-end">
+                                            <div class="col-md-7">
+                                                <label for="">Filter By Price</label>
+                                                <select name="price_filter_type" id="filter_by_price_drop_down"  class="form-control">
+                                                    <option value="">None</option>
+                                                    <option value="equal_to">Equal To</option>
+                                                    <option value="greater_then">Greater Then</option>
+                                                    <option value="less_then">Less Then</option>
+                                                    {{-- <option value="greater_then_or_equal_to">Greater Then / Equal To</option> --}}
+                                                    {{-- <option value="less_then_or_equal_to">Less Then / Equal To </option> --}}
+                                                </select>
+                                            </div>
+                                            <div class="col-md-4 d-none" id="price_input_div">
+                                                <input type="number" min="0" name="price_value" id="price" placeholder="Price" value="{{ isset($price_value) ? $price_value : '' }}" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2 d-none" id="filter_btn_div">
+                                <button type="submit" class="btn btn-success" id="search_advanced_filters">
+                                    GO
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
             <div class="card-body product_table_body">
@@ -364,6 +425,27 @@
                 $(document).on('click', '#selectAll', function(e) {
                     var table = $(e.target).closest('table');
                     $('td input:checkbox', table).prop('checked', this.checked);
+                });
+
+                $(document).on('click' , '#advanced_filter_btn' , function(){
+                    $('#filter_main_div').toggleClass('d-none');
+                    $('#filter_btn_div').toggleClass('d-none');
+                });
+                $('#filter_by_weight_drop_down').on('change' , function(){
+                    let value = $(this).val();
+                    if (value != '') {
+                        $('#weight_input_div').removeClass('d-none');
+                    } else {
+                        $('#weight_input_div').addClass('d-none');
+                    }
+                });
+                $('#filter_by_price_drop_down').on('change' , function(){
+                    let value = $(this).val();
+                    if (value != '') {
+                        $('#price_input_div').removeClass('d-none');
+                    } else {
+                        $('#price_input_div').addClass('d-none');
+                    }
                 });
             </script>
 

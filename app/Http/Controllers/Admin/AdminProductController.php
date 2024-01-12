@@ -20,6 +20,10 @@ class AdminProductController extends Controller
     
     public function index(Request $request) {
         $search = $request->get('search');
+        $weight_filter_type = $request->get('weight_filter_type');
+        $weight_value = $request->get('weight_value');
+        $price_filter_type = $request->get('price_filter_type');
+        $price_value = $request->get('price_value');
         $products = Product::with('categories', 'options')->paginate(10);
         if(isset($search)) {
             $products = Product::with('categories', 'options')->where('name', 'LIKE', '%' . $search . '%')
@@ -28,8 +32,33 @@ class AdminProductController extends Controller
             ->orWhere('retail_price', 'like', '%' . $search . '%')
             ->paginate(10);
         }
+        if (isset($weight_filter_type) && isset($weight_value)) {
+            if($weight_filter_type == 'greater_then') {
+                $products = Product::with('categories' , 'options')
+                    ->whereHas('options' , function($query) use ($weight_value){
+                        $query->where('optionWeight', '>', $weight_value)->where('status', '!=', 'disabled');
+                })
+                ->where('status'  , '!=' , 'Inactive')
+                ->paginate(10);
+            } else if($weight_filter_type == 'less_then') {
+                $products = Product::with('categories' , 'options')
+                    ->whereHas('options' , function($query) use ($weight_value){
+                        $query->where('optionWeight', '>', $weight_value)->where('status', '!=', 'disabled');
+                })
+                ->where('status'  , '!=' , 'Inactive')
+                ->paginate(10);
+            } else if($weight_filter_type == 'equal_to') {
+                $products = Product::with('categories' , 'options')
+                    ->whereHas('options' , function($query) use ($weight_value){
+                        $query->where('optionWeight', '>', $weight_value)->where('status', '!=', 'disabled');
+                })
+                ->where('status'  , '!=' , 'Inactive')
+                ->paginate(10);
+            }
+        }
+       
         
-         return view('admin/products', compact('products' , 'search'));
+        return view('admin/products', compact('products' , 'search'));
 
     }
 
