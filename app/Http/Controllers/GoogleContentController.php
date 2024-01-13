@@ -55,11 +55,12 @@ class GoogleContentController extends Controller
         $product_array = [];
         $products = Product::with('options','options.defaultPrice', 'product_brand','product_image','categories' , 'product_views','apiorderItem', 'product_stock')
         ->with(['product_views','apiorderItem' , 'options' => function ($q) {
-            $q->where('status', '!=', 'Disabled');
+            $q->where('status', '!=', 'Disabled')
+            ->where('optionWeight', '>', 0);
             
         }])
         ->whereHas('options.defaultPrice', function ($q) {
-            $q->where('retailUSD', '!=', 0);
+            $q->where('retailUSD', '>', 0);
         })
         ->whereHas('categories' , function ($q) {
             $q->where('is_active', 1);
@@ -107,6 +108,7 @@ class GoogleContentController extends Controller
                             'brand' => !empty($product->product_brand->name) ? $product->product_brand->name : 'General brand',
                             'barcode' => $product->barcode,
                             'google_product_category' => $category,
+                            'product_weight' => $option->optionWeight,
                         ];
                     }
                 }
@@ -136,10 +138,16 @@ class GoogleContentController extends Controller
                 // $product->setmultipack('5000');
                 // $product->setIdentifierExists(false);
                 $product->setMpn($add_product['code']);
-                // $product->setAgeGroup('adult');
+                $product->setAgeGroup('adult');
                 // $product->setColor('universal');
-                // $product->setGender('unisex');
+                $product->setGender('unisex');
                 // $product->setSizes(['Large']);
+
+                $shippingWeight = new \Google\Service\ShoppingContent\ProductShippingWeight();
+                $shippingWeight->setValue($add_product['product_weight']);
+                $shippingWeight->setUnit('lb');
+                $product->setShippingWeight($shippingWeight);
+
                 $price = new Price();
                 $price->setValue($add_product['price']);
                 $price->setCurrency('USD');
