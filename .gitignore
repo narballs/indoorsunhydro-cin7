@@ -11,8 +11,9 @@ vendor/
 composer.lock
 pages/
 wholesale/
-public/producs.csv
-
+public/products.csv
+theme/img
+theme/products
 
 # Compiled Java class files
 *.class
