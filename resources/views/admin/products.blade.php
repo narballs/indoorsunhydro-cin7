@@ -56,9 +56,9 @@
                 <div class="col-md-12">
                     <form action="{{url('admin/products')}}" class="mb-0">
                         <div class="row mx-4 mb-3 align-items-end">
-                            <div class="col-md-6 {{ empty($do_search) ? 'd-none' : '' }}" id="filter_main_div">
+                            <div class="col-md-12 {{ empty($do_search) ? 'd-none' : '' }}" id="filter_main_div">
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-5">
                                         <div class="row align-items-end">
                                             <div class="col-md-7">
                                                 <label for="">Filter By Weight</label>
@@ -71,19 +71,12 @@
                                                     {{-- <option value="less_than_or_equal_to">Less Than / Equal To </option> --}}
                                                 </select>
                                             </div>
-                                            <div class="col-md-4 {{ empty($do_search) ? 'd-none' : '' }}" id="weight_input_div">
+                                            <div class="col-md-5 {{ empty($do_search) ? 'd-none' : '' }}" id="weight_input_div">
                                                 <input type="number" min="0" name="weight_value" id="weight" value="{{ isset($weight_value) ? $weight_value : '' }}" placeholder="Weight" class="form-control">
                                             </div>
                                         </div>                                        
                                     </div>
-                                    <div class="col-md-4  {{ empty($do_search) ? 'd-none' : '' }}" id="filter_btn_div" style="margin-top: 30px;">
-                                        <input type="hidden" name="do_search" value="1">
-                                        <button type="submit" class="btn btn-success" id="search_advanced_filters">
-                                            Filter Products
-                                        </button>
-                                    </div>
-                                    {{-- 
-                                    <div class="col-md-6">
+                                    <div class="col-md-5">
                                         <div class="row align-items-end">
                                             <div class="col-md-7">
                                                 <label for="">Filter By Price</label>
@@ -94,12 +87,18 @@
                                                     <option value="less_than" {{ (isset($price_filter_type) && $price_filter_type == 'less_than') ? 'selected="selected"' : '' }}>Less Than</option>
                                                 </select>
                                             </div>
-                                            <div class="col-md-4 {{ empty($do_search) ? 'd-none' : '' }}" id="price_input_div">
+                                            <div class="col-md-5 {{ empty($do_search) ? 'd-none' : '' }}" id="price_input_div">
                                                 <input type="number" min="0" name="price_value" id="price" placeholder="Price" value="{{ isset($price_value) ? $price_value : '' }}" class="form-control">
                                             </div>
                                         </div>
                                     </div>
-                                    --}}
+                                   
+                                    <div class="col-md-2  {{ empty($do_search) ? 'd-none' : '' }}" id="filter_btn_div" style="margin-top: 30px;">
+                                        <input type="hidden" name="do_search" value="1">
+                                        <button type="submit" class="btn btn-success" id="search_advanced_filters">
+                                            Filter Products
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                             
@@ -149,73 +148,82 @@
                             $count = 0;
                             @endphp
                             @foreach ($products as $key => $product)
-                                <?php $count++; ?>
-                                <tr id="row-{{ $product->id }}" class="product-row border-bottom">
-                                    <td class="d-flex table-items">
-                                        <div class="custom-control custom-checkbox tabel-checkbox">
-                                            <input class="custom-control-input custom-control-input-success sub_chk"
-                                                data-id="{{ $product->id }}" type="checkbox"
-                                                id="separate_check_{{ $product->id }}">
-                                            <label for="separate_check_{{ $product->id }}"
-                                                class="custom-control-label ml-4"></label>
-                                        </div>
-                                        <span class="table-row-heading-order sm-d-none">
-                                            {{ $key + 1 }}
-                                        </span>
-                                    </td>
-                                    <td class="product_name">
-                                        <span class="product_name_slg d-flex table-items-title">
-                                            {{ $product->name }}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span class="product_name_slg d-flex table-items-title">{{ $product->code }}</span>
-                                    </td>
-                                    <td>
-                                        @if ($product->status == 'Public')
-                                            <span class="badge badge-success">
-                                                {{ $product->status }}
+                                @foreach ($product->options as $option)
+                                    
+                                    <?php $count++; ?>
+                                    @php
+                                        $retail_price = 0;
+                                        if ($option->defaultPrice->retailUSD != null) {
+                                            $retail_price = $option->defaultPrice->retailUSD;
+                                        }
+                                    @endphp
+                                    <tr id="row-{{ $product->id }}" class="product-row border-bottom">
+                                        <td class="d-flex table-items">
+                                            <div class="custom-control custom-checkbox tabel-checkbox">
+                                                <input class="custom-control-input custom-control-input-success sub_chk"
+                                                    data-id="{{ $product->id }}" type="checkbox"
+                                                    id="separate_check_{{ $product->id }}">
+                                                <label for="separate_check_{{ $product->id }}"
+                                                    class="custom-control-label ml-4"></label>
+                                            </div>
+                                            <span class="table-row-heading-order sm-d-none">
+                                                {{ $key + 1 }}
                                             </span>
-                                        @else
-                                            <span class="badge badge-danger">
-                                                {{ $product->status }}
+                                        </td>
+                                        <td class="product_name">
+                                            <span class="product_name_slg d-flex table-items-title">
+                                                {{ $product->name }}
                                             </span>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        <span class="product_retail_price">
-                                            <span class="d-flex table-items-title"> ${{ $product->retail_price }}</span>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span class="product_weight">
-                                            <span class="d-flex table-items-title"> {{ isset($product->options[0]) ? $product->options[0]->optionWeight : '' }}</span>
-                                        </span>
-                                    </td>
-                                    <td class="created_by toggleClass td_padding_row">
-                                        <div class="d-flex aling-items-center order-table-actions">
-                                            <span>
-                                                <a href="{{ url('admin/products/' . $product->id) }}" class="view a_class"
-                                                    title="" data-toggle="tooltip" data-original-title="View">
-                                                    <img src="/theme/img/view.png" alt="" class="img-fluid">
-                                                </a>
+                                        </td>
+                                        <td>
+                                            <span class="product_name_slg d-flex table-items-title">{{ $product->code }}</span>
+                                        </td>
+                                        <td>
+                                            @if ($product->status == 'Public')
+                                                <span class="badge badge-success">
+                                                    {{ $product->status }}
+                                                </span>
+                                            @else
+                                                <span class="badge badge-danger">
+                                                    {{ $product->status }}
+                                                </span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <span class="product_retail_price">
+                                                <span class="d-flex table-items-title"> ${{ $retail_price }}</span>
                                             </span>
-                                            <span>
-                                                <a href="#" class="edit a_class" title="" data-toggle="tooltip"
-                                                    data-original-title="Edit"><img src="/theme/img/edit.png" alt=""
-                                                        class="img-fluid">
-                                                </a>
+                                        </td>
+                                        <td>
+                                            <span class="product_weight">
+                                                <span class="d-flex table-items-title"> {{ isset($product->options[0]) ? $product->options[0]->optionWeight : '' }}</span>
                                             </span>
-                                            <span>
-                                                <a href="#" class="delete deleteIcon a_class"
-                                                    id="{{ $product->id }}" title="" data-toggle="tooltip"
-                                                    data-original-title="Delete">
-                                                    <img src="/theme/img/delete.png" alt="" class="img-fluid">
-                                                </a>
-                                            </span>
-                                        </div>
-                                    </td>
-                                </tr>
+                                        </td>
+                                        <td class="created_by toggleClass td_padding_row">
+                                            <div class="d-flex aling-items-center order-table-actions">
+                                                <span>
+                                                    <a href="{{ url('admin/products/' . $product->id) }}" class="view a_class"
+                                                        title="" data-toggle="tooltip" data-original-title="View">
+                                                        <img src="/theme/img/view.png" alt="" class="img-fluid">
+                                                    </a>
+                                                </span>
+                                                <span>
+                                                    <a href="#" class="edit a_class" title="" data-toggle="tooltip"
+                                                        data-original-title="Edit"><img src="/theme/img/edit.png" alt=""
+                                                            class="img-fluid">
+                                                    </a>
+                                                </span>
+                                                <span>
+                                                    <a href="#" class="delete deleteIcon a_class"
+                                                        id="{{ $product->id }}" title="" data-toggle="tooltip"
+                                                        data-original-title="Delete">
+                                                        <img src="/theme/img/delete.png" alt="" class="img-fluid">
+                                                    </a>
+                                                </span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
                             @endforeach
                         </tbody>
                         <tfoot>
@@ -448,7 +456,9 @@
                     if (value != '') {
                         $('#weight_input_div').removeClass('d-none');
                     } else {
+                        $('#weight').val('');
                         $('#weight_input_div').addClass('d-none');
+
                     }
                 });
                 $('#filter_by_price_drop_down').on('change' , function(){
@@ -456,6 +466,7 @@
                     if (value != '') {
                         $('#price_input_div').removeClass('d-none');
                     } else {
+                        $('#price').val('');
                         $('#price_input_div').addClass('d-none');
                     }
                 });
