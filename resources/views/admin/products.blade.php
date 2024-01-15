@@ -58,7 +58,7 @@
                         <div class="row mx-4 mb-3 align-items-end">
                             <div class="col-md-12 {{ empty($do_search) ? 'd-none' : '' }}" id="filter_main_div">
                                 <div class="row">
-                                    <div class="col-md-5">
+                                    <div class="col-md-4">
                                         <div class="row align-items-end">
                                             <div class="col-md-7">
                                                 <label for="">Filter By Weight</label>
@@ -76,7 +76,7 @@
                                             </div>
                                         </div>                                        
                                     </div>
-                                    <div class="col-md-5">
+                                    <div class="col-md-4">
                                         <div class="row align-items-end">
                                             <div class="col-md-7">
                                                 <label for="">Filter By Price</label>
@@ -91,6 +91,14 @@
                                                 <input type="number" min="0" name="price_value" id="price" placeholder="Price" value="{{ isset($price_value) ? $price_value : '' }}" class="form-control">
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="">Filter By Product Status</label>
+                                        <select name="product_status" id="filter_by_status_drop_down" class="form-control">
+                                            <option value="">None</option>
+                                            <option value="Public" {{ (isset($product_status) && $product_status == 'Public') ? 'selected="selected"' : '' }}>Public</option>
+                                            <option value="Inactive" {{ (isset($product_status) && $product_status == 'Inactive') ? 'selected="selected"' : '' }}>Inactive</option>
+                                        </select>
                                     </div>
                                    
                                     <div class="col-md-2  {{ empty($do_search) ? 'd-none' : '' }}" id="filter_btn_div" style="margin-top: 30px;">
@@ -153,7 +161,7 @@
                                     <?php $count++; ?>
                                     @php
                                         $retail_price = 0;
-                                        if ($option->defaultPrice->retailUSD != null) {
+                                        if ($option->defaultPrice != null) {
                                             $retail_price = $option->defaultPrice->retailUSD;
                                         }
                                     @endphp
