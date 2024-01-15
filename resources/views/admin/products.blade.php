@@ -58,7 +58,7 @@
                         <div class="row mx-4 mb-3 align-items-end">
                             <div class="col-md-12 {{ empty($do_search) ? 'd-none' : '' }}" id="filter_main_div">
                                 <div class="row">
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <div class="row align-items-end">
                                             <div class="col-md-7">
                                                 <label for="">Filter By Weight</label>
@@ -76,7 +76,7 @@
                                             </div>
                                         </div>                                        
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <div class="row align-items-end">
                                             <div class="col-md-7">
                                                 <label for="">Filter By Price</label>
@@ -92,6 +92,22 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="col-md-3">
+                                        <div class="row align-items-end">
+                                            <div class="col-md-7">
+                                                <label for="">Filter By Stock</label>
+                                                <select name="stock_filter_type" id="filter_by_stock_drop_down"  class="form-control">
+                                                    <option value="">None</option>
+                                                    <option value="equal_to" {{ (isset($stock_filter_type) && $stock_filter_type == 'equal_to') ? 'selected="selected"' : '' }}>Equal To</option>
+                                                    <option value="greater_than" {{ (isset($stock_filter_type) && $stock_filter_type == 'greater_than') ? 'selected="selected"' : '' }}>Greater Than</option>
+                                                    <option value="less_than" {{ (isset($stock_filter_type) && $stock_filter_type == 'less_than') ? 'selected="selected"' : '' }}>Less Than</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-5 {{ empty($do_search) ? 'd-none' : '' }}" id="stock_input_div">
+                                                <input type="number" min="0" name="stock_value" id="stock" placeholder="Stock" value="{{ isset($stock_value) ? $stock_value : '' }}" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="col-md-2">
                                         <label for="">Filter By Product Status</label>
                                         <select name="product_status" id="filter_by_status_drop_down" class="form-control">
@@ -101,10 +117,10 @@
                                         </select>
                                     </div>
                                    
-                                    <div class="col-md-2  {{ empty($do_search) ? 'd-none' : '' }}" id="filter_btn_div" style="margin-top: 30px;">
+                                    <div class="col-md-1  {{ empty($do_search) ? 'd-none' : '' }}" id="filter_btn_div" style="margin-top: 30px;">
                                         <input type="hidden" name="do_search" value="1">
                                         <button type="submit" class="btn btn-success" id="search_advanced_filters">
-                                            Filter Products
+                                            <i class="fa fa-filter"></i>
                                         </button>
                                     </div>
                                 </div>
@@ -144,6 +160,9 @@
                                 </td>
                                 <td>
                                     <span class="d-flex table-row-item"> Weight</span>
+                                </td>
+                                <td>
+                                    <span class="d-flex table-row-item"> Stock Available</span>
                                 </td>
                                 <td>
                                     <span class="d-flex table-row-item"></span>
@@ -205,6 +224,11 @@
                                         <td>
                                             <span class="product_weight">
                                                 <span class="d-flex table-items-title"> {{ isset($product->options[0]) ? $product->options[0]->optionWeight : '' }}</span>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="product_weight">
+                                                <span class="d-flex table-items-title"> {{ isset($product->options[0]) ? $product->options[0]->stockAvailable : '' }}</span>
                                             </span>
                                         </td>
                                         <td class="created_by toggleClass td_padding_row">
@@ -476,6 +500,15 @@
                     } else {
                         $('#price').val('');
                         $('#price_input_div').addClass('d-none');
+                    }
+                });
+                $('#filter_by_stock_drop_down').on('change' , function(){
+                    let value = $(this).val();
+                    if (value != '') {
+                        $('#stock_input_div').removeClass('d-none');
+                    } else {
+                        $('#stock').val('');
+                        $('#stock_input_div').addClass('d-none');
                     }
                 });
             </script>
