@@ -25,29 +25,94 @@ class AdminProductController extends Controller
         $weight_value = $request->get('weight_value');
         $price_filter_type = $request->get('price_filter_type');
         $price_value = $request->get('price_value');
-        $products_query = Product::with('categories', 'options');
+        $products_query = Product::with('categories', 'options' , 'options.defaultPrice');
         
         if(isset($search)) {
-            $products_query->where('name', 'LIKE', '%' . $search . '%')
-            ->orWhere('code', 'like', '%' . $search . '%')
-            ->orWhere('status', 'like', '%' . $search . '%')
-            ->orWhere('retail_price', 'like', '%' . $search . '%');
+            $products_query
+            ->where('status', '!=', 'Inactive')
+            ->where('name', 'LIKE', '%' . $search . '%')
+            ->orWhere('code', 'like', '%' . $search . '%');
+
+            // ->orWhere('status', 'like', '%' . $search . '%')
+            // ->orWhere('retail_price', 'like', '%' . $search . '%');
         }
+        if (($weight_filter_type != null) && (($weight_value != null) && (($price_filter_type == null) && ($price_value == null)))) {
+            if (isset($weight_filter_type) && isset($weight_value)) {
+                $operation = '';
 
-        if (isset($weight_filter_type) && isset($weight_value)) {
-            $operation = '';
+                if ($weight_filter_type == 'equal_to') {
+                    $operation = '=';
+                } elseif($weight_filter_type == 'less_than') {
+                    $operation = '<';
+                } elseif($weight_filter_type == 'greater_than') {
+                    $operation = '>';
+                }
 
-            if ($weight_filter_type == 'equal_to') {
-                $operation = '=';
-            } elseif($weight_filter_type == 'less_than') {
-                $operation = '<';
-            } elseif($weight_filter_type == 'greater_than') {
-                $operation = '>';
+                $products_query->where('status', '!=', 'Inactive')
+                ->whereHas('options', function ($query) use ($weight_value, $operation) {
+                    $query->where(function ($query) use ($weight_value, $operation) {
+                        $query->whereRaw("CONVERT(optionWeight, SIGNED) $operation ?", [$weight_value])
+                            ->orWhereRaw("CONVERT(optionWeight, DECIMAL(10,2)) $operation ?", [$weight_value]);
+                    })
+                    ->where('status', '!=', 'disabled');
+                });
             }
+        } 
 
-            $products_query->whereHas('options' , function($query) use ($weight_value, $operation){
-                $query->where('optionWeight', $operation, $weight_value)->where('status', '!=', 'disabled');
-            });
+        elseif(($price_filter_type != null) && ($price_value != null) && (($weight_filter_type == null) && ($weight_value == null))) {
+            if (isset($price_filter_type) && isset($price_value)) {
+                $operation = '';
+
+                if ($price_filter_type == 'equal_to') {
+                    $operation = '=';
+                } elseif($price_filter_type == 'less_than') {
+                    $operation = '<';
+                } elseif($price_filter_type == 'greater_than') {
+                    $operation = '>';
+                }
+
+                $products_query->where('status', '!=', 'Inactive')
+                ->whereHas('options' , function($query){
+                    $query->where('status', '!=', 'disabled');
+                })
+                ->whereHas('options.defaultPrice' , function($query) use ($price_value, $operation){
+                    $query->where('retailUSD', $operation, $price_value);
+                });
+            }
+        }
+        elseif ((($price_filter_type != null) && ($price_value != null)) && (($weight_filter_type != null) && ($weight_value != null))) {
+            if ((isset($price_filter_type) && isset($price_value)) && (isset($weight_filter_type) && isset($weight_value))) {
+                $operation = '';
+                $weight_operation = '';
+
+                if ($price_filter_type == 'equal_to') {
+                    $operation = '=';
+                } elseif($price_filter_type == 'less_than') {
+                    $operation = '<';
+                } elseif($price_filter_type == 'greater_than') {
+                    $operation = '>';
+                }
+
+                if ($weight_filter_type == 'equal_to') {
+                    $weight_operation = '=';
+                } elseif($weight_filter_type == 'less_than') {
+                    $weight_operation = '<';
+                } elseif($weight_filter_type == 'greater_than') {
+                    $weight_operation = '>';
+                }
+
+                $products_query->where('status', '!=', 'Inactive')
+                ->whereHas('options', function ($query) use ($weight_value, $weight_operation) {
+                    $query->where(function ($query) use ($weight_value, $weight_operation) {
+                        $query->whereRaw("CONVERT(optionWeight, SIGNED) $weight_operation ?", [$weight_value])
+                            ->orWhereRaw("CONVERT(optionWeight, DECIMAL(10,2)) $weight_operation ?", [$weight_value]);
+                    })
+                    ->where('status', '!=', 'disabled');
+                })
+                ->whereHas('options.defaultPrice' , function($query) use ($price_value, $operation){
+                    $query->where('retailUSD', $operation, $price_value);
+                });
+            }
         }
         
         $download_csv = $request->get('download_csv');
@@ -65,11 +130,15 @@ class AdminProductController extends Controller
                 ];
 
                 foreach ($products as $product) {
+                    $retail_price = 0;
+                    if (!empty($product->options[0]->defaultPrice->retailUSD)) {
+                        $retail_price = $product->options[0]->defaultPrice->retailUSD;
+                    }   
                     $csv_data[] = [
                         $product->name,
                         $product->code,
                         $product->status,
-                        $product->retail_price,
+                        $retail_price,
                         isset($product->options[0]) ? $product->options[0]->optionWeight : '',
                     ];
                 }
