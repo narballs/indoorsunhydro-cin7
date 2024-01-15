@@ -21,6 +21,8 @@ class AdminProductController extends Controller
     public function index(Request $request) {
         $search = $request->get('search');
         $do_search = $request->get('do_search');
+        $stock_filter_type = $request->get('stock_filter_type');
+        $stock_value = $request->get('stock_value');
         $weight_filter_type = $request->get('weight_filter_type');
         $weight_value = $request->get('weight_value');
         $price_filter_type = $request->get('price_filter_type');
@@ -37,7 +39,7 @@ class AdminProductController extends Controller
             // ->orWhere('status', 'like', '%' . $search . '%')
             // ->orWhere('retail_price', 'like', '%' . $search . '%');
         }
-        if (($weight_filter_type != null) && (($weight_value != null) && (($price_filter_type == null) && ($price_value == null))) && ($product_status == null)) {
+        if (($weight_filter_type != null) && (($weight_value != null) && (($price_filter_type == null) && ($price_value == null))) && ($product_status == null) && ($stock_filter_type == null && $stock_value == null)) {
             if (isset($weight_filter_type) && isset($weight_value)) {
                 $operation = '';
 
@@ -60,7 +62,7 @@ class AdminProductController extends Controller
                 });
             }
         } 
-        elseif ((($price_filter_type != null) && ($price_value != null)) && (($weight_filter_type == null) && ($weight_value == null)) && ($product_status == null)) {
+        elseif ((($price_filter_type != null) && ($price_value != null)) && (($weight_filter_type == null) && ($weight_value == null)) && ($product_status == null)  && ($stock_filter_type == null && $stock_value == null)) {
             if (isset($price_filter_type) && isset($price_value)) {
                 $operation = '';
 
@@ -82,7 +84,7 @@ class AdminProductController extends Controller
                 });
             }
         }
-        elseif (($product_status != null) && (($weight_filter_type == null) && ($weight_value == null)) && (($price_filter_type == null) && ($price_value == null))) {
+        elseif (($product_status != null) && (($weight_filter_type == null) && ($weight_value == null)) && (($price_filter_type == null) && ($price_value == null))  && ($stock_filter_type == null && $stock_value == null)) {
             if (isset($product_status)) {
                 if ($product_status == 'Public') {
                     $products_query->where('status', '!=', 'Inactive')
@@ -98,7 +100,7 @@ class AdminProductController extends Controller
                 
             }
         }
-        elseif (($product_status != null) && (($weight_filter_type != null) && ($weight_value != null)) && (($price_filter_type == null) && ($price_value == null))) {
+        elseif (($product_status != null) && (($weight_filter_type != null) && ($weight_value != null)) && (($price_filter_type == null) && ($price_value == null))  && ($stock_filter_type == null && $stock_value == null)) {
             if (isset($product_status) && (isset($weight_filter_type) && isset($weight_value))) {
                 $operation = '';
 
@@ -131,7 +133,7 @@ class AdminProductController extends Controller
                 
             }
         }
-        elseif (($product_status != null) && (($weight_filter_type == null) && ($weight_value == null)) && (($price_filter_type != null) && ($price_value != null))) {
+        elseif (($product_status != null) && (($weight_filter_type == null) && ($weight_value == null)) && (($price_filter_type != null) && ($price_value != null))  && ($stock_filter_type == null && $stock_value == null)) {
             if (isset($product_status) && (isset($price_filter_type) && isset($price_value))) {
                 $operation = '';
 
@@ -162,7 +164,7 @@ class AdminProductController extends Controller
                 
             }
         }
-        elseif ((($price_filter_type != null) && ($price_value != null)) && (($weight_filter_type != null) && ($weight_value != null)) && ($product_status == null)) {
+        elseif ((($price_filter_type != null) && ($price_value != null)) && (($weight_filter_type != null) && ($weight_value != null)) && ($product_status == null)  && ($stock_filter_type == null && $stock_value == null)) {
             if ((isset($price_filter_type) && isset($price_value)) && (isset($weight_filter_type) && isset($weight_value)))  {
 
                $operation = '';
@@ -196,8 +198,28 @@ class AdminProductController extends Controller
                 });
             }
         }
-        elseif ((($price_filter_type != null) && ($price_value != null)) && (($weight_filter_type != null) && ($weight_value != null)) && ($product_status != null)) {
-            if ((isset($price_filter_type) && isset($price_value)) && (isset($weight_filter_type) && isset($weight_value)) && (isset($product_status))) {
+        // stock filter
+        elseif(($stock_filter_type != null && $stock_value != null) && (($weight_filter_type == null) && ($weight_value == null)) && (($price_filter_type == null) && ($price_value == null)) && ($product_status == null)) {
+            if (isset($stock_filter_type) && isset($stock_value)) {
+                $operation = '';
+
+                if ($stock_filter_type == 'equal_to') {
+                    $operation = '=';
+                } elseif($stock_filter_type == 'less_than') {
+                    $operation = '<';
+                } elseif($stock_filter_type == 'greater_than') {
+                    $operation = '>';
+                }
+
+                $products_query->whereHas('options', function ($query) use ($stock_value, $operation) {
+                    $query->where('status', '!=', 'disabled')
+                    ->whereRaw("CAST(stockAvailable AS SIGNED) $operation ?", [$stock_value]);
+                });
+            }
+
+        }
+        elseif ((($price_filter_type != null) && ($price_value != null)) && (($weight_filter_type != null) && ($weight_value != null)) && ($product_status != null)  && ($stock_filter_type != null && $stock_value != null)) {
+            if ((isset($price_filter_type) && isset($price_value)) && (isset($weight_filter_type) && isset($weight_value)) && (isset($product_status)) && (isset($stock_filter_type) && isset($stock_value))) {
 
                 $status_operation  = '';
                 $status = '';
@@ -211,6 +233,7 @@ class AdminProductController extends Controller
 
                 $operation = '';
                 $weight_operation = '';
+                $stock_operation = '';
 
                 if ($price_filter_type == 'equal_to') {
                     $operation = '=';
@@ -228,6 +251,15 @@ class AdminProductController extends Controller
                     $weight_operation = '>';
                 }
 
+                if ($stock_filter_type == 'equal_to') {
+                    $stock_operation = '=';
+                } elseif($stock_filter_type == 'less_than') {
+                    $stock_operation = '<';
+                } elseif($stock_filter_type == 'greater_than') {
+                    $stock_operation = '>';
+                }
+
+
                 $products_query->where('status', $status_operation , $status)
                 ->whereHas('options', function ($query) use ($weight_value, $weight_operation) {
                         $query->where(function ($query) use ($weight_value, $weight_operation) {
@@ -236,11 +268,16 @@ class AdminProductController extends Controller
                     })
                     ->where('status', '!=', 'disabled');
                 })
+                ->whereHas('options', function ($query) use ($stock_value, $stock_operation) {
+                    $query->whereRaw("CAST(stockAvailable AS SIGNED) $stock_operation ?", [$stock_value]);
+                })
                 ->whereHas('options.defaultPrice' , function($query) use ($price_value, $operation){
                     $query->where('retailUSD', $operation, $price_value);
                 });
             }
         }
+        
+
         
         $download_csv = $request->get('download_csv');
         if ($download_csv == '1') {
@@ -254,6 +291,7 @@ class AdminProductController extends Controller
                     'Product Status',
                     'Product Retail Price',
                     'Product Weight',
+                    'Product Stock'
                 ];
 
                 foreach ($products as $product) {
@@ -267,6 +305,7 @@ class AdminProductController extends Controller
                         $product->status,
                         $retail_price,
                         isset($product->options[0]) ? $product->options[0]->optionWeight : '',
+                        isset($product->options[0]) ? $product->options[0]->stockAvailable : ''
                     ];
                 }
 
