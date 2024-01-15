@@ -64,10 +64,13 @@ class ProductController extends Controller
         }
         $price_creteria = $request->get('search_price');
         if (!empty($category_ids)) {
-
+            
             $products_query = Product::where('status', '!=', 'Inactive')
                 ->whereIn('category_id', $category_ids)
-                ->with('options.price', 'brand');
+                ->with('options.price', 'brand')
+                ->with(['product_views','apiorderItem' , 'options' => function ($q) {
+                    $q->where('status', '!=', 'Disabled');
+                }]);
 
 
             if (!empty($brand_id)) {
@@ -104,12 +107,12 @@ class ProductController extends Controller
             }
 
             $products = $products_query->with('options.price', 'brand')
-            ->whereHas('options.defaultPrice', function ($q) {
-                $q->where('retailUSD', '!=', 0);
-            })
+            // ->whereHas('options.defaultPrice', function ($q) {
+            //     $q->where('retailUSD', '!=', 0);
+            // })
             ->paginate($per_page);
 
-            $queries = DB::getQueryLog();
+            // $queries = DB::getQueryLog();
         }
 
         $brands = Brand::orderBy('name', 'ASC')->whereIn('id', $brand_ids)->pluck('name', 'id')->toArray();
@@ -268,9 +271,9 @@ class ProductController extends Controller
             $products = $products_query->with(['product_views','apiorderItem' , 'options' => function ($q) {
                 $q->where('status', '!=', 'Disabled');
             }])
-            ->whereHas('options.defaultPrice', function ($q) {
-                $q->where('retailUSD', '!=', 0);
-            })
+            // ->whereHas('options.defaultPrice', function ($q) {
+            //     $q->where('retailUSD', '!=', 0);
+            // })
             ->paginate($per_page);
             // $products = $products_query->paginate($per_page);
         } else {
@@ -278,9 +281,9 @@ class ProductController extends Controller
             $products = $products_query->with(['product_views','apiorderItem' , 'options' => function ($q) {
                 $q->where('status', '!=', 'Disabled');
             }])
-            ->whereHas('options.defaultPrice', function ($q) {
-                $q->where('retailUSD', '!=', 0);
-            })
+            // ->whereHas('options.defaultPrice', function ($q) {
+            //     $q->where('retailUSD', '!=', 0);
+            // })
             ->paginate($per_page);
         }
 
@@ -354,9 +357,9 @@ class ProductController extends Controller
             $products = $products_query->with(['product_views','apiorderItem' , 'options' => function ($q) {
                 $q->where('status', '!=', 'Disabled');
             }])
-            ->whereHas('options.defaultPrice', function ($q) {
-                $q->where('retailUSD', '!=', 0);
-            })
+            // ->whereHas('options.defaultPrice', function ($q) {
+            //     $q->where('retailUSD', '!=', 0);
+            // })
             ->paginate($per_page);
         }
         $user_id = Auth::id();
@@ -646,7 +649,12 @@ class ProductController extends Controller
         $category_ids = Category::where('parent_id', $category->id)->pluck('id')->toArray();
         $products = [];
         if (!empty($category_ids)) {
-            $products = Product::with('product_views','apiorderItem')->whereIn('category_id', $category_ids)->get();
+            $products = Product::with(['product_views','apiorderItem' , 'options' => function ($q) {
+                $q->where('status', '!=', 'Disabled');
+            }])
+            ->whereIn('category_id', $category_ids)
+            ->where('status' , '!=' , 'Inactive')
+            ->get();
         }
         $user_id = Auth::id();
         $contact_id = session()->get('contact_id');
@@ -765,9 +773,17 @@ class ProductController extends Controller
         }
 
         if (empty($search_queries)) {
-            $products = $products_query->paginate($per_page);
+            $products = $products_query
+            ->with(['product_views','apiorderItem' , 'options' => function ($q) {
+                $q->where('status', '!=', 'Disabled');
+            }])
+            ->paginate($per_page);
         } else {
-            $products = $products_query->with('options.price', 'brand')->paginate($per_page);
+            $products = $products_query
+            ->with(['product_views','apiorderItem' , 'options' => function ($q) {
+                $q->where('status', '!=', 'Disabled');
+            }])
+            ->paginate($per_page);
         }
         $brands = [];
         if (!empty($brand_ids)) {
@@ -1173,9 +1189,9 @@ class ProductController extends Controller
             $products = $products_query->with(['product_views','apiorderItem' , 'options' => function ($q) {
                 $q->where('status', '!=', 'Disabled');
             }])
-            ->whereHas('options.defaultPrice', function ($q) {
-                $q->where('retailUSD', '!=', 0);
-            })
+            // ->whereHas('options.defaultPrice', function ($q) {
+            //     $q->where('retailUSD', '!=', 0);
+            // })
             ->paginate($per_page);
             // $products = $products_query->paginate($per_page);
         } else {
@@ -1183,9 +1199,9 @@ class ProductController extends Controller
             $products = $products_query->with(['product_views','brand','apiorderItem' , 'options' => function ($q) {
                 $q->where('status', '!=', 'Disabled');
             }])
-            ->whereHas('options.defaultPrice', function ($q) {
-                $q->where('retailUSD', '!=', 0);
-            })
+            // ->whereHas('options.defaultPrice', function ($q) {
+            //     $q->where('retailUSD', '!=', 0);
+            // })
             ->paginate($per_page);
         }
         $brands = [];
@@ -1270,9 +1286,9 @@ class ProductController extends Controller
             $main_query = Product::with(['product_views','apiorderItem' , 'options' => function ($q) {
                 $q->where('status', '!=', 'Disabled');
             }])
-            ->whereHas('options.defaultPrice', function ($q) {
-                $q->where('retailUSD', '!=', 0);
-            })
+            // ->whereHas('options.defaultPrice', function ($q) {
+            //     $q->where('retailUSD', '!=', 0);
+            // })
             ->where(function (Builder $query) use ($explode_search_value) {
                 foreach ($explode_search_value as $searchvalue) {
                     $query->where('name', 'LIKE', '%' . $searchvalue . '%')
@@ -1298,9 +1314,9 @@ class ProductController extends Controller
             $main_query = Product::with(['product_views','apiorderItem' , 'options' => function ($q) {
                 $q->where('status', '!=', 'Disabled');
             }])
-            ->whereHas('options.defaultPrice', function ($q) {
-                $q->where('retailUSD', '!=', 0);
-            })
+            // ->whereHas('options.defaultPrice', function ($q) {
+            //     $q->where('retailUSD', '!=', 0);
+            // })
             ->where(function (Builder $query) use ($explode_search_value) {
                 foreach ($explode_search_value as $searchvalue) {
                     $query->where('name', 'LIKE', '%' . $searchvalue . '%')
@@ -1321,9 +1337,9 @@ class ProductController extends Controller
             $main_query = Product::with(['product_views','apiorderItem' , 'options' => function ($q) {
                 $q->where('status', '!=', 'Disabled');
             }])
-            ->whereHas('options.defaultPrice', function ($q) {
-                $q->where('retailUSD', '!=', 0);
-            })
+            // ->whereHas('options.defaultPrice', function ($q) {
+            //     $q->where('retailUSD', '!=', 0);
+            // })
             ->where(function (Builder $query) use ($explode_search_value) {
                 foreach ($explode_search_value as $searchvalue) {
                     $query->where('description', 'LIKE', '%' . $searchvalue . '%')
