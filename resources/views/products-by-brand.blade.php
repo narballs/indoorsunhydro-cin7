@@ -117,7 +117,7 @@
       @endif
       @foreach($products as $key=>$product)
          @foreach($product->options as $option)
-         <div class="col-sm-12 col-md-6 col-lg-3 d-flex align-self-stretch">
+         {{-- <div class="col-sm-12 col-md-6 col-lg-3 d-flex align-self-stretch">
             <div class="card shadow-sm mb-4 w-100">
                @if($option->image != '')
                <a href="{{ url('product-detail/'.$product->id.'/'.$option->option_id.'/'.$product->slug) }}"><img src="{{$option['image']}}"
@@ -148,7 +148,8 @@
                   </div>
                </div>
             </div>
-         </div>
+         </div> --}}
+         @include('product_row')
          @endforeach
       @endforeach
    </div>
@@ -281,7 +282,7 @@
       @endif
       @foreach($products as $key=>$product)
          @foreach($product->options as $option)
-         <div class="col-md-6 col-lg-3 d-flex align-self-stretch mt-2 product_row_mobile_responsive pt-1">
+         {{-- <div class="col-md-6 col-lg-3 d-flex align-self-stretch mt-2 product_row_mobile_responsive pt-1">
             <div class="p-2 shadow-sm  w-100 h-100" style="background-color: #fff;background-clip: border-box;border: 1px solid rgba(0,0,0,.125);
             border-radius: 0.25rem;">
                @if($option->image != '')
@@ -310,7 +311,8 @@
                   </div>
                </div>
             </div>
-         </div>
+         </div> --}}
+         @include('product_row')
          @endforeach
       @endforeach
       <div class=" w-100 justify-content-center p-2 mt-3">
@@ -428,7 +430,7 @@
       @endif
       @foreach($products as $key=>$product)
          @foreach($product->options as $option)
-         <div class="col-sm-12 col-md-6 col-lg-3 d-flex align-self-stretch">
+         {{-- <div class="col-sm-12 col-md-6 col-lg-3 d-flex align-self-stretch">
             <div class="card shadow-sm mb-4 w-100">
                @if($option->image != '')
                <a href="{{ url('product-detail/'.$product->id.'/'.$option->option_id.'/'.$product->slug) }}"><img src="{{$option['image']}}"
@@ -453,7 +455,8 @@
                   </div>
                </div>
             </div>
-         </div>
+         </div> --}}
+         @include('product_row')
          @endforeach
       @endforeach
    </div>
