@@ -1,5 +1,5 @@
 @include('partials.header')
-<body>
+<body class="m-0 p-0" style="overflow-x: hidden">
     <main>
         @include('partials.top-bar')
         @include('partials.search-bar')
