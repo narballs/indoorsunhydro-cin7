@@ -428,76 +428,9 @@
                                         {{-- {{ $user_orders->appends(Request::all())->links('pagination.front_custom_pagination') }} --}}
                                     </div>
                                 </div>
-                                <div class="col-md-3 col-xl-4 p-3" style="max-height: 100rem;overflow-y:scroll">
+                                <div class="col-md-3 col-xl-4 p-3">
                                     <div class="card rounded buy_again_div">
-                                        <div class="card-body">
-                                            @if(!empty($frequent_products))
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <p class="buy_again_heading">Buy Again</p>
-                                                    </div>
-                                                </div>
-                                                @foreach($frequent_products as $frequent_product)
-                                                    @if(!empty($frequent_product))
-                                                        <div class="row mt-4 mb-3">
-                                                            <div class="col-md-12">
-                                                                <div class="row">
-                                                                    <div class="col-md-4 image-div image-div-account d-flex justify-content-center">
-                                                                        @if(!empty($frequent_product->product->images))
-                                                                            <img src="{{ $frequent_product->product->images }}" alt="" class="buy_again_product_image">
-                                                                        @else
-                                                                            <img src="{{ asset('/theme/img/image_not_available.png') }}" alt="" class="buy_again_product_image">
-                                                                        @endif
-                                                                    </div>
-                                                                    <div class="col-md-8 data-div data-div-account">
-                                                                        <div class="row">
-                                                                            <div class="col-md-10">
-                                                                                
-                                                                                <p class="product_name mb-1">
-                                                                                    @if(!empty($frequent_product->product->name))
-                                                                                        <a class="product_name" id="prd_name_{{$frequent_product->product->id }}" href="{{ url('product-detail/' . $frequent_product->product->id . '/' . $frequent_product->product->options[0]->option_id . '/' . $frequent_product->product->slug) }}">{{ $frequent_product->product->name }}</a>
-                                                                                    @endif
-                                                                                </p>
-                                                                                
-                                                                            </div>
-                                                                            <div class="col-md-10">
-                                                                            <p class="product_price mb-1">
-                                                                                    @if(!empty($frequent_product->price))
-                                                                                        ${{ number_format($frequent_product->price, 2) }}
-                                                                                    @endif
-                                                                                </p>
-                                                                            </div>
-                                                                            <div class="col-md-10">
-                                                                                <p class="category_name mb-1">Category:
-                                                                                    @if(!empty($frequent_product->product->categories))
-                                                                                    <a class="category_name" href="{{ url('products/' . $frequent_product->product->categories->id . '/' .$frequent_product->product->categories->slug) }}"> 
-                                                                                        {{$frequent_product->product->categories->name}}
-                                                                                    </a> 
-                                                                                    @endif
-                                                                                </p>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="row justify-content-center mt-4">
-                                                                    <div class="col-md-10">
-                                                                        <button type="button" class="buy_frequent_again_btn border-0 w-100 p-2" onclick="add_to_cart('{{ $frequent_product->product->id }}', '{{ $frequent_product->product->options[0]->option_id }}')">Add to Cart</button>
-                                                                    </div>
-                                                                    <div class="col-md-10 mt-4 border-div d-flex align-items-center align-self-center"></div>
-                                                                </div>
-                                                            </div>
-                                                            
-                                                        </div>
-                                                    @endif
-                                                @endforeach
-                                            @else
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <p class="buy_again_heading">No Frequently buyed products to show</p>
-                                                    </div>
-                                                </div>
-                                            @endif
-                                        </div>
+                                        @include('my-account.buy_again_slider')
                                     </div>
                                 </div>
                             </div>
@@ -693,4 +626,129 @@
 </script>
 @include('my-account.my-account-scripts')
 @include('partials.product-footer')
+
 @include('partials.footer')
+{{-- pagination for buy again script --}}
+<script>
+    $(document).ready(function() {
+        loadPaginationBuyAgain(1);
+
+        function loadPaginationBuyAgain(page) {
+            
+            $.ajax({
+                url: '/my-account/buy-again-products?page=${page}',
+                method: 'GET',
+                data: { page: page },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.data.length > 0) {
+                        var html = buildBuyagainProductsHtml(response);
+                        $('#buy_again_container').html(html);
+                        updateBuyagainProductsPaginationLinks();
+                    } else {
+                        var html = '<div class="row"><div class="col-md-12"><p class="buy_again_heading">No products found</p></div></div>';
+                        $('#buy_again_container').html(html);
+                    }
+                }
+            });
+        }
+
+
+        function updateBuyagainProductsPaginationLinks() {
+            $('body').on('click', '.pagination-link-buy-again', function(e) { 
+                e.preventDefault();
+                $('html, body').animate({ scrollTop: 0 }, 'slow');
+                var page = $(this).text();
+                loadPaginationBuyAgain(page);
+            });
+            
+        }
+
+        function buildBuyagainProductsHtml(response) {
+            var html = '';
+            var data = response.data;
+            var header = '<div class="row"><div class="col-md-12"><p class="buy_again_heading">Buy Again</p></div></div>';
+            html += header;
+            for (var i = 0; i < data.length; i++) {
+                html += buildProductRow(data[i]);
+            }
+
+            var totalPages = response.last_page;
+            var currentPage = response.current_page;
+            var paginationHtml = $('#pagination-list-buy-again').html(generatePaginationLinks(totalPages, currentPage));
+            // html += paginationHtml;
+
+            return html;
+        }
+
+        function buildProductRow(productData) {
+            var rowHtml = '<div class="row mt-4 mb-3">';
+            rowHtml += '    <div class="col-md-12">';
+            rowHtml += '        <div class="row">';
+            rowHtml += buildImageColumn(productData.images);
+            rowHtml += buildDataColumn(productData);
+            rowHtml += '        </div>';
+            rowHtml += buildButtonRow(productData);
+            rowHtml += '    </div>';
+            rowHtml += '</div>';
+
+            return rowHtml;
+        }
+
+        function buildImageColumn(imageUrl) {
+            if (imageUrl != '') {
+                imageUrl = imageUrl;
+            } else {
+                imageUrl = '/theme/img/image_not_available.png';
+            }
+            return '<div class="col-md-4 image-div image-div-account d-flex justify-content-center">' +
+                '<img src="' + imageUrl  + '" alt="Product Image" class="buy_again_product_image">' +
+                '</div>';
+        }
+
+        function buildDataColumn(productData) {
+            var dataHtml = '            <div class="col-md-8 data-div data-div-account">';
+                dataHtml += '                <div class="row">';
+                dataHtml += '                    <div class="col-md-10">';
+                dataHtml += '                        <p class="product_name mb-1">';
+                dataHtml += '                            <a class="product_name" id="prd_name_' + productData.id + '" href="' + '/product-detail/' + productData.id + '/' + productData.options[0].option_id +'/'+ productData.code +'">' + productData.name + '</a>';
+                dataHtml += '                        </p>';
+                dataHtml += '                    </div>';
+                dataHtml += '                    <div class="col-md-10">';
+                dataHtml += '                        <p class="product_price mb-1">$' + productData.retail_price + '</p>';
+                dataHtml += '                    </div>';
+                dataHtml += '                    <div class="col-md-10">';
+                dataHtml += '                        <p class="category_name mb-1">Category:';
+                dataHtml += '                            <a class="category_name" href="' + '/products/' + productData.categories.id + '/' + productData.categories.slug +  '">' + productData.categories.name + '</a>';
+                dataHtml += '                        </p>';
+                dataHtml += '                    </div>';
+                dataHtml += '                </div>';
+                dataHtml += '            </div>';
+            return dataHtml;
+        }
+
+        function buildButtonRow(productData) {
+            var buttonRowHtml = '        <div class="row justify-content-center mt-4">';
+                buttonRowHtml += '            <div class="col-md-10">';
+                buttonRowHtml += '                <button type="button" class="buy_frequent_again_btn border-0 w-100 p-2" onclick="add_to_cart(\'' + productData.id + '\', \'' + productData.options[0].option_id + '\')">Add to Cart</button>';
+                buttonRowHtml += '            </div>';
+                buttonRowHtml += '            <div class="col-md-10 mt-4 border-div d-flex align-items-center align-self-center"></div>';
+                buttonRowHtml += '        </div>';
+             return buttonRowHtml;
+        }
+
+        function generatePaginationLinks(totalPages, currentPage) {
+            var paginationHtml = '';
+
+            for (var i = 1; i <= totalPages; i++) {
+                var activeClass = (i === currentPage) ? 'active' : '';
+                paginationHtml += '<li class="pagination-item-buy-again"><a href="#" class="pagination-link-buy-again ' + activeClass + '">' + i + '</a></li>';
+            }
+
+            return paginationHtml;
+        }
+
+    });
+</script>
+
+{{-- end --}}

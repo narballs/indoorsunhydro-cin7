@@ -108,6 +108,9 @@ Route::get('/my-account/', [UserController::class, 'my_account'])->name('my_acco
 Route::post('/user-contact/', [UserController::class, 'save_contact'])->name('save_contact');
 Route::post('/update-contact/', [UserController::class, 'update_contact'])->name('update_contact');
 
+//buy again products with paginate jquery 
+Route::get('/my-account/buy-again-products', [UserController::class, 'buy_again_products'])->name('buy_again_products');
+
 // save landing page details
 Route::post('landing-page/personal/details', [LandingPageController::class, 'landing_page_personal_details'])->name('landing_page_personal_details');
 Route::post('landing-page/company/details', [LandingPageController::class, 'landing_page_company_details'])->name('landing_page_company_details');
