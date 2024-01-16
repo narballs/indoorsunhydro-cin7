@@ -63,10 +63,10 @@
                                         <button type="submit" class="btn btn-sm btn-primary text-white" onclick="return confirm('Are you sure you want to restore this Contact?');">Restore Contact</button>
                                     </form>
     
-                                    <form action="{{route('delete_contact_permanently' , $deletedContact->id)}}" method="post" class="ml-2">
+                                    {{-- <form action="{{route('delete_contact_permanently' , $deletedContact->id)}}" method="post" class="ml-2">
                                         @csrf
                                         <button type="submit" class="btn btn-sm btn-danger text-white" onclick="return confirm('Are you sure you want to delete this Contact Permanently?');">Delete Contact</button>
-                                    </form>
+                                    </form> --}}
     
                                 </div>
                             </td>
