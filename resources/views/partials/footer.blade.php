@@ -9,6 +9,139 @@
 <script src="https://kit.fontawesome.com/ec19ec29f3.js" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/feather-icons"></script>
 <script id="ze-snippet" src="{{asset('zendesk.js?key=c226feaf-aefa-49d4-ae97-5b83a096f475')}}"></script>
+<script>
+    function adding_quantity(product_id , option_id) {
+        var plus = parseInt($('#swap_qty_number_' + product_id).val());
+        var result = plus + 1;
+        var new_qty = $('#swap_qty_number_' + product_id).val(result);
+        increasingQuantity(product_id , option_id)
+        $('#swap_qty_number_' + product_id).val(result)
+    }
+    function subtracting_quantity(product_id , option_id) {
+        var minus = parseInt($('#swap_qty_number_' + product_id).val());
+        
+        if (minus > 1) {
+            var result = minus - 1;
+            $('#swap_qty_number_' + product_id).val(result);
+            decreasingQuantity(product_id , option_id)
+        } else {
+            var result = minus - 1;
+            $('#button_swap_'+product_id).addClass('d-none');
+            $('#ajaxSubmit_'+product_id).removeClass('d-none');
+            $('#swap_qty_number_' + product_id).val(result);
+            decreasingQuantity(product_id , option_id)
+            // $('#swap_qty_number_' + product_id).val(0);
+        } 
+    }
+    function increasingQuantity(id, option_id) {
+        // $('#ajaxSubmit_'+id).addClass('d-none');
+        // $('#button_swap_'+id).removeClass('d-none');
+        // $('#swap_qty_number_'+id).val(1);
+        jQuery.ajax({
+            url: "{{ url('/update-product-cart/') }}",
+            method: 'post',
+            data: {
+                "_token": "{{ csrf_token() }}",
+                p_id: jQuery('#p_' + id).val(),
+                option_id: option_id,
+                quantity: 1,
+                'action': 'addition'
+            },
+            success: function(response) {
+                if (response.status == 'success') {
+                    var cart_items = response.cart_items;
+                    var cart_total = 0;
+                    var total_cart_quantity = 0;
+                    for (var key in cart_items) {
+                        var item = cart_items[key];
+                        var product_id = item.prd_id;
+                        var price = parseFloat(item.price);
+                        var quantity = parseFloat(item.quantity);
+                        var subtotal = parseFloat(price * quantity);
+                        var cart_total = cart_total + subtotal;
+                        var total_cart_quantity = total_cart_quantity + quantity;
+                        $('#subtotal_' + product_id).html('$' + subtotal);
+                        var product_name = document.getElementById("product_name_" + jQuery('#p_' + id)
+                            .val()).innerHTML;
+                    }
+                    Swal.fire({
+                        toast: true,
+                        icon: 'success',
+                        title: jQuery('#quantity').val() + ' X ' + product_name +
+                            ' added to your cart',
+                        timer: 3000,
+                        showConfirmButton: false,
+                        position: 'top',
+                        timerProgressBar: true
+                    });
+                }
+                $('#top_cart_quantity').html(total_cart_quantity);
+                $('#cart_items_quantity').html(total_cart_quantity);
+                $('.cartQtyipad').html(total_cart_quantity);
+                $('.cartQtymbl').html(total_cart_quantity);
+                $('#topbar_cart_total').html('$' + parseFloat(cart_total).toFixed(2));
+                $('.topbar_cart_total_ipad').html('$'+parseFloat(cart_total).toFixed(2));
+                var total = document.getElementById('#top_cart_quantity');
+            }
+        });
+        return false;
+    }
+    function decreasingQuantity(id, option_id) {
+        // $('#ajaxSubmit_'+id).addClass('d-none');
+        // $('#button_swap_'+id).removeClass('d-none');
+        // $('#swap_qty_number_'+id).val(1);
+        jQuery.ajax({
+            url: "{{ url('/update-product-cart/') }}",
+            method: 'post',
+            data: {
+                "_token": "{{ csrf_token() }}",
+                p_id: jQuery('#p_' + id).val(),
+                option_id: option_id,
+                quantity: 1,
+                'action': 'subtraction'
+            },
+            success: function(response) {
+                if (response.status == 'success') {
+                    var cart_items = response.cart_items;
+                    var cart_total = 0;
+                    var total_cart_quantity = 0;
+                    for (var key in cart_items) {
+                        var item = cart_items[key];
+                        console.log(item)
+                        var product_id = item.prd_id;
+                        var price = parseFloat(item.price);
+                        var quantity = parseFloat(item.quantity);
+                        var subtotal = parseFloat(price * quantity);
+                        var cart_total = cart_total + subtotal;
+                        var total_cart_quantity = total_cart_quantity + quantity;
+                        $('#subtotal_' + product_id).html('$' + subtotal);
+                        console.log(item.name);
+                        var product_name = document.getElementById("product_name_" + jQuery('#p_' + id)
+                            .val()).innerHTML;
+                    }
+                    Swal.fire({
+                        toast: true,
+                        icon: 'error',
+                        title: jQuery('#quantity').val() > 1 ? jQuery('#quantity').val() + ' X ' + product_name : 'Product' +
+                            ' removed from your  cart',
+                        timer: 3000,
+                        showConfirmButton: false,
+                        position: 'top',
+                        timerProgressBar: true
+                    });
+                }
+                $('#top_cart_quantity').html(total_cart_quantity);
+                $('#cart_items_quantity').html(total_cart_quantity);
+                $('.cartQtyipad').html(total_cart_quantity);
+                $('.cartQtymbl').html(total_cart_quantity);
+                $('#topbar_cart_total').html('$' + parseFloat(cart_total).toFixed(2));
+                $('.topbar_cart_total_ipad').html('$'+parseFloat(cart_total).toFixed(2));
+                var total = document.getElementById('#top_cart_quantity');
+            }
+        });
+        return false;
+    }
+</script>
 
 <script type="text/javascript">
     var popover = new bootstrap.Popover(document.querySelector('.cart-price'), {

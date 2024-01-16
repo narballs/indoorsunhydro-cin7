@@ -608,6 +608,13 @@
     }
 
     function updateCart(id, option_id) {
+        // $('#ajaxSubmit_'+id).addClass('d-none');
+        $('.original_cart_btn').removeClass('d-none');
+        $('.button_swap_quantity').addClass('d-none');
+        $('#ajaxSubmit_'+id).addClass('d-none');
+        $('#button_swap_'+id).removeClass('d-none');
+
+        $('#swap_qty_number_'+id).val(1);
         jQuery.ajax({
             url: "{{ url('/add-to-cart/') }}",
             method: 'post',

@@ -42,6 +42,17 @@
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{asset('theme/bootstrap5/js/bootstrap_alpha.min.js')}}"></script>
     <style>
+        .quantity_count_circle {
+            border: 2px solid #7CC633;
+            background-color: #7CC633;
+            color: #FFFFFF;
+            display: inline-flex;
+            width: 40;
+            height: 40;
+            align-items: center;
+            justify-content: center;
+            font-family: 'poppins';
+        }
         .carousel-indicators li {
             background-color: grey;
             width: 10px;

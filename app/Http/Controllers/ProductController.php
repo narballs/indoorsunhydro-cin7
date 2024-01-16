@@ -1110,6 +1110,120 @@ class ProductController extends Controller
         ]);
     }
 
+    public function update_product_cart(Request $request) {
+        $id = $request->p_id;
+        $option_id = $request->option_id;
+        $action = $request->action;
+        $subtraction = false;
+        if (!empty($action) && $action === 'subtraction') {
+            $subtraction = true;
+        }
+        $productOption = ProductOption::where('option_id', $option_id)->with('products.options.price')->first();
+        $cart = session()->get('cart');
+        if (Auth::id() !== null) {
+            $user_id = Auth::id();
+        } else {
+            $user_id = '';
+        }
+        $user_price_column = UserHelper::getUserPriceColumn();
+        foreach ($productOption->products->options as $option) {
+            foreach ($option->price as $price) {
+                $price = isset($price[$user_price_column]) ? $price[$user_price_column] : 0;
+            }
+        }
+        if ($subtraction == true) {
+            if (isset($cart[$id])) {
+                $hash_cart = session()->get('cart_hash');
+                $product_in_active_cart = Cart::where('qoute_id', $id)->first();
+                if (!empty($product_in_active_cart)) {
+                    if ($product_in_active_cart->quantity == 1) {
+                        $product_in_active_cart->delete();
+                        unset($cart[$id]);
+                    } else {
+                        $current_quantity = $product_in_active_cart->quantity;
+                        $product_in_active_cart->quantity = $current_quantity - $request->quantity;
+                        $product_in_active_cart->save();
+                        $cart[$id]['quantity'] -= $request->quantity;
+                    }
+                }
+            } 
+            else {
+    
+                $hash_cart = $request->session()->get('cart_hash');
+                $cart_hash_exist = session()->has('cart_hash');
+    
+    
+                if ($cart_hash_exist == false) {
+                    $request->session()->put('cart_hash', Str::random(10));
+                }
+    
+                $cart[$id] = [
+                    "product_id" => $productOption->products->product_id,
+                    "name" => $productOption->products->name,
+                    "quantity" => $request->quantity,
+                    "price" => $price,
+                    "code" => $productOption->code,
+                    "image" => $productOption->image,
+                    'option_id' => $productOption->option_id,
+                    "slug" => $productOption->products->slug,
+                    "cart_hash" => session()->get('cart_hash')
+                ];
+                $cart[$id]['user_id'] = $user_id;
+                $cart[$id]['is_active'] = 1;
+                $cart[$id]['qoute_id'] = $id;
+    
+                $qoute = Cart::create($cart[$id]);
+            }
+        }
+        else {
+            if (isset($cart[$id])) {
+                $hash_cart = session()->get('cart_hash');
+                $product_in_active_cart = Cart::where('qoute_id', $id)->first();
+                if ($product_in_active_cart) {
+                    $current_quantity = $product_in_active_cart->quantity;
+                    $product_in_active_cart->quantity = $current_quantity + $request->quantity;
+                    $product_in_active_cart->save();
+                }
+                $cart[$id]['quantity'] += $request->quantity;
+            } 
+            else {
+    
+                $hash_cart = $request->session()->get('cart_hash');
+                $cart_hash_exist = session()->has('cart_hash');
+    
+    
+                if ($cart_hash_exist == false) {
+                    $request->session()->put('cart_hash', Str::random(10));
+                }
+    
+                $cart[$id] = [
+                    "product_id" => $productOption->products->product_id,
+                    "name" => $productOption->products->name,
+                    "quantity" => $request->quantity,
+                    "price" => $price,
+                    "code" => $productOption->code,
+                    "image" => $productOption->image,
+                    'option_id' => $productOption->option_id,
+                    "slug" => $productOption->products->slug,
+                    "cart_hash" => session()->get('cart_hash')
+                ];
+                $cart[$id]['user_id'] = $user_id;
+                $cart[$id]['is_active'] = 1;
+                $cart[$id]['qoute_id'] = $id;
+    
+                $qoute = Cart::create($cart[$id]);
+            }
+        }
+        
+        $request->session()->put('cart', $cart);
+        $cart_items = session()->get('cart');
+        return response()->json([
+            'status' => 'success',
+            'cart_items' => $cart_items,
+            'cart' => $cart,
+        ]);
+    }
+
     public function productSearch(Request $request)
     {
         if ($request->ajax()) {
