@@ -122,7 +122,7 @@
                             </div>
                         </button>
 
-                        {{-- <span class="quantity_count_circle rounded-circle" id="quantity_count_{{$product->id}}">2</span> --}}
+                        <div class="cart-total-{{ $product->id }} quantity_count_circle rounded-circle">here</div>
                     @else
                         <button 
                             class="prd_btn_resp ajaxSubmit mb-3 text-white bg-danger bg-gradient button-cards col w-100 autocomplete=off"

@@ -52,6 +52,11 @@
             align-items: center;
             justify-content: center;
             font-family: 'poppins';
+            visibility: hidden;
+            
+        }
+        .btn-added-to-cart {
+            visibility: hidden;
         }
         .carousel-indicators li {
             background-color: grey;

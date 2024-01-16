@@ -207,5 +207,6 @@
             </div>
         </div>
     </div>
+    <input type="hidden" id="last_button_clicked" value="" />
 </footer>
 

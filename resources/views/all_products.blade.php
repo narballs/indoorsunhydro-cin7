@@ -483,8 +483,8 @@
 <script>
     function showdetails(id, option_id, slug) {
         window.location.href = '/product-detail/' + id + '/' + option_id + '/' + slug;
-    }
-
+    }  
+    
     function inStockOutstock() {
         var value = jQuery('#in-stock').val();
         if (value == 'in-stock') {
@@ -608,9 +608,35 @@
     }
 
     function updateCart(id, option_id) {
+        console.log('add to cart button clicked');
+        $('#last_button_clicked').val(id);
+
+        $('.cart-total-' + id).addClass('added-to-cart');
+        $('#button_swap_' + id).addClass('btn-added-to-cart');
+
+        //$('.quantity_count_circle').css('visibility', 'visible');
+        $('.added-to-cart').css('visibility', 'visible');
+        $('.button_swap_quantity').css('visibility', 'hidden');
+
+        $('.cart-total-' + id).css('visibility', 'hidden');
+        $('#button_swap_' + id).css('visibility', 'visible');
+        
+        // $('.quantity_count_circle').each(function() {
+        //     var button_id = $(this).attr('id');
+        //     button_id = button_id.replace('ajaxSubmit_', '');
+
+        //     if (button_id != id) {
+        //         $('#ajaxSubmit_' + id).hide();
+        //         //$('#button_swap_' + id).hide();
+        //         $('.added-to-cart').css('visibility', 'visible');
+        //     }
+
+        // });
+
         // $('#ajaxSubmit_'+id).addClass('d-none');
-        $('.original_cart_btn').removeClass('d-none');
-        $('.button_swap_quantity').addClass('d-none');
+        // $('.original_cart_btn').removeClass('d-none');
+        // $('.button_swap_quantity').addClass('d-none');
+        
         $('#ajaxSubmit_'+id).addClass('d-none');
         $('#button_swap_'+id).removeClass('d-none');
 

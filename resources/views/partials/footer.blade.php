@@ -196,6 +196,15 @@
     });
 
     $(document).ready(function() {
+        $('body').click(function() {
+            console.log('body clicked');
+            $('.added-to-cart').css('visibility', 'visible');
+
+            var last_button_id = $('#last_button_clicked').val();
+            $('.cart-total-' + last_button_id).css('visibility', 'hidden');
+
+        });
+
         $(document).on('click', '#copyUrl', function() {
             $('#custom_loader').removeClass('d-none');
             let textValue = $(this).attr('data-id');
