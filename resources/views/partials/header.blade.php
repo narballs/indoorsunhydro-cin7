@@ -41,7 +41,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{asset('theme/bootstrap5/js/bootstrap_alpha.min.js')}}"></script>
+    <script>
+         var bodyClickEventActive = true;
+    </script>
     <style>
+        .quantity_count_circle {
+            border: 2px solid #7CC633;
+            background-color: #7CC633;
+            color: #FFFFFF;
+            display: none;
+            width: 40;
+            height: 40;
+            align-items: center;
+            justify-content: center;
+            font-family: 'poppins';
+            /* visibility: hidden; */
+            
+        }
+        .btn-added-to-cart {
+            /* visibility: hidden; */
+            display: none;
+        }
         .carousel-indicators li {
             background-color: grey;
             width: 10px;

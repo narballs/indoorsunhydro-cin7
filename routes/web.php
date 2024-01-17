@@ -136,6 +136,7 @@ Route::post('add-to-cart/', [ProductController::class, 'addToCart'])->name('add.
 Route::get('/remove/{id}', [ProductController::class, 'removeProductByCategory']);
 Route::get('/cart', [ProductController::class, 'cart'])->name('cart');
 Route::post('update-cart', [ProductController::class, 'updateCart'])->name('update.cart');
+Route::post('update-product-cart', [ProductController::class, 'update_product_cart'])->name('update_product_cart');
 Route::get('checkout', [CheckoutController::class, 'index'])->name('checkout');
 Route::post('order', [OrderController::class, 'store'])->name('order');
 Route::get('/thankyou/{id}', [CheckoutController::class, 'thankyou'])->name('thankyou');

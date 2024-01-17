@@ -102,13 +102,27 @@
                 <div class="col-md-12 add-to-cart-button-section">
                     @if ($enable_add_to_cart)
                         <button 
-                            class="hover_effect prd_btn_resp ajaxSubmit button-cards col w-100  mb-1" 
+                            class="hover_effect prd_btn_resp ajaxSubmit button-cards col w-100  mb-1 original_cart_btn" 
                             type="submit" 
                             style="max-height: 46px;" id="ajaxSubmit_{{ $product->id }}"
                             onclick="updateCart('{{ $product->id }}', '{{ $option->option_id }}')"
                         >
                             Add to cart
                         </button>
+                        <button 
+                            class="prd_btn_resp ajaxSubmit button-cards col w-100  mb-1 d-none button_swap_quantity"  
+                            type="button" 
+                            style="max-height: 46px;" id="button_swap_{{ $product->id }}">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <i class="fa fa-minus-circle" style="font-size: 20px;" onclick="subtracting_quantity('{{ $product->id }}', '{{ $option->option_id }}')"></i>
+                                <span id="swap_qty_number" class="text-center d-flex justify-content-center">
+                                    <input type="number" readonly name="swap_qty_number" id="swap_qty_number_{{$product->id}}" value="0"  class="form-control swap_qty_number w-75 border-0 text-center" min="0">
+                                </span>
+                                <i class="fa fa-plus-circle"  style="font-size: 20px;" onclick="adding_quantity('{{ $product->id }}', '{{ $option->option_id }}')"></i>
+                            </div>
+                        </button>
+ 
+                        <div class="cart-total-{{ $product->id }} quantity_count_circle rounded-circle" style="display: none" data-product="{{$product->id}}" onclick="swap_quantity_input('{{ $product->id }}')"></div>
                     @else
                         <button 
                             class="prd_btn_resp ajaxSubmit mb-3 text-white bg-danger bg-gradient button-cards col w-100 autocomplete=off"
@@ -215,6 +229,9 @@
 </style>
 <script>
     function updateCart(id, option_id) {
+        $('#ajaxSubmit_'+id).addClass('d-none');
+        $('#button_swap_'+id).removeClass('d-none');
+        $('#swap_qty_number_'+id).val(1);
         jQuery.ajax({
             url: "{{ url('/add-to-cart/') }}",
             method: 'post',
@@ -295,4 +312,6 @@
         });
         return false;
     }
+
+
 </script>

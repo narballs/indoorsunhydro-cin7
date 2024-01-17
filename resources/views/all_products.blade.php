@@ -483,8 +483,8 @@
 <script>
     function showdetails(id, option_id, slug) {
         window.location.href = '/product-detail/' + id + '/' + option_id + '/' + slug;
-    }
-
+    }  
+    
     function inStockOutstock() {
         var value = jQuery('#in-stock').val();
         if (value == 'in-stock') {
@@ -608,6 +608,33 @@
     }
 
     function updateCart(id, option_id) {
+        updateBodyClickEventStatus(false);
+        $('#last_button_clicked').val(id);
+
+        $('.cart-total-' + id).addClass('added-to-cart');
+        $('#button_swap_' + id).addClass('btn-added-to-cart');
+
+        //$('.quantity_count_circle').css('visibility', 'visible');
+        $('.added-to-cart').css('display', 'inline-flex');
+        $('.btn-added-to-cart').css('display', 'none');
+
+        $('.cart-total-' + id).css('display', 'none');
+        $('#button_swap_' + id).css('display', 'block');
+        
+        $('#ajaxSubmit_'+id).addClass('d-none');
+        $('#button_swap_'+id).removeClass('d-none');
+
+        $('#swap_qty_number_'+id).val(1);
+
+        $('.quantity_count_circle').each(function() {
+            var html = $(this).html();
+            if (parseInt(html) > 0) {
+                $(this).css('display', 'inline-flex');
+            } else {
+                $(this).css('display', 'none');
+            }
+        });
+
         jQuery.ajax({
             url: "{{ url('/add-to-cart/') }}",
             method: 'post',
@@ -622,22 +649,25 @@
                     var cart_items = response.cart_items;
                     var cart_total = 0;
                     var total_cart_quantity = 0;
+                    var product_quantity = 0;
 
                     for (var key in cart_items) {
                         var item = cart_items[key];
 
                         var product_id = item.prd_id;
                         var price = parseFloat(item.price);
+                        product_quantity = item.quantity;
                         var quantity = parseFloat(item.quantity);
 
                         var subtotal = parseFloat(price * quantity);
                         var cart_total = cart_total + subtotal;
                         var total_cart_quantity = total_cart_quantity + quantity;
                         $('#subtotal_' + product_id).html('$' + subtotal);
-                        console.log(item.name);
                         var product_name = document.getElementById("product_name_" + jQuery('#p_' + id)
                             .val()).innerHTML;
                     }
+
+                    jQuery('.cart-total-' + id).html($('#swap_qty_number_' + id).val());
 
                     Swal.fire({
                         toast: true,
@@ -661,6 +691,30 @@
         });
 
         return false;
+    }
+    function swap_quantity_input(id) {
+        updateBodyClickEventStatus(false);
+        $('.quantity_count_circle').each(function() {
+            var html = $(this).html();
+            if (parseInt(html) > 0) {
+                $(this).css('display', 'inline-flex');
+            } else {
+                $(this).css('display', 'none');
+            }
+        });
+        $('.cart-total-'+id).css('display', 'none');
+        $('.btn-added-to-cart').css('display', 'none');
+        // $('.added-to-cart').css('display', 'flex');
+        $('.quantity_count_circle').each(function() {
+            var html = $(this).html();
+            if (parseInt(html) > 0) {
+                $(this).css('display', 'inline-flex');
+            } else {
+                $(this).css('display', 'none');
+            }
+        });
+        $('#button_swap_'+id).css('display', 'block');
+        $('.cart-total-'+id).css('display', 'none');
     }
 </script>
 <script>
