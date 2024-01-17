@@ -34,10 +34,12 @@ use Illuminate\Support\Facades\Hash;
 use App\Jobs\SalesOrders;
 use App\Models\Cart;
 use App\Models\AdminSetting;
+use App\Models\Category;
 use App\Models\DailyApiLog;
 use App\Models\Pricing;
 use App\Models\Pricingnew;
 use App\Models\ProductBuyList;
+use App\Models\ProductOption;
 use App\Models\WholesaleApplicationInformation;
 use App\Models\WholesaleApplicationAddress;
 use App\Models\WholesaleApplicationAuthorizationDetail;
@@ -48,6 +50,7 @@ use Illuminate\Support\Facades\File;
 use App\Services\ZendeskService;
 use Zendesk\API\HttpClient as ZendeskClient;
 use Illuminate\Auth\Events\Validated;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
 use PDF;
@@ -808,6 +811,8 @@ class UserController extends Controller
             $contact_ids = Contact::whereIn('id', $all_ids)
                 ->pluck('contact_id')
                 ->toArray();
+
+            $frequent_products = $this->buy_again_products($request);
             
             $user_orders_query = ApiOrder::with(['createdby'])->whereIn('memberId', $contact_ids)
                 ->with('contact' , function($query) {
@@ -937,22 +942,7 @@ class UserController extends Controller
             $states = UsState::all();
             $wishlist = BuyList::with('list_products')->where('user_id', $user_id)->first();
 
-            $frequent_products = ApiOrderItem::with('product' , 'product.categories' , 'product.options')
-            ->whereHas('product' , function($query){
-                $query->where('status' , '!=' , 'Inactive');
-            })
-            ->whereHas('product.categories' , function($query){
-                $query->where('is_active' , 1);
-            })
-            ->whereHas('product.product_options' , function($query){
-                $query->where('stockAvailable' , '>' , 0);
-            })
-            ->whereHas('order' , function($query) use ($contact_ids){
-                $query->with(['createdby'])->whereIn('memberId', $contact_ids);
-            })
-            ->groupBy('product_id')
-            // ->take(5)
-            ->get();
+            
             
             $get_contact = Contact::where('user_id', $user_id)
             ->where('status', 1)
@@ -969,7 +959,6 @@ class UserController extends Controller
                     $address_user = Contact::where('contact_id', $parent->parent_id)->first();
                 }
             }
-        
             return view('my-account', compact(
                 'user',
                 'user_address',
@@ -988,6 +977,51 @@ class UserController extends Controller
                 'order_submitters','submitter_filter','address_user'
             ));
         }
+    }
+
+    // buy again products 
+    public function buy_again_products(Request $request) {
+        $user_id = auth()->id();
+        $user = User::where('id', $user_id)->first();
+        $all_ids = UserHelper::getAllMemberIds($user);
+        $contact_ids = Contact::whereIn('id', $all_ids)
+                ->pluck('contact_id')
+                ->toArray();
+        $product_price = 0;
+        $user_price_column =UserHelper::getUserPriceColumn();
+        
+        $frequent_products = null;
+
+        $perPage = 4;
+        $currentPage = $request->get('page', 1);
+        $offset = ($currentPage - 1) * $perPage;
+
+        $order_ids = ApiOrder::whereIn('memberId', $contact_ids)->pluck('id')->toArray();
+        $product_ids = ApiOrderItem::whereIn('order_id', $order_ids)->pluck('product_id')->toArray();
+        $option_ids = ProductOption::whereIn('product_id', $product_ids)->pluck('option_id')->toArray();
+        $price_ids = Pricingnew::whereIn('option_id', $option_ids)->where($user_price_column, '>' , 0)->pluck('option_id')->toArray();
+        $product_options_ids = ProductOption::whereIn('option_id', $price_ids)->pluck('product_id')->toArray();
+        $category_ids = Product::whereIn('product_id', $product_options_ids)->pluck('category_id')->toArray();
+        $active_category_ids = Category::whereIn('category_id', $category_ids)->where('is_active' , '1')->pluck('category_id')->toArray();
+        $active_products_ids = Product::whereIn('category_id' ,$active_category_ids)->where('status', '!=', 'Inactive')->pluck('product_id')->toArray();
+        
+
+        $buy_again_query = Product::with('categories' , 'options')
+            ->whereIn('product_id', $active_products_ids);
+        $total_products = $buy_again_query->count();
+
+        $buy_again = $buy_again_query->take($perPage)
+            ->skip($offset)
+            ->get();
+        
+        $total = $total_products >= 16 ? 16 : $total_products;
+        $frequent_products = new LengthAwarePaginator($buy_again, $total, $perPage, $currentPage, [
+            'path' => url('/my-account/buy-again-products'),
+            'query' => $request->query(),
+        ]);
+
+        
+        return $frequent_products;
     }
 
     //get favorites in separate page
