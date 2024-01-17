@@ -625,6 +625,16 @@
         $('#button_swap_'+id).removeClass('d-none');
 
         $('#swap_qty_number_'+id).val(1);
+
+        $('.quantity_count_circle').each(function() {
+            var html = $(this).html();
+            if (parseInt(html) > 0) {
+                $(this).css('visibility', 'visible');
+            } else {
+                $(this).css('visibility', 'hidden');
+            }
+        });
+
         jQuery.ajax({
             url: "{{ url('/add-to-cart/') }}",
             method: 'post',
@@ -684,9 +694,25 @@
     }
     function swap_quantity_input(id) {
         updateBodyClickEventStatus(false);
+        $('.quantity_count_circle').each(function() {
+            var html = $(this).html();
+            if (parseInt(html) > 0) {
+                $(this).css('visibility', 'visible');
+            } else {
+                $(this).css('visibility', 'hidden');
+            }
+        });
         $('.cart-total-'+id).css('visibility', 'hidden');
         $('.btn-added-to-cart').css('visibility', 'hidden');
-        $('.added-to-cart').css('visibility', 'visible');
+        // $('.added-to-cart').css('visibility', 'visible');
+        $('.quantity_count_circle').each(function() {
+            var html = $(this).html();
+            if (parseInt(html) > 0) {
+                $(this).css('visibility', 'visible');
+            } else {
+                $(this).css('visibility', 'hidden');
+            }
+        });
         $('#button_swap_'+id).css('visibility', 'visible');
         $('.cart-total-'+id).css('visibility', 'hidden');
     }

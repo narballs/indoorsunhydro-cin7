@@ -20,8 +20,8 @@
     }
     function subtracting_quantity(product_id , option_id) {
         updateBodyClickEventStatus(false);
+        // var cart_total_span = $('#cart-total-' + product_id).html();
         var minus = parseInt($('#swap_qty_number_' + product_id).val());
-        
         if (minus > 1) {
             var result = minus - 1;
             $('#swap_qty_number_' + product_id).val(result);
@@ -206,6 +206,15 @@
     function bodyClickHandler() {
         $('.added-to-cart').css('visibility', 'visible');
         $('.button_swap_quantity').css('visibility', 'hidden');
+
+        $('.quantity_count_circle').each(function() {
+            var html = $(this).html();
+            if (parseInt(html) > 0) {
+                $(this).css('visibility', 'visible');
+            } else {
+                $(this).css('visibility', 'hidden');
+            }
+        });
 
         // var last_button_id = $('#last_button_clicked').val();
         // $('.cart-total-' + last_button_id).css('visibility', 'visible');
