@@ -615,11 +615,11 @@
         $('#button_swap_' + id).addClass('btn-added-to-cart');
 
         //$('.quantity_count_circle').css('visibility', 'visible');
-        $('.added-to-cart').css('visibility', 'visible');
-        $('.button_swap_quantity').css('visibility', 'hidden');
+        $('.added-to-cart').css('display', 'inline-flex');
+        $('.btn-added-to-cart').css('display', 'none');
 
-        $('.cart-total-' + id).css('visibility', 'hidden');
-        $('#button_swap_' + id).css('visibility', 'visible');
+        $('.cart-total-' + id).css('display', 'none');
+        $('#button_swap_' + id).css('display', 'block');
         
         $('#ajaxSubmit_'+id).addClass('d-none');
         $('#button_swap_'+id).removeClass('d-none');
@@ -629,9 +629,9 @@
         $('.quantity_count_circle').each(function() {
             var html = $(this).html();
             if (parseInt(html) > 0) {
-                $(this).css('visibility', 'visible');
+                $(this).css('display', 'inline-flex');
             } else {
-                $(this).css('visibility', 'hidden');
+                $(this).css('display', 'none');
             }
         });
 
@@ -697,24 +697,24 @@
         $('.quantity_count_circle').each(function() {
             var html = $(this).html();
             if (parseInt(html) > 0) {
-                $(this).css('visibility', 'visible');
+                $(this).css('display', 'inline-flex');
             } else {
-                $(this).css('visibility', 'hidden');
+                $(this).css('display', 'none');
             }
         });
-        $('.cart-total-'+id).css('visibility', 'hidden');
-        $('.btn-added-to-cart').css('visibility', 'hidden');
-        // $('.added-to-cart').css('visibility', 'visible');
+        $('.cart-total-'+id).css('display', 'none');
+        $('.btn-added-to-cart').css('display', 'none');
+        // $('.added-to-cart').css('display', 'flex');
         $('.quantity_count_circle').each(function() {
             var html = $(this).html();
             if (parseInt(html) > 0) {
-                $(this).css('visibility', 'visible');
+                $(this).css('display', 'inline-flex');
             } else {
-                $(this).css('visibility', 'hidden');
+                $(this).css('display', 'none');
             }
         });
-        $('#button_swap_'+id).css('visibility', 'visible');
-        $('.cart-total-'+id).css('visibility', 'hidden');
+        $('#button_swap_'+id).css('display', 'block');
+        $('.cart-total-'+id).css('display', 'none');
     }
 </script>
 <script>

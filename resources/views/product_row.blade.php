@@ -121,8 +121,8 @@
                                 <i class="fa fa-plus-circle"  style="font-size: 20px;" onclick="adding_quantity('{{ $product->id }}', '{{ $option->option_id }}')"></i>
                             </div>
                         </button>
-
-                        <div class="cart-total-{{ $product->id }} quantity_count_circle rounded-circle" data-product="{{$product->id}}" onclick="swap_quantity_input('{{ $product->id }}')"></div>
+ 
+                        <div class="cart-total-{{ $product->id }} quantity_count_circle rounded-circle" style="display: none" data-product="{{$product->id}}" onclick="swap_quantity_input('{{ $product->id }}')"></div>
                     @else
                         <button 
                             class="prd_btn_resp ajaxSubmit mb-3 text-white bg-danger bg-gradient button-cards col w-100 autocomplete=off"

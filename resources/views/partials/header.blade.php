@@ -49,17 +49,18 @@
             border: 2px solid #7CC633;
             background-color: #7CC633;
             color: #FFFFFF;
-            display: inline-flex;
+            display: none;
             width: 40;
             height: 40;
             align-items: center;
             justify-content: center;
             font-family: 'poppins';
-            visibility: hidden;
+            /* visibility: hidden; */
             
         }
         .btn-added-to-cart {
-            visibility: hidden;
+            /* visibility: hidden; */
+            display: none;
         }
         .carousel-indicators li {
             background-color: grey;
