@@ -208,5 +208,6 @@
         </div>
     </div>
     <input type="hidden" id="last_button_clicked" value="" />
+    <input type="hidden" id="body_flag" value="0" />
 </footer>
 

@@ -608,7 +608,7 @@
     }
 
     function updateCart(id, option_id) {
-        console.log('add to cart button clicked');
+        updateBodyClickEventStatus(false);
         $('#last_button_clicked').val(id);
 
         $('.cart-total-' + id).addClass('added-to-cart');
@@ -620,22 +620,6 @@
 
         $('.cart-total-' + id).css('visibility', 'hidden');
         $('#button_swap_' + id).css('visibility', 'visible');
-        
-        // $('.quantity_count_circle').each(function() {
-        //     var button_id = $(this).attr('id');
-        //     button_id = button_id.replace('ajaxSubmit_', '');
-
-        //     if (button_id != id) {
-        //         $('#ajaxSubmit_' + id).hide();
-        //         //$('#button_swap_' + id).hide();
-        //         $('.added-to-cart').css('visibility', 'visible');
-        //     }
-
-        // });
-
-        // $('#ajaxSubmit_'+id).addClass('d-none');
-        // $('.original_cart_btn').removeClass('d-none');
-        // $('.button_swap_quantity').addClass('d-none');
         
         $('#ajaxSubmit_'+id).addClass('d-none');
         $('#button_swap_'+id).removeClass('d-none');
@@ -655,22 +639,25 @@
                     var cart_items = response.cart_items;
                     var cart_total = 0;
                     var total_cart_quantity = 0;
+                    var product_quantity = 0;
 
                     for (var key in cart_items) {
                         var item = cart_items[key];
 
                         var product_id = item.prd_id;
                         var price = parseFloat(item.price);
+                        product_quantity = item.quantity;
                         var quantity = parseFloat(item.quantity);
 
                         var subtotal = parseFloat(price * quantity);
                         var cart_total = cart_total + subtotal;
                         var total_cart_quantity = total_cart_quantity + quantity;
                         $('#subtotal_' + product_id).html('$' + subtotal);
-                        console.log(item.name);
                         var product_name = document.getElementById("product_name_" + jQuery('#p_' + id)
                             .val()).innerHTML;
                     }
+
+                    jQuery('.cart-total-' + id).html($('#swap_qty_number_' + id).val());
 
                     Swal.fire({
                         toast: true,
@@ -694,6 +681,14 @@
         });
 
         return false;
+    }
+    function swap_quantity_input(id) {
+        updateBodyClickEventStatus(false);
+        $('.cart-total-'+id).css('visibility', 'hidden');
+        $('.btn-added-to-cart').css('visibility', 'hidden');
+        $('.added-to-cart').css('visibility', 'visible');
+        $('#button_swap_'+id).css('visibility', 'visible');
+        $('.cart-total-'+id).css('visibility', 'hidden');
     }
 </script>
 <script>

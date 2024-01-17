@@ -11,6 +11,7 @@
 <script id="ze-snippet" src="{{asset('zendesk.js?key=c226feaf-aefa-49d4-ae97-5b83a096f475')}}"></script>
 <script>
     function adding_quantity(product_id , option_id) {
+        updateBodyClickEventStatus(false);
         var plus = parseInt($('#swap_qty_number_' + product_id).val());
         var result = plus + 1;
         var new_qty = $('#swap_qty_number_' + product_id).val(result);
@@ -18,6 +19,7 @@
         $('#swap_qty_number_' + product_id).val(result)
     }
     function subtracting_quantity(product_id , option_id) {
+        updateBodyClickEventStatus(false);
         var minus = parseInt($('#swap_qty_number_' + product_id).val());
         
         if (minus > 1) {
@@ -52,9 +54,11 @@
                     var cart_items = response.cart_items;
                     var cart_total = 0;
                     var total_cart_quantity = 0;
+                    var product_quantity = 0;
                     for (var key in cart_items) {
                         var item = cart_items[key];
                         var product_id = item.prd_id;
+                        product_quantity = item.quantity;
                         var price = parseFloat(item.price);
                         var quantity = parseFloat(item.quantity);
                         var subtotal = parseFloat(price * quantity);
@@ -64,6 +68,7 @@
                         var product_name = document.getElementById("product_name_" + jQuery('#p_' + id)
                             .val()).innerHTML;
                     }
+                    jQuery('.cart-total-' + id).html($('#swap_qty_number_' + id).val());
                     Swal.fire({
                         toast: true,
                         icon: 'success',
@@ -105,10 +110,12 @@
                     var cart_items = response.cart_items;
                     var cart_total = 0;
                     var total_cart_quantity = 0;
+                    var product_quantity = 0;
                     for (var key in cart_items) {
                         var item = cart_items[key];
                         console.log(item)
                         var product_id = item.prd_id;
+                        product_quantity = item.quantity;
                         var price = parseFloat(item.price);
                         var quantity = parseFloat(item.quantity);
                         var subtotal = parseFloat(price * quantity);
@@ -119,6 +126,7 @@
                         var product_name = document.getElementById("product_name_" + jQuery('#p_' + id)
                             .val()).innerHTML;
                     }
+                    jQuery('.cart-total-' + id).html($('#swap_qty_number_' + id).val());
                     Swal.fire({
                         toast: true,
                         icon: 'error',
@@ -195,14 +203,41 @@
         })
     });
 
+    function bodyClickHandler() {
+        $('.added-to-cart').css('visibility', 'visible');
+        $('.button_swap_quantity').css('visibility', 'hidden');
+
+        // var last_button_id = $('#last_button_clicked').val();
+        // $('.cart-total-' + last_button_id).css('visibility', 'visible');
+        // $('.btn-added-to-cart').css('visibility', 'hidden');
+    }
+    function updateBodyClickEventStatus(newStatus) {
+      bodyClickEventActive = newStatus;
+    }
+
+    // function updateAlert() {
+    //   if (bodyClickEventActive) {
+    //     alert('Body click event enabled');
+    //   } else {
+    //     alert('Body click event disabled');
+    //   }
+    // }
+
     $(document).ready(function() {
         $('body').click(function() {
-            console.log('body clicked');
-            $('.added-to-cart').css('visibility', 'visible');
+            // console.log('body clicked');
+            // $('.added-to-cart').css('visibility', 'visible');
 
-            var last_button_id = $('#last_button_clicked').val();
-            $('.cart-total-' + last_button_id).css('visibility', 'hidden');
+            // var last_button_id = $('#last_button_clicked').val();
+            // $('.cart-total-' + last_button_id).css('visibility', 'hidden');
+            if (bodyClickEventActive) {
+                bodyClickHandler();
+            }
 
+        });
+
+        $('body').on('click', function() {
+            updateBodyClickEventStatus(true);
         });
 
         $(document).on('click', '#copyUrl', function() {
