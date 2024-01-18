@@ -295,11 +295,14 @@
                                             </div>
                                             <div class="col-md-3">
                                                 <div class="row align-items-center justify-content-end">
-                                                    <a href="{{url('/admin/customer-detail/' . $customer->id)}}" class="btn btn-success text-white mr-2"> Active Users </a>
-                                                    <form action="{{url('/admin/customer-detail/' . $customer->id)}}">
-                                                        <input type="hidden" name="show_deleted_users" value="show_deleted_users">
-                                                        <button class="btn btn-danger" type="submit">Deleted Users</button>
-                                                    </form>
+                                                    @if (empty($show_deleted_users))
+                                                        <form action="{{url('/admin/customer-detail/' . $customer->id)}}">
+                                                            <input type="hidden" name="show_deleted_users" value="show_deleted_users">
+                                                            <button class="btn btn-danger" type="submit">Deleted Users</button>
+                                                        </form>
+                                                    @else
+                                                        <a href="{{url('/admin/customer-detail/' . $customer->id)}}" class="btn btn-success text-white mr-2"> Active Users </a>
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>
