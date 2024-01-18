@@ -222,11 +222,11 @@ class AdminSettingsController extends Controller
             $user->restore();
         }
         if (!empty($contact) && !empty($user)) {
-            return redirect()->route('recycle_bin')->with('success', 'Contact restored successfully.');
+            return redirect()->back()->with('success', 'Contact restored successfully.');
         } elseif(!empty($contact) && empty($user)) {
-            return redirect()->route('recycle_bin')->with('success', 'Contact restored successfully.');
+            return redirect()->back()->with('success', 'Contact restored successfully.');
         } else {
-            return redirect()->route('recycle_bin')->with('error', 'Contact not restored.');
+            return redirect()->back()->with('error', 'Contact not restored.');
         }
     }
 
