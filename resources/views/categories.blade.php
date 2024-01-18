@@ -664,22 +664,26 @@
    }
    function updateCart(id, option_id) {
       updateBodyClickEventStatus(false);
-      $('#last_button_clicked').val(id);
+        $('#last_button_clicked').val(id);
 
-      $('.cart-total-' + id).addClass('added-to-cart');
-      $('#button_swap_' + id).addClass('btn-added-to-cart');
+        $('.cart-total-' + id).addClass('added-to-cart');
+        $('.button_swap_quantity_' + id).addClass('btn-added-to-cart');
 
-      //$('.quantity_count_circle').css('visibility', 'visible');
-      $('.added-to-cart').css('display', 'inline-flex');
-      $('.btn-added-to-cart').css('display', 'none');
+        //$('.quantity_count_circle').css('visibility', 'visible');
+        $('.added-to-cart').css('display', 'inline-flex');
+        $('.btn-added-to-cart').css('display', 'none');
 
-      $('.cart-total-' + id).css('display', 'none');
-      $('#button_swap_' + id).css('display', 'block');
-      
-      $('#ajaxSubmit_'+id).addClass('d-none');
-      $('#button_swap_'+id).removeClass('d-none');
-      $('#swap_qty_number_'+id).val(1);
-      $('.quantity_count_circle').each(function() {
+        $('.cart-total-' + id).css('display', 'none');
+        $('.button_swap_quantity_' + id).css('display', 'block');
+        
+        // $('#ajaxSubmit_'+id).addClass('d-none');
+        $('.original_cart_btn_'+id).addClass('d-none');
+        // $('#button_swap_'+id).removeClass('d-none');
+        $('.button_swap_quantity_'+id).removeClass('d-none');
+
+        $('.swap_qty_number_'+id).val(1);
+
+        $('.quantity_count_circle').each(function() {
             var html = $(this);
             var spanContent = $(html).find('span');
             if (parseInt($(html).find('span').html()) > 0) {
@@ -717,7 +721,7 @@
                         var product_name = document.getElementById("product_name_"+jQuery('#p_'+id).val()).innerHTML;
                      }
                      // jQuery('.cart-total-' + id).html($('#swap_qty_number_' + id).val());
-                     jQuery('.cart-total-number-' + id).html($('#swap_qty_number_' + id).val());
+                     jQuery('.cart-total-number-' + id).html($('.swap_qty_number_' + id).val());
                      Swal.fire({
                         toast: true,
                         icon: 'success',
@@ -742,28 +746,26 @@
    function swap_quantity_input(id) {
       updateBodyClickEventStatus(false);
       $('.quantity_count_circle').each(function() {
-            // var html = $(this).html();
-            var html = $(this);
-            var spanContent = $(html).find('span');
-            if (parseInt($(html).find('span').html()) > 0) {
-                spanContent.parent().css('display', 'inline-flex');
-            } else {
-                spanContent.parent().css('display', 'none');
-            }
-        });
+         var html = $(this);
+         var spanContent = $(html).find('span');
+         if (parseInt($(html).find('span').html()) > 0) {
+            spanContent.parent().css('display', 'inline-flex');
+         } else {
+            spanContent.parent().css('display', 'none');
+         }
+      });
       $('.cart-total-'+id).css('display', 'none');
       $('.btn-added-to-cart').css('display', 'none');
       $('.quantity_count_circle').each(function() {
-            // var html = $(this).html();
-            var html = $(this);
-            var spanContent = $(html).find('span');
-            if (parseInt($(html).find('span').html()) > 0) {
-                spanContent.parent().css('display', 'inline-flex');
-            } else {
-                spanContent.parent().css('display', 'none');
-            }
-        });
-      $('#button_swap_'+id).css('display', 'block');
+         var html = $(this);
+         var spanContent = $(html).find('span');
+         if (parseInt($(html).find('span').html()) > 0) {
+            spanContent.parent().css('display', 'inline-flex');
+         } else {
+            spanContent.parent().css('display', 'none');
+         }
+      });
+      $('.button_swap_quantity_'+id).css('display', 'block');
       $('.cart-total-'+id).css('display', 'none');
    }
 </script>

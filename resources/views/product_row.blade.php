@@ -102,7 +102,7 @@
                 <div class="col-md-12 add-to-cart-button-section">
                     @if ($enable_add_to_cart)
                         <button 
-                            class="hover_effect prd_btn_resp ajaxSubmit button-cards col w-100  mb-1 original_cart_btn" 
+                            class="hover_effect prd_btn_resp ajaxSubmit button-cards col w-100  mb-1 original_cart_btn   original_cart_btn_{{$product->id}}" 
                             type="submit" 
                             style="max-height: 46px;" id="ajaxSubmit_{{ $product->id }}"
                             onclick="updateCart('{{ $product->id }}', '{{ $option->option_id }}')"
@@ -122,14 +122,14 @@
                             </div>
                         </button>
                         --}}
-                        <div class="col-sm-12 button_swap_quantity d-none" id="button_swap_{{ $product->id }}">
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend custom-border">
-                                    <button class="btn-sm border-0" id="" onclick="subtracting_quantity('{{ $product->id }}', '{{ $option->option_id }}')"><i class="fa fa-minus"></i></button>
+                        <div class="col-sm-12 mt-0 button_swap_quantity button_swap_quantity_{{$product->id}} d-none" id="button_swap_{{ $product->id }}">
+                            <div class="input-group">
+                                <div class="input-group-prepend custom-border qty_minus_mobile">
+                                    <button class="p-0 bg-transparent btn-sm border-0 qty_customize_btn" id="" onclick="subtracting_quantity('{{ $product->id }}', '{{ $option->option_id }}')"><i class="fa fa-minus minus_qty_font qty_font"></i></button>
                                 </div>
-                                <input type="number" id="swap_qty_number_{{$product->id}}" name="swap_qty_number" readonly class="bg-white form-control text-dark form-control-sm text-center swap_qty_number"  style="font-weight: 500" value="0" min="1">
-                                <div class="input-group-prepend custom-border">
-                                    <button class="btn-sm border-0" id="" onclick="adding_quantity('{{ $product->id }}', '{{ $option->option_id }}')"><i class="fa fa-plus"></i></button>
+                                <input type="number" id="swap_qty_number_{{$product->id}}" name="swap_qty_number " readonly class="qty_number_mobile bg-white form-control text-dark form-control-sm text-center swap_qty_number_{{$product->id}}"  style="font-weight: 500" value="0" min="0">
+                                <div class="input-group-prepend custom-border qty_plus_mobile">
+                                    <button class="p-0 bg-transparent btn-sm border-0 qty_customize_btn" id="" onclick="adding_quantity('{{ $product->id }}', '{{ $option->option_id }}')"><i class="fa fa-plus plus_qty_font qty_font"></i></button>
                                 </div>
                             </div>
                         </div>

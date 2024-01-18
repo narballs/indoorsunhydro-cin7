@@ -12,25 +12,30 @@
 <script>
     function adding_quantity(product_id , option_id) {
         updateBodyClickEventStatus(false);
-        var plus = parseInt($('#swap_qty_number_' + product_id).val());
+        var plus = parseInt($('.swap_qty_number_' + product_id).val());
         var result = plus + 1;
-        var new_qty = $('#swap_qty_number_' + product_id).val(result);
+        var new_qty = $('.swap_qty_number_' + product_id).val(result);
         increasingQuantity(product_id , option_id)
-        $('#swap_qty_number_' + product_id).val(result)
+        $('.swap_qty_number_' + product_id).val(result)
     }
     function subtracting_quantity(product_id , option_id) {
         updateBodyClickEventStatus(false);
         // var cart_total_span = $('#cart-total-' + product_id).html();
-        var minus = parseInt($('#swap_qty_number_' + product_id).val());
+        var minus = parseInt($('.swap_qty_number_' + product_id).val());
         if (minus > 1) {
             var result = minus - 1;
-            $('#swap_qty_number_' + product_id).val(result);
+            $('.swap_qty_number_' + product_id).val(result);
             decreasingQuantity(product_id , option_id)
         } else {
             var result = minus - 1;
-            $('#button_swap_'+product_id).addClass('d-none');
-            $('#ajaxSubmit_'+product_id).removeClass('d-none');
-            $('#swap_qty_number_' + product_id).val(result);
+            // $('#button_swap_'+product_id).addClass('d-none');
+            // $('#ajaxSubmit_'+product_id).removeClass('d-none');
+             // $('#ajaxSubmit_'+id).addClass('d-none');
+             $('.button_swap_quantity_'+product_id).addClass('d-none');
+            $('.original_cart_btn_'+product_id).removeClass('d-none');
+            // $('#button_swap_'+id).removeClass('d-none');
+            
+            $('.swap_qty_number_' + product_id).val(result);
             decreasingQuantity(product_id , option_id)
             // $('#swap_qty_number_' + product_id).val(0);
         }
@@ -70,7 +75,7 @@
                             .val()).innerHTML;
                     }
                     // jQuery('.cart-total-' + id).html($('#swap_qty_number_' + id).val());
-                    jQuery('.cart-total-number-' + id).html($('#swap_qty_number_' + id).val());
+                    jQuery('.cart-total-number-' + id).html($('.swap_qty_number_' + id).val());
                     // Swal.fire({
                     //     toast: true,
                     //     icon: 'success',
@@ -129,7 +134,7 @@
                             .val()).innerHTML;
                     }
                     // jQuery('.cart-total-' + id).html($('#swap_qty_number_' + id).val());
-                    jQuery('.cart-total-number-' + id).html($('#swap_qty_number_' + id).val());
+                    jQuery('.cart-total-number-' + id).html($('.swap_qty_number_' + id).val());
                     // Swal.fire({
                     //     toast: true,
                     //     icon: 'error',
