@@ -223,11 +223,13 @@ class ContactController extends Controller
         return redirect('admin/customers');
     }
 
-    public function show_customer($id)
+    public function show_customer(Request $request , $id)
     {
         $primary_contact = '';
         $secondary_contacts = '';
         $contact_is_parent = '';
+        $show_deleted_users = $request->show_deleted_users;
+        $secondary_contacts_query = '';
         $customer = Contact::withTrashed()->where('id', $id)->first();
         $pricing = $customer->priceColumn;
         $logs = UserLog::where('contact_id', $customer->contact_id)
@@ -236,7 +238,17 @@ class ContactController extends Controller
             ->get();
         $user_id = $customer->user_id;
         if (!empty($customer->contact_id)) {
-            $secondary_contacts = Contact::withTrashed()->where('parent_id', $customer->contact_id)->get();
+            $secondary_contacts_query = Contact::where('parent_id', $customer->contact_id);
+        } else {
+            $secondary_contacts = '';
+        }
+
+        if ($request->show_deleted_users != '' && isset($request->show_deleted_users)) {
+            $secondary_contacts_query = $secondary_contacts_query->onlyTrashed();
+        }
+
+        if (!empty($customer->contact_id)) {
+            $secondary_contacts = $secondary_contacts_query->get();
         } else {
             $secondary_contacts = '';
         }
@@ -279,7 +291,8 @@ class ContactController extends Controller
             'logs',
             'contact_price_columns',
             'pricing',
-            'get_secondary_contact'
+            'get_secondary_contact',
+            'show_deleted_users'
         ));
     }
 
