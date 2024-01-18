@@ -229,7 +229,7 @@ class ContactController extends Controller
         $secondary_contacts = '';
         $contact_is_parent = '';
         $show_deleted_users = $request->show_deleted_users;
-        $secondary_contacts_query = null;
+        $secondary_contacts_query = '';
         $customer = Contact::withTrashed()->where('id', $id)->first();
         $pricing = $customer->priceColumn;
         $logs = UserLog::where('contact_id', $customer->contact_id)
@@ -246,7 +246,12 @@ class ContactController extends Controller
         if ($request->show_deleted_users != '' && isset($request->show_deleted_users)) {
             $secondary_contacts_query = $secondary_contacts_query->onlyTrashed();
         }
-        $secondary_contacts = $secondary_contacts_query->get();
+
+        if (!empty($customer->contact_id)) {
+            $secondary_contacts = $secondary_contacts_query->get();
+        } else {
+            $secondary_contacts = '';
+        }
 
         $user = Contact::withTrashed()->where('id', $id)->first();
         $all_ids = UserHelper::getAllMemberIds($user);
