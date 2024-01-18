@@ -287,7 +287,15 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-lg-12">
-                                        <h2 class="h5 mb-0"><a href="#" class="text-muted"></a>Secondary Users</h2>
+                                        <div class="row align-items-center justify-content-between mb-2">
+                                            <h2 class="h5 mb-0">
+                                                <a href="#" class="text-muted"></a>Secondary Users
+                                            </h2>
+                                            <form action="{{url('/admin/customer-detail/' . $customer->id)}}">
+                                                <input type="hidden" name="show_deleted_users" value="show_deleted_users">
+                                                <button class="btn btn-danger" type="submit">Deleted Users</button>
+                                            </form>
+                                        </div>
                                         <table class="table">
                                             <tr>
                                                 <th>Company</th>
@@ -394,6 +402,14 @@
                                                                 <span class="custom-control-indicator"></span>
                                                             </label>
                                                         </td>
+                                                    @endif
+                                                    @if (!empty($contact->deleted_at) && isset($show_deleted_users))
+                                                    <td>
+                                                        <form action="{{route('restore_contact' , $contact->id)}}" method="post">
+                                                            @csrf
+                                                            <button type="submit" class="btn btn-sm btn-primary text-white" onclick="return confirm('Are you sure you want to restore this Contact?');">Restore</button>
+                                                        </form>
+                                                    </td>
                                                     @endif
                                                 </tr>
                                             @endforeach
