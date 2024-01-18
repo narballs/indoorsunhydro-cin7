@@ -41,7 +41,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{asset('theme/bootstrap5/js/bootstrap_alpha.min.js')}}"></script>
+    <script>
+         var bodyClickEventActive = true;
+    </script>
     <style>
+        .quantity_count_circle {
+            border: 2px solid #7CC633;
+            background-color: #7CC633;
+            color: #FFFFFF;
+            display: none;
+            width: 100%;
+            height: 40;
+            align-items: center;
+            justify-content: center;
+            font-family: 'poppins';
+            /* visibility: hidden; */
+            
+        }
+        .btn-added-to-cart {
+            /* visibility: hidden; */
+            display: none;
+        }
+        .added-to-cart {
+            /* visibility: hidden; */
+            display: none;
+        }
         .carousel-indicators li {
             background-color: grey;
             width: 10px;
@@ -118,6 +142,12 @@
             min-height: 13rem!important;
             max-height:13rem !important;
         }
+        .qty_font::before {
+            border: none !important;
+        }
+        .custom-border {
+            border: 1px solid #EBEBEB  !important;
+        }
     
         /* Custom hover styles */
         @media screen and (max-width: 768px) {
@@ -125,6 +155,44 @@
                 display: none !important;
             }
         }
+        @media screen and (min-width: 426px) {
+            .qty_customize_btn {
+                padding: 0.75rem 0.75rem !important;
+            }
+            .custom-border {
+                border: 1px solid #EBEBEB  !important;
+                background: #F9F9F9  !important;
+            }
+        }
+        @media screen and (max-width: 425px) {
+            .quantity_count_circle {
+                font-size: 12px;
+                height: 25.19px;
+            }
+        }
+        /* @media screen and (max-width: 425px) {
+            .qty_minus_mobile{
+                width: 25%;
+            }
+            .qty_plus_mobile{
+                width: 25%;
+            }
+            .qty_number_mobile{
+                width: 50% !important;
+            }
+        }
+        @media screen and (max-width: 425px) and (min-width:376px) {
+            .qty_minus_mobile{
+                width: 25%;
+            }
+            .qty_plus_mobile{
+                margin-right: -6px;
+                margin-left: 2px;
+            }
+            .qty_number_mobile{
+                width: 50% !important;
+            }
+        } */
     </style>
     <link rel="stylesheet" href="{{asset('theme/landing_page/landing_page_style.css')}}">
 </head>
