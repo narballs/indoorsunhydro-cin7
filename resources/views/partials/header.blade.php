@@ -146,7 +146,7 @@
             border: none !important;
         }
         .custom-border {
-            border: 1px solid #BDBDBD !important;
+            border: 1px solid #EBEBEB  !important;
         }
     
         /* Custom hover styles */
@@ -160,8 +160,8 @@
                 padding: 0.75rem 0.75rem !important;
             }
             .custom-border {
-                border: 1px solid #BDBDBD !important;
-                background: #BDBDBD !important;
+                border: 1px solid #EBEBEB  !important;
+                background: #F9F9F9  !important;
             }
         }
         @media screen and (max-width: 425px) {
