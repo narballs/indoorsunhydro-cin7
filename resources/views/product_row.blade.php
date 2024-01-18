@@ -102,14 +102,14 @@
                 <div class="col-md-12 add-to-cart-button-section">
                     @if ($enable_add_to_cart)
                         <button 
-                            class="hover_effect prd_btn_resp ajaxSubmit button-cards col w-100  mb-1 original_cart_btn" 
+                            class="hover_effect prd_btn_resp ajaxSubmit button-cards col w-100  mb-1 original_cart_btn   original_cart_btn_{{$product->id}}" 
                             type="submit" 
                             style="max-height: 46px;" id="ajaxSubmit_{{ $product->id }}"
                             onclick="updateCart('{{ $product->id }}', '{{ $option->option_id }}')"
                         >
                             Add to cart
                         </button>
-                        <button 
+                        {{-- <button 
                             class="prd_btn_resp ajaxSubmit button-cards col w-100  mb-1 d-none button_swap_quantity"  
                             type="button" 
                             style="max-height: 46px;" id="button_swap_{{ $product->id }}">
@@ -121,8 +121,22 @@
                                 <i class="fa fa-plus-circle"  style="font-size: 20px;" onclick="adding_quantity('{{ $product->id }}', '{{ $option->option_id }}')"></i>
                             </div>
                         </button>
- 
-                        <div class="cart-total-{{ $product->id }} quantity_count_circle rounded-circle" style="display: none" data-product="{{$product->id}}" onclick="swap_quantity_input('{{ $product->id }}')"></div>
+                        --}}
+                        <div class="col-sm-12 mt-0 button_swap_quantity button_swap_quantity_{{$product->id}} d-none" id="button_swap_{{ $product->id }}">
+                            <div class="input-group">
+                                <div class="input-group-prepend custom-border qty_minus_mobile">
+                                    <button class="p-0 bg-transparent btn-sm border-0 qty_customize_btn" id="" onclick="subtracting_quantity('{{ $product->id }}', '{{ $option->option_id }}')"><i class="fa fa-minus minus_qty_font qty_font"></i></button>
+                                </div>
+                                <input type="number" id="swap_qty_number_{{$product->id}}" name="swap_qty_number " readonly class="qty_number_mobile bg-white form-control text-dark form-control-sm text-center swap_qty_number_{{$product->id}}"  style="font-weight: 500" value="0" min="0">
+                                <div class="input-group-prepend custom-border qty_plus_mobile">
+                                    <button class="p-0 bg-transparent btn-sm border-0 qty_customize_btn" id="" onclick="adding_quantity('{{ $product->id }}', '{{ $option->option_id }}')"><i class="fa fa-plus plus_qty_font qty_font"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cart-total-{{ $product->id }} quantity_count_circle " style="display: none" data-product="{{$product->id}}" onclick="swap_quantity_input('{{ $product->id }}')">
+                            <span class="cart-total-number-{{$product->id }} mr-2"></span>
+                            Added to cart
+                        </div>
                     @else
                         <button 
                             class="prd_btn_resp ajaxSubmit mb-3 text-white bg-danger bg-gradient button-cards col w-100 autocomplete=off"
@@ -229,9 +243,33 @@
 </style>
 <script>
     function updateCart(id, option_id) {
+        updateBodyClickEventStatus(false);
+        $('#last_button_clicked').val(id);
+
+        $('.cart-total-' + id).addClass('added-to-cart');
+        $('#button_swap_' + id).addClass('btn-added-to-cart');
+
+        //$('.quantity_count_circle').css('visibility', 'visible');
+        $('.added-to-cart').css('display', 'inline-flex');
+        $('.btn-added-to-cart').css('display', 'none');
+
+        $('.cart-total-' + id).css('display', 'none');
+        $('#button_swap_' + id).css('display', 'block');
+        
         $('#ajaxSubmit_'+id).addClass('d-none');
         $('#button_swap_'+id).removeClass('d-none');
+
         $('#swap_qty_number_'+id).val(1);
+        $('.quantity_count_circle').each(function() {
+            // var html = $(this).html();
+            var html = $(this);
+            var spanContent = $(html).find('span');
+            if (parseInt($(html).find('span').html()) > 0) {
+                spanContent.parent().css('display', 'inline-flex');
+            } else {
+                spanContent.parent().css('display', 'none');
+            }
+        });
         jQuery.ajax({
             url: "{{ url('/add-to-cart/') }}",
             method: 'post',
@@ -261,6 +299,7 @@
                         var product_name = document.getElementById("product_name_" + jQuery('#p_' + id)
                             .val()).innerHTML;
                     }
+                    jQuery('.cart-total-number-' + id).html($('#swap_qty_number_' + id).val());
                     Swal.fire({
                         toast: true,
                         icon: 'success',
@@ -280,6 +319,33 @@
 
         return false;
     }
+    function swap_quantity_input(id) {
+      updateBodyClickEventStatus(false);
+      $('.quantity_count_circle').each(function() {
+            // var html = $(this).html();
+            var html = $(this);
+            var spanContent = $(html).find('span');
+            if (parseInt($(html).find('span').html()) > 0) {
+                spanContent.parent().css('display', 'inline-flex');
+            } else {
+                spanContent.parent().css('display', 'none');
+            }
+        });
+      $('.cart-total-'+id).css('display', 'none');
+      $('.btn-added-to-cart').css('display', 'none');
+      $('.quantity_count_circle').each(function() {
+            // var html = $(this).html();
+            var html = $(this);
+            var spanContent = $(html).find('span');
+            if (parseInt($(html).find('span').html()) > 0) {
+                spanContent.parent().css('display', 'inline-flex');
+            } else {
+                spanContent.parent().css('display', 'none');
+            }
+        });
+      $('#button_swap_'+id).css('display', 'block');
+      $('.cart-total-'+id).css('display', 'none');
+   }
 
     function addToList(product_id, option_id, status) {
         var list_id = $("input[name='list_id']:checked").val();
