@@ -288,13 +288,20 @@
                                 <div class="row">
                                     <div class="col-lg-12">
                                         <div class="row align-items-center justify-content-between mb-2">
-                                            <h2 class="h5 mb-0">
-                                                <a href="#" class="text-muted"></a>Secondary Users
-                                            </h2>
-                                            <form action="{{url('/admin/customer-detail/' . $customer->id)}}">
-                                                <input type="hidden" name="show_deleted_users" value="show_deleted_users">
-                                                <button class="btn btn-danger" type="submit">Deleted Users</button>
-                                            </form>
+                                            <div class="col-md-9">
+                                                <h2 class="h5 mb-0">
+                                                    <a href="#" class="text-muted"></a>Secondary Users
+                                                </h2>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="row align-items-center justify-content-end">
+                                                    <a href="{{url('/admin/customer-detail/' . $customer->id)}}" class="btn btn-success text-white mr-2"> Active Users </a>
+                                                    <form action="{{url('/admin/customer-detail/' . $customer->id)}}">
+                                                        <input type="hidden" name="show_deleted_users" value="show_deleted_users">
+                                                        <button class="btn btn-danger" type="submit">Deleted Users</button>
+                                                    </form>
+                                                </div>
+                                            </div>
                                         </div>
                                         <table class="table">
                                             <tr>
