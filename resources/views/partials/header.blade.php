@@ -50,7 +50,7 @@
             background-color: #7CC633;
             color: #FFFFFF;
             display: none;
-            width: 40;
+            width: 100%;
             height: 40;
             align-items: center;
             justify-content: center;
@@ -59,6 +59,10 @@
             
         }
         .btn-added-to-cart {
+            /* visibility: hidden; */
+            display: none;
+        }
+        .added-to-cart {
             /* visibility: hidden; */
             display: none;
         }
