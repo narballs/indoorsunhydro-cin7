@@ -2,7 +2,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\AdminSetting;
+use App\Models\Category;
+use App\Models\Pricingnew;
 use App\Models\Product;
+use App\Models\ProductOption;
 use Google\Service\ShoppingContent;
 use Google\Service\ShoppingContent\Product as ServiceProduct;
 use Google\Service\ShoppingContent\Price;
@@ -62,18 +65,35 @@ class GoogleContentController extends Controller
             $price_column = 'retailUSD';
         }
         $product_array = [];
-        $products = Product::with('options','options.defaultPrice', 'product_brand','product_image','categories' , 'product_views','apiorderItem', 'product_stock')
-        ->with(['product_views','apiorderItem' , 'options' => function ($q) {
-            $q->where('status', '!=', 'Disabled')
-            ->where('optionWeight', '>', 0);
+        // $products = Product::with('options','options.defaultPrice', 'product_brand','product_image','categories' , 'product_views','apiorderItem', 'product_stock')
+        // ->with(['product_views','apiorderItem' , 'options' => function ($q) {
+        //     $q->where('status', '!=', 'Disabled')
+        //     ->where('optionWeight', '>', 0);
             
-        }])
-        ->whereHas('options.defaultPrice', function ($q) use ($price_column) {
-            $q->where($price_column, '>', 0);
-        })
-        ->whereHas('categories' , function ($q) {
-            $q->where('is_active', 1);
-        })
+        // }])
+        // ->whereHas('options.defaultPrice', function ($q) use ($price_column) {
+        //     $q->where($price_column, '>', 0);
+        // })
+        // ->whereHas('categories' , function ($q) {
+        //     $q->where('is_active', 1);
+        // })
+        // ->where('status' , '!=' , 'Inactive')
+        // ->where('barcode' , '!=' , '')
+        // ->get();
+        $product_categories = Category::where('is_active', 1)->pluck('category_id')->toArray();
+        $all_products_ids = Product::whereIn('category_id' , $product_categories)
+        ->pluck('product_id')->toArray();
+        $product_options_ids = ProductOption::whereIn('product_id' , $all_products_ids)
+        ->where('status', '!=', 'Disabled')
+        ->where('optionWeight', '>', 0)
+        ->pluck('option_id')->toArray();
+        $product_pricing_option_ids = Pricingnew::whereIn('option_id' , $product_options_ids)
+        ->where($price_column , '>' , 0)
+        ->pluck('option_id')
+        ->toArray();
+        $products_ids = ProductOption::whereIn('option_id' , $product_pricing_option_ids)
+        ->pluck('product_id')->toArray();;
+        $products = Product::with('options','options.defaultPrice','product_brand','product_image','categories')->whereIn('product_id' , $products_ids)
         ->where('status' , '!=' , 'Inactive')
         ->where('barcode' , '!=' , '')
         ->get();
@@ -189,21 +209,40 @@ class GoogleContentController extends Controller
             $price_column = 'retailUSD';
         }
         $product_array = [];
-        $products = Product::with('options','options.defaultPrice', 'product_brand','product_image','categories' , 'product_views','apiorderItem', 'product_stock')
-        ->with(['product_views','apiorderItem' , 'options' => function ($q) {
-            $q->where('status', '!=', 'Disabled');
+        // $products = Product::with('options','options.defaultPrice', 'product_brand','product_image','categories' , 'product_views','apiorderItem', 'product_stock')
+        // ->with(['product_views','apiorderItem' , 'options' => function ($q) {
+        //     $q->where('status', '!=', 'Disabled');
             
-        }])
-        ->whereHas('options.defaultPrice', function ($q)  use ($price_column){
-            $q->where($price_column, '>', 0);
-        })
-        ->whereHas('categories' , function ($q) {
-            $q->where('is_active', 1);
-        })
+        // }])
+        // ->whereHas('options.defaultPrice', function ($q)  use ($price_column){
+        //     $q->where($price_column, '>', 0);
+        // })
+        // ->whereHas('categories' , function ($q) {
+        //     $q->where('is_active', 1);
+        // })
+        // ->where('status' , '!=' , 'Inactive')
+        // // ->where('barcode' , '!=' , '')
+        // ->take(10)
+        // ->get();
+        $product_categories = Category::where('is_active', 1)->pluck('category_id')->toArray();
+        $all_products_ids = Product::whereIn('category_id' , $product_categories)
+        ->pluck('product_id')->toArray();
+        $product_options_ids = ProductOption::whereIn('product_id' , $all_products_ids)
+        ->where('status', '!=', 'Disabled')
+        ->where('optionWeight', '>', 0)
+        ->pluck('option_id')->toArray();
+        $product_pricing_option_ids = Pricingnew::whereIn('option_id' , $product_options_ids)
+        ->where($price_column , '>' , 0)
+        ->pluck('option_id')
+        ->toArray();
+        $products_ids = ProductOption::whereIn('option_id' , $product_pricing_option_ids)
+        ->pluck('product_id')->toArray();;
+        $products = Product::with('options','options.defaultPrice','product_brand','product_image','categories')
+        ->whereIn('product_id' , $products_ids)
         ->where('status' , '!=' , 'Inactive')
-        // ->where('barcode' , '!=' , '')
-        ->take(10)
+        ->where('barcode' , '!=' , '')
         ->get();
+        dd($products->count());
         if (count($products) > 0) {
             foreach ($products as $product) {
                 
