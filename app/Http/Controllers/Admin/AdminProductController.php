@@ -39,7 +39,9 @@ class AdminProductController extends Controller
         $price_filter_type = $request->get('price_filter_type');
         $price_value = $request->get('price_value');
         $product_status = $request->get('product_status');
-        $products_query = Product::with('categories', 'options' , 'options.defaultPrice');
+        $products_query = Product::with('categories', 'options' , 'options.defaultPrice')->whereHas('categories' , function ($q) {
+            $q->where('is_active', 1);
+        });
         
         if(isset($search)) {
             $products_query
