@@ -58,7 +58,6 @@ class DownloadAndSaveImage extends Command
         // ->where('barcode' , '!=' , '')
         // ->get();
         $all_products = $all_products_query->get();
-        // var_dump($all_products->count());exit;
         $productImages = [];
         if (count($all_products) > 0) {
             foreach ($all_products as $product) {
