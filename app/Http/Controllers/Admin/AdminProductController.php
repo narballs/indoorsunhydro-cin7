@@ -39,9 +39,7 @@ class AdminProductController extends Controller
         $price_filter_type = $request->get('price_filter_type');
         $price_value = $request->get('price_value');
         $product_status = $request->get('product_status');
-        $products_query = Product::with('categories', 'options' , 'options.defaultPrice')->whereHas('categories' , function ($q) {
-            $q->where('is_active', 1);
-        });
+        $products_query = Product::with('categories', 'options' , 'options.defaultPrice');
         
         if(isset($search)) {
             $products_query
@@ -341,8 +339,6 @@ class AdminProductController extends Controller
         else {
             $products = $products_query->paginate(10)->appends(request()->query());
         }
-       
-        
         return view('admin/products', compact(
             'products', 
             'search',
