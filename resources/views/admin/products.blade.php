@@ -10,7 +10,7 @@
                     <div class="row">
                         <div class="col-md-2 mobile_heading">
                             <p class="order_heading">
-                                Products
+                                Products 
                             </p>
                         </div>
                         <div class="col-md-6">
@@ -43,12 +43,17 @@
                             </div>
                         </div>
                         <div class="col-md-9">
-                            <div class="row">
+                            <div class="row align-items-center">
                                 <div class="col-md-2">
                                     <button class="btn btn-info" id="advanced_filter_btn">
                                         Advanced Filters          
                                     </button>
                                 </div>
+                                @if(isset($do_search))  
+                                    <div class="col-md-4">
+                                        <span class="text-dark" style="font-weight: 500">Products Count :  {{'(' . $products->total() . ')'}}</span>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>
