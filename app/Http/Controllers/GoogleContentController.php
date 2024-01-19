@@ -92,7 +92,7 @@ class GoogleContentController extends Controller
         ->pluck('option_id')
         ->toArray();
         $products_ids = ProductOption::whereIn('option_id' , $product_pricing_option_ids)
-        ->pluck('product_id')->toArray();;
+        ->pluck('product_id')->toArray();
         $products = Product::with('options','options.defaultPrice','product_brand','product_image','categories')->whereIn('product_id' , $products_ids)
         ->where('status' , '!=' , 'Inactive')
         ->where('barcode' , '!=' , '')
@@ -236,7 +236,7 @@ class GoogleContentController extends Controller
         ->pluck('option_id')
         ->toArray();
         $products_ids = ProductOption::whereIn('option_id' , $product_pricing_option_ids)
-        ->pluck('product_id')->toArray();;
+        ->pluck('product_id')->toArray();
         $products = Product::with('options','options.defaultPrice','product_brand','product_image','categories')
         ->whereIn('product_id' , $products_ids)
         ->where('status' , '!=' , 'Inactive')
