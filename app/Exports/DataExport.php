@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use App\Models\AdminSetting;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Illuminate\Support\Collection;
 use App\Models\Product;
@@ -10,14 +11,22 @@ class DataExport implements FromCollection
 {
     public function collection()
     {
+        $price_column = null;
+        $default_price_column = AdminSetting::where('option_name', 'default_price_column')->first();
+        if (!empty($default_price_column)) {
+            $price_column = $default_price_column->option_value;
+        }
+        else {
+            $price_column = 'retailUSD';
+        }
         $product_array = [];
         $products = Product::with('options','options.defaultPrice', 'product_brand', 'categories' , 'product_views','apiorderItem', 'product_stock')
         ->with(['product_views','apiorderItem' , 'options' => function ($q) {
             $q->where('status', '!=', 'Disabled');
             
         }])
-        ->whereHas('options.defaultPrice', function ($q) {
-            $q->where('retailUSD', '!=', 0);
+        ->whereHas('options.defaultPrice', function ($q) use ($price_column) {
+            $q->where($price_column, '>', 0);
         })
         ->whereHas('categories' , function ($q) {
             $q->where('is_active', 1);
@@ -49,7 +58,7 @@ class DataExport implements FromCollection
                             'description' => !empty($product->description) ? strip_tags($product->description) : 'No description available',
                             'link' => url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug),
                             'image_link' => !empty($product->images) ? $product->images : url(asset('theme/img/image_not_available.png')),
-                            'price' => !empty($option->price[0]->retailUSD) ? $option->price[0]->retailUSD : 0,
+                            'price' => !empty($option->price[0]->$price_column) ? $option->price[0]->$price_column : 0,
                             'condition' => 'new',
                             'availability' => 'In stock',
                             'brand' => !empty($product->product_brand->name) ? $product->product_brand->name : 'General brand',

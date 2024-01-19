@@ -132,6 +132,11 @@ class SettingSeeder extends Seeder
                 'option_value' => 'retailUSD',
             ],
             [
+                'option_name' => 'default_price_column', 
+                'type' => 'text',
+                'option_value' => 'sacramentoUSD',
+            ],
+            [
                 'option_name' => 'site_id', 
                 'type' => 'text',
                 'option_value' => '1',

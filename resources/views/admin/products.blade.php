@@ -181,7 +181,7 @@
                                     @php
                                         $retail_price = 0;
                                         if ($option->defaultPrice != null) {
-                                            $retail_price = $option->defaultPrice->retailUSD;
+                                            $retail_price = $option->defaultPrice->$price_column;
                                         }
                                     @endphp
                                     <tr id="row-{{ $product->id }}" class="product-row border-bottom">

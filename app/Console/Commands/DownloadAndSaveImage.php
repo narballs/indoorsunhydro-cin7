@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\AdminSetting;
 use App\Models\Product;
 use App\Models\ProductImage;
 use Illuminate\Console\Command;
@@ -18,13 +19,22 @@ class DownloadAndSaveImage extends Command
 
     public function handle()
     {
+        $price_column = null;
+        $default_price_column = AdminSetting::where('option_name', 'default_price_column')->first();
+        if (!empty($default_price_column)) {
+            $price_column = $default_price_column->option_value;
+        }
+        else {
+            $price_column = 'retailUSD';
+        }
+
         $all_products = Product::with('options','options.defaultPrice', 'product_brand', 'categories' , 'product_views','apiorderItem','product_image' , 'product_stock')
         ->with(['product_views','apiorderItem' , 'options' => function ($q) {
             $q->where('status', '!=', 'Disabled');
             
         }])
-        ->whereHas('options.defaultPrice', function ($q) {
-            $q->where('retailUSD', '!=', 0);
+        ->whereHas('options.defaultPrice', function ($q) use ($price_column) {
+            $q->where($price_column, '>', 0);
         })
         ->whereHas('categories' , function ($q) {
             $q->where('is_active', 1);
