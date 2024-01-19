@@ -21,17 +21,17 @@ class DataExport implements FromCollection
         }
         $product_array = [];
         $products = Product::with('options','options.defaultPrice', 'product_brand', 'categories' , 'product_views','apiorderItem', 'product_stock')
-        // ->with(['product_views','apiorderItem' , 'options' => function ($q) {
-        //     $q->where('status', '!=', 'Disabled');
+        ->with(['product_views','apiorderItem' , 'options' => function ($q) {
+            $q->where('status', '!=', 'Disabled');
             
-        // }])
+        }])
         ->whereHas('options.defaultPrice', function ($q) use ($price_column) {
             $q->where($price_column, '=', '0.00');
         })
-        // ->whereHas('categories' , function ($q) {
-        //     $q->where('is_active', 1);
-        // })
-        // ->where('status' , '!=' , 'Inactive')
+        ->whereHas('categories' , function ($q) {
+            $q->where('is_active', 1);
+        })
+        ->where('status' , '!=' , 'Inactive')
         // ->where('barcode' , '!=' , '')
         ->get();
 
