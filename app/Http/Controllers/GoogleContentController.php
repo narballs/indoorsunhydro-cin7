@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\AdminSetting;
 use App\Models\Product;
 use Google\Service\ShoppingContent;
 use Google\Service\ShoppingContent\Product as ServiceProduct;
@@ -52,6 +53,14 @@ class GoogleContentController extends Controller
     public function insertProducts($token , $client)
     {
         
+        $price_column = null;
+        $default_price_column = AdminSetting::where('option_name', 'default_price_column')->first();
+        if (!empty($default_price_column)) {
+            $price_column = $default_price_column->option_value;
+        }
+        else {
+            $price_column = 'retailUSD';
+        }
         $product_array = [];
         $products = Product::with('options','options.defaultPrice', 'product_brand','product_image','categories' , 'product_views','apiorderItem', 'product_stock')
         ->with(['product_views','apiorderItem' , 'options' => function ($q) {
@@ -59,8 +68,8 @@ class GoogleContentController extends Controller
             ->where('optionWeight', '>', 0);
             
         }])
-        ->whereHas('options.defaultPrice', function ($q) {
-            $q->where('retailUSD', '>', 0);
+        ->whereHas('options.defaultPrice', function ($q) use ($price_column) {
+            $q->where($price_column, '>', 0);
         })
         ->whereHas('categories' , function ($q) {
             $q->where('is_active', 1);
@@ -102,7 +111,7 @@ class GoogleContentController extends Controller
                             'description' => !empty($product->description) ? strip_tags($product->description) : 'No description available',
                             'link' => url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug),
                             'image_link' => !empty($product->product_image->image) ? url(asset('theme/products/images/' . $product->product_image->image)) : url(asset('theme/img/image_not_available.png')),
-                            'price' => !empty($option->price[0]->retailUSD) ? $option->price[0]->retailUSD : 0,
+                            'price' => !empty($option->price[0]->$price_column) ? $option->price[0]->$price_column : 0,
                             'condition' => 'new',
                             'availability' => 'In stock',
                             'brand' => !empty($product->product_brand->name) ? $product->product_brand->name : 'General brand',
@@ -171,20 +180,29 @@ class GoogleContentController extends Controller
 
 
     public function list_products() {
+        $price_column = null;
+        $default_price_column = AdminSetting::where('option_name', 'default_price_column')->first();
+        if (!empty($default_price_column)) {
+            $price_column = $default_price_column->option_value;
+        }
+        else {
+            $price_column = 'retailUSD';
+        }
         $product_array = [];
         $products = Product::with('options','options.defaultPrice', 'product_brand','product_image','categories' , 'product_views','apiorderItem', 'product_stock')
         ->with(['product_views','apiorderItem' , 'options' => function ($q) {
             $q->where('status', '!=', 'Disabled');
             
         }])
-        ->whereHas('options.defaultPrice', function ($q) {
-            $q->where('retailUSD', '!=', 0);
+        ->whereHas('options.defaultPrice', function ($q)  use ($price_column){
+            $q->where($price_column, '>', 0);
         })
         ->whereHas('categories' , function ($q) {
             $q->where('is_active', 1);
         })
         ->where('status' , '!=' , 'Inactive')
-        ->where('barcode' , '!=' , '')
+        // ->where('barcode' , '!=' , '')
+        ->take(10)
         ->get();
         if (count($products) > 0) {
             foreach ($products as $product) {
@@ -220,7 +238,7 @@ class GoogleContentController extends Controller
                             'description' => !empty($product->description) ? strip_tags($product->description) : 'No description available',
                             'link' => url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug),
                             'image_link' => !empty($product->product_image->image) ? url(asset('theme/products/images/' .$product->product_image->image)) : url(asset('theme/img/image_not_available.png')),
-                            'price' => !empty($option->price[0]->retailUSD) ? $option->price[0]->retailUSD : 0,
+                            'price' => !empty($option->price[0]->$price_column) ? $option->price[0]->$price_column : 0,
                             'condition' => 'new',
                             'availability' => 'In stock',
                             'brand' => !empty($product->product_brand->name) ? $product->product_brand->name : 'General brand',

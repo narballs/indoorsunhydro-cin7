@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Admin;
 
 use \App\Http\Controllers\Controller;
 use App\Http\Middleware\IsAdmin;
+use App\Models\AdminSetting;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Pricing;
-
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class AdminProductController extends Controller
 {
@@ -19,6 +21,15 @@ class AdminProductController extends Controller
     }
 
     public function index(Request $request) {
+        
+        $price_column = null;
+        $default_price_column = AdminSetting::where('option_name', 'default_price_column')->first();
+        if (!empty($default_price_column)) {
+            $price_column = $default_price_column->option_value;
+        }
+        else {
+            $price_column = 'retailUSD';
+        }
         $search = $request->get('search');
         $do_search = $request->get('do_search');
         $stock_filter_type = $request->get('stock_filter_type');
@@ -79,8 +90,8 @@ class AdminProductController extends Controller
                 ->whereHas('options' , function($query){
                     $query->where('status', '!=', 'disabled');
                 })
-                ->whereHas('options.defaultPrice' , function($query) use ($price_value, $operation){
-                    $query->where('retailUSD', $operation, $price_value);
+                ->whereHas('options.defaultPrice' , function($query) use ($price_value, $operation , $price_column){
+                    $query->where($price_column, $operation, $price_value);
                 });
             }
         }
@@ -149,16 +160,16 @@ class AdminProductController extends Controller
                     ->whereHas('options' , function($query){
                         $query->where('status', '!=', 'disabled');
                     })
-                    ->whereHas('options.defaultPrice' , function($query) use ($price_value, $operation){
-                        $query->where('retailUSD', $operation, $price_value);
+                    ->whereHas('options.defaultPrice' , function($query) use ($price_value, $operation , $price_column){
+                        $query->where($price_column, $operation, $price_value);
                     });
                 } elseif($product_status == 'Inactive') {
                     $products_query->where('status', '=', 'Inactive')
                     ->whereHas('options' , function($query){
                         $query->where('status', '!=', 'disabled');
                     })
-                    ->whereHas('options.defaultPrice' , function($query) use ($price_value, $operation){
-                        $query->where('retailUSD', $operation, $price_value);
+                    ->whereHas('options.defaultPrice' , function($query) use ($price_value, $operation , $price_column){
+                        $query->where($price_column, $operation, $price_value);
                     });
                 }
                 
@@ -193,8 +204,8 @@ class AdminProductController extends Controller
                     })
                     ->where('status', '!=', 'disabled');
                 })
-                ->whereHas('options.defaultPrice' , function($query) use ($price_value, $operation){
-                    $query->where('retailUSD', $operation, $price_value);
+                ->whereHas('options.defaultPrice' , function($query) use ($price_value, $operation, $price_column){
+                    $query->where($price_column, $operation, $price_value);
                 });
             }
         }
@@ -271,8 +282,8 @@ class AdminProductController extends Controller
                 ->whereHas('options', function ($query) use ($stock_value, $stock_operation) {
                     $query->whereRaw("CAST(stockAvailable AS SIGNED) $stock_operation ?", [$stock_value]);
                 })
-                ->whereHas('options.defaultPrice' , function($query) use ($price_value, $operation){
-                    $query->where('retailUSD', $operation, $price_value);
+                ->whereHas('options.defaultPrice' , function($query) use ($price_value, $operation , $price_column){
+                    $query->where($price_column, $operation, $price_value);
                 });
             }
         }
@@ -296,8 +307,8 @@ class AdminProductController extends Controller
 
                 foreach ($products as $product) {
                     $retail_price = 0;
-                    if (!empty($product->options[0]->defaultPrice->retailUSD)) {
-                        $retail_price = $product->options[0]->defaultPrice->retailUSD;
+                    if (!empty($product->options[0]->defaultPrice->$price_column)) {
+                        $retail_price = $product->options[0]->defaultPrice->$price_column;
                     }   
                     $csv_data[] = [
                         $product->name,
@@ -338,7 +349,8 @@ class AdminProductController extends Controller
             'weight_value',
             'price_filter_type',
             'price_value',
-            'product_status'
+            'product_status',
+            'price_column'
         ));
     }
 
