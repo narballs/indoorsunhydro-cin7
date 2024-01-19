@@ -26,13 +26,13 @@ class DataExport implements FromCollection
             
         }])
         ->whereHas('options.defaultPrice', function ($q) use ($price_column) {
-            $q->where($price_column, '>', 0);
+            $q->where($price_column, '=', 0);
         })
         ->whereHas('categories' , function ($q) {
             $q->where('is_active', 1);
         })
         ->where('status' , '!=' , 'Inactive')
-        ->where('barcode' , '!=' , '')
+        // ->where('barcode' , '!=' , '')
         ->get();
 
         if (count($products) > 0) {
@@ -55,15 +55,15 @@ class DataExport implements FromCollection
                             'id' => $product->id,
                             'title' => $product->name,
                             'code' => $product->code,
-                            'description' => !empty($product->description) ? strip_tags($product->description) : 'No description available',
-                            'link' => url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug),
-                            'image_link' => !empty($product->images) ? $product->images : url(asset('theme/img/image_not_available.png')),
+                            // 'description' => !empty($product->description) ? strip_tags($product->description) : 'No description available',
+                            // 'link' => url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug),
+                            // 'image_link' => !empty($product->images) ? $product->images : url(asset('theme/img/image_not_available.png')),
                             'price' => !empty($option->price[0]->$price_column) ? $option->price[0]->$price_column : 0,
-                            'condition' => 'new',
-                            'availability' => 'In stock',
-                            'brand' => !empty($product->product_brand->name) ? $product->product_brand->name : 'General brand',
-                            'barcode' => $product->barcode,
-                            'google_product_category' => $new_category,
+                            // 'condition' => 'new',
+                            // 'availability' => 'In stock',
+                            // 'brand' => !empty($product->product_brand->name) ? $product->product_brand->name : 'General brand',
+                            // 'barcode' => $product->barcode,
+                            // 'google_product_category' => $new_category,
                         ];
                     }
                     
