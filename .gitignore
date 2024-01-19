@@ -12,8 +12,8 @@ composer.lock
 pages/
 wholesale/
 public/products.csv
-theme/img
-theme/products
+public/theme/img
+public/theme/products
 .htaccess
 
 # Compiled Java class files
