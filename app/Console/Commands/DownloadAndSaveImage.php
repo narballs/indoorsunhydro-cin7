@@ -41,7 +41,7 @@ class DownloadAndSaveImage extends Command
         ->toArray();
         $products_ids = ProductOption::whereIn('option_id' , $product_pricing_option_ids)
         ->where('status', '!=', 'Disabled')
-        ->pluck('product_id')->toArray();;
+        ->pluck('product_id')->toArray();
         $all_products_query = Product::with('options','options.defaultPrice')->whereIn('product_id' , $products_ids)
         ->where('status' , '!=' , 'Inactive')
         ->where('barcode' , '!=' , '');
