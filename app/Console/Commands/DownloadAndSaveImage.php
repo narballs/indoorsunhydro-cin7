@@ -3,8 +3,11 @@
 namespace App\Console\Commands;
 
 use App\Models\AdminSetting;
+use App\Models\Category;
+use App\Models\Pricingnew;
 use App\Models\Product;
 use App\Models\ProductImage;
+use App\Models\ProductOption;
 use Illuminate\Console\Command;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Storage;
@@ -28,20 +31,34 @@ class DownloadAndSaveImage extends Command
             $price_column = 'retailUSD';
         }
 
-        $all_products = Product::with('options','options.defaultPrice', 'product_brand', 'categories' , 'product_views','apiorderItem','product_image' , 'product_stock')
-        ->with(['product_views','apiorderItem' , 'options' => function ($q) {
-            $q->where('status', '!=', 'Disabled');
-            
-        }])
-        ->whereHas('options.defaultPrice', function ($q) use ($price_column) {
-            $q->where($price_column, '>', 0);
-        })
-        ->whereHas('categories' , function ($q) {
-            $q->where('is_active', 1);
-        })
+        $product_categories = Category::where('is_active', 1)->pluck('category_id')->toArray();
+        $all_products_ids = Product::whereIn('category_id' , $product_categories)
+        ->pluck('product_id')->toArray();
+        $product_options_ids = ProductOption::whereIn('product_id' , $all_products_ids)->pluck('option_id')->toArray();
+        $product_pricing_option_ids = Pricingnew::whereIn('option_id' , $product_options_ids)
+        ->where($price_column , '>' , 0)
+        ->pluck('option_id')
+        ->toArray();
+        $products_ids = ProductOption::whereIn('option_id' , $product_pricing_option_ids)
+        ->where('status', '!=', 'Disabled')
+        ->pluck('product_id')->toArray();;
+        $all_products_query = Product::with('options','options.defaultPrice')->whereIn('product_id' , $products_ids)
         ->where('status' , '!=' , 'Inactive')
-        ->where('barcode' , '!=' , '')
-        ->get();
+        ->where('barcode' , '!=' , '');
+        // ->with(['product_views','apiorderItem' , 'options' => function ($q) {
+        //     $q->where('status', '!=', 'Disabled');
+        // }])
+        // ->whereHas('options.defaultPrice', function ($q) use ($price_column) {
+        //     $q->where($price_column, '>', 0);
+        // })
+        // ->whereHas('categories' , function ($q) {
+        //     $q->where('is_active', 1);
+        // })
+        // ->where('status' , '!=' , 'Inactive')
+        // ->where('barcode' , '!=' , '')
+        // ->get();
+        $all_products = $all_products_query->get();
+        // var_dump($all_products->count());exit;
         $productImages = [];
         if (count($all_products) > 0) {
             foreach ($all_products as $product) {
