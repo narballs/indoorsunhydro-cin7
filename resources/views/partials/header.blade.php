@@ -11,6 +11,11 @@
 
         gtag('config', 'GT-PHG5T9K');
     </script>
+    <script>
+        gtag('event', 'ads_conversion_PURCHASE_1', {
+        // <event_parameters>
+        });
+    </script>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <link rel="stylesheet" href="/theme/bootstrap5/css/bootstrap.css">
