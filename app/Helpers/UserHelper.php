@@ -13,7 +13,7 @@ use App\Models\ApiOrder;
 use App\Models\ApiOrderItem;
 use App\Models\ProductOption;
 use App\Models\AdminSetting;
-
+use Google\Service\Calendar\Setting;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -134,7 +134,14 @@ class UserHelper
     }
 
     public static function getUserPriceColumn($is_admin = false , $user_id = null) {
-        $price_column = 'retailUSD';
+        $price_column = null;
+        $default_price_column = AdminSetting::where('option_name', 'default_price_column')->first();
+        if (!empty($default_price_column)) {
+            $price_column = $default_price_column->option_value;
+        }
+        else {
+            $price_column = 'retailUSD';
+        }
         if ($is_admin === false) {
 
             $user_id = Auth::id();
