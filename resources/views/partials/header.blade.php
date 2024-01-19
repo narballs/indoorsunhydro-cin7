@@ -13,7 +13,7 @@
     </script>
     <script>
         gtag('event', 'ads_conversion_PURCHASE_1', {
-        // <event_parameters>
+            'debug_mode':true
         });
     </script>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
