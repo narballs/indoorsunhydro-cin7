@@ -65,7 +65,6 @@ class GoogleContentController extends Controller
             $price_column = 'retailUSD';
         }
         $product_array = [];
-        
         // $products = Product::with('options','options.defaultPrice', 'product_brand','product_image','categories' , 'product_views','apiorderItem', 'product_stock')
         // ->with(['product_views','apiorderItem' , 'options' => function ($q) {
         //     $q->where('status', '!=', 'Disabled')
@@ -94,46 +93,24 @@ class GoogleContentController extends Controller
         ->toArray();
         $products_ids = ProductOption::whereIn('option_id' , $product_pricing_option_ids)
         ->pluck('product_id')->toArray();
-        $all_products = Product::with('options','options.defaultPrice','product_brand','product_image','categories')
-        ->whereIn('product_id' , $products_ids)
+        $products = Product::with('options','options.defaultPrice','product_brand','product_image','categories')->whereIn('product_id' , $products_ids)
         ->where('status' , '!=' , 'Inactive')
         ->where('barcode' , '!=' , '')
         ->get();
-        $client->setAccessToken($token['access_token']); // Use the stored access token
-
-        $service = new ShoppingContent($client);
-        $result  = null;
-        $merchantId = config('services.google.merchant_center_id');
-        $productStatusList = [];
-        $pageToken = null;
-        $dataSourceId = '5309938228';
-        do {
-            try {
-                $products = $service->products->listProducts($merchantId, ['maxResults' => 250, 'pageToken' => $pageToken]);
-    
-                foreach ($products->getResources() as $product) {
-                    $productId = $product['id'];
-                    $mpn = $product['mpn'];
-                    $productStatusList[$productId] = [
-                        'id' => $productId,
-                        'mpn' => $mpn,
-                    ];
-                }
-                $pageToken = $products->getNextPageToken();
-            } catch (\Google\Service\Exception $e) {
-                report($e);
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Failed to retrieve products from Google Merchant Center.'
-                ]);
-            }
-        } while (!empty($pageToken));
-
-
-        if (count($all_products) > 0) {
-            foreach ($all_products as $product) {
+        if (count($products) > 0) {
+            foreach ($products as $product) {
                 
                 if (count($product->options) > 0) {
+                    // if (!empty($product->images)) {
+                    //     $response  = Http::get($product->images);
+                    //     if ($response->getStatusCode() == 200) {
+                    //         $image = $product->images;
+                    //     } else {
+                    //         $image = url(asset('theme/img/image_not_available.png'));
+                    //     }
+                    // }  else {
+                    //     $image = url(asset('theme/img/image_not_available.png'));
+                    // }
                     foreach ($product->options as $option) {
                         $category = 'General > General';
                         if (!empty($product->categories)) {
@@ -146,28 +123,31 @@ class GoogleContentController extends Controller
                         else {
                             $category = 'General > General';
                         }
-                        $existingProduct = collect($productStatusList)->firstWhere('mpn', $product->code);
-                        if (!$existingProduct) {
-                            $product_array[] = [
-                                'id' => $product->id,
-                                'title' => $product->name,
-                                'code' => $product->code,
-                                'description' => !empty($product->description) ? strip_tags($product->description) : 'No description available',
-                                'link' => url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug),
-                                'image_link' => !empty($product->product_image->image) ? url(asset('theme/products/images/' . $product->product_image->image)) : url(asset('theme/img/image_not_available.png')),
-                                'price' => !empty($option->price[0]->$price_column) ? $option->price[0]->$price_column : 0,
-                                'condition' => 'new',
-                                'availability' => 'In stock',
-                                'brand' => !empty($product->product_brand->name) ? $product->product_brand->name : 'General brand',
-                                'barcode' => $product->barcode,
-                                'google_product_category' => $category,
-                                'product_weight' => $option->optionWeight,
-                            ];
-                        }
+                        
+                        $product_array[] = [
+                            'id' => $product->id,
+                            'title' => $product->name,
+                            'code' => $product->code,
+                            'description' => !empty($product->description) ? strip_tags($product->description) : 'No description available',
+                            'link' => url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug),
+                            'image_link' => !empty($product->product_image->image) ? url(asset('theme/products/images/' . $product->product_image->image)) : url(asset('theme/img/image_not_available.png')),
+                            'price' => !empty($option->price[0]->$price_column) ? $option->price[0]->$price_column : 0,
+                            'condition' => 'new',
+                            'availability' => 'In stock',
+                            'brand' => !empty($product->product_brand->name) ? $product->product_brand->name : 'General brand',
+                            'barcode' => $product->barcode,
+                            'google_product_category' => $category,
+                            'product_weight' => $option->optionWeight,
+                        ];
                     }
                 }
             }
         }
+        // $chunks = array_chunk($product_array, 100);
+        $client->setAccessToken($token['access_token']); // Use the stored access token
+
+        $service = new ShoppingContent($client);
+        $result  = null;
         if (!empty($product_array) > 0) {
             foreach ($product_array as $index => $add_product) {
                 $product = new ServiceProduct();
