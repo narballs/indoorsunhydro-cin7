@@ -185,7 +185,7 @@ class GoogleContentController extends Controller
                 }
                 if (!$isDuplicate) {
                     $product = new ServiceProduct();
-                    $product->setOfferId($add_product['code']);
+                    $product->setOfferId(substr($add_product['code'], 0, 50));
                     $product->setTitle($add_product['title']);
                     $product->setDescription($add_product['description']);
                     $product->setLink($add_product['link']);
