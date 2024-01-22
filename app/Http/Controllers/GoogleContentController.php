@@ -143,6 +143,7 @@ class GoogleContentController extends Controller
                 }
             }
         }
+        
         // $chunks = array_chunk($product_array, 100);
         $client->setAccessToken($token['access_token']); // Use the stored access token
 
@@ -158,7 +159,7 @@ class GoogleContentController extends Controller
                 foreach ($products->getResources() as $product) {
                     $productId = $product['id'];
                     $mpn = $product['mpn'];
-                    $productStatusList[$productId] = [
+                    $productStatusList[] = [
                         'id' => $productId,
                         'mpn' => $mpn,
                     ];
