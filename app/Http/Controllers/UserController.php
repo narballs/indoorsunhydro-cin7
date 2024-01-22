@@ -784,6 +784,10 @@ class UserController extends Controller
         $data = [
             'user' => $user,
             'subject' => 'New Register User',
+            'name' => $user->first_name . ' ' . $user->last_name,
+            'content' => 'Your account registration request has been submitted. You will receive an email once your account has been approved.',
+            'email' => $user->email,
+            'subject' => 'Your account registration request ',
             'from' => 'noreply@indoorsunhydro.com',
         ];
         
