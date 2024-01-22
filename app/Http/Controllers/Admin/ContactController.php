@@ -321,7 +321,7 @@ class ContactController extends Controller
         $difference = strtotime($response_time) - strtotime($request_time);
         
         if ($is_updated) {
-            $name = $currentContact['firstName'];
+            $name = $currentContact['firstName'] . ' ' . $currentContact['lastName'];
             $email = $currentContact['email'];
             $subject = 'Account  approval';
             $template = 'emails.approval-notifications';
@@ -331,7 +331,7 @@ class ContactController extends Controller
                 'name' =>  'Admin',
                 'email' => $email,
                 'contact_email' => $currentContact['email'],
-                'contact_id' => $is_updated ? $is_updated->contact_id : null,
+                // 'contact_id' => $is_updated ? $is_updated->contact_id : null,
                 'subject' => 'New Account activated',
                 'from' => env('MAIL_FROM_ADDRESS'),
                 'content' => 'New account activated.'
