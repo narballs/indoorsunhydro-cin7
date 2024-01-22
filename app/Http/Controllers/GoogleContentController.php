@@ -106,6 +106,7 @@ class GoogleContentController extends Controller
         $merchantId = config('services.google.merchant_center_id');
         $productStatusList = [];
         $pageToken = null;
+        $dataSourceId = '5309938228';
         do {
             try {
                 $products = $service->products->listProducts($merchantId, ['maxResults' => 250, 'pageToken' => $pageToken]);
@@ -167,8 +168,6 @@ class GoogleContentController extends Controller
                 }
             }
         }
-        
-        dd($product_array);
         if (!empty($product_array) > 0) {
             foreach ($product_array as $index => $add_product) {
                 $product = new ServiceProduct();
@@ -205,7 +204,7 @@ class GoogleContentController extends Controller
                 $product->setPrice($price);
                 $merchant_id = config('services.google.merchant_center_id');
 
-                $result = $service->products->insert($merchant_id, $product);
+                $result = $service->products->insert($merchant_id, $product, $dataSourceId);
             }
             return response()->json([
                 'status' => 'success',
