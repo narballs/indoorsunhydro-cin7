@@ -321,34 +321,34 @@ class ContactController extends Controller
         $difference = strtotime($response_time) - strtotime($request_time);
         
         if ($is_updated) {
-            // $name = $currentContact['firstName'];
-            // $email = $currentContact['email'];
-            // $subject = 'Account  approval';
-            // $template = 'emails.approval-notifications';
+            $name = $currentContact['firstName'];
+            $email = $currentContact['email'];
+            $subject = 'Account  approval';
+            $template = 'emails.approval-notifications';
 
-            // $data = [
-            //     'contact_name' => $name,
-            //     'name' =>  'Admin',
-            //     'email' => $email,
-            //     'contact_email' => $currentContact['email'],
-            //     'contact_id' => $is_updated ? $is_updated->contact_id : null,
-            //     'subject' => 'New Account activated',
-            //     'from' => env('MAIL_FROM_ADDRESS'),
-            //     'content' => 'New account activated.'
-            // ];
+            $data = [
+                'contact_name' => $name,
+                'name' =>  'Admin',
+                'email' => $email,
+                'contact_email' => $currentContact['email'],
+                'contact_id' => $is_updated ? $is_updated->contact_id : null,
+                'subject' => 'New Account activated',
+                'from' => env('MAIL_FROM_ADDRESS'),
+                'content' => 'New account activated.'
+            ];
 
-            // if (!empty($users_with_role_admin)) {
-            //     foreach ($users_with_role_admin as $role_admin) {
-            //         $data['email'] = $role_admin->email;
-            //         $adminTemplate = 'emails.approval-notifications';
-            //         MailHelper::sendMailNotification('emails.approval-notifications', $data);
-            //     }
-            // }
-            // $data['name'] = $name;
-            // $data['email'] = $email;
-            // $data['content'] = 'Your account has been approved';
-            // $data['subject'] = 'Your account has been approved';
-            // MailHelper::sendMailNotification('emails.approval-notifications', $data);
+            if (!empty($users_with_role_admin)) {
+                foreach ($users_with_role_admin as $role_admin) {
+                    $data['email'] = $role_admin->email;
+                    $adminTemplate = 'emails.approval-notifications';
+                    MailHelper::sendMailNotification('emails.approval-notifications', $data);
+                }
+            }
+            $data['name'] = $name;
+            $data['email'] = $email;
+            $data['content'] = 'Your account has been approved';
+            $data['subject'] = 'Your account has been approved';
+            MailHelper::sendMailNotification('emails.approval-notifications', $data);
             return response()->json([
                 'success' => true,
                 'created' => true,
