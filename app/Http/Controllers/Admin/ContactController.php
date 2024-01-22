@@ -82,12 +82,12 @@ class ContactController extends Controller
             }
             if ($activeCustomer == 'pending-approval') {
                 $contact_query = Contact::where('contact_id', NULL)
-                ->where('user_id', '!=', NULL);
+                ->where('user_id', '!=', NULL)->orderBy('created_at' , 'Desc');
             }
         }
         if ($pendingApproval == 'pending-approval') {
             $contact_query = Contact::where('contact_id', NULL)
-            ->where('user_id', '!=', NULL);
+            ->where('user_id', '!=', NULL)->orderBy('created_at' , 'Desc');
         }
         if (!empty($search)) {
             $contact_query = $contact_query->where('firstName', 'LIKE', '%' . $search . '%')
@@ -225,6 +225,7 @@ class ContactController extends Controller
 
     public function show_customer(Request $request , $id)
     {
+        
         $primary_contact = '';
         $secondary_contacts = '';
         $contact_is_parent = '';
@@ -232,10 +233,13 @@ class ContactController extends Controller
         $secondary_contacts_query = '';
         $customer = Contact::withTrashed()->where('id', $id)->first();
         $pricing = $customer->priceColumn;
-        $logs = UserLog::where('contact_id', $customer->contact_id)
-            ->orderBy('id', 'desc')
-            ->limit(8)
-            ->get();
+        $get_contactID = !empty($customer->contact_id) ? $customer->contact_id : $id;
+        $get_secondaryID = !empty($customer->secondary_id) ? $customer->secondary_id : $id;
+        $logs = UserLog::orWhere('contact_id', $get_contactID)
+        ->orWhere('secondary_id', $get_secondaryID)
+        ->orderBy('created_at', 'desc')
+        ->take(10)
+        ->get();
         $user_id = $customer->user_id;
         if (!empty($customer->contact_id)) {
             $secondary_contacts_query = Contact::where('parent_id', $customer->contact_id);
@@ -321,34 +325,34 @@ class ContactController extends Controller
         $difference = strtotime($response_time) - strtotime($request_time);
         
         if ($is_updated) {
-            // $name = $currentContact['firstName'];
-            // $email = $currentContact['email'];
-            // $subject = 'Account  approval';
-            // $template = 'emails.approval-notifications';
+            $name = $currentContact['firstName'] . ' ' . $currentContact['lastName'];
+            $email = $currentContact['email'];
+            $subject = 'Account  approval';
+            $template = 'emails.approval-notifications';
 
-            // $data = [
-            //     'contact_name' => $name,
-            //     'name' =>  'Admin',
-            //     'email' => $email,
-            //     'contact_email' => $currentContact['email'],
-            //     'contact_id' => $is_updated ? $is_updated->contact_id : null,
-            //     'subject' => 'New Account activated',
-            //     'from' => env('MAIL_FROM_ADDRESS'),
-            //     'content' => 'New account activated.'
-            // ];
+            $data = [
+                'contact_name' => $name,
+                'name' =>  'Admin',
+                'email' => $email,
+                'contact_email' => $currentContact['email'],
+                // 'contact_id' => $is_updated ? $is_updated->contact_id : null,
+                'subject' => 'New Account activated',
+                'from' => env('MAIL_FROM_ADDRESS'),
+                'content' => 'New account activated.'
+            ];
 
-            // if (!empty($users_with_role_admin)) {
-            //     foreach ($users_with_role_admin as $role_admin) {
-            //         $data['email'] = $role_admin->email;
-            //         $adminTemplate = 'emails.approval-notifications';
-            //         MailHelper::sendMailNotification('emails.approval-notifications', $data);
-            //     }
-            // }
-            // $data['name'] = $name;
-            // $data['email'] = $email;
-            // $data['content'] = 'Your account has been approved';
-            // $data['subject'] = 'Your account has been approved';
-            // MailHelper::sendMailNotification('emails.approval-notifications', $data);
+            if (!empty($users_with_role_admin)) {
+                foreach ($users_with_role_admin as $role_admin) {
+                    $data['email'] = $role_admin->email;
+                    $adminTemplate = 'emails.approval-notifications';
+                    MailHelper::sendMailNotification('emails.approval-notifications', $data);
+                }
+            }
+            $data['name'] = $name;
+            $data['email'] = $email;
+            $data['content'] = 'Your account has been approved';
+            $data['subject'] = 'Your account has been approved';
+            MailHelper::sendMailNotification('emails.approval-notifications', $data);
             return response()->json([
                 'success' => true,
                 'created' => true,
@@ -410,8 +414,17 @@ class ContactController extends Controller
             $contact_log->user_id = $user_id;
             $contact_log->action_by = auth()->user()->id;
             $contact_log->action = 'Deletion';
-            $contact_log->description = !empty($customer->email) ? $customer->email : $customer->firstName .' '. $customer->lastName  . 'is ' . 'deleted by ' . auth()->user()->email;
+            $contact_log->description = !empty($customer->email) ? $customer->email . ' ' . 'is ' . 'deleted by ' . auth()->user()->email . ' ' .'at'. ' '. now() : $customer->firstName .' '. $customer->lastName  . ' ' . 'is ' . 'deleted by ' . auth()->user()->email . ' ' .'at'. ' '. now();
             $contact_log->save();
+
+            // adding to user log
+            $user_log = new UserLog();
+            $user_log->user_id = auth()->user()->id;
+            $user_log->contact_id = !empty($customer->contact_id) ? $customer->contact_id : $customer->id;
+            $user_log->secondary_id = !empty($customer->secondary_id) ? $customer->secondary_id : $customer->id;
+            $user_log->action = 'Deletion';
+            $user_log->user_notes = !empty($customer->email) ? $customer->email . ' ' . 'is ' . 'deleted by ' . auth()->user()->email . ' ' .'at'. ' '. now() : $customer->firstName .' '. $customer->lastName  . 'is ' . 'deleted by ' . auth()->user()->email .' ' .'at'. ' '. now();
+            $user_log->save();
             $user->delete();
             $customer->delete();
             return redirect()->back()->with('success', 'Customer Deleted Successfully');
@@ -420,8 +433,16 @@ class ContactController extends Controller
             $contact_log->user_id = $user_id;
             $contact_log->action_by = auth()->user()->id;
             $contact_log->action = 'Deletion';
-            $contact_log->description =  !empty($customer->email) ? $customer->email : $customer->firstName .' '. $customer->lastName . ' '. ' is ' . 'deleted by ' . auth()->user()->email;
+            $contact_log->description =  !empty($customer->email) ? $customer->email . ' ' . 'is ' . 'deleted by ' . auth()->user()->email . ' ' .'at'. ' '. now()  : $customer->firstName .' '. $customer->lastName . ' '. ' is ' . 'deleted by ' . auth()->user()->email .' ' .'at'. ' '. now();
             $contact_log->save();
+
+            $user_log = new UserLog();
+            $user_log->user_id = auth()->user()->id;
+            $user_log->contact_id = !empty($customer->contact_id) ? $customer->contact_id : $customer->id;
+            $user_log->secondary_id = !empty($customer->secondary_id) ? $customer->secondary_id : $customer->id;
+            $user_log->action = 'Deletion';
+            $user_log->user_notes = !empty($customer->email) ? $customer->email . ' ' . 'is ' . 'deleted by ' . auth()->user()->email . ' ' .'at'. ' '. now() : $customer->firstName .' '. $customer->lastName  . 'is ' . 'deleted by ' . auth()->user()->email .' ' .'at'. ' '. now();
+            $user_log->save();
             $customer->delete();
             return redirect()->back()->with('error', 'Customer deleted from Contacts but not found is Users');
         }

@@ -1031,16 +1031,28 @@ class ProductController extends Controller
         $contact = [];
        
         $user_id = auth()->id();
+        $parent_contact = null;
         // $company = session()->get('company');
         $contact_id = session()->get('contact_id');
+        $is_child = false; 
         
         if (!empty($user_id) && !empty($contact_id)) {
             $contact = Contact::where('user_id', $user_id)->where('contact_id', $contact_id)
                 ->orWhere('secondary_id', $contact_id)
                 ->first();
             
-        }else {
+        } else {
             $contact = Contact::where('user_id', $user_id)->first();
+        }
+
+        if (!empty($contact) && $contact->is_parent == 0) {
+            $is_child = true;
+        }
+
+        if ($is_child == true) {
+            $parent_contact = Contact::where('contact_id', $contact->parent_id)->first();
+        } else {
+            $parent_contact = $contact;
         }
         
         if (empty($contact)) {
@@ -1057,7 +1069,8 @@ class ProductController extends Controller
         return view($view, compact(
             'cart_items',
             'contact',
-            'tax_class'
+            'tax_class',
+            'parent_contact',
         ));
     }
 

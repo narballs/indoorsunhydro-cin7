@@ -644,6 +644,14 @@ class UserController extends Controller
 
     public function save_contact(CompanyInfoRequest $request)
     {
+        $price_column = null;
+        $default_price_column = AdminSetting::where('option_name', 'default_price_column')->first();
+        if (!empty($default_price_column)) {
+            $price_column = ucfirst($default_price_column->option_value);
+        }
+        else {
+            $price_column = 'RetailUSD';
+        }
         $validatedData = $request->validate(
             [
                 'street_address' => [
@@ -695,7 +703,7 @@ class UserController extends Controller
                 'company' => $request->input('company_name'),
                 'phone' => $request->input('phone'),
                 'status' => 0,
-                'priceColumn' => 'RetailUSD',
+                'priceColumn' => $price_column,
                 'user_id' => $user_id,
                 'firstName' => $user->first_name,
                 'type' => 'Customer',
@@ -776,6 +784,10 @@ class UserController extends Controller
         $data = [
             'user' => $user,
             'subject' => 'New Register User',
+            'name' => $user->first_name . ' ' . $user->last_name,
+            'content' => 'Your account registration request has been submitted. You will receive an email once your account has been approved.',
+            'email' => $user->email,
+            'subject' => 'Your account registration request ',
             'from' => 'noreply@indoorsunhydro.com',
         ];
         
@@ -786,6 +798,11 @@ class UserController extends Controller
                 MailHelper::sendMailNotification('emails.admin_notification', $data);
             }
         }
+        // $data['name'] = $user->first_name . ' ' . $user->last_name;
+        // $data['email'] = $user->email;
+        // $data['content'] = 'Your account registration request has been submitted. You will receive an email once your account has been approved.';
+        // $data['subject'] = 'Your account registration request ';
+        // MailHelper::sendMailNotification('emails.user_registration_notification', $data);
 
         return response()->json([
             'success' => true,
