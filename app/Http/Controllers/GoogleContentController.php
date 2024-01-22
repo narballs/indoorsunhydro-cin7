@@ -151,7 +151,11 @@ class GoogleContentController extends Controller
         $result  = null;
         $merchantId = config('services.google.merchant_center_id');
         $products = $service->products->listProducts($merchantId);
-        dd($products);
+        if (!empty($products->getResources())) {
+            foreach ($products->getResources() as $product) {
+                dd($product['status']);
+            }
+        }
         // if (!empty($product_array) > 0) {
         //     foreach ($product_array as $index => $add_product) {
         //         $product = new ServiceProduct();
