@@ -798,11 +798,11 @@ class UserController extends Controller
                 MailHelper::sendMailNotification('emails.admin_notification', $data);
             }
         }
-        $data['name'] = $user->first_name . ' ' . $user->last_name;
-        $data['email'] = $user->email;
-        $data['content'] = 'Your account registration request has been submitted. You will receive an email once your account has been approved.';
-        $data['subject'] = 'Your account registration request ';
-        MailHelper::sendMailNotification('emails.user_registration_notification', $data);
+        // $data['name'] = $user->first_name . ' ' . $user->last_name;
+        // $data['email'] = $user->email;
+        // $data['content'] = 'Your account registration request has been submitted. You will receive an email once your account has been approved.';
+        // $data['subject'] = 'Your account registration request ';
+        // MailHelper::sendMailNotification('emails.user_registration_notification', $data);
 
         return response()->json([
             'success' => true,
