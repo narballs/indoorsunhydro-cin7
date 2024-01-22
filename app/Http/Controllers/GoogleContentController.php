@@ -152,7 +152,8 @@ class GoogleContentController extends Controller
         $merchantId = config('services.google.merchant_center_id');
         $productStatusList = [];
         $pageToken = null;
-        $products = $service->products->listProducts($merchantId, ['pageToken' => $pageToken]);
+        $data_source_id = 5309938228;
+        $products = $service->products->listProducts($merchantId, $data_source_id);
 
         // Update the pageToken for the next iteration
         $pageToken = $products->getNextPageToken();
