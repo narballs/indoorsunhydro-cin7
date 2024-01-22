@@ -8,6 +8,7 @@ use App\Models\AdminSetting;
 use App\Models\Contact;
 use App\Models\ContactLogs;
 use App\Models\User;
+use App\Models\UserLog;
 
 class AdminSettingsController extends Controller
 {
@@ -210,16 +211,39 @@ class AdminSettingsController extends Controller
         $contact = Contact::withTrashed()->findOrFail($id);
         $contact->is_deleted = null;
         $contact->restore();
+        if (!empty($contact->user_id)) {
+            $user_id = $contact->id;
+        } else {
+            $user_id = null;
+        }
+
         $contact_log = new ContactLogs();
         $contact_log->user_id = $contact->user_id;
         $contact_log->action_by = auth()->user()->id;
         $contact_log->action = 'Restoration';
-        $contact_log->description = !empty($contact->email) ? $contact->email : $contact->firstName .' '. $contact->lastName  . 'is ' . 'restored by ' . auth()->user()->email;
+        $contact_log->description = !empty($contact->email) ? $contact->email .' '. 'is ' . 'restored by ' . auth()->user()->email .' ' .'at'. ' '. now()  : $contact->firstName .' '. $contact->lastName  . 'is ' . 'restored by ' . auth()->user()->email .' ' .'at'. ' '. now();
         $contact_log->save();
+
+        $user_log = new UserLog();
+        $user_log->user_id = auth()->user()->id;
+        $user_log->contact_id = !empty($contact->contact_id) ? $contact->contact_id : $user_id;
+        $user_log->secondary_id = !empty($contact->secondary_id) ? $contact->secondary_id : $user_id;
+        $user_log->action = 'Restoration';
+        $user_log->user_notes = !empty($contact->email) ? $contact->email .' '. 'is ' . 'restored by ' . auth()->user()->email .' ' .'at'. ' '. now() : $contact->firstName .' '. $contact->lastName  . 'is ' . 'deleted by ' . auth()->user()->email .' ' .'at'. ' '. now();
+        $user_log->save();
+
         $user = User::withTrashed()->where('id', $contact->user_id)->first();
         if (!empty($user)) {
             $user->is_deleted = null;
             $user->restore();
+
+            $user_log = new UserLog();
+            $user_log->user_id = auth()->user()->id;
+            $user_log->contact_id = !empty($contact->contact_id) ? $contact->contact_id : $contact->user_id;
+            $user_log->secondary_id = !empty($contact->secondary_id) ? $contact->secondary_id : $contact->user_id;
+            $user_log->action = 'Restoration';
+            $user_log->user_notes = !empty($contact->email) ? $contact->email .' ' . 'is ' . 'restored by ' . auth()->user()->email : $contact->firstName .' '. $contact->lastName .' ' . 'is ' . 'deleted by ' . auth()->user()->email .' ' .'at'. ' '. now();
+            $user_log->save();
         }
         if (!empty($contact) && !empty($user)) {
             return redirect()->back()->with('success', 'Contact restored successfully.');
@@ -238,8 +262,17 @@ class AdminSettingsController extends Controller
         $contact_log->user_id = $contact->user_id;
         $contact_log->action_by = auth()->user()->id;
         $contact_log->action = 'Deletion';
-        $contact_log->description = !empty($contact->email) ? $contact->email : $contact->firstName .' '. $contact->lastName  . 'is ' . 'deleted by ' . auth()->user()->email;
+        $contact_log->description = !empty($contact->email) ? $contact->email .' ' . 'is ' . 'deleted by ' . auth()->user()->email .' ' .'at'. ' '. now() : $contact->firstName .' '. $contact->lastName  . 'is ' . 'deleted by ' . auth()->user()->email .' ' .'at'. ' '. now();
         $contact_log->save();
+
+        $user_log = new UserLog();
+        $user_log->user_id = auth()->user()->id;
+        $user_log->contact_id = !empty($contact->contact_id) ? $contact->contact_id : $contact->id;
+        $user_log->secondary_id = !empty($contact->secondary_id) ? $contact->secondary_id : $contact->id;
+        $user_log->action = 'Deletion';
+        $user_log->user_notes = !empty($contact->email) ? $contact->email.' '. 'is ' . 'deleted by ' . auth()->user()->email .' ' .'at'. ' '. now() : $contact->firstName .' '. $contact->lastName .' ' . 'is ' . 'deleted by ' . auth()->user()->email .' ' .'at'. ' '. now();
+        $user_log->save();
+
         $contact->delete();
         $user->delete();
         if ($contact && $user) {

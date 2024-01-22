@@ -98,13 +98,15 @@
                     <i class="fas fa-pen" style="color: lightgray"></i>
                 </a>
             </span>
-            <span class="ml-1">
-                <a href=" {{ url('admin/customer-delete/' . $contact->id) }}" class="delete deleteIcon a_class"
-                    id="{{ $contact->id }}" title="" data-toggle="tooltip" data-original-title="Delete">
-                    {{-- <img src="/theme/img/delete.png" alt="" class="img-fluid" onclick="return confirm('Are you sure you want to delete this Contact?');"> --}}
-                    <i class="fas fa-trash" style="color: lightgray" onclick="return confirm('Are you sure you want to delete this Contact?');"></i>
-                </a>
-            </span>
+            @if (empty($contact->is_deleted))
+                <span class="ml-1">
+                    <a href=" {{ url('admin/customer-delete/' . $contact->id) }}" class="delete deleteIcon a_class"
+                        id="{{ $contact->id }}" title="" data-toggle="tooltip" data-original-title="Delete">
+                        {{-- <img src="/theme/img/delete.png" alt="" class="img-fluid" onclick="return confirm('Are you sure you want to delete this Contact?');"> --}}
+                        <i class="fas fa-trash" style="color: lightgray" onclick="return confirm('Are you sure you want to delete this Contact?');"></i>
+                    </a>
+                </span>
+            @endif
         </div>
     </td>
 </tr>

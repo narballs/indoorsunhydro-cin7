@@ -225,6 +225,7 @@ class ContactController extends Controller
 
     public function show_customer(Request $request , $id)
     {
+        
         $primary_contact = '';
         $secondary_contacts = '';
         $contact_is_parent = '';
@@ -232,10 +233,13 @@ class ContactController extends Controller
         $secondary_contacts_query = '';
         $customer = Contact::withTrashed()->where('id', $id)->first();
         $pricing = $customer->priceColumn;
-        $logs = UserLog::where('contact_id', $customer->contact_id)
-            ->orderBy('id', 'desc')
-            ->limit(8)
-            ->get();
+        $get_contactID = !empty($customer->contact_id) ? $customer->contact_id : $id;
+        $get_secondaryID = !empty($customer->secondary_id) ? $customer->secondary_id : $id;
+        $logs = UserLog::orWhere('contact_id', $get_contactID)
+        ->orWhere('secondary_id', $get_secondaryID)
+        ->orderBy('created_at', 'desc')
+        ->take(10)
+        ->get();
         $user_id = $customer->user_id;
         if (!empty($customer->contact_id)) {
             $secondary_contacts_query = Contact::where('parent_id', $customer->contact_id);
@@ -410,8 +414,17 @@ class ContactController extends Controller
             $contact_log->user_id = $user_id;
             $contact_log->action_by = auth()->user()->id;
             $contact_log->action = 'Deletion';
-            $contact_log->description = !empty($customer->email) ? $customer->email : $customer->firstName .' '. $customer->lastName  . 'is ' . 'deleted by ' . auth()->user()->email;
+            $contact_log->description = !empty($customer->email) ? $customer->email . ' ' . 'is ' . 'deleted by ' . auth()->user()->email . ' ' .'at'. ' '. now() : $customer->firstName .' '. $customer->lastName  . ' ' . 'is ' . 'deleted by ' . auth()->user()->email . ' ' .'at'. ' '. now();
             $contact_log->save();
+
+            // adding to user log
+            $user_log = new UserLog();
+            $user_log->user_id = auth()->user()->id;
+            $user_log->contact_id = !empty($customer->contact_id) ? $customer->contact_id : $customer->id;
+            $user_log->secondary_id = !empty($customer->secondary_id) ? $customer->secondary_id : $customer->id;
+            $user_log->action = 'Deletion';
+            $user_log->user_notes = !empty($customer->email) ? $customer->email . ' ' . 'is ' . 'deleted by ' . auth()->user()->email . ' ' .'at'. ' '. now() : $customer->firstName .' '. $customer->lastName  . 'is ' . 'deleted by ' . auth()->user()->email .' ' .'at'. ' '. now();
+            $user_log->save();
             $user->delete();
             $customer->delete();
             return redirect()->back()->with('success', 'Customer Deleted Successfully');
@@ -420,8 +433,16 @@ class ContactController extends Controller
             $contact_log->user_id = $user_id;
             $contact_log->action_by = auth()->user()->id;
             $contact_log->action = 'Deletion';
-            $contact_log->description =  !empty($customer->email) ? $customer->email : $customer->firstName .' '. $customer->lastName . ' '. ' is ' . 'deleted by ' . auth()->user()->email;
+            $contact_log->description =  !empty($customer->email) ? $customer->email . ' ' . 'is ' . 'deleted by ' . auth()->user()->email . ' ' .'at'. ' '. now()  : $customer->firstName .' '. $customer->lastName . ' '. ' is ' . 'deleted by ' . auth()->user()->email .' ' .'at'. ' '. now();
             $contact_log->save();
+
+            $user_log = new UserLog();
+            $user_log->user_id = auth()->user()->id;
+            $user_log->contact_id = !empty($customer->contact_id) ? $customer->contact_id : $customer->id;
+            $user_log->secondary_id = !empty($customer->secondary_id) ? $customer->secondary_id : $customer->id;
+            $user_log->action = 'Deletion';
+            $user_log->user_notes = !empty($customer->email) ? $customer->email . ' ' . 'is ' . 'deleted by ' . auth()->user()->email . ' ' .'at'. ' '. now() : $customer->firstName .' '. $customer->lastName  . 'is ' . 'deleted by ' . auth()->user()->email .' ' .'at'. ' '. now();
+            $user_log->save();
             $customer->delete();
             return redirect()->back()->with('error', 'Customer deleted from Contacts but not found is Users');
         }

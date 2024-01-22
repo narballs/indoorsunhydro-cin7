@@ -249,7 +249,7 @@
                                                             class="edit a_class" title="" data-toggle="tooltip"
                                                             data-original-title="Edit">Edit
                                                         </a>
-                                                        @if ($contact->status != 0 && (!empty($contact->contact_id) || !empty($contact->secondary_id)))
+                                                        @if ((empty($contact->is_deleted)) && ($contact->status != 0) && (!empty($contact->contact_id) || !empty($contact->secondary_id)))
                                                             <a class="dropdown-item remove_padding"href="{{ url('admin/user-switch/' . $user->id . '/' . $contact_switch_id) }}"
                                                                 class="edit a_class" title="" data-toggle="tooltip"
                                                                 data-original-title="Edit">Switch User
