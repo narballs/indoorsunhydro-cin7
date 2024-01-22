@@ -644,6 +644,14 @@ class UserController extends Controller
 
     public function save_contact(CompanyInfoRequest $request)
     {
+        $price_column = null;
+        $default_price_column = AdminSetting::where('option_name', 'default_price_column')->first();
+        if (!empty($default_price_column)) {
+            $price_column = ucfirst($default_price_column->option_value);
+        }
+        else {
+            $price_column = 'RetailUSD';
+        }
         $validatedData = $request->validate(
             [
                 'street_address' => [
@@ -695,7 +703,7 @@ class UserController extends Controller
                 'company' => $request->input('company_name'),
                 'phone' => $request->input('phone'),
                 'status' => 0,
-                'priceColumn' => 'RetailUSD',
+                'priceColumn' => $price_column,
                 'user_id' => $user_id,
                 'firstName' => $user->first_name,
                 'type' => 'Customer',
