@@ -58,10 +58,7 @@
                                 
                                 <tr>
                                     <td>Account Details</td>
-                                </tr>
-                                <tr>
-                                    <td>Contact ID: {{$contact_id}}</td>
-                                </tr>
+                                </tr> 
                                 <tr>
                                     <td>Name : {{$contact_name}}</td>
                                 </tr>
