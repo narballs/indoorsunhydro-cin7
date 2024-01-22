@@ -98,52 +98,52 @@ class GoogleContentController extends Controller
         ->where('status' , '!=' , 'Inactive')
         ->where('barcode' , '!=' , '')
         ->get();
-        if (count($products) > 0) {
-            foreach ($products as $product) {
+        // if (count($products) > 0) {
+        //     foreach ($products as $product) {
                 
-                if (count($product->options) > 0) {
-                    // if (!empty($product->images)) {
-                    //     $response  = Http::get($product->images);
-                    //     if ($response->getStatusCode() == 200) {
-                    //         $image = $product->images;
-                    //     } else {
-                    //         $image = url(asset('theme/img/image_not_available.png'));
-                    //     }
-                    // }  else {
-                    //     $image = url(asset('theme/img/image_not_available.png'));
-                    // }
-                    foreach ($product->options as $option) {
-                        $category = 'General > General';
-                        if (!empty($product->categories)) {
-                            if (!empty($product->categories->category_id) && $product->categories->parent_id == 0) {
-                                $category = $product->categories->category_id;
-                            } else if (!empty($product->categories->parent_id) && !empty($product->categories->category_id) && $product->categories->parent_id != 0) {
-                                $category = $product->categories->parent_id;
-                            }
-                        }
-                        else {
-                            $category = 'General > General';
-                        }
+        //         if (count($product->options) > 0) {
+        //             // if (!empty($product->images)) {
+        //             //     $response  = Http::get($product->images);
+        //             //     if ($response->getStatusCode() == 200) {
+        //             //         $image = $product->images;
+        //             //     } else {
+        //             //         $image = url(asset('theme/img/image_not_available.png'));
+        //             //     }
+        //             // }  else {
+        //             //     $image = url(asset('theme/img/image_not_available.png'));
+        //             // }
+        //             foreach ($product->options as $option) {
+        //                 $category = 'General > General';
+        //                 if (!empty($product->categories)) {
+        //                     if (!empty($product->categories->category_id) && $product->categories->parent_id == 0) {
+        //                         $category = $product->categories->category_id;
+        //                     } else if (!empty($product->categories->parent_id) && !empty($product->categories->category_id) && $product->categories->parent_id != 0) {
+        //                         $category = $product->categories->parent_id;
+        //                     }
+        //                 }
+        //                 else {
+        //                     $category = 'General > General';
+        //                 }
                         
-                        $product_array[] = [
-                            'id' => $product->id,
-                            'title' => $product->name,
-                            'code' => $product->code,
-                            'description' => !empty($product->description) ? strip_tags($product->description) : 'No description available',
-                            'link' => url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug),
-                            'image_link' => !empty($product->product_image->image) ? url(asset('theme/products/images/' . $product->product_image->image)) : url(asset('theme/img/image_not_available.png')),
-                            'price' => !empty($option->price[0]->$price_column) ? $option->price[0]->$price_column : 0,
-                            'condition' => 'new',
-                            'availability' => 'In stock',
-                            'brand' => !empty($product->product_brand->name) ? $product->product_brand->name : 'General brand',
-                            'barcode' => $product->barcode,
-                            'google_product_category' => $category,
-                            'product_weight' => $option->optionWeight,
-                        ];
-                    }
-                }
-            }
-        }
+        //                 $product_array[] = [
+        //                     'id' => $product->id,
+        //                     'title' => $product->name,
+        //                     'code' => $product->code,
+        //                     'description' => !empty($product->description) ? strip_tags($product->description) : 'No description available',
+        //                     'link' => url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug),
+        //                     'image_link' => !empty($product->product_image->image) ? url(asset('theme/products/images/' . $product->product_image->image)) : url(asset('theme/img/image_not_available.png')),
+        //                     'price' => !empty($option->price[0]->$price_column) ? $option->price[0]->$price_column : 0,
+        //                     'condition' => 'new',
+        //                     'availability' => 'In stock',
+        //                     'brand' => !empty($product->product_brand->name) ? $product->product_brand->name : 'General brand',
+        //                     'barcode' => $product->barcode,
+        //                     'google_product_category' => $category,
+        //                     'product_weight' => $option->optionWeight,
+        //                 ];
+        //             }
+        //         }
+        //     }
+        // }
         // $chunks = array_chunk($product_array, 100);
         $client->setAccessToken($token['access_token']); // Use the stored access token
 
@@ -152,24 +152,62 @@ class GoogleContentController extends Controller
         $merchantId = config('services.google.merchant_center_id');
         $productStatusList = [];
         $pageToken = null;
-        $products = $service->products->listProducts($merchantId, ['maxResults' => 250, 'pageToken' => $pageToken]);
+        // $products = $service->products->listProducts($merchantId, ['maxResults' => 250, 'pageToken' => $pageToken]);
 
         // Update the pageToken for the next iteration
         
 
         // Loop through the products and gather visibility and status information
-        foreach ($products->getResources() as $product) {
-            $pageToken = $products->getNextPageToken();
-            $productId = $product['id'];
-            $mpn = $product['mpn'];
+        // foreach ($products->getResources() as $product) {
+        //     $pageToken = $products->getNextPageToken();
+        //     $productId = $product['id'];
+        //     $mpn = $product['mpn'];
 
-            // Collect status information
-            $productStatusList[$productId] = [
-                'id' => $productId,
-                'mpn' => $mpn,
-            ];
-        }
+        //     // Collect status information
+        //     $productStatusList[$productId] = [
+        //         'id' => $productId,
+        //         'mpn' => $mpn,
+        //     ];
+        // }
+        // dd($productStatusList);
+        do {
+            try {
+                // Retrieve products from Google Merchant Center with pagination
+                $products = $service->products->listProducts($merchantId, ['maxResults' => 250, 'pageToken' => $pageToken]);
+    
+                // Loop through the products and gather visibility and status information
+                foreach ($products->getResources() as $product) {
+                    $productId = $product['id'];
+                    $mpn = $product['mpn'];
+    
+                    // Collect status information
+                    $productStatusList[$productId] = [
+                        'id' => $productId,
+                        'mpn' => $mpn,
+                    ];
+                }
+    
+                // Update the pageToken for the next iteration
+                $pageToken = $products->getNextPageToken();
+            } catch (\Google\Service\Exception $e) {
+                // Handle exception (e.g., API request error) if necessary
+                report($e);
+                // Return an error response or handle it based on your application's requirements
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Failed to retrieve products from Google Merchant Center.'
+                ]);
+            }
+        } while (!empty($pageToken));
         dd($productStatusList);
+    
+        // Return a success response with all products
+        return response()->json([
+            'status' => 'success',
+            'message' => 'All products retrieved successfully.',
+            'product_status_list' => $productStatusList,
+        ]);
+    
         // if (!empty($product_array) > 0) {
         //     foreach ($product_array as $index => $add_product) {
         //         $product = new ServiceProduct();
