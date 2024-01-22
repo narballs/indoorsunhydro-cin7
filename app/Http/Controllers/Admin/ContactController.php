@@ -82,12 +82,12 @@ class ContactController extends Controller
             }
             if ($activeCustomer == 'pending-approval') {
                 $contact_query = Contact::where('contact_id', NULL)
-                ->where('user_id', '!=', NULL);
+                ->where('user_id', '!=', NULL)->orderBy('created_at' , 'Desc');
             }
         }
         if ($pendingApproval == 'pending-approval') {
             $contact_query = Contact::where('contact_id', NULL)
-            ->where('user_id', '!=', NULL);
+            ->where('user_id', '!=', NULL)->orderBy('created_at' , 'Desc');
         }
         if (!empty($search)) {
             $contact_query = $contact_query->where('firstName', 'LIKE', '%' . $search . '%')
