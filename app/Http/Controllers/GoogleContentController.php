@@ -152,14 +152,14 @@ class GoogleContentController extends Controller
         $merchantId = config('services.google.merchant_center_id');
         $productStatusList = [];
         $pageToken = null;
-        $data_source_id = 5309938228;
-        $products = $service->products->listProducts($merchantId, $data_source_id);
+        $products = $service->products->listProducts($merchantId, ['maxResults' => 1500, 'pageToken' => $pageToken]);
 
         // Update the pageToken for the next iteration
-        $pageToken = $products->getNextPageToken();
+        
 
         // Loop through the products and gather visibility and status information
         foreach ($products->getResources() as $product) {
+            $pageToken = $products->getNextPageToken();
             $productId = $product['id'];
             $mpn = $product['mpn'];
 
