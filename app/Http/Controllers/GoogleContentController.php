@@ -117,13 +117,9 @@ class GoogleContentController extends Controller
                         'mpn' => $mpn,
                     ];
                 }
-    
-                // Update the pageToken for the next iteration
                 $pageToken = $products->getNextPageToken();
             } catch (\Google\Service\Exception $e) {
-                // Handle exception (e.g., API request error) if necessary
                 report($e);
-                // Return an error response or handle it based on your application's requirements
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Failed to retrieve products from Google Merchant Center.'
@@ -170,7 +166,6 @@ class GoogleContentController extends Controller
                 }
             }
         }
-        // $chunks = array_chunk($product_array, 100);
         
         dd($product_array);
         if (!empty($product_array) > 0) {
