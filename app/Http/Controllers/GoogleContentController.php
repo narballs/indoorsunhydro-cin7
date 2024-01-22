@@ -154,20 +154,21 @@ class GoogleContentController extends Controller
         $pageToken = null;
         $products = $service->products->listProducts($merchantId, ['pageToken' => $pageToken]);
 
-            // Update the pageToken for the next iteration
-            $pageToken = $products->getNextPageToken();
+        // Update the pageToken for the next iteration
+        $pageToken = $products->getNextPageToken();
 
-            // Loop through the products and gather visibility and status information
-            foreach ($products->getResources() as $product) {
-                $productId = $product['id'];
-                $mpn = $product['mpn'];
+        // Loop through the products and gather visibility and status information
+        foreach ($products->getResources() as $product) {
+            $productId = $product['id'];
+            $mpn = $product['mpn'];
 
-                // Collect status information
-                $productStatusList[$productId] = [
-                    'id' => $productId,
-                    'mpn' => $mpn,
-                ];
-            }
+            // Collect status information
+            $productStatusList[$productId] = [
+                'id' => $productId,
+                'mpn' => $mpn,
+            ];
+        }
+        dd($productStatusList);
         // if (!empty($product_array) > 0) {
         //     foreach ($product_array as $index => $add_product) {
         //         $product = new ServiceProduct();
