@@ -65,6 +65,7 @@ class GoogleContentController extends Controller
             $price_column = 'retailUSD';
         }
         $product_array = [];
+        
         // $products = Product::with('options','options.defaultPrice', 'product_brand','product_image','categories' , 'product_views','apiorderItem', 'product_stock')
         // ->with(['product_views','apiorderItem' , 'options' => function ($q) {
         //     $q->where('status', '!=', 'Disabled')
@@ -148,6 +149,9 @@ class GoogleContentController extends Controller
 
         $service = new ShoppingContent($client);
         $result  = null;
+        $merchantId = config('services.google.merchant_center_id');
+        $products = $service->products->listProducts($merchantId);
+        dd($products);
         if (!empty($product_array) > 0) {
             foreach ($product_array as $index => $add_product) {
                 $product = new ServiceProduct();
