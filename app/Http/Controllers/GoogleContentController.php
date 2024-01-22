@@ -143,6 +143,7 @@ class GoogleContentController extends Controller
                 }
             }
         }
+        
         // $chunks = array_chunk($product_array, 100);
         $client->setAccessToken($token['access_token']); // Use the stored access token
 
@@ -184,7 +185,7 @@ class GoogleContentController extends Controller
                 }
                 if (!$isDuplicate) {
                     $product = new ServiceProduct();
-                    $product->setOfferId($add_product['code']);
+                    $product->setOfferId(substr($add_product['code'], 0, 50));
                     $product->setTitle($add_product['title']);
                     $product->setDescription($add_product['description']);
                     $product->setLink($add_product['link']);
