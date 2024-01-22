@@ -403,7 +403,7 @@ $cart_price = 0;
                         <div class="col-md-12 mb-3">
                             <p class="thank-you-page-select-date-options mb-2">Payment Terms</p>
                             <select name="paymentTerms" id="pay_terms" class="form-control">
-                                @if($user_address->paymentTerms == "Pay in Advanced" )
+                                @if(strtolower($user_address->paymentTerms) == "pay in advanced" )
                                     <option value="Pay in Advanced" selected>Pay in Advanced</option>
                                 @else
                                     <option value="30 days from invoice" selected>30 days from invoice</option>
@@ -853,7 +853,7 @@ $cart_price = 0;
                                                     <p class="payment-option">Payment Terms</p>
                                                     
                                                     <select name="paymentTerms" id="pay_terms" class="form-control w-75">
-                                                        @if($user_address->paymentTerms == "Pay in Advanced" )
+                                                        @if(strtolower($user_address->paymentTerms) == "pay in advanced" )
                                                             <option value="Pay in Advanced" selected>Pay in Advanced</option>
                                                         @else
                                                             <option value="30 days from invoice" selected>30 days from invoice</option>
@@ -1226,7 +1226,7 @@ $cart_price = 0;
                                                                 <div class="">
                                                                     <p class="cart-total-checkout-page">Payment Terms</p>
                                                                     <select name="paymentTerms" id="pay_terms" class="form-control">
-                                                                        @if($user_address->paymentTerms == "Pay in Advanced" )
+                                                                        @if(strtolower($user_address->paymentTerms) == 'pay in advanced')
                                                                             <option value="Pay in Advanced" selected>Pay in Advanced</option>
                                                                         @else
                                                                             <option value="30 days from invoice" selected>30 days from invoice</option>
