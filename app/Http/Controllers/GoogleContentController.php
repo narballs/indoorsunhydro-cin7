@@ -159,7 +159,7 @@ class GoogleContentController extends Controller
                 foreach ($products->getResources() as $product) {
                     $productId = $product['id'];
                     $mpn = $product['mpn'];
-                    $productStatusList[$productId] = [
+                    $productStatusList[] = [
                         'id' => $productId,
                         'mpn' => $mpn,
                     ];
@@ -185,7 +185,7 @@ class GoogleContentController extends Controller
                 }
                 if (!$isDuplicate) {
                     $product = new ServiceProduct();
-                    $product->setOfferId(substr($add_product['code'], 0, 50));
+                    $product->setOfferId($add_product['code']);
                     $product->setTitle($add_product['title']);
                     $product->setDescription($add_product['description']);
                     $product->setLink($add_product['link']);
