@@ -1,6 +1,18 @@
+
+@if (!empty($enable_free_shipping_banner) && (strtolower($enable_free_shipping_banner->option_value) == 'yes'))
+    {{-- @if (($calculate_free_shipping < intval($free_shipping)) && ($calculate_free_shipping >= 0)) --}}
+        <div class="w-100 promotional_banner_div {{$d_none}}" id="promotional_banner_div" style="">
+            <p class="text-center text-white promotional_banner_text p-2 mb-0">
+                <i class="fas fa-shipping-fast"></i> Only <span class="promotional_banner_span">@if($calculate_free_shipping <= intval($free_shipping)) {{number_format($calculate_free_shipping , 2)}} @endif</span> left to get free shipping in California
+            </p>
+        </div>
+    {{-- @endif --}}
+@endif
 @include('partials.header')
 @include('partials.top-bar')
 @include('partials.search-bar')
+
+<input type="hidden" name="" id="initial_free_shipping_value" class="initial_free_shipping_value" value="{{$free_shipping}}">
 <div class=" cart-title mt-4  desktop-view">
     <p style="line-height: 95px;"
         class=" fs-2 product-btn my-auto border-0 text-white text-center align-middle cart-title">
@@ -830,6 +842,7 @@
 
                 var grand_total = 0;
                 var total_cart_quantity = 0;
+                var initial_free_shipping_value = parseInt($('.initial_free_shipping_value').val());
                 Object.keys(response.cart_items).forEach(function(key) {
                     row_total = parseFloat(response.cart_items[key].price) * response.cart_items[
                         key].quantity;
@@ -837,6 +850,7 @@
                     total_cart_quantity += parseInt(response.cart_items[key].quantity);
 
                 });
+                
                 $('#cart_grand_total').children().html('$' + grand_total.toFixed(2));
                 $('#topbar_cart_total').html('$' + grand_total.toFixed(2));
                 $('#top_cart_quantity').html(total_cart_quantity);
@@ -856,6 +870,14 @@
                 var tax = grand_total.toFixed(2) * (tax_rate / 100);
                 $('.tax_cart').children().html('$' + tax.toFixed(2));
                 $('.grandTotal').children().html('$' + (tax + grand_total).toFixed(2));
+                var grand_total_include_tax = 0;
+                grand_total_include_tax = (tax + grand_total).toFixed(2);
+                if (grand_total <= initial_free_shipping_value) {
+                    $('.promotional_banner_div').removeClass('d-none');
+                    $('.promotional_banner_span').html('$' + (initial_free_shipping_value - grand_total_include_tax).toFixed(2));
+                } else {
+                    $('.promotional_banner_div').addClass('d-none');
+                }
 
 
                 $('#mbl_tax_price').html('$' + tax.toFixed(2));
@@ -899,6 +921,7 @@
 
                 var grand_total = 0;
                 var total_cart_quantity = 0;
+                var initial_free_shipping_value = parseInt($('.initial_free_shipping_value').val());
                 Object.keys(response.cart_items).forEach(function(key) {
                     row_total = parseFloat(response.cart_items[key].price) * response.cart_items[
                         key].quantity;
@@ -922,6 +945,15 @@
                 var tax = grand_total.toFixed(2) * (tax_rate / 100);
                 $('.tax_cart').children().html('$' + tax.toFixed(2));
                 $('.grandTotal').children().html('$' + (tax + grand_total).toFixed(2));
+
+                var grand_total_include_tax = 0;
+                grand_total_include_tax = (tax + grand_total).toFixed(2);
+                if (grand_total <= initial_free_shipping_value) {
+                    $('.promotional_banner_div').removeClass('d-none');
+                    $('.promotional_banner_span').html('$' + (initial_free_shipping_value - grand_total_include_tax).toFixed(2));
+                } else {
+                    $('.promotional_banner_div').addClass('d-none');
+                }
 
                 $('#mbl_tax_price').html('$' + tax.toFixed(2));
                 $('#mbl_total_p').html('$' + (tax + grand_total).toFixed(2));
@@ -959,6 +991,7 @@
 
                 var grand_total = 0;
                 var total_cart_quantity = 0;
+                var initial_free_shipping_value = parseInt($('.initial_free_shipping_value').val());
                 Object.keys(response.cart_items).forEach(function(key) {
                     row_total = parseFloat(response.cart_items[key].price) * response.cart_items[
                         key].quantity;
@@ -986,6 +1019,14 @@
                 $('.tax_cart').children().html('$' + tax.toFixed(2));
                 $('.grandTotal').children().html('$' + (tax + grand_total).toFixed(2));
 
+                var grand_total_include_tax = 0;
+                grand_total_include_tax = (tax + grand_total).toFixed(2);
+                if (grand_total <= initial_free_shipping_value) {
+                    $('.promotional_banner_div').removeClass('d-none');
+                    $('.promotional_banner_span').html('$' + (initial_free_shipping_value - grand_total_include_tax).toFixed(2));
+                } else {
+                    $('.promotional_banner_div').addClass('d-none');
+                }
 
                 $('#mbl_tax_price').html('$' + tax.toFixed(2));
                 $('#mbl_total_p').html('$' + (tax + grand_total).toFixed(2));
