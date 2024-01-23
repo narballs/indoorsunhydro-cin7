@@ -48,12 +48,20 @@
                             </div>
                         </div>
                         <div class="col-md-2">
-                            <input type="hidden" value="pending-approval" id="pending_approval" name="pending_approval">
-                            <button class="btn-sm btn-primary border-0 p-1 px-2 rounded-pill" type="button" onclick="pending_approval()">New User Pending Approval</button>
+                            {{-- <input type="hidden" value="pending-approval" id="pending_approval" name="pending_approval">
+                            <button class="btn-sm btn-primary border-0 p-1 px-2 rounded-pill" type="button" onclick="pending_approval()">New User Pending Approval</button> --}}
+                            
+
                         </div>
                         <div class="col-md-5">
                             <div class="row filter-row-mobile-secreen">
                                 <div class="col-md-6">
+                                    <select name="sort_by_created_at" id="sort_by_created_at" onchange="sortbycreatedat()"
+                                        class="form-control" style="margin-left: -7px;">
+                                        <option value="" class="form-control">Sort By Created Date</option>
+                                        <option value="Asc" class="form-control" {{ isset($sort_by_created_at) && $sort_by_created_at == 'Asc' ? 'selected="selected"' : '' }}> Ascending </option>
+                                        <option value="Desc" class="form-control" {{ isset($sort_by_created_at) && $sort_by_created_at == 'Desc' ? 'selected="selected"' : '' }}> Descending </option>
+                                    </select>
                                 </div>
                                 <div class="col-md-6 fillter-mobile-screen">
                                     <select name="active_customer" id="active_customer" onchange="perPage()"
@@ -505,6 +513,18 @@
             }
             if (activeCustomer != '') {
                 basic_url = basic_url + `&active-customer=${activeCustomer}`;
+            }
+            window.location.href = basic_url;
+        }
+        function sortbycreatedat() {
+            var perPage = $('#per_page').val();
+            var search = $('#search').val();
+            var sort_by_created_at = $('#sort_by_created_at').val();
+            if (perPage != '') {
+                var basic_url = 'customers?&search=' + search;
+            }
+            if (sort_by_created_at != '') {
+                basic_url = basic_url + `&sort_by_created_at=${sort_by_created_at}`;
             }
             window.location.href = basic_url;
         }
