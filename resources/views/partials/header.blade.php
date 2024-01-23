@@ -198,6 +198,25 @@
                 width: 50% !important;
             }
         } */
+
+        @keyframes blink {
+        0% {
+            opacity: 1;
+        }
+        50% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+        }
+        .promotional_banner_div {
+            background-color: #373737;
+        }
+
+        .promotional_banner_text {
+            animation: blink 1s infinite;
+        }
     </style>
     <link rel="stylesheet" href="{{asset('theme/landing_page/landing_page_style.css')}}">
 </head>

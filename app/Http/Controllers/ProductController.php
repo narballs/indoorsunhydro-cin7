@@ -1029,9 +1029,17 @@ class ProductController extends Controller
     public function cart(Request $request)
     {
         $contact = [];
-       
+        $subtotal = 0;
+        $cart_total = 0;
+        $tax_rate = 0;
+        $tax = 0 ;
+        $d_none = 'd-none'; 
+        $calculate_free_shipping = 0;
+        $free_shipping = 0;
         $user_id = auth()->id();
         $parent_contact = null;
+        $enable_free_shipping_banner = AdminSetting::where('option_name', 'enable_free_shipping_banner')->first();
+        $free_shipping_value  = AdminSetting::where('option_name', 'free_shipping_value')->first();
         // $company = session()->get('company');
         $contact_id = session()->get('contact_id');
         $is_child = false; 
@@ -1061,6 +1069,33 @@ class ProductController extends Controller
         
         $cart_items = UserHelper::switch_price_tier($request);
         $tax_class = TaxClass::where('name', $contact->tax_class)->first();
+
+        if (!empty($cart_items)) {
+            foreach ($cart_items as $cart_item) {
+                $subtotal += $cart_item['price'] * $cart_item['quantity'];
+            }
+
+            if (!empty($tax_class)) {
+                $tax_rate = $subtotal * ($tax_class->rate / 100);
+                $tax = $tax_rate;
+            }
+
+            $cart_total = $subtotal + $tax;
+
+            if (!empty($free_shipping_value)) {
+                $free_shipping = $free_shipping_value->option_value;
+            } else {
+                $free_shipping = 0;
+            }
+            $calculate_free_shipping = $free_shipping - $cart_total;
+        }
+
+        if ($calculate_free_shipping <= intval($free_shipping) && $calculate_free_shipping >= 0) {
+            $d_none = '';
+        } else {
+            $d_none = 'd-none';
+        }
+
         if (!empty($cart_items)) {
             $view = 'cart';
         } else {
@@ -1071,6 +1106,13 @@ class ProductController extends Controller
             'contact',
             'tax_class',
             'parent_contact',
+            'cart_total',
+            'enable_free_shipping_banner',
+            'calculate_free_shipping',
+            'free_shipping_value',
+            'free_shipping',
+            'd_none'
+
         ));
     }
 

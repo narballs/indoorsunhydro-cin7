@@ -32,6 +32,11 @@ class SettingSeeder extends Seeder
                 'option_value' => 'No',
             ],
             [
+                'option_name' => 'enable_free_shipping_banner', 
+                'type' => 'yes/no',
+                'option_value' => 'No',
+            ],
+            [
                 'option_name' => 'sync_api_data', 
                 'type' => 'yes/no',
                 'option_value' => 'No',
@@ -206,6 +211,11 @@ class SettingSeeder extends Seeder
                 'option_name' => 'empty_trash_time_for_contacts', 
                 'type' => 'text',
                 'option_value' => '10',
+            ],
+            [
+                'option_name' => 'free_shipping_value', 
+                'type' => 'text',
+                'option_value' => '1000',
             ],
         ];
 
