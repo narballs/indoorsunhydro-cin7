@@ -72,6 +72,7 @@ class ContactController extends Controller
         $sort_by_email = $request->get('sort_by_email');
         $activeCustomer = $request->get('active-customer');
         $pendingApproval = $request->get('pending-approval');
+        $sort_by_created_at = $request->get('sort_by_created_at');
         $contact_query = Contact::withTrashed()->where('type', 'Customer');
         if (!empty($activeCustomer)) {
             if ($activeCustomer == 'active-customer') {
@@ -128,6 +129,15 @@ class ContactController extends Controller
                 $contact_query = $contact_query->orderBy('email' , 'Desc');
             }
         }
+        
+        if (!empty($sort_by_created_at)) {
+            if ($sort_by_created_at == 'Asc') {
+                $contact_query = $contact_query->orderBy('created_at' , 'Asc');
+            }
+            if ($sort_by_created_at == 'Desc') {
+                $contact_query = $contact_query->orderBy('created_at' , 'Desc');
+            }
+        }
 
         $contacts = $contact_query->paginate($perPage);
         return view('admin/customers', compact(
@@ -139,6 +149,7 @@ class ContactController extends Controller
             'sort_by_asc',
             'sort_by_name',
             'sort_by_email',
+            'sort_by_created_at',
         ));
     }
 
