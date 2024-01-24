@@ -1,12 +1,12 @@
 
 @if (!empty($enable_free_shipping_banner) && (strtolower($enable_free_shipping_banner->option_value) == 'yes'))
-    {{-- @if (($calculate_free_shipping < intval($free_shipping)) && ($calculate_free_shipping >= 0)) --}}
-        <div class="w-100 promotional_banner_div {{$d_none}}" id="promotional_banner_div" style="">
-            <p class="text-center text-white promotional_banner_text p-2 mb-0">
-                <i class="fas fa-shipping-fast"></i> Only <span class="promotional_banner_span">@if($calculate_free_shipping <= intval($free_shipping)) {{number_format($calculate_free_shipping , 2)}} @endif</span> left to get free shipping in California
-            </p>
-        </div>
-    {{-- @endif --}}
+    <div class="w-100 promotional_banner_div {{$d_none}}" id="promotional_banner_div" style="">
+        <p class="text-center promotional_banner_text mb-0">
+            {{-- <i class="fas fa-shipping-fast"></i>  --}}
+            <img src="{{asset('theme/img/shipping_truck_updated.gif')}}" alt="" class="mr-2" style="max-height: 40px;">
+            Only <span class="promotional_banner_span">@if($calculate_free_shipping <= intval($free_shipping)) {{'$' . number_format($calculate_free_shipping , 2)}} @endif</span> left to get free shipping in California
+        </p>
+    </div>
 @endif
 @include('partials.header')
 @include('partials.top-bar')
