@@ -11,6 +11,14 @@
 
         gtag('config', 'GT-PHG5T9K');
     </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5TM37Z9MWC"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        
+        gtag('config', 'G-5TM37Z9MWC');
+    </script>
     <script>
         gtag('event', 'ads_conversion_PURCHASE_1', {
         });
