@@ -165,12 +165,12 @@ class SettingSeeder extends Seeder
             [
                 'option_name' => 'shipping_carrier_code', 
                 'type' => 'text',
-                'option_value' => 'fedex',
+                'option_value' => 'ups_walleted',
             ],
             [
                 'option_name' => 'shipping_service_code', 
                 'type' => 'text',
-                'option_value' => 'fedex_ground',
+                'option_value' => 'ups_ground',
             ],
             [
                 'option_name' => 'shipping_carrier_code_2', 
