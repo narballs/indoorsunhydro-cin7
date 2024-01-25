@@ -137,6 +137,8 @@ class ContactController extends Controller
             if ($sort_by_created_at == 'Desc') {
                 $contact_query = $contact_query->orderBy('created_at' , 'Desc');
             }
+        } else {
+            $contact_query = $contact_query->orderBy('created_at' , 'Desc');
         }
 
         $contacts = $contact_query->paginate($perPage);
