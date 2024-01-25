@@ -1513,6 +1513,7 @@ class UserController extends Controller
 
     public function address_user_my_account(Request $request)
     {
+        
         // $user_id = auth()->id();
         // $secondary_id = $request->secondary_id;
         // $contact_id = $request->contact_id;
@@ -1561,46 +1562,174 @@ class UserController extends Controller
         // }else {
         //     return response()->json(['success' => false, 'created' => false, 'msg' => 'You Cannot update your primary contact']);
         // }
-
-        $subdomain = env('ZENDESK_SUBDOMAIN'); 
-        $username = env('ZENDESK_USERNAME'); 
-        $token =  env('ZENDESK_TOKEN'); 
-        $auth = [
-            'token' => $token, 
-        ];
+        // ticket creating on upaating address
+        // $subdomain = env('ZENDESK_SUBDOMAIN'); 
+        // $username = env('ZENDESK_USERNAME'); 
+        // $token =  env('ZENDESK_TOKEN'); 
+        // $auth = [
+        //     'token' => $token, 
+        // ];
         
-        $client = new ZendeskClient($subdomain);
-        $client->setAuth('basic', ['username' => $username, 'token' => $token]);
+        // $client = new ZendeskClient($subdomain);
+        // $client->setAuth('basic', ['username' => $username, 'token' => $token]);
 
-        $subject = $request->type;
-        $requesterName = $request->first_name . ' ' . $request->last_name;
-        $requesterEmail = $request->email;
+        // $subject = $request->type;
+        // $requesterName = $request->first_name . ' ' . $request->last_name;
+        // $requesterEmail = $request->email;
         
-        $company_name = !empty($request->company_name) ? $request->company_name : '';
-        $address1 = $request->address;
-        $address2 = $request->address2;
-        $city = $request->town_city;
-        $state = $request->state;
-        $zip = $request->zip;
+        // $company_name = !empty($request->company_name) ? $request->company_name : '';
+        // $address1 = $request->address;
+        // $address2 = $request->address2;
+        // $city = $request->town_city;
+        // $state = $request->state;
+        // $zip = $request->zip;
 
-        $user_message = $requesterName . ' ' . 'requested to change his/her profile information.';
-        $description = $user_message  . "\n" .  "Request Type : " . $subject . "\n" . "Company : " . $company_name . "\n" . "Address 1: " . $address1 . "\n" . "Address 2: " . $address2 . "\n" . "City: " . $city . "\n" . "State: " . $state . "\n" . "Zip: " . $zip . "\n";
+        // $user_message = $requesterName . ' ' . 'requested to change his/her profile information.';
+        // $description = $user_message  . "\n" .  "Request Type : " . $subject . "\n" . "Company : " . $company_name . "\n" . "Address 1: " . $address1 . "\n" . "Address 2: " . $address2 . "\n" . "City: " . $city . "\n" . "State: " . $state . "\n" . "Zip: " . $zip . "\n";
         
-        $ticketData = [
-            'subject' => $subject,
-            'description' => $description,
-            'requester' => [
-                'email' => $requesterEmail,
-                'name' => $requesterName,
-            ],
-        ];
+        // $ticketData = [
+        //     'subject' => $subject,
+        //     'description' => $description,
+        //     'requester' => [
+        //         'email' => $requesterEmail,
+        //         'name' => $requesterName,
+        //     ],
+        // ];
 
-        $response = $client->tickets()->create($ticketData);
+        // $response = $client->tickets()->create($ticketData);
+        $request->validate([
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'company_name' => 'required',
+            'address' => 'required',
+            'state' => 'required',
+            'phone' => 'required',
+            'zip' => 'required'
+        ]);
+
+        $response  = null;
+        $get_contact = null;
+        $contact_type = null;
+        $address_type  = null;
+        $response_status = false;
+        $contact_synced = false;
+        $contact_id = $request->contact_id;
+        $secondary_id = $request->secondary_id;
+        $response_status = null;
+        $responseBody = null;
+        $cin7_status = null;
+
+
+        if (!empty($request->type) && $request->type == 'update shipping address') {
+            $address_type = 'shipping';
+        }
+        
+        if (!empty($request->type) && $request->type == 'update billing address') {
+            $address_type = 'billing';
+        }
+
+        if (!empty($request->contact_id)) {
+            $get_contact = Contact::where('contact_id', $contact_id)
+            ->where('is_parent', 1)
+            ->first();
+            $contact_type = 'primary';
+        }
+
+        if (!empty($secondary_id) && empty($contact_id)) {
+            $secondary_contact = Contact::where('secondary_id', $secondary_id)
+            ->where('is_parent', 0)
+            ->first();
+            $contact_type = 'secondary';
+            $get_contact = Contact::where('contact_id', $secondary_contact->parent_id)->first();
+        }
+
+        
+
+
+        if (!empty($get_contact) && !empty($address_type)) {
+            if ($address_type === 'shipping') {
+                $get_contact->firstName = $request->first_name;
+                $get_contact->lastName = $request->last_name;
+                $get_contact->company = $request->company_name;
+                $get_contact->address1 = $request->address;
+                $get_contact->address2 = $request->address2;
+                $get_contact->state = $request->state;
+                $get_contact->city = $request->town_city;
+                $get_contact->postCode = $request->zip;
+                $get_contact->phone = $request->phone;
+                $get_contact->tax_class = strtolower($request->state) == strtolower('California') ? '8.75%' : 'Out of State';
+                $get_contact->save();
+                $response = $get_contact;
+                $response_status = true;
+            }
+
+            if ($address_type === 'billing') {
+                $get_contact->firstName = $request->first_name;
+                $get_contact->lastName = $request->last_name;
+                $get_contact->company = $request->company_name;
+                $get_contact->postalAddress1 = $request->address;
+                $get_contact->postalAddress2 = $request->address2;
+                $get_contact->postalState = $request->state;
+                $get_contact->postalCity = $request->town_city;
+                $get_contact->postCode = $request->zip;
+                $get_contact->phone = $request->phone;
+                $get_contact->tax_class = strtolower($request->state) == strtolower('California') ? '8.75%' : 'Out of State';
+                $get_contact->save();
+                $response = $get_contact;
+                $response_status = true;
+            }
+        } else {
+            $response_status = false;
+        }
+
+
+        if ($response_status == true) {
+            $contact = Contact::where('id', $get_contact->id)->first();
+
+            $body = [
+                'id'=> $contact->contact_id,
+                'type' => $contact->type,
+                'firstName' => $contact->firstName,
+                'lastName' => $contact->lastName,
+                'address1' => $contact->address1,
+                'address2' => $contact->address2,
+                'city' => $contact->city,
+                'state' => $contact->state,
+                'postCode' => $contact->postCode,
+                'postalAddress1' => $contact->postalAddress1,
+                'postalAddress2' => $contact->postalAddress2,
+                'postalCity' => $contact->postalCity,
+                'postalState' => $contact->postalState,
+                'postalPostCode' => $contact->postalPostCode,
+                'phone' => $contact->phone,
+            ];
+
+            
+            $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
+            $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
+            $client = new \GuzzleHttp\Client();
+            $response = $client->request('PUT', 'https://api.cin7.com/api/v1/Contacts', [
+                'auth' => [$cin7_auth_username, $cin7_auth_password], // Authenticate with Cin7 API credentials
+                'json' =>  [
+                    $body
+                ],
+                'headers' => [
+                    'Content-Type' => 'application/json' // Specify Content-Type header
+                ]
+            ]);
+            
+            $responseBody = $response->getBody()->getContents();
+            $cin7_status = $response->getStatusCode();
+        }
+
+
         return response()->json(
             [
+                'cin7_status' => $cin7_status,
+                'status' => $response_status,
                 'success' => true, 
-                'data' => $response ,
-                'msg' => 'Your change profile request has been received. A ticket has been opened and admin will update the information within 24-48 hours'
+                'data' => $responseBody ,
+                'msg' => 'Address updated and synced Successfully'
             ]
         );
     }

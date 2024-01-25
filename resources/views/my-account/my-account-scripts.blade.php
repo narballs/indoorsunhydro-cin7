@@ -1027,7 +1027,7 @@
         var contact_id = $('#contact_id_val').val();
         var secondary_id = $('input[name=secondary_id]').val();
         
-        
+        console.log(state);
         jQuery.ajax({
             method: 'GET',
             url: "{{ url('/my-account-user-addresses/') }}",
@@ -1050,8 +1050,7 @@
                 'type': type
             },
             success: function(response) {
-                console.log(response.data.ticket.id );
-                if (response.data.ticket.id != '' || response.data.ticket.id != null) {
+                if (response.cin7_status == 200 || response.status == true) {
                     $('#address_loader').addClass('d-none');
                     $('#address_loader_shipping').addClass('d-none');
                     $('.modal-backdrop').remove()
@@ -1394,7 +1393,7 @@
                             <div class="col-md-6 mb-3">
                                 <label for="state">State</label>
 
-                                <select class="form-control bg-light" class="shipping_state" name="state" id="state">
+                                <select class="form-control bg-light shipping_state" name="state" id="state">
                                     @if (empty($address_user->state)) <option value="">Select State</option>@endif
                                     @foreach ($states as $state)
                                         <?php
