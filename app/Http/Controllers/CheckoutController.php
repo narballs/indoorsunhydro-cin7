@@ -131,7 +131,7 @@ class CheckoutController extends Controller
                 $carrier_code_2 = AdminSetting::where('option_name', 'shipping_carrier_code_2')->first();
                 $service_code_2 = AdminSetting::where('option_name', 'shipping_service_code_2')->first();
 
-                if ($products_weight > 64) {
+                if ($products_weight > 150) {
                     $carrier_code = $carrier_code_2->option_value;
                     $service_code = $service_code_2->option_value;
                 } else {
