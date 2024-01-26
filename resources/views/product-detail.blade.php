@@ -163,7 +163,7 @@
                                         <div class="col-md-8 mt-2">
                                             
                                             @if (!empty($notify_user_about_product_stock) && strtolower($notify_user_about_product_stock->option_value) === 'yes')
-                                                @if ($productOption->stockAvailable > 0)
+                                                @if ($productOption->stockAvailable < 0)
                                                     <button class="w-100 ml-0 button-cards product-detail-button-cards text-uppercase"
                                                         type="button" id="ajaxSubmit">
                                                         <a class="text-white">Add to cart </a>

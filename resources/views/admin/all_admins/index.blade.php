@@ -18,6 +18,13 @@
             </button>
         </div>
     @endif
+
+    <div class="alert alert-info alert-dismissible fade show mt-2 select_user_div" role="alert">
+        <span class="select_user_text"></span>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
     <div class="table-wrapper">
         <div class="card-body product_secion_main_body">
             <div class="row border-bottom product_section_header">
@@ -25,7 +32,7 @@
                     <div class="row">
                         <div class="col-md-6 mobile_heading">
                             <p class="product_heading">
-                                Product Stock Notification Users
+                                All Admins
                             </p>
                         </div>
                     </div>
@@ -33,64 +40,46 @@
             </div>
         </div>
         <div class="card card-body  mt-5">
+            <div>
+                <button class="btn btn-primary select_specific_admins mb-3" onclick="select_specific_admins()">Submit</button>
+            </div>
             <div class="col-md-12 shadow border">
+                
                 <table class="table table-border">
                     <thead>
                         <tr>
                             <th>S.No</th>
                             <th>Email</th>
-                            <th>Product Code</th>
-                            <th>Status</th>
-                            <th>Action</th>
-
                         </tr>
                     </thead>
                     <tbody>
                         @php
                             $i =1; 
                         @endphp
-                        @if(count($product_stock_notification_users) > 0 )
-                        @foreach ($product_stock_notification_users as $product_stock_notification_user)
-                        <tr>
-                            <td>{{ $i++ }}</td>
-                            <td>{{$product_stock_notification_user->email}}</td>
-                            <td>{{$product_stock_notification_user->sku}}</td>
-                            <td>
-                                @if ($product_stock_notification_user->status == 0) 
-                                <span class="badge badge-danger">Pending</span> 
-                                @elseif ($product_stock_notification_user->status == 1)
-                                <span class="badge badge-success">Completed</span>
-                                @endif
-                            </td>
-                            <td>
-                                <div class="row">
-                                    @if ($product_stock_notification_user->status == 0)
-                                        <form action="{{route('product_stock_notification')}}" method="post">
-                                            @csrf
-                                            <input type="hidden" name="product_stock_notification_user" id="" class="" value="{{$product_stock_notification_user->id}}">
-                                            <button type="submit" class="btn btn-primary text-white text-white" onclick="return confirm('Are you sure you want to Notify this Contact?');">Notify</button>
-                                        </form>
-                                    @else
-                                        <form action="">
-                                            <button type="button" class="btn btn-success text-white text-white"> Notified</button>
-                                        </form>
-                                    @endif
-                                </div>
-                            </td>
-                        </tr>
-                        @endforeach
+                        @if(count($admins) > 0 )
+                            @foreach ($admins as $admin)
+                            @php
+                               $find_user = in_array($admin->id, $specific_admins); 
+                            @endphp
+                                <tr>
+                                    <td>
+                                        <span>
+                                            <input type="checkbox" class="admin_users" onclick="select_user()" {{!empty($find_user) && $find_user == true ? 'checked' : '' }}  data-id="{{$admin->id}}"  id="admin_users{{$admin->id}}" name="admin_users[]" value="{{ $admin->id }}">
+                                        </span>
+                                        <span>
+                                            {{ $i++ }}
+                                        </span>
+                                    </td>
+                                    <td>{{$admin->email}}</td>
+                                </tr>
+                            @endforeach
                         @else
                         <tr>
-                            <td colspan="3">No Users Found</td>
+                            <td colspan="3">No Admins Found</td>
                         </tr>
                         @endif
                     </tbody>
                 </table>
-            </div>
-            <div class="row">
-                <div class="col-md-10">
-                    {{ $product_stock_notification_users->links('pagination.custom_pagination') }}
-                </div>
             </div>
         </div>
     @stop
@@ -342,4 +331,59 @@
 
 
 @section('js')
+<script>
+    $(document).ready(function() {
+        $('.select_specific_admins').hide();
+        $('.select_user_div').hide();
+    });
+    function select_user(){
+        var admin_users = [];
+        $.each($("input[name='admin_users[]']:checked"), function(){
+            admin_users.push($(this).val());
+        });
+        if (admin_users.length > 0){
+            $('.select_specific_admins').show();
+        }   else{
+            $('.select_specific_admins').hide();
+        }
+    }
+    function select_specific_admins(){
+        $('.select_specific_admins').hide();
+        var admin_users = [];
+        $.each($("input[name='admin_users[]']:checked"), function(){
+            admin_users.push($(this).val());
+        });
+        if(admin_users.length > 0){
+            $.ajax({
+                url: "{{ route('send_email_to_specific_admin') }}",
+                type: "POST",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "admin_users": admin_users,
+                },
+                success: function(response) {
+                    console.log(response)
+                    if (response.status == true){
+                        $('.select_user_div').show()
+                        $('.select_user_text').html(response.msg)
+                        setTimeout(function(){ 
+                            window.location.href = "{{ route('all_admins') }}";
+                        }, 3000);
+                    }
+                    else{
+                        $('.select_user_div').show()
+                        $('.select_user_text').html('Something went wrong');
+                        setTimeout(function(){ 
+                            window.location.href = "{{ route('all_admins') }}";
+                        }, 3000);
+
+                    }
+                }
+            });
+        }
+        else{
+            alert('Please select atleast one admin');
+        }
+    }
+</script>
 @stop
