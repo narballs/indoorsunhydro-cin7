@@ -596,6 +596,9 @@ class ProductController extends Controller
                 $total_stock += $product_stock->available_stock;
             }
         }
+
+        $notify_user_about_product_stock = AdminSetting::where('option_name', 'notify_user_about_product_stock')->first();
+
         return view('product-detail', compact(
             'productOption',
             'pname',
@@ -606,6 +609,7 @@ class ProductController extends Controller
             'contact_id',
             'stock_updated',
             'product_stocks',
+            'notify_user_about_product_stock',
             'similar_products','total_stock','best_selling_products'
         ));
 

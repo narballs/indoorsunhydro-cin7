@@ -405,6 +405,10 @@ return [
             'text'    => 'Contact Logs',
             'url'  => 'admin/contact-logs',
         ],
+        [
+            'text'    => 'Notify Users',
+            'url'  => 'admin/notify-users',
+        ],
 
         [
             'text'       => 'Logout',

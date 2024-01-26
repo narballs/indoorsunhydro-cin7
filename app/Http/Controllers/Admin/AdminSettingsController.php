@@ -7,6 +7,7 @@ use App\Http\Middleware\IsAdmin;
 use App\Models\AdminSetting;
 use App\Models\Contact;
 use App\Models\ContactLogs;
+use App\Models\ProductStockNotification;
 use App\Models\User;
 use App\Models\UserLog;
 
@@ -285,5 +286,10 @@ class AdminSettingsController extends Controller
     public function contact_logs() {
         $contact_logs = ContactLogs::with('adminuser' , 'user')->orderBY('id' , 'desc')->paginate(10);
         return view('admin.contact_logs.index', compact('contact_logs'));
+    }
+
+    public function notify_users() {
+        $product_stock_notification_users = ProductStockNotification::orderBy('created_at' , 'Desc')->paginate(10);
+        return view ('admin.product_stock_notification_users', compact('product_stock_notification_users'));
     }
 }

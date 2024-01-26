@@ -16,6 +16,12 @@
 </div>
 <?php //dd($location_inventories);exit;?>
 <input type="hidden" value="{{App\Helpers\UserHelper::getUserPriceColumn()}}" id="get_column">
+<div class="w-100">
+    <div class="alert alert-success alert-dismissible d-none mb-0 text-center notify_user_div">
+        <a href="#" onclick="hide_notify_user_div()" class="close" aria-label="close">&times;</a>
+        <span class="notify_text"></span>
+    </div>
+</div>
 <div class="row bg-light desktop-view justify-content-center w-100">
     <div class="col-md-12 col-xl-10 col-lg-12 col-sm-12 col-xs-12 mt-3 mb-3">
         <div class="row justify-content-center ml-1">
@@ -155,44 +161,57 @@
                                             </div>
                                         </div>
                                         <div class="col-md-8 mt-2">
-                                            <?php 
-                                                // $enable_add_to_cart = App\Helpers\SettingHelper::enableAddToCart($productOption);
-                                                $enable_add_to_cart = true;
-                                             ?>
-                                            {{-- @if ($enable_add_to_cart)
-                                                <button 
-                                                    class="w-100 ml-0 button-cards product-detail-button-cards text-uppercase"
-                                                    type="button" id="ajaxSubmit"
-                                                >
-                                                    <a class="text-white">Add to cart </a>
-                                                </button>
-                                            @else
-                                                <button 
-                                                    class="ml-0 w-100 button-cards product-detail-button-cards opacity-50 text-uppercase" 
-                                                    type="submit"
-                                                >
-                                                    <a class="text-white">Add to cart</a>
-                                                </button>
-                                            @endif --}}
-                                            @if ($productOption->stockAvailable > 0)
-                                                <button 
-                                                    class="w-100 ml-0 button-cards product-detail-button-cards text-uppercase"
-                                                    type="button" id="ajaxSubmit"
-                                                >
-                                                    <a class="text-white">Add to cart </a>
-                                                </button>
-                                            @else
-                                                <input type="hidden" name="" id="auth_user_email" value="{{auth()->user()->email}}">
-                                                @if (auth()->user())
-                                                <button class="w-100 ml-0 bg-primary button-cards product-detail-button-cards text-uppercase"
-                                                    type="button" id="">
-                                                    <a class="text-white">Notify When in Stock </a>
-                                                </button>
+                                            
+                                            @if (!empty($notify_user_about_product_stock) && strtolower($notify_user_about_product_stock->option_value) === 'yes')
+                                                @if ($productOption->stockAvailable > 0)
+                                                    <button class="w-100 ml-0 button-cards product-detail-button-cards text-uppercase"
+                                                        type="button" id="ajaxSubmit">
+                                                        <a class="text-white">Add to cart </a>
+                                                    </button>
                                                 @else
-                                                <button class="w-100 ml-0 bg-primary button-cards product-detail-button-cards text-uppercase"
-                                                    type="button" id="notify_popup_modal" onclick="notify_popup_modal()">
-                                                    <a class="text-white">Notify When in Stock </a>
-                                                </button>
+                                                    @if (auth()->user())
+                                                        <input type="hidden" name="notify_user_email_input" class="notify_user_email_input" id="auth_user_email" value="{{auth()->user()->email}}">
+                                                        <input type="hidden" name="sku" id="sku_value" class="sku_value" value="{{$productOption->products->code}}">
+                                                        <input type="hidden" name="product_id" id="product_id_value" class="product_id_value" value="{{$productOption->products->id}}">
+                                                        <div class="row justify-content-between align-items-center">
+                                                            <div class="col-md-10">
+                                                                <button class="w-100 ml-0 bg-primary button-cards product-detail-button-cards text-uppercase"
+                                                                    type="button" id="" onclick="notify_user_about_product_stock()">
+                                                                    <a class="text-white">Notify When in Stock </a>
+                                                                </button>
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <div class="spinner-border text-primary stock_spinner d-none" role="status">
+                                                                    <span class="sr-only"></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    @else
+                                                        <button class="w-100 ml-0 bg-primary button-cards product-detail-button-cards text-uppercase notify_popup_modal_btn"
+                                                            type="button" id="notify_popup_modal" onclick="show_notify_popup_modal()">
+                                                            <a class="text-white">Notify When in Stock </a>
+                                                        </button>
+                                                    @endif
+                                                @endif
+                                            @else
+                                                <?php 
+                                                    // $enable_add_to_cart = App\Helpers\SettingHelper::enableAddToCart($productOption);
+                                                    $enable_add_to_cart = true;
+                                                ?>
+                                                @if ($enable_add_to_cart)
+                                                    <button 
+                                                        class="w-100 ml-0 button-cards product-detail-button-cards text-uppercase"
+                                                        type="button" id="ajaxSubmit"
+                                                    >
+                                                        <a class="text-white">Add to cart </a>
+                                                    </button>
+                                                @else
+                                                    <button 
+                                                        class="ml-0 w-100 button-cards product-detail-button-cards opacity-50 text-uppercase" 
+                                                        type="submit"
+                                                    >
+                                                        <a class="text-white">Add to cart</a>
+                                                    </button>
                                                 @endif
                                             @endif
                                         </div>
@@ -692,6 +711,46 @@
     </form>
 </div>
 {{-- ipad view end --}}
+
+{{--  notify user pop up modal  --}}
+<!-- Modal -->
+<div class="modal fade notify_popup_modal" id="notify_user_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static">
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Notify User About Product Stock</h5>
+        <button type="button" class="close" onclick="close_notify_user_modal()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form>
+            <div class="row">
+                <div class="form-group">
+                    <label for="">Email <span class="text-danger">*</span></label>
+                    <input type="hidden" name="sku" id="sku_value" class="sku_value" value="{{$productOption->products->code}}">
+                    <input type="hidden" name="product_id" id="product_id_value" class="product_id_value" value="{{$productOption->products->id}}">
+                    <div class="col-md-12">
+                        <input type="text" name="notify_user_email" id="notify_user_email" class="form-control notify_user_email_input" placeholder="Enter your email">
+                        <div class="text-danger email_required_alert"></div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <div class="spinner-border text-primary stock_spinner d-none" role="status">
+            <span class="sr-only"></span>
+        </div>
+        <button type="button" class="btn btn-secondary" onclick="notify_user_about_product_stock()">Submit</button>
+        <!-- You can add additional buttons here if needed -->
+    </div>
+    </div>
+</div>
+</div>
+{{--  notify user pop up modal end --}}
+
 @include('partials.similar_products_slider')
 @include('partials.product-footer')
 @include('partials.footer')
@@ -1059,6 +1118,9 @@
             }
         });
     }
+    
+
+    
 </script>
 
 <script>
@@ -1191,4 +1253,66 @@
         }
 
     });
+</script>
+
+
+<script>
+    // $(document).ready(function() {
+        // open notify user modal 
+        function show_notify_popup_modal () {
+            $('.notify_popup_modal').modal('show');
+        } 
+        function close_notify_user_modal () {
+            $('.notify_popup_modal').modal('hide');
+        }
+        
+        function notify_user_about_product_stock () {
+            var email = $('.notify_user_email_input').val();
+            var sku = $('.sku_value').val();
+            var product_id = $('.product_id_value').val();
+            $('.stock_spinner').removeClass('d-none');
+            if (email == '') {
+                $('.email_required_alert').html('Email is Required')
+                return false;
+            }
+            else {
+                $.ajax({
+                    url: "{{ url('product-stock/notification') }}",
+                    method: 'post',
+                    data: {
+                    "_token": "{{ csrf_token() }}",
+                        email : email,
+                        sku : sku,
+                        product_id : product_id
+                    },
+                    success: function(response){
+
+                        if (response.status === true) {
+                            $('.stock_spinner').addClass('d-none');
+                            $('.notify_user_div').removeClass('d-none');
+                            close_notify_user_modal();
+                            $('.notify_text').html(response.message);
+                        } else {
+                            $('.stock_spinner').addClass('d-none');
+                            $('.notify_user_div').removeClass('d-none');
+                            $('.notify_text').html('Something went wrong!');
+                        }
+                    },
+                    error: function(response) {
+                        var error_message = response.responseJSON;
+                        $('.stock_spinner').addClass('d-none');
+                        $('.notify_user_div').addClass('d-none');
+                        var error_text  = error_message.errors.email[0];
+                        $('.email_required_alert').html(error_text)
+                    }
+                });
+            }
+        }
+        
+        function hide_notify_user_div() {
+            $('.notify_text').html('');
+            $('.notify_user_div').addClass('d-none');
+        }
+
+    // });
 </script>

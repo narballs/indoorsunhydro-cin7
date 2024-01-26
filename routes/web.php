@@ -31,6 +31,7 @@ use App\Http\Controllers\Admin\DiscountController;
 use App\Http\Controllers\Admin\PagesController;
 use App\Http\Controllers\GoogleContentController;
 use App\Http\Controllers\ExportController;
+use App\Http\Controllers\ProductStockNotificationController;
 use App\Models\TaxClass;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -406,6 +407,8 @@ Route::group(['middleware' => ['auth']], function () {
 });
 
 
+
+
 Route::get('/index', [UserController::class, 'index_email_view']);
 Route::get('/event', [CheckoutController::class, 'event']);
 
@@ -416,3 +419,6 @@ Route::get('/page/{slug}', [HomeController::class, 'show_page']);
 Route::post('page/blogs/search', [PagesController::class, 'blog_search'])->name('blog_search');
 Route::get('admin/page/blog/detail/{slug}', [PagesController::class, 'blog_detail'])->name('blog_detail');
 
+Route::post('product-stock/notification', [ProductStockNotificationController::class, 'notify_user_about_product_stock'])->name('notify_user_about_product_stock');
+Route::get('admin/notify-users', [AdminSettingsController::class, 'notify_users'])->name('notify_users');
+Route::get('admin/product-stock-notification', [AdminSettingsController::class, 'product_stock_notification'])->name('product_stock_notification');

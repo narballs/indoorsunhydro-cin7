@@ -1,4 +1,15 @@
-<header class="bg-white  text-dark top-bar-height w-100 header-top">
+@php
+    $announcement_banner = App\Models\AdminSetting::where('option_name' , 'enable_announcement_banner')->first();
+    $announcement_banner_text = App\Models\AdminSetting::where('option_name' , 'announcement_banner_text')->first();
+@endphp
+@if (!empty($announcement_banner) && strtolower($announcement_banner->option_value) == 'yes')
+<div class="row bg-dark">
+    <h6 class="text-white text-center p-2 mb-0">
+        <i class="fa fa-bullhorn text-white mr-2" aria-hidden="true"></i> {{!empty($announcement_banner_text->option_value) ? $announcement_banner_text->option_value : ''}}
+    </h6>
+</div>
+@endif
+<header class="bg-white  text-white top-bar-height w-100 header-top">
     <div class="container-fluid my-1">
         <div class="row justify-content-center">
             
