@@ -159,7 +159,7 @@
                                                 // $enable_add_to_cart = App\Helpers\SettingHelper::enableAddToCart($productOption);
                                                 $enable_add_to_cart = true;
                                              ?>
-                                            @if ($enable_add_to_cart)
+                                            {{-- @if ($enable_add_to_cart)
                                                 <button 
                                                     class="w-100 ml-0 button-cards product-detail-button-cards text-uppercase"
                                                     type="button" id="ajaxSubmit"
@@ -173,6 +173,27 @@
                                                 >
                                                     <a class="text-white">Add to cart</a>
                                                 </button>
+                                            @endif --}}
+                                            @if ($productOption->stockAvailable > 0)
+                                                <button 
+                                                    class="w-100 ml-0 button-cards product-detail-button-cards text-uppercase"
+                                                    type="button" id="ajaxSubmit"
+                                                >
+                                                    <a class="text-white">Add to cart </a>
+                                                </button>
+                                            @else
+                                                <input type="hidden" name="" id="auth_user_email" value="{{auth()->user()->email}}">
+                                                @if (auth()->user())
+                                                <button class="w-100 ml-0 bg-primary button-cards product-detail-button-cards text-uppercase"
+                                                    type="button" id="">
+                                                    <a class="text-white">Notify When in Stock </a>
+                                                </button>
+                                                @else
+                                                <button class="w-100 ml-0 bg-primary button-cards product-detail-button-cards text-uppercase"
+                                                    type="button" id="notify_popup_modal" onclick="notify_popup_modal()">
+                                                    <a class="text-white">Notify When in Stock </a>
+                                                </button>
+                                                @endif
                                             @endif
                                         </div>
                                     </div>
