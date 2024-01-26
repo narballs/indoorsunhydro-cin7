@@ -217,6 +217,22 @@ class SettingSeeder extends Seeder
                 'type' => 'text',
                 'option_value' => '1000',
             ],
+            [
+                'option_name' => 'notify_user_about_product_stock', 
+                'type' => 'yes/no',
+                'option_value' => 'No',
+            ],
+            [
+                'option_name' => 'enable_announcement_banner', 
+                'type' => 'yes/no',
+                'option_value' => 'No',
+            ],
+            [
+                'option_name' => 'announcement_banner_text', 
+                'type' => 'text',
+                'option_value' => 'Please call to double check inventory if you are planning to place a pick up order',
+            ],
+            
         ];
 
         foreach($setting as $setting) {
