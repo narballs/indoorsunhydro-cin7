@@ -39,9 +39,21 @@ class OrderController extends Controller
 {
     public function store(Request $request)
     {
-        $request->validate([
-            'method_name' => 'required'
-        ]);
+        $request->validate(
+            [
+                'method_name' => 'required',
+            ]
+        );
+        $address_1_shipping = $request->address_1_shipping;
+        $state_shipping = $request->state_shipping;
+        $zip_code_shipping = $request->zip_code_shipping;
+
+        $address_1_billing = $request->address_1_billing;
+        $state_billing = $request->state_billing;
+        $zip_code_billing = $request->zip_code_billing;
+        if (empty($address_1_shipping) || empty($state_shipping) || empty($zip_code_shipping) || empty($address_1_billing) || empty($state_billing) || empty($zip_code_billing)) {
+            return back()->with('error', 'Blilling and Shipping address is required.');
+        }
         
         $paymentMethod = $request->input('method_name');
         $paymentMethodOption = $request->input('method_option');
