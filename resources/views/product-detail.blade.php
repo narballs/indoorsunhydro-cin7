@@ -368,15 +368,48 @@
                                     <?php 
                                         // $enable_add_to_cart = App\Helpers\SettingHelper::enableAddToCart($productOption);
                                         $enable_add_to_cart = true;
-                                     ?>
-                                    @if ($enable_add_to_cart)
-                                        <button class="button-cards product-detail-button-cards text-uppercase ajaxSubmit_mbl w-100" type="button" id="ajaxSubmit_mbl">
-                                            <a class="text-white">Add to cart</a>
-                                        </button>
+                                    ?>
+                                    @if (!empty($notify_user_about_product_stock) && strtolower($notify_user_about_product_stock->option_value) === 'yes')
+                                        @if ($productOption->stockAvailable < 0)
+                                                <button class="button-cards product-detail-button-cards text-uppercase  w-100" 
+                                                type="submit" id="ajaxSubmit_mbl">
+                                                Add to cart
+                                            </button>
+                                        @else
+                                            @if (auth()->user())
+                                                <input type="hidden" name="notify_user_email_input" class="notify_user_email_input" id="auth_user_email" value="{{auth()->user()->email}}">
+                                                <input type="hidden" name="sku" id="sku_value" class="sku_value" value="{{$productOption->products->code}}">
+                                                <input type="hidden" name="product_id" id="product_id_value" class="product_id_value" value="{{$productOption->products->id}}">
+                                                <div class="row justify-content-between align-items-center">
+                                                    <div class="col-md-10">
+                                                        <button class="bg-primary button-cards product-detail-button-cards ajaxSubmit_mbl"
+                                                            type="button" id="" onclick="notify_user_about_product_stock()">
+                                                            <a class="text-white">Notify When in Stock </a>
+                                                        </button>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <div class="spinner-border text-primary stock_spinner d-none" role="status">
+                                                            <span class="sr-only"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @else
+                                                <button class="bg-primary button-cards product-detail-button-cards notify_popup_modal_btn "
+                                                    type="button" id="notify_popup_modal" onclick="show_notify_popup_modal()">
+                                                    <a class="text-white">Notify When in Stock </a>
+                                                </button>
+                                            @endif
+                                        @endif
                                     @else
-                                        <button class="button-cards product-detail-button-cards opacity-50 text-uppercase w-100" type="submit">
-                                            <a class="text-white">Add to cart</a>
-                                        </button>
+                                        @if ($enable_add_to_cart)
+                                            <button class="button-cards product-detail-button-cards text-uppercase ajaxSubmit_mbl w-100" type="button" id="ajaxSubmit_mbl">
+                                                <a class="text-white">Add to cart</a>
+                                            </button>
+                                        @else
+                                            <button class="button-cards product-detail-button-cards opacity-50 text-uppercase w-100" type="submit">
+                                                <a class="text-white">Add to cart</a>
+                                            </button>
+                                        @endif
                                     @endif
                                 </div>
                             </div>
@@ -740,7 +773,7 @@
         </form>
     </div>
     <div class="modal-footer">
-        <div class="spinner-border text-primary stock_spinner d-none" role="status">
+        <div class="spinner-border text-primary stock_spinner_modal d-none" role="status">
             <span class="sr-only"></span>
         </div>
         <button type="button" class="btn btn-secondary" onclick="notify_user_about_product_stock()">Submit</button>
@@ -1270,9 +1303,12 @@
             var email = $('.notify_user_email_input').val();
             var sku = $('.sku_value').val();
             var product_id = $('.product_id_value').val();
+            $('.stock_spinner_modal').removeClass('d-none');
             $('.stock_spinner').removeClass('d-none');
             if (email == '') {
-                $('.email_required_alert').html('Email is Required')
+                $('.email_required_alert').html('Email is Required');
+                $('.stock_spinner_modal').addClass('d-none');
+                $('.stock_spinner').addClass('d-none');
                 return false;
             }
             else {
@@ -1288,11 +1324,13 @@
                     success: function(response){
 
                         if (response.status === true) {
+                            $('.stock_spinner_modal').addClass('d-none');
                             $('.stock_spinner').addClass('d-none');
                             $('.notify_user_div').removeClass('d-none');
                             close_notify_user_modal();
                             $('.notify_text').html(response.message);
                         } else {
+                            $('.stock_spinner_modal').addClass('d-none');
                             $('.stock_spinner').addClass('d-none');
                             $('.notify_user_div').removeClass('d-none');
                             $('.notify_text').html('Something went wrong!');
@@ -1300,6 +1338,7 @@
                     },
                     error: function(response) {
                         var error_message = response.responseJSON;
+                        $('.stock_spinner_modal').addClass('d-none');
                         $('.stock_spinner').addClass('d-none');
                         $('.notify_user_div').addClass('d-none');
                         var error_text  = error_message.errors.email[0];
