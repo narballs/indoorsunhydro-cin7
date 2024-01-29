@@ -7,8 +7,9 @@
             </div>
         </div>
         @foreach($similar_products as $similar_product)
-            @if(!empty($similar_product->options))
-                @foreach ($similar_product->options as $option)
+            @if(!empty($similar_product->categories) && $similar_product->categories->is_active === 1)
+                @if(!empty($similar_product->options))
+                    @foreach ($similar_product->options as $option)
                     @php
                         $product = $similar_product; 
                     @endphp
@@ -67,6 +68,7 @@
                     </div>
                     @endforeach
                 @endif
+            @endif
         @endforeach
     @else
         <div class="row">
