@@ -233,7 +233,7 @@ class OrderController extends Controller
                                     "order_id"=> $order_id,
                                 ]
                             ],
-                            'shipping_cost' =>  !empty($request->shipment_price) ? $request->shipment_price : 0,
+                            // 'shipping_cost' =>  !empty($request->shipment_price) ? $request->shipment_price : 0,
                             'customer_email' => auth()->user()->email,
                             
                         ]);
