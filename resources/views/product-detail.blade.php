@@ -162,8 +162,8 @@
                                         </div>
                                         <div class="col-md-8 mt-2">
                                             
-                                            @if (!empty($notify_user_about_product_stock) && strtolower($notify_user_about_product_stock->option_value) === 'yes')
-                                                @if ($productOption->stockAvailable > 0)
+                                            @if (!empty($notify_user_about_product_stock) && strtolower($notify_user_about_product_stock->option_value) === 'yes' && $stock_updated)
+                                                @if ($total_stock > 0)
                                                     <button class="w-100 ml-0 button-cards product-detail-button-cards text-uppercase"
                                                         type="button" id="ajaxSubmit">
                                                         <a class="text-white">Add to cart </a>
@@ -369,8 +369,8 @@
                                         // $enable_add_to_cart = App\Helpers\SettingHelper::enableAddToCart($productOption);
                                         $enable_add_to_cart = true;
                                     ?>
-                                    @if (!empty($notify_user_about_product_stock) && strtolower($notify_user_about_product_stock->option_value) === 'yes')
-                                        @if ($productOption->stockAvailable > 0)
+                                    @if (!empty($notify_user_about_product_stock) && strtolower($notify_user_about_product_stock->option_value) === 'yes' && $stock_updated)
+                                        @if ($total_stock > 0)
                                                 <button class="button-cards product-detail-button-cards text-uppercase  w-100" 
                                                 type="submit" id="ajaxSubmit_mbl">
                                                 Add to cart
