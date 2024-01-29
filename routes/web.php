@@ -421,4 +421,6 @@ Route::get('admin/page/blog/detail/{slug}', [PagesController::class, 'blog_detai
 
 Route::post('product-stock/notification', [ProductStockNotificationController::class, 'notify_user_about_product_stock'])->name('notify_user_about_product_stock');
 Route::get('admin/notify-users', [AdminSettingsController::class, 'notify_users'])->name('notify_users');
-Route::get('admin/product-stock-notification', [AdminSettingsController::class, 'product_stock_notification'])->name('product_stock_notification');
+Route::post('admin/product-stock-notification', [AdminSettingsController::class, 'product_stock_notification'])->name('product_stock_notification');
+Route::get('admin/all-admins', [AdminSettingsController::class, 'all_admins'])->name('all_admins');
+Route::post('admin/send-email-to-specific-admins', [AdminSettingsController::class, 'send_email_to_specific_admin'])->name('send_email_to_specific_admin');

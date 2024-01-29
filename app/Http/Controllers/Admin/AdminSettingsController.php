@@ -1,6 +1,9 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
+
+use App\Helpers\MailHelper;
+use App\Helpers\SettingHelper;
 use \App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Middleware\IsAdmin;
@@ -8,8 +11,10 @@ use App\Models\AdminSetting;
 use App\Models\Contact;
 use App\Models\ContactLogs;
 use App\Models\ProductStockNotification;
+use App\Models\SpecificAdminNotification;
 use App\Models\User;
 use App\Models\UserLog;
+use Illuminate\Support\Facades\DB;
 
 class AdminSettingsController extends Controller
 {
@@ -291,5 +296,71 @@ class AdminSettingsController extends Controller
     public function notify_users() {
         $product_stock_notification_users = ProductStockNotification::orderBy('created_at' , 'Desc')->paginate(10);
         return view ('admin.product_stock_notification_users', compact('product_stock_notification_users'));
+    }
+
+    public function product_stock_notification (Request $request) {
+        $user_stock_notification  = $request->product_stock_notification_user;
+        $product_stock_notification = ProductStockNotification::with('product' , 'product.options')
+        ->where('id', $user_stock_notification)
+        ->first();
+        if (!empty($product_stock_notification)) {
+            
+            $data = [
+                'email' => $product_stock_notification->email,
+                'product' => $product_stock_notification->product,
+                'product_options' => $product_stock_notification->product->options,
+                'subject' => 'Product Stock Notification',
+                'from' => SettingHelper::getSetting('noreply_email_address')
+            ];
+
+            $mail = MailHelper::stockMailNotification('emails.user-stock-notification', $data);
+            if ($mail) {
+                $product_stock_notification->is_notified = 1;
+                $product_stock_notification->status = 1;
+                $product_stock_notification->save();
+                return back()->with('success', 'User notified successfully.');
+            } else {
+                return back()->with('error', 'User not notified due to invalid email.');
+            }
+
+        } else {
+            return back()->with('error', 'User not found.');
+        }
+    }
+
+    public function all_admins () {
+        $admin_users = DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
+
+        $admin_users = $admin_users->toArray();
+
+        $admins = User::select("id" , "email")
+            ->whereIn('id', $admin_users)
+            ->get();
+        $specific_admins = SpecificAdminNotification::pluck('user_id')->toArray();
+        return view('admin.all_admins.index', compact('admins' , 'specific_admins'));
+    }
+
+    public function send_email_to_specific_admin (Request $request) {
+        $admin_users = $request->admin_users;
+        $check_previous_admins = SpecificAdminNotification::pluck('user_id')->toArray();
+        $update_previous_admins = SpecificAdminNotification::whereIn('user_id', $check_previous_admins)->delete();
+        $status = false;
+        if ( !empty($admin_users)) {
+            foreach ($admin_users as $admin_user) {
+                $specific_admin = new SpecificAdminNotification();
+                $specific_admin->user_id = $admin_user;
+                $specific_admin->email = User::where('id', $admin_user)->first()->email;
+                $specific_admin->save();
+            }
+
+            $status = true;
+        } else {
+            $status = false;
+        }
+
+        return response()->json([
+            'status' => $status,
+            'msg' => 'Admins Selected Succeesfully'
+        ]);
     }
 }

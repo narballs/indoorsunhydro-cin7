@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\ProductStockNotification;
 use App\Models\Product;
 use App\Models\User;
+use App\Models\SpecificAdminNotification;
 use Illuminate\Support\Facades\DB;
 
 class ProductStockNotificationController extends Controller
@@ -36,7 +37,21 @@ class ProductStockNotificationController extends Controller
             'email' => $email,
         ]);
 
+        
+
         if ($product_stock_notification == true) {
+            $data = [
+                'product' => $product_stock_notification->product,
+                'product_options' => $product_stock_notification->product->product_options,
+                'email' => $email,
+                'subject' => 'Product Stock Request',
+                'from' => SettingHelper::getSetting('noreply_email_address')
+            ];
+            $specific_admin_notifications = SpecificAdminNotification::all();
+            foreach ($specific_admin_notifications as $specific_admin_notification) {
+                $data['email'] = $specific_admin_notification->email;
+                $mail = MailHelper::stockMailNotification('emails.admin-stock-notification', $data);
+            }
             $status = true;
         } else {
             $status = false;

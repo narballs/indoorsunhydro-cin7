@@ -16,4 +16,10 @@ class ProductStockNotification extends Model
         'status',
         'is_notified',
     ];
+
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
 }

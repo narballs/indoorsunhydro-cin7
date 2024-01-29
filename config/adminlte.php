@@ -409,6 +409,10 @@ return [
             'text'    => 'Notify Users',
             'url'  => 'admin/notify-users',
         ],
+        [
+            'text'    => 'Select Specific Admins',
+            'url'  => 'admin/all-admins',
+        ],
 
         [
             'text'       => 'Logout',
