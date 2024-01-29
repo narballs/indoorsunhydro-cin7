@@ -7,6 +7,13 @@
             Only <span class="promotional_banner_span">@if($calculate_free_shipping <= intval($free_shipping)) {{'$' . number_format($calculate_free_shipping , 2)}} @endif</span> left to get free shipping in California
         </p>
     </div>
+    <div class="w-100 promotional_banner_div_congrats {{$congrats_div_dnone}}" id="promotional_banner_div_congrats" style="">
+        <p class="text-center promotional_banner_text_congrats mb-0">
+            {{-- <i class="fas fa-shipping-fast"></i>  --}}
+            <img src="{{asset('theme/bootstrap5/images/shipping_truck_updated.gif')}}" alt="" class="mr-2" style="max-height: 40px;">
+             <span class="promotional_banner_span_congrats">Good news, your cart qualifies for free shipping</span> 
+        </p>
+    </div>
 @endif
 @include('partials.header')
 @include('partials.top-bar')
@@ -873,12 +880,13 @@
                 var grand_total_include_tax = 0;
                 grand_total_include_tax = (tax + grand_total).toFixed(2);
                 if (grand_total <= initial_free_shipping_value) {
+                    $('.promotional_banner_div_congrats').addClass('d-none');
                     $('.promotional_banner_div').removeClass('d-none');
                     $('.promotional_banner_span').html('$' + (initial_free_shipping_value - grand_total_include_tax).toFixed(2));
                 } else {
                     $('.promotional_banner_div').addClass('d-none');
+                    $('.promotional_banner_div_congrats').removeClass('d-none');
                 }
-
 
                 $('#mbl_tax_price').html('$' + tax.toFixed(2));
                 $('#mbl_total_p').html('$' + (tax + grand_total).toFixed(2));
@@ -949,10 +957,13 @@
                 var grand_total_include_tax = 0;
                 grand_total_include_tax = (tax + grand_total).toFixed(2);
                 if (grand_total <= initial_free_shipping_value) {
+                    $('.promotional_banner_div_congrats').addClass('d-none');
                     $('.promotional_banner_div').removeClass('d-none');
                     $('.promotional_banner_span').html('$' + (initial_free_shipping_value - grand_total_include_tax).toFixed(2));
+                    
                 } else {
                     $('.promotional_banner_div').addClass('d-none');
+                    $('.promotional_banner_div_congrats').removeClass('d-none');
                 }
 
                 $('#mbl_tax_price').html('$' + tax.toFixed(2));
@@ -1022,10 +1033,13 @@
                 var grand_total_include_tax = 0;
                 grand_total_include_tax = (tax + grand_total).toFixed(2);
                 if (grand_total <= initial_free_shipping_value) {
+                    $('.promotional_banner_div_congrats').addClass('d-none');
                     $('.promotional_banner_div').removeClass('d-none');
                     $('.promotional_banner_span').html('$' + (initial_free_shipping_value - grand_total_include_tax).toFixed(2));
+                   
                 } else {
                     $('.promotional_banner_div').addClass('d-none');
+                    $('.promotional_banner_div_congrats').removeClass('d-none');
                 }
 
                 $('#mbl_tax_price').html('$' + tax.toFixed(2));
