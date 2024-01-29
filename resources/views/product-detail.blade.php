@@ -370,7 +370,7 @@
                                         $enable_add_to_cart = true;
                                     ?>
                                     @if (!empty($notify_user_about_product_stock) && strtolower($notify_user_about_product_stock->option_value) === 'yes')
-                                        @if ($productOption->stockAvailable < 0)
+                                        @if ($productOption->stockAvailable > 0)
                                                 <button class="button-cards product-detail-button-cards text-uppercase  w-100" 
                                                 type="submit" id="ajaxSubmit_mbl">
                                                 Add to cart
