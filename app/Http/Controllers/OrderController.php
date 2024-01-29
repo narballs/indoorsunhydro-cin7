@@ -217,6 +217,25 @@ class OrderController extends Controller
                                 'quantity' => '1',
                             ];
                         }
+
+                        // adding shipping price to order
+                        if (!empty($request->shipment_price) && $request->shipment_price > 0) {
+                            $shipment_price = number_format(($request->shipment_price * 100) , 2);
+                            $shipment_value = str_replace(',', '', $shipment_price);
+                            $shipment_product = $stripe->products->create([
+                                'name' => 'Shipment',
+                            ]);
+                            $shipment_product_price = $stripe->prices->create([
+                                'unit_amount_decimal' => $shipment_value,
+                                'currency' => 'usd',
+                                'product' => $shipment_product->id
+                            ]);
+                            $items[] = [
+                                'price' => $shipment_product_price->id,
+                                'quantity' => '1',
+                            ];
+                        }
+
                         $line_items = [
                             'line_items' => 
                             [
