@@ -360,7 +360,7 @@ class AdminSettingsController extends Controller
 
         return response()->json([
             'status' => $status,
-            'msg' => 'Admins Selected Succeesfully'
+            'msg' => 'Admins Selected Succesfully'
         ]);
     }
 }
