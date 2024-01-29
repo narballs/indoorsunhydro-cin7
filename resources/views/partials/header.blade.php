@@ -208,11 +208,19 @@
         } */
 
         
-        .promotional_banner_div {
+        .promotional_banner_div , .promotional_banner_div_congrats {
             background-color: #FFFFB4;
         }
 
         .promotional_banner_text {
+            color: #000;
+            font-family: 'Poppins';
+            font-size: 20px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 171%;
+        }
+        .promotional_banner_text_congrats {
             color: #000;
             font-family: 'Poppins';
             font-size: 20px;

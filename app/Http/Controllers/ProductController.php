@@ -1100,6 +1100,12 @@ class ProductController extends Controller
             $d_none = 'd-none';
         }
 
+        if ($cart_total >= intval($free_shipping) && $cart_total >= 0) {
+            $congrats_div_dnone = '';
+        } else {
+            $congrats_div_dnone = 'd-none';
+        }
+
         if (!empty($cart_items)) {
             $view = 'cart';
         } else {
@@ -1115,7 +1121,8 @@ class ProductController extends Controller
             'calculate_free_shipping',
             'free_shipping_value',
             'free_shipping',
-            'd_none'
+            'd_none',
+            'congrats_div_dnone'
 
         ));
     }
