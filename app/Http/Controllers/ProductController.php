@@ -633,6 +633,9 @@ class ProductController extends Controller
                 $similar_products_query = Product::with('options', 'options.defaultPrice', 'brand', 'options.products', 'categories', 'apiorderItem', 'product_stock')
                 ->where('category_id', $product->category_id)
                 ->where('id', '!=', $product->id)
+                ->whereHas('categories' , function ($q){
+                    $q->where('is_active' , 1);
+                })
                 ->where('status', '!=', 'Inactive');
                 
                 $total_products = $similar_products_query->count();

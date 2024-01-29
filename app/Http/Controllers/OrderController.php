@@ -39,9 +39,21 @@ class OrderController extends Controller
 {
     public function store(Request $request)
     {
-        $request->validate([
-            'method_name' => 'required'
-        ]);
+        $request->validate(
+            [
+                'method_name' => 'required',
+            ]
+        );
+        $address_1_shipping = $request->address_1_shipping;
+        $state_shipping = $request->state_shipping;
+        $zip_code_shipping = $request->zip_code_shipping;
+
+        $address_1_billing = $request->address_1_billing;
+        $state_billing = $request->state_billing;
+        $zip_code_billing = $request->zip_code_billing;
+        if (empty($address_1_shipping) || empty($state_shipping) || empty($zip_code_shipping) || empty($address_1_billing) || empty($state_billing) || empty($zip_code_billing)) {
+            return back()->with('error', 'Blilling and Shipping address is required.');
+        }
         
         $paymentMethod = $request->input('method_name');
         $paymentMethodOption = $request->input('method_option');
@@ -217,6 +229,25 @@ class OrderController extends Controller
                                 'quantity' => '1',
                             ];
                         }
+
+                        // adding shipping price to order
+                        if (!empty($request->shipment_price) && $request->shipment_price > 0) {
+                            $shipment_price = number_format(($request->shipment_price * 100) , 2);
+                            $shipment_value = str_replace(',', '', $shipment_price);
+                            $shipment_product = $stripe->products->create([
+                                'name' => 'Shipment',
+                            ]);
+                            $shipment_product_price = $stripe->prices->create([
+                                'unit_amount_decimal' => $shipment_value,
+                                'currency' => 'usd',
+                                'product' => $shipment_product->id
+                            ]);
+                            $items[] = [
+                                'price' => $shipment_product_price->id,
+                                'quantity' => '1',
+                            ];
+                        }
+
                         $line_items = [
                             'line_items' => 
                             [
@@ -233,6 +264,7 @@ class OrderController extends Controller
                                     "order_id"=> $order_id,
                                 ]
                             ],
+                            // 'shipping_cost' =>  !empty($request->shipment_price) ? $request->shipment_price : 0,
                             'customer_email' => auth()->user()->email,
                             
                         ]);
