@@ -161,7 +161,7 @@
         }
     }
 </style>
-<div class="mb-5 desktop-view">
+<div class="mb-3 desktop-view">
     <p style="line-height: 95px;" class="fw-bold fs-2 product-btn my-auto border-0 text-white text-center align-middle">
         Checkout
     </p>
@@ -171,6 +171,26 @@
 $cart_total = 0;
 $cart_price = 0;
 ?>
+
+{{-- hidden fields for shipping and billing --}}
+
+<input type="hidden" name="address_1_billing" value="{{ !empty($user_address->postalAddress1) ?  $user_address->postalAddress1 : '' }}">
+<input type="hidden" name="state_billing" value="{{ !empty($user_address->postalState) ?  $user_address->postalState : '' }}">
+<input type="hidden" name="zip_code_billing" value="{{ !empty($user_address->postalPostCode) ?  $user_address->postalPostCode : '' }}">
+
+{{-- shipping --}}
+<input type="hidden" name="address_1_shipping" value="{{ !empty($user_address->address1) ?  $user_address->address1 : '' }}">
+<input type="hidden" name="state_shipping" value="{{ !empty($user_address->state) ?  $user_address->state : '' }}">
+<input type="hidden" name="zip_code_shipping" value="{{ !empty($user_address->postCode) ?  $user_address->postCode : '' }}">
+{{-- end --}}
+@if (\Session::has('error'))
+    <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">
+        {!! \Session::get('error') !!}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+@endif
 @if (Session::get('cart'))
     @foreach (Session::get('cart') as $cart)
         <?php
@@ -432,6 +452,14 @@ $cart_price = 0;
                     $total_including_tax = $tax + $cart_total  + $shipment_price;
 
                     ?>
+                    <input type="hidden" name="address_1_billing" value="{{ !empty($user_address->postalAddress1) ?  $user_address->postalAddress1 : '' }}">
+                    <input type="hidden" name="state_billing" value="{{ !empty($user_address->postalState) ?  $user_address->postalState : '' }}">
+                    <input type="hidden" name="zip_code_billing" value="{{ !empty($user_address->postalPostCode) ?  $user_address->postalPostCode : '' }}">
+                    
+                    {{-- shipping --}}
+                    <input type="hidden" name="address_1_shipping" value="{{ !empty($user_address->address1) ?  $user_address->address1 : '' }}">
+                    <input type="hidden" name="state_shipping" value="{{ !empty($user_address->state) ?  $user_address->state : '' }}">
+                    <input type="hidden" name="zip_code_shipping" value="{{ !empty($user_address->postCode) ?  $user_address->postCode : '' }}">
                     <input type="hidden" name="incl_tax" id="incl_tax" value="{{ $total_including_tax }}">
                     <input type="hidden" name="shipment_price" id="shipment_price" value="{{ $shipment_price }}">
                     @if(!empty($tax_class))
@@ -784,6 +812,14 @@ $cart_price = 0;
                                                         </div>
                                                     @endforeach
                                                 @endforeach
+                                                <input type="hidden" name="address_1_billing" value="{{ !empty($user_address->postalAddress1) ?  $user_address->postalAddress1 : '' }}">
+                                                <input type="hidden" name="state_billing" value="{{ !empty($user_address->postalState) ?  $user_address->postalState : '' }}">
+                                                <input type="hidden" name="zip_code_billing" value="{{ !empty($user_address->postalPostCode) ?  $user_address->postalPostCode : '' }}">
+
+                                                {{-- shipping --}}
+                                                <input type="hidden" name="address_1_shipping" value="{{ !empty($user_address->address1) ?  $user_address->address1 : '' }}">
+                                                <input type="hidden" name="state_shipping" value="{{ !empty($user_address->state) ?  $user_address->state : '' }}">
+                                                <input type="hidden" name="zip_code_shipping" value="{{ !empty($user_address->postCode) ?  $user_address->postCode : '' }}">
                                                 <input type="hidden" name="incl_tax" id="incl_tax" value="{{ $total_including_tax }}">
                                                 <input type="hidden" name="shipment_price" id="shipment_price" value="{{ $shipment_price }}">
                                                 @if(!empty($tax_class))
@@ -1208,6 +1244,14 @@ $cart_price = 0;
                                                                     </div>
                                                                 @endforeach
                                                         @endforeach
+                                                        <input type="hidden" name="address_1_billing" value="{{ !empty($user_address->postalAddress1) ?  $user_address->postalAddress1 : '' }}">
+                                                        <input type="hidden" name="state_billing" value="{{ !empty($user_address->postalState) ?  $user_address->postalState : '' }}">
+                                                        <input type="hidden" name="zip_code_billing" value="{{ !empty($user_address->postalPostCode) ?  $user_address->postalPostCode : '' }}">
+
+                                                        {{-- shipping --}}
+                                                        <input type="hidden" name="address_1_shipping" value="{{ !empty($user_address->address1) ?  $user_address->address1 : '' }}">
+                                                        <input type="hidden" name="state_shipping" value="{{ !empty($user_address->state) ?  $user_address->state : '' }}">
+                                                        <input type="hidden" name="zip_code_shipping" value="{{ !empty($user_address->postCode) ?  $user_address->postCode : '' }}">
                                                         <input type="hidden" name="shipment_price" id="shipment_price" value="{{ $shipment_price }}">
                                                         <input type="hidden" name="incl_tax" id="incl_tax" value="{{ $total_including_tax }}">
                                                         @if(!empty($tax_class))
