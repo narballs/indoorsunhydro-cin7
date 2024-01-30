@@ -527,10 +527,12 @@ class ProductController extends Controller
         $user_buy_list_options = [];
         $lists = '';
         $contact_id = '';
+        $locations= null;
 
             
         // Fetch stock from API
-        $stock_updated = UtilHelper::updateProductStock($product, $option_id);
+        $stock_updated_helper = UtilHelper::updateProductStock($product, $option_id);
+        $stock_updated = $stock_updated_helper['stock_updated'];
 
         $product_stocks = ProductStock::where('product_id' ,  $product->product_id)
             ->where('option_id' , $option_id)
@@ -597,6 +599,10 @@ class ProductController extends Controller
             }
         }
 
+        if (!empty($stock_updated_helper['branch_with_stocks'])) {
+            $locations = $stock_updated_helper['branch_with_stocks'];
+        }
+
         $notify_user_about_product_stock = AdminSetting::where('option_name', 'notify_user_about_product_stock')->first();
 
         return view('product-detail', compact(
@@ -610,7 +616,7 @@ class ProductController extends Controller
             'stock_updated',
             'product_stocks',
             'notify_user_about_product_stock',
-            'similar_products','total_stock','best_selling_products'
+            'similar_products','total_stock','best_selling_products','locations'
         ));
 
         
