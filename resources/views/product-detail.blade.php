@@ -139,6 +139,20 @@
                                                     </div>
                                                 @endif
                                             </div>
+                                            @if($stock_updated)
+                                                <div class="col-md-12 mx-3">
+                                                    @if (count($locations) > 0)
+                                                        @foreach ($locations as $location)
+                                                            <div>
+                                                                <p class="mb-1"> 
+                                                                    <i class="fa fa-map-marker mr-2"></i>{{$location['branch_name'] . ':'}}
+                                                                    <span class="text-success">{{$location['available']}}</span>
+                                                                </p>
+                                                            </div>
+                                                        @endforeach
+                                                    @endif
+                                                </div>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
