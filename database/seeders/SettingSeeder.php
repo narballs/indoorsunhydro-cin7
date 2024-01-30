@@ -232,6 +232,42 @@ class SettingSeeder extends Seeder
                 'type' => 'text',
                 'option_value' => 'Please call to double check inventory if you are planning to place a pick up order',
             ],
+            [
+                'option_name' => 'square_payment_mode', 
+                'type' => 'yes/no',
+                'option_value' => 'No',
+            ],
+            [
+                'option_name' => 'square_payment_access_token', 
+                'type' => 'text',
+                'option_value' => 'EAAAlx4Z__fo4anToV6YLH4KHDD7bLVf__Jb4d02qX21VapGB-LOwKrquG_WKhBc',
+            ],
+            [
+                'option_name' => 'square_payment_location_id', 
+                'type' => 'text',
+                'option_value' => 'LN2EBJZEF6NSX',
+            ],
+            [
+                'option_name' => 'square_payment_environment', 
+                'type' => 'text',
+                'option_value' => 'SquareClient::ENVIRONMENT_SANDBOX',
+            ],
+            [
+                'option_name' => 'square_payment_app_id', 
+                'type' => 'text',
+                'option_value' => 'sandbox-sq0idb-sK1tlkd_hYyAh7YPaTxolw',
+            ],
+            [
+                'option_name' => 'square_payment_secret', 
+                'type' => 'text',
+                'option_value' => 'sandbox-sq0csb-ptflX3Fbck0VMfLhDCfPrhx4PD-WDCBHUonJLw48ZAU',
+            ],
+            [
+                'option_name' => 'toggle_registration_approval', 
+                'type' => 'yes/no',
+                'option_value' => 'No',
+            ],
+
             
         ];
 

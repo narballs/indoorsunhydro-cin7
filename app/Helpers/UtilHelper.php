@@ -92,6 +92,7 @@ class UtilHelper
         $setting = AdminSetting::where('option_name', 'check_product_stock')->first();
         $total_stock = 0;
         $stock_updated = false;
+        $branch_with_stocks = [];
 
         if (empty($setting) || ($setting->option_value !=  'Yes')) {
             return $stock_updated;
@@ -116,9 +117,12 @@ class UtilHelper
 
             $inventory = $res->getBody()->getContents();
             $location_inventories = json_decode($inventory);
-
             if (empty($location_inventories)) {
-                return $stock_updated;
+                return [
+                    'stock_updated' => $stock_updated,
+                    'branch_with_stocks' => null,
+
+                ];
             }
             $inactive_inventory_locations = InventoryLocation::where('status', 0)->pluck('cin7_branch_id')->toArray();
             
@@ -129,6 +133,11 @@ class UtilHelper
                 if (in_array($location_inventory->branchId, $skip_branches)) {
                     continue;
                 }
+                $branch_with_stocks[] = [
+                    'branch_id' => $location_inventory->branchId,
+                    'branch_name' => $location_inventory->branchName,
+                    'available' => $location_inventory->available
+                ];
                 $product_stock = ProductStock::where('branch_id' , $location_inventory->branchId)
                     ->where('product_id' ,  $product->product_id)
                     ->where('option_id' , $option_id)
@@ -174,6 +183,10 @@ class UtilHelper
             return $stock_updated;
         }
 
-        return $stock_updated;
+        return [
+            'stock_updated' => $stock_updated,
+            'branch_with_stocks' => $branch_with_stocks,
+
+        ];
     }
 }
