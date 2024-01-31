@@ -90,7 +90,7 @@
                                                 <div class="mt-4 mb-3"> <span class="text-uppercase text-muted brand"></span>                                                
                                                     <div class="price d-flex flex-row align-items-center">
                                                         @if ($productOption->products->status != 'Inactive')
-                                                            @if($stock_updated)
+                                                            @if($stock_updated == true)
                                                             <span class="rounded-pill cursor product-detail-quantity d-flex justify-content-center align-items-center"
                                                                     data-toggle="popover-hover" data-bs-container="body" data-placement="top" data-bs-placement="top"
                                                                     data-bs-content="Top popover" style=" cursor: pointer;"><span class="stock_number">

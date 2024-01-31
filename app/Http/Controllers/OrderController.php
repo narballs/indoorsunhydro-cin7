@@ -32,7 +32,14 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
+use Square\SquareClient;
+use Square\Models\Money;
+use Square\Models\QuickPay;
+use Square\Models\CreatePaymentLinkRequest;
+use Square\Models\Order as SquareOrder;
+use Square\Exceptions\ApiException;
 use Illuminate\Support\Facades\Storage;
+use Square\Models\OrderLineItem;
 use Stripe\TaxRate;
 
 class OrderController extends Controller
@@ -95,16 +102,164 @@ class OrderController extends Controller
 
                 $is_primary = Contact::where('contact_id', $session_contact_id)->first();
                 $enable_stripe_checkout_setting = AdminSetting::where('option_name', 'enable_stripe_checkout')->first();
+                $square_payment_mode = AdminSetting::where('option_name', 'square_payment_mode')->first();
                 $stripe_is_enabled = !empty($enable_stripe_checkout_setting) && strtolower($enable_stripe_checkout_setting->option_value) == 'yes';
-
+                $square_is_enabled = !empty($square_payment_mode) && strtolower($square_payment_mode->option_value) == 'yes';
                 $go_to_stripe_checkout = false;
+                $go_to_square_checkout = false;
                 $pay_in_advance = strtolower($request->paymentTerms) === 'pay in advanced' ? true : false;
 
                 if ($stripe_is_enabled && $pay_in_advance) {
                     $go_to_stripe_checkout = true;
                 }
 
+                if ($square_is_enabled && $pay_in_advance) {
+                    $go_to_square_checkout = true;
+                }
+
+
+                $square_payment_accessToken = AdminSetting::where('option_name', 'square_payment_access_token')->first();
+                $square_payment_environment = AdminSetting::where('option_name', 'square_payment_environment')->first();
+                $square_payment_location_id = AdminSetting::where('option_name', 'square_payment_location_id')->first();
+
                 $tax_rate = 0;
+                if ($go_to_square_checkout == true) {
+                    $client = new SquareClient([
+                        'accessToken' => $square_payment_accessToken->option_value,
+                        'environment' => 'sandbox'
+                    ]);
+                    $order = new ApiOrder;
+                    
+                    if ($is_primary == null) {
+                        $order->secondaryId = $session_contact_id;
+                    } else {
+                        $order->primaryId = $session_contact_id;
+                    }
+                    $dateCreated = Carbon::now();
+                    $createdDate = Carbon::now();
+                    $order->createdDate = $createdDate;
+                    $order->modifiedDate = $createdDate;
+                    $order->createdBy = 79914;
+                    $order->processedBy = 79914;
+                    $order->isApproved = false;
+                    $order->memberId = $active_contact_id;
+                    $order->branchId = "none";
+                    $order->distributionBranchId = 0;
+                    $order->branchEmail = 'wqszeeshan@gmail.com';
+                    $order->productTotal = $cart_total;
+                    $order->total = $cart_total;
+                    $order->currencyCode = 'USD';
+                    $order->currencyRate = 59.0;
+                    $order->currencySymbol = '$';
+                    $order->order_status_id = $order_status->id;
+                    $order->user_id = Auth::id();
+                    $order->status = "DRAFT";
+                    $order->stage = "New";
+                    $order->payment_status = "unpaid";
+                    $order->logisticsCarrier = $paymentMethod;
+                    $order->tax_class_id = $request->tax_class_id;
+                    $order->user_switch = $user_switch;
+                    $order->total_including_tax = $request->incl_tax;
+                    $order->po_number = $request->po_number;
+                    $order->paymentTerms = $request->paymentTerms;
+                    $order->memo = $request->memo;
+                    $order->date = $request->date;
+                    $order->shipment_price = $request->shipment_price;
+                    $order->is_stripe = 1;
+                    $order->save();
+
+                    $order_id =  $order->id;
+                    $currentOrder = ApiOrder::where('id', $order->id)->first();
+                    $apiApproval = $currentOrder->apiApproval;
+                    $random_string = Str::random(10);
+                    $currentOrder->reference = 'DEV4' . '-QCOM-' .$random_string . '-' .$order_id;
+
+                    $currentOrder->save();
+                    $currentOrder = ApiOrder::where('id', $order_id)->with(
+                        'contact',
+                        'user.contact',
+                        'apiOrderItem.product.options',
+                        'texClasses'
+                    )->first();
+
+                    //adding comment to order
+
+                    $order_comment = new OrderComment;
+                    $order_comment->order_id = $order_id;
+                    $order_comment->comment = 'Order Placed through Stripe';
+                    $order_comment->save();
+
+                    $order_contact = Contact::where('contact_id', $currentOrder->memberId)->first();
+                    $product_prices = [];
+                    $lineItems  = [];
+                    $product_names = [];
+                    $reference = $currentOrder->reference;
+                    $get_tax_class = !empty($currentOrder->texClasses) ? $currentOrder->texClasses : null;
+                    if (!empty($get_tax_class)) {
+                        $tax_rate = $currentOrder->total * ($get_tax_class->rate / 100);
+                    } else {
+                        $tax_rate = 0;
+                    }
+                    // Initialize Square Checkout API
+                    $checkoutApi = $client->getCheckoutApi();
+                    $line_items = [];
+                    if (session()->has('cart')) {
+                        foreach ($cart_items as $cart_item) {
+                            $OrderItem = new ApiOrderItem;
+                            $OrderItem->order_id = $order_id;
+                            $OrderItem->product_id = $cart_item['product_id'];
+                            $OrderItem->quantity =  $cart_item['quantity'];
+                            $OrderItem->price = $cart_item['price'];
+                            $OrderItem->option_id = $cart_item['option_id'];
+                            $OrderItem->save();
+                            
+                            $order_line_item = new OrderLineItem($cart_item['quantity']);
+                            $order_line_item->setName($cart_item['name']);
+                            // Create a Money object for base price
+                            $base_price_money = new Money();
+                            $base_price_money->setAmount($cart_item['price'] * 100); // Convert price to cents
+                            $base_price_money->setCurrency('USD');
+
+                            // Set base price money for the order line item
+                            $order_line_item->setBasePriceMoney($base_price_money);
+                            $line_items[] = $order_line_item;
+                        
+                        }
+                        // Create an Order object and set line items
+                        $square_order = new SquareOrder($square_payment_location_id->option_value);
+                        $square_order->setLineItems($line_items);
+
+                        // Create a CreatePaymentLinkRequest object and set the order
+                        $body = new CreatePaymentLinkRequest();
+                        $body->setIdempotencyKey($order->id);
+                        $body->setOrder($square_order );
+                        try {
+                            // Make the API request to create the payment link
+                            $apiResponse = $checkoutApi->createPaymentLink($body);
+                        
+                            if ($apiResponse->getStatusCode() == 200){
+                                $checkoutUrl = $apiResponse->getResult()->getPaymentLink()->getUrl();
+                            } else {
+                                // Handle API errors
+                                $errors = $apiResponse->getErrors();
+                            }
+                        } catch (\Square\Exceptions\ApiException $e) {
+
+                            return back()->with('error', 'Something went wrong, please try again later.');
+                            // Handle API exceptions
+                        } catch (\Exception $e) {
+                            return back()->with('error', 'Something went wrong, please try again later.');
+                            // Handle other exceptions
+                        }
+                        
+                    } else {
+                        session()->forget('cart');
+                        return redirect('/');
+                    }
+
+                    session()->forget('cart');
+                    return redirect($checkoutUrl);
+                }
                 if ($go_to_stripe_checkout) {
                     $order = new ApiOrder;
                     
