@@ -250,7 +250,7 @@ class SettingSeeder extends Seeder
             [
                 'option_name' => 'square_payment_environment', 
                 'type' => 'text',
-                'option_value' => 'SquareClient::ENVIRONMENT_SANDBOX',
+                'option_value' => 'sandbox',
             ],
             [
                 'option_name' => 'square_payment_app_id', 
