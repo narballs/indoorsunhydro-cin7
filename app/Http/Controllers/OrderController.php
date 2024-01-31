@@ -126,7 +126,7 @@ class OrderController extends Controller
                 if ($go_to_square_checkout == true) {
                     $client = new SquareClient([
                         'accessToken' => $square_payment_accessToken->option_value,
-                        'environment' => 'sandbox'
+                        'environment' => !empty($square_payment_environment->option_value) ? $square_payment_environment->option_value : 'sandbox'
                     ]);
                     $order = new ApiOrder;
                     
