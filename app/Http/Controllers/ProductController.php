@@ -594,11 +594,14 @@ class ProductController extends Controller
             ->get();
         $total_stock = 0;
         if ($stock_updated) {
-            foreach ($product_stocks as $product_stock) {
-                $total_stock += $product_stock->available_stock;
+            // foreach ($product_stocks as $product_stock) {
+            //     $total_stock += $product_stock->available_stock;
+            // }
+
+            if (!empty($stock_updated_helper['total_stock'])) {
+                $total_stock = $stock_updated_helper['total_stock'];
             }
         }
-
         if (!empty($stock_updated_helper['branch_with_stocks'])) {
             $locations = $stock_updated_helper['branch_with_stocks'];
         }

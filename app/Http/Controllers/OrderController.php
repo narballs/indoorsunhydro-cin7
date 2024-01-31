@@ -123,7 +123,7 @@ class OrderController extends Controller
                 $square_payment_location_id = AdminSetting::where('option_name', 'square_payment_location_id')->first();
 
                 $tax_rate = 0;
-                if ($go_to_square_checkout) {
+                if ($go_to_square_checkout == true) {
                     $client = new SquareClient([
                         'accessToken' => $square_payment_accessToken->option_value,
                         'environment' => 'sandbox'
@@ -432,7 +432,6 @@ class OrderController extends Controller
                     return redirect($checkout_session->url);
                     
                 }
-                
                 else {
                     $order = new ApiOrder;
                     if ($is_primary == null) {
