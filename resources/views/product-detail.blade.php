@@ -141,7 +141,7 @@
                                             </div>
                                             @if($stock_updated)
                                                 <div class="col-md-12 mx-3">
-                                                    @if (count($locations) > 0)
+                                                    @if (!empty($locations))
                                                         @foreach ($locations as $location)
                                                             <div>
                                                                 <p class="mb-1"> 
@@ -286,9 +286,11 @@
                     @if (!$stock_updated)
                         Unable to show accurate stock levels.<br />
                     @endif
-                    @foreach ($product_stocks as $product_stock)
-                        {{ $product_stock->branch_name }}: {{ $product_stock->available_stock }}<br />
-                    @endforeach
+                    @if (!empty($locations))
+                        @foreach ($locations as $location)
+                            {{ $location['branch_name'] }}: {{ $location['available'] }}<br />
+                        @endforeach
+                    @endif
                 </span>
             </div>
         </div>
@@ -321,19 +323,28 @@
                         <span class="text-uppercase text-muted brand"></span>
 
                         <div class="price d-flex flex-row align-items-center">
-                            @if ($productOption->stockAvailable > 0)
-                            <span class="rounded-pill product-detail-quantity d-flex justify-content-center align-items-center">
-                                <span class="stock_number">{{$productOption->stockAvailable}}</span>
-                            </span>
-                            <div class="ml-2">
-                                <span class="instock-label">IN STOCK</span>
-                            </div>
-                            @else
-                            <div class="ml-2">
-                                <span class="text-danger instock-label">
-                                    {{ App\Helpers\SettingHelper::getSetting('out_of_stock_label', 'OUT OF STOCK'); }}
+                            @if($stock_updated == true)
+                                <span class="rounded-pill product-detail-quantity d-flex justify-content-center align-items-center">
+                                    <span class="stock_number">{{$total_stock}}</span>
                                 </span>
-                            </div>
+                                <div class="ml-2">
+                                    <span class="instock-label">IN STOCK</span>
+                                </div>
+                            @else
+                                @if ($productOption->stockAvailable > 0)
+                                <span class="rounded-pill product-detail-quantity d-flex justify-content-center align-items-center">
+                                    <span class="stock_number">{{$productOption->stockAvailable}}</span>
+                                </span>
+                                <div class="ml-2">
+                                    <span class="instock-label">IN STOCK</span>
+                                </div>
+                                @else
+                                <div class="ml-2">
+                                    <span class="text-danger instock-label">
+                                        {{ App\Helpers\SettingHelper::getSetting('out_of_stock_label', 'OUT OF STOCK'); }}
+                                    </span>
+                                </div>
+                                @endif
                             @endif
                             @if(!empty($contact_id))
                             <a style="width:20px !important;" href="javascript:void(0);" class="mx-3 subscribe">
@@ -345,15 +356,31 @@
                             @endif
                         </div>
                     </div>
+                    <div class="row">
+                        @if($stock_updated)
+                            <div class="col-md-12">
+                                @if (empty($locations))
+                                    @foreach ($locations as $location)
+                                        <div>
+                                            <p class="mb-1 instock-label"> 
+                                                <i class="fa fa-map-marker mr-2"></i>{{$location['branch_name'] . ':'}}
+                                                <span class="text-success">{{$location['available']}}</span>
+                                            </p>
+                                        </div>
+                                    @endforeach
+                                @endif
+                            </div>
+                        @endif
+                    </div>
                     @if (!empty($productOption->option1) || !empty($productOption->option2) || !empty($productOption->option3))
                         <div class="row" style="font-size: 14px;">
                             <div class="col-sm-6">
                                 <img src="/theme/img/box_icon.png" style="max-width: 40px;" />
                             </div>
                             <div class="col-sm-6">
-                                <p>{{ $productOption->option1 }}</p>
-                                <p>{{ $productOption->option2 }}</p>
-                                <p>{{ $productOption->option3 }}</p>
+                                <p class="mb-0">{{ $productOption->option1 }}</p>
+                                <p class="mb-0">{{ $productOption->option2 }}</p>
+                                <p class="mb-0">{{ $productOption->option3 }}</p>
                             </div>
                         </div>
                     @endif
