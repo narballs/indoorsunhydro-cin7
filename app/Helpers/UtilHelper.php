@@ -186,7 +186,7 @@ class UtilHelper
         return [
             'stock_updated' => $stock_updated,
             'branch_with_stocks' => $branch_with_stocks,
-
+            'total_stock' => $total_stock
         ];
     }
 }
