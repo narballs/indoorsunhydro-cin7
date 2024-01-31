@@ -359,7 +359,7 @@
                     <div class="row">
                         @if($stock_updated)
                             <div class="col-md-12">
-                                @if (empty($locations))
+                                @if (!empty($locations))
                                     @foreach ($locations as $location)
                                         <div>
                                             <p class="mb-1 instock-label"> 
