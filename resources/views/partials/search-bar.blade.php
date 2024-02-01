@@ -97,7 +97,12 @@
         @include('partials.nav')
     </div>
 </div>
-
+<div class="w-100 mb-2">
+    <div class="alert alert-success alert-dismissible d-none mb-0 text-center notify_user_div">
+        <a href="#" onclick="hide_notify_user_div()" class="close" aria-label="close">&times;</a>
+        <span class="notify_text"></span>
+    </div>
+</div>
 
 <style>
     .main_search_filter{
