@@ -102,7 +102,7 @@
                     </div>
                     <div class="col-md-12 add-to-cart-button-section">
                         @if (!empty($notify_user_about_product_stock) && strtolower($notify_user_about_product_stock->option_value) == 'yes')
-                            @if ($option->stockOnHand < 0)
+                            @if ($option->stockOnHand > 0)
                                 <button 
                                     class="hover_effect prd_btn_resp ajaxSubmit button-cards col w-100  mb-1 original_cart_btn   original_cart_btn_{{$product->id}}" 
                                     type="submit" 
