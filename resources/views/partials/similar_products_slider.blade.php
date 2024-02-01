@@ -19,6 +19,21 @@
         display:flex;
         justify-content: center !important;
     }
+    .notify_stock_btn_class {
+        font-size: 15px;
+    }
+    .custom_stock_spinner {
+        height: 1.5rem ;
+        width: 1.5rem ;
+    }
+
+    @media screen and (max-width:550px)  and (min-width: 280px){
+        
+        .custom_stock_spinner {
+            height: 1rem !important;
+            width: 1rem !important;
+        }
+    }
 
     
 </style>
@@ -284,21 +299,53 @@
                                                 @endif
                                             </div>
                                             <div class="col-md-12 add-to-cart-button-section">
-                                                @if ($enable_add_to_cart)
-                                                    <button 
-                                                        class="btn hover_effect prd_btn_resp p-2 ajaxSubmit button-cards-product-slider col w-100  mb-1" 
-                                                        type="submit" id="ajaxSubmit_{{ $product->id }}"
-                                                        onclick="updateCart('{{ $product->id }}', '{{ $option->option_id }}')"
-                                                    >
-                                                        Add to cart
-                                                    </button>
+                                                @if (!empty($notify_user_about_product_stock) && strtolower($notify_user_about_product_stock->option_value) == 'yes')
+                                                    @if ($option->stockOnHand > 0)
+                                                        <button 
+                                                            class="btn hover_effect prd_btn_resp p-2 ajaxSubmit button-cards-product-slider col w-100  mb-1" 
+                                                            type="submit" id="ajaxSubmit_{{ $product->id }}"
+                                                            onclick="updateCart('{{ $product->id }}', '{{ $option->option_id }}')">
+                                                            Add to cart
+                                                        </button>
+                                                    @else
+                                                        @if (auth()->user())
+                                                            <input type="hidden" name="sku" id="sku_value" class="sku_value" value="{{$product->code}}">
+                                                            <input type="hidden" name="product_id" id="product_id_value" class="product_id_value" value="{{$product->id}}">
+                                                            <div class="row justify-content-center align-items-center">
+                                                                <div class="col-md-12">
+                                                                    <button class="w-100 ml-0 bg-primary h-auto product-detail-button-cards text-uppercase notify_stock_btn_class rounded d-flex align-items-center justify-content-center"
+                                                                        type="button" id="" onclick="notify_user_about_product_stock_similar('{{$product->id}}' , '{{$product->code}}')" data-product-id = {{$product->id}}>
+                                                                        <a class="text-white">Notify</a>
+                                                                        <div class="spinner-border text-white custom_stock_spinner stock_spinner_{{$product->id}} ml-1 d-none" role="status">
+                                                                            <span class="sr-only"></span>
+                                                                        </div>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        @else
+                                                            <button class="w-100 ml-0 bg-primary h-auto product-detail-button-cards notify_stock_btn_class text-uppercase notify_popup_modal_btn rounded"
+                                                                type="button" id="notify_popup_modal" onclick="show_notify_popup_modal_similar('{{$product->id}}' , '{{$product->code}}')">
+                                                                <a class="text-white">Notify</a>
+                                                            </button>
+                                                        @endif
+                                                    @endif
                                                 @else
-                                                    <button 
-                                                        class="btn prd_btn_resp p-2 ajaxSubmit mb-1 text-white bg-danger bg-gradient button-cards-product-slider col w-100 autocomplete=off"
-                                                        tabindex="-1" 
-                                                        type="submit" id="ajaxSubmit_{{ $product->id }}"
-                                                        disabled 
-                                                        onclick="return updateCart('{{ $product->id }}')">Out of Stock</button>
+                                                    @if ($enable_add_to_cart)
+                                                        <button 
+                                                            class="btn hover_effect prd_btn_resp p-2 ajaxSubmit button-cards-product-slider col w-100  mb-1" 
+                                                            type="submit" id="ajaxSubmit_{{ $product->id }}"
+                                                            onclick="updateCart('{{ $product->id }}', '{{ $option->option_id }}')"
+                                                        >
+                                                            Add to cart
+                                                        </button>
+                                                    @else
+                                                        <button 
+                                                            class="btn prd_btn_resp p-2 ajaxSubmit mb-1 text-white bg-danger bg-gradient button-cards-product-slider col w-100 autocomplete=off"
+                                                            tabindex="-1" 
+                                                            type="submit" id="ajaxSubmit_{{ $product->id }}"
+                                                            disabled 
+                                                            onclick="return updateCart('{{ $product->id }}')">Out of Stock</button>
+                                                    @endif
                                                 @endif
                                             </div>
                                         </div>
@@ -386,6 +433,7 @@
     }
 </style>
 <script>
+    
     function updateCart(id, option_id) {
         jQuery.ajax({
             url: "{{ url('/add-to-cart/') }}",
@@ -468,4 +516,84 @@
         });
         return false;
     }
+    // stock notification
+    function show_notify_popup_modal_similar (id , sku_value) {
+        $('.notify_popup_modal_similar').modal('show');
+        $('.productId_value').val(id);
+        $('.productSku_value').val(sku_value);
+    } 
+    function close_notify_user_modal_similar () {
+        $('.notify_popup_modal_similar').modal('hide');
+        $('.notify_stock_btn_class').each(function() {
+            $(this).attr('disabled', false);
+        });
+    }
+    
+    function notify_user_about_product_stock_similar (id , sku_value) {
+        $('.notify_stock_btn_class').each(function() {
+            var p_id = $(this).attr('data-product-id');
+            if (p_id != id) {
+                $(this).attr('disabled', true);
+            }
+        });
+        var email = $('.similar_notifyEmail').val();
+        var sku = sku_value;
+        var product_id = id;
+        $('.stock_spinner_modal').removeClass('d-none');
+        $('.stock_spinner_'+product_id).removeClass('d-none');
+        if (email != '') {
+            $('.email_required_alert').html('');
+        }
+        if (email == '') {
+            $('.email_required_alert').html('Email is Required');
+            $('.stock_spinner_modal').addClass('d-none');
+            $('.stock_spinner_'+product_id).addClass('d-none');
+            return false;
+        }
+        else {
+            $.ajax({
+                url: "{{ url('product-stock/notification') }}",
+                method: 'post',
+                data: {
+                "_token": "{{ csrf_token() }}",
+                    email : email,
+                    sku : sku,
+                    product_id : product_id
+                },
+                success: function(response){
+
+                    if (response.status === true) {
+                        $('.stock_spinner_modal').addClass('d-none');
+                        $('.stock_spinner_'+product_id).addClass('d-none');
+                        $('.notify_user_div').removeClass('d-none');
+                        close_notify_user_modal_similar();
+                        $('.notify_text').html(response.message);
+                    } else {
+                        $('.stock_spinner_modal').addClass('d-none');
+                        $('.stock_spinner_'+product_id).addClass('d-none');
+                        $('.notify_user_div').removeClass('d-none');
+                        $('.notify_text').html('Something went wrong!');
+                    }
+                },
+                error: function(response) {
+                    var error_message = response.responseJSON;
+                    $('.stock_spinner_modal').addClass('d-none');
+                    $('.stock_spinner_'+product_id).addClass('d-none');
+                    $('.notify_user_div').addClass('d-none');
+                    var error_text  = error_message.errors.email[0];
+                    $('.email_required_alert').html(error_text)
+                },
+                complete: function() {
+                    // Re-enable all buttons with class 'notify_stock_btn_class'
+                    $('.notify_stock_btn_class').prop('disabled', false);
+                }
+            });
+        }
+    }
+    
+    function hide_notify_user_div() {
+        $('.notify_text').html('');
+        $('.notify_user_div').addClass('d-none');
+    }
+    // end
 </script>
