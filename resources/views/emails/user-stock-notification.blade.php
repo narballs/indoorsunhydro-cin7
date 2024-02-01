@@ -26,7 +26,7 @@
            
             <div style="width: 100%;text-align:center">
                 <button  style="color:#FFF;background:#008BD3;border:1px solid #008BD3;padding:4px;text-align-center;px;font-weight:500;font-size:16px;">
-                   <a href="{{url('product-detail/'.$product->id . '/'. $product_options[0]->option_id . '/'. $product->code)}}">Buy Now</a>
+                   <a href="{{url('product-detail/'.$product->id . '/'. $product_options[0]->option_id . '/'. $product->slug)}}">Buy Now</a>
                 </button>
             </div>
         
