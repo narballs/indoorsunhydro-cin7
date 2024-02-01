@@ -529,12 +529,17 @@ class ProductController extends Controller
         $lists = '';
         $contact_id = '';
         $locations= null;
-        $stock_updated = false;
+        $stock_updated_helper = null;
         
             
         // Fetch stock from API
         $stock_updated_helper = UtilHelper::updateProductStock($product, $option_id);
-        $stock_updated = $stock_updated_helper['stock_updated'];
+        if ($stock_updated_helper != null) {
+
+            $stock_updated = $stock_updated_helper['stock_updated'];
+        } else {
+            $stock_updated = false;
+        }
 
         $product_stocks = ProductStock::where('product_id' ,  $product->product_id)
             ->where('option_id' , $option_id)
