@@ -174,7 +174,7 @@ class ProductController extends Controller
             ->groupBy('product_id')
             ->take(10)
             ->get();
-        
+        $notify_user_about_product_stock = AdminSetting::where('option_name', 'notify_user_about_product_stock')->first();
         return view('categories', compact(
             'products',
             'brands',
@@ -193,8 +193,8 @@ class ProductController extends Controller
             'pricing',
             'user_buy_list_options',
             'product_views',
-            'best_selling_products'
-            // 'product_buy_list'
+            'best_selling_products',
+            'notify_user_about_product_stock'
         ));
     }
 
@@ -416,7 +416,7 @@ class ProductController extends Controller
             ->groupBy('product_id')
             ->take(10)
             ->get();
-
+        $notify_user_about_product_stock = AdminSetting::where('option_name', 'notify_user_about_product_stock')->first();
         return view('all_products', compact(
             'products',
             'brands',
@@ -434,7 +434,8 @@ class ProductController extends Controller
             'user_buy_list_options',
             'contact_id',
             'product_views',
-            'best_selling_products'
+            'best_selling_products',
+            'notify_user_about_product_stock'
             // 'db_price_column'
         ));
     }
@@ -716,13 +717,14 @@ class ProductController extends Controller
         ->groupBy('product_id')
         ->take(10)
         ->get();
-        
+        $notify_user_about_product_stock = AdminSetting::where('option_name', 'notify_user_about_product_stock')->first();
         return view('categories', compact('products',
         'user_buy_list_options',
         'contact_id',
         'lists', 
         'product_views',
-        'best_selling_products'
+        'best_selling_products',
+        'notify_user_about_product_stock'
         ));
     }
 
@@ -934,7 +936,7 @@ class ProductController extends Controller
         ->take(10)
         ->get();
 
-
+        $notify_user_about_product_stock = AdminSetting::where('option_name', 'notify_user_about_product_stock')->first();
         return view(
             'products-by-brand',
             compact(
@@ -954,7 +956,8 @@ class ProductController extends Controller
             'user_buy_list_options',
             'contact_id',
             'product_views',
-            'best_selling_products' 
+            'best_selling_products',
+            'notify_user_about_product_stock' 
             )
         );
     }
@@ -1615,7 +1618,7 @@ class ProductController extends Controller
         ->groupBy('product_id')
         ->take(10)
         ->get();
-        
+        $notify_user_about_product_stock = AdminSetting::where('option_name', 'notify_user_about_product_stock')->first();
         return view('search_product.search_product', compact(
             'products',
             'brands',
@@ -1633,7 +1636,8 @@ class ProductController extends Controller
             'filter_value_main',
             'user_buy_list_options',
             'product_views',
-            'best_selling_products'
+            'best_selling_products',
+            'notify_user_about_product_stock'
         ));
     }
 

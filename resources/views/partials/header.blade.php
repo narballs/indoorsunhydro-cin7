@@ -243,3 +243,7 @@
 {{-- <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WQS825W2"
     height="0" width="0" style="display:none;visibility:hidden"></iframe>
 </noscript> --}}
+
+@if (auth()->user())
+    <input type="hidden" name="notify_user_email_input" class="notifyEmail" id="auth_user_email" value="{{auth()->user()->email}}">
+@endif

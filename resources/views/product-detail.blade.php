@@ -1,6 +1,12 @@
 @include('partials.header')
 @include('partials.top-bar')
 @include('partials.search-bar')
+<div class="w-100 mb-2">
+    <div class="alert alert-success alert-dismissible d-none mb-0 text-center notify_user_div_detail">
+        <a href="#" onclick="hide_notify_user_div()" class="close" aria-label="close">&times;</a>
+        <span class="notify_text_detail"></span>
+    </div>
+</div>
 <div class="w-100 mx-0 row justify-content-center align-items-center" style="background-color: #008BD3;height:70px;">
     <p class="fw-bold fs-2 my-auto border-0 text-white text-center align-middle">
        PRODUCT DETAIL
@@ -16,12 +22,7 @@
 </div>
 <?php //dd($location_inventories);exit;?>
 <input type="hidden" value="{{App\Helpers\UserHelper::getUserPriceColumn()}}" id="get_column">
-<div class="w-100">
-    <div class="alert alert-success alert-dismissible d-none mb-0 text-center notify_user_div">
-        <a href="#" onclick="hide_notify_user_div()" class="close" aria-label="close">&times;</a>
-        <span class="notify_text"></span>
-    </div>
-</div>
+
 <div class="row bg-light desktop-view justify-content-center w-100">
     <div class="col-md-12 col-xl-10 col-lg-12 col-sm-12 col-xs-12 mt-3 mb-3">
         <div class="row justify-content-center ml-1">
@@ -177,7 +178,7 @@
                                         <div class="col-md-8 mt-2">
                                             
                                             @if (!empty($notify_user_about_product_stock) && strtolower($notify_user_about_product_stock->option_value) === 'yes' && $stock_updated)
-                                                @if ($total_stock > 0)
+                                                @if ($total_stock < 0)
                                                     <button class="w-100 ml-0 button-cards product-detail-button-cards text-uppercase"
                                                         type="button" id="ajaxSubmit">
                                                         <a class="text-white">Add to cart </a>
@@ -790,7 +791,7 @@
 
 {{--  notify user pop up modal  --}}
 <!-- Modal -->
-<div class="modal fade notify_popup_modal" id="notify_user_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static">
+<div class="modal fade notify_popup_modal_detail" id="notify_user_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
 <div class="modal-dialog" role="document">
     <div class="modal-content">
     <div class="modal-header">
@@ -808,7 +809,7 @@
                     <input type="hidden" name="product_id" id="product_id_value" class="product_id_value" value="{{$productOption->products->id}}">
                     <div class="col-md-12">
                         <input type="text" name="notify_user_email" id="notify_user_email" class="form-control notify_user_email_input" placeholder="Enter your email">
-                        <div class="text-danger email_required_alert"></div>
+                        <div class="text-danger email_required_alert_detail"></div>
                     </div>
 
                 </div>
@@ -1336,10 +1337,10 @@
     // $(document).ready(function() {
         // open notify user modal 
         function show_notify_popup_modal () {
-            $('.notify_popup_modal').modal('show');
+            $('.notify_popup_modal_detail').modal('show');
         } 
         function close_notify_user_modal () {
-            $('.notify_popup_modal').modal('hide');
+            $('.notify_popup_modal_detail').modal('hide');
         }
         
         function notify_user_about_product_stock () {
@@ -1348,8 +1349,11 @@
             var product_id = $('.product_id_value').val();
             $('.stock_spinner_modal').removeClass('d-none');
             $('.stock_spinner').removeClass('d-none');
+            if (email != '') {
+                $('.email_required_alert_detail').html('');
+            }
             if (email == '') {
-                $('.email_required_alert').html('Email is Required');
+                $('.email_required_alert_detail').html('Email is Required');
                 $('.stock_spinner_modal').addClass('d-none');
                 $('.stock_spinner').addClass('d-none');
                 return false;
@@ -1369,31 +1373,31 @@
                         if (response.status === true) {
                             $('.stock_spinner_modal').addClass('d-none');
                             $('.stock_spinner').addClass('d-none');
-                            $('.notify_user_div').removeClass('d-none');
+                            $('.notify_user_div_detail').removeClass('d-none');
                             close_notify_user_modal();
-                            $('.notify_text').html(response.message);
+                            $('.notify_text_detail').html(response.message);
                         } else {
                             $('.stock_spinner_modal').addClass('d-none');
                             $('.stock_spinner').addClass('d-none');
-                            $('.notify_user_div').removeClass('d-none');
-                            $('.notify_text').html('Something went wrong!');
+                            $('.notify_user_div_detail').removeClass('d-none');
+                            $('.notify_text_detail').html('Something went wrong!');
                         }
                     },
                     error: function(response) {
                         var error_message = response.responseJSON;
                         $('.stock_spinner_modal').addClass('d-none');
                         $('.stock_spinner').addClass('d-none');
-                        $('.notify_user_div').addClass('d-none');
+                        $('.notify_user_div_detail').addClass('d-none');
                         var error_text  = error_message.errors.email[0];
-                        $('.email_required_alert').html(error_text)
+                        $('.email_required_alert_detail').html(error_text)
                     }
                 });
             }
         }
         
         function hide_notify_user_div() {
-            $('.notify_text').html('');
-            $('.notify_user_div').addClass('d-none');
+            $('.notify_text_detail').html('');
+            $('.notify_user_div_detail').addClass('d-none');
         }
 
     // });
