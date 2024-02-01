@@ -529,7 +529,8 @@ class ProductController extends Controller
         $lists = '';
         $contact_id = '';
         $locations= null;
-
+        $stock_updated = false;
+        
             
         // Fetch stock from API
         $stock_updated_helper = UtilHelper::updateProductStock($product, $option_id);
