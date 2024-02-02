@@ -416,32 +416,80 @@
                     </tbody>
                 </table>
                 <div>
-                    @if (Auth::check() == true && $contact->status == 1 && !empty($contact->contact_id))
-                        <a href="{{ url('/checkout') }}">
-                            <button class="procedd-to-checkout mt-3 w-100 mb-4">
-                                PROCEED TO CHECKOUT
-                            </button>
-                        </a>
-                    @elseif (Auth::check() == true && $contact->status == 0)
-                        <div class="alert alert-danger alert-dismissible fade show py-2" role="alert">
-                            <span class="d-flex justify-content-center align-items-center">
-                                Checkout has been disabled for this email address, please contact your
-                                account
-                                manager to re-enable checkout.
-                            </span>
-                        </div>
-                    @elseif(Auth::check() == true && empty($contact->contact_id))
-                        <a href="{{ url('/checkout/') }}">
-                            <button class="procedd-to-checkout mt-3 w-100 mb-4">
-                                PROCEED TO CHECKOUT
-                            </button>
-                        </a>
+                    @if (!empty($new_checkout_flow) && strtolower($new_checkout_flow->option_value) == 'yes')
+                        @if (auth()->user())
+                            @if ($contact->status == 1 && !empty($contact->contact_id))
+                                <a href="{{ url('/checkout') }}">
+                                    <button class="procedd-to-checkout mt-3 w-100 mb-4">
+                                        PROCEED TO CHECKOUT
+                                    </button>
+                                </a>
+                            @elseif (!empty($contact) && $contact->status == 0)
+                                <div class="alert alert-danger alert-dismissible fade show py-2" role="alert">
+                                    <span class="d-flex justify-content-center align-items-center">
+                                        Checkout has been disabled for this email address, please contact your
+                                        account
+                                        manager to re-enable checkout.
+                                    </span>
+                                </div>
+                            @elseif (empty($contact->contact_id))
+                                <a href="{{ url('/checkout/') }}">
+                                    <button class="procedd-to-checkout mt-3 w-100 mb-4">
+                                        PROCEED TO CHECKOUT
+                                    </button>
+                                </a>
+                            @endif
+                        @else
+                            @if ($contact->status == 1 && !empty($contact->contact_id))
+                                <a href="{{ url('/checkout') }}">
+                                    <button class="procedd-to-checkout mt-3 w-100 mb-4">
+                                        PROCEED TO CHECKOUT
+                                    </button>
+                                </a>
+                            @elseif (!empty($contact) && $contact->status == 0)
+                                <div class="alert alert-danger alert-dismissible fade show py-2" role="alert">
+                                    <span class="d-flex justify-content-center align-items-center">
+                                        Checkout has been disabled for this email address, please contact your
+                                        account
+                                        manager to re-enable checkout.
+                                    </span>
+                                </div>
+                            @elseif (empty($contact->contact_id))
+                                <a href="{{ url('/checkout/') }}">
+                                    <button class="procedd-to-checkout mt-3 w-100 mb-4">
+                                        PROCEED TO CHECKOUT
+                                    </button>
+                                </a>
+                            @endif
+                        @endif
                     @else
-                        <a href="{{ url('/user/') }}">
-                            <button class="procedd-to-checkout mt-3 w-100 mb-4">
-                                Login or Register
-                            </button>
-                        </a>
+                        @if (Auth::check() == true && $contact->status == 1 && !empty($contact->contact_id))
+                            <a href="{{ url('/checkout') }}">
+                                <button class="procedd-to-checkout mt-3 w-100 mb-4">
+                                    PROCEED TO CHECKOUT
+                                </button>
+                            </a>
+                        @elseif (Auth::check() == true && $contact->status == 0)
+                            <div class="alert alert-danger alert-dismissible fade show py-2" role="alert">
+                                <span class="d-flex justify-content-center align-items-center">
+                                    Checkout has been disabled for this email address, please contact your
+                                    account
+                                    manager to re-enable checkout.
+                                </span>
+                            </div>
+                        @elseif(Auth::check() == true && empty($contact->contact_id))
+                            <a href="{{ url('/checkout/') }}">
+                                <button class="procedd-to-checkout mt-3 w-100 mb-4">
+                                    PROCEED TO CHECKOUT
+                                </button>
+                            </a>
+                        @else
+                            <a href="{{ url('/user/') }}">
+                                <button class="procedd-to-checkout mt-3 w-100 mb-4">
+                                    Login or Register
+                                </button>
+                            </a>
+                        @endif
                     @endif
                 </div>
             </div>

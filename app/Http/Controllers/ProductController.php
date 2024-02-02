@@ -1127,6 +1127,8 @@ class ProductController extends Controller
             $congrats_div_dnone = 'd-none';
         }
 
+        $new_checkout_flow = AdminSetting::where('option_name', 'new_checkout_flow')->first();
+
         if (!empty($cart_items)) {
             $view = 'cart';
         } else {
@@ -1143,7 +1145,8 @@ class ProductController extends Controller
             'free_shipping_value',
             'free_shipping',
             'd_none',
-            'congrats_div_dnone'
+            'congrats_div_dnone',
+            'new_checkout_flow'
 
         ));
     }

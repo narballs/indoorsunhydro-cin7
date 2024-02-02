@@ -424,3 +424,5 @@ Route::get('admin/notify-users', [AdminSettingsController::class, 'notify_users'
 Route::post('admin/product-stock-notification', [AdminSettingsController::class, 'product_stock_notification'])->name('product_stock_notification');
 Route::get('admin/all-admins', [AdminSettingsController::class, 'all_admins'])->name('all_admins');
 Route::post('admin/send-email-to-specific-admins', [AdminSettingsController::class, 'send_email_to_specific_admin'])->name('send_email_to_specific_admin');
+Route::get('check-existing-email', [CheckoutController::class, 'check_existing_email'])->name('check_existing_email');
+Route::post('authenticate-user', [CheckoutController::class, 'authenticate_user'])->name('authenticate_user');
