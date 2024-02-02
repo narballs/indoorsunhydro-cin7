@@ -35,6 +35,11 @@ class TaxClassSeeder extends Seeder
             [
                 'name' => '8.75%',
                 'rate' => '8.75%',
+                'is_default' => 0
+            ],
+            [
+                'name' => 'Sacramento',
+                'rate' => '8.75%',
                 'is_default' => 1
             ],
             [

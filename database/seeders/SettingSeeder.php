@@ -272,6 +272,11 @@ class SettingSeeder extends Seeder
                 'type' => 'yes/no',
                 'option_value' => 'No',
             ],
+            [
+                'option_name' => 'new_checkout_flow', 
+                'type' => 'yes/no',
+                'option_value' => 'No',
+            ],
 
             
         ];

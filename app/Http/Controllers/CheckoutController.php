@@ -35,7 +35,17 @@ use PSpell\Config;
 
 class CheckoutController extends Controller
 {
-    public function index(Request $request)
+    
+    public function index(Request $request) {
+       $new_checkout = AdminSetting::where('option_name', 'new_checkout_flow')->first();
+        if (!empty($new_checkout) && strtolower($new_checkout->option_value) == 'yes') {
+            return $this->new_checkout($request);
+        } else {
+           return $this->old_checkout($request);
+        }
+    }
+    
+    public function old_checkout(Request $request)
     {
         $user_id = auth()->user()->id;
         $selected_company = Session::get('company');
@@ -196,6 +206,173 @@ class CheckoutController extends Controller
         }
     }
 
+    
+    public function new_checkout(Request $request)
+    {
+        $cart_items = UserHelper::switch_price_tier($request);
+        $cart_total = 0;
+        foreach ($cart_items as $cart_item) {
+            $row_price = $cart_item['quantity'] * $cart_item['price'];
+            $cart_total = $row_price + $cart_total;
+        }
+        if (!auth()->user()) {
+            $tax_class = TaxClass::where('is_default', 1)->first();
+            $shipment_price = 0;
+            return view ('checkout.checkout_without_login' ,compact('cart_total' , 'cart_items' , 'tax_class' , 'shipment_price'));
+        }
+        $user_id = auth()->user()->id;
+        $selected_company = Session::get('company');
+        if (!$selected_company) {
+            Session::flash('message', "Please select a company for which you want to make an order for");
+            return redirect('/cart/');
+        }
+        $contact = Contact::where('user_id', $user_id)
+            ->where('status', 1)
+            ->where('company', $selected_company)
+            ->with('states')
+            ->with('cities')
+            ->first();
+        // $cart_items = session()->get('cart');
+        
+        
+        $products_weight = 0;
+        foreach ($cart_items as $cart_item) {
+            $product_options = ProductOption::where('product_id', $cart_item['product_id'])->where('option_id' , $cart_item['option_id'])->get();
+            foreach ($product_options as $product_option) {
+                $products_weight += $product_option->optionWeight * $cart_item['quantity'];
+            }
+        }
+        if ($contact) {
+            $isApproved = $contact->contact_id;
+        }
+
+        $zip_code_is_valid = true;
+
+        if (Auth::check() && (!empty($contact->contact_id) || !empty($contact->secondary_id)) && $contact->status == 1) {
+            // $tax_class = TaxClass::where('is_default', 1)->first();
+            $user_address = null;
+            $states = UsState::all();
+            $payment_methods = PaymentMethod::with('options')->get();
+            $contact_id = session()->get('contact_id');
+
+            $user = User::where('id', $user_id)->first();
+            $all_ids = UserHelper::getAllMemberIds($user);
+            $pluck_default_user = Contact::whereIn('id', $all_ids)->where('contact_id' , $contact_id)->first();
+            
+            if (!empty($contact->contact_id)) {
+                $user_address = Contact::where('user_id', $user_id)->where('contact_id' , $contact->contact_id)->first();
+            } else {
+                if (!empty($contact->secondary_id)) {
+                    $parent = Contact::where('secondary_id', $contact->secondary_id)->first();
+                    $user_address = Contact::where('contact_id', $parent->parent_id)->first();
+                }
+            }
+            if (empty($user_address) && ($user_address->postalAddress1 == null  && $user_address->postalPostCode == null)) {
+                return redirect()->back()->with('address_message', "Please contact support to update your billing address" );
+            }
+
+            $charge_shipment_fee = false;
+            if (!empty($user_address) && $user_address->charge_shipping == 1) {
+                $charge_shipment_fee = true;
+            }
+
+            $tax_class = TaxClass::where('name', $user_address->tax_class)->first();
+            $tax_class_none = TaxClass::where('name', 'none')->first();
+            
+            $matchZipCode = null;
+            if (empty($user_address) && ($user_address->postalPostCode != null || $user_address->postCode != null)) {
+                $matchZipCode = OperationalZipCode::where('status' , 'active')->where('zip_code', $user_address->postalPostCode)->orWhere('zip_code' , $user_address->postCode)->first();
+            }
+            
+            $check_zip_code_setting = AdminSetting::where('option_name', 'check_zipcode')->where('option_value' , 'Yes')->first();
+
+            if (!empty($check_zip_code_setting) && strtolower($check_zip_code_setting->option_value) == 'yes') {
+                $zip_code_is_valid = false;
+                $operational_zip_code = OperationalZipCode::where('status' , 'active')
+                    ->where('zip_code', $user_address->postalPostCode)
+                    ->orWhere('zip_code' , $user_address->postCode)
+                    ->first();
+                if (!empty($operational_zip_code)) {
+                    $zip_code_is_valid = true;
+                }
+            }
+
+            
+            // adding shipment rates
+            if ($charge_shipment_fee == true) {
+                $client = new \GuzzleHttp\Client();
+                $ship_station_host_url = config('services.shipstation.host_url');
+                $ship_station_api_key = config('services.shipstation.key');
+                $ship_station_api_secret = config('services.shipstation.secret');
+                $carrier_code = AdminSetting::where('option_name', 'shipping_carrier_code')->first();
+                $service_code = AdminSetting::where('option_name', 'shipping_service_code')->first();
+                $carrier_code_2 = AdminSetting::where('option_name', 'shipping_carrier_code_2')->first();
+                $service_code_2 = AdminSetting::where('option_name', 'shipping_service_code_2')->first();
+
+                if ($products_weight > 150) {
+                    $carrier_code = $carrier_code_2->option_value;
+                    $service_code = $service_code_2->option_value;
+                } else {
+                    $carrier_code = $carrier_code->option_value;
+                    $service_code = $service_code->option_value;
+                }
+
+                $data = [
+                    'carrierCode' => $carrier_code ,
+                    'serviceCode' => $service_code ,
+                    'fromPostalCode' => '95826',
+                    'toCountry' => 'US',
+                    'toPostalCode' => $user_address->postalPostCode ? $user_address->postalPostCode : $user_address->postCode,
+                    'weight' => [
+                        'value' => $products_weight,
+                        'units' => 'pounds'
+                    ],
+                ];
+                
+                $headers = [
+                    'Authorization' => 'Basic ' . base64_encode($ship_station_api_key . ':' . $ship_station_api_secret),
+                    'Content-Type' => 'application/json',
+                ];
+                $responseBody = null;
+                try {
+                    $response = $client->post($ship_station_host_url, [
+                        'headers' => $headers,
+                        'json' => $data,
+                    ]);
+
+                    $statusCode = $response->getStatusCode();
+                    $responseBody = $response->getBody()->getContents();
+                } catch (\Exception $e) {
+                    $e->getMessage();
+                }
+
+                $shipment_price = 0;
+                if ($responseBody != null) {
+                    $shipping_response = json_decode($responseBody);
+                    foreach ($shipping_response as $shipping_response) {
+                        $shipment_price = $shipping_response->shipmentCost;
+                    } 
+                }
+            } else {
+                $shipment_price = 0;
+            }
+            return view('checkout/checkout_for_login', compact(
+                'user_address',
+                'states',
+                'payment_methods',
+                'tax_class',
+                'contact_id',
+                'tax_class_none',
+                'matchZipCode',
+                'zip_code_is_valid',
+                'check_zip_code_setting',
+                'shipment_price',
+                'cart_items'
+            ));
+        } else {
+            return redirect()->back()->with('message', 'Your account is disabled. You can not proceed with checkout. Please contact us.');
+        }
+    }
 
     public function thankyou(Request $request , $id)
     {
@@ -439,4 +616,122 @@ class CheckoutController extends Controller
         
         return response()->json(['status' => 'success']);
     }
+
+    public function check_existing_email(Request $request)
+    {
+        $email = $request->email;
+        $user = User::where('email', $email)->first();
+        if (!empty($user)) {
+            return response()->json(['status' => 'success', 'message' => 'Email already exists']);
+        } else {
+            return response()->json(['status' => 'error', 'message' => 'Email does not exist']);
+        }
+    }
+
+    public function authenticate_user(Request $request) {
+        $request->validate([
+            'email' => 'required',
+            'password' => 'required'
+        ]);
+        $credentials = $request->except(['_token']);
+        $user = User::where('email', $request->email)->first();
+
+        $email_user = session::put('user', $user);
+        $cart = [];
+        $access = false;
+        $message = '';
+        $admin = false;  
+        if (auth()->attempt($credentials)) {
+            if (auth()->user()->allow_access == 0) {
+                Session::flush();
+                Auth::logout();
+                $access = false;
+                $message = 'Your account has been disabled.';
+                // session()->flash('message', 'Your account has been disabled.');
+                // return redirect()->back();
+            } else {
+                $user_id = auth()->user()->id;
+                if ($request->session()->has('cart_hash')) {
+                    $cart_hash = $request->session()->get('cart_hash');
+                    $cart_items = Cart::where('cart_hash', $cart_hash)->where('is_active', 1)->where('user_id', 0)->get();
+                    foreach ($cart_items as $cart_item) {
+                        $cart_item->user_id = $user_id;
+                        $cart_item->save();
+                    }
+                }
+                if ($user->hasRole(['Admin'])) {
+                    session()->flash('message', 'Successfully Logged in');
+                    $companies = Contact::where('user_id', auth()->user()->id)->get();
+                    if ($companies->count() == 1) {
+                        
+                        if ($companies[0]->contact_id == null) {
+                            UserHelper::switch_company($companies[0]->secondary_id);
+                        } else {
+                            UserHelper::switch_company($companies[0]->contact_id);
+                        }
+                    }
+                    Session::put('companies', $companies);
+                    $admin = true;
+                } else {
+                    $companies = Contact::where('user_id', auth()->user()->id)->get();
+                    if ($companies->count() == 1) {
+                        if ($companies[0]->contact_id == null) {
+                            UserHelper::switch_company($companies[0]->secondary_id);
+                        } else {
+                            UserHelper::switch_company($companies[0]->contact_id);
+                        }
+                    }
+                    if ($companies->count() == 2) {
+                        foreach ($companies as $company) {
+                            if ($company->status == 1) {
+                                if ($company->contact_id == null) {
+                                    UserHelper::switch_company($company->secondary_id);
+                                } else {
+                                    UserHelper::switch_company($company->contact_id);
+                                }
+                            }
+                        }
+                    }
+                    Session::put('companies', $companies);
+                    // if (!empty(session()->get('cart'))) {
+                    //     return redirect()->route('cart');
+                    // } else {
+                        if ($user->is_updated == 1) {
+
+                            $companies = Contact::where('user_id', auth()->user()->id)->get();
+
+                            if ($companies[0]->contact_id == null) {
+                                UserHelper::switch_company($companies[0]->secondary_id);
+                            } else {
+                                UserHelper::switch_company($companies[0]->contact_id);
+                            }
+                            // Session::put('companies', $companies);
+                            $previousUrl = session('previous_url', '/'); 
+                            // return redirect()->intended($previousUrl);
+                            // return redirect()->route('my_account');
+                        } else {
+                            $companies = Contact::where('user_id', auth()->user()->id)->get();
+                            // Session::put('companies', $companies);
+                            if ($companies[0]->contact_id == null) {
+                                UserHelper::switch_company($companies[0]->secondary_id);
+                            } else {
+                                UserHelper::switch_company($companies[0]->contact_id);
+                            }
+                            // return redirect('/');
+                        }
+                        $admin = false;
+                    // }
+                }
+                $message = 'Successfully Logged in';
+                $access = true;
+            }
+
+            return response()->json(['status' => 'success', 'message' => $message, 'access' => $access , 'is_admin' , $admin]);
+            
+        } else {
+            $message = 'Invalid credentials';
+            return response()->json(['status' => 'error', 'message' => $message, 'access' => $access]);
+        }   
+    }
+    
 }
