@@ -294,9 +294,10 @@ $cart_price = 0;
                                 <div class="form-group">
                                     <input type="text" name="email_address_checkout" class="form-control update_checkout_label_input email_address_checkout" id="email_address_checkout" placeholder="Enter your email">
                                     <span class="">
-                                        <span class="success_text d-none existed_text" style="position: absolute;top:45px;right:5%;">Existed</span>
+                                        <span class="success_text existed_text" style="position: absolute;top:45px;right:5%;"></span>
                                     </span>
                                     <div class="success_text success_div mt-1"></div>
+                                    <div class="error_text error_div_email mt-1"></div>
                                 </div>
                             </div>
                             <div class="col-md-12 password_div d-none">
@@ -354,16 +355,20 @@ $cart_price = 0;
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <input type="text" name="country" id="country" class="form-control update_checkout_input country" placeholder="Country">
+                                        <input type="text" name="country" id="country" readonly value="US" class="form-control update_checkout_input country" placeholder="Country">
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <select name="state" id="state" class="form-control update_checkout_input">
+                                        <select name="state" id="state" class="form-control update_checkout_input state">
                                             <option value="">Select State</option>
-                                            <option value="">1</option>
+                                            @if (count($states) > 0)
+                                                @foreach ($states as $state)
+                                                    <option value="{{ $state->id }}">{{ $state->state_name }}</option>
+                                                @endforeach
+                                            @endif
                                         </select>
                                     </div>
                                 </div>
@@ -396,13 +401,13 @@ $cart_price = 0;
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
+                            {{-- <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <input type="text" name="bussiness_name" id="bussiness_name" class="form-control update_checkout_input bussiness_name" placeholder="Business Name">
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group d-flex">
@@ -442,9 +447,13 @@ $cart_price = 0;
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <select name="postalState" id="" class="form-control update_checkout_input">
+                                        <select name="postalState" id="" class="form-control update_checkout_input postalState">
                                             <option value="">Select State</option>
-                                            <option value="">1</option>
+                                            @if (count($states) > 0)
+                                                @foreach ($states as $state)
+                                                    <option value="{{ $state->id }}">{{ $state->state_name }}</option>
+                                                @endforeach
+                                            @endif
                                         </select>
                                     </div>
                                 </div>
@@ -473,6 +482,7 @@ $cart_price = 0;
                             </div> --}}
                         </div>
                     </div>
+                    <input type="hidden" value="Pay in Advanced" id="paymentTerms">
                     <div class="col-md-12 col-lg-12 col-xl-5">
                         <div class="row mb-0 mt-2">
                             <h5 class="p-0 checkout_default_address">Cart Total</h5>
@@ -609,11 +619,14 @@ $cart_price = 0;
                     },
                     success: function(response) {
                         if (response.status == 'success') {
-                            $('.existed_text').removeClass('d-none');
-                            $('.success_div').html('Please enter your password to continue.')
+                            $('.error_div_email').html('');
+                            $('.existed_text').html(response.user_status);
+                            $('.success_div').html(response.message);
                             $('.password_div').removeClass('d-none');
                         } else {
-                            $('.existed_text').addClass('d-none');
+                            $('.success_div').html('');
+                            $('.existed_text').html(response.user_status);
+                            $('.error_div_email').html(response.message);
                             $('.billing_div').removeClass('d-none');
                             $('.password_div').removeClass('d-none');
                         }
@@ -625,13 +638,45 @@ $cart_price = 0;
             e.preventDefault();
             var email = $('.email_address_checkout').val();
             var password = $('.password_checkout').val();
-            if (email != '') {
+            var company_name = $('.company_name').val();
+            var first_name = $('.first_name').val();
+            var last_name = $('.last_name').val();
+            var address= $('.street_address').val();
+            var address_2= $('.street_address_2').val();
+            var country= $('.country').val();
+            var state= $('.state').val();
+            var city= $('.city').val();
+            var zip_code= $('.zip_code').val();
+            var phone= $('.phone').val();
+            var postal_address1= $('.postalStreetAddress').val();
+            var postal_address2= $('.postalStreetAddress_2').val();
+            var postal_state= $('.postalState').val();
+            var postal_city= $('.postalCity').val();
+            var postal_zip_code= $('.postalpostCode').val();
+            var different_shipping_address = $('.ship_to_different_address').is(':checked') ? 1 : 0;
+            if (email != '' && password != '') {
                 $.ajax({
                     url: '/authenticate-user',
                     type: 'post',
                     data: {
                         email: email,
                         password: password,
+                        different_shipping_address: different_shipping_address,
+                        company: company_name,
+                        first_name: first_name,
+                        last_name: last_name,
+                        address: address,
+                        address_2: address_2,
+                        country: country,
+                        state: state,
+                        city: city,
+                        zip_code: zip_code,
+                        phone: phone,
+                        postal_address1: postal_address1,
+                        postal_address2: postal_address2,
+                        postal_state: postal_state,
+                        postal_city: postal_city,
+                        postal_zip_code: postal_zip_code,
                         _token: '{{ csrf_token() }}'
                     },
                     success: function(response) {
@@ -646,10 +691,17 @@ $cart_price = 0;
                                 $('.error_div').text(response.message);
                             }
                         } else {
-                            $('.error_div').text(response.message);
+                            if (response.registration_status == true) {
+                                $('.error_div').text(response.message);
+                                window.location.href = '/checkout';
+                            } else {
+                                $('.error_div').text(response.message);
+                            }
                         }
                     }
                 });
+            } else {
+                return false;
             }
         });
     });
