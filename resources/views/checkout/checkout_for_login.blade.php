@@ -381,6 +381,14 @@
     </p>
 </div>
 
+@if (\Session::has('error'))
+    <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">
+        {!! \Session::get('error') !!}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+@endif
 <?php
 $cart_total = 0;
 $cart_price = 0;
@@ -492,7 +500,8 @@ $cart_price = 0;
                             </div>
                         </div>
                         <div class="row">
-                            <button class="btn check_out_pay_now w-100 mt-5 p-3">Place Order</button>
+                            <div class="text-center d-none" id="progress_spinner"><img src="/theme/img/progress.gif" alt=""></div>
+                            <button class="btn check_out_pay_now w-100 mt-5 p-3" id="proceed_to_checkout" onclick="validate()">Place Order</button>
                         </div>
                     </div>
                     <div class="col-md-12 col-lg-12 col-xl-5 ">
@@ -607,6 +616,14 @@ $cart_price = 0;
                                             }
                                             $total_including_tax = $tax + $cart_total  + $shipment_price;
                                         @endphp
+                                        <input type="hidden" name="address_1_billing" value="{{ !empty($user_address->postalAddress1) ?  $user_address->postalAddress1 : '' }}">
+                                        <input type="hidden" name="state_billing" value="{{ !empty($user_address->postalState) ?  $user_address->postalState : '' }}">
+                                        <input type="hidden" name="zip_code_billing" value="{{ !empty($user_address->postalPostCode) ?  $user_address->postalPostCode : '' }}">
+                                        
+                                        {{-- shipping --}}
+                                        <input type="hidden" name="address_1_shipping" value="{{ !empty($user_address->address1) ?  $user_address->address1 : '' }}">
+                                        <input type="hidden" name="state_shipping" value="{{ !empty($user_address->state) ?  $user_address->state : '' }}">
+                                        <input type="hidden" name="zip_code_shipping" value="{{ !empty($user_address->postCode) ?  $user_address->postCode : '' }}">
                                         <input type="hidden" name="incl_tax" id="incl_tax" value="{{ $total_including_tax }}">
                                         <input type="hidden" name="shipment_price" id="shipment_price" value="{{ $shipment_price }}">
                                         @if(!empty($tax_class))
@@ -2053,6 +2070,135 @@ $cart_price = 0;
                 Valid first name is required.
             </div>
             <script>
+                function updateContact_address(type , user_id) {
+        
+                    if (type === 'update shipping address') {
+                        $('#address_loader_shipping').removeClass('d-none');
+                        var companyNameShipping = $('.companyNameShipping:checked').val();
+                        var first_name_shipping = $('#shipping_first_name').val();
+                        var last_name_shipping = $('#shipping_last_name').val();
+                        var shipping_address_1 = $('.shipping_address_1').val();
+                        var shipping_address_2 = $('.shipping_address_2').val();
+                        var shipping_city = $('.shipping_city').val();
+                        var shipping_state = $('.shipping_state').val();
+                        var post_code = $('.shipping_post_code').val();
+                        var shipping_email = $('.shipping_email').val();
+                        var shipping_phone = $('.shipping_phone').val();
+
+                        var company_name = companyNameShipping;
+                        var first_name = first_name_shipping;
+                        var last_name = last_name_shipping;
+                        var address = shipping_address_1;
+                        var address2 = shipping_address_2;
+                        var town_city = shipping_city;
+                        var state = shipping_state;
+                        var zip = post_code;
+                        var email = shipping_email;
+                        var phone = shipping_phone;
+
+                        if (companyNameShipping == '' || companyNameShipping == null) {
+                            $('#error_company_shipping').html('Please select location');
+                            $('#address_loader_shipping').addClass('d-none');
+                            return false;
+                        } 
+                        else {
+                            $('#error_company_shipping').html('');
+                        }
+                    } else {
+                        $('#address_loader').removeClass('d-none');
+                        var companyNameBilling = $('.companyNameBilling:checked').val();
+                        var first_name_billing = $('#billing_first_name').val();
+                        var last_name_billing = $('#billing_last_name').val();
+                        var billing_address_1 = $('.billing_address_1').val();
+                        var billing_address_2 = $('.billing_address_2').val();
+                        var billing_city = $('.billing_city').val();
+                        var billing_state = $('.billing_state').val();
+                        var post_code = $('.billing_post_code').val();
+                        var billing_email = $('.billing_email').val();
+                        var billing_phone = $('.billing_phone').val();
+
+                        var company_name = companyNameBilling;
+                        var first_name = first_name_billing;
+                        var last_name = last_name_billing;
+                        var address = billing_address_1;
+                        var address2 = billing_address_2;
+                        var town_city = billing_city;
+                        var state = billing_state;
+                        var zip = post_code;
+                        var email = billing_email;
+                        var phone = billing_phone;
+
+                        if (companyNameBilling == '' || companyNameBilling == null) {
+                            $('#error_company_billing').html('Please select location');
+                            $('#address_loader').addClass('d-none');
+                            return false;
+                        } 
+                        else {
+                            $('#error_company_billing').html('');
+                        }
+                    }
+                    
+                    var companyName = $('.companyName:checked').val();
+                    var contact_id = $('#contact_id_val').val();
+                    var secondary_id = $('input[name=secondary_id]').val();
+                    
+                    console.log(state);
+                    jQuery.ajax({
+                        method: 'GET',
+                        url: "{{ url('/my-account-user-addresses/') }}",
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                            "user_id": user_id,
+                            "first_name": first_name,
+                            "last_name": last_name,
+                            "company_name": company_name,
+                            "phone": phone,
+                            "address": address,
+                            "address2": address2,
+                            "town_city": town_city,
+                            "state": state,
+                            "zip": zip,
+                            "email": email,
+                            'contact_id': contact_id,
+                            'secondary_id': secondary_id,
+                            // 'company_name': companyName,
+                            'type': type
+                        },
+                        success: function(response) {
+                            if (response.cin7_status == 200 || response.status == true) {
+                                $('#address_loader').addClass('d-none');
+                                $('#address_loader_shipping').addClass('d-none');
+                                $('.modal-backdrop').remove()
+                                if (type === 'update shipping address') { 
+                                    $('#success_msg_shipping').removeClass('d-none');
+                                    $('#success_msg_shipping').html(response.msg);
+                                } else {
+
+                                    $('#success_msg').removeClass('d-none');
+                                    $('#success_msg').html(response.msg);
+                                }
+                                setTimeout(function() {
+                                    window.location.href = "{{ url('/checkout') }}";
+                                }, 2000);
+                            }   else {
+                                $('#address_loader').addClass('d-none');
+                                $('#address_loader_shipping').addClass('d-none');
+                                $('.modal-backdrop').remove();
+                                if (type === 'update shipping address') {  
+                                    $('#error_msg_shipping').removeClass('d-none');
+                                    $('#error_msg_shipping').html('Something went wrong');
+                                } else {
+
+                                    $('#error_msg').removeClass('d-none');
+                                    $('#error_msg').html('Something went wrong');
+                                }
+                                setTimeout(function() {
+                                    window.location.href = "{{ url('/checkout') }}";
+                                }, 2000);
+                            }
+                        }
+                    });
+                }
                 function validate() {
                     $('#progress_spinner').removeClass('d-none');
                     $([document.documentElement, document.body]).animate({
