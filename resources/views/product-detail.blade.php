@@ -101,11 +101,11 @@
                                                                     <span class="instock-label">IN STOCK</span>
                                                                 </div>
                                                             @else
-                                                                @if ($productOption->stockAvailable > 0)
+                                                                @if ($productOption->stockOnHand > 0)
                                                                     <span class="rounded-pill cursor product-detail-quantity d-flex justify-content-center align-items-center"
                                                                         data-toggle="popover-hover" data-bs-container="body" data-placement="top" data-bs-placement="top"
                                                                         data-bs-content="Top popover" style=" cursor: pointer;"><span class="stock_number">
-                                                                            {{$productOption->stockAvailable}}</span></span>
+                                                                            {{$productOption->stockOnHand}}</span></span>
                                                                     <div>
                                                                         <small class="dis-price">&nbsp;</small>
                                                                         <span class="instock-label">IN STOCK</span>
@@ -177,8 +177,8 @@
                                         </div>
                                         <div class="col-md-8 mt-2">
                                             
-                                            @if (!empty($notify_user_about_product_stock) && strtolower($notify_user_about_product_stock->option_value) === 'yes' && $stock_updated)
-                                                @if ($total_stock < 0)
+                                            @if (!empty($notify_user_about_product_stock) && strtolower($notify_user_about_product_stock->option_value) === 'yes')
+                                                @if ($total_stock > 0)
                                                     <button class="w-100 ml-0 button-cards product-detail-button-cards text-uppercase"
                                                         type="button" id="ajaxSubmit">
                                                         <a class="text-white">Add to cart </a>
