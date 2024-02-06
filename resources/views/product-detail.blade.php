@@ -101,11 +101,11 @@
                                                                     <span class="instock-label">IN STOCK</span>
                                                                 </div>
                                                             @else
-                                                                @if ($productOption->stockOnHand > 0)
+                                                                @if ($productOption->stockAvailable > 0)
                                                                     <span class="rounded-pill cursor product-detail-quantity d-flex justify-content-center align-items-center"
                                                                         data-toggle="popover-hover" data-bs-container="body" data-placement="top" data-bs-placement="top"
                                                                         data-bs-content="Top popover" style=" cursor: pointer;"><span class="stock_number">
-                                                                            {{$productOption->stockOnHand}}</span></span>
+                                                                            {{$productOption->stockAvailable}}</span></span>
                                                                     <div>
                                                                         <small class="dis-price">&nbsp;</small>
                                                                         <span class="instock-label">IN STOCK</span>
@@ -289,7 +289,7 @@
                     @endif
                     @if (!empty($locations))
                         @foreach ($locations as $location)
-                            {{ $location['branch_name'] }}: {{ $location['available'] }}<br />
+                            {{ $location['branch_name'] }}: {{ $location['available'] >= 0 ? $location['available'] : 0  }}<br />
                         @endforeach
                     @endif
                 </span>
@@ -365,7 +365,7 @@
                                         <div>
                                             <p class="mb-1 instock-label"> 
                                                 <i class="fa fa-map-marker mr-2"></i>{{$location['branch_name'] . ':'}}
-                                                <span class="text-success">{{$location['available']}}</span>
+                                                <span class="text-success">{{$location['available'] >= 0 ?  $location['available'] : 0}}</span>
                                             </p>
                                         </div>
                                     @endforeach

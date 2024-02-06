@@ -64,7 +64,7 @@
                             $retail_price = $price->$user_price_column;
                         }
                         ?>
-                        @if (!empty($option) && $option->stockOnHand > 0)
+                        @if (!empty($option) && $option->stockAvailable > 0)
                             <div>
                                 <span class="text-success">{{'In Stock'}}</span>
                             </div>
@@ -113,7 +113,7 @@
                     </div>
                     <div class="col-md-12 add-to-cart-button-section">
                         @if (!empty($notify_user_about_product_stock) && strtolower($notify_user_about_product_stock->option_value) == 'yes')
-                            @if ($option->stockOnHand > 0)
+                            @if ($option->stockAvailable > 0)
                                 <button 
                                     class="hover_effect prd_btn_resp ajaxSubmit button-cards col w-100  mb-1 original_cart_btn   original_cart_btn_{{$product->id}}" 
                                     type="submit" 

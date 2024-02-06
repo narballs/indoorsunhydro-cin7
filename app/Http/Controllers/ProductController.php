@@ -606,7 +606,7 @@ class ProductController extends Controller
             // }
 
             if (!empty($stock_updated_helper['total_stock'])) {
-                $total_stock = $stock_updated_helper['total_stock'];
+                $total_stock = $stock_updated_helper['total_stock'] >= 0 ? $stock_updated_helper['total_stock'] : 0;
             }
         }
         if (!empty($stock_updated_helper['branch_with_stocks'])) {
