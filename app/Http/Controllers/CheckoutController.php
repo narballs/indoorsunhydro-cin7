@@ -879,8 +879,8 @@ class CheckoutController extends Controller
                         }
 
                         if (!empty($created_contact)) {
-                            $data['name'] = $created_contact->firstName . ' ' . $created_contact->lastName;
-                            $data['email'] = $created_contact->email;
+                            $data['contact_name'] = $created_contact->firstName . ' ' . $created_contact->lastName;
+                            $data['contact_email'] = $created_contact->email;
                             $data['content'] = 'Your account has been approved';
                             $data['subject'] = 'Your account has been approved';
                             MailHelper::sendMailNotification('emails.approval-notifications', $data);
