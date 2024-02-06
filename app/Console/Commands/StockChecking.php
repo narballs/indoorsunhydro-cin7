@@ -12,7 +12,7 @@ use App\Models\ProductOption;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
-class StockCheking extends Command
+class StockChecking extends Command
 {
     /**
      * The name and signature of the console command.
@@ -77,15 +77,15 @@ class StockCheking extends Command
         // Find total stock pages
         $total_stock_pages = 200;
         $total_record_count = 0;
-        $stock_api_url = 'https://api.cin7.com/api/v1/Stock?where=modifieddate>='. $api_formatted_product_stock_sync_date . '&rows=250';
+        $stock_api_url = 'https://api.cin7.com/api/v1/Stock?where=modifiedDate>='. $api_formatted_product_stock_sync_date . '&rows=250';
 
-        for ($i = 1; $i <= $total_stock_pages; $i++) {
-            $this->info('Processing page#' . $i);
+        // for ($i = 1; $i <= $total_stock_pages; $i++) {
+            $this->info('Processing page#');
             try {
 
                 $res = $client2->request(
                     'GET', 
-                    $stock_api_url . '&page=' . $i, 
+                    $stock_api_url, 
                     [
                         'auth' => [
                             $cin7_auth_username,
@@ -108,10 +108,10 @@ class StockCheking extends Command
 
                 $this->info('Record Count => ' . $record_count);
                 
-                if ($record_count < 1 || empty($record_count)) {
-                    $this->info('----------------break-----------------');
-                    break;
-                }
+                // if ($record_count < 1 || empty($record_count)) {
+                //     $this->info('----------------break-----------------');
+                //     break;
+                // }
             }
             catch (\Exception $e) {
                 $msg = $e->getMessage();
@@ -120,7 +120,8 @@ class StockCheking extends Command
                 $errorlog->exception = $e->getCode();
                 $errorlog->save();
             }
-
+            $stock_available = 0;
+            $stock_on_hand = 0;
             if ($api_product_stock) {
                 foreach ($api_product_stock as $product_stock) {
                     $product_id = $product_stock->productId;
@@ -133,21 +134,23 @@ class StockCheking extends Command
                         }
                     }
                 }
-            }
 
-            if ($api_product_stock->productOptions) {
-                foreach ($api_product_stock->productOptions as $product_option) {
-                    $single_product_option = ProductOption::with('price')->where('option_id',$product_option->id)->first();
+                foreach ($api_product_stock as $product_option_stock) {
+                    $single_product_option = ProductOption::with('price')->where('option_id',$product_option_stock->productOptionId)->first();
+                    $stock_available += $product_option_stock->available;
+                    $stock_on_hand += $product_option_stock->stockOnHand;
                     if (!empty($single_product_option)) {
-                        $product_option->stockAvailable = $single_product_option->stockAvailable;
-                        $product_option->stockOnHand = $single_product_option->stockOnHand;
-                        $product_option->save();
-                        $this->info('Stock Updated for product option#' . $product_option->id);
+                        $single_product_option->stockAvailable = $stock_available;
+                        $single_product_option->stockOnHand = $stock_on_hand;
+                        $single_product_option->save();
+                        $this->info('Stock Updated for product option#' . $single_product_option->option_id);
                     }
                     
                 }
             }
-        }
+
+            
+        // }
 
         $stock_sync_log->last_synced = $current_date;
         $stock_sync_log->record_count = $total_record_count;
