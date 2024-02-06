@@ -799,7 +799,7 @@ class CheckoutController extends Controller
                         'email' => $user->email,
                         'is_parent' => 1,
                         'tax_class' => strtolower($state_name) == strtolower('California') ? '8.75%' : 'Out of State',
-                        'paymentTerms' => $request->paymentTerms,
+                        'paymentTerms' => 'Pay in Advanced',
                         'charge_shipping' => 1,
                         'address1' => $address1,
                         'address2' => $address2,
