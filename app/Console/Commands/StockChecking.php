@@ -7,6 +7,7 @@ use App\Helpers\UtilHelper;
 use App\Models\AdminSetting;
 use App\Models\ApiErrorLog;
 use App\Models\ApiSyncLog;
+use App\Models\InventoryLocation;
 use App\Models\Product;
 use App\Models\ProductOption;
 use Carbon\Carbon;
@@ -53,7 +54,8 @@ class StockChecking extends Command
 
         $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
         $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
-
+        $inactive_inventory_locations = InventoryLocation::where('status', 0)->pluck('cin7_branch_id')->toArray();
+        $skip_branches = $inactive_inventory_locations;
         $current_date = Carbon::now()->setTimezone('UTC')->format('Y-m-d H:i:s');
         $stock_sync_log = ApiSyncLog::where('end_point', 'Stock End Point')->first();
         if (empty($stock_sync_log)) {
@@ -137,15 +139,16 @@ class StockChecking extends Command
 
                 foreach ($api_product_stock as $product_option_stock) {
                     $single_product_option = ProductOption::with('price')->where('option_id',$product_option_stock->productOptionId)->first();
-                    $stock_available += $product_option_stock->available;
-                    $stock_on_hand += $product_option_stock->stockOnHand;
-                    if (!empty($single_product_option)) {
-                        $single_product_option->stockAvailable = $stock_available;
-                        $single_product_option->stockOnHand = $stock_on_hand;
-                        $single_product_option->save();
-                        $this->info('Stock Updated for product option#' . $single_product_option->option_id);
+                    if (!in_array($product_option_stock->branchId, $skip_branches)) {
+                        $stock_available += $product_option_stock->available;
+                        $stock_on_hand += $product_option_stock->stockOnHand;
+                        if (!empty($single_product_option)) {
+                            $single_product_option->stockAvailable = $stock_available;
+                            $single_product_option->stockOnHand = $stock_on_hand;
+                            $single_product_option->save();
+                            $this->info('Stock Updated for product option#' . $single_product_option->option_id);
+                        }
                     }
-                    
                 }
             }
 
