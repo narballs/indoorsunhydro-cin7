@@ -635,38 +635,8 @@ class CheckoutController extends Controller
             'email' => 'required',
             'password' => 'required'
         ]);
-        $states = UsState::where('id', $request->state)->first();
-        $state_name = $states->state_name;
-        $toggle_registration = AdminSetting::where('option_name', 'toggle_registration_approval')->first();
         $credentials = $request->only('email', 'password');
-        $first_name = $request->first_name;
-        $last_name = $request->last_name;
-        $company = $request->company;
-        $different_shipping = $request->different_shipping_address;
-        $address1 = $request->address;
-        $address2 = $request->address_2;
-        $city = $request->city;
-        $postCode = $request->zip_code;
-        $phone = $request->phone;
-        if (!empty($$request->postal_state)) {
-            $postal_state = UsState::where('id', $request->postal_state)->first();
-            $postal_state_name = $postal_state->state_name;
-        } else {
-            $postal_state_name = '';
-        }
-        if ($different_shipping == 1) {
-            $postalAddress1 = $request->postal_address1;
-            $postalAddress2 = $request->postal_address2;
-            $postalCity = $request->postal_city;
-            $postalState = $postal_state_name;
-            $postalPostCode = $request->postal_zip_code;
-        } else {
-            $postalAddress1 = $address1;
-            $postalAddress2 =$address2;
-            $postalCity = $city;
-            $postalState = $state_name;
-            $postalPostCode =$postCode;
-        }
+        
         $user = User::where('email', $request->email)->first();
         $email_user = session::put('user', $user);
         $cart = [];
@@ -761,12 +731,43 @@ class CheckoutController extends Controller
             }
             return response()->json(['status' => 'success', 'message' => $message, 'access' => $access , 'is_admin' , $admin]);
             
-        } else {
+        } 
+        else {
             if (!empty($user)) {
                 $message = 'Invalid credentials';
                 return response()->json(['status' => 'error', 'message' => $message, 'access' => $access]);
             } else {
-                // DB::beginTransaction();
+                $states = UsState::where('id', $request->state)->first();
+                $state_name = $states->state_name;
+                $toggle_registration = AdminSetting::where('option_name', 'toggle_registration_approval')->first();
+                $first_name = $request->first_name;
+                $last_name = $request->last_name;
+                $company = $request->company;
+                $different_shipping = $request->different_shipping_address;
+                $address1 = $request->address;
+                $address2 = $request->address_2;
+                $city = $request->city;
+                $postCode = $request->zip_code;
+                $phone = $request->phone;
+                if (!empty($$request->postal_state)) {
+                    $postal_state = UsState::where('id', $request->postal_state)->first();
+                    $postal_state_name = $postal_state->state_name;
+                } else {
+                    $postal_state_name = '';
+                }
+                if ($different_shipping == 1) {
+                    $postalAddress1 = $request->postal_address1;
+                    $postalAddress2 = $request->postal_address2;
+                    $postalCity = $request->postal_city;
+                    $postalState = $postal_state_name;
+                    $postalPostCode = $request->postal_zip_code;
+                } else {
+                    $postalAddress1 = $address1;
+                    $postalAddress2 =$address2;
+                    $postalCity = $city;
+                    $postalState = $state_name;
+                    $postalPostCode =$postCode;
+                }
                 try {
                     $price_column = null;
                     $default_price_column = AdminSetting::where('option_name', 'default_price_column')->first();
@@ -789,7 +790,7 @@ class CheckoutController extends Controller
                         // 'website' => $request->input('company_website'),
                         'company' => $company,
                         'phone' => $phone,
-                        'status' => !empty($toggle_registration) && strtolower($toggle_registration->option_value) == 'yes' ? 1 : 0,
+                        'status' => !empty($toggle_registration) && strtolower($toggle_registration->option_value) == 'yes' ? 0 : 1,
                         'priceColumn' => $price_column,
                         'user_id' => $user_id,
                         'firstName' => $user->first_name,
@@ -864,25 +865,53 @@ class CheckoutController extends Controller
                             'from' => 'noreply@indoorsunhydro.com',
                         ];
                         
-                        // if (!empty($users_with_role_admin)) {
-                        //     foreach ($users_with_role_admin as $role_admin) {
-                        //         $subject = 'New Register User';
-                        //         $data['email'] = $role_admin->email;
-                        //         MailHelper::sendMailNotification('emails.admin_notification', $data);
-                        //     }
-                        // }
+                        if (!empty($users_with_role_admin)) {
+                            foreach ($users_with_role_admin as $role_admin) {
+                                $subject = 'New Register User';
+                                $data['email'] = $role_admin->email;
+                                MailHelper::sendMailNotification('emails.admin_notification', $data);
+                            }
+                        }
+
+                        if (!empty($user->email)) {
+                            $data['email'] = $user->email;
+                            MailHelper::sendMailNotification('emails.admin_notification', $data);
+                        }
+
+                        if (!empty($created_contact)) {
+                            $data['name'] = $created_contact->firstName . ' ' . $created_contact->lastName;
+                            $data['email'] = $created_contact->email;
+                            $data['content'] = 'Your account has been approved';
+                            $data['subject'] = 'Your account has been approved';
+                            MailHelper::sendMailNotification('emails.approval-notifications', $data);
+                        }
+                       
                         $access = true;
                         $message = 'Registration successfull and approved by admin.';
-                        $auth_user = Auth::loginUsingId($created_contact->user_id);
-                        $companies = Contact::where('user_id', $created_contact->user_id)->get();
-                        if (count($companies) > 0 ) {
-                            if ($companies[0]->contact_id == null) {
-                                UserHelper::switch_company($companies[0]->secondary_id);
-                            } else {
-                                UserHelper::switch_company($companies[0]->contact_id);
+                        if (!empty($created_contact)) {
+                            $auth_user = Auth::loginUsingId($created_contact->user_id);
+                            if ($request->session()->has('cart_hash')) {
+                                $cart_hash = $request->session()->get('cart_hash');
+                                $cart_items = Cart::where('cart_hash', $cart_hash)->where('is_active', 1)->where('user_id', 0)->get();
+                                foreach ($cart_items as $cart_item) {
+                                    $cart_item->user_id = $user_id;
+                                    $cart_item->save();
+                                }
                             }
-                            Session::put('companies', $companies);
+                            $companies = Contact::where('user_id', $auth_user->id)->get();
+                            if (count($companies) > 0 ) {
+                                if ($companies[0]->contact_id == null) {
+                                    UserHelper::switch_company($companies[0]->secondary_id);
+                                } else {
+                                    UserHelper::switch_company($companies[0]->contact_id);
+                                }
+                                Session::put('companies', $companies);
+                            }
+                        } else {
+                            $access = false;
+                            $message = 'Something went wrong. Please try again.';
                         }
+                        
 
                     }
                 } catch (\Exception $e) {
@@ -891,8 +920,9 @@ class CheckoutController extends Controller
                     $registrstion_status = false;
                 }
             }
-            return response()->json(['status' => 'error', 'message' => $message, 'access' => $access , 'registration_status' => $registrstion_status]);
+            return response()->json(['status' => 'error', 'message' => $message, 'access' => $access , 'registration_status' => $registrstion_status , 'contact' => $created_contact]);
         }   
     }
-    
+
+   
 }
