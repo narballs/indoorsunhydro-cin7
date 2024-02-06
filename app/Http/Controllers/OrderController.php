@@ -260,7 +260,7 @@ class OrderController extends Controller
                     session()->forget('cart');
                     return redirect($checkoutUrl);
                 }
-                if ($go_to_stripe_checkout) {
+                elseif ($go_to_stripe_checkout) {
                     $order = new ApiOrder;
                     
                     if ($is_primary == null) {
@@ -603,28 +603,35 @@ class OrderController extends Controller
                     $credit_limit = $customer->contact->credit_limit;
                     $parent_email = Contact::where('contact_id', $active_contact_id)->first();
 
-                    if ($credit_limit < $cart_total) {
-                        if ($is_primary == null) {
-                            $data['subject'] = 'Credit limit reached';
-                            $data['email'] = $parent_email->email;
+                    // if ($credit_limit < $cart_total) {
+                    //     if ($is_primary == null) {
+                    //         $data['subject'] = 'Credit limit reached';
+                    //         $data['email'] = $parent_email->email;
 
-                            MailHelper::sendMailNotification('emails.credit-limit-reached', $data);
-                        }
-                        if ($is_primary != null) {
-                            $data['subject'] = 'Credit limit reached';
-                            $data['email'] = $email;
+                    //         MailHelper::sendMailNotification('emails.credit-limit-reached', $data);
+                    //     }
+                    //     if ($is_primary != null) {
+                    //         $data['subject'] = 'Credit limit reached';
+                    //         $data['email'] = $email;
 
-                            MailHelper::sendMailNotification('emails.credit-limit-reached', $data);
-                        }
+                    //         MailHelper::sendMailNotification('emails.credit-limit-reached', $data);
+                    //     }
                         
+                    //     $data['subject'] = 'Your Indoorsun Hydro order' .'#'.$currentOrder->id. ' ' .'has been received';
+                    //     $data['email'] = $email;
+                    //     MailHelper::sendMailNotification('emails.admin-order-received', $data);
+                    // } else {
+                    //     $data['subject'] = 'Your Indoorsun Hydro order' .'#'.$currentOrder->id. ' ' .'has been received';
+                    //     $data['email'] = $email;
+                    //     MailHelper::sendMailNotification('emails.admin-order-received', $data);
+                    // }
+                    if (!empty($email)) {
                         $data['subject'] = 'Your Indoorsun Hydro order' .'#'.$currentOrder->id. ' ' .'has been received';
                         $data['email'] = $email;
                         MailHelper::sendMailNotification('emails.admin-order-received', $data);
-                    } else {
-                        $data['subject'] = 'Your Indoorsun Hydro order' .'#'.$currentOrder->id. ' ' .'has been received';
-                        $data['email'] = $email;
-                        MailHelper::sendMailNotification('emails.admin-order-received', $data);
-                    }$email_sent_to_users = [];
+                    }
+                    $email_sent_to_users = [];
+                    
                     // $user = User::where('id',  Auth::id())->first();
                     // $all_ids = UserHelper::getAllMemberIds($user);
                     $all_members = Contact::whereIn('id', $all_ids)->get();
