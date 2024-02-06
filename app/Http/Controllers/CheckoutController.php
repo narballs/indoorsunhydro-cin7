@@ -920,7 +920,7 @@ class CheckoutController extends Controller
                     $registrstion_status = false;
                 }
             }
-            return response()->json(['status' => 'error', 'message' => $message, 'access' => $access , 'registration_status' => $registrstion_status , 'contact' => $created_contact]);
+            return response()->json(['status' => 'error', 'message' => $message, 'access' => $access , 'registration_status' => $registrstion_status]);
         }   
     }
 
