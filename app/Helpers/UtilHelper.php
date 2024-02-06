@@ -136,7 +136,7 @@ class UtilHelper
                 $branch_with_stocks[] = [
                     'branch_id' => $location_inventory->branchId,
                     'branch_name' => $location_inventory->branchName,
-                    'available' => $location_inventory->stockOnHand
+                    'available' => $location_inventory->available
                 ];
                 $product_stock = ProductStock::where('branch_id' , $location_inventory->branchId)
                     ->where('product_id' ,  $product->product_id)
@@ -154,14 +154,14 @@ class UtilHelper
                 }
                 else {
                     $product_stock = ProductStock::create([
-                        'available_stock' => $location_inventory->stockOnHand,
+                        'available_stock' => $location_inventory->available,
                         'branch_id' => $location_inventory->branchId,
                         'product_id' => $product->product_id,
                         'branch_name' => $location_inventory->branchName,
                         'option_id' => $option_id
                     ]);
                     if (!in_array($location_inventory->branchId, $skip_branches)) {
-                        $total_stock += $location_inventory->stockOnHand;
+                        $total_stock += $location_inventory->available;
                     }
                     // $total_stock += $product_stock->available_stock;
                 }
