@@ -790,7 +790,7 @@ class CheckoutController extends Controller
                         // 'website' => $request->input('company_website'),
                         'company' => $company,
                         'phone' => $phone,
-                        'status' => !empty($toggle_registration) && strtolower($toggle_registration->option_value) == 'yes' ? 0 : 1,
+                        'status' => !empty($toggle_registration) && strtolower($toggle_registration->option_value) == 'yes' ? 1 : 0,
                         'priceColumn' => $price_column,
                         'user_id' => $user_id,
                         'firstName' => $user->first_name,
@@ -879,8 +879,8 @@ class CheckoutController extends Controller
                         }
 
                         if (!empty($created_contact)) {
-                            $data['name'] = $created_contact->firstName . ' ' . $created_contact->lastName;
-                            $data['email'] = $created_contact->email;
+                            $data['contact_name'] = $created_contact->firstName . ' ' . $created_contact->lastName;
+                            $data['contact_email'] = $created_contact->email;
                             $data['content'] = 'Your account has been approved';
                             $data['subject'] = 'Your account has been approved';
                             MailHelper::sendMailNotification('emails.approval-notifications', $data);
