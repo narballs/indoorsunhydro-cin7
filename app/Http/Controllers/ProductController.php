@@ -174,7 +174,7 @@ class ProductController extends Controller
             ->groupBy('product_id')
             ->take(10)
             ->get();
-        
+        $notify_user_about_product_stock = AdminSetting::where('option_name', 'notify_user_about_product_stock')->first();
         return view('categories', compact(
             'products',
             'brands',
@@ -193,8 +193,8 @@ class ProductController extends Controller
             'pricing',
             'user_buy_list_options',
             'product_views',
-            'best_selling_products'
-            // 'product_buy_list'
+            'best_selling_products',
+            'notify_user_about_product_stock'
         ));
     }
 
@@ -416,7 +416,7 @@ class ProductController extends Controller
             ->groupBy('product_id')
             ->take(10)
             ->get();
-
+        $notify_user_about_product_stock = AdminSetting::where('option_name', 'notify_user_about_product_stock')->first();
         return view('all_products', compact(
             'products',
             'brands',
@@ -434,7 +434,8 @@ class ProductController extends Controller
             'user_buy_list_options',
             'contact_id',
             'product_views',
-            'best_selling_products'
+            'best_selling_products',
+            'notify_user_about_product_stock'
             // 'db_price_column'
         ));
     }
@@ -528,11 +529,17 @@ class ProductController extends Controller
         $lists = '';
         $contact_id = '';
         $locations= null;
-
+        $stock_updated_helper = null;
+        
             
         // Fetch stock from API
         $stock_updated_helper = UtilHelper::updateProductStock($product, $option_id);
-        $stock_updated = $stock_updated_helper['stock_updated'];
+        if ($stock_updated_helper != null) {
+
+            $stock_updated = $stock_updated_helper['stock_updated'];
+        } else {
+            $stock_updated = false;
+        }
 
         $product_stocks = ProductStock::where('product_id' ,  $product->product_id)
             ->where('option_id' , $option_id)
@@ -716,13 +723,14 @@ class ProductController extends Controller
         ->groupBy('product_id')
         ->take(10)
         ->get();
-        
+        $notify_user_about_product_stock = AdminSetting::where('option_name', 'notify_user_about_product_stock')->first();
         return view('categories', compact('products',
         'user_buy_list_options',
         'contact_id',
         'lists', 
         'product_views',
-        'best_selling_products'
+        'best_selling_products',
+        'notify_user_about_product_stock'
         ));
     }
 
@@ -934,7 +942,7 @@ class ProductController extends Controller
         ->take(10)
         ->get();
 
-
+        $notify_user_about_product_stock = AdminSetting::where('option_name', 'notify_user_about_product_stock')->first();
         return view(
             'products-by-brand',
             compact(
@@ -954,7 +962,8 @@ class ProductController extends Controller
             'user_buy_list_options',
             'contact_id',
             'product_views',
-            'best_selling_products' 
+            'best_selling_products',
+            'notify_user_about_product_stock' 
             )
         );
     }
@@ -1118,6 +1127,8 @@ class ProductController extends Controller
             $congrats_div_dnone = 'd-none';
         }
 
+        $new_checkout_flow = AdminSetting::where('option_name', 'new_checkout_flow')->first();
+
         if (!empty($cart_items)) {
             $view = 'cart';
         } else {
@@ -1134,7 +1145,8 @@ class ProductController extends Controller
             'free_shipping_value',
             'free_shipping',
             'd_none',
-            'congrats_div_dnone'
+            'congrats_div_dnone',
+            'new_checkout_flow'
 
         ));
     }
@@ -1615,7 +1627,7 @@ class ProductController extends Controller
         ->groupBy('product_id')
         ->take(10)
         ->get();
-        
+        $notify_user_about_product_stock = AdminSetting::where('option_name', 'notify_user_about_product_stock')->first();
         return view('search_product.search_product', compact(
             'products',
             'brands',
@@ -1633,7 +1645,8 @@ class ProductController extends Controller
             'filter_value_main',
             'user_buy_list_options',
             'product_views',
-            'best_selling_products'
+            'best_selling_products',
+            'notify_user_about_product_stock'
         ));
     }
 

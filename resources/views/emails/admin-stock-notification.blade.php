@@ -27,7 +27,7 @@
                         <strong style="text-align: center;font-weight:600;font-size:14px;margin-top:3px;">{{$product->code}}</strong>
                     </td>
                     <td style="text-align: center;" align="center">
-                        <a href="{{url('product-detail/'.$product->id . '/'. $product_options[0]->option_id . '/'. $product->code)}}"><strong style="text-align: center;font-weight:600;font-size:14px;margin-top:3px;">{{$product->name}}</strong></a>
+                        <a href="{{url('product-detail/'.$product->id . '/'. $product_options[0]->option_id . '/'. $product->slug)}}"><strong style="text-align: center;font-weight:600;font-size:14px;margin-top:3px;">{{$product->name}}</strong></a>
                     </td>
                 </tr>
             </table>   

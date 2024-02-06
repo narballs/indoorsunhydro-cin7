@@ -216,21 +216,54 @@
                                                     @endif
                                                 </div>
                                                 <div class="col-md-12 add-to-cart-button-section">
-                                                    @if ($enable_add_to_cart)
-                                                        <button 
-                                                            class="btn hover_effect prd_btn_resp p-2 ajaxSubmit button-cards-product-slider col w-100  mb-1" 
-                                                            type="submit" id="ajaxSubmit_{{ $product->id }}"
-                                                            onclick="updateCart('{{ $product->id }}', '{{ $option->option_id }}')"
-                                                        >
-                                                            Add to cart
-                                                        </button>
+                                                    @if (!empty($notify_user_about_product_stock) && strtolower($notify_user_about_product_stock->option_value) == 'yes')
+                                                        @if ($option->stockOnHand > 0)
+                                                            <button 
+                                                                class="btn hover_effect prd_btn_resp p-2 ajaxSubmit button-cards-product-slider col w-100  mb-1" 
+                                                                type="submit" id="ajaxSubmit_{{ $product->id }}"
+                                                                onclick="updateCart('{{ $product->id }}', '{{ $option->option_id }}')"
+                                                            >
+                                                                Add to cart
+                                                            </button>
+                                                        @else
+                                                            @if (auth()->user())
+                                                                <input type="hidden" name="sku" id="sku_value" class="sku_value" value="{{$product->code}}">
+                                                                <input type="hidden" name="product_id" id="product_id_value" class="product_id_value" value="{{$product->id}}">
+                                                                <div class="row justify-content-center align-items-center">
+                                                                    <div class="col-md-12">
+                                                                        <button class="w-100 ml-0 bg-primary h-auto product-detail-button-cards text-uppercase notify_stock_btn_class rounded d-flex align-items-center justify-content-center"
+                                                                            type="button" id="" onclick="notify_user_about_product_stock('{{$product->id}}' , '{{$product->code}}')" data-product-id = {{$product->id}}>
+                                                                            <a class="text-white">Notify</a>
+                                                                            <div class="spinner-border text-white custom_stock_spinner stock_spinner_{{$product->id}} ml-1 d-none" role="status">
+                                                                                <span class="sr-only"></span>
+                                                                            </div>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            @else
+                                                                <button class="w-100 ml-0 bg-primary h-auto product-detail-button-cards notify_stock_btn_class text-uppercase notify_popup_modal_btn rounded"
+                                                                    type="button" id="notify_popup_modal" onclick="show_notify_popup_modal('{{$product->id}}' , '{{$product->code}}')">
+                                                                    <a class="text-white">Notify</a>
+                                                                </button>
+                                                            @endif
+                                                        @endif
                                                     @else
-                                                        <button 
-                                                            class="btn prd_btn_resp p-2 ajaxSubmit mb-1 text-white bg-danger bg-gradient button-cards-product-slider col w-100 autocomplete=off"
-                                                            tabindex="-1" 
-                                                            type="submit" id="ajaxSubmit_{{ $product->id }}"
-                                                            disabled 
-                                                            onclick="return updateCart('{{ $product->id }}')">Out of Stock</button>
+                                                        @if ($enable_add_to_cart)
+                                                            <button 
+                                                                class="btn hover_effect prd_btn_resp p-2 ajaxSubmit button-cards-product-slider col w-100  mb-1" 
+                                                                type="submit" id="ajaxSubmit_{{ $product->id }}"
+                                                                onclick="updateCart('{{ $product->id }}', '{{ $option->option_id }}')"
+                                                            >
+                                                                Add to cart
+                                                            </button>
+                                                        @else
+                                                            <button 
+                                                                class="btn prd_btn_resp p-2 ajaxSubmit mb-1 text-white bg-danger bg-gradient button-cards-product-slider col w-100 autocomplete=off"
+                                                                tabindex="-1" 
+                                                                type="submit" id="ajaxSubmit_{{ $product->id }}"
+                                                                disabled 
+                                                                onclick="return updateCart('{{ $product->id }}')">Out of Stock</button>
+                                                        @endif
                                                     @endif
                                                 </div>
                                             </div>
@@ -369,21 +402,54 @@
                                                     @endif
                                                 </div>
                                                 <div class="col-md-12 add-to-cart-button-section">
-                                                    @if ($enable_add_to_cart)
-                                                        <button 
-                                                            class="btn hover_effect prd_btn_resp p-2 ajaxSubmit button-cards-product-slider col w-100  mb-1" 
-                                                            type="submit" id="ajaxSubmit_{{ $product->id }}"
-                                                            onclick="updateCart('{{ $product->id }}', '{{ $option->option_id }}')"
-                                                        >
-                                                            Add to cart
-                                                        </button>
+                                                    @if (!empty($notify_user_about_product_stock) && strtolower($notify_user_about_product_stock->option_value) == 'yes')
+                                                        @if ($option->stockOnHand > 0)
+                                                            <button 
+                                                                class="btn hover_effect prd_btn_resp p-2 ajaxSubmit button-cards-product-slider col w-100  mb-1" 
+                                                                type="submit" id="ajaxSubmit_{{ $product->id }}"
+                                                                onclick="updateCart('{{ $product->id }}', '{{ $option->option_id }}')"
+                                                            >
+                                                                Add to cart
+                                                            </button>
+                                                        @else
+                                                            @if (auth()->user())
+                                                                <input type="hidden" name="sku" id="sku_value" class="sku_value" value="{{$product->code}}">
+                                                                <input type="hidden" name="product_id" id="product_id_value" class="product_id_value" value="{{$product->id}}">
+                                                                <div class="row justify-content-center align-items-center">
+                                                                    <div class="col-md-12">
+                                                                        <button class="w-100 ml-0 bg-primary h-auto product-detail-button-cards text-uppercase notify_stock_btn_class rounded d-flex align-items-center justify-content-center"
+                                                                            type="button" id="" onclick="notify_user_about_product_stock('{{$product->id}}' , '{{$product->code}}')" data-product-id = {{$product->id}}>
+                                                                            <a class="text-white">Notify</a>
+                                                                            <div class="spinner-border text-white custom_stock_spinner stock_spinner_{{$product->id}} ml-1 d-none" role="status">
+                                                                                <span class="sr-only"></span>
+                                                                            </div>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            @else
+                                                                <button class="w-100 ml-0 bg-primary h-auto product-detail-button-cards notify_stock_btn_class text-uppercase notify_popup_modal_btn rounded"
+                                                                    type="button" id="notify_popup_modal" onclick="show_notify_popup_modal('{{$product->id}}' , '{{$product->code}}')">
+                                                                    <a class="text-white">Notify</a>
+                                                                </button>
+                                                            @endif
+                                                        @endif
                                                     @else
-                                                        <button 
-                                                            class="btn prd_btn_resp p-2 ajaxSubmit mb-1 text-white bg-danger bg-gradient button-cards-product-slider col w-100 autocomplete=off"
-                                                            tabindex="-1" 
-                                                            type="submit" id="ajaxSubmit_{{ $product->id }}"
-                                                            disabled 
-                                                            onclick="return updateCart('{{ $product->id }}')">Out of Stock</button>
+                                                        @if ($enable_add_to_cart)
+                                                            <button 
+                                                                class="btn hover_effect prd_btn_resp p-2 ajaxSubmit button-cards-product-slider col w-100  mb-1" 
+                                                                type="submit" id="ajaxSubmit_{{ $product->id }}"
+                                                                onclick="updateCart('{{ $product->id }}', '{{ $option->option_id }}')"
+                                                            >
+                                                                Add to cart
+                                                            </button>
+                                                        @else
+                                                            <button 
+                                                                class="btn prd_btn_resp p-2 ajaxSubmit mb-1 text-white bg-danger bg-gradient button-cards-product-slider col w-100 autocomplete=off"
+                                                                tabindex="-1" 
+                                                                type="submit" id="ajaxSubmit_{{ $product->id }}"
+                                                                disabled 
+                                                                onclick="return updateCart('{{ $product->id }}')">Out of Stock</button>
+                                                        @endif
                                                     @endif
                                                 </div>
                                             </div>

@@ -31,13 +31,18 @@ class ProductStockNotificationController extends Controller
         $product_id = $request->product_id;
         $sku = $request->sku;
         $email = $request->email;
+        $check_product_stock_notification = ProductStockNotification::where('product_id', $product_id)->where('sku', $sku)->where('email', $email)->first();
+        if (!empty($check_product_stock_notification)) {
+            return response()->json([
+                'message' => 'You have already requested for this product stock notification.',
+                'status' => true
+            ]);
+        }
         $product_stock_notification = ProductStockNotification::create([
             'product_id' => $product_id,
             'sku' => $sku,
             'email' => $email,
         ]);
-
-        
 
         if ($product_stock_notification == true) {
             $data = [

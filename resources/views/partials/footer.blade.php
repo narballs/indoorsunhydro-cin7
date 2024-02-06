@@ -562,3 +562,94 @@
             zE('webWidget', 'open');
         }
     </script>
+
+    <!-- Modal -->
+<div class="modal fade notify_popup_modal" id="notify_user_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Notify User About Product Stock</h5>
+            <button type="button" class="close" onclick="close_notify_user_modal()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="">Email <span class="text-danger">*</span></label>
+                        <input type="hidden" name="sku" id="sku_value" class="productSku_value" value="">
+                        <input type="hidden" name="product_id" id="product_id_value" class="productId_value" value="">
+                        <div class="col-md-12">
+                            <input type="text" name="notify_user_email" id="notify_user_email" class="form-control notifyEmail" value="" placeholder="Enter your email">
+                            <div class="text-danger email_required_alert"></div>
+                        </div>
+    
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <div class="spinner-border text-primary stock_spinner_modal d-none" role="status">
+                <span class="sr-only"></span>
+            </div>
+            <button type="button" class="btn btn-secondary" onclick="notify_user_about_product_stock($('.productId_value').val() , $('.productSku_value').val())">Submit</button>
+            <!-- You can add additional buttons here if needed -->
+        </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade notify_popup_modal_similar" id="notify_user_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Notify User About Product Stock</h5>
+            <button type="button" class="close" onclick="close_notify_user_modal_similar()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="">Email <span class="text-danger">*</span></label>
+                        <input type="hidden" name="sku" id="sku_value" class="productSku_value" value="">
+                        <input type="hidden" name="product_id" id="product_id_value" class="productId_value" value="">
+                        <div class="col-md-12">
+                            <input type="text" name="notify_user_email" id="notify_user_email" class="form-control similar_notifyEmail" value="" placeholder="Enter your email">
+                            <div class="text-danger email_required_alert"></div>
+                        </div>
+    
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <div class="spinner-border text-primary stock_spinner_modal d-none" role="status">
+                <span class="sr-only"></span>
+            </div>
+            <button type="button" class="btn btn-secondary" onclick="notify_user_about_product_stock_similar($('.productId_value').val() , $('.productSku_value').val())">Submit</button>
+            <!-- You can add additional buttons here if needed -->
+        </div>
+        </div>
+    </div>
+</div>
+{{--  notify user pop up modal end --}}
+
+<script>
+    $(document).on('keydown', function(event) {
+        // Check if the modal is open and the Enter key is pressed
+        if ($('.notify_popup_modal').hasClass('show') && event.keyCode === 13) {
+            // Prevent the default action of the Enter key
+            event.preventDefault();
+        }
+        if ($('.notify_popup_modal_detail').hasClass('show') && event.keyCode === 13) {
+            // Prevent the default action of the Enter key
+            event.preventDefault();
+        }
+        if ($('.notify_popup_modal_similar').hasClass('show') && event.keyCode === 13) {
+            // Prevent the default action of the Enter key
+            event.preventDefault();
+        }
+    });
+</script>
