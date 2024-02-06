@@ -790,7 +790,7 @@ class CheckoutController extends Controller
                         // 'website' => $request->input('company_website'),
                         'company' => $company,
                         'phone' => $phone,
-                        'status' => !empty($toggle_registration) && strtolower($toggle_registration->option_value) == 'yes' ? 0 : 1,
+                        'status' => !empty($toggle_registration) && strtolower($toggle_registration->option_value) == 'yes' ? 1 : 0,
                         'priceColumn' => $price_column,
                         'user_id' => $user_id,
                         'firstName' => $user->first_name,
