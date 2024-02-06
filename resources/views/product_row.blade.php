@@ -64,6 +64,16 @@
                             $retail_price = $price->$user_price_column;
                         }
                         ?>
+                        @if (!empty($option) && $option->stockOnHand > 0)
+                            <div>
+                                <span class="text-success">{{'In Stock'}}</span>
+                            </div>
+                        @else
+                            <div>
+                                <span class="text-danger">{{ App\Helpers\SettingHelper::getSetting('out_of_stock_label', 'OUT OF STOCK');
+                                    }}</span>
+                            </div>
+                        @endif
                         <h4 text="{{ $retail_price }}" class="text-uppercase mb-0 text-center p_price_resp mt-0">
                             ${{ number_format($retail_price, 2) }}</h4>
                         @if ($product->categories)
@@ -99,6 +109,7 @@
                         {{-- @else
                         <p class="text-danger category-cart-page font-weight-bold product_buys_count margin-for-empty"></p> --}}
                         @endif
+                        
                     </div>
                     <div class="col-md-12 add-to-cart-button-section">
                         @if (!empty($notify_user_about_product_stock) && strtolower($notify_user_about_product_stock->option_value) == 'yes')
@@ -127,6 +138,7 @@
                                     Added to cart
                                 </div>
                             @else
+                                
                                 @if (auth()->user())
                                     <input type="hidden" name="sku" id="sku_value" class="sku_value" value="{{$product->code}}">
                                     <input type="hidden" name="product_id" id="product_id_value" class="product_id_value" value="{{$product->id}}">
@@ -222,7 +234,7 @@
     }
 
     .price-category-view-section {
-        min-height: 7.7rem;
+        min-height: 9rem;
     }
 
 
