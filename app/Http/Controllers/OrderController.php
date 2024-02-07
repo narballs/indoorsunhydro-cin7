@@ -1046,7 +1046,8 @@ class OrderController extends Controller
         $current_order_status = OrderStatus::where('id', $order_status_id)->first();
         $order->update([
             'order_status_id' => $order_status_id,
-            'payment_status' => $payment_status
+            'payment_status' => $payment_status,
+            'isApproved' => $current_order_status->status == 'Cancelled' ? 2 : $order->isApproved
         ]);
 
 
