@@ -233,6 +233,7 @@ class UserHelper
             'carrierCode' => $carrier_code->option_value,
             'serviceCode' => $service_code->option_value,
             'orderStatus' => $orderStatus,
+            'customerEmail'=> $order_contact->email,
             'shippingAmount' => number_format($currentOrder->shipment_price , 2),
             "amountPaid" => number_format($currentOrder->total_including_tax , 2),
             "taxAmount" => number_format($tax, 2),
