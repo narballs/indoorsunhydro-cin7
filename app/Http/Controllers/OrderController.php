@@ -165,7 +165,7 @@ class OrderController extends Controller
                     $order->memo = $request->memo;
                     $order->date = $request->date;
                     $order->shipment_price = $request->shipment_price;
-                    $order->is_stripe = 1;
+                    $order->is_square = 1;
                     $order->save();
 
                     $order_id =  $order->id;
