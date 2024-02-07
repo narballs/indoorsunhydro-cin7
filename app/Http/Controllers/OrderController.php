@@ -203,6 +203,9 @@ class OrderController extends Controller
                     // Initialize Square Checkout API
                     $checkoutApi = $client->getCheckoutApi();
                     $line_items = [];
+
+                    
+                    
                     if (session()->has('cart')) {
                         foreach ($cart_items as $cart_item) {
                             $OrderItem = new ApiOrderItem;
@@ -225,14 +228,44 @@ class OrderController extends Controller
                             $line_items[] = $order_line_item;
                         
                         }
+
+                        if ($tax_rate > 0) {
+                            $order_tax_item = new OrderLineItem(1); // Assuming only one unit of tax
+                            $order_tax_item->setName('Tax');
+                            $order_tax_item->setQuantity(1);
+    
+                            // Set base price for tax line item to be the same as the total tax amount
+                            $base_tax_price_money = new Money();
+                            $base_tax_price_money->setAmount($tax_rate * 100); // Convert total price to cents
+                            $base_tax_price_money->setCurrency('USD');
+                            $order_tax_item->setBasePriceMoney($base_tax_price_money);
+                            $line_items[] = $order_tax_item;
+                        }
+    
+                        if (!empty($request->shipment_price) && $request->shipment_price > 0) {
+                            $order_shipping_item = new OrderLineItem(2); // Assuming only one unit of tax
+                            $order_shipping_item->setName('Shipment Price');
+                            $order_shipping_item->setQuantity(1);
+    
+                            // Set base price for tax line item to be the same as the total tax amount
+                            $base_shipping_price_money = new Money();
+                            $base_shipping_price_money->setAmount($request->shipment_price * 100); // Convert total price to cents
+                            $base_shipping_price_money->setCurrency('USD');
+                            $order_shipping_item->setBasePriceMoney($base_shipping_price_money);
+                            $line_items[] = $order_shipping_item;
+                        }
                         // Create an Order object and set line items
                         $square_order = new SquareOrder($square_payment_location_id->option_value);
                         $square_order->setLineItems($line_items);
 
+                        $pre_populated_data = new \Square\Models\PrePopulatedData();
+                        $pre_populated_data->setBuyerEmail(!empty($order_contact->email) ? $order_contact->email : '');
+                        $pre_populated_data->setBuyerPhoneNumber(!empty($order_contact->phone) ? $order_contact->phone : '');
                         // Create a CreatePaymentLinkRequest object and set the order
                         $body = new CreatePaymentLinkRequest();
                         $body->setIdempotencyKey($order->id);
                         $body->setOrder($square_order );
+                        $body->setPrePopulatedData($pre_populated_data);
                         try {
                             // Make the API request to create the payment link
                             $apiResponse = $checkoutApi->createPaymentLink($body);
