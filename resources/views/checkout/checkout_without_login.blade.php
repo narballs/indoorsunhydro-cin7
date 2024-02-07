@@ -52,6 +52,14 @@
         font-weight: 500;
         line-height: 15px;
     }
+    .checkout_validation_errors {
+        color: #b91f1a;
+        font-family: 'Poppins';
+        font-size: 14;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 15px;
+    }
     .update_checkout_input {
         border-radius: 4px;
         border: 1px solid #DDD;
@@ -298,15 +306,18 @@ $cart_price = 0;
                                     </span>
                                     <div class="success_text success_div mt-1"></div>
                                     <div class="error_text error_div_email mt-1"></div>
+                                    <div class=" checkout_validation_errors email_errors"></div>
                                 </div>
                             </div>
                             <div class="col-md-12 password_div d-none">
                                 <label for="" class="update_checkout_labels">Password</label>
                                 <div class="form-group">
                                     <input type="password" name="password" class="form-control update_checkout_label_input password_checkout" id="password" placeholder="Password">
+                                    <div class=" password_errors checkout_validation_errors"></div>
                                 </div>
                             </div>
                             <div class="error_div error_text"></div>
+                            
                         </div>
                         <div class="billing_div d-none">
                             <div class="row">
@@ -319,12 +330,14 @@ $cart_price = 0;
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <input type="text" name="first_name" id="first_name" class="form-control update_checkout_input first_name" placeholder="First Name">
+                                                <input type="text" name="first_name" id="first_name" class="form-control update_checkout_input mb-1 first_name" placeholder="First Name">
+                                                <div class=" first_name_errors checkout_validation_errors"></div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <input type="text" name="last_name" id="last_name" class="form-control update_checkout_input last_name" placeholder="Last Name">
+                                                <input type="text" name="last_name" id="last_name" class="form-control update_checkout_input mb-1 last_name" placeholder="Last Name">
+                                                <div class=" last_name_errors checkout_validation_errors"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -333,21 +346,24 @@ $cart_price = 0;
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <input type="text" name="company_name" id="company_name" class="form-control update_checkout_input company_name" placeholder="Enter Company Name">
+                                        <input type="text" name="company_name" id="company_name" class="form-control update_checkout_input mb-1 company_name" placeholder="Enter Company Name">
+                                        <div class="company_name_errors checkout_validation_errors"></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <input type="text" name="street_address" id="street_address" class="form-control update_checkout_input street_address" placeholder="Street Address">
+                                        <input type="text" name="street_address" id="street_address" class="form-control update_checkout_input mb-1 street_address" placeholder="Street Address">
+                                        <div class="street_address_errors checkout_validation_errors"></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <input type="text" name="street_address_2" id="street_address_2" class="form-control update_checkout_input street_address_2" placeholder="Address 2">
+                                        <input type="text" name="street_address_2" id="street_address_2" class="form-control update_checkout_input mb-1 street_address_2" placeholder="Address 2">
+                                        <div class="street_address_2_errors checkout_validation_errors"></div>
                                     </div>
                                 </div>
                             </div>
@@ -362,7 +378,7 @@ $cart_price = 0;
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <select name="state" id="state" class="form-control update_checkout_input state">
+                                        <select name="state" id="state" class="form-control update_checkout_input mb-1 state">
                                             <option value="">Select State</option>
                                             @if (count($states) > 0)
                                                 @foreach ($states as $state)
@@ -370,20 +386,23 @@ $cart_price = 0;
                                                 @endforeach
                                             @endif
                                         </select>
+                                        <div class=" state_errors checkout_validation_errors"></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <input type="text" name="city" id="city" class="form-control update_checkout_input city" placeholder="Town/City">
+                                        <input type="text" name="city" id="city" class="form-control update_checkout_input mb-1 city" placeholder="Town/City">
+                                        <div class=" city_errors checkout_validation_errors"></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <input type="text" name="zip_code" id="zip_code" class="form-control update_checkout_input zip_code" placeholder="Zip Code">
+                                        <input type="text" name="zip_code" id="zip_code" class="form-control update_checkout_input mb-1 zip_code" placeholder="Zip Code">
+                                        <div class=" post_code_errors checkout_validation_errors"></div>
                                     </div>
                                 </div>
                             </div>
@@ -397,7 +416,8 @@ $cart_price = 0;
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <input type="text" name="phone" id="phone" class="form-control update_checkout_input phone" placeholder="Phone">
+                                        <input type="text" name="phone" id="phone" class="form-control update_checkout_input mb-1 phone" placeholder="Phone">
+                                        <div class=" phone_errors checkout_validation_errors"></div>
                                     </div>
                                 </div>
                             </div>
@@ -433,21 +453,23 @@ $cart_price = 0;
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <input type="text" name="postalStreetAddress" id="postalStreetAddress" class="form-control update_checkout_input postalStreetAddress" placeholder="Street Address">
+                                        <input type="text" name="postalStreetAddress" id="postalStreetAddress" class="form-control update_checkout_input mb-1 postalStreetAddress" placeholder="Street Address">
+                                        <div class=" postal_address_errors checkout_validation_errors"></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <input type="text" name="postalStreetAddress_2" id="postalStreetAddress_2" class="form-control update_checkout_input postalStreetAddress_2" placeholder="Address 2">
+                                        <input type="text" name="postalStreetAddress_2" id="postalStreetAddress_2" class="form-control update_checkout_input mb-1 postalStreetAddress_2" placeholder="Address 2">
+                                        <div class=" postal_address_2_errors checkout_validation_errors"></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <select name="postalState" id="" class="form-control update_checkout_input postalState">
+                                        <select name="postalState" id="" class="form-control update_checkout_input mb-1 postalState">
                                             <option value="">Select State</option>
                                             @if (count($states) > 0)
                                                 @foreach ($states as $state)
@@ -455,13 +477,15 @@ $cart_price = 0;
                                                 @endforeach
                                             @endif
                                         </select>
+                                        <div class="checkout_validation_errors postal_state_errors"></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <input type="text" name="postalCity" id="postalCity" class="form-control update_checkout_input postalCity" placeholder="Town/City">
+                                        <input type="text" name="postalCity" id="postalCity" class="form-control update_checkout_input mb-1 postalCity" placeholder="Town/City">
+                                        <div class=" postal_city_errors checkout_validation_errors"></div>
                                     </div>
                                 </div>
                             </div>
@@ -469,7 +493,8 @@ $cart_price = 0;
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <input type="text" name="postalpostCode" id="postalpostCode" class="form-control update_checkout_input postalpostCode" placeholder="Zip Code">
+                                        <input type="text" name="postalpostCode" id="postalpostCode" class="form-control update_checkout_input mb-1 postalpostCode" placeholder="Zip Code">
+                                        <div class=" postalpostCode_errors checkout_validation_errors"></div>
                                     </div>
                                 </div>
                             </div>
@@ -552,7 +577,14 @@ $cart_price = 0;
                             </div>
                         </div>
                         <div class="row mt-3">
-                            <button class="btn check_out_pay_now w-100 p-3" type="button" id="checkout">Checkout</button>
+                            <button class="btn check_out_pay_now w-100 p-3 d-flex align-items-center justify-content-center" type="button" id="checkout">
+                                <span>Checkout</span>
+                                <span class="update_checkout_loader d-none mx-2">
+                                    <div class="spinner-border text-white update_checkout_loader" role="status">
+                                        <span class="sr-only"></span>
+                                    </div>
+                                </span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -655,6 +687,7 @@ $cart_price = 0;
             var postal_zip_code= $('.postalpostCode').val();
             var different_shipping_address = $('.ship_to_different_address').is(':checked') ? 1 : 0;
             if (email != '' && password != '') {
+                $('.update_checkout_loader').removeClass('d-none');
                 $.ajax({
                     url: '/authenticate-user',
                     type: 'post',
@@ -688,19 +721,102 @@ $cart_price = 0;
                                     window.location.href = '/checkout';
                                 }
                             } else {
+                                $('.update_checkout_loader').addClass('d-none');
                                 $('.error_div').text(response.message);
                             }
                         } else {
                             if (response.registration_status == true) {
+                                $('.update_checkout_loader').addClass('d-none');
                                 $('.error_div').text(response.message);
                                 window.location.href = '/checkout';
                             } else {
+                                $('.update_checkout_loader').addClass('d-none');
                                 $('.error_div').text(response.message);
+                            }
+                        }
+                    },
+                    error: function(response) {
+                        $('.update_checkout_loader').addClass('d-none');
+                        var errors = response.responseJSON.errors;
+                        if (errors) {
+                            if (errors.first_name) {
+                                error_first_name = errors.first_name[0];
+                                $('.first_name_errors').html(error_first_name);
+                            }
+                            else {
+                                $('.first_name_errors').html('');
+                            }
+
+                            if (errors.address) {
+                                var error_billing_address = errors.address[0];
+                                $('.street_address_errors').html(error_billing_address);
+                            }
+                            else {
+                                $('.street_address_errors').html('');
+                            }
+
+                            if (errors.state) {
+                                var error_billing_state = errors.state[0];
+                                $('.state_errors').html(error_billing_state);
+                            }
+                            else {
+                                $('.state_errors').html('');
+                            }
+
+                            if (errors.company) {
+                                var error_company = errors.company[0];
+                                $('.company_name_errors').html(error_company);
+                            }
+                            else {
+                                $('.company_name_errors').html('');
+                            }
+
+                            if (errors.zip_code) {
+                                var error_zip_code = errors.zip_code[0];
+                                $('.post_code_errors').html(error_zip_code);
+                            }
+                            else {
+                                $('.post_code_errors').html('');
+                            }
+
+                            if (errors.phone) {
+                                var error_phone = errors.phone[0];
+                                $('.phone_errors').html(error_phone);
+                            }
+                            else {
+                                $('.phone_errors').html('');
+                            }
+                            
+                            if (errors.postal_address1) {
+                                var error_postal_address = errors.postal_address1[0];
+                                $('.postal_address_errors').html(error_postal_address);
+                            }
+                            else {
+                                $('.postal_address_errors').html('');
+                            }
+
+                            
+
+                            if (errors.postal_state) {
+                                var error_state = errors.postal_state[0];
+                                $('.postal_state_errors').html(error_state);
+                            }
+                            else {
+                                $('.postal_state_errors').html('');
+                            }
+
+                            if (errors.postal_zip_code) {
+                                var error_text_postal_code = errors.postal_zip_code[0];
+                                $('.postalpostCode_errors').html(error_text_postal_code);
+                            }
+                            else {
+                                $('.postalpostCode_errors').html('');
                             }
                         }
                     }
                 });
             } else {
+                $('.error_div').text('Please enter your email and password');
                 return false;
             }
         });

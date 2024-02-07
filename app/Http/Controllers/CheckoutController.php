@@ -737,6 +737,37 @@ class CheckoutController extends Controller
                 $message = 'Invalid credentials';
                 return response()->json(['status' => 'error', 'message' => $message, 'access' => $access]);
             } else {
+                
+                if (!empty($request->different_shipping_address) && $request->different_shipping_address == 1) {
+                    $request->validate([
+                        'email' => 'required',
+                        'password' => 'required',
+                        'first_name' => 'required',
+                        'company' => 'required',
+                        'address' => 'required',
+                        // 'city' => 'required',
+                        'state' => 'required',
+                        'zip_code' => 'required',
+                        'phone' => 'required',
+                        'postal_address1' => 'required',
+                        'postal_state' => 'required',
+                        'postal_zip_code' => 'required',
+                    ]);
+                } else {
+                    $request->validate([
+                        'email' => 'required',
+                        'password' => 'required',
+                        'first_name' => 'required',
+                        'company' => 'required',
+                        'address' => 'required',
+                        // 'city' => 'required',
+                        'state' => 'required',
+                        'zip_code' => 'required',
+                        'phone' => 'required',
+                    ]);
+                }
+
+                
                 $states = UsState::where('id', $request->state)->first();
                 $state_name = $states->state_name;
                 $toggle_registration = AdminSetting::where('option_name', 'toggle_registration_approval')->first();
@@ -749,7 +780,7 @@ class CheckoutController extends Controller
                 $city = $request->city;
                 $postCode = $request->zip_code;
                 $phone = $request->phone;
-                if (!empty($$request->postal_state)) {
+                if (!empty($request->postal_state)) {
                     $postal_state = UsState::where('id', $request->postal_state)->first();
                     $postal_state_name = $postal_state->state_name;
                 } else {
