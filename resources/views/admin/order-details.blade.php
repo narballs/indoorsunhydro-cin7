@@ -206,7 +206,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        @if($order->isApproved == 0 && $order->isVoid == 0)
+                                        @if(($order->isApproved == 0 || $order->isApproved == 1  || $order->isApproved == 2)   && $order->isVoid == 0)
                                         <div class="col-md-2 d-flex align-items-center justify-content-end edit_order_div">
                                             <button class="btn btn-light btn-sm edit_admin_order" type="button" onclick="edit_order('{{ $order->id }}')">
                                                     Edit Order
