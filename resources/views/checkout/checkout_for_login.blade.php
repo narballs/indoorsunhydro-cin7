@@ -578,20 +578,20 @@ $cart_price = 0;
                                         </div>
                                         <div class="row justify-content-center border-bottom py-3">
                                             <div class="col-md-12 mt-1">
-                                                <p class="checkout_product_heading mb-1 ml-0">Please Select Date</p>
+                                                <p class="checkout_product_heading mb-1 ml-0">Please Select Date (Optional)</p>
                                                 <input type="datetime-local" name="date" class="checkout_product_heading form-control datetime_" min="" id="date">
                                             </div>
                                         </div>
                                         <div class="row justify-content-center border-bottom py-3">
                                             <div class="col-md-12">
-                                                <p class="checkout_product_heading mb-1 ml-0">Purchase Order Number</p>
+                                                <p class="checkout_product_heading mb-1 ml-0">Purchase Order Number (Optional)</p>
                                                 <input type="text" name="po_number" placeholder="PO Number" id="po_number"
                                                     class="form-control fontAwesome checkout_product_heading">
                                             </div>
                                         </div>
                                         <div class="row justify-content-center border-bottom py-3">
                                             <div class="col-md-12">
-                                                <p class="checkout_product_heading mb-1 ml-0">Memo</p>
+                                                <p class="checkout_product_heading mb-1 ml-0">Memo (Optional)</p>
                                                 <textarea type="text" name="memo" cols="20" rows="5" placeholder="Enter your Message"
                                                     id="memo" class="form-control fontAwesome">
                                                     </textarea>
