@@ -133,7 +133,7 @@ class GoogleContentController extends Controller
                             'image_link' => !empty($product->product_image->image) ? url(asset('theme/products/images/' . $product->product_image->image)) : url(asset('theme/img/image_not_available.png')),
                             'price' => !empty($option->price[0]->$price_column) ? $option->price[0]->$price_column : 0,
                             'condition' => 'new',
-                            'availability' => 'In stock',
+                            'availability' => !empty($option) && $option->stockAvailable > 0 ? 'In stock' : 'Out of stock',
                             'brand' => !empty($product->product_brand->name) ? $product->product_brand->name : 'General brand',
                             'barcode' => $product->barcode,
                             'google_product_category' => $category,
