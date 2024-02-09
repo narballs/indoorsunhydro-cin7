@@ -92,7 +92,7 @@
                                                     <div class="price d-flex flex-row align-items-center">
                                                         @if ($productOption->products->status != 'Inactive')
                                                             @if($stock_updated == true)
-                                                            <span class="rounded-pill cursor product-detail-quantity d-flex justify-content-center align-items-center"
+                                                                <span class="rounded-pill cursor product-detail-quantity d-flex justify-content-center align-items-center"
                                                                     data-toggle="popover-hover" data-bs-container="body" data-placement="top" data-bs-placement="top"
                                                                     data-bs-content="Top popover" style=" cursor: pointer;"><span class="stock_number">
                                                                         {{$total_stock}}</span></span>
@@ -100,23 +100,21 @@
                                                                     <small class="dis-price">&nbsp;</small>
                                                                     <span class="instock-label">IN STOCK</span>
                                                                 </div>
+                                                            @elseif ($productOption->stockAvailable > 0)
+                                                                <span class="rounded-pill cursor product-detail-quantity d-flex justify-content-center align-items-center"
+                                                                    data-toggle="popover-hover" data-bs-container="body" data-placement="top" data-bs-placement="top"
+                                                                    data-bs-content="Top popover" style=" cursor: pointer;"><span class="stock_number">
+                                                                        {{$productOption->stockAvailable}}</span></span>
+                                                                <div>
+                                                                    <small class="dis-price">&nbsp;</small>
+                                                                    <span class="instock-label">IN STOCK</span>
+                                                                </div>
                                                             @else
-                                                                @if ($productOption->stockAvailable > 0)
-                                                                    <span class="rounded-pill cursor product-detail-quantity d-flex justify-content-center align-items-center"
-                                                                        data-toggle="popover-hover" data-bs-container="body" data-placement="top" data-bs-placement="top"
-                                                                        data-bs-content="Top popover" style=" cursor: pointer;"><span class="stock_number">
-                                                                            {{$productOption->stockAvailable}}</span></span>
-                                                                    <div>
-                                                                        <small class="dis-price">&nbsp;</small>
-                                                                        <span class="instock-label">IN STOCK</span>
-                                                                    </div>
-                                                                @else
-                                                                    <div>
-                                                                        <small class="dis-price">&nbsp;</small>
-                                                                        <span class="text-danger">{{ App\Helpers\SettingHelper::getSetting('out_of_stock_label', 'OUT OF STOCK');
-                                                                            }}</span>
-                                                                    </div>
-                                                                @endif
+                                                                <div>
+                                                                    <small class="dis-price">&nbsp;</small>
+                                                                    <span class="text-danger">{{ App\Helpers\SettingHelper::getSetting('out_of_stock_label', 'OUT OF STOCK');
+                                                                        }}</span>
+                                                                </div>
                                                             @endif
                                                         @else
                                                             <div>
@@ -179,6 +177,11 @@
                                             
                                             @if (!empty($notify_user_about_product_stock) && strtolower($notify_user_about_product_stock->option_value) === 'yes')
                                                 @if ($total_stock > 0)
+                                                    <button class="w-100 ml-0 button-cards product-detail-button-cards text-uppercase"
+                                                        type="button" id="ajaxSubmit">
+                                                        <a class="text-white">Add to cart </a>
+                                                    </button>
+                                                @elseif ($productOption->stockAvailable > 0)
                                                     <button class="w-100 ml-0 button-cards product-detail-button-cards text-uppercase"
                                                         type="button" id="ajaxSubmit">
                                                         <a class="text-white">Add to cart </a>
@@ -331,21 +334,19 @@
                                 <div class="ml-2">
                                     <span class="instock-label">IN STOCK</span>
                                 </div>
-                            @else
-                                @if ($productOption->stockAvailable > 0)
+                            @elseif ($productOption->stockAvailable > 0)
                                 <span class="rounded-pill product-detail-quantity d-flex justify-content-center align-items-center">
                                     <span class="stock_number">{{$productOption->stockAvailable}}</span>
                                 </span>
                                 <div class="ml-2">
                                     <span class="instock-label">IN STOCK</span>
                                 </div>
-                                @else
+                            @else
                                 <div class="ml-2">
                                     <span class="text-danger instock-label">
                                         {{ App\Helpers\SettingHelper::getSetting('out_of_stock_label', 'OUT OF STOCK'); }}
                                     </span>
                                 </div>
-                                @endif
                             @endif
                             @if(!empty($contact_id))
                             <a style="width:20px !important;" href="javascript:void(0);" class="mx-3 subscribe">
@@ -411,9 +412,14 @@
                                         // $enable_add_to_cart = App\Helpers\SettingHelper::enableAddToCart($productOption);
                                         $enable_add_to_cart = true;
                                     ?>
-                                    @if (!empty($notify_user_about_product_stock) && strtolower($notify_user_about_product_stock->option_value) === 'yes' && $stock_updated)
+                                    @if (!empty($notify_user_about_product_stock) && strtolower($notify_user_about_product_stock->option_value) === 'yes')
                                         @if ($total_stock > 0)
                                                 <button class="button-cards product-detail-button-cards text-uppercase  w-100" 
+                                                type="submit" id="ajaxSubmit_mbl">
+                                                Add to cart
+                                            </button>
+                                        @elseif ($productOption->stockAvailable > 0)
+                                            <button class="button-cards product-detail-button-cards text-uppercase  w-100" 
                                                 type="submit" id="ajaxSubmit_mbl">
                                                 Add to cart
                                             </button>
