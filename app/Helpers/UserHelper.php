@@ -185,9 +185,6 @@ class UserHelper
 
 
     public static function shipping_order($order_id , $currentOrder , $order_contact) {
-        $length = 0;
-        $width = 0;
-        $height = 0;
         $api_order = ApiOrder::where('id', $order_id)->first();
         $order_items = ApiOrderItem::with('order.texClasses', 'product.options', 'product')->where('order_id', $order_id)->get();
         for ($i = 0; $i <= count($order_items) - 1; $i++){
@@ -196,9 +193,6 @@ class UserHelper
                 'sku' => $order_items[0]->product->code,
                 'quantity' => $order_items[0]->quantity,
                 'unitPrice' => $order_items[0]->price,
-                'length' => $length + $order_items[0]->product->length,
-                'width' => $width + $order_items[0]->product->width,
-                'height' => $height + $order_items[0]->product->height,
             ];  
         }
 
@@ -270,12 +264,6 @@ class UserHelper
             'weight' => [
                 'value' => $produts_weight,
                 'units' => 'pounds'
-            ],
-            'dimensions' => [
-                'units' => 'inches',
-                'length' => $length,
-                'width' => $width,
-                'height' => $height
             ],
             'items'=> $items
         ];
