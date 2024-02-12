@@ -29,7 +29,7 @@ class CheckOrderStatus extends Command
      *
      * @var string
      */
-    protected $description = 'Check thr order of the status if they are not fullfilled';
+    protected $description = 'Check the order of the status if they are not fullfilled';
 
     /**
      * Create a new command instance.

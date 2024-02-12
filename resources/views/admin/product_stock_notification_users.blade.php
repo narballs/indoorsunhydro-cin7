@@ -22,11 +22,39 @@
         <div class="card-body product_secion_main_body">
             <div class="row border-bottom product_section_header">
                 <div class="col-md-12">
-                    <div class="row">
-                        <div class="col-md-6 mobile_heading">
+                    <div class="row align-items-center">
+                        <div class="col-md-8 mobile_heading">
                             <p class="product_heading">
                                 Product Stock Notification Users
                             </p>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="notiy_btn_mbl">
+                                @if ($auto_notify == true)
+                                    <span class="d-flex">
+                                        <a class="btn  btn-sm notify-row-items-order-page">
+                                            Auto Notify
+                                        </a>
+                                        <label class="custom-control custom-checkbox ">
+                                            <input type="checkbox" id="auto_notify" value="{{ $auto_notify }}"
+                                                class="custom-control-input general_switch" onchange="autoNotify()"
+                                                {{ isset($auto_notify) && $auto_notify == true ? 'checked="checked"' : '' }}>
+                                            <span class="custom-control-indicator"></span>
+                                        </label>
+                                    </span>
+                                @else
+                                    <span class="d-flex ">
+                                        <a class=" btn  btn-sm notify-row-items-order-page">
+                                            Auto Notify
+                                        </a>
+                                        <label class="custom-control custom-checkbox ">
+                                            <input type="checkbox" id="auto_notify" value=""
+                                                class="custom-control-input general_switch" onchange="autoNotify()">
+                                            <span class="custom-control-indicator"></span>
+                                        </label>
+                                    </span>
+                                @endif
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -40,6 +68,8 @@
                             <th>S.No</th>
                             <th>Email</th>
                             <th>Product Code</th>
+                            <th>Date Requested</th>
+                            <th>Date Sent</th>
                             <th>Status</th>
                             <th>Action</th>
 
@@ -55,6 +85,8 @@
                             <td>{{ $i++ }}</td>
                             <td>{{$product_stock_notification_user->email}}</td>
                             <td>{{$product_stock_notification_user->sku}}</td>
+                            <td>{{$product_stock_notification_user->created_at}}</td>
+                            <td>{{$product_stock_notification_user->updated_at}}</td>
                             <td>
                                 @if ($product_stock_notification_user->status == 0) 
                                 <span class="badge badge-danger">Pending</span> 
@@ -126,8 +158,15 @@
             .mobile_fulfill_div {
                 margin-top: 3.563rem
             }
+            .mobile_notify_div {
+                margin-top: 3.563rem
+            }
 
             .fullfill_btn_mbl {
+                position: absolute;
+                left: 3.3rem;
+            }
+            .notiy_btn_mbl {
                 position: absolute;
                 left: 3.3rem;
             }
