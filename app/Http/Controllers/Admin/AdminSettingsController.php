@@ -294,8 +294,16 @@ class AdminSettingsController extends Controller
     }
 
     public function notify_users() {
+        $auto_notify = false;
+        $auto_notify = AdminSetting::where('option_name', 'auto_notify')->first();
+        $auto_notify_value = $auto_notify->option_value;
+        if (!empty($auto_notify_value) && strtolower($auto_notify_value) ==  'yes') {
+            $auto_notify = true;
+        } else {
+            $auto_notify = false;
+        }
         $product_stock_notification_users = ProductStockNotification::orderBy('created_at' , 'Desc')->paginate(10);
-        return view ('admin.product_stock_notification_users', compact('product_stock_notification_users'));
+        return view ('admin.product_stock_notification_users', compact('product_stock_notification_users' , 'auto_notify'));
     }
 
     public function product_stock_notification (Request $request) {
