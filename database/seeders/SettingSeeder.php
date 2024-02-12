@@ -170,7 +170,7 @@ class SettingSeeder extends Seeder
             [
                 'option_name' => 'shipping_service_code', 
                 'type' => 'text',
-                'option_value' => 'ups_ground',
+                'option_value' => 'ups_3_day_select',
             ],
             [
                 'option_name' => 'shipping_carrier_code_2', 
