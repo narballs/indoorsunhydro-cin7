@@ -23,12 +23,12 @@
         gtag('event', 'ads_conversion_PURCHASE_1', {
         });
     </script> --}}
-    {{-- <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
         new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
         j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
         })(window,document,'script','dataLayer','GTM-WQS825W2');
-    </script> --}}
+    </script>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <link rel="stylesheet" href="/theme/bootstrap5/css/bootstrap.css">
@@ -240,9 +240,9 @@
 <div class="spinner-border text-success hide_default" role="status" id="spinner-global">
     <span class="sr-only">Loading...</span>
 </div>
-{{-- <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WQS825W2"
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WQS825W2"
     height="0" width="0" style="display:none;visibility:hidden"></iframe>
-</noscript> --}}
+</noscript>
 
 @if (auth()->user())
     <input type="hidden" name="notify_user_email_input" class="notifyEmail" id="auth_user_email" value="{{auth()->user()->email}}">
