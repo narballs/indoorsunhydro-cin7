@@ -578,7 +578,7 @@ $cart_price = 0;
                         </div>
                         <div class="row mt-3">
                             <button class="btn check_out_pay_now w-100 p-3 d-flex align-items-center justify-content-center" type="button" id="checkout">
-                                <span>Checkout</span>
+                                <span>Save & Next</span>
                                 <span class="update_checkout_loader d-none mx-2">
                                     <div class="spinner-border text-white update_checkout_loader" role="status">
                                         <span class="sr-only"></span>
@@ -655,6 +655,8 @@ $cart_price = 0;
                             $('.existed_text').html(response.user_status);
                             $('.success_div').html(response.message);
                             $('.password_div').removeClass('d-none');
+                            $('.billing_div').addClass('d-none');
+                            $('.shipping_div').addClass('d-none');
                         } else {
                             $('.success_div').html('');
                             $('.existed_text').html(response.user_status);
