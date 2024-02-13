@@ -223,7 +223,20 @@
         background-color: #7CC633;
     }
     
-
+    .stripe-radio-label {
+        background-image: url('/theme/bootstrap5/images/stripe_logo.svg');
+        background-repeat: no-repeat;
+        background-position: center;
+        width: 100%;
+        height: 60px;
+    }
+    .square-radio-label {
+        background-image: url('/theme/bootstrap5/images/square_payment_logo.png');
+        background-repeat: no-repeat;
+        background-position: center;
+        width: 100%;
+        height: 60px;
+    }
     @media only screen and (max-width: 425px) and (min-width: 280px) {
         .proceedCheckoutmbl {
             border-radius: 5px;
@@ -368,11 +381,21 @@
             align-items: center;
             width: 50% !important;
         }
+        
         @media (max-width: 425px) {
             .main_row_checkout {
                 justify-content: center ;
             }
         }
+    }
+    .payment-custom-radio.selected {
+        outline: 2px solid #7CC633;
+    }
+    .payment-hidden-radio {
+        display: none;
+    }
+    .payment-custom-radio {
+        cursor: pointer;
     }
 </style>
 <div class="mb-4 desktop-view">
@@ -499,9 +522,23 @@ $cart_price = 0;
                                 </div>
                             </div>
                         </div>
+                        <div class="row justify-content-between mt-3 mb-3">
+                            <div id="stripe_payment" class="col-md-3 d-flex border justify-content-center align-items-center m-0 payment-custom-radio py-1" onclick="select_payment_method(this)">
+                                <input type="radio" name="checkout_payment_type" class="radio_check_payment payment-hidden-radio border-0" value="stripe" id="stripe" >
+                                <span class="stripe-radio-label"></span>
+                            </div>
+                            <div id="square_payment" class="col-md-3 d-flex border justify-content-center align-items-center m-0 payment-custom-radio py-1" onclick="select_payment_method(this)">
+                                <input type="radio" name="checkout_payment_type" class="radio_check_payment payment-hidden-radio border-0" value="square" id="square">
+                                <span class="square-radio-label"></span>
+                            </div>
+                            <div id="manuall_payment" class="col-md-3 d-flex border justify-content-center align-items-center m-0 payment-custom-radio py-1" onclick="select_payment_method(this)">
+                                <input type="radio" name="checkout_payment_type" class="radio_check_payment payment-hidden-radio border-0" value="Manuall" id="manuall">
+                                <span class="manuall-radio-label">Manuall</span>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="text-center d-none" id="progress_spinner"><img src="/theme/img/progress.gif" alt=""></div>
-                            <button class="btn check_out_pay_now w-100 mt-5 p-3" id="proceed_to_checkout" onclick="validate()">Place Order</button>
+                            <button class="btn check_out_pay_now w-100 p-3" id="proceed_to_checkout" onclick="validate()">Place Order</button>
                         </div>
                     </div>
                     <div class="col-md-12 col-lg-12 col-xl-5 ">
@@ -2070,6 +2107,22 @@ $cart_price = 0;
                 Valid first name is required.
             </div>
             <script>
+                function select_payment_method(element) {
+                    // $('#card_type_errors').html('');
+                    $('.payment-custom-radio').removeClass('selected');
+                    let all_inputs = $('.payment-hidden-radio');
+                    all_inputs.removeAttr('checked');
+                    all_inputs.each(function() {
+                        $(this).val('');
+                    });
+                    var radioInput = $(element).find('.payment-hidden-radio');
+                    var getRadioId = radioInput.attr('id');
+                    var assign_value = $('#' + getRadioId).val(getRadioId)
+                    $('#' + getRadioId).attr('checked', 'checked');
+                    $(element).addClass('selected');
+                }
+
+                
                 function updateContact_address(type , user_id) {
         
                     if (type === 'update shipping address') {
@@ -2200,6 +2253,7 @@ $cart_price = 0;
                     });
                 }
                 function validate() {
+                    
                     $('#progress_spinner').removeClass('d-none');
                     $([document.documentElement, document.body]).animate({
                         scrollTop: $("#progress_spinner").offset().top
