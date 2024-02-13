@@ -237,6 +237,14 @@
         width: 100%;
         height: 60px;
     }
+    .manuall-radio-label {
+        font-size: 20px;
+        font-weight: 400;
+        width: 100%;
+        text-align: center;
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
     @media only screen and (max-width: 425px) and (min-width: 280px) {
         .proceedCheckoutmbl {
             border-radius: 5px;
@@ -522,19 +530,27 @@ $cart_price = 0;
                                 </div>
                             </div>
                         </div>
-                        <div class="row justify-content-between mt-3 mb-3">
-                            <div id="stripe_payment" class="col-md-3 d-flex border justify-content-center align-items-center m-0 payment-custom-radio py-1" onclick="select_payment_method(this)">
+                        
+                        <div class="row justify-content-between mt-2 mb-3">
+                            <div class="col-md-12 p-0 mb-2">
+                                <h5 class="p-0 checkout_default_address mb-0">Payment Method</h5>
+                            </div>
+                            @if (!empty($user_address->paymentTerms) && strtolower($user_address->paymentTerms) == 'pay in advanced')
+                            <div id="stripe_payment" class="col-md-3 d-flex border justify-content-center align-items-center m-0 payment-custom-radio py-1 mt-2 selected">
                                 <input type="radio" name="checkout_payment_type" class="radio_check_payment payment-hidden-radio border-0" value="stripe" id="stripe" >
                                 <span class="stripe-radio-label"></span>
                             </div>
-                            <div id="square_payment" class="col-md-3 d-flex border justify-content-center align-items-center m-0 payment-custom-radio py-1" onclick="select_payment_method(this)">
+                            @else
+                            {{-- <div id="square_payment" class="col-md-3 d-flex border justify-content-center align-items-center m-0 payment-custom-radio py-1 mt-2">
                                 <input type="radio" name="checkout_payment_type" class="radio_check_payment payment-hidden-radio border-0" value="square" id="square">
                                 <span class="square-radio-label"></span>
-                            </div>
-                            <div id="manuall_payment" class="col-md-3 d-flex border justify-content-center align-items-center m-0 payment-custom-radio py-1" onclick="select_payment_method(this)">
+                            </div> --}}
+                            <div id="manuall_payment" class="col-md-3 d-flex border justify-content-center align-items-center m-0 payment-custom-radio py-1 mt-2 selected">
                                 <input type="radio" name="checkout_payment_type" class="radio_check_payment payment-hidden-radio border-0" value="Manuall" id="manuall">
                                 <span class="manuall-radio-label">Manuall</span>
                             </div>
+                            @endif
+                            {{-- <span class="payment_type_errors text-danger" id="payment_type_errors"></span> --}}
                         </div>
                         <div class="row">
                             <div class="text-center d-none" id="progress_spinner"><img src="/theme/img/progress.gif" alt=""></div>
@@ -2108,7 +2124,7 @@ $cart_price = 0;
             </div>
             <script>
                 function select_payment_method(element) {
-                    // $('#card_type_errors').html('');
+                    $('#payment_type_errors').html('');
                     $('.payment-custom-radio').removeClass('selected');
                     let all_inputs = $('.payment-hidden-radio');
                     all_inputs.removeAttr('checked');
@@ -2253,7 +2269,6 @@ $cart_price = 0;
                     });
                 }
                 function validate() {
-                    
                     $('#progress_spinner').removeClass('d-none');
                     $([document.documentElement, document.body]).animate({
                         scrollTop: $("#progress_spinner").offset().top
