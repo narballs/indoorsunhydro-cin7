@@ -479,6 +479,8 @@ class CheckoutController extends Controller
                         $order_comment->order_id = $order_id;
                         $order_comment->comment = 'Order marked as paid through webhook. (charge.succeeded)';
                         $order_comment->save();
+
+                        
     
                     } else {
                         $currentOrder->payment_status = 'unpaid';

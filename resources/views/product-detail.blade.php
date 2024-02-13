@@ -27,13 +27,13 @@
     <div class="col-md-12 col-xl-10 col-lg-12 col-sm-12 col-xs-12 mt-3 mb-3">
         <div class="row justify-content-center ml-1">
             {{-- similar product partial --}}
-            <div class="col-md-8 col-xl-3 col-xxl-3 col-lg-4 col-sm-12 col-xs-12">
+            <div class="col-md-8 col-xl-3 col-xxl-3 col-lg-4 col-sm-12 col-xs-12 order-md-2 order-lg-1 order-xl-1">
                 <div class="card rounded buy_again_div">
                     @include('partials.product-detail.similar-products')
                 </div>
             </div>
             {{-- product detail --}}
-            <div class="col-md-12 col-sm-12 col-xl-9 col-xxl-9 col-lg-8 col-xs-12">
+            <div class="col-md-12 col-sm-12 col-xl-9 col-xxl-9 col-lg-8 col-xs-12 order-md-1 order-lg-2 order-xl-2">
                 
                 <div class="card py-3">
                     <div class="row ms-0">
@@ -254,7 +254,29 @@
                                         </div>
                                     </div>
                                 </div>
-
+                                <div class="row mt-3 w-100">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-3 col-xl-3 col-lg-4">
+                                                <span><strong>Weight :</strong> 
+                                                    <span>{{!empty($productOption->optionWeight) ? $productOption->optionWeight . 'lbs' : ''}}</span>
+                                                </span>
+                                            </div>
+                                            @if (!empty($productOption->products->width) && !empty($productOption->products->height) && !empty($productOption->products->length))
+                                                <div class="col-md-9 col-xl-9 col-lg-8">
+                                                    <span>
+                                                        <strong>Dimensions : </strong> 
+                                                        <span>
+                                                            {{!empty($productOption->products->length) ? $productOption->products->length . ' ' .  "x" : ''}}
+                                                            {{!empty($productOption->products->width) ? $productOption->products->width . ' ' . "x" : ''}}
+                                                            {{!empty($productOption->products->height) ? $productOption->products->height : ''}}
+                                                        </span>
+                                                    </span>
+                                                </div>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="product-detail-content-dec row w-100">
                                     <div class="col-md-12">
                                         <div class="category-description category-description mt-1  lh-lg"><span>Description</span></div>
@@ -464,7 +486,25 @@
                         </div>
                         <span class="text-uppercase text-muted brand"></span>
                     </form>
-                    <div class="price mt-2 mb-1">
+                    <div class="mt-2 mb-2">
+                        <div class="row">
+                            <div class="col-12">
+                                <span class="category-title-heading">Weight :</span>
+                                <span class="category-title">{{!empty($productOption->optionWeight) ? $productOption->optionWeight . 'lbs' : ''}}</span>
+                            </div>
+                            @if (!empty($productOption->products->width) && !empty($productOption->products->height) && !empty($productOption->products->length))
+                            <div class="col-12">
+                                <span class="category-title-heading">
+                                    Dimensions :
+                                </span>
+                                <span class="category-title">
+                                    {{!empty($productOption->products->length) ? $productOption->products->length . ' ' .  "x" : ''}}
+                                    {{!empty($productOption->products->width) ? $productOption->products->width . ' ' . "x" : ''}}
+                                    {{!empty($productOption->products->height) ? $productOption->products->height : ''}}
+                                </span>
+                            </div> 
+                            @endif
+                        </div>
                         <div class="d-flex">
                             <div class="w-50">
                                 <span class="category-title-heading">Category :</span>
