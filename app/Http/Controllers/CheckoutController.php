@@ -479,6 +479,21 @@ class CheckoutController extends Controller
                         $order_comment->order_id = $order_id;
                         $order_comment->comment = 'Order marked as paid through webhook. (charge.succeeded)';
                         $order_comment->save();
+
+                        $order_contact = Contact::where('contact_id', $currentOrder->memberId)->first();
+                        $go_to_shipstation = false;
+                        if (!empty($order_contact) && !empty($order_contact->is_parent == 1) && !empty($order_contact->address1) && !empty($order_contact->postalAddress1)) {
+                            $go_to_shipstation = true;
+                        }
+                        $check_shipstation_create_order_status = AdminSetting::where('option_name', 'create_order_in_shipstation')->first();
+                        if (!empty($check_shipstation_create_order_status) && strtolower($check_shipstation_create_order_status->option_value) == 'yes' && ($go_to_shipstation == true)) {
+                            $shiping_order = UserHelper::shipping_order($order_id , $currentOrder , $order_contact);
+                            if ($shiping_order['statusCode'] == 200) {
+                                $orderUpdate = ApiOrder::where('id', $order_id)->update([
+                                    'shipstation_orderId' => $shiping_order['responseBody']->orderId,
+                                ]);
+                            }
+                        }
     
                     } else {
                         $currentOrder->payment_status = 'unpaid';
