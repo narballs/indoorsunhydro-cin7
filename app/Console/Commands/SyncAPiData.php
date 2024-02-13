@@ -246,6 +246,10 @@ class SyncAPiData extends Command
                         $product->slug = Str::slug($api_product->name);
                         $product->status =  $api_product->status;
                         $product->description =  $api_product->description;
+                        $product->width =  $api_product->width;
+                        $product->height =  $api_product->height;
+                        $product->length =  $api_product->length;
+                        $product->volume =  $api_product->volume;
                         $product->category_id =  $category_id;
                         $product->images =  !empty($api_product->images[0]) ? $api_product->images[0]->link: '';
                         $product->code =  $api_product->productOptions[0]->code;
@@ -413,7 +417,11 @@ class SyncAPiData extends Command
                         'retail_price' => $retail_price,
                         'stockAvailable' => $api_product->productOptions[0]->stockAvailable,
                         'brand' => $api_product->brand,
-                        'brand_id' => $brand_id
+                        'brand_id' => $brand_id,
+                        'width' =>  $api_product->width,
+                        'height' =>  $api_product->height,
+                        'length' =>  $api_product->length,
+                        'volume' =>  $api_product->volume,
                     ]);
                     $product->save();
                     if ($api_product->productOptions) {
