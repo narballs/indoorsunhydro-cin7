@@ -1782,6 +1782,7 @@ $cart_price = 0;
                         @endif
                         @csrf
                         <div class="alert alert-success mt-3 d-none" id="success_msg"></div>
+                        <div class="alert alert-info mt-3 d-none" id="processing_msg"></div>
                         <div class="alert alert-danger mt-3 d-none" id="error_msg"></div>
                         <input type="hidden" name="email" id="billing_email" value="{{!empty($user_address->email) ? $user_address->email : ''}}">
                         <div class="row">
@@ -1962,6 +1963,7 @@ $cart_price = 0;
                         @endif
                         @csrf
                         <div class="alert alert-success mt-3 d-none" id="success_msg_shipping"></div>
+                        <div class="alert alert-info mt-3 d-none" id="processing_msg_shipping"></div>
                         <div class="alert alert-danger mt-3 d-none" id="error_msg_shipping"></div>
                         <input type="hidden" name="email" id="shipping_email" value="{{!empty($user_address->email) ? $user_address->email : ''}}">
                         <div class="row">
@@ -2316,6 +2318,17 @@ $cart_price = 0;
                                     $('#success_msg').html(response.msg);
                                 }
                                 setTimeout(function() {
+                                    if (type === 'update shipping address') {
+                                        $('#success_msg_shipping').addClass('d-none');
+                                        $('#success_msg_shipping').html('');
+                                        $('#processing_msg_shipping').removeClass('d-none');
+                                        $('#processing_msg_shipping').html('Fetching Data ...');
+                                    } else {
+                                        $('#success_msg').addClass('d-none');
+                                        $('#success_msg').html('');
+                                        $('#processing_msg').removeClass('d-none');
+                                        $('#processing_msg').html('Fetching Data ...');
+                                    }
                                     window.location.href = "{{ url('/checkout') }}";
                                 }, 2000);
                             }   else {
@@ -2331,6 +2344,17 @@ $cart_price = 0;
                                     $('#error_msg').html('Something went wrong');
                                 }
                                 setTimeout(function() {
+                                    if (type === 'update shipping address') {
+                                        $('#error_msg_shipping').removeClass('d-none');
+                                        $('#error_msg_shipping').html('Something went wrong');
+                                        $('#processing_msg_shipping').removeClass('d-none');
+                                        $('#processing_msg_shipping').html('Fetching Data ...');
+                                    } else {
+                                        $('#error_msg').removeClass('d-none');
+                                        $('#error_msg').html('Something went wrong');
+                                        $('#processing_msg').removeClass('d-none');
+                                        $('#processing_msg').html('Fetching Data ...');
+                                    }
                                     window.location.href = "{{ url('/checkout') }}";
                                 }, 2000);
                             }
