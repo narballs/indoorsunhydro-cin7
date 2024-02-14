@@ -1067,12 +1067,15 @@
                         if (type === 'update shipping address') {
                             $('#success_msg_shipping').addClass('d-none');
                             $('#success_msg_shipping').html('');
+                            $('#processing_msg_shipping').removeClass('d-none');
+                            $('#processing_msg_shipping').html('Processing ...');
                         } else {
                             $('#success_msg').addClass('d-none');
                             $('#success_msg').html('');
+                            $('#processing_msg').removeClass('d-none');
+                            $('#processing_msg').html('Processing ...');
                         }
-                        $('#processing_msg').removeClass('d-none');
-                        $('#processing_msg').html('Processing ...');
+                        
                         window.location.href = "{{ url('my-account/address') }}";
                     }, 1000);
                 }   else {
@@ -1092,12 +1095,15 @@
                         if (type === 'update shipping address') { 
                             $('#error_msg_shipping').addClass('d-none');
                             $('#error_msg_shipping').html('');
+                            $('#processing_msg_shipping').removeClass('d-none');
+                            $('#processing_msg_shipping').html('Processing ...');
                         } else {
                             $('#error_msg').addClass('d-none');
                             $('#error_msg').html('');
+                            $('#processing_msg').removeClass('d-none');
+                            $('#processing_msg').html('Processing ...');
                         }
-                        $('#processing_msg').removeClass('d-none');
-                        $('#processing_msg').html('Processing ...');
+                        
                         window.location.href = "{{ url('my-account/address') }}";
                     }, 1000);
                 }
@@ -1314,7 +1320,7 @@
                         @endif
                         @csrf
                         <div class="alert alert-success mt-3 d-none" id="success_msg_shipping"></div>
-                        <div class="alert alert-danger mt-3 d-none" id="processing_msg"></div>
+                        <div class="alert alert-danger mt-3 d-none" id="processing_msg_shipping"></div>
                         <div class="alert alert-danger mt-3 d-none" id="error_msg_shipping"></div>
                         <input type="hidden" name="email" id="shipping_email" value="{{!empty($address_user->email) ? $address_user->email : ''}}">
                         <div class="row">
