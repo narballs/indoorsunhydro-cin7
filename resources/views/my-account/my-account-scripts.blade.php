@@ -1064,8 +1064,13 @@
                     }
                     
                     setTimeout(function() {
-                        $('#success_msg_shipping').addClass('d-none');
-                        $('#success_msg_shipping').html('');
+                        if (type === 'update shipping address') {
+                            $('#success_msg_shipping').addClass('d-none');
+                            $('#success_msg_shipping').html('');
+                        } else {
+                            $('#success_msg').addClass('d-none');
+                            $('#success_msg').html('');
+                        }
                         $('#processing_msg').removeClass('d-none');
                         $('#processing_msg').html('Processing ...');
                         window.location.href = "{{ url('my-account/address') }}";
@@ -1084,8 +1089,13 @@
                     }
                     
                     setTimeout(function() {
-                        $('#error_msg_shipping').addClass('d-none');
-                        $('#error_msg_shipping').html('');
+                        if (type === 'update shipping address') { 
+                            $('#error_msg_shipping').addClass('d-none');
+                            $('#error_msg_shipping').html('');
+                        } else {
+                            $('#error_msg').addClass('d-none');
+                            $('#error_msg').html('');
+                        }
                         $('#processing_msg').removeClass('d-none');
                         $('#processing_msg').html('Processing ...');
                         window.location.href = "{{ url('my-account/address') }}";
