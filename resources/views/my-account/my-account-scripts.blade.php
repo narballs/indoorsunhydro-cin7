@@ -1068,12 +1068,12 @@
                             $('#success_msg_shipping').addClass('d-none');
                             $('#success_msg_shipping').html('');
                             $('#processing_msg_shipping').removeClass('d-none');
-                            $('#processing_msg_shipping').html('Processing ...');
+                            $('#processing_msg_shipping').html('Fetching Data ...');
                         } else {
                             $('#success_msg').addClass('d-none');
                             $('#success_msg').html('');
                             $('#processing_msg').removeClass('d-none');
-                            $('#processing_msg').html('Processing ...');
+                            $('#processing_msg').html('Fetching Data ...');
                         }
                         
                         window.location.href = "{{ url('my-account/address') }}";
@@ -1096,12 +1096,12 @@
                             $('#error_msg_shipping').addClass('d-none');
                             $('#error_msg_shipping').html('');
                             $('#processing_msg_shipping').removeClass('d-none');
-                            $('#processing_msg_shipping').html('Processing ...');
+                            $('#processing_msg_shipping').html('Fetching Data ...');
                         } else {
                             $('#error_msg').addClass('d-none');
                             $('#error_msg').html('');
                             $('#processing_msg').removeClass('d-none');
-                            $('#processing_msg').html('Processing ...');
+                            $('#processing_msg').html('Fetching Data ...');
                         }
                         
                         window.location.href = "{{ url('my-account/address') }}";
