@@ -1650,7 +1650,7 @@ $cart_price = 0;
                         @elseif(!empty($user_address->secondary_id))
                         <input type="hidden" value="{{$user_address->secondary_id}}" name="secondary_id" id="secondary_id_val">
                         @endif
-                        <div class="alert alert-success mt-3 d-none" id="success_msg"></div>
+                        <div class="alert alert-success mt-3 d-none" id="success_msg_previous"></div>
                         <div class="alert alert-danger mt-3 d-none" id="failure_msg"></div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
@@ -1752,7 +1752,7 @@ $cart_price = 0;
                 </div>
             </div>
             <div class="modal-footer mbl-footer-modal-address">
-                <div class="spinner-border text-primary d-none" role="status" id="address_loader">
+                <div class="spinner-border text-primary d-none" role="status" id="address_loader_previous">
                     <span class="visually-hidden">Loading...</span>
                 </div>
                 <button type="button" class="btn button-cards primary mbl-btn-update-address"
@@ -1781,9 +1781,9 @@ $cart_price = 0;
                         <input type="hidden" value="{{$user_address->secondary_id}}" name="secondary_id" id="secondary_id_val">
                         @endif
                         @csrf
-                        <div class="alert alert-success mt-3 d-none" id="success_msg"></div>
+                        <div class="alert alert-success mt-3 d-none" id="success_msg_billing"></div>
                         <div class="alert alert-info mt-3 d-none" id="processing_msg"></div>
-                        <div class="alert alert-danger mt-3 d-none" id="error_msg"></div>
+                        <div class="alert alert-danger mt-3 d-none" id="error_msg_billing"></div>
                         <input type="hidden" name="email" id="billing_email" value="{{!empty($user_address->email) ? $user_address->email : ''}}">
                         <div class="row">
                             <div class="col-md-6 mb-3">
@@ -2314,8 +2314,8 @@ $cart_price = 0;
                                     $('#success_msg_shipping').html(response.msg);
                                 } else {
 
-                                    $('#success_msg').removeClass('d-none');
-                                    $('#success_msg').html(response.msg);
+                                    $('#success_msg_billing').removeClass('d-none');
+                                    $('#success_msg_billing').html(response.msg);
                                 }
                                 setTimeout(function() {
                                     if (type === 'update shipping address') {
@@ -2324,8 +2324,8 @@ $cart_price = 0;
                                         $('#processing_msg_shipping').removeClass('d-none');
                                         $('#processing_msg_shipping').html('Fetching Data ...');
                                     } else {
-                                        $('#success_msg').addClass('d-none');
-                                        $('#success_msg').html('');
+                                        $('#success_msg_billing').addClass('d-none');
+                                        $('#success_msg_billing').html('');
                                         $('#processing_msg').removeClass('d-none');
                                         $('#processing_msg').html('Fetching Data ...');
                                     }
@@ -2340,8 +2340,8 @@ $cart_price = 0;
                                     $('#error_msg_shipping').html('Something went wrong');
                                 } else {
 
-                                    $('#error_msg').removeClass('d-none');
-                                    $('#error_msg').html('Something went wrong');
+                                    $('#error_msg_billing').removeClass('d-none');
+                                    $('#error_msg_billing').html('Something went wrong');
                                 }
                                 setTimeout(function() {
                                     if (type === 'update shipping address') {
@@ -2350,8 +2350,8 @@ $cart_price = 0;
                                         $('#processing_msg_shipping').removeClass('d-none');
                                         $('#processing_msg_shipping').html('Fetching Data ...');
                                     } else {
-                                        $('#error_msg').removeClass('d-none');
-                                        $('#error_msg').html('Something went wrong');
+                                        $('#error_msg_billing').removeClass('d-none');
+                                        $('#error_msg_billing').html('Something went wrong');
                                         $('#processing_msg').removeClass('d-none');
                                         $('#processing_msg').html('Fetching Data ...');
                                     }
