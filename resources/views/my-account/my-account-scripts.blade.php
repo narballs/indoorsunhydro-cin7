@@ -1139,7 +1139,7 @@
                         @endif
                         @csrf
                         <div class="alert alert-success mt-3 d-none" id="success_msg"></div>
-                        <div class="alert alert-danger mt-3 d-none" id="processing_msg"></div>
+                        <div class="alert alert-info mt-3 d-none" id="processing_msg"></div>
                         <div class="alert alert-danger mt-3 d-none" id="error_msg"></div>
                         <input type="hidden" name="email" id="billing_email" value="{{!empty($address_user->email) ? $address_user->email : ''}}">
                         <div class="row">
@@ -1320,7 +1320,7 @@
                         @endif
                         @csrf
                         <div class="alert alert-success mt-3 d-none" id="success_msg_shipping"></div>
-                        <div class="alert alert-danger mt-3 d-none" id="processing_msg_shipping"></div>
+                        <div class="alert alert-info mt-3 d-none" id="processing_msg_shipping"></div>
                         <div class="alert alert-danger mt-3 d-none" id="error_msg_shipping"></div>
                         <input type="hidden" name="email" id="shipping_email" value="{{!empty($address_user->email) ? $address_user->email : ''}}">
                         <div class="row">
