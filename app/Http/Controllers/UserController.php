@@ -1671,7 +1671,7 @@ class UserController extends Controller
                 $get_contact->postalAddress2 = $request->address2;
                 $get_contact->postalState = $request->state;
                 $get_contact->postalCity = $request->town_city;
-                $get_contact->postCode = $request->zip;
+                $get_contact->postalPostCode = $request->zip;
                 $get_contact->phone = $request->phone;
                 $get_contact->tax_class = strtolower($request->state) == strtolower('California') ? '8.75%' : 'Out of State';
                 $get_contact->save();
