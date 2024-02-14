@@ -1064,7 +1064,7 @@
                     }
                     setTimeout(function() {
                         window.location.href = "{{ url('my-account/address') }}";
-                    }, 2000);
+                    }, 1000);
                 }   else {
                     $('#address_loader').addClass('d-none');
                     $('#address_loader_shipping').addClass('d-none');
@@ -1079,7 +1079,7 @@
                     }
                     setTimeout(function() {
                         window.location.href = "{{ url('my-account/address') }}";
-                    }, 2000);
+                    }, 1000);
                 }
             }
         });
