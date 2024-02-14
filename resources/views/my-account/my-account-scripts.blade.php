@@ -1062,8 +1062,9 @@
                         $('#success_msg').removeClass('d-none');
                         $('#success_msg').html(response.msg);
                     }
+                    $('.processing_msg').removeClass('d-none');
+                    $('.processing_msg').html('Processing ...');
                     setTimeout(function() {
-                        $('.processing_msg').html('Processing ...');
                         window.location.href = "{{ url('my-account/address') }}";
                     }, 1000);
                 }   else {
@@ -1078,8 +1079,9 @@
                         $('#error_msg').removeClass('d-none');
                         $('#error_msg').html('Something went wrong');
                     }
+                    $('.processing_msg').removeClass('d-none');
+                    $('.processing_msg').html('Processing ...');
                     setTimeout(function() {
-                        $('.processing_msg').html('Processing ...');
                         window.location.href = "{{ url('my-account/address') }}";
                     }, 1000);
                 }
@@ -1115,7 +1117,7 @@
                         @endif
                         @csrf
                         <div class="alert alert-success mt-3 d-none" id="success_msg"></div>
-                        <div class="alert alert-danger mt-3" id="processing_msg"></div>
+                        <div class="alert alert-danger mt-3 d-none" id="processing_msg"></div>
                         <div class="alert alert-danger mt-3 d-none" id="error_msg"></div>
                         <input type="hidden" name="email" id="billing_email" value="{{!empty($address_user->email) ? $address_user->email : ''}}">
                         <div class="row">
@@ -1296,7 +1298,7 @@
                         @endif
                         @csrf
                         <div class="alert alert-success mt-3 d-none" id="success_msg_shipping"></div>
-                        <div class="alert alert-danger mt-3" id="processing_msg"></div>
+                        <div class="alert alert-danger mt-3 d-none" id="processing_msg"></div>
                         <div class="alert alert-danger mt-3 d-none" id="error_msg_shipping"></div>
                         <input type="hidden" name="email" id="shipping_email" value="{{!empty($address_user->email) ? $address_user->email : ''}}">
                         <div class="row">
