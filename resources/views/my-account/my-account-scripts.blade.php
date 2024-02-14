@@ -1062,8 +1062,8 @@
                         $('#success_msg').removeClass('d-none');
                         $('#success_msg').html(response.msg);
                     }
-                    $('.processing_msg').removeClass('d-none');
-                    $('.processing_msg').html('Processing ...');
+                    $('#processing_msg').removeClass('d-none');
+                    $('#processing_msg').html('Processing ...');
                     setTimeout(function() {
                         window.location.href = "{{ url('my-account/address') }}";
                     }, 1000);
@@ -1079,8 +1079,8 @@
                         $('#error_msg').removeClass('d-none');
                         $('#error_msg').html('Something went wrong');
                     }
-                    $('.processing_msg').removeClass('d-none');
-                    $('.processing_msg').html('Processing ...');
+                    $('#processing_msg').removeClass('d-none');
+                    $('#processing_msg').html('Processing ...');
                     setTimeout(function() {
                         window.location.href = "{{ url('my-account/address') }}";
                     }, 1000);
