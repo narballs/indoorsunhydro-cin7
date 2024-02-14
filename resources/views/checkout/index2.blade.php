@@ -2793,13 +2793,13 @@ $cart_price = 0;
                                 }
                                 setTimeout(function() {
                                     if (type === 'update shipping address') {
-                                        $('#success_msg_shipping').addClass('d-none');
-                                        $('#success_msg_shipping').html('');
+                                        $('#error_msg_shipping').removeClass('d-none');
+                                        $('#error_msg_shipping').html('Something went wrong');
                                         $('#processing_msg_shipping').removeClass('d-none');
                                         $('#processing_msg_shipping').html('Fetching Data ...');
                                     } else {
-                                        $('#success_msg').addClass('d-none');
-                                        $('#success_msg').html('');
+                                        $('#error_msg').removeClass('d-none');
+                                        $('#error_msg').html('Something went wrong');
                                         $('#processing_msg').removeClass('d-none');
                                         $('#processing_msg').html('Fetching Data ...');
                                     }
