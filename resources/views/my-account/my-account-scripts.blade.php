@@ -1062,9 +1062,12 @@
                         $('#success_msg').removeClass('d-none');
                         $('#success_msg').html(response.msg);
                     }
-                    $('#processing_msg').removeClass('d-none');
-                    $('#processing_msg').html('Processing ...');
+                    
                     setTimeout(function() {
+                        $('#success_msg_shipping').addClass('d-none');
+                        $('#success_msg_shipping').html('');
+                        $('#processing_msg').removeClass('d-none');
+                        $('#processing_msg').html('Processing ...');
                         window.location.href = "{{ url('my-account/address') }}";
                     }, 1000);
                 }   else {
@@ -1079,9 +1082,12 @@
                         $('#error_msg').removeClass('d-none');
                         $('#error_msg').html('Something went wrong');
                     }
-                    $('#processing_msg').removeClass('d-none');
-                    $('#processing_msg').html('Processing ...');
+                    
                     setTimeout(function() {
+                        $('#error_msg_shipping').addClass('d-none');
+                        $('#error_msg_shipping').html('');
+                        $('#processing_msg').removeClass('d-none');
+                        $('#processing_msg').html('Processing ...');
                         window.location.href = "{{ url('my-account/address') }}";
                     }, 1000);
                 }
