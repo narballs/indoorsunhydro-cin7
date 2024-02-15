@@ -617,7 +617,7 @@ class OrderController extends Controller
                             'postalState' => $customer->contact->postalState,
                             'postalPostCode' => $customer->contact->postalPostCode,
                         ],
-                        'payment_terms' =>  !empty($customer->contact->paymentTerms) ? $customer->contact->paymentTerms : '30 Days from Invoice',
+                        'payment_terms' =>  '30 Days from Invoice',
                         'shipping_fee' => !empty($currentOrder->shipment_price) ? $currentOrder->shipment_price : '',
                         'best_product' => $best_products,
                         'user_email' =>   $customer->contact->email,
