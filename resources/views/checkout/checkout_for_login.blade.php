@@ -689,7 +689,7 @@ $cart_price = 0;
                                         </div>
                                         <div class="row justify-content-center border-bottom custom_address_padding ">
                                             <div class="col-md-3"><span class="checkout_address_heading">Bill to</span></div>
-                                            <div class="col-md-9"><span class="checkout_address_text">{{ $user_address->postalAddress1 ? $user_address->postalAddress1 : ''}}</span></div>
+                                            <div class="col-md-9"><span class="checkout_address_text">{{ $user_address->postalAddress1 ? $user_address->postalAddress1 : ''}} {{$user_address->postalAddress2 ? ', ' .$user_address->postalAddress2 : ''}}</span></div>
                                             
                                         </div>
                                         <div class="row justify-content-center border-bottom custom_address_padding ">
@@ -726,7 +726,7 @@ $cart_price = 0;
                                         </div>
                                         <div class="row justify-content-center border-bottom custom_address_padding ">
                                             <div class="col-md-3"><span class="checkout_address_heading">Ship to</span></div>
-                                            <div class="col-md-9"><span class="checkout_address_text">{{ $user_address->address1 ? $user_address->address1 : ''}}</span></div>
+                                            <div class="col-md-9"><span class="checkout_address_text">{{ $user_address->address1 ? $user_address->address1 : ''}}  {{$user_address->address2 ? ', ' .$user_address->address2 : ''}}</span></div>
                                             
                                         </div>
                                         <div class="row justify-content-center border-bottom custom_address_padding ">
@@ -752,7 +752,7 @@ $cart_price = 0;
                         
                         <div class="row justify-content-between mt-2 mb-3">
                             <div class="col-md-12 mb-2">
-                                <h5 class="checkout_default_address mb-0">Payment Method</h5>
+                                <h5 class="checkout_default_address mb-0">{{!empty($user_address->paymentTerms) && strtolower($user_address->paymentTerms) == 'pay in advanced' ? 'Payment Method' : 'Payment Terms' }}</h5>
                             </div>
                             <div class="col-md-12">
                                 {{-- <div class="row"> --}}
@@ -766,9 +766,9 @@ $cart_price = 0;
                                         <input type="radio" name="checkout_payment_type" class="radio_check_payment payment-hidden-radio border-0" value="square" id="square">
                                         <span class="square-radio-label"></span>
                                     </div> --}}
-                                    <div id="manuall_payment" class="col-md-3 d-flex border justify-content-center align-items-center m-0 payment-custom-radio py-1 mt-2 selected">
+                                    <div id="manuall_payment" class="col-md-6 d-flex border justify-content-center align-items-center m-0 payment-custom-radio py-1 mt-2 selected">
                                         <input type="radio" name="checkout_payment_type" class="radio_check_payment payment-hidden-radio border-0" value="Manuall" id="manuall">
-                                        <span class="manuall-radio-label">Manuall</span>
+                                        <span class="manuall-radio-label">30 Days from Invoice</span>
                                     </div>
                                     @endif
                                 {{-- </div> --}}
@@ -2070,7 +2070,7 @@ $cart_price = 0;
                             <div class="col-md-6 mb-3">
                                 <label for="state">State</label>
 
-                                <select class="form-control bg-light shipping_state" name="state" id="state">
+                                <select class="form-control bg-light shipping_state" name="state" id="state" autocomplete="address-level1">
                                     @if (empty($user_address->state)) <option value="">Select State</option>@endif
                                     @foreach ($states as $state)
                                         <?php
