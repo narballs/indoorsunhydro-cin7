@@ -294,6 +294,9 @@
                                             </tr>
                                         </table>
                                     </td>
+                                    <td width="20">
+                                        <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">{{ $item->quantity . 'x' }}</span></td>
+                                    </td>
                                     <td width="20%" style="text-align: right;vertical-align:top;color:#000000;font-color:#000000;font-size: 12px; font-weight:400; ">{{ '$'. number_format($item->price, 2) }}</td>
                                 </tr>
                                 
