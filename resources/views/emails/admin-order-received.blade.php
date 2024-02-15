@@ -260,7 +260,7 @@
                                     <tbody>
                                         <tr>
                                             <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
-                                                {{ $addresses['currentOrder']['logisticsCarrier'] }}
+                                                {{ $addresses['payment_terms'] }}
                                             </td>
                                         </tr>
                                     </tbody>
