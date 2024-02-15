@@ -1781,6 +1781,9 @@ $cart_price = 0;
                         <input type="hidden" value="{{$user_address->secondary_id}}" name="secondary_id" id="secondary_id_val">
                         @endif
                         @csrf
+                        <div class="spinner-border text-primary d-none" role="status" id="waiting_loader">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
                         <div class="alert alert-success mt-3 d-none" id="success_msg_billing"></div>
                         <div class="alert alert-info mt-3 d-none" id="processing_msg"></div>
                         <div class="alert alert-danger mt-3 d-none" id="error_msg_billing"></div>
@@ -1962,6 +1965,9 @@ $cart_price = 0;
                         <input type="hidden" value="{{$user_address->secondary_id}}" name="secondary_id" id="secondary_id_val">
                         @endif
                         @csrf
+                        <div class="spinner-border text-primary d-none" role="status" id="waiting_loader_shipping">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
                         <div class="alert alert-success mt-3 d-none" id="success_msg_shipping"></div>
                         <div class="alert alert-info mt-3 d-none" id="processing_msg_shipping"></div>
                         <div class="alert alert-danger mt-3 d-none" id="error_msg_shipping"></div>
@@ -2310,10 +2316,11 @@ $cart_price = 0;
                                 $('#address_loader_shipping').addClass('d-none');
                                 $('.modal-backdrop').remove()
                                 if (type === 'update shipping address') { 
+                                    $('#waiting_loader_shipping').removeClass('d-none');
                                     $('#success_msg_shipping').removeClass('d-none');
                                     $('#success_msg_shipping').html(response.msg);
                                 } else {
-
+                                    $('#waiting_loader').removeClass('d-none');
                                     $('#success_msg_billing').removeClass('d-none');
                                     $('#success_msg_billing').html(response.msg);
                                 }
@@ -2336,10 +2343,11 @@ $cart_price = 0;
                                 $('#address_loader_shipping').addClass('d-none');
                                 $('.modal-backdrop').remove();
                                 if (type === 'update shipping address') {  
+                                    $('#waiting_loader_shipping').removeClass('d-none');
                                     $('#error_msg_shipping').removeClass('d-none');
                                     $('#error_msg_shipping').html('Something went wrong');
                                 } else {
-
+                                    $('#waiting_loader').removeClass('d-none');
                                     $('#error_msg_billing').removeClass('d-none');
                                     $('#error_msg_billing').html('Something went wrong');
                                 }
