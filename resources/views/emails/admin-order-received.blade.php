@@ -345,6 +345,14 @@
                                 {{'$'. number_format($tax, 2) }}
                             </td>
                         </tr>
+                        <tr>
+                            <td width="50%" style="color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
+                                Shipping
+                            </td>
+                            <td align="right" style="text-align: right;color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
+                                {{!empty($shipping_fee) ? '$'. number_format($shipping_fee, 2) : ''}}
+                            </td>
+                        </tr>
                     </table>
                 </td>
             </tr>
