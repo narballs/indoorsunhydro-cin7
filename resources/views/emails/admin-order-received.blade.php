@@ -284,7 +284,7 @@
                                     <td width="20%">
                                         <img src="{{ asset($option->image) }}" width="55" height="49" alt="" style="border:5px solid #d9d9d9;border-radius:2px;">
                                     </td>
-                                    <td>
+                                    <td style="vertical-align:top;">
                                         <table width="100%" align="left" border="0">
                                             <tr>
                                                 <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">{{ $item['product']->name }}</td>
@@ -294,9 +294,7 @@
                                             </tr>
                                         </table>
                                     </td>
-                                    <td width="20">
-                                        <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">{{ $item->quantity . 'x' }}</span></td>
-                                    </td>
+                                    <td width="20%" style="color:#000000;font-color:#000000;font-size: 12px;vertical-align:top; font-weight:400;">{{ $item->quantity . 'x' }}</span></td>
                                     <td width="20%" style="text-align: right;vertical-align:top;color:#000000;font-color:#000000;font-size: 12px; font-weight:400; ">{{ '$'. number_format($item->price, 2) }}</td>
                                 </tr>
                                 
