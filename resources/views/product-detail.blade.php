@@ -129,7 +129,7 @@
                                                     @php
                                                         $image_src = [];
                                                         $options_array = ['option1', 'option2', 'option3'];
-                                                        $image_type_array = ['case' => 'case.png', 'pallet' => 'pallet.png', 'box' => 'box.png' , 'pack' => 'case.png' , 'pk' =>'case.png'];
+                                                        $image_type_array = ['case' => 'case.png', 'pallet' => 'pallet.png', 'box' => 'box.png' , 'pack' => 'case.png' ];
                                                         foreach ($options_array as $option) {
                                                             foreach ($image_type_array as $key => $image_type) {
                                                                 if (strpos($productOption[$option], $key) !== false) {
@@ -433,7 +433,7 @@
                         @php
                             $image_src = [];
                             $options_array = ['option1', 'option2', 'option3'];
-                            $image_type_array = ['case' => 'case.png', 'pallet' => 'pallet.png', 'box' => 'box.png' , 'pack' => 'case.png' , 'pk' =>'case.png'];
+                            $image_type_array = ['case' => 'case.png', 'pallet' => 'pallet.png', 'box' => 'box.png' , 'pack' => 'case.png' ];
                             foreach ($options_array as $option) {
                                 foreach ($image_type_array as $key => $image_type) {
                                     if (strpos($productOption[$option], $key) !== false) {
