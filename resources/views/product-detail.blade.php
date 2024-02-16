@@ -132,7 +132,7 @@
                                                         $image_type_array = ['case' => 'case.png', 'pallet' => 'pallet.png', 'box' => 'box.png' , 'pack' => 'case.png' ];
                                                         foreach ($options_array as $option) {
                                                             foreach ($image_type_array as $key => $image_type) {
-                                                                if (strpos($productOption[$option], $key) !== false) {
+                                                                if (strpos(strtolower($productOption[$option]), $key) !== false) {
                                                                     $image_src[$option] = $image_type;
                                                                 }
                                                             }
@@ -436,7 +436,7 @@
                             $image_type_array = ['case' => 'case.png', 'pallet' => 'pallet.png', 'box' => 'box.png' , 'pack' => 'case.png' ];
                             foreach ($options_array as $option) {
                                 foreach ($image_type_array as $key => $image_type) {
-                                    if (strpos($productOption[$option], $key) !== false) {
+                                    if (strpos(strtolower($productOption[$option]), $key) !== false) {
                                         $image_src[$option] = $image_type;
                                     }
                                 }
