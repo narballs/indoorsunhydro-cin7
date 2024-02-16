@@ -908,10 +908,10 @@ class CheckoutController extends Controller
                             }
                         }
 
-                        if (!empty($user->email)) {
-                            $data['email'] = $user->email;
-                            MailHelper::sendMailNotification('emails.admin_notification', $data);
-                        }
+                        // if (!empty($user->email)) {
+                        //     $data['email'] = $user->email;
+                        //     MailHelper::sendMailNotification('emails.admin_notification', $data);
+                        // }
 
                         if (!empty($created_contact)) {
                             $data['contact_name'] = $created_contact->firstName . ' ' . $created_contact->lastName;
@@ -950,7 +950,8 @@ class CheckoutController extends Controller
 
                     }
                 } catch (\Exception $e) {
-                    $message = $e->getMessage();
+                    // $message = $e->getMessage();
+                    $message = 'Something went wrong. Please contact admin .';
                     $access = true;
                     $registrstion_status = false;
                 }
