@@ -950,7 +950,8 @@ class CheckoutController extends Controller
 
                     }
                 } catch (\Exception $e) {
-                    $message = $e->getMessage();
+                    // $message = $e->getMessage();
+                    $message = 'Something went wrong. Please contact admin .';
                     $access = true;
                     $registrstion_status = false;
                 }
