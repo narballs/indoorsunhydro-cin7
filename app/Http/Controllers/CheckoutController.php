@@ -538,6 +538,8 @@ class CheckoutController extends Controller
                             'postalState' =>$contact->postalState,
                             'postalPostCode' =>$contact->postalPostCode,
                         ],
+                        'payment_terms' =>  'Stripe',
+                        'shipping_fee' => !empty($currentOrder->shipment_price) ? $currentOrder->shipment_price : '',
                         'best_product' => $best_products,
                         'user_email' =>   $user_email,
                         'currentOrder' => $currentOrder,

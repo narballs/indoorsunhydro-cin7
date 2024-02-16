@@ -110,7 +110,7 @@
         font-size: 16px;
         font-style: normal;
         font-weight: 500;
-        line-height: 59.667px;
+        /* line-height: 59.667px; */
     }
     .checkout_product_quantity {
         color: #81B441;
@@ -119,7 +119,7 @@
         font-size: 16px;
         font-style: normal;
         font-weight: 500;
-        line-height: 59.667px;
+        /* line-height: 59.667px; */
     }
     .checkout_product_price {
         color: #111;
@@ -127,7 +127,7 @@
         font-size: 16px;
         font-style: normal;
         font-weight: 500;
-        line-height: 59.667px;
+        /* line-height: 59.667px; */
     }
     .checkout_coupen_btn {
         color:#FFF;
@@ -188,7 +188,7 @@
         font-size: 17px;
         font-style: normal;
         font-weight: 500;
-        line-height: 59.667px;
+        line-height: 36px; /* 150% */
     }
     .checkout_shipping_price {
         color: #111;
@@ -196,7 +196,7 @@
         font-size: 17px;
         font-style: normal;
         font-weight: 500;
-        line-height: 59.667px;
+        line-height: 36px; /* 150% */
     }
     .checkout_tax_rate {
         color: #111;
@@ -204,7 +204,7 @@
         font-size: 17px;
         font-style: normal;
         font-weight: 500;
-        line-height: 59.667px;
+        line-height: 36px; /* 150% */
     }
     .checkout_tax_rate_heading {
         color: #555;
@@ -252,6 +252,53 @@
         color: #FFF;
         background-color: #7CC633;
     }
+
+    @media only screen and (max-width: 600px) and (min-width:280px) {
+        .checkout_product_title {
+            line-height: 21px !important;
+            font-size: 14px !important;
+        }
+        .checkout_product_quantity , .checkout_product_price , .checkout_tax_rate_heading , .checkout_shipping_heading {
+            line-height: 19.5px !important;
+            font-size: 13px !important;
+        }
+        .checkout_subtotal_heading {
+            font-size: 16px !important;
+            line-height: 32.87px !important;
+        }
+        .checkout_total_heading , .checkout_total_price {
+            line-height: 27px !important;
+            font-size: 18px !important;
+        }
+        .checkout_subtotal_price {
+            font-size: 16px !important;
+            line-height: 23.28px !important;
+
+        }
+        .custom-padding {
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+        }
+    }
+    @media only screen and (max-width: 1700px) and (min-width: 1200px) {
+        .custom-width {
+            min-width: 48%;
+            max-width: 48%;
+        }
+        .checkout_total_price {
+            font-size: 20px;
+        }
+        .checkout_total_price , .checkout_subtotal_price {
+            font-size: 20px;
+        }
+        .checkout_product_price {
+            font-size: 14px;
+        }
+    }
+    .custom-padding {
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+    }
 </style>
 <div class="mb-4 desktop-view">
     <p style="line-height: 95px;" class="fw-bold fs-2 product-btn my-auto border-0 text-white text-center align-middle">
@@ -279,13 +326,13 @@ $cart_price = 0;
             <form action="" class="checkout_form">
                 <div class="row justify-content-between">
                     <div class="col-md-12 col-lg-12 col-xl-5">
-                        <div class="row mb-2 mt-2">
-                            <div class="col-md-6 ">
+                        <div class="row mb-2 mt-2 align-items-center">
+                            <div class="col-md-6 col-4">
                                 <h5 class="update_checkout_heading mb-0">Contact</h5>
                             </div>
-                            <div class="col-md-6 ">
+                            <div class="col-md-6 col-8">
                                 <span class="float-end">
-                                <span class="update_checkout_have_account">Have an account? </span> <a href="" class="update_checkout_login">Log in</a>
+                                <span class="update_checkout_have_account">Have an account? </span> <a href="{{url('/user')}}" class="update_checkout_login">Log in</a>
                                 </span>
                             </div>
                         </div>
@@ -510,11 +557,13 @@ $cart_price = 0;
                     <input type="hidden" value="Pay in Advanced" id="paymentTerms">
                     <div class="col-md-12 col-lg-12 col-xl-5">
                         <div class="row mb-0 mt-2">
-                            <h5 class="p-0 checkout_default_address">Cart Total</h5>
+                            <div class="col-md-12">
+                                <h5 class="checkout_default_address">Cart Total</h5>
+                            </div>
                         </div>
-                        <div class="row cart_total_div">
-                            <div class="border m-0 rounded">
-                                <div class="row p-3">
+                        {{-- <div class="row cart_total_div"> --}}
+                            {{-- <div class="border m-0 rounded"> --}}
+                                <div class="row pt-2 pb-2 cart_total_div border m-0 rounded">
                                     <div class="row">
                                         <div class="col-md-12">
                                             <h6 class="checkout_product_heading">Product</h6>
@@ -534,10 +583,10 @@ $cart_price = 0;
                                                     $item_quantity = $item_quantity + $total_quatity;
                                                     $cart_total = $cart_total + $total_price;
                                                 ?>
-                                                <div class="row justify-content-center border-bottom ">
-                                                    <div class="col-md-9"><span class="checkout_product_title">{{ $cart['name'] }}</span></div>
-                                                    <div class="col-md-1"><span class="checkout_product_quantity">{{$total_quatity . 'x'}}</span></div>
-                                                    <div class="col-md-2 text-right"><span class="checkout_product_price ">${{ number_format($total_price, 2) }}</span></div>
+                                                <div class="row justify-content-center border-bottom custom-padding">
+                                                    <div class="col-md-8 col-8"><span class="checkout_product_title">{{ $cart['name'] }}</span></div>
+                                                    <div class="col-md-1 col-1"><span class="checkout_product_quantity">{{$total_quatity . 'x'}}</span></div>
+                                                    <div class="col-md-3 col-3 text-right"><span class="checkout_product_price ">${{ number_format($total_price, 2) }}</span></div>
                                                 </div>
                                             @endforeach
                                         @endif
@@ -549,42 +598,44 @@ $cart_price = 0;
                                             $total_including_tax = $tax + $cart_total  + $shipment_price;
                                         @endphp
                                         <div class="row justify-content-center border-bottom align-items-center py-2">
-                                            <div class="col-md-9"><span class="checkout_subtotal_heading">Subtotal</span></div>
-                                            <div class="col-md-3 text-right"><span class="checkout_subtotal_price">${{ number_format($cart_total, 2) }}</span></div>
+                                            <div class="col-md-9 col-9"><span class="checkout_subtotal_heading">Subtotal</span></div>
+                                            <div class="col-md-3 col-3 text-right"><span class="checkout_subtotal_price">${{ number_format($cart_total, 2) }}</span></div>
                                         </div>
                                         <div class="row justify-content-center border-bottom align-items-center py-2">
-                                            <div class="col-md-9">
+                                            <div class="col-md-9 col-9">
                                                 <span class="checkout_tax_rate_heading">
                                                     Tax Rate {{!empty($tax_class) ? '('.number_format($tax_class->rate  , 2).'%)' : '('. number_format(0  , 2) . ')'}}
                                                 </span>
                                             </div>
-                                            <div class="col-md-3 text-right">
+                                            <div class="col-md-3 col-3 text-right">
                                                 <span class="checkout_tax_rate">
                                                     ${{ number_format($tax, 2) }}
                                                 </span>
                                             </div>
                                         </div>
                                         <div class="row justify-content-center border-bottom align-items-center py-2">
-                                            <div class="col-md-9"><span class="checkout_shipping_heading">Shipment Price</span></div>
-                                            <div class="col-md-3 text-right"><span class="checkout_shipping_price">${{number_format($shipment_price , 2)}}</span></div>
+                                            <div class="col-md-9 col-9"><span class="checkout_shipping_heading">Shipment Price</span></div>
+                                            <div class="col-md-3  col-3 text-right"><span class="checkout_shipping_price">${{number_format($shipment_price , 2)}}</span></div>
                                         </div>
                                         <div class="row justify-content-center  align-items-center py-2">
-                                            <div class="col-md-9"><span class="checkout_total_heading">Total</span></div>
-                                            <div class="col-md-3 text-right"><span class="checkout_total_price">${{ number_format($total_including_tax, 2) }}</span></div>
+                                            <div class="col-md-9 col-9"><span class="checkout_total_heading">Total</span></div>
+                                            <div class="col-md-3 col-3 text-right"><span class="checkout_total_price">${{ number_format($total_including_tax, 2) }}</span></div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
+                            {{-- </div> --}}
+                        {{-- </div> --}}
                         <div class="row mt-3">
-                            <button class="btn check_out_pay_now w-100 p-3 d-flex align-items-center justify-content-center" type="button" id="checkout">
-                                <span>Save & Next</span>
-                                <span class="update_checkout_loader d-none mx-2">
-                                    <div class="spinner-border text-white update_checkout_loader" role="status">
-                                        <span class="sr-only"></span>
-                                    </div>
-                                </span>
-                            </button>
+                            <div class="col-md-12">
+                                <button class="btn check_out_pay_now w-100 p-3 d-flex align-items-center justify-content-center" type="button" id="checkout">
+                                    <span>Save & Next</span>
+                                    <span class="update_checkout_loader d-none mx-2">
+                                        <div class="spinner-border text-white update_checkout_loader" role="status">
+                                            <span class="sr-only"></span>
+                                        </div>
+                                    </span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

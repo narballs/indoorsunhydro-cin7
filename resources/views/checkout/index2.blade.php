@@ -405,7 +405,7 @@ $cart_price = 0;
                                                 <input type="hidden" value="{{ $payment_method->name }}"
                                                     name="method_name">
                                                 <input type="radio" id="local_delivery_{{ $payment_option->id }}"
-                                                    name="method_option"{{ $payment_option->option_name == 'Local Delivery' ? 'checked' : '' }}
+                                                    name="method_option"{{ $payment_option->option_name == 'Delivery' ? 'checked' : '' }}
                                                     value="{{ $payment_option->option_name }}" style="background: #008BD3;">
                                                 <label for="local_delivery payment-option-label"
                                                     class="thank-you-page-product-items-payment-method-cart ml-2 mb-0">{{ $payment_option->option_name }}</label>
@@ -806,7 +806,7 @@ $cart_price = 0;
                                                         <div class="w-50 text-center d-flex align-items-center justify-content-center">
                                                             <input type="hidden" value="{{ $payment_method->name }}" name="method_name">
                                                             <input type="radio" class="mb-0 radio_delievery" id="local_delivery_{{ $payment_option->id }}"
-                                                            name="method_option"  {{ $payment_option->option_name == 'Local Delivery' ? 'checked' : '' }}
+                                                            name="method_option"  {{ $payment_option->option_name == 'Delivery' ? 'checked' : '' }}
                                                             value="{{ $payment_option->option_name }}">
                                                             <label for="local_delivery payment-option-label" class="mb-0 ml-2 delievery_label">{{ $payment_option->option_name }}</label>
                                                         </div>
@@ -1236,7 +1236,7 @@ $cart_price = 0;
                                                                                 name="method_name">
                                                                             <input type="radio"
                                                                                 id="local_delivery_{{ $payment_option->id }}"
-                                                                                name="method_option"  {{ $payment_option->option_name == 'Local Delivery' ? 'checked' : '' }}
+                                                                                name="method_option"  {{ $payment_option->option_name == 'Delivery' ? 'checked' : '' }}
                                                                                 value="{{ $payment_option->option_name }}">
                                                                             <label
                                                                                 for="local_delivery payment-option-label">{{ $payment_option->option_name }}</label>
@@ -1518,7 +1518,11 @@ $cart_price = 0;
                         <input type="hidden" value="{{$user_address->secondary_id}}" name="secondary_id" id="secondary_id_val">
                         @endif
                         @csrf
+                        <div class="spinner-border text-primary d-none" role="status" id="waiting_loader">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
                         <div class="alert alert-success mt-3 d-none" id="success_msg"></div>
+                        <div class="alert alert-info mt-3 d-none" id="processing_msg"></div>
                         <div class="alert alert-danger mt-3 d-none" id="error_msg"></div>
                         <input type="hidden" name="email" id="billing_email" value="{{!empty($user_address->email) ? $user_address->email : ''}}">
                         <div class="row">
@@ -1698,7 +1702,11 @@ $cart_price = 0;
                         <input type="hidden" value="{{$user_address->secondary_id}}" name="secondary_id" id="secondary_id_val">
                         @endif
                         @csrf
+                        <div class="spinner-border text-primary d-none" role="status" id="waiting_loader_shipping">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
                         <div class="alert alert-success mt-3 d-none" id="success_msg_shipping"></div>
+                        <div class="alert alert-info mt-3 d-none" id="processing_msg_shipping"></div>
                         <div class="alert alert-danger mt-3 d-none" id="error_msg_shipping"></div>
                         <input type="hidden" name="email" id="shipping_email" value="{{!empty($user_address->email) ? $user_address->email : ''}}">
                         <div class="row">
@@ -2756,29 +2764,53 @@ $cart_price = 0;
                                 $('#address_loader_shipping').addClass('d-none');
                                 $('.modal-backdrop').remove()
                                 if (type === 'update shipping address') { 
+                                    $('#waiting_loader_shipping').removeClass('d-none'); 
                                     $('#success_msg_shipping').removeClass('d-none');
                                     $('#success_msg_shipping').html(response.msg);
                                 } else {
-
+                                    $('#waiting_loader').removeClass('d-none'); 
                                     $('#success_msg').removeClass('d-none');
                                     $('#success_msg').html(response.msg);
                                 }
                                 setTimeout(function() {
+                                    if (type === 'update shipping address') {
+                                        $('#success_msg_shipping').addClass('d-none');
+                                        $('#success_msg_shipping').html('');
+                                        $('#processing_msg_shipping').removeClass('d-none');
+                                        $('#processing_msg_shipping').html('Fetching Data ...');
+                                    } else {
+                                        $('#success_msg').addClass('d-none');
+                                        $('#success_msg').html('');
+                                        $('#processing_msg').removeClass('d-none');
+                                        $('#processing_msg').html('Fetching Data ...');
+                                    }
                                     window.location.href = "{{ url('/checkout') }}";
                                 }, 2000);
                             }   else {
                                 $('#address_loader').addClass('d-none');
                                 $('#address_loader_shipping').addClass('d-none');
                                 $('.modal-backdrop').remove();
-                                if (type === 'update shipping address') {  
+                                if (type === 'update shipping address') { 
+                                    $('#waiting_loader_shipping').removeClass('d-none');  
                                     $('#error_msg_shipping').removeClass('d-none');
                                     $('#error_msg_shipping').html('Something went wrong');
                                 } else {
-
+                                    $('#waiting_loader').removeClass('d-none'); 
                                     $('#error_msg').removeClass('d-none');
                                     $('#error_msg').html('Something went wrong');
                                 }
                                 setTimeout(function() {
+                                    if (type === 'update shipping address') {
+                                        $('#error_msg_shipping').removeClass('d-none');
+                                        $('#error_msg_shipping').html('Something went wrong');
+                                        $('#processing_msg_shipping').removeClass('d-none');
+                                        $('#processing_msg_shipping').html('Fetching Data ...');
+                                    } else {
+                                        $('#error_msg').removeClass('d-none');
+                                        $('#error_msg').html('Something went wrong');
+                                        $('#processing_msg').removeClass('d-none');
+                                        $('#processing_msg').html('Fetching Data ...');
+                                    }
                                     window.location.href = "{{ url('/checkout') }}";
                                 }, 2000);
                             }

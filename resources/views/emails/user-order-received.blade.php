@@ -609,8 +609,10 @@
                         ">
                                 {{ \App\Helpers\SettingHelper::getSetting('website_name') }} isn’t your grandma’s gardening
                                 store.<br> But you can bring her along
-                                if you want. <br> Walk-ins welcome anytime — except Sunday. Even
-                                gardeners need a day of rest.</p>
+                                if you want. 
+                                {{-- <br> Walk-ins welcome anytime — except Sunday. Even
+                                gardeners need a day of rest. --}}
+                            </p>
                             <center>
                                 <p style="display: flex !important; justify-content: center !important; padding: 3px; !important">
                                     <img src="{{ \App\Helpers\SettingHelper::getSetting('website_url') }}/theme/img/thank-you-page-icon-3.png" alt="" />

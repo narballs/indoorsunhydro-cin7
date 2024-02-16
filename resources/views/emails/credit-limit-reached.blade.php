@@ -464,8 +464,9 @@
                             ">
                                 {{ \App\Helpers\SettingHelper::getSetting('website_name') }} isn't your grandma's gardening
                                 store.<br> But you can bring her along
-                                if you want. <br> Walk-ins welcome anytime — except Sunday. Even
-                                gardeners need a day of rest.
+                                if you want. 
+                                {{-- <br> Walk-ins welcome anytime — except Sunday. Even
+                                gardeners need a day of rest. --}}
                             </p>
                             <center>
                                 <p style="display: flex !important; justify-content: center !important; padding: 3px; !important">

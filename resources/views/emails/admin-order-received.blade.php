@@ -260,7 +260,7 @@
                                     <tbody>
                                         <tr>
                                             <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
-                                                {{ $addresses['currentOrder']['logisticsCarrier'] }}
+                                                {{ $addresses['payment_terms'] }}
                                             </td>
                                         </tr>
                                     </tbody>
@@ -284,7 +284,7 @@
                                     <td width="20%">
                                         <img src="{{ asset($option->image) }}" width="55" height="49" alt="" style="border:5px solid #d9d9d9;border-radius:2px;">
                                     </td>
-                                    <td>
+                                    <td style="vertical-align:top;">
                                         <table width="100%" align="left" border="0">
                                             <tr>
                                                 <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">{{ $item['product']->name }}</td>
@@ -294,6 +294,7 @@
                                             </tr>
                                         </table>
                                     </td>
+                                    <td width="20%" style="color:#000000;font-color:#000000;font-size: 12px;vertical-align:top; font-weight:400;">{{ $item->quantity . 'x' }}</span></td>
                                     <td width="20%" style="text-align: right;vertical-align:top;color:#000000;font-color:#000000;font-size: 12px; font-weight:400; ">{{ '$'. number_format($item->price, 2) }}</td>
                                 </tr>
                                 
@@ -345,6 +346,14 @@
                                 {{'$'. number_format($tax, 2) }}
                             </td>
                         </tr>
+                        <tr>
+                            <td width="50%" style="color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
+                                Shipping
+                            </td>
+                            <td align="right" style="text-align: right;color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
+                                {{!empty($addresses['shipping_fee']) ? '$'. number_format($addresses['shipping_fee'], 2) : ''}}
+                            </td>
+                        </tr>
                     </table>
                 </td>
             </tr>
@@ -371,7 +380,7 @@
             <tr>
                 <td align="center">
                     <?php $email_logo_name = \App\Helpers\SettingHelper::getSetting('email_logo_name'); ?>
-                    <img src="{{ url('theme/img/email/' . $email_logo_name) }}" alt="" />
+                    <img src="{{ url('/theme/bootstrap5/images/' . $email_logo_name) }}" alt="" />
                 </td>
             </tr>
         </tbody>
