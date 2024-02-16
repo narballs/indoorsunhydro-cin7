@@ -430,13 +430,46 @@
                         @endif
                     </div>
                     @if (!empty($productOption->option1) || !empty($productOption->option2) || !empty($productOption->option3))
-                        <div class="row" style="font-size: 14px;">
-                            <div class="col-sm-6">
-                                <img src="/theme/img/box_icon.png" style="max-width: 40px;" />
+                        @php
+                            $image_src = [];
+                            $options_array = ['option1', 'option2', 'option3'];
+                            $image_type_array = ['case' => 'case.png', 'pallet' => 'pallet.png', 'box' => 'box.png' , 'pack' => 'case.png' , 'pk' =>'case.png'];
+                            foreach ($options_array as $option) {
+                                foreach ($image_type_array as $key => $image_type) {
+                                    if (strpos($productOption[$option], $key) !== false) {
+                                        $image_src[$option] = $image_type;
+                                    }
+                                }
+                            }
+
+                        @endphp
+                        <div class="row mt-1" style="font-size: 14px;">
+                            <div class="col-4">
+                                @if (isset($image_src['option1']))
+                                    <img src="{{asset('theme/bootstrap5/images/' . $image_src['option1'] )}}" style="max-width: 40px;" />
+                                @endif
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-8">
                                 <p class="mb-0">{{ $productOption->option1 }}</p>
+                            </div>
+                        </div>
+                        <div class="row mt-1" style="font-size: 14px;">
+                            <div class="col-4">
+                                @if (isset($image_src['option2']))
+                                    <img src="{{asset('theme/bootstrap5/images/' . $image_src['option2'] )}}" style="max-width: 40px;" />
+                                @endif
+                            </div>
+                            <div class="col-8">
                                 <p class="mb-0">{{ $productOption->option2 }}</p>
+                            </div>
+                        </div>
+                        <div class="row mt-1" style="font-size: 14px;">
+                            <div class="col-4">
+                                @if (isset($image_src['option3']))
+                                    <img src="/theme/img/box_icon.png" style="max-width: 40px;" />
+                                @endif
+                            </div>
+                            <div class="col-8">
                                 <p class="mb-0">{{ $productOption->option3 }}</p>
                             </div>
                         </div>
