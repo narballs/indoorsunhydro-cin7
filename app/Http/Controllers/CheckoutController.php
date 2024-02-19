@@ -744,7 +744,7 @@ class CheckoutController extends Controller
                 
                 if (!empty($request->different_shipping_address) && $request->different_shipping_address == 1) {
                     $request->validate([
-                        'email' => 'required',
+                        'email' => 'required|email',
                         'password' => 'required',
                         'first_name' => 'required',
                         'company' => 'required',
@@ -759,7 +759,7 @@ class CheckoutController extends Controller
                     ]);
                 } else {
                     $request->validate([
-                        'email' => 'required',
+                        'email' => 'required|email',
                         'password' => 'required',
                         'first_name' => 'required',
                         'company' => 'required',

@@ -353,7 +353,7 @@ $cart_price = 0;
                                     </span>
                                     <div class="success_text success_div mt-1"></div>
                                     <div class="error_text error_div_email mt-1"></div>
-                                    <div class=" checkout_validation_errors email_errors"></div>
+                                    <div class="checkout_validation_errors email_errors"></div>
                                 </div>
                             </div>
                             <div class="col-md-12 password_div d-none">
@@ -792,6 +792,13 @@ $cart_price = 0;
                         $('.update_checkout_loader').addClass('d-none');
                         var errors = response.responseJSON.errors;
                         if (errors) {
+                            if (errors.email) {
+                                error_email = errors.email[0];
+                                $('.email_errors').html(error_email);
+                            }
+                            else {
+                                $('.email_errors').html('');
+                            }
                             if (errors.first_name) {
                                 error_first_name = errors.first_name[0];
                                 $('.first_name_errors').html(error_first_name);
