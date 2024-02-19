@@ -263,6 +263,10 @@ class UserController extends Controller
         $user = User::find($id);
         $user->update($input);
 
+        $update_contact = Contact::where('user_id', $id)->update([
+            'email' => $request->email,
+        ]);
+
         DB::table('model_has_roles')->where('model_id', $id)->delete();
         DB::table('custom_roles')->where('user_id', $id)->delete();
 
@@ -453,7 +457,7 @@ class UserController extends Controller
 
     public function checkEmail(Request $request) {
         $validatedData = $request->validate([
-            'email' => 'required',
+            'email' => 'required|email'
         ]);
         $user = User::where('email', $request->get('email'))->first();
         if (!empty($user)) {

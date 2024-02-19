@@ -471,12 +471,30 @@ class ContactController extends Controller
 
     public function customer_update(Request $request)
     {
+        $request->validate([
+            'email' => 'required|email',
+        ]);
         $id = $request->id;
-        Contact::where('id', $id)->update(
+        $get_user = Contact::where('id', $id)->first();
+        if (!empty($get_user->user_id)) {
+            $update_user = User::where('id', $get_user->user_id)->update(
+                [
+                    'email' => $request->email,
+                ]
+            );
+        } else {
+            $update_user = User::where('email' , $get_user->email)->update(
+                [
+                    'email' => $request->email,
+                ]
+            );
+        }
+        $update_contact = Contact::where('id', $id)->update(
             [
                 'firstName' => $request->first_name,
                 'lastName' => $request->last_name,
                 'company' => $request->company,
+                'email' => $request->email,
                 'website' => $request->website,
                 'postalAddress1' => $request->address_1,
                 'postalAddress2' => $request->address_2,
@@ -487,7 +505,11 @@ class ContactController extends Controller
                 'tax_class' => strtolower($request->state) == strtolower('California') ? '8.75%' : 'Out of State'
             ]
         );
-        return redirect()->back();
+        if ($update_contact) {
+            return redirect()->back()->with('success', 'Customer Updated Successfully');
+        } else {
+            return redirect()->back()->with('error', 'Customer Not Updated');
+        }
     }
 
     public function send_invitation_email(Request $request)
