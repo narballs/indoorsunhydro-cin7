@@ -311,14 +311,15 @@
                                                 <th>Company</th>
                                                 <th>First Name</th>
                                                 <th>Last Name</th>
-                                                <th>Job Title</th>
                                                 <th>Email</th>
                                                 <th>Mobile#</th>
                                                 <th>Phone</th>
+                                                <th>Deleted at</th>
                                                 <th>Status</th>
                                                 <th></th>
                                             </tr>
                                             @foreach ($secondary_contacts as $contact)
+                                                
                                                 <tr class="{{!empty($contact->deleted_at) ? 'delete_grey' : ''}}" title="{{!empty($contact->deleted_at) ?  'deleted on ' . $contact->deleted_at : ''}}">
                                                     @if ($contact->company)
                                                         <td>
@@ -347,18 +348,9 @@
                                                             <span class="badge bg-info">empty</span>
                                                         </td>
                                                     @endif
-                                                    @if ($contact->jobTitle)
-                                                        <td>
-                                                            {{ $contact->jobTitle }}
-                                                        </td>
-                                                    @else
-                                                        <td>
-                                                            <span class="badge bg-info">empty</span>
-                                                        </td>
-                                                    @endif
                                                     @if ($contact->email)
                                                         <td>
-                                                            {{ $contact->email }}
+                                                            <a class="text-primary" href="{{url('/admin/customer-detail/' . $contact->id)}}">{{ $contact->email }}</a>
                                                         </td>
                                                     @else
                                                         <td>
@@ -383,7 +375,15 @@
                                                             <span class="badge bg-info">empty</span>
                                                         </td>
                                                     @endif
-
+                                                    @if ($contact->deleted_at)
+                                                        <td>
+                                                            {{ $contact->deleted_at }}
+                                                        </td>
+                                                    @else
+                                                        <td>
+                                                            <span class="badge bg-info">empty</span>
+                                                        </td>
+                                                    @endif
                                                     @if ($contact && $contact->status == 1)
                                                         <td>
                                                             <span class="badge bg-success">Active</span>
