@@ -553,6 +553,18 @@ $cart_price = 0;
                                 </div>
                             </div> --}}
                         </div>
+                        <div class="row mt-3">
+                            <div class="col-md-12">
+                                <button class="btn check_out_pay_now w-100 p-3 d-flex align-items-center justify-content-center" type="button" id="checkout">
+                                    <span>Save & Next</span>
+                                    <span class="update_checkout_loader d-none mx-2">
+                                        <div class="spinner-border text-white update_checkout_loader" role="status">
+                                            <span class="sr-only"></span>
+                                        </div>
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                     <input type="hidden" value="Pay in Advanced" id="paymentTerms">
                     <div class="col-md-12 col-lg-12 col-xl-5">
