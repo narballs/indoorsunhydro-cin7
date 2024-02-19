@@ -395,7 +395,7 @@ return [
         [
             'text'    => 'Discounts',
             'url'  => 'admin/discounts',
-            'classes' => 'd-none',
+            // 'classes' => 'd-none',
         ],
         [
             'text'    => 'Recycle Bin',
