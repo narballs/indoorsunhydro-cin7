@@ -27,13 +27,13 @@
     <div class="col-md-12 col-xl-10 col-lg-12 col-sm-12 col-xs-12 mt-3 mb-3">
         <div class="row justify-content-center ml-1">
             {{-- similar product partial --}}
-            <div class="col-md-8 col-xl-3 col-xxl-3 col-lg-4 col-sm-12 col-xs-12 order-md-2 order-lg-1 order-xl-1">
+            <div class="col-md-8 col-xl-3 col-xxl-3 col-lg-4 col-sm-12 col-xs-12 col-12 order-md-2 order-lg-1 order-xl-1 order-xs-2 order-2">
                 <div class="card rounded buy_again_div">
                     @include('partials.product-detail.similar-products')
                 </div>
             </div>
             {{-- product detail --}}
-            <div class="col-md-12 col-sm-12 col-xl-9 col-xxl-9 col-lg-8 col-xs-12 order-md-1 order-lg-2 order-xl-2">
+            <div class="col-md-12 col-sm-12 col-xl-9 col-xxl-9 col-lg-8 col-xs-12 col-12 order-md-1 order-lg-2 order-xl-2 order-xs-1 order-1">
                 
                 <div class="card py-3">
                     <div class="row ms-0">
