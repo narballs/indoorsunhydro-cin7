@@ -186,6 +186,7 @@ class UserHelper
 
     public static function shipping_order($order_id , $currentOrder , $order_contact) {
         $api_order = ApiOrder::where('id', $order_id)->first();
+        $shipping_package = AdminSetting::where('option_name', 'shipping_package')->first();
         $order_items = ApiOrderItem::with('order.texClasses', 'product.options', 'product')->where('order_id', $order_id)->get();
         for ($i = 0; $i <= count($order_items) - 1; $i++){
             $items[] = [
@@ -234,6 +235,7 @@ class UserHelper
             'serviceCode' => $service_code->option_value,
             'orderStatus' => $orderStatus,
             'customerEmail'=> $order_contact->email,
+            'packageCode' => !empty($shipping_package->option_value) ? $shipping_package->option_value : 'package',
             'shippingAmount' => number_format($currentOrder->shipment_price , 2),
             "amountPaid" => number_format($currentOrder->total_including_tax , 2),
             "taxAmount" => number_format($tax, 2),
