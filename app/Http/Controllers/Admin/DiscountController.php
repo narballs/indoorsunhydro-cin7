@@ -50,8 +50,21 @@ class DiscountController extends Controller
             'minimum_purchase_requirements' => 'required',
             'customer_eligibility' => 'required',
             'status' => 'required',
+            'start_date' => 'required',
+            'end_date' => 'required',
         ]);
-
+        if (!empty($request->max_discount_uses)) {
+            if ((strtolower($request->max_discount_uses)) == 'none') {
+                $limit_per_user = null;
+                $limit_max_times = null;
+            } elseif (strtolower($request->max_discount_uses) == 'limit for user') {
+                $limit_per_user = $request->limit_per_user;
+                $limit_max_times = null;
+            } elseif (strtolower($request->max_discount_uses) == 'limit max times') {
+                $limit_per_user = null;
+                $limit_max_times = $request->max_usage_count;
+            }
+        }
         $discount = Discount::create([
             'name' => $request->name,
             'type' => $request->type,
@@ -64,8 +77,8 @@ class DiscountController extends Controller
             'discount_variation_value' => $request->discount_variation_value,
             'minimum_purchase_amount' => $request->minimum_purchase_amount,
             'max_discount_uses' => $request->max_discount_uses,
-            'max_usage_count' => $request->max_usage_count,
-            'limit_per_user' => $request->limit_per_user,
+            'max_usage_count' => $limit_max_times,
+            'limit_per_user' => $limit_per_user,
             'usage_count' => $request->usage_count,
             'start_date' => $request->start_date,
             'end_date' => $request->end_date,
@@ -132,10 +145,25 @@ class DiscountController extends Controller
             'minimum_purchase_requirements' => 'required',
             'customer_eligibility' => 'required',
             'status' => 'required',
+            'start_date' => 'required',
+            'end_date' => 'required',
         ]);
 
-
+        $limit_per_user = null;
+        $limit_max_times = null;
         $discount = Discount::findOrFail($id);
+        if (!empty($request->max_discount_uses)) {
+            if ((strtolower($request->max_discount_uses)) == 'none') {
+                $limit_per_user = null;
+                $limit_max_times = null;
+            } elseif (strtolower($request->max_discount_uses) == 'limit for user') {
+                $limit_per_user = $request->limit_per_user;
+                $limit_max_times = null;
+            } elseif (strtolower($request->max_discount_uses) == 'limit max times') {
+                $limit_per_user = null;
+                $limit_max_times = $request->max_usage_count;
+            }
+        }
         $discount->update([
             'name' => $request->name,
             'type' => $request->type,
@@ -148,8 +176,8 @@ class DiscountController extends Controller
             'discount_variation_value' => $request->discount_variation_value,
             'minimum_purchase_amount' => $request->minimum_purchase_amount,
             'max_discount_uses' => $request->max_discount_uses,
-            'max_usage_count' => $request->max_usage_count,
-            'limit_per_user' => $request->limit_per_user,
+            'max_usage_count' => $limit_max_times,
+            'limit_per_user' => $limit_per_user,
             'usage_count' => $request->usage_count,
             'start_date' => $request->start_date,
             'end_date' => $request->end_date,

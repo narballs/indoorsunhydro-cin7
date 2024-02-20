@@ -69,7 +69,9 @@ class OrderController extends Controller
         $existing_contact = Contact::where('user_id', Auth::id())->first();
         $session_contact_id = Session::get('contact_id');
         $order_status = OrderStatus::where('status', 'New')->first();
-        
+        $discount_amount = !empty($request->discount_amount) ? $request->discount_amount : 0;
+        $discount_type = $request->discount_variation;
+        $discount_id =  $request->discount_id;
         if (!empty($session_contact_id)) {
             $contact = Contact::where('contact_id', $session_contact_id)->first();
             if ($contact) {
@@ -99,6 +101,16 @@ class OrderController extends Controller
                 } else {
                     return redirect('/');
                 }
+                $enable_discount_setting = AdminSetting::where('option_name', 'enable_discount')->first();
+                if (!empty($enable_discount_setting) && strtolower($enable_discount_setting->option_value) == 'yes') {
+                    $shipment_price = !empty($request->shipment_price) ? $request->shipment_price : 0;
+                    $total_tax = !empty($request->total_tax) ? $request->total_tax : 0;
+                    $total_amount_with_discount = $cart_total - $discount_amount;
+                    $order_total = $total_amount_with_discount + $total_tax + $shipment_price;
+                } else {
+                    $order_total = $request->incl_tax;
+                }
+                
 
                 $is_primary = Contact::where('contact_id', $session_contact_id)->first();
                 $enable_stripe_checkout_setting = AdminSetting::where('option_name', 'enable_stripe_checkout')->first();
@@ -339,12 +351,14 @@ class OrderController extends Controller
                     $order->logisticsCarrier = $paymentMethod;
                     $order->tax_class_id = $request->tax_class_id;
                     $order->user_switch = $user_switch;
-                    $order->total_including_tax = $request->incl_tax;
                     $order->po_number = $request->po_number;
                     $order->paymentTerms = $request->paymentTerms;
                     $order->memo = $request->memo;
                     $order->date = $request->date;
                     $order->shipment_price = $request->shipment_price;
+                    $order->total_including_tax = $order_total;
+                    $order->discount_id = $discount_id;
+                    $order->discount_amount = $discount_amount;
                     $order->is_stripe = 1;
                     $order->save();
 
@@ -432,6 +446,27 @@ class OrderController extends Controller
                             ];
                         }
 
+                        //adding discount to order
+                        // $enable_discount_setting = AdminSetting::where('option_name', 'enable_discount')->first();
+                        // if (!empty($enable_discount_setting) && strtolower($enable_discount_setting->option_value) == 'yes') {
+                        //     if (intval($discount_amount) > 0) {
+                        //         $discount_price = number_format(($discount_amount * 100) , 2);
+                        //         $discount_value = str_replace(',', '', $discount_price);
+                        //         $discount_product = $stripe->products->create([
+                        //             'name' => 'Discount',
+                        //         ]);
+                        //         $discount_product_price = $stripe->prices->create([
+                        //             'unit_amount_decimal' => $discount_value,
+                        //             'currency' => 'usd',
+                        //             'product' => $discount_product->id
+                        //         ]);
+                        //         $items[] = [
+                        //             'price' => $discount_product_price->id,
+                        //             'quantity' => '1',
+                        //         ];
+                        //     }
+                        // }
+
                         // adding shipping price to order
                         if (!empty($request->shipment_price) && $request->shipment_price > 0) {
                             $shipment_price = number_format(($request->shipment_price * 100) , 2);
@@ -449,6 +484,8 @@ class OrderController extends Controller
                                 'quantity' => '1',
                             ];
                         }
+
+                        
 
                         $line_items = [
                             'line_items' => 
@@ -522,12 +559,14 @@ class OrderController extends Controller
                     $order->logisticsCarrier = $paymentMethod;
                     $order->tax_class_id = $request->tax_class_id;
                     $order->user_switch = $user_switch;
-                    $order->total_including_tax = $request->incl_tax;
                     $order->po_number = $request->po_number;
                     $order->paymentTerms = $request->paymentTerms;
                     $order->memo = $request->memo;
                     $order->date = $request->date;
                     $order->shipment_price = $request->shipment_price;
+                    $order->total_including_tax = $order_total;
+                    $order->discount_id = $discount_id;
+                    $order->discount_amount = $discount_amount;
                     $order->save();
 
                     $order_id =  $order->id;
