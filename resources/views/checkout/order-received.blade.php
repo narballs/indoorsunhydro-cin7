@@ -662,12 +662,14 @@
 								<p class="order-confirmation-page-order-number-item">${{number_format($order->shipment_price , 2)}}</p>
 							</div>
 							@php
+								$total_amount = 0;
+								$total_amount = $order->total_including_tax + $order->$discount_amount;
 								$tax=0;
 								$tax_rate = 0;
 								$tax_class = App\Models\TaxClass::where('name', $order_contact->tax_class)->first();
 								if (!empty($tax_class)) {
 									$tax_rate = $tax_class->rate;
-									$tax = $order->total * ($tax_rate / 100);
+									$tax = $total_amount * ($tax_rate / 100);
 								}
 								
 							@endphp
