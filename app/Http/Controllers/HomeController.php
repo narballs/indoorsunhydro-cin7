@@ -67,7 +67,7 @@ class HomeController extends Controller
             ->select('product_id' , DB::raw('count(*) as entry_count'))
             ->orderBy('created_at' , 'DESC')
             ->groupBy('product_id')
-            ->take(10)
+            ->take(24)
             ->get();
         $user_list = BuyList::where('user_id', $user_id)
             ->where('contact_id', $contact_id)

@@ -172,7 +172,7 @@ class ProductController extends Controller
             ->select('product_id' , DB::raw('count(*) as entry_count'))
             ->orderBy('created_at' , 'DESC')
             ->groupBy('product_id')
-            ->take(10)
+            ->take(24)
             ->get();
         $notify_user_about_product_stock = AdminSetting::where('option_name', 'notify_user_about_product_stock')->first();
         return view('categories', compact(
@@ -414,7 +414,7 @@ class ProductController extends Controller
             ->select('product_id' , DB::raw('count(*) as entry_count'))
             ->orderBy('created_at' , 'DESC')
             ->groupBy('product_id')
-            ->take(10)
+            ->take(24)
             ->get();
         $notify_user_about_product_stock = AdminSetting::where('option_name', 'notify_user_about_product_stock')->first();
         return view('all_products', compact(
@@ -516,7 +516,7 @@ class ProductController extends Controller
             ->select('product_id' , DB::raw('count(*) as entry_count'))
             ->orderBy('created_at' , 'DESC')
             ->groupBy('product_id')
-            ->take(10)
+            ->take(24)
             ->get();
 
         $location_inventories = [];
@@ -720,7 +720,7 @@ class ProductController extends Controller
         ->select('product_id' , DB::raw('count(*) as entry_count'))
         ->orderBy('created_at' , 'DESC')
         ->groupBy('product_id')
-        ->take(10)
+        ->take(24)
         ->get();
         $notify_user_about_product_stock = AdminSetting::where('option_name', 'notify_user_about_product_stock')->first();
         return view('categories', compact('products',
@@ -938,7 +938,7 @@ class ProductController extends Controller
         ->select('product_id' , DB::raw('count(*) as entry_count'))
         ->orderBy('created_at' , 'DESC')
         ->groupBy('product_id')
-        ->take(10)
+        ->take(24)
         ->get();
 
         $notify_user_about_product_stock = AdminSetting::where('option_name', 'notify_user_about_product_stock')->first();
@@ -1624,7 +1624,7 @@ class ProductController extends Controller
         ->select('product_id' , DB::raw('count(*) as entry_count'))
         ->orderBy('created_at' , 'DESC')
         ->groupBy('product_id')
-        ->take(10)
+        ->take(24)
         ->get();
         $notify_user_about_product_stock = AdminSetting::where('option_name', 'notify_user_about_product_stock')->first();
         return view('search_product.search_product', compact(
