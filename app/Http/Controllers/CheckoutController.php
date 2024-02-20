@@ -30,6 +30,8 @@ use App\Models\OperationalZipCode;
 use App\Helpers\SettingHelper;
 use App\Helpers\UserHelper;
 use App\Models\AdminSetting;
+use App\Models\CustomerDiscount;
+use App\Models\Discount;
 use App\Models\ProductOption;
 use App\Models\UsCity;
 use App\Models\UserLog;
@@ -236,8 +238,8 @@ class CheckoutController extends Controller
             ->with('cities')
             ->first();
         // $cart_items = session()->get('cart');
-        
-        
+        $current_date = Carbon::now()->format('Y-m-d');
+        $discount_code = Discount::where('start_date', '<=', $current_date)->where('end_date', '>=', $current_date)->where('status', 1)->first();
         $products_weight = 0;
         foreach ($cart_items as $cart_item) {
             $product_options = ProductOption::where('product_id', $cart_item['product_id'])->where('option_id' , $cart_item['option_id'])->get();
@@ -358,6 +360,7 @@ class CheckoutController extends Controller
             } else {
                 $shipment_price = 0;
             }
+            $enable_discount_setting = AdminSetting::where('option_name', 'enable_discount')->first();
             return view('checkout/checkout_for_login', compact(
                 'user_address',
                 'states',
@@ -369,7 +372,9 @@ class CheckoutController extends Controller
                 'zip_code_is_valid',
                 'check_zip_code_setting',
                 'shipment_price',
-                'cart_items'
+                'cart_items',
+                'discount_code',
+                'enable_discount_setting'
             ));
         } else {
             return redirect()->back()->with('message', 'Your account is disabled. You can not proceed with checkout. Please contact us.');
@@ -960,5 +965,116 @@ class CheckoutController extends Controller
         }   
     }
 
-   
+    public function apply_discount_code(Request $request) {
+        $specific_customers = false;
+        $eligible = false;
+        $max_uses = false;
+        $success = false;
+        $message = '';
+        $discount_per_user = false;
+        $discount_max_times = false;
+        $max_discount_uses_none = false;
+        $coupen_code = $request->coupen_code;
+        $contact_id = $request->contact_id;
+        $discount_variation_value = 0;
+        $discount_variation = '';
+        $current_date = Carbon::now()->format('Y-m-d');
+
+        $discount = Discount::where('discount_code', $coupen_code)
+        ->where('start_date', '<=', $current_date)
+        ->where('end_date', '>=', $current_date)
+        ->where('status', 1)
+        ->first();
+        
+        if (!empty($discount)) {
+            $success = true;
+            $discount_variation = $discount->discount_variation;
+            $discount_variation_value = $discount->discount_variation_value;
+            if (strtolower($discount->customer_eligibility) == 'Specific Customers')  {
+                $specific_customers = true;
+                $customer_discount = CustomerDiscount::where('contact_id', $contact_id)->where('discount_id', $discount->id)->first();
+                if (empty($customer_discount)) {
+                    $eligible = false;
+                    $message = 'You are not eligible for this discount';
+                } else {
+                    $eligible = true;
+                    if (!empty($discount->limit_per_user) && strtolower($discount->max_discount_uses) == 'limit for user') {
+                        $discount_per_user = true;
+                        $customer_discount_count = CustomerDiscount::where('contact_id', $contact_id)->where('discount_id', $discount->id)->count();
+                        if ($customer_discount_count > $discount->limit_per_user) {
+                            $max_uses = true;
+                            $message = 'You have reached the maximum usage of this discount';   
+                        } else {
+                            $max_uses = false;
+                            $message = 'Discount applied successfully';
+                        }
+                    } elseif(!empty($discount->max_usage_count) && strtolower($discount->max_discount_uses) == 'limit max times') {
+                        $discount_max_times = true;
+                        $max_discont_count_in_total = $discount->usage_count == 'Null' ? 0 : $discount->usage_count;
+                        if ($max_discont_count_in_total > $discount->max_usage_count) {
+                            $max_uses = true;
+                            $message = 'Discount has reached the maximum usage';   
+                        } else {
+                            $max_uses = false;
+                            $message = 'Discount applied successfully';
+                        }
+                    } elseif(strtolower($discount->max_discount_uses) == 'none') {
+                        $max_uses = true;
+                        $discount_per_user = false;
+                        $discount_max_times = false;
+                        $max_discount_uses_none = true;
+                        $message = 'Discount applied successfully';
+                    }
+                }
+            } else {
+                $specific_customers = false;
+                $eligible = true;
+                if (!empty($discount->limit_per_user) && strtolower($discount->max_discount_uses) == 'limit for user') {
+                    $discount_per_user = true;
+                    $customer_discount_count = CustomerDiscount::where('contact_id', $contact_id)->where('discount_id', $discount->id)->count();
+                    if ($customer_discount_count > $discount->limit_per_user) {
+                        $max_uses = true;
+                        $message = 'You have reached the maximum usage of this discount';   
+                    } else {
+                        $max_uses = false;
+                        $message = 'Discount applied successfully';
+                    }
+                } 
+                elseif(!empty($discount->max_usage_count) && strtolower($discount->max_discount_uses) == 'limit max times') {
+                    $discount_max_times = true;
+                    $max_discont_count_in_total = $discount->usage_count == 'Null' ? 0 : $discount->usage_count;
+                    if ($max_discont_count_in_total > $discount->max_usage_count) {
+                        $max_uses = true;
+                        $message = 'Discount has reached the maximum usage';   
+                    } else {
+                        $max_uses = false;
+                        $message = 'Discount applied successfully';
+                    }
+                } 
+                elseif(strtolower($discount->max_discount_uses) == 'none') {
+                    $max_uses = false;
+                    $discount_per_user = false;
+                    $discount_max_times = false;
+                    $max_discount_uses_none = true;
+                    $message = 'Discount applied successfully';
+                } 
+            }
+        } else {
+            $success = false;
+            $message = 'Invalid discount code';
+        }
+
+        return response()->json([
+            'success' => $success,
+            'specific_customers' => $specific_customers,
+            'eligible' => $eligible,
+            'max_uses' => $max_uses,
+            'discount_per_user' => $discount_per_user,
+            'discount_max_times' => $discount_max_times,
+            'message' => $message,
+            'discount_variation' => $discount_variation,
+            'discount_variation_value' => $discount_variation_value,
+            'max_discount_uses_none' => $max_discount_uses_none
+        ]);
+    }
 }

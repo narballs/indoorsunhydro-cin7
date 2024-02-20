@@ -43,7 +43,7 @@
                                                         <label for="type">Discount Type</label>
                                                         <select name="type" id="discount_type" class="form-control">
                                                             <option value="cart" {{$discount->type == 'cart' ? 'selected' : ''}}>Cart</option>
-                                                            <option value="products" {{$discount->type == 'cart' ? 'products' : ''}}>Products</option>
+                                                            {{-- <option value="products" {{$discount->type == 'cart' ? 'products' : ''}}>Products</option> --}}
                                                         </select>
                                                     </div>
                                                 </div>
@@ -190,12 +190,12 @@
                                                                 <input type="radio" data-value="Limit Max Times" class="discount_uses" name="max_discount_uses" value="{{$discount->max_discount_uses == 'Limit Max Times' ? 'Limit Max Times' : ''}}" id="limit_max_times" {{$discount->max_discount_uses == 'Limit Max Times' ? 'checked' : ''}}>
                                                                 <label for="">Limit number of times this discount can be used in total</label>
                                                             </div>
-                                                            <input type="number" name="max_usage_count" value="{{$discount->max_usage_count}}" id="max_usage_count" class="form-control {{$discount->max_discount_uses == 'Limit For User' ? '' : 'd-none'}}">
+                                                            <input type="number" name="max_usage_count" value="{{$discount->max_usage_count}}" id="max_usage_count" class="form-control {{$discount->max_discount_uses == 'Limit Max Times' ? '' : 'd-none'}}">
                                                             <div class="col-md-12">
-                                                                <input type="radio" data-value="Limit For User" class="discount_uses" name="max_discount_uses"  value="{{$discount->max_discount_uses == 'Limit Max Times' ? 'Limit Max Times' : ''}}" {{$discount->max_discount_uses == 'Limit For User' ? 'checked' : ''}}>
+                                                                <input type="radio" data-value="Limit For User" class="discount_uses" name="max_discount_uses"  value="{{$discount->max_discount_uses == 'Limit For User' ? 'Limit For User' : ''}}" {{$discount->max_discount_uses == 'Limit For User' ? 'checked' : ''}}>
                                                                 <label for="">Limit to one use per customer</label>
                                                             </div>
-                                                            <input type="number" name="limit_per_user" value="{{$discount->limit_per_user}}" id="limit_per_user" class="form-control {{$discount->max_discount_uses == 'Limit For User' ? '' : 'd-none'}}">
+                                                            <input type="number" name="limit_per_user" value="1" id="limit_per_user" class="form-control {{$discount->max_discount_uses == 'Limit For User' ? '' : 'd-none'}}" readonly>
                                                         </div>
                                                     </div>
                                                 </div>

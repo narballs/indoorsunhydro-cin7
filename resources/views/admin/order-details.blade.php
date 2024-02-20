@@ -258,13 +258,16 @@
                                         @php
                                             $tax=0;
                                             $shipment_price = 0;
+                                            $discount = !empty($order->discount_amount) ? $order->discount_amount : 0;
                                             if (!empty($order->shipment_price)) {
                                                 $shipment_price = $order->shipment_price;
                                             }
                                             if (!empty($tax_class)) {
                                                 $tax = $order->total * ($tax_class->rate / 100);
                                             }
-                                            $total_including_tax = $tax + $shipment_price + $order->total;
+                                            $add_discount_to_total = 0;
+                                            $add_discount_to_total = $order->total - $discount;
+                                            $total_including_tax = $tax + $shipment_price + $add_discount_to_total;
                                         @endphp
                                         @foreach ($orderitems as $item)
                                             @foreach($item->product->options as $option)
@@ -331,6 +334,11 @@
                                         <tr class="border-bottom">
                                             <td colspan="4" class="add_colspan"><span class="summary-head mx-2">Subtotal</span></td>
                                             <td class="text-center"><span class="order-item-price" id="subtotal_text">${{ number_format($order->total, 2) }}</span>
+                                            </td>
+                                        </tr>
+                                        <tr class="border-bottom">
+                                            <td colspan="4" class="add_colspan"><span class="summary-head mx-2">Discount</span></td>
+                                            <td class="text-center"><span class="order-item-price" id="subtotal_text">${{ number_format($order->discount_amount, 2) }}</span>
                                             </td>
                                         </tr>
                                         <tr class="border-bottom">

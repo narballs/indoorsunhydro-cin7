@@ -41,9 +41,8 @@
                                                     <div class="form-group">
                                                         <label for="type">Discount Type</label>
                                                         <select name="type" id="discount_type" class="form-control">
-                                                            <option value="">Select</option>
-                                                            <option value="cart">Cart</option>
-                                                            <option value="products">Products</option>
+                                                            <option value="cart" selected>Cart</option>
+                                                            {{-- <option value="products">Products</option> --}}
                                                         </select>
                                                     </div>
                                                 </div>
