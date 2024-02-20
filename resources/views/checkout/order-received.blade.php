@@ -664,8 +664,9 @@
 							@php
 								$tax=0;
 								$tax_rate = 0;
-								if ($order->texClasses) {
-									$tax_rate = $order->texClasses->rate;
+								$tax_class = App\Models\TaxClass::where('name', $order_contact->tax_class)->first();
+								if (!empty($tax_class)) {
+									$tax_rate = $tax_class->rate;
 									$tax = $order->total * ($tax_rate / 100);
 								}
 								
