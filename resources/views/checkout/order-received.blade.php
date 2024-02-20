@@ -664,7 +664,7 @@
 							<div class="col-md-3">
 								<p class="order-confirmation-page-order-number-title">Tax</p>
 								<p class="order-confirmation-page-order-number-item">
-									${{ number_format(($order->discount_amount + $order->total_including_tax - $order->productTotal) - $order->shipment_price, 2) }}
+									${{ number_format(($order->total_including_tax - $order->productTotal) - $order->shipment_price, 2) + $order->discount_amount }}
 								</p>
 							</div>
 							<div class="col-md-3">
