@@ -663,7 +663,7 @@
 							</div>
 							@php
 								$total_amount = 0;
-								$total_amount = $order->total_including_tax + $order->$discount_amount;
+								$total_amount = $order->total_including_tax + $order->discount_amount;
 								$tax=0;
 								$tax_rate = 0;
 								$tax_class = App\Models\TaxClass::where('name', $order_contact->tax_class)->first();
