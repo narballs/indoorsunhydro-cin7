@@ -661,10 +661,20 @@
 								<p class="order-confirmation-page-order-number-title">Shipping</p>
 								<p class="order-confirmation-page-order-number-item">${{number_format($order->shipment_price , 2)}}</p>
 							</div>
+							@php
+								$tax=0;
+								$tax_rate = 0;
+								if ($order->texClasses) {
+									$tax_rate = $order->texClasses->rate;
+									$tax = $order->total * ($tax_rate / 100);
+								}
+								
+							@endphp
 							<div class="col-md-3">
 								<p class="order-confirmation-page-order-number-title">Tax</p>
 								<p class="order-confirmation-page-order-number-item">
-									${{ number_format(($order->total_including_tax - $order->productTotal) - $order->shipment_price, 2) + $order->discount_amount }}
+									{{-- ${{ number_format(($order->total_including_tax - $order->productTotal) - $order->shipment_price, 2) + $order->discount_amount }} --}}
+									${{ number_format($tax, 2) }}
 								</p>
 							</div>
 							<div class="col-md-3">
