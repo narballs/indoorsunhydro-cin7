@@ -7,6 +7,7 @@
         MY ACCOUNT
     </p>
 </div>
+
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-10 m-auto">
@@ -144,12 +145,12 @@
     
                                                 </td>
                                                 <td class="my_account_all_items">
-                                                    ${{ number_format($total, 2) }}
+                                                    ${{ number_format($order_detail->total, 2) }}
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td class="order_detail_page_prices">
-                                                    Tax
+                                                    Tax 
                                                 </td>
                                                 <td class="my_account_all_items">
     
@@ -161,9 +162,41 @@
     
                                                 </td>
                                                 <td class="my_account_all_items">
-                                                    @if(!empty($order_detail['texClasses']))
-                                                        {{ $order_detail['texClasses']->name }}
-                                                     @endif
+                                                     ${{!empty($order_detail->tax_rate) ? number_format($order_detail->tax_rate , 2) : number_format($tax , 2)}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="order_detail_page_prices">
+                                                    Shipping Price
+                                                </td>
+                                                <td class="my_account_all_items">
+    
+                                                </td>
+                                                <td class="my_account_all_items">
+    
+                                                </td>
+                                                <td class="my_account_all_items">
+    
+                                                </td>
+                                                <td class="my_account_all_items">
+                                                    ${{!empty($order_detail->shipment_price) ? number_format($order_detail->shipment_price , 2) : number_format(0 , 2)}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="order_detail_page_prices">
+                                                    Discount
+                                                </td>
+                                                <td class="my_account_all_items">
+    
+                                                </td>
+                                                <td class="my_account_all_items">
+    
+                                                </td>
+                                                <td class="my_account_all_items">
+    
+                                                </td>
+                                                <td class="my_account_all_items">
+                                                    ${{!empty($order_detail->discount_amount) ? number_format($order_detail->discount_amount , 2) : number_format(0 , 2)}}
                                                 </td>
                                             </tr>
                                             <tr>
@@ -196,7 +229,7 @@
                                                 <td class="my_account_all_items">
     
                                                 </td>
-                                                <td class="my_account_all_items">
+                                                <td colspan="4" class="my_account_all_items">
                                                     ${{number_format($order_detail->total_including_tax , 2)}}
                                                 </td>
                                             </tr>
@@ -252,7 +285,41 @@
     
                                                 </td>
                                                 <td class="my_account_all_items">
-                                                    {{ $order_detail['texClasses']->name }}
+                                                    ${{!empty($order_detail->tax_rate) ? number_format($order_detail->tax_rate , 2) : number_format($tax , 2)}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="my_account_address_items">
+                                                    Shipping Price
+                                                </td>
+                                                <td class="my_account_all_items">
+    
+                                                </td>
+                                                <td class="my_account_all_items">
+    
+                                                </td>
+                                                <td class="my_account_all_items">
+    
+                                                </td>
+                                                <td class="my_account_all_items">
+                                                    ${{!empty($order_detail->shipment_price) ? number_format($order_detail->shipment_price , 2) : number_format(0 , 2)}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="my_account_address_items">
+                                                    Discount
+                                                </td>
+                                                <td class="my_account_all_items">
+    
+                                                </td>
+                                                <td class="my_account_all_items">
+    
+                                                </td>
+                                                <td class="my_account_all_items">
+    
+                                                </td>
+                                                <td class="my_account_all_items">
+                                                    {{!empty($order_detail->discount_amount) ? number_format($order_detail->discount_amount , 2) : number_format(0 , 2)}}
                                                 </td>
                                             </tr>
                                             <tr>

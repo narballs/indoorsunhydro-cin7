@@ -621,6 +621,7 @@ $cart_price = 0;
                                         <input type="hidden" name="state_shipping" value="{{ !empty($user_address->state) ?  $user_address->state : '' }}">
                                         <input type="hidden" name="zip_code_shipping" value="{{ !empty($user_address->postCode) ?  $user_address->postCode : '' }}">
                                         <input type="hidden" name="incl_tax" id="incl_tax" value="{{ $total_including_tax }}">
+                                        <input type="hidden" name="original_shipment_price" id="original_shipment_price" value="{{ $shipment_price }}">
                                         <input type="hidden" name="shipment_price" id="shipment_price" value="{{ $shipment_price }}">
                                         <input type="hidden" name="discount_amount" class="discount_amount" id="discount_amount" value="{{ number_format($discount_amount , 2) }}">
                                         <input type="hidden" name="items_total_price" class="items_total_price" id="" value="{{ number_format($cart_total, 2) }}">
@@ -2350,10 +2351,12 @@ $cart_price = 0;
                 function apply_discount_code() {
                     var coupen_code = $('.coupen_code_input').val();
                     var contact_id = $('.user_contact_id').val();
-                    var cart_total = $('.items_total_price').val() != null ? parseInt($('.items_total_price').val()) : 0;
-                    var shipment_price  = $('#shipment_price').val() != null ? parseInt($('#shipment_price').val()) : 0;
-                    var total_tax = $('.total_tax').val() != null ? parseInt($('.total_tax').val()) : 0;
+                    var cart_total_including_tax_shipping = $('#incl_tax').val() != null ? $('#incl_tax').val() : 0;
+                    var shipment_price  = $('#shipment_price').val() != null ? $('#shipment_price').val() : 0;
+                    var total_tax = $('.total_tax').val() != null ? $('.total_tax').val() : 0;
                     var add_discount = 0;
+                    var tax_discount = 0;
+                    var shipping_discount = 0;
                     var total  = 0;
                     var subtotal = 0;
                     var message = null;
@@ -2378,23 +2381,9 @@ $cart_price = 0;
                                             if (response.discount_per_user == true && response.max_uses == false) {
                                                 
                                                 if (response.discount_variation == 'percentage') {
-                                                    $('.discount_variation').val('percentage');
-                                                    $('.discount_variation_value').val(response.discount_variation_value);
-                                                    add_discount = (cart_total * parseInt(response.discount_variation_value)) / 100;
-                                                    $('.discount_amount').val(add_discount.toFixed(2));
-                                                    $('.checkout_discount_rate_manuall').html('$' + add_discount);
-                                                    subtotal = cart_total - add_discount;
-                                                    total = subtotal + shipment_price + total_tax;
-                                                    $('.checkout_total_price').html('$' + (parseInt(total).toFixed(2)));
+                                                    apply_discount_to_percentage(response , cart_total_including_tax_shipping , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
                                                 } else {
-                                                    $('.discount_variation').val('fixed');
-                                                    $('.discount_variation_value').val(response.discount_variation_value);
-                                                    add_discount = parseInt(response.discount_variation_value);
-                                                    $('.discount_amount').val(add_discount.toFixed(2));
-                                                    $('.checkout_discount_rate_manuall').html('$' + add_discount);
-                                                    subtotal = cart_total - add_discount;
-                                                    total = subtotal + shipment_price + total_tax;
-                                                    $('.checkout_total_price').html('$' + (parseInt(total).toFixed(2)));
+                                                    apply_discount_to_fixed(response , cart_total_including_tax_shipping , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
                                                 }
                                                 message = response.message;
                                                 $('.coupen_code_message').html(message);
@@ -2402,46 +2391,18 @@ $cart_price = 0;
                                             } else if (response.discount_max_times == true && response.max_uses == false) {
                                                 
                                                 if (response.discount_variation == 'percentage') {
-                                                    $('.discount_variation').val('percentage');
-                                                    $('.discount_variation_value').val(response.discount_variation_value);
-                                                    add_discount = (cart_total * parseInt(response.discount_variation_value)) / 100;
-                                                    $('.discount_amount').val(add_discount.toFixed(2));
-                                                    $('.checkout_discount_rate_manuall').html('$' + add_discount);
-                                                    subtotal = cart_total - add_discount;
-                                                    total = subtotal + shipment_price + total_tax;
-                                                    $('.checkout_total_price').html('$' + (parseInt(total).toFixed(2)));
+                                                    apply_discount_to_percentage(response , cart_total_including_tax_shipping , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
                                                 } else {
-                                                    $('.discount_variation').val('fixed');
-                                                    $('.discount_variation_value').val(response.discount_variation_value);
-                                                    add_discount = parseInt(response.discount_variation_value);
-                                                    $('.discount_amount').val(add_discount.toFixed(2));
-                                                    $('.checkout_discount_rate_manuall').html('$' + add_discount);
-                                                    subtotal = cart_total - add_discount;
-                                                    total = subtotal + shipment_price + total_tax;
-                                                    $('.checkout_total_price').html('$' + (parseInt(total).toFixed(2)));
+                                                    apply_discount_to_fixed(response , cart_total_including_tax_shipping , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
                                                 }
                                                 message = response.message;
                                                 $('.coupen_code_message').html(message);
                                                 $('.discount_form').addClass('d-none');
                                             } else if (response.discount_max_times == false && response.discount_per_user == false && response.max_uses == false && response.max_discount_uses_none == true) {
                                                 if (response.discount_variation == 'percentage') {
-                                                    $('.discount_variation').val('percentage');
-                                                    $('.discount_variation_value').val(response.discount_variation_value);
-                                                    add_discount = (cart_total * parseInt(response.discount_variation_value)) / 100;
-                                                    $('.discount_amount').val(add_discount.toFixed(2));
-                                                    $('.checkout_discount_rate_manuall').html('$' + add_discount);
-                                                    subtotal = cart_total - add_discount;
-                                                    total = subtotal + shipment_price + total_tax;
-                                                    $('.checkout_total_price').html('$' + (parseInt(total).toFixed(2)));
+                                                    apply_discount_to_percentage(response , cart_total_including_tax_shipping , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
                                                 } else {
-                                                    $('.discount_variation').val('fixed');
-                                                    $('.discount_variation_value').val(response.discount_variation_value);
-                                                    add_discount = parseInt(response.discount_variation_value);
-                                                    $('.discount_amount').val(add_discount.toFixed(2));
-                                                    $('.checkout_discount_rate_manuall').html('$' + add_discount);
-                                                    subtotal = cart_total - add_discount;
-                                                    total = subtotal + shipment_price + total_tax;
-                                                    $('.checkout_total_price').html('$' + (parseInt(total).toFixed(2)));
+                                                    apply_discount_to_fixed(response , cart_total_including_tax_shipping , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
                                                 }
                                                 message = response.message;
                                                 $('.coupen_code_message').html(message);
@@ -2457,23 +2418,9 @@ $cart_price = 0;
                                             $('.manuall_discount').removeClass('d-none');
                                             if (response.discount_per_user == true && response.max_uses == false) {
                                                 if (response.discount_variation == 'percentage') {
-                                                    $('.discount_variation').val('percentage');
-                                                    $('.discount_variation_value').val(response.discount_variation_value);
-                                                    add_discount = (cart_total * parseInt(response.discount_variation_value)) / 100;
-                                                    $('.discount_amount').val(add_discount.toFixed(2));
-                                                    $('.checkout_discount_rate_manuall').html('$' + add_discount);
-                                                    subtotal = cart_total - add_discount;
-                                                    total = subtotal + shipment_price + total_tax;
-                                                    $('.checkout_total_price').html('$' + (parseInt(total).toFixed(2)));
+                                                    apply_discount_to_percentage(response , cart_total_including_tax_shipping , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
                                                 } else {
-                                                    $('.discount_variation').val('fixed');
-                                                    $('.discount_variation_value').val(response.discount_variation_value);
-                                                    add_discount = parseInt(response.discount_variation_value);
-                                                    $('.discount_amount').val(add_discount.toFixed(2));
-                                                    $('.checkout_discount_rate_manuall').html('$' + add_discount);
-                                                    subtotal = cart_total - add_discount;
-                                                    total = subtotal + shipment_price + total_tax;
-                                                    $('.checkout_total_price').html('$' + (parseInt(total).toFixed(2)));
+                                                    apply_discount_to_fixed(response , cart_total_including_tax_shipping , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
                                                 }
                                                 
                                                 message = response.message;
@@ -2481,46 +2428,18 @@ $cart_price = 0;
                                                 $('.discount_form').addClass('d-none');
                                             } else if (response.discount_max_times == true && response.max_uses == false) {
                                                 if (response.discount_variation == 'percentage') {
-                                                    $('.discount_variation').val('percentage');
-                                                    $('.discount_variation_value').val(response.discount_variation_value);
-                                                    add_discount = (cart_total * parseInt(response.discount_variation_value)) / 100;
-                                                    $('.discount_amount').val(add_discount.toFixed(2));
-                                                    $('.checkout_discount_rate_manuall').html('$' + add_discount);
-                                                    subtotal = cart_total - add_discount;
-                                                    total = subtotal + shipment_price + total_tax;
-                                                    $('.checkout_total_price').html('$' + (parseInt(total).toFixed(2)));
+                                                    apply_discount_to_percentage(response , cart_total_including_tax_shipping , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
                                                 } else {
-                                                    $('.discount_variation').val('fixed');
-                                                    $('.discount_variation_value').val(response.discount_variation_value);
-                                                    add_discount = parseInt(response.discount_variation_value);
-                                                    $('.discount_amount').val(add_discount.toFixed(2));
-                                                    $('.checkout_discount_rate_manuall').html('$' + add_discount);
-                                                    subtotal = cart_total - add_discount;
-                                                    total = subtotal + shipment_price + total_tax;
-                                                    $('.checkout_total_price').html('$' + (parseInt(total).toFixed(2)));
+                                                    apply_discount_to_fixed(response , cart_total_including_tax_shipping , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
                                                 }
                                                 message = response.message;
                                                 $('.coupen_code_message').html(message);
                                                 $('.discount_form').addClass('d-none');
                                             } else if (response.discount_max_times == false && response.discount_per_user == false && response.max_uses == false && response.max_discount_uses_none == true) {
                                                 if (response.discount_variation == 'percentage') {
-                                                    $('.discount_variation').val('percentage');
-                                                    $('.discount_variation_value').val(response.discount_variation_value);
-                                                    add_discount = (cart_total * parseInt(response.discount_variation_value)) / 100;
-                                                    $('.discount_amount').val(add_discount.toFixed(2));
-                                                    $('.checkout_discount_rate_manuall').html('$' + add_discount);
-                                                    subtotal = cart_total - add_discount;
-                                                    total = subtotal + shipment_price + total_tax;
-                                                    $('.checkout_total_price').html('$' + (parseInt(total).toFixed(2)));
+                                                    apply_discount_to_percentage(response , cart_total_including_tax_shipping , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
                                                 } else {
-                                                    $('.discount_variation').val('fixed');
-                                                    $('.discount_variation_value').val(response.discount_variation_value);
-                                                    add_discount = parseInt(response.discount_variation_value);
-                                                    $('.discount_amount').val(add_discount.toFixed(2));
-                                                    $('.checkout_discount_rate_manuall').html('$' + add_discount);
-                                                    subtotal = cart_total - add_discount;
-                                                    total = subtotal + shipment_price + total_tax;
-                                                    $('.checkout_total_price').html('$' + (parseInt(total).toFixed(2)));
+                                                    apply_discount_to_fixed(response , cart_total_including_tax_shipping , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
                                                 }
                                                 message = response.message;
                                                 $('.coupen_code_message').html(message);
@@ -2539,6 +2458,46 @@ $cart_price = 0;
                             }
                         });
                     }
+                }
+                function apply_discount_to_percentage(response , cart_total_including_tax_shipping , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal) {
+                    var total_shipping_price = 0;
+                    var total_tax_price = 0;
+                    $('.discount_variation').val('percentage');
+                    $('.discount_variation_value').val(response.discount_variation_value);
+                    add_discount = (cart_total_including_tax_shipping * response.discount_variation_value / 100);
+                    tax_discount = (total_tax * response.discount_variation_value / 100);
+                    shipping_discount = (shipment_price * response.discount_variation_value / 100);
+                    $('.discount_amount').val(add_discount.toFixed(2));
+                    $('.checkout_discount_rate_manuall').html('$' + add_discount.toFixed(2));
+                    subtotal = cart_total_including_tax_shipping - add_discount;
+                    total = subtotal;
+                    total_shipping_price = shipment_price - shipping_discount;
+                    total_tax_price = total_tax - tax_discount;
+                    $('#shipment_price').val(total_shipping_price.toFixed(2));
+                    $('.total_tax').val(total_tax_price.toFixed(2));
+                    $('#incl_tax').val(total.toFixed(2));
+                    $('.checkout_total_price').html('$' + total.toFixed(2));
+                    $('.checkout_tax_rate').html('$' + total_tax_price.toFixed(2));
+                    $('.checkout_shipping_price').html('$' + total_shipping_price.toFixed(2));
+                }
+                function apply_discount_to_fixed(response , cart_total_including_tax_shipping , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal) {
+                    $('.discount_variation').val('fixed');
+                    $('.discount_variation_value').val(response.discount_variation_value);
+                    add_discount = parseInt(response.discount_variation_value);
+                    tax_discount = parseInt(response.discount_variation_value);
+                    shipping_discount = parseInt(response.discount_variation_value);
+                    $('.discount_amount').val(add_discount.toFixed(2));
+                    $('.checkout_discount_rate_manuall').html('$' + add_discount.toFixed(2));
+                    subtotal = cart_total_including_tax_shipping - add_discount;
+                    total = subtotal;
+                    total_shipping_price = shipment_price - shipping_discount;
+                    total_tax_price = total_tax - tax_discount;
+                    $('#shipment_price').val(total_shipping_price.toFixed(2));
+                    $('.total_tax').val(total_tax_price.toFixed(2));
+                    $('#incl_tax').val(total.toFixed(2));
+                    $('.checkout_total_price').html('$' + total.toFixed(2));
+                    $('.checkout_tax_rate').html('$' + total_tax_price.toFixed(2));
+                    $('.checkout_shipping_price').html('$' + total_shipping_price.toFixed(2));
                 }
             </script>
             @include('partials.footer')

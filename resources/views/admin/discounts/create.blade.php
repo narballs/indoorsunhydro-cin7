@@ -102,7 +102,7 @@
                                                             </div>
                                                             <input type="hidden" value="percentage" name="discount_variation" id="discount_variation">
                                                             <div class="col-md-7">
-                                                                <input type="number" min="1" class="form-control" id="discount_variation_value" placeholder="Percentage %" name="discount_variation_value" step="any" onkeydown="removeAlpha($(this))" onkeyup="removeAlpha($(this))">
+                                                                <input type="number" min="1" class="form-control discount_variation_value" onchange="check_variration_value($(this)) id="discount_variation_value" placeholder="Percentage %" name="discount_variation_value" step="any" onkeydown="removeAlpha($(this))" onkeyup="removeAlpha($(this))">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -621,6 +621,17 @@
                 $('#discount_variation_value').attr('placeholder', 'Fixed Amount');
             }
         });
+
+        function check_variration_value(element) {
+            var variation_value =  $('#discount_variation').val();
+            if (variation_value === 'percentage') {
+                var value = element.val();
+                if (value > 99) {
+                    $(this).val(99)
+                    $('#discount_variation_value_error').html('The Discount value cant be greater than 99%');
+                }
+            }
+        }
 
         // minimum purchase requirements functionality
         $('.purchase_requirements').click(function() {

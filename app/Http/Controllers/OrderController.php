@@ -72,6 +72,8 @@ class OrderController extends Controller
         $discount_amount = !empty($request->discount_amount) ? $request->discount_amount : 0;
         $discount_type = $request->discount_variation;
         $discount_id =  $request->discount_id;
+        $total_tax_rate = !empty($request->total_tax) ? $request->total_tax : 0;
+        $discount_variation_value = !empty($request->discount_variation_value) ? $request->discount_variation_value : 0;
         if (!empty($session_contact_id)) {
             $contact = Contact::where('contact_id', $session_contact_id)->first();
             if ($contact) {
@@ -103,10 +105,11 @@ class OrderController extends Controller
                 }
                 $enable_discount_setting = AdminSetting::where('option_name', 'enable_discount')->first();
                 if (!empty($enable_discount_setting) && strtolower($enable_discount_setting->option_value) == 'yes') {
-                    $shipment_price = !empty($request->shipment_price) ? $request->shipment_price : 0;
-                    $total_tax = !empty($request->total_tax) ? $request->total_tax : 0;
-                    $total_amount_with_discount = $cart_total - $discount_amount;
-                    $order_total = $total_amount_with_discount + $total_tax + $shipment_price;
+                    // $shipment_price = !empty($request->shipment_price) ? $request->shipment_price : 0;
+                    // $total_tax = !empty($request->total_tax) ? $request->total_tax : 0;
+                    // $total_amount_with_discount = $cart_total - $discount_amount;
+                    // $order_total = $total_amount_with_discount + $total_tax + $shipment_price;
+                    $order_total = $request->incl_tax;
                 } else {
                     $order_total = $request->incl_tax;
                 }
@@ -359,6 +362,7 @@ class OrderController extends Controller
                     $order->total_including_tax = $order_total;
                     $order->discount_id = $discount_id;
                     $order->discount_amount = $discount_amount;
+                    $order->tax_rate = $total_tax_rate;
                     $order->is_stripe = 1;
                     $order->save();
 
@@ -447,29 +451,20 @@ class OrderController extends Controller
                         }
 
                         //adding discount to order
-                        // $enable_discount_setting = AdminSetting::where('option_name', 'enable_discount')->first();
-                        // if (!empty($enable_discount_setting) && strtolower($enable_discount_setting->option_value) == 'yes') {
-                        //     if (intval($discount_amount) > 0) {
-                        //         $discount_price = number_format(($discount_amount * 100) , 2);
-                        //         $discount_value = str_replace(',', '', $discount_price);
-                        //         $discount_product = $stripe->products->create([
-                        //             'name' => 'Discount',
-                        //         ]);
-                        //         $discount_product_price = $stripe->prices->create([
-                        //             'unit_amount_decimal' => $discount_value,
-                        //             'currency' => 'usd',
-                        //             'product' => $discount_product->id
-                        //         ]);
-                        //         $items[] = [
-                        //             'price' => $discount_product_price->id,
-                        //             'quantity' => '1',
-                        //         ];
-                        //     }
-                        // }
+                        $enable_discount_setting = AdminSetting::where('option_name', 'enable_discount')->first();
+                        if (!empty($enable_discount_setting) && strtolower($enable_discount_setting->option_value) == 'yes') {
+                            if (intval($discount_amount) > 0) {
+                                $adding_discount = $stripe->coupons->create([
+                                    'percent_off' => $discount_variation_value,
+                                    'duration' => 'once',
+                                    'currency' => 'usd',
+                                ]);
+                            }
+                        }
 
                         // adding shipping price to order
-                        if (!empty($request->shipment_price) && $request->shipment_price > 0) {
-                            $shipment_price = number_format(($request->shipment_price * 100) , 2);
+                        if (!empty($request->original_shipment_price) && $request->original_shipment_price > 0) {
+                            $shipment_price = number_format(($request->original_shipment_price * 100) , 2);
                             $shipment_value = str_replace(',', '', $shipment_price);
                             $shipment_product = $stripe->products->create([
                                 'name' => 'Shipment',
@@ -493,20 +488,38 @@ class OrderController extends Controller
                                 $items
                             ]
                         ];
-                        $checkout_session = $stripe->checkout->sessions->create([
-                            'success_url' => url('/thankyou/' . $order_id) . '?session_id={CHECKOUT_SESSION_ID}',
-                            'cancel_url' => url('/checkout'),
-                            $line_items,
-                            'mode' => 'payment',
-                            'payment_intent_data'=> [
-                                "metadata" => [
-                                    "order_id"=> $order_id,
-                                ]
-                            ],
-                            // 'shipping_cost' =>  !empty($request->shipment_price) ? $request->shipment_price : 0,
-                            'customer_email' => auth()->user()->email,
-                            
-                        ]);
+                        $enable_discount_setting = AdminSetting::where('option_name', 'enable_discount')->first();
+                        if (!empty($enable_discount_setting) && strtolower($enable_discount_setting->option_value) == 'yes' && ($discount_amount > 0)) {
+                            $checkout_session = $stripe->checkout->sessions->create([
+                                'success_url' => url('/thankyou/' . $order_id) . '?session_id={CHECKOUT_SESSION_ID}',
+                                'cancel_url' => url('/checkout'),
+                                $line_items,
+                                'mode' => 'payment',
+                                'discounts' => [['coupon' => $adding_discount->id]],
+                                'payment_intent_data'=> [
+                                    "metadata" => [
+                                        "order_id"=> $order_id,
+                                    ]
+                                ],
+                                // 'shipping_cost' =>  !empty($request->shipment_price) ? $request->shipment_price : 0,
+                                'customer_email' => auth()->user()->email,
+                                
+                            ]);
+                        } else {
+                            $checkout_session = $stripe->checkout->sessions->create([
+                                'success_url' => url('/thankyou/' . $order_id) . '?session_id={CHECKOUT_SESSION_ID}',
+                                'cancel_url' => url('/checkout'),
+                                $line_items,
+                                'mode' => 'payment',
+                                'payment_intent_data'=> [
+                                    "metadata" => [
+                                        "order_id"=> $order_id,
+                                    ]
+                                ],
+                                // 'shipping_cost' =>  !empty($request->shipment_price) ? $request->shipment_price : 0,
+                                'customer_email' => auth()->user()->email,
+                            ]);
+                        }
                         // $go_to_shipstation = false;
                         // if (!empty($order_contact) && !empty($order_contact->is_parent == 1) && !empty($order_contact->address1) && !empty($order_contact->postalAddress1)) {
                         //     $go_to_shipstation = true;
@@ -567,6 +580,7 @@ class OrderController extends Controller
                     $order->total_including_tax = $order_total;
                     $order->discount_id = $discount_id;
                     $order->discount_amount = $discount_amount;
+                    $order->tax_rate = $total_tax_rate;
                     $order->save();
 
                     $order_id =  $order->id;
