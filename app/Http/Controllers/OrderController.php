@@ -27,6 +27,8 @@ use Stripe\Webhook;
 use Symfony\Component\HttpFoundation\Response;
 
 use App\Helpers\SettingHelper;
+use App\Models\CustomerDiscountUses;
+use App\Models\Discount;
 use App\Models\OrderStatus;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
@@ -366,6 +368,22 @@ class OrderController extends Controller
                     $order->is_stripe = 1;
                     $order->save();
 
+                    
+                    if (!empty($enable_discount_setting) && strtolower($enable_discount_setting->option_value) == 'yes') {
+                        if (!empty($order->discount_id)) {
+                            $update_discount_count = Discount::where('id', $order->discount_id)->first();
+                            if (!empty($update_discount_count)) {
+                                $update_discount_count->usage_count = !empty($update_discount_count->usage_count ? $update_discount_count->usage_count : 0)  + 1;
+                                $update_discount_count->save();
+
+                                $customer_discount_uses = new CustomerDiscountUses();
+                                $customer_discount_uses->discount_id = $order->discount_id;
+                                $customer_discount_uses->contact_id = $order->memberId;
+                                $customer_discount_uses->save();
+                            }
+                        }
+                    }
+
                     $order_id =  $order->id;
                     $currentOrder = ApiOrder::where('id', $order->id)->first();
                     $apiApproval = $currentOrder->apiApproval;
@@ -451,7 +469,6 @@ class OrderController extends Controller
                         }
 
                         //adding discount to order
-                        $enable_discount_setting = AdminSetting::where('option_name', 'enable_discount')->first();
                         if (!empty($enable_discount_setting) && strtolower($enable_discount_setting->option_value) == 'yes') {
                             if (intval($discount_amount) > 0) {
                                 $adding_discount = $stripe->coupons->create([
@@ -488,7 +505,6 @@ class OrderController extends Controller
                                 $items
                             ]
                         ];
-                        $enable_discount_setting = AdminSetting::where('option_name', 'enable_discount')->first();
                         if (!empty($enable_discount_setting) && strtolower($enable_discount_setting->option_value) == 'yes' && ($discount_amount > 0)) {
                             $checkout_session = $stripe->checkout->sessions->create([
                                 'success_url' => url('/thankyou/' . $order_id) . '?session_id={CHECKOUT_SESSION_ID}',
@@ -582,6 +598,22 @@ class OrderController extends Controller
                     $order->discount_amount = $discount_amount;
                     $order->tax_rate = $total_tax_rate;
                     $order->save();
+
+
+                    if (!empty($enable_discount_setting) && strtolower($enable_discount_setting->option_value) == 'yes') {
+                        if (!empty($order->discount_id)) {
+                            $update_discount_count = Discount::where('id', $order->discount_id)->first();
+                            if (!empty($update_discount_count)) {
+                                $update_discount_count->usage_count = !empty($update_discount_count->usage_count ? $update_discount_count->usage_count : 0)  + 1;
+                                $update_discount_count->save();
+
+                                $customer_discount_uses = new CustomerDiscountUses();
+                                $customer_discount_uses->discount_id = $order->discount_id;
+                                $customer_discount_uses->contact_id = $order->memberId;
+                                $customer_discount_uses->save();
+                            }
+                        }
+                    }
 
                     $order_id =  $order->id;
                     $currentOrder = ApiOrder::where('id', $order->id)->first();
