@@ -40,6 +40,7 @@ use App\Models\Pricing;
 use App\Models\Pricingnew;
 use App\Models\ProductBuyList;
 use App\Models\ProductOption;
+use App\Models\TaxClass;
 use App\Models\WholesaleApplicationInformation;
 use App\Models\WholesaleApplicationAddress;
 use App\Models\WholesaleApplicationAuthorizationDetail;
@@ -1213,6 +1214,40 @@ class UserController extends Controller
         $user_order->createdDate = $createdDate->format('F \  j, Y');
         $user_address = Contact::where('user_id', $user_id)->first();
         $orderdetails = ApiOrderItem::where('order_id', $id)->with('product')->get();
+        $discount_variation_value = 0;
+        $discount_variation = null;
+        $enable_discount_setting = AdminSetting::where('option_name', 'enable_discount')->first();
+        if (!empty($enable_discount_setting) && strtolower($enable_discount_setting->option_value) == 'yes') {
+            if (!empty($user_order->discount)) {
+                $discount_variation_value = $user_order->discount->discount_variation_value;
+                $discount_variation = $user_order->discount->discount_variation;
+            }
+        }
+        $tax=0;
+        $tax_rate = 0;
+        $subtotal = 0;
+        $tax_without_discount = 0;
+        $subtotal = $user_order->total;
+        $tax_class = TaxClass::where('name', $order_detail->contact->tax_class)->first();
+        $discount_amount = $user_order->discount_amount;
+        if (isset($discount_variation_value) && !empty($discount_variation_value) && $discount_amount > 0) {
+            $discount_variation_value = $discount_variation_value;
+            if (!empty($tax_class)) {
+                $tax_rate = $tax_class->rate;
+                $tax_without_discount = $subtotal * ($tax_rate / 100);
+                if (!empty($discount_variation) && $discount_variation == 'percentage') {
+                    $tax = $tax_without_discount - ($tax_without_discount * ($discount_variation_value / 100));
+                } else {
+                    $tax = $tax_without_discount - $discount_variation_value;
+                }
+            }
+
+        } else {
+            if (!empty($tax_class)) {
+                $tax_rate = $tax_class->rate;
+                $tax = $subtotal * ($tax_rate / 100);
+            }
+        } 
         return view('my-account.order-detail', compact(
             'lists',
             'user',
@@ -1222,7 +1257,8 @@ class UserController extends Controller
             'companies',
             'user_order',
             'orderdetails',
-            'order_detail'
+            'order_detail',
+            'tax',
         ));
     }
     // address

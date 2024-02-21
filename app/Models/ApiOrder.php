@@ -47,7 +47,10 @@ class ApiOrder extends Model
         'is_stripe',
         'label_link',
         'order_status_id',
-        'is_default'
+        'is_default',
+        'discount_id',
+        'discount_amount',
+        'tax_rate'
     ];
     public function contact()
     {
@@ -94,5 +97,9 @@ class ApiOrder extends Model
     public function texClasses()
     {
         return $this->belongsTo('App\Models\TaxClass', 'tax_class_id', 'id');
+    }
+    public function discount()
+    {
+        return $this->belongsTo('App\Models\Discount', 'discount_id', 'id');
     }
 }

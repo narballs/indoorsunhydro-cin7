@@ -256,18 +256,30 @@
                                     </thead>
                                     <tbody class="order-detail-tbody">
                                         @php
-                                            $tax=0;
-                                            $shipment_price = 0;
-                                            $discount = !empty($order->discount_amount) ? $order->discount_amount : 0;
-                                            if (!empty($order->shipment_price)) {
-                                                $shipment_price = $order->shipment_price;
-                                            }
-                                            if (!empty($tax_class)) {
-                                                $tax = $order->total * ($tax_class->rate / 100);
-                                            }
-                                            $add_discount_to_total = 0;
-                                            $add_discount_to_total = $order->total - $discount;
-                                            $total_including_tax = $tax + $shipment_price + $add_discount_to_total;
+                                            // $tax=0;
+                                            // $tax_rate = 0;
+                                            // $subtotal = 0;
+                                            // $tax_without_discount = 0;
+                                            // $subtotal = $order->total;
+                                            // $discount_amount = $order->discount_amount;
+	                                        // if (isset($discount_variation_value) && !empty($discount_variation_value) && $discount_amount > 0) {
+                                            //     $discount_variation_value = $discount_variation_value;
+                                            //     if (!empty($tax_class)) {
+                                            //         $tax_rate = $tax_class->rate;
+                                            //         $tax_without_discount = $subtotal * ($tax_rate / 100);
+                                            //         if (!empty($discount_variation) && $discount_variation == 'percentage') {
+                                            //             $tax = $tax_without_discount - ($tax_without_discount * ($discount_variation_value / 100));
+                                            //         } else {
+                                            //             $tax = $tax_without_discount - $discount_variation_value;
+                                            //         }
+                                            //     }
+
+                                            // } else {
+                                            //     if (!empty($tax_class)) {
+                                            //         $tax_rate = $tax_class->rate;
+                                            //         $tax = $subtotal * ($tax_rate / 100);
+                                            //     }
+                                            // }  
                                         @endphp
                                         @foreach ($orderitems as $item)
                                             @foreach($item->product->options as $option)
@@ -343,16 +355,16 @@
                                         </tr>
                                         <tr class="border-bottom">
                                             <td colspan="4" class="add_colspan"><span class="summary-head mx-2">Shipping</span></td>
-                                            <td class="text-center"><span class="order-item-price">${{ number_format($shipment_price, 2) }}</span></td>
+                                            <td class="text-center"><span class="order-item-price">${{ number_format($order->shipment_price, 2) }}</span></td>
                                         </tr>
                                         <tr class="border-bottom">
                                             <td colspan="4" class="add_colspan"><span class="summary-head mx-2">Add Tax</span></td>
-                                            <td class="text-center"><span class="order-item-price" id="tax_text">${{ number_format($tax, 2) }}</span>
+                                            <td class="text-center"><span class="order-item-price" id="tax_text">${{ !empty($order->tax_rate) ? number_format($order->tax_rate , 2) : number_format($tax, 2) }}</span>
                                             </td>
                                         </tr>
                                         <tr class="fw-bold">
                                             <td colspan="4" class="add_colspan"><span class="summary-head mx-2">GRAND TOTAL</span></td>
-                                            <td class="text-center"><span class="order-grand-total" id="grand_total_text">${{ number_format($total_including_tax, 2) }}</span></td>
+                                            <td class="text-center"><span class="order-grand-total" id="grand_total_text">${{ number_format($order->total_including_tax, 2) }}</span></td>
                                         </tr>
                                     </tfoot>
                                 </table>

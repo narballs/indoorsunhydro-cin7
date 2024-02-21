@@ -172,6 +172,40 @@ class OrderManagementController extends Controller
         }
 
         $order_statuses = OrderStatus::orderby('id', 'desc')->get();
+        $discount_variation_value = 0;
+        $discount_variation = null;
+        $enable_discount_setting = AdminSetting::where('option_name', 'enable_discount')->first();
+        if (!empty($enable_discount_setting) && strtolower($enable_discount_setting->option_value) == 'yes') {
+            if (!empty($order->discount)) {
+                $discount_variation_value = $order->discount->discount_variation_value;
+                $discount_variation = $order->discount->discount_variation;
+            }
+        }
+
+        $tax=0;
+        $tax_rate = 0;
+        $subtotal = 0;
+        $tax_without_discount = 0;
+        $subtotal = $order->total;
+        $discount_amount = $order->discount_amount;
+        if (isset($discount_variation_value) && !empty($discount_variation_value) && $discount_amount > 0) {
+            $discount_variation_value = $discount_variation_value;
+            if (!empty($tax_class)) {
+                $tax_rate = $tax_class->rate;
+                $tax_without_discount = $subtotal * ($tax_rate / 100);
+                if (!empty($discount_variation) && $discount_variation == 'percentage') {
+                    $tax = $tax_without_discount - ($tax_without_discount * ($discount_variation_value / 100));
+                } else {
+                    $tax = $tax_without_discount - $discount_variation_value;
+                }
+            }
+
+        } else {
+            if (!empty($tax_class)) {
+                $tax_rate = $tax_class->rate;
+                $tax = $subtotal * ($tax_rate / 100);
+            }
+        }  
         
         return view('admin/order-details', compact(
             'order',
@@ -185,7 +219,8 @@ class OrderManagementController extends Controller
             'time_difference_seconds',
             'auto_fullfill',
             'is_processing',
-            'order_statuses'
+            'order_statuses',
+            'tax'
         ));
     }
 
