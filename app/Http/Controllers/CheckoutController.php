@@ -31,6 +31,7 @@ use App\Helpers\SettingHelper;
 use App\Helpers\UserHelper;
 use App\Models\AdminSetting;
 use App\Models\CustomerDiscount;
+use App\Models\CustomerDiscountUses;
 use App\Models\Discount;
 use App\Models\ProductOption;
 use App\Models\UsCity;
@@ -239,7 +240,7 @@ class CheckoutController extends Controller
             ->first();
         // $cart_items = session()->get('cart');
         $current_date = Carbon::now()->format('Y-m-d');
-        $discount_code = Discount::where('start_date', '<=', $current_date)->where('end_date', '>=', $current_date)->where('status', 1)->first();
+        
         $products_weight = 0;
         foreach ($cart_items as $cart_item) {
             $product_options = ProductOption::where('product_id', $cart_item['product_id'])->where('option_id' , $cart_item['option_id'])->get();
@@ -361,6 +362,30 @@ class CheckoutController extends Controller
                 $shipment_price = 0;
             }
             $enable_discount_setting = AdminSetting::where('option_name', 'enable_discount')->first();
+            if (!empty($enable_discount_setting) && strtolower($enable_discount_setting->option_value) == 'yes') {
+                $discount_code = Discount::where('start_date', '<=', $current_date)->where('end_date', '>=', $current_date)->where('status', 1)->first();
+                if (!empty($discount_code) ) {
+                    
+                    $customer_discount_uses = CustomerDiscountUses::where('contact_id', $contact_id)->where('discount_id', $discount_code->id)->count();
+                    $max_usage_count = CustomerDiscountUses::where('discount_id', $discount_code->id)->count();
+                    if (strtolower($discount_code->max_discount_uses) === 'limit for user') {
+                        if ($customer_discount_uses >= intval($discount_code->limit_per_user)) {
+                            $discount_code = null;
+                        }
+                    }  
+                    elseif(strtolower($discount_code->max_discount_uses) === 'limit max times') {
+                        if (!empty($max_usage_count) && ($max_usage_count >= !empty($discount_code->usage_count) ? $discount_code->usage_count : 0)) {
+                            $discount_code = null;
+                        }
+                    } 
+                    
+                } else {
+                    $discount_code = null;
+                }
+            } else {
+                $discount_code = null;
+            }
+            
             return view('checkout/checkout_for_login', compact(
                 'user_address',
                 'states',
