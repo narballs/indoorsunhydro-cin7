@@ -2354,6 +2354,7 @@ $cart_price = 0;
                     var cart_total_including_tax_shipping = $('#incl_tax').val() != null ? $('#incl_tax').val() : 0;
                     var shipment_price  = $('#shipment_price').val() != null ? $('#shipment_price').val() : 0;
                     var total_tax = $('.total_tax').val() != null ? $('.total_tax').val() : 0;
+                    var cartTotal = 0;
                     var add_discount = 0;
                     var tax_discount = 0;
                     var shipping_discount = 0;
@@ -2378,35 +2379,39 @@ $cart_price = 0;
                                     if (response.specific_customers == true) {
                                         if (response.eligible == true) {
                                             $('.manuall_discount').removeClass('d-none');
-                                            if (response.discount_per_user == true && response.max_uses == false) {
+                                            if (response.discount_per_user == true && response.max_uses == true) {
                                                 
                                                 if (response.discount_variation == 'percentage') {
-                                                    apply_discount_to_percentage(response , cart_total_including_tax_shipping , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
+                                                    apply_discount_to_percentage(response , cart_total_including_tax_shipping, cartTotal , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
                                                 } else {
-                                                    apply_discount_to_fixed(response , cart_total_including_tax_shipping , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
+                                                    apply_discount_to_fixed(response , cart_total_including_tax_shipping, cartTotal , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
                                                 }
                                                 message = response.message;
                                                 $('.coupen_code_message').html(message);
                                                 $('.discount_form').addClass('d-none');
-                                            } else if (response.discount_max_times == true && response.max_uses == false) {
+                                            } else if (response.discount_max_times == true && response.max_uses == true) {
                                                 
                                                 if (response.discount_variation == 'percentage') {
-                                                    apply_discount_to_percentage(response , cart_total_including_tax_shipping , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
+                                                    apply_discount_to_percentage(response , cart_total_including_tax_shipping, cartTotal , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
                                                 } else {
-                                                    apply_discount_to_fixed(response , cart_total_including_tax_shipping , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
+                                                    apply_discount_to_fixed(response , cart_total_including_tax_shipping, cartTotal , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
                                                 }
                                                 message = response.message;
                                                 $('.coupen_code_message').html(message);
                                                 $('.discount_form').addClass('d-none');
-                                            } else if (response.discount_max_times == false && response.discount_per_user == false && response.max_uses == false && response.max_discount_uses_none == true) {
+                                            } else if (response.discount_max_times == false && response.discount_per_user == false && response.max_uses == true && response.max_discount_uses_none == true) {
                                                 if (response.discount_variation == 'percentage') {
-                                                    apply_discount_to_percentage(response , cart_total_including_tax_shipping , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
+                                                    apply_discount_to_percentage(response , cart_total_including_tax_shipping, cartTotal , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
                                                 } else {
-                                                    apply_discount_to_fixed(response , cart_total_including_tax_shipping , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
+                                                    apply_discount_to_fixed(response , cart_total_including_tax_shipping, cartTotal , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
                                                 }
                                                 message = response.message;
                                                 $('.coupen_code_message').html(message);
                                                 $('.discount_form').addClass('d-none');
+                                            } else {
+                                                $('.manuall_discount').addClass('d-none');
+                                                message = response.message;
+                                                $('.coupen_code_message').html(message);
                                             } 
                                         } else {
                                             $('.manuall_discount').addClass('d-none');
@@ -2416,35 +2421,39 @@ $cart_price = 0;
                                     } else {
                                         if (response.eligible == true) {
                                             $('.manuall_discount').removeClass('d-none');
-                                            if (response.discount_per_user == true && response.max_uses == false) {
+                                            if (response.discount_per_user == true && response.max_uses == true) {
                                                 if (response.discount_variation == 'percentage') {
-                                                    apply_discount_to_percentage(response , cart_total_including_tax_shipping , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
+                                                    apply_discount_to_percentage(response , cart_total_including_tax_shipping, cartTotal , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
                                                 } else {
-                                                    apply_discount_to_fixed(response , cart_total_including_tax_shipping , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
+                                                    apply_discount_to_fixed(response , cart_total_including_tax_shipping, cartTotal , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
                                                 }
                                                 
                                                 message = response.message;
                                                 $('.coupen_code_message').html(message);
                                                 $('.discount_form').addClass('d-none');
-                                            } else if (response.discount_max_times == true && response.max_uses == false) {
+                                            } else if (response.discount_max_times == true && response.max_uses == true) {
                                                 if (response.discount_variation == 'percentage') {
-                                                    apply_discount_to_percentage(response , cart_total_including_tax_shipping , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
+                                                    apply_discount_to_percentage(response , cart_total_including_tax_shipping, cartTotal , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
                                                 } else {
-                                                    apply_discount_to_fixed(response , cart_total_including_tax_shipping , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
+                                                    apply_discount_to_fixed(response , cart_total_including_tax_shipping, cartTotal , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
                                                 }
                                                 message = response.message;
                                                 $('.coupen_code_message').html(message);
                                                 $('.discount_form').addClass('d-none');
-                                            } else if (response.discount_max_times == false && response.discount_per_user == false && response.max_uses == false && response.max_discount_uses_none == true) {
+                                            } else if (response.discount_max_times == false && response.discount_per_user == false && response.max_uses == true && response.max_discount_uses_none == true) {
                                                 if (response.discount_variation == 'percentage') {
-                                                    apply_discount_to_percentage(response , cart_total_including_tax_shipping , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
+                                                    apply_discount_to_percentage(response , cart_total_including_tax_shipping, cartTotal , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
                                                 } else {
-                                                    apply_discount_to_fixed(response , cart_total_including_tax_shipping , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
+                                                    apply_discount_to_fixed(response , cart_total_including_tax_shipping, cartTotal , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
                                                 }
                                                 message = response.message;
                                                 $('.coupen_code_message').html(message);
                                                 $('.discount_form').addClass('d-none');
-                                            } 
+                                            } else {
+                                                $('.manuall_discount').addClass('d-none');
+                                                message = response.message;
+                                                $('.coupen_code_message').html(message);
+                                            }
                                         } else {
                                             $('.manuall_discount').addClass('d-none');
                                             message = response.message;
@@ -2459,7 +2468,7 @@ $cart_price = 0;
                         });
                     }
                 }
-                function apply_discount_to_percentage(response , cart_total_including_tax_shipping , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal) {
+                function apply_discount_to_percentage(response ,cartTotal ,cart_total_including_tax_shipping , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal) {
                     var total_shipping_price = 0;
                     var total_tax_price = 0;
                     $('.discount_variation').val('percentage');
@@ -2480,18 +2489,39 @@ $cart_price = 0;
                     $('.checkout_tax_rate').html('$' + total_tax_price.toFixed(2));
                     $('.checkout_shipping_price').html('$' + total_shipping_price.toFixed(2));
                 }
-                function apply_discount_to_fixed(response , cart_total_including_tax_shipping , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal) {
+                function apply_discount_to_fixed(response , cartTotal,cart_total_including_tax_shipping , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal) {
+                    var productTotal = $('.items_total_price').val() != null ?  parseFloat($('.items_total_price').val().replace(',', '')) : 0;
                     $('.discount_variation').val('fixed');
                     $('.discount_variation_value').val(response.discount_variation_value);
-                    add_discount = parseInt(response.discount_variation_value);
+                    add_discount = response.discount_variation_value;
                     tax_discount = parseInt(response.discount_variation_value);
                     shipping_discount = parseInt(response.discount_variation_value);
+                    
+                    var  total_shipping_price = 0;
+                    var  total_tax_price = 0;
+                    if (tax_discount > total_tax) {
+                        total_tax_price = 0;
+                    } else {
+                        total_tax_price = total_tax - tax_discount;
+                    }
+                    if (shipping_discount > shipment_price) {
+                        total_shipping_price = 0;
+                    } else {
+                        total_shipping_price = shipment_price - shipping_discount;
+                    }
+
+                    if (add_discount > productTotal) {
+                        subtotal = 0;
+                        total = 0;
+                    } else if(total_tax_price == 0  && total_shipping_price == 0) {
+                        subtotal = productTotal - add_discount;
+                        total = subtotal;
+                    } else {
+                        subtotal = cart_total_including_tax_shipping - add_discount;
+                        total = subtotal;
+                    }
                     $('.discount_amount').val(add_discount.toFixed(2));
                     $('.checkout_discount_rate_manuall').html('$' + add_discount.toFixed(2));
-                    subtotal = cart_total_including_tax_shipping - add_discount;
-                    total = subtotal;
-                    total_shipping_price = shipment_price - shipping_discount;
-                    total_tax_price = total_tax - tax_discount;
                     $('#shipment_price').val(total_shipping_price.toFixed(2));
                     $('.total_tax').val(total_tax_price.toFixed(2));
                     $('#incl_tax').val(total.toFixed(2));

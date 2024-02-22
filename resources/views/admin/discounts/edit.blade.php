@@ -645,9 +645,9 @@
             var variation_value =  $('#discount_variation').val();
             if (variation_value === 'percentage') {
                 var value = element.val();
-                if (value > 99) {
-                    $(this).val(99)
-                    $('#discount_variation_value_error').html('The Discount value cant be greater than 99%');
+                if (value > 100) {
+                    $(this).val(100)
+                    $('#discount_variation_value_error').html('The Discount value cant be greater than 100%');
                 }
             }
         }
