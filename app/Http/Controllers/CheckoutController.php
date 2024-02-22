@@ -373,7 +373,7 @@ class CheckoutController extends Controller
                                 $discount_code = null;
                             }
                         } else {
-                            $discount_code = null;
+                            $discount_code = $discount_code;
                         }
                     }  
                     elseif(strtolower($discount_code->max_discount_uses) === 'limit max times') {
@@ -382,10 +382,10 @@ class CheckoutController extends Controller
                             if ($usage_count >= $discount_code->max_usage_count) {
                                 $discount_code = null;
                             }
+                        } else {
+                            $discount_code = $discount_code;
                         }
-                        else {
-                            $discount_code = null;
-                        }
+                        
                     } 
                     
                 } else {

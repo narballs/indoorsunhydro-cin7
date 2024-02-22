@@ -2469,16 +2469,18 @@ $cart_price = 0;
                     }
                 }
                 function apply_discount_to_percentage(response ,cartTotal ,cart_total_including_tax_shipping , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal) {
+                    var productTotal = $('.items_total_price').val() != null ?  parseFloat($('.items_total_price').val().replace(',', '')) : 0;
                     var total_shipping_price = 0;
                     var total_tax_price = 0;
                     $('.discount_variation').val('percentage');
                     $('.discount_variation_value').val(response.discount_variation_value);
-                    add_discount = (cart_total_including_tax_shipping * response.discount_variation_value / 100);
+                    add_discount = ((productTotal + parseFloat(total_tax) + parseFloat(shipment_price))  * parseFloat(response.discount_variation_value) / 100);
+                    $('#discount_amount').val(add_discount.toFixed(2));
+                    $('.checkout_discount_rate_manuall').html('$' + add_discount.toFixed(2));
                     tax_discount = (total_tax * response.discount_variation_value / 100);
                     shipping_discount = (shipment_price * response.discount_variation_value / 100);
-                    $('.discount_amount').val(add_discount.toFixed(2));
-                    $('.checkout_discount_rate_manuall').html('$' + add_discount.toFixed(2));
-                    subtotal = cart_total_including_tax_shipping - add_discount;
+                    
+                    subtotal = (productTotal + parseFloat(total_tax) + parseFloat(shipment_price)) - add_discount;
                     total = subtotal;
                     total_shipping_price = shipment_price - shipping_discount;
                     total_tax_price = total_tax - tax_discount;
@@ -2520,7 +2522,7 @@ $cart_price = 0;
                         subtotal = cart_total_including_tax_shipping - add_discount;
                         total = subtotal;
                     }
-                    $('.discount_amount').val(add_discount.toFixed(2));
+                    $('#discount_amount').val(add_discount.toFixed(2));
                     $('.checkout_discount_rate_manuall').html('$' + add_discount.toFixed(2));
                     $('#shipment_price').val(total_shipping_price.toFixed(2));
                     $('.total_tax').val(total_tax_price.toFixed(2));

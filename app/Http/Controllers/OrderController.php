@@ -71,7 +71,7 @@ class OrderController extends Controller
         $existing_contact = Contact::where('user_id', Auth::id())->first();
         $session_contact_id = Session::get('contact_id');
         $order_status = OrderStatus::where('status', 'New')->first();
-        $discount_amount = !empty($request->discount_amount) ? $request->discount_amount : 0;
+        $discount_amount = !empty($request->discount_amount) ? floatval($request->discount_amount) : floatval(0);
         $discount_type = $request->discount_variation;
         $discount_id =  $request->discount_id;
         $total_tax_rate = !empty($request->total_tax) ? $request->total_tax : 0;
@@ -417,7 +417,6 @@ class OrderController extends Controller
                     if (session()->has('cart')) {
                         $checkout_session = null;
                         if (!empty($enable_discount_setting) && strtolower($enable_discount_setting->option_value) == 'yes' && ($discount_amount > 0)) {
-                            
                             $checkout = $this->apply_discount($tax_rate,  $discount_amount, $discount_type, $order_id, $currentOrder, $cart_items, $request , $discount_variation_value , $product_prices , $type = 'discount', $order_total);
                             if ($checkout) {
                                 session()->forget('cart');
@@ -527,6 +526,7 @@ class OrderController extends Controller
                             // ]);
                         } 
                         else {
+                            dd('hi');
                             $checkout = $this->checkout_without_discount($tax_rate,  $discount_amount, $discount_type, $order_id, $currentOrder, $cart_items, $request , $discount_variation_value , $product_prices , $type = 'no_discount', $order_total);
                             if ($checkout) {
                                 session()->forget('cart');
