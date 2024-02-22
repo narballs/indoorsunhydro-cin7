@@ -353,7 +353,7 @@
                                 Shipping
                             </td>
                             <td align="right" style="text-align: right;color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
-                                {{!empty($addresses['shipping_fee']) ? '$'. number_format($addresses['shipping_fee'], 2) : ''}}
+                                {{ '$'.number_format($currentOrder->shipment_price, 2) }} 
                             </td>
                         </tr>
                         <tr>
