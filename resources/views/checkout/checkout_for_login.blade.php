@@ -148,7 +148,7 @@
         font-weight: 500;
         line-height: 36px; /* 150% */
     }
-    .checkout_tax_rate_heading {
+    .checkout_tax_rate_heading , .checkout_discount_rate_heading , .checkout_discount_rate_heading_manuall {
         color: #555;
         font-family: 'Poppins';
         font-size: 17px;
@@ -158,7 +158,7 @@
         text-transform: uppercase;
         line-height: 36px; /* 150% */
     }
-    .checkout_tax_rate{
+    .checkout_tax_rate , .checkout_discount_rate, .checkout_discount_rate_manuall {
         color: #111;
         font-family: 'Poppins';
         font-size: 16px;
@@ -535,18 +535,6 @@ $cart_price = 0;
                                             @endforeach
                                         @endif
                                         
-                                        {{-- <div class="row my-5 align-items-center">
-                                            <div class="col-md-9">
-                                                <div class="form-group mb-0">
-                                                    <input type="text" name="coupen_code" id="coupen_code" class="coupen_code_input form-control">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <div class="form-group mb-0">
-                                                    <input type="button" class="checkout_coupen_btn btn btn-sm w-100" value="Apply">
-                                                </div>
-                                            </div>
-                                        </div> --}}
                                         <div class="row justify-content-center border-bottom py-3">
                                             <div class="col-md-12">
                                                 <p class="checkout_product_heading ml-0 mb-2">Delivery Options</p>
@@ -607,11 +595,22 @@ $cart_price = 0;
                                             </div>
                                         </div>
                                         @php
+                                            $discount_amount = 0;
+                                            $remove_discount = 0;
+                                            if (!empty($discount_code) && strtolower($discount_code->mode) === 'automatic') {
+                                                if ($discount_code->discount_variation === 'percentage') {
+                                                    $discount_amount = $cart_total * ($discount_code->discount_variation_value / 100);
+                                                } else {
+                                                    $discount_amount = $discount_code->discount_variation_value;
+                                                }
+                                            } 
                                             $tax=0;
                                             if (!empty($tax_class)) {
                                                 $tax = $cart_total * ($tax_class->rate / 100);
                                             }
-                                            $total_including_tax = $tax + $cart_total  + $shipment_price;
+                                            $remove_discount = $cart_total - $discount_amount;   
+                                            $total_including_tax = $tax + $remove_discount  + $shipment_price;
+                                            
                                         @endphp
                                         <input type="hidden" name="address_1_billing" value="{{ !empty($user_address->postalAddress1) ?  $user_address->postalAddress1 : '' }}">
                                         <input type="hidden" name="state_billing" value="{{ !empty($user_address->postalState) ?  $user_address->postalState : '' }}">
@@ -622,7 +621,11 @@ $cart_price = 0;
                                         <input type="hidden" name="state_shipping" value="{{ !empty($user_address->state) ?  $user_address->state : '' }}">
                                         <input type="hidden" name="zip_code_shipping" value="{{ !empty($user_address->postCode) ?  $user_address->postCode : '' }}">
                                         <input type="hidden" name="incl_tax" id="incl_tax" value="{{ $total_including_tax }}">
+                                        <input type="hidden" name="original_shipment_price" id="original_shipment_price" value="{{ $shipment_price }}">
                                         <input type="hidden" name="shipment_price" id="shipment_price" value="{{ $shipment_price }}">
+                                        <input type="hidden" name="discount_amount" class="discount_amount" id="discount_amount" value="{{ number_format($discount_amount , 2) }}">
+                                        <input type="hidden" name="items_total_price" class="items_total_price" id="" value="{{ number_format($cart_total, 2) }}">
+                                        <input type="hidden" name="total_tax" class="total_tax" id="" value="{{ number_format($tax , 2) }}">
                                         @if(!empty($tax_class))
                                         <input type="hidden" name="tax_class_id" id="tax_class_id" value="{{ $tax_class->id }}">
                                         @else
@@ -633,6 +636,67 @@ $cart_price = 0;
                                             <div class="col-md-9 col-9"><span class="checkout_subtotal_heading">Subtotal</span></div>
                                             <div class="col-md-3  col-3 text-right"><span class="checkout_subtotal_price">${{ number_format($cart_total, 2) }}</span></div>
                                         </div>
+                                        @if (!empty($enable_discount_setting) && strtolower($enable_discount_setting->option_value) === 'yes')
+                                            @if (!empty($discount_code))
+                                                <input type="hidden" name="discount_id" class="" id="" value="{{$discount_code->id}}">
+                                                <input type="hidden" name="discount_mode" class="discount_mode" value="{{strtolower($discount_code->mode) === 'automatic' ?  'automatic' : 'manuall'}}">
+                                                <input type="hidden" name="user_contact_id" id="" class="user_contact_id" value="{{!empty($user_address->contact_id) ? $user_address->contact_id : ''}}">
+                                                <input type="hidden" name="discount_variation" id="" class="discount_variation" value="{{$discount_code->discount_variation}}">
+                                                <input type="hidden" name="discount_variation_value" id="" class="discount_variation_value" value="{{$discount_code->discount_variation_value}}">
+                                                @if (strtolower($discount_code->mode) === 'manuall')
+                                                    <div class="row my-3 align-items-center discount_form">
+                                                        <p for="" class="checkout_product_heading mb-2 ml-0">Enter Promo Code</p>
+                                                        <div class="col-md-9">
+                                                            <div class="form-group mb-0">
+                                                                <input type="text" name="coupen_code" id="coupen_code" class="coupen_code_input form-control">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <div class="form-group mb-0">
+                                                                <input type="button" class="checkout_coupen_btn btn btn-sm w-100" value="Apply" onclick="apply_discount_code()">
+                                                            </div>
+                                                        </div>
+                                                        <div class="coupen_code_message text-info"></div>
+                                                    </div>
+                                                    <div class="row justify-content-center border-bottom align-items-center py-2 manuall_discount d-none">
+                                                        <div class="col-md-9 col-9">
+                                                            <span class="checkout_discount_rate_heading_manuall">
+                                                                @if ($discount_code->discount_variation === 'percentage')
+                                                                    Discount ({{$discount_code->discount_variation_value . '%'}})
+                                                                @else
+                                                                    Discount (${{ number_format($discount_code->discount_variation_value, 2) }})
+                                                                @endif
+                                                            </span>
+                                                            <span class="coupen_code_name">(<label for="">Coupon Code : </label>{{!empty($discount_code) && !empty($discount_code->discount_code)  ? $discount_code->discount_code : ''}}</span>)
+                                                            <span class="remove_coupen_code"><a href="{{url('/checkout')}}">Remove Code</a></span>
+                                                        </div>
+                                                        <div class="col-md-3 col-3 text-right">
+                                                            <span class="checkout_discount_rate_manuall">
+                                                                ${{ number_format($discount_amount, 2) }}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                @else
+                                                <div class="row my-2 justify-content-center border-bottom align-items-center py-2">
+                                                        <p for="" class="checkout_product_heading mb-2 ml-0">Enter Promo Code</p>
+                                                        <div class="col-md-9 col-9">
+                                                            <span class="checkout_discount_rate_heading">
+                                                                @if ($discount_code->discount_variation === 'percentage')
+                                                                    Discount ({{$discount_code->discount_variation_value . '%'}})
+                                                                @else
+                                                                    Discount (${{ number_format($discount_code->discount_variation_value, 2) }})
+                                                                @endif
+                                                            </span>
+                                                        </div>
+                                                        <div class="col-md-3 col-3 text-right">
+                                                            <span class="checkout_discount_rate">
+                                                                ${{ number_format($discount_amount, 2) }}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                            @endif
+                                        @endif
                                         <div class="row justify-content-center border-bottom align-items-center py-2">
                                             <div class="col-md-9 col-9">
                                                 <span class="checkout_tax_rate_heading">
@@ -789,816 +853,7 @@ $cart_price = 0;
     </div>
 </div>
 
-<!--Mobile View -->
-<!-- MultiStep Form  -->
-<div class="container-fluid mobile-view d-none">
-    <div class="row justify-content-center mt-0">
-        <div class="col-11 col-sm-9 col-md-7 col-lg-6 text-center p-0">
-            <div class="card border-0 px-0">
-                <div class="row">
 
-                    <div class="col-md-12 mx-0">
-                        <div id="msform">
-                            <!-- progressbar -->
-                            {{-- <ul id="progressbar">
-                                <li class="active" id="account"><strong>Your Card</strong></li>
-                                <li id="personal"><strong>Personal</strong></li>
-                                <li id="payment"><strong>Payment</strong></li>
-                                <li id="confirm"><strong>Finish</strong></li>
-                            </ul> --}}
-                            <!-- fieldsets -->
-                            {{--<fieldset>
-                                <button class="text-white billing-div-mobile" style="">
-                                    Billing Details
-                                </button>
-                                <div class="form-card">
-                                    <div class="card border-0">
-                                        <div class="card-body p-0 m-0">
-                                            <div class="form-signup-secondary">
-                                                <div class="user-info">
-                                                    <div class="row">
-                                                        <div class="col-md-6">
-                                                            <label
-                                                                class="label custom_label_style mt-5 text-uppercase fw-bold">First
-                                                                Name</label><span
-                                                                class="text-danger fw-bold pl-1">*</span>
-                                                            <input type="text" required placeholder="Enter your first name"
-                                                                id="f_name" name="first_name"
-                                                                value="{{ $user_address->first_name ? $user_address->first_name : $user_address->firstName }}"
-                                                                class="form-control mt-0fontAwesome ">
-                                                                <div id="error_first_name" class="text-danger"></div>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <label
-                                                                class="label custom_label_style fw-bold text-uppercase ">last
-                                                                Name</label><span
-                                                                class="text-danger fw-bold pl-1">*</span>
-                                                            <input type="text" placeholder="Enter your last"
-                                                                id="l_name" name="last_name"
-                                                                value="{{ $user_address->last_name ? $user_address->last_name : $user_address->lastName }}"
-                                                                class="form-control fontAwesome  ">
-                                                                <div id="error_last_name" class="text-danger"></div>
-                                                        </div>
-                                                        <div class="col-md-12 ">
-                                                            <label
-                                                                class="label custom_label_style fw-bold text-uppercase ">company
-                                                                name
-                                                                (optional)</label>
-                                                            <input type="text"
-                                                                placeholder="Enter your company name"
-                                                                value="{{ $user_address->company }}" id="u_company"
-                                                                name="company"
-                                                                class="form-control  company-info fontAwesome  ">
-                                                                <div id="error_company" class="text-danger"></div>
-                                                        </div>
-                                                        <div class="col-md-12">
-                                                            <label
-                                                                class="label custom_label_style fw-bold text-uppercase ">street
-                                                                address</label><span
-                                                                class="text-danger fw-bold pl-1">*</span>
-                                                            <input type="text"
-                                                                placeholder="House number and street name"
-                                                                id="add_1" name="address"
-                                                                value="{{ $user_address->address1 ? $user_address->address1 : $user_address->postalAddress1 }}"
-                                                                class="form-control  company-info fontAwesome  ">
-                                                                <div id="error_address1" class="text-danger"></div>
-                                                        </div>
-                                                        <div class="col-md-12">
-                                                            <input type="text"
-                                                                placeholder="Aprtmant, suit, unit, etc.(optional)"
-                                                                id="add_2" name="address2"
-                                                                value="{{ $user_address->address2 ? $user_address->address2 : $user_address->postalAddress2 }}"
-                                                                class="form-control  company-info fontAwesome  ">
-                                                        </div>
-
-                                                        <div class="col-md-12">
-                                                            <label
-                                                                class="label custom_label_style fw-bold text-uppercase ">town
-                                                                / city</label>
-                                                            <input type="text" placeholder="Enter your town"
-                                                                id="t_city" name="city"
-                                                                value="{{ $user_address->city ? $user_address->city : $user_address->postalCity }}"
-                                                                class="form-control  company-info fontAwesome  ">
-                                                        </div>
-                                                        <div class="col-md-12">
-                                                            <label
-                                                                class="label custom_label_style fw-bold text-uppercase ">state</label><span
-                                                                class="text-danger fw-bold pl-1">*</span>
-                                                                <select class="form-control bg-light" name="state" id="state">
-                                                                    @foreach ($states as $state)
-                                                                        <?php
-                                                                        if ($user_address->state == $state->state_name) {
-                                                                            $selected = 'selected';
-                                                                        } else {
-                                                                            $selected = '';
-                                                                        }
-                                                                        ?>
-                                                                        <option value="{{ $state->state_name }}" <?php echo $selected; ?>>
-                                                                            {{ $state->state_name }}
-                                                                        </option>
-                                                                    @endforeach
-                                                                </select>
-                                                        </div>
-                                                        <div class="col-md-12">
-                                                            <label
-                                                                class="label custom_label_style fw-bold text-uppercase ">zip</label><span
-                                                                class="text-danger fw-bold pl-1">*</span>
-                                                            <input type="text" placeholder="Enter your zip"
-                                                                id="p_code" name="zip"
-                                                                value="{{ $user_address->postCode ? $user_address->postCode : $user_address->postalPostCode }}"
-                                                                class="form-control  company-info fontAwesome  ">
-                                                                <div id="error_zip" class="text-danger"></div>
-                                                        </div>
-                                                        <div class="col-md-12">
-                                                            <label
-                                                                class="label custom_label_style fw-bold text-uppercase ">phone</label><span
-                                                                class="text-danger fw-bold pl-1">*</span>
-                                                            <input type="text" placeholder="Enter your phone"
-                                                                id="d_phone" name="phone"
-                                                                value="{{ $user_address->phone }}"
-                                                                class="form-control  company-info fontAwesome  ">
-                                                                <div id="error_phone" class="text-danger"></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <button onclick="updateContact_mbl('{{ $contact_id }}')"
-                                    class=" action-button btn btn-success w-100 text-white mt-4 mx-auto mob_next_btn_footer"
-                                    style="background:#7bc533 !important;"> NEXT STEP </button>
-                                <input type="hidden" class="" id="next_step">
-                            </fieldset>--}}
-                            <fieldset>
-                                <div class="card p-4 border-0 mbl-checkout-card">
-                                    <div class="row">
-                                        <div class="col-md-6 text-left">
-                                            <div class="d-flex justify-content-between shipping-body-div-mbl">
-                                                <div class="w-75">
-                                                    <p class="billing-address-thank-you-page-heading mb-0">Billing Address</p>
-                                                </div>
-                                                <div class="w-25 text-right">
-                                                    <a data-bs-toggle="modal" href="#address_modal_id" role="button">
-                                                        <img src="/theme/img/thank_you_page_edit_icon.png" alt="">
-                                                    </a>
-                                                </div>
-                                            </div>
-                                            <div class="row billing-border-row">
-                                                <div class="col-md-12">
-                                                    <p class="user-address-thank-you-page-item mt-3"> {{ $user_address->first_name ? $user_address->first_name : $user_address->firstName }}{{ $user_address->last_name ? $user_address->last_name : $user_address->lastName }}
-                                                    </p>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <p class="user-address-thank-you-page-title mb-1">Address line 1</p>
-                                                    <p class="user-address-thank-you-page-item">{{ $user_address->address1 ? $user_address->address1 :  $user_address->postalAddress1}}</p>
-                                                    <p class="user-address-thank-you-page-title mb-1">Address line 2</p>
-                                                    <p class="user-address-thank-you-page-item">{{ $user_address->address2 ? $user_address->address2 : $user_address->postalAddress2 }}</p>
-                                                    <div class="d-flex justify-content-between">
-                                                        <div class="">
-                                                            <p class="user-address-thank-you-page-title mb-1">City</p>
-                                                            <p class="user-address-thank-you-page-item">{{ $user_address->city ? $user_address->city : $user_address->postalCity }}
-                                                            </p>
-                                                        </div>
-                                                        <div class="">
-                                                            <p class="user-address-thank-you-page-title mb-1">State</p>
-                                                            <p class="user-address-thank-you-page-item">{{ $user_address->state ? $user_address->state : $user_address->postalState }}
-                                                            </p>
-                                                        </div>
-                                                        <div class="">
-                                                            <p class="user-address-thank-you-page-title mb-1">Zip</p>
-                                                            <p class="user-address-thank-you-page-item">{{ $user_address->postCode ? $user_address->postCode : $user_address->postalPostCode }}
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 mt-5 text-left">
-                                            <div class="d-flex justify-content-between shipping-body-div-mbl">
-                                                <div class="w-75">
-                                                    <p class="billing-address-thank-you-page-heading mb-0">Shipping Address</p>
-                                                </div>
-                                                <div class="w-25 text-right">
-                                                    <a data-bs-toggle="modal" href="#address_modal_id" role="button">
-                                                        <img src="/theme/img/thank_you_page_edit_icon.png" alt="">
-                                                    </a>
-                                                </div>
-                                            </div>
-                                            <div class="row billing-border-row">
-                                                <div class="col-md-12">
-                                                    <p class="user-address-thank-you-page-item mt-3"> {{ $user_address->first_name ? $user_address->first_name : $user_address->firstName }}{{ $user_address->last_name ? $user_address->last_name : $user_address->lastName }}
-                                                    </p>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <p class="user-address-thank-you-page-title mb-1">Address line 1</p>
-                                                    <p class="user-address-thank-you-page-item">{{ $user_address->address1 ? $user_address->address1 :  $user_address->postalAddress1}}</p>
-                                                    <p class="user-address-thank-you-page-title mb-1">Address line 2</p>
-                                                    <p class="user-address-thank-you-page-item">{{ $user_address->address2 ? $user_address->address2 : $user_address->postalAddress2 }}</p>
-                                                    <div class="d-flex justify-content-between">
-                                                        <div class="">
-                                                            <p class="user-address-thank-you-page-title mb-1">City</p>
-                                                            <p class="user-address-thank-you-page-item">{{ $user_address->city ? $user_address->city : $user_address->postalCity }}
-                                                            </p>
-                                                        </div>
-                                                        <div class="">
-                                                            <p class="user-address-thank-you-page-title mb-1">State</p>
-                                                            <p class="user-address-thank-you-page-item">{{ $user_address->state ? $user_address->state : $user_address->postalState }}
-                                                            </p>
-                                                        </div>
-                                                        <div class="">
-                                                            <p class="user-address-thank-you-page-title mb-1">Zip</p>
-                                                            <p class="user-address-thank-you-page-item">{{ $user_address->postCode ? $user_address->postCode : $user_address->postalPostCode }}
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-card">
-                                    <div class="cart-items-checkout mx-4 mt-4 mb-4">Cart Items</div>
-                                    <table>
-                                        <tbody class="border-0">
-                                            <?php
-                                            $cart_total = 0;
-                                            $cart_price = 0;
-                                            ?>
-                                            
-                                            @if (Session::get('cart'))
-            
-                                            @foreach (Session::get('cart') as $product_id => $cart)
-                                                    <?php
-                                                        $total_quatity = $cart['quantity'];
-                                                        $total_price = $cart['price'] * $total_quatity;
-                                                        $cart_total = $cart_total + $total_price;
-                                                    ?>
-                                                    {{-- <tr>
-                                                        <td class="ps-3">
-                                                            <div class="mt-3">
-                                                                <a class="product-name"
-                                                                    href="{{ url('product-detail/' . $product_id . '/' . $cart['option_id'] . '/' . $cart['slug']) }}">
-                                                                    {{ $cart['name'] }}
-                                                                </a>
-                                                            </div>
-                                                        </td>
-                                                    </tr> --}}
-                                                    <tr class="border_top_mb">
-                                                        <td class="pl-4 checkout-image-td-mbl pt-3 pb-3" style="">
-                                                            <div class="py-2 mobile_thankyou_img_div">
-                                                                @if ($cart['image'])
-                                                                <img class="img-fluid img-thumbnail m_chechout_image" src="{{$cart['image']}}" alt=""
-                                                                    width="90px" style="max-height: 90px">
-                                                                @else
-                                                                <img src="/theme/img/image_not_available.png" class="m_chechout_image" alt="" width="80px">
-                                                                @endif
-                                                            </div>
-                                                        </td>
-                                                        <td class="pl-3 checkout-product-name-td-mbl pt-3 pb-3">
-                                                            <div class="ps-0 mobile_text_class" style="">
-                                                                <p class="mb-0">
-                                                                    <a class="order-confirmation-page-product-category-name pb-2"
-                                                                        href=" {{ url('product-detail/'. $product_id.'/'.$cart['option_id'].'/'.$cart['slug']) }}">
-                                                                        {{$cart['name']}}
-                                                                    </a>
-                                                                </p>
-                                                                <p class="product-title-thank-you-page mb-0">Title:<span
-                                                                    class="product-title-thank-you-page-title">
-                                                                    {{ $cart['name'] }}</span>
-                                                                </p>
-                                                                <p class=" mb-0 order-confirmation-page-product-price text-right"> ${{number_format($cart['price'],2)}}</p>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                            @endif
-                                        </tbody>
-                                    </table>
-                                    <form class="" action="{{ url('order') }}" method="POST" id="order_form_mbl" class="order_form" name="order_form">
-                                        <div class="delievery_options_div_mbl p-3">
-                                            <h3 class="delievery_options_heading ml-2">Delivery Options</h3>
-                                            <div class="d-flex justify-content-between">
-                                                @csrf
-                                                @foreach ($payment_methods as $payment_method)
-                                                    @foreach ($payment_method->options as $payment_option)
-                                                        <div class="w-50 text-center d-flex align-items-center justify-content-center">
-                                                            <input type="hidden" value="{{ $payment_method->name }}" name="method_name">
-                                                            <input type="radio" class="mb-0 radio_delievery" id="local_delivery_{{ $payment_option->id }}"
-                                                            name="method_option"  {{ $payment_option->option_name == 'Local Delivery' ? 'checked' : '' }}
-                                                            value="{{ $payment_option->option_name }}">
-                                                            <label for="local_delivery payment-option-label" class="mb-0 ml-2 delievery_label">{{ $payment_option->option_name }}</label>
-                                                        </div>
-                                                    @endforeach
-                                                @endforeach
-                                                <input type="hidden" name="incl_tax" id="incl_tax" value="{{ $total_including_tax }}">
-                                                <input type="hidden" name="shipment_price" id="shipment_price" value="{{ $shipment_price }}">
-                                                @if(!empty($tax_class))
-                                                <input type="hidden" name="tax_class_id" id="tax_class_id" value="{{ $tax_class->id }}">
-                                                @else
-                                                <input type="hidden" name="tax_class_id" id="tax_class_id" value="{{$tax_class_none->id}}">
-                                                @endif
-                                            </div>
-                                        </div>
-                                        <div class="w-100 suborderSummarymbl_main p-3">
-                                            <div class="suborderSummarymbl p-2">
-                                                <div>
-                                                    <h3 class="delievery_options_mbl mb-3">
-                                                        Total
-                                                    </h3>
-                                                    <div class="d-flex w-100 mb-2">
-                                                        <div class="w-50 p-1">
-                                                            <span class="summary_sub_total_head">Subtotal:</span>
-                                                        </div>
-                                                        <div class="w-50 p-1 text-right">
-                                                            <span class="summary_sub_total_price text-right">${{ number_format($cart_total, 2) }}</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="d-flex w-100 mb-2">
-                                                        <div class="w-50 p-1">
-                                                            <span class="summary_sub_total_head">Rate
-                                                                @if(!empty($tax_class))
-                                                                    ({{ number_format($tax_class->rate  , 2)}}%)
-                                                                @else 
-                                                                        ({{ number_format(0  , 2)}})
-                                                                @endif 
-                                                                :
-                                                            </span>
-                                                        </div>
-                                                        <div class="w-50 p-1 text-right">
-                                                            <p class="summary_sub_total_price text-right mb-0" id="mbl_tax_price">${{ number_format($tax, 2) }}</p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="d-flex w-100 mb-2">
-                                                        <div class="w-50 p-1">
-                                                            <span class="summary_sub_total_head">Shipment Price:</span>
-                                                        </div>
-                                                        <div class="w-50 p-1 text-right">
-                                                            <span class="summary_sub_total_price text-right">${{number_format($shipment_price , 2)}}</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="d-flex w-100">
-                                                        <div class="w-50 p-1 d-flex align-items-center">
-                                                            <span class="summary_sub_total_head">Total:</span>
-                                                        </div>
-                                                        <div class="w-50 p-1 text-right">
-                                                            <p class="summary_total_price text-right mb-0" id="mbl_total_p">${{ number_format($total_including_tax, 2) }}</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row mt-2 p-3">
-                                            <div class="ps-1">
-                                                <div class=" mt-1">
-                                                    <p class="payment-option">Please Select Date</p>
-                                                    <input type="datetime-local" name="date" class="form-control datetimembl_" min="" id="date">
-                                                </div>
-                                                <div class="">
-                                                    <p class="payment-option">Purchase Order Number</p>
-                                                    <input type="text" name="po_number" placeholder="PO Number" id="po_number"
-                                                        class="form-control fontAwesome">
-                                                </div>
-                                                <div class="">
-                                                    <p class="payment-option">Memo</p>
-                                                    <textarea type="text" name="memo" cols="20" rows="5" placeholder="Enter your Message"
-                                                        id="memo" class="form-control fontAwesome">
-                                                        </textarea>
-                                                </div>
-                                                <div class="">
-                                                    <p class="payment-option">Payment Terms</p>
-                                                    
-                                                    <select name="paymentTerms" id="pay_terms" class="form-control w-75">
-                                                        @if(strtolower($user_address->paymentTerms) == "pay in advanced" )
-                                                            <option value="Pay in Advanced" selected>Pay in Advanced</option>
-                                                        @else
-                                                            <option value="30 days from invoice" selected>30 days from invoice</option>
-                                                        @endif
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        @if ($zip_code_is_valid === true)
-                                            <div class="text-center">
-                                                <button type="button" class="proceedCheckoutmbl mt-4 w-100 p-2 border-0"
-                                                    id="proceed_to_checkout" onclick="validate_mbl()">
-                                                    Place Order</button>
-                                            </div>
-                                        @else
-                                            <div class="w-100">
-                                                <div class="alert alert-danger text-center">
-                                                    <span>
-                                                        <strong>Sorry, we don't deliver to this address.</strong>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        @endif
-                                    </form>
-                                </div>
-                            </fieldset>
-                            <fieldset>
-                                <div class="form-card">
-                                    <h2 class="fs-title text-center">Success !</h2>
-                                    <br><br>
-                                    <div class="row justify-content-center">
-                                        <div class="col-3">
-                                            <img src="https://img.icons8.com/color/96/000000/ok--v2.png"
-                                                class="fit-image">
-                                        </div>
-                                    </div>
-                                    <br><br>
-                                    <div class="row justify-content-center">
-                                        <div class="col-7 text-center">
-                                            <h5>You Have Successfully !</h5>
-                                        </div>
-                                    </div>
-                                </div>
-                            </fieldset>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!--ipad View -->
-<!-- MultiStep Form  -->
-<div class="container-fluid ipad-view d-none">
-    <div class="row justify-content-center mt-0">
-        <div class="col-md-12">
-            <div class="card border-0 px-0">
-                <div class="row">
-                    <div class="col-md-12 mx-0">
-                        <div id="msform">
-                            <!-- progressbar -->
-                            {{-- <ul id="progressbar">
-                                <li class="active" id="account"><strong>Your Card</strong></li>
-                                <li id="personal"><strong>Personal</strong></li>
-                                <li id="payment"><strong>Payment</strong></li>
-                                <li id="confirm"><strong>Finish</strong></li>
-                            </ul> --}}
-                            <!-- fieldsets -->
-                            <fieldset>
-                                <input type="button" value="Next" name="next"
-                                    class="next action-button next-btn-mobile"
-                                    style="background:#7bc533 !important;left:86% !important;">
-                                <button class="text-white billing-div-mobile" style="width: 104% !important;">
-                                    Billing Details
-                                </button>
-                                <div class="form-card">
-                                    <div class="card border-0">
-                                        <div class="card-body p-0 m-0">
-                                            <div class="form-signup-secondary">
-                                                <div class="user-info">
-                                                    <div class="row">
-                                                        <div class="col-md-12">
-                                                            <label
-                                                                class="label custom_label_style mt-5 fw-bold text-uppercase">First
-                                                                Name</label><span
-                                                                class="text-danger fw-bold pl-1">*</span>
-                                                            <input type="text" placeholder="Enter your first name"
-                                                                id="company_website" name="firstName"
-                                                                value="{{ $user_address->first_name ?  $user_address->first_name : $user_address->firstName}}"
-                                                                class="form-control mt-0fontAwesome">
-                                                        </div>
-                                                        <div class="col-md-12">
-                                                            <label
-                                                                class="label custom_label_style fw-bold text-uppercase ">last
-                                                                Name</label><span
-                                                                class="text-danger fw-bold pl-1">*</span>
-                                                            <input type="text" placeholder="Enter your last"
-                                                                id="company_website" name="lastName"
-                                                                value="{{ $user_address->last_name ?  $user_address->last_name : $user_address->lastName}}"
-                                                                class="form-control fontAwesome ">
-                                                        </div>
-                                                        <div class="col-md-12 ">
-                                                            <label
-                                                                class="label custom_label_style fw-bold text-uppercase">company
-                                                                name
-                                                                (optional)</label><span
-                                                                class="text-danger fw-bold pl-1">*</span>
-                                                            <input type="text"
-                                                                placeholder="Enter your company name"
-                                                                value="{{ $user_address->company }}" id="company"
-                                                                name="company"
-                                                                class="form-control  company-info fontAwesome ">
-                                                        </div>
-                                                        <div class="col-md-12">
-                                                            <label
-                                                                class="label custom_label_style fw-bold text-uppercase ">street
-                                                                address</label><span
-                                                                class="text-danger fw-bold pl-1">*</span>
-                                                            <input type="text"
-                                                                placeholder="House number and street name"
-                                                                id="postalAddress1" name="postalAddress1"
-                                                                value="{{ $user_address->address1 ?  $user_address->address1 : $user_address->postalAddress1}}"
-                                                                class="form-control  company-info fontAwesome ">
-                                                        </div>
-                                                        <div class="col-md-12">
-                                                            <input type="text"
-                                                                placeholder="Aprtmant, suit, unit, etc.(optional)"
-                                                                id="postalAddress2" name="postalAddress2"
-                                                                value="{{ $user_address->address2 ?  $user_address->address2 : $user_address->postalAddress2}}"
-                                                                class="form-control  company-info fontAwesome ">
-                                                        </div>
-
-                                                        <div class="col-md-12">
-                                                            <label
-                                                                class="label custom_label_style fw-bold text-uppercase ">town
-                                                                / city</label><span
-                                                                class="text-danger fw-bold pl-1">*</span>
-                                                            <input type="text" placeholder="Enter your town"
-                                                                id="postalCity" name="postalCity"
-                                                                value="{{ $user_address->city ?  $user_address->city : $user_address->postalCity}}"
-                                                                class="form-control  company-info fontAwesome ">
-                                                        </div>
-                                                        <div class="col-md-12">
-                                                            <label
-                                                                class="label custom_label_style fw-bold text-uppercase ">state</label><span
-                                                                class="text-danger fw-bold pl-1">*</span>
-                                                            <input type="text" placeholder="Enter your state"
-                                                                id="postalState" name="postalState"
-                                                                value="{{ $user_address->state ?  $user_address->state : $user_address->postalState}}"
-                                                                class="form-control  company-info fontAwesome ">
-                                                        </div>
-                                                        <div class="col-md-12">
-                                                            <label
-                                                                class="label custom_label_style fw-bold text-uppercase ">zip</label><span
-                                                                class="text-danger fw-bold pl-1">*</span>
-                                                            <input type="text" placeholder="Enter your zip"
-                                                                id="postalPostCode" name="postalPostCode"
-                                                                value="{{$user_address->postCode ? $user_address->postCode : $user_address->postalPostCode }}"
-                                                                class="form-control  company-info fontAwesome ">
-                                                        </div>
-                                                        <div class="col-md-12">
-                                                            <label
-                                                                class="label custom_label_style fw-bold text-uppercase ">phone</label><span
-                                                                class="text-danger fw-bold pl-1">*</span>
-                                                            <input type="text" placeholder="Enter your phone"
-                                                                id="phone" name="phone"
-                                                                value="{{ $user_address->phone }}"
-                                                                class="form-control  company-info fontAwesome ">
-                                                            <div class="text-danger" id="password_errors"></div>
-                                                        </div>
-                                                        <div class="col-md-12">
-                                                            <label
-                                                                class="label custom_label_style fw-bold text-uppercase ">email
-                                                                address</label><span
-                                                                class="text-danger fw-bold pl-1">*</span>
-                                                            <input type="text"
-                                                                placeholder="Enter your email adress"
-                                                                id="emailAddress" name="password"
-                                                                class="form-control  company-info fontAwesome ">
-                                                        </div>
-                                                        {{-- <button type="button" class="btn btn-success next action-button text-white ipad_next_btn_footer mx-3" style="background:#7bc533 !important;"> NEXT STEP </button> --}}
-                                                        {{-- <div class="d-flex justify-content-center align-items-center">
-                                                            <div>
-                                                                <img class="img-fluid coupon-code-modal-btn" src="/theme/img/modal-icon1.png" alt="">
-                                                            </div>
-                                                            <button type="button"
-                                                                class="btn btn-primary fw-blod coupon-code-modal-btn ps-0"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#staticBackdrop">
-                                                                applay coupon
-                                                            </button>
-                                                        </div> --}}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <button type="button" onclick="updateContact_ipad({{$contact_id}})" class="btn btn-success  action-button text-white ipad_next_btn_footer"
-                                    style="background:#7bc533 !important;"> NEXT STEP </button>
-                                <input type="hidden" class="" id="next_step">
-                                {{-- <div class="d-flex justify-content-center align-items-center">
-                                    <div>
-                                        <img class="img-fluid coupon-code-modal-btn" src="/theme/img/modal-icon1.png"
-                                            alt="">
-                                    </div>
-                                    <button type="button" class="btn btn-primary fw-blod coupon-code-modal-btn ps-0"
-                                        data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                                        applay coupon
-                                    </button>
-                                </div> --}}
-                                {{-- <input type="button" name="next" class="next action-button" value="Next Step" /> --}}
-                            </fieldset>
-                            <fieldset>
-                                <div class="form-card">
-                                    <table class=" border-white" style="width:658px">
-                                        <thead>
-                                            <tr class="border-white">
-                                                <th class="ps-3">
-                                                    <span>
-                                                        <img class="img-fluid" src="/theme/img/product-iccon.png">
-                                                    </span>
-                                                    <span class="product-title">Product</span>
-                                                </th>
-                                                <th class="text-white">
-                                                    Quantity
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php
-                                            $cart_total = 0;
-                                            $cart_price = 0;
-                                            ?>
-                                            @if (Session::get('cart'))
-            
-                                            @foreach (Session::get('cart') as $product_id => $cart)
-                                                    <?php
-                                                    $total_quatity = $cart['quantity'];
-                                                    $total_price = $cart['price'] * $total_quatity;
-                                                    $cart_total = $cart_total + $total_price;
-                                                    ?>
-                                                    <tr class="border-white">
-                                                        <td class="ps-4 border-white">
-                                                            <div class="mt-3">
-                                                                <a class="product-name"
-                                                                    href="
-                                                        {{ url('product-detail/' . $cart['product_id'] . '/' . $cart['option_id'] . '/' . $cart['slug']) }}
-                                                        ">
-                                                                    {{ $cart['name'] }}
-                                                                </a>
-                                                            </div>
-                                                        </td>
-
-                                                        <td class="d-flex justify-content-end align-items-end">
-                                                            <div class="text-muted rounded-circle mt-3  product-quantity"
-                                                                id="circle">
-                                                                {{ $cart['quantity'] }}</div>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                            @endif
-                                        </tbody>
-                                    </table>
-                                    <div>
-                                        <table class="table mt-5">
-                                            <thead>
-                                                <tr>
-                                                    <th style="border-top:none !important" scope="col">Cart Total
-                                                    </th>
-                                                    <th style="border-top:none !important" scope="col"></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>
-                                                        <div class="d-flex justify-content-between">
-                                                            <span>
-                                                                <img src="theme/img/pricing_tag.png" width=" 22px">
-                                                                <span class="cart-total-checkout-page">Sub Total</span>
-                                                            </span>
-                                                            <span class="d-flex justify-content-end aling-items-end">
-                                                                <p class="sub-total-checkout-page"> ${{ number_format($cart_total, 2) }} </p>
-                                                            </span>
-                                                        </div>
-                                                        <div class="d-flex justify-content-between">
-                                                            <span>
-                                                                <img src="/theme/img/text-rate-icon.png" alt="" width=" 22px">
-                                                                <span id="ipad_tax_rate">Rate
-                                                                    @if(!empty($tax_class))
-                                                                        ({{ number_format($tax_class->rate  , 2)}}%)
-                                                                    @else 
-                                                                        ({{ number_format(0  , 2)}})
-                                                                    @endif
-                                                                </span>
-                                                            </span>
-                                                            <p id="ipad_tax_price">${{ number_format($tax, 2) }}</p>
-                                                        </div>
-                                                        <div class="d-flex justify-content-between">
-                                                            <span>
-                                                                <img src="/theme/img/text-rate-icon.png" alt="" width=" 22px">
-                                                                <span id="ipad_shipment">Shipment Price
-                                                                </span>
-                                                            </span>
-                                                            <p id="ipad_shipment_price">${{number_format($shipment_price , 2)}}</p>
-                                                        </div>
-                                                        <div class="d-flex justify-content-between">
-                                                            <span>
-                                                                <img src="/theme/img/pricing_tag.png" alt="" width=" 22px">
-                                                                <span class="cart-total-checkout-page">Total</span>
-                                                            </span>
-                                                            <span>
-                                                                <p id="ipad_total_p" class="sub-total-checkout-page">${{ number_format($total_including_tax, 2) }}</p>
-                                                            </span>
-                                                        </div>
-                                                    </td>
-                                                    <td></td>
-                                                </tr>
-                                            </tbody>
-                                            <tfoot class="border-0">
-                                                <tr>
-                                                    <td style="border-bottom:none !important;">
-                                                        <div class="cart-total-checkout-page ps-3">Delivery Options</div>
-                                                        @foreach ($payment_methods as $payment_method)
-                                                            <form class="p-2" action="{{ url('order') }}"
-                                                                method="POST" id="order_form_ipad" name="order_form">
-                                                                @csrf
-                                                                @foreach ($payment_method->options as $payment_option)
-                                                                    <div class="row">
-                                                                        <div class="ps-4">
-                                                                            <input type="hidden"
-                                                                                value="{{ $payment_method->name }}"
-                                                                                name="method_name">
-                                                                            <input type="radio"
-                                                                                id="local_delivery_{{ $payment_option->id }}"
-                                                                                name="method_option"  {{ $payment_option->option_name == 'Local Delivery' ? 'checked' : '' }}
-                                                                                value="{{ $payment_option->option_name }}">
-                                                                            <label
-                                                                                for="local_delivery payment-option-label">{{ $payment_option->option_name }}</label>
-                                                                        </div>
-                                                                    </div>
-                                                                @endforeach
-                                                        @endforeach
-                                                        <input type="hidden" name="shipment_price" id="shipment_price" value="{{ $shipment_price }}">
-                                                        <input type="hidden" name="incl_tax" id="incl_tax" value="{{ $total_including_tax }}">
-                                                        @if(!empty($tax_class))
-                                                        <input type="hidden" name="tax_class_id" id="tax_class_id" value="{{ $tax_class->id }}">
-                                                        @else
-                                                        <input type="hidden" name="tax_class_id" id="tax_class_id" value="{{$tax_class_none->id}}">
-                                                        @endif
-                                                        <div class="row mt-2">
-                                                            <div class="ps-1">
-                                                                <div class=" mt-1">
-                                                                    <p class="cart-total-checkout-page">Please Select Date</p>
-                                                                    <input type="datetime-local" name="date" class="form-control datetimeipad_" min="" id="date">
-                                                                </div>
-                                                                <div class="">
-                                                                    <p class="cart-total-checkout-page">Purchase Order Number</p>
-                                                                    <input type="text" name="po_number" placeholder="PO Number" id="po_number"
-                                                                        class="form-control fontAwesome">
-                                                                </div>
-                                                                <div class="">
-                                                                    <p class="cart-total-checkout-page">Memo</p>
-                                                                    <textarea type="text" name="memo" cols="20" rows="5" placeholder="Enter your Message"
-                                                                        id="memo" class="form-control fontAwesome">
-                                                                        </textarea>
-                                                                </div>
-                                                                <div class="">
-                                                                    <p class="cart-total-checkout-page">Payment Terms</p>
-                                                                    <select name="paymentTerms" id="pay_terms" class="form-control">
-                                                                        @if(strtolower($user_address->paymentTerms) == 'pay in advanced')
-                                                                            <option value="Pay in Advanced" selected>Pay in Advanced</option>
-                                                                        @else
-                                                                            <option value="30 days from invoice" selected>30 days from invoice</option>
-                                                                        @endif
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        @if ($zip_code_is_valid === true)
-                                                            <div class="d-flex justify-content-center mt-3">
-                                                                <button type="button" class="button-cards w-50 proceed_checkout_ipad" id="proceed_to_checkout" onclick="validate_ipad()"> Place Order</button>
-                                                            </div>
-                                                        @else
-                                                            <div class="col-md-6 mt-5"style="margin:auto; !important; max-width:600px !important;">
-                                                                <div class="alert alert-danger text-center">
-                                                                    <span>
-                                                                        <strong>Sorry, we don't deliver to this address.</strong>
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-                                                        @endif
-
-                                                        </form>
-                                                    </td>
-                                                </tr>
-                                            </tfoot>
-                                        </table>
-                                    </div>
-                                </div>
-                            </fieldset>
-                            <fieldset>
-                                <div class="form-card">
-                                    <h2 class="fs-title text-center">Success !</h2>
-                                    <br><br>
-                                    <div class="row justify-content-center">
-                                        <div class="col-3">
-                                            <img src="https://img.icons8.com/color/96/000000/ok--v2.png"
-                                                class="fit-image">
-                                        </div>
-                                    </div>
-                                    <br><br>
-                                    <div class="row justify-content-center">
-                                        <div class="col-7 text-center">
-                                            <h5>You Have Successfully !</h5>
-                                        </div>
-                                    </div>
-                                </div>
-                            </fieldset>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 <!-- Modal -->
 <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
     aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -3066,36 +2321,220 @@ $cart_price = 0;
                     });
                 }
                 function next_btn_mbl () {
-                        var next = $('#next_step');
-                        // $(".next").click(function() {
-                        // updateContact_mbl($contact_id);
-                            current_fs = next.parent();
-                            next_fs = next.parent().next();
+                    var next = $('#next_step');
+                    // $(".next").click(function() {
+                    // updateContact_mbl($contact_id);
+                        current_fs = next.parent();
+                        next_fs = next.parent().next();
 
-                            //Add Class Active
-                            $("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
+                        //Add Class Active
+                        $("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
 
-                            //show the next fieldset
-                            next_fs.show();
-                            //hide the current fieldset with style
-                            current_fs.animate({
-                                opacity: 0
-                            }, {
-                                step: function(now) {
-                                    // for making fielset appear animation
-                                    opacity = 1 - now;
-                                    current_fs.css({
-                                        'display': 'none',
-                                        'position': 'relative'
-                                    });
-                                    next_fs.css({
-                                        'opacity': opacity
-                                    });
-                                },
-                                duration: 600
-                            });
-                        // });
+                        //show the next fieldset
+                        next_fs.show();
+                        //hide the current fieldset with style
+                        current_fs.animate({
+                            opacity: 0
+                        }, {
+                            step: function(now) {
+                                // for making fielset appear animation
+                                opacity = 1 - now;
+                                current_fs.css({
+                                    'display': 'none',
+                                    'position': 'relative'
+                                });
+                                next_fs.css({
+                                    'opacity': opacity
+                                });
+                            },
+                            duration: 600
+                        });
+                    // });
+                }
+
+                function apply_discount_code() {
+                    var coupen_code = $('.coupen_code_input').val();
+                    var contact_id = $('.user_contact_id').val();
+                    var cart_total_including_tax_shipping = $('#incl_tax').val() != null ? $('#incl_tax').val() : 0;
+                    var shipment_price  = $('#shipment_price').val() != null ? $('#shipment_price').val() : 0;
+                    var total_tax = $('.total_tax').val() != null ? $('.total_tax').val() : 0;
+                    var cartTotal = 0;
+                    var add_discount = 0;
+                    var tax_discount = 0;
+                    var shipping_discount = 0;
+                    var total  = 0;
+                    var subtotal = 0;
+                    var message = null;
+                    if (coupen_code == '') {
+                        $('.coupen_code_message').html('Please enter the coupen code');
+                        return false;
+                    } else {
+                        $('.coupen_code_message').html('');
+                        $.ajax({
+                            url: "{{ url('/apply-discount-code') }}",
+                            method: 'POST',
+                            data: {
+                                "_token": "{{ csrf_token() }}",
+                                coupen_code: coupen_code,
+                                contact_id : contact_id,
+                            },
+                            success: function(response) {
+                                if (response.success == true) {
+                                    if (response.specific_customers == true) {
+                                        if (response.eligible == true) {
+                                            $('.manuall_discount').removeClass('d-none');
+                                            if (response.discount_per_user == true && response.max_uses == true) {
+                                                
+                                                if (response.discount_variation == 'percentage') {
+                                                    apply_discount_to_percentage(response , cart_total_including_tax_shipping, cartTotal , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
+                                                } else {
+                                                    apply_discount_to_fixed(response , cart_total_including_tax_shipping, cartTotal , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
+                                                }
+                                                message = response.message;
+                                                $('.coupen_code_message').html(message);
+                                                $('.discount_form').addClass('d-none');
+                                            } else if (response.discount_max_times == true && response.max_uses == true) {
+                                                
+                                                if (response.discount_variation == 'percentage') {
+                                                    apply_discount_to_percentage(response , cart_total_including_tax_shipping, cartTotal , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
+                                                } else {
+                                                    apply_discount_to_fixed(response , cart_total_including_tax_shipping, cartTotal , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
+                                                }
+                                                message = response.message;
+                                                $('.coupen_code_message').html(message);
+                                                $('.discount_form').addClass('d-none');
+                                            } else if (response.discount_max_times == false && response.discount_per_user == false && response.max_uses == true && response.max_discount_uses_none == true) {
+                                                if (response.discount_variation == 'percentage') {
+                                                    apply_discount_to_percentage(response , cart_total_including_tax_shipping, cartTotal , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
+                                                } else {
+                                                    apply_discount_to_fixed(response , cart_total_including_tax_shipping, cartTotal , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
+                                                }
+                                                message = response.message;
+                                                $('.coupen_code_message').html(message);
+                                                $('.discount_form').addClass('d-none');
+                                            } else {
+                                                $('.manuall_discount').addClass('d-none');
+                                                message = response.message;
+                                                $('.coupen_code_message').html(message);
+                                            } 
+                                        } else {
+                                            $('.manuall_discount').addClass('d-none');
+                                            message = response.message;
+                                            $('.coupen_code_message').html(message);
+                                        }
+                                    } else {
+                                        if (response.eligible == true) {
+                                            $('.manuall_discount').removeClass('d-none');
+                                            if (response.discount_per_user == true && response.max_uses == true) {
+                                                if (response.discount_variation == 'percentage') {
+                                                    apply_discount_to_percentage(response , cart_total_including_tax_shipping, cartTotal , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
+                                                } else {
+                                                    apply_discount_to_fixed(response , cart_total_including_tax_shipping, cartTotal , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
+                                                }
+                                                
+                                                message = response.message;
+                                                $('.coupen_code_message').html(message);
+                                                $('.discount_form').addClass('d-none');
+                                            } else if (response.discount_max_times == true && response.max_uses == true) {
+                                                if (response.discount_variation == 'percentage') {
+                                                    apply_discount_to_percentage(response , cart_total_including_tax_shipping, cartTotal , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
+                                                } else {
+                                                    apply_discount_to_fixed(response , cart_total_including_tax_shipping, cartTotal , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
+                                                }
+                                                message = response.message;
+                                                $('.coupen_code_message').html(message);
+                                                $('.discount_form').addClass('d-none');
+                                            } else if (response.discount_max_times == false && response.discount_per_user == false && response.max_uses == true && response.max_discount_uses_none == true) {
+                                                if (response.discount_variation == 'percentage') {
+                                                    apply_discount_to_percentage(response , cart_total_including_tax_shipping, cartTotal , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
+                                                } else {
+                                                    apply_discount_to_fixed(response , cart_total_including_tax_shipping, cartTotal , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
+                                                }
+                                                message = response.message;
+                                                $('.coupen_code_message').html(message);
+                                                $('.discount_form').addClass('d-none');
+                                            } else {
+                                                $('.manuall_discount').addClass('d-none');
+                                                message = response.message;
+                                                $('.coupen_code_message').html(message);
+                                            }
+                                        } else {
+                                            $('.manuall_discount').addClass('d-none');
+                                            message = response.message;
+                                            $('.coupen_code_message').html(message);
+                                        }
+                                    }
+                                } else {
+                                    message = response.message;
+                                    $('.coupen_code_message').html(message);
+                                }
+                            }
+                        });
                     }
+                }
+                function apply_discount_to_percentage(response ,cartTotal ,cart_total_including_tax_shipping , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal) {
+                    var productTotal = $('.items_total_price').val() != null ?  parseFloat($('.items_total_price').val().replace(',', '')) : 0;
+                    var total_shipping_price = 0;
+                    var total_tax_price = 0;
+                    $('.discount_variation').val('percentage');
+                    $('.discount_variation_value').val(response.discount_variation_value);
+                    add_discount = ((productTotal + parseFloat(total_tax) + parseFloat(shipment_price))  * parseFloat(response.discount_variation_value) / 100);
+                    $('#discount_amount').val(add_discount.toFixed(2));
+                    $('.checkout_discount_rate_manuall').html('$' + add_discount.toFixed(2));
+                    tax_discount = (total_tax * response.discount_variation_value / 100);
+                    shipping_discount = (shipment_price * response.discount_variation_value / 100);
+                    
+                    subtotal = (productTotal + parseFloat(total_tax) + parseFloat(shipment_price)) - add_discount;
+                    total = subtotal;
+                    total_shipping_price = shipment_price - shipping_discount;
+                    total_tax_price = total_tax - tax_discount;
+                    $('#shipment_price').val(total_shipping_price.toFixed(2));
+                    $('.total_tax').val(total_tax_price.toFixed(2));
+                    $('#incl_tax').val(total.toFixed(2));
+                    $('.checkout_total_price').html('$' + total.toFixed(2));
+                    $('.checkout_tax_rate').html('$' + total_tax_price.toFixed(2));
+                    $('.checkout_shipping_price').html('$' + total_shipping_price.toFixed(2));
+                }
+                function apply_discount_to_fixed(response , cartTotal,cart_total_including_tax_shipping , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal) {
+                    var productTotal = $('.items_total_price').val() != null ?  parseFloat($('.items_total_price').val().replace(',', '')) : 0;
+                    $('.discount_variation').val('fixed');
+                    $('.discount_variation_value').val(response.discount_variation_value);
+                    add_discount = response.discount_variation_value;
+                    tax_discount = parseInt(response.discount_variation_value);
+                    shipping_discount = parseInt(response.discount_variation_value);
+                    
+                    var  total_shipping_price = 0;
+                    var  total_tax_price = 0;
+                    if (tax_discount > total_tax) {
+                        total_tax_price = 0;
+                    } else {
+                        total_tax_price = total_tax - tax_discount;
+                    }
+                    if (shipping_discount > shipment_price) {
+                        total_shipping_price = 0;
+                    } else {
+                        total_shipping_price = shipment_price - shipping_discount;
+                    }
+
+                    if (add_discount > productTotal) {
+                        subtotal = 0;
+                        total = 0;
+                    } else if(total_tax_price == 0  && total_shipping_price == 0) {
+                        subtotal = productTotal - add_discount;
+                        total = subtotal;
+                    } else {
+                        subtotal = cart_total_including_tax_shipping - add_discount;
+                        total = subtotal;
+                    }
+                    $('#discount_amount').val(add_discount.toFixed(2));
+                    $('.checkout_discount_rate_manuall').html('$' + add_discount.toFixed(2));
+                    $('#shipment_price').val(total_shipping_price.toFixed(2));
+                    $('.total_tax').val(total_tax_price.toFixed(2));
+                    $('#incl_tax').val(total.toFixed(2));
+                    $('.checkout_total_price').html('$' + total.toFixed(2));
+                    $('.checkout_tax_rate').html('$' + total_tax_price.toFixed(2));
+                    $('.checkout_shipping_price').html('$' + total_shipping_price.toFixed(2));
+                }
             </script>
             @include('partials.footer')
             <script>

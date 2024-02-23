@@ -317,7 +317,8 @@
                                         $sub_total += $item->price;
                                     }
                                 @endphp
-                                {{'$'. number_format($sub_total, 2) }}
+                                {{-- {{'$'. number_format($sub_total, 2) }} --}}
+                                {{ '$'.number_format($currentOrder->total, 2) }}
                             </td>
                         </tr>
                     </table>
@@ -343,7 +344,8 @@
                                         $tax += ($item->price * $item->order->texClasses->rate) / 100;
                                     }
                                 @endphp
-                                {{'$'. number_format($tax, 2) }}
+                                {{-- {{'$'. number_format($tax, 2) }} --}}
+                                {{ '$'.number_format($currentOrder->tax_rate, 2) }}
                             </td>
                         </tr>
                         <tr>
@@ -351,7 +353,15 @@
                                 Shipping
                             </td>
                             <td align="right" style="text-align: right;color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
-                                {{!empty($addresses['shipping_fee']) ? '$'. number_format($addresses['shipping_fee'], 2) : ''}}
+                                {{ '$'.number_format($currentOrder->shipment_price, 2) }} 
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="50%" style="color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
+                                Discount
+                            </td>
+                            <td align="right" style="text-align: right;color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
+                                {{ '$'.number_format($currentOrder->discount_amount, 2) }}
                             </td>
                         </tr>
                     </table>
@@ -371,7 +381,8 @@
                                         $total = $item['order']->total_including_tax;
                                     }
                                 @endphp
-                                {{ '$'.number_format($total, 2) }}
+                                {{-- {{ '$'.number_format($total, 2) }} --}}
+                                {{ '$'.number_format($currentOrder->total_including_tax, 2) }}
                             </td>
                         </tr>
                     </table>

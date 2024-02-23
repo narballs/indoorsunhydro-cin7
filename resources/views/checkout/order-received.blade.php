@@ -588,7 +588,33 @@
 	
 </style>
 {{session()->forget('cart');}}
+{{-- @php
+	$tax=0;
+	$tax_rate = 0;
+	$subtotal = 0;
+	$tax_without_discount = 0;
+	$subtotal = $order->total;
+	$tax_class = App\Models\TaxClass::where('name', $order_contact->tax_class)->first();
+	$discount_amount = $order->discount_amount;
+	if (isset($discount_variation_value) && !empty($discount_variation_value) && $discount_amount > 0) {
+		$discount_variation_value = $discount_variation_value;
+		if (!empty($tax_class)) {
+			$tax_rate = $tax_class->rate;
+			$tax_without_discount = $subtotal * ($tax_rate / 100);
+			if (!empty($discount_variation) && $discount_variation == 'percentage') {
+				$tax = $tax_without_discount - ($tax_without_discount * ($discount_variation_value / 100));
+			} else {
+				$tax = $tax_without_discount - $discount_variation_value;
+			}
+		}
 
+	} else {
+		if (!empty($tax_class)) {
+			$tax_rate = $tax_class->rate;
+			$tax = $subtotal * ($tax_rate / 100);
+		}
+	} 
+@endphp --}}
 <div class="container-fluid main-thankyou-div" style="width:89%;">
 	<div class="">
 		<div class="col-md-12">
@@ -661,10 +687,19 @@
 								<p class="order-confirmation-page-order-number-title">Shipping</p>
 								<p class="order-confirmation-page-order-number-item">${{number_format($order->shipment_price , 2)}}</p>
 							</div>
+							
 							<div class="col-md-3">
 								<p class="order-confirmation-page-order-number-title">Tax</p>
 								<p class="order-confirmation-page-order-number-item">
-									${{ number_format(($order->total_including_tax - $order->productTotal) - $order->shipment_price, 2) }}
+									{{-- ${{ number_format(($order->total_including_tax - $order->productTotal) - $order->shipment_price, 2) + $order->discount_amount }} --}}
+									${{ !empty($order->tax_rate) ? number_format($order->tax_rate , 2) : number_format($tax, 2) }}
+								</p>
+							</div>
+							<div class="col-md-3">
+								<p class="order-confirmation-page-order-number-title">Discount</p>
+								<p class="order-confirmation-page-order-number-item">
+									{{-- ${{ number_format(($order->total_including_tax - $order->productTotal) - $order->shipment_price, 2) + $order->discount_amount }} --}}
+									${{!empty($order->discount_amount) ?  number_format($order->discount_amount, 2) : '0.00' }}
 								</p>
 							</div>
 							<div class="col-md-3">
@@ -723,7 +758,15 @@
 									<div class="col-md-3">
 										<p class="order-confirmation-page-order-number-title">Tax</p>
 										<p class="order-confirmation-page-order-number-item">
-											${{ number_format(($order->total_including_tax - $order->productTotal) - $order->shipment_price, 2) }}
+											{{-- ${{ number_format(($order->total_including_tax - $order->productTotal) - $order->shipment_price, 2) }} --}}
+											${{ !empty($order->tax_rate) ? number_format($order->tax_rate , 2) : number_format($tax, 2) }}
+										</p>
+									</div>
+									<div class="col-md-3">
+										<p class="order-confirmation-page-order-number-title">Discount</p>
+										<p class="order-confirmation-page-order-number-item">
+											{{-- ${{ number_format(($order->total_including_tax - $order->productTotal) - $order->shipment_price, 2) }} --}}
+											${{!empty($order->discount_amount) ?  number_format($order->discount_amount, 2) : '0.00' }}
 										</p>
 									</div>
 									<div class="col-md-3">
@@ -794,7 +837,15 @@
 								<div class="col-md-4">
 									<p class="order-confirmation-page-order-number-title">Tax</p>
 									<p class="order-confirmation-page-order-number-item">
-										${{ number_format(($order->total_including_tax - $order->productTotal) - $order->shipment_price  , 2) }}
+										{{-- ${{ number_format(($order->total_including_tax - $order->productTotal) - $order->shipment_price  , 2) }} --}}
+										${{ !empty($order->tax_rate) ? number_format($order->tax_rate , 2) : number_format($tax, 2) }}
+									</p>
+								</div>
+								<div class="col-md-4">
+									<p class="order-confirmation-page-order-number-title">Discount</p>
+									<p class="order-confirmation-page-order-number-item">
+										{{-- ${{ number_format(($order->total_including_tax - $order->productTotal) - $order->shipment_price  , 2) }} --}}
+										${{!empty($order->discount_amount) ?  number_format($order->discount_amount, 2) : '0.00' }}
 									</p>
 								</div>
 								<div class="col-md-4">
@@ -851,7 +902,15 @@
 								<div class="d-flex justify-content-between">
 									<p class="order-confirmation-page-tax-title">Tax</p>
 									<p class="order-confirmation-page-tax-item">
-										${{ number_format(($order->total_including_tax - $order->productTotal) - $order->shipment_price , 2) }}
+										{{-- ${{ number_format(($order->total_including_tax - $order->productTotal) - $order->shipment_price , 2) }} --}}
+										${{ !empty($order->tax_rate) ? number_format($order->tax_rate , 2) : number_format($tax, 2) }}
+									</p>
+								</div>
+								<div class="d-flex justify-content-between">
+									<p class="order-confirmation-page-tax-title">Discount</p>
+									<p class="order-confirmation-page-tax-item">
+										{{-- ${{ number_format(($order->total_including_tax - $order->productTotal) - $order->shipment_price , 2) }} --}}
+										${{!empty($order->discount_amount) ?  number_format($order->discount_amount, 2) : '0.00' }}
 									</p>
 								</div>
 							</div>
@@ -1099,7 +1158,15 @@
 												<span class="summary_sub_total_head">Rate ({{$order->texClasses->rate . '%' }}) :</span>
 											</div>
 											<div class="w-50 p-1 text-right">
-												<span class="summary_sub_total_price text-right">${{ number_format(($order->total_including_tax - $order->productTotal) - $order->shipment_price, 2) }}</span>
+												<span class="summary_sub_total_price text-right">${{ !empty($order->tax_rate) ? number_format($order->tax_rate , 2) : number_format($tax, 2) }}</span>
+											</div>
+										</div>
+										<div class="d-flex w-100 mb-2">
+											<div class="w-50 p-1">
+												<span class="summary_sub_total_head">Discount :</span>
+											</div>
+											<div class="w-50 p-1 text-right">
+												<span class="summary_sub_total_price text-right">${{!empty($order->discount_amount) ?  number_format($order->discount_amount, 2) : '0.00' }}</span>
 											</div>
 										</div>
 										<div class="d-flex w-100 mb-2">

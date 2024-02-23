@@ -43,7 +43,7 @@
                                                         <label for="type">Discount Type</label>
                                                         <select name="type" id="discount_type" class="form-control">
                                                             <option value="cart" {{$discount->type == 'cart' ? 'selected' : ''}}>Cart</option>
-                                                            <option value="products" {{$discount->type == 'cart' ? 'products' : ''}}>Products</option>
+                                                            {{-- <option value="products" {{$discount->type == 'cart' ? 'products' : ''}}>Products</option> --}}
                                                         </select>
                                                     </div>
                                                 </div>
@@ -103,8 +103,9 @@
                                                             </div>
                                                             <input type="hidden" value="{{$discount->discount_variation}}" name="discount_variation" id="discount_variation">
                                                             <div class="col-md-7">
-                                                                <input type="number" min="1" class="form-control" id="discount_variation_value" value="{{$discount->discount_variation_value}}" name="discount_variation_value" step="any" onkeydown="removeAlpha($(this))" onkeyup="removeAlpha($(this))">
+                                                                <input type="number" min="1" class="form-control discount_variation_value" onchange="check_variration_value($(this))"  id="discount_variation_value" value="{{$discount->discount_variation_value}}" name="discount_variation_value" step="any" onkeydown="removeAlpha($(this))" onkeyup="removeAlpha($(this))">
                                                             </div>
+                                                            <div class="text-info" id="discount_variation_value_error"></div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -190,12 +191,12 @@
                                                                 <input type="radio" data-value="Limit Max Times" class="discount_uses" name="max_discount_uses" value="{{$discount->max_discount_uses == 'Limit Max Times' ? 'Limit Max Times' : ''}}" id="limit_max_times" {{$discount->max_discount_uses == 'Limit Max Times' ? 'checked' : ''}}>
                                                                 <label for="">Limit number of times this discount can be used in total</label>
                                                             </div>
-                                                            <input type="number" name="max_usage_count" value="{{$discount->max_usage_count}}" id="max_usage_count" class="form-control {{$discount->max_discount_uses == 'Limit For User' ? '' : 'd-none'}}">
+                                                            <input type="number" name="max_usage_count" value="{{$discount->max_usage_count}}" id="max_usage_count" class="form-control {{$discount->max_discount_uses == 'Limit Max Times' ? '' : 'd-none'}}">
                                                             <div class="col-md-12">
-                                                                <input type="radio" data-value="Limit For User" class="discount_uses" name="max_discount_uses"  value="{{$discount->max_discount_uses == 'Limit Max Times' ? 'Limit Max Times' : ''}}" {{$discount->max_discount_uses == 'Limit For User' ? 'checked' : ''}}>
+                                                                <input type="radio" data-value="Limit For User" class="discount_uses" name="max_discount_uses"  value="{{$discount->max_discount_uses == 'Limit For User' ? 'Limit For User' : ''}}" {{$discount->max_discount_uses == 'Limit For User' ? 'checked' : ''}}>
                                                                 <label for="">Limit to one use per customer</label>
                                                             </div>
-                                                            <input type="number" name="limit_per_user" value="{{$discount->limit_per_user}}" id="limit_per_user" class="form-control {{$discount->max_discount_uses == 'Limit For User' ? '' : 'd-none'}}">
+                                                            <input type="number" name="limit_per_user" value="1" id="limit_per_user" class="form-control {{$discount->max_discount_uses == 'Limit For User' ? '' : 'd-none'}}" readonly>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -639,6 +640,18 @@
                 $('#discount_variation_value').attr('placeholder', 'Fixed Amount');
             }
         });
+
+        function check_variration_value(element) {
+            var variation_value =  $('#discount_variation').val();
+            if (variation_value === 'percentage') {
+                var value = element.val();
+                if (value > 100) {
+                    $(this).val(100)
+                    $('#discount_variation_value_error').html('The Discount value cant be greater than 100%');
+                }
+            }
+        }
+
 
         // minimum purchase requirements functionality
         $('.purchase_requirements').click(function() {

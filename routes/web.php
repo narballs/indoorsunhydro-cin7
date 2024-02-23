@@ -426,3 +426,5 @@ Route::get('admin/all-admins', [AdminSettingsController::class, 'all_admins'])->
 Route::post('admin/send-email-to-specific-admins', [AdminSettingsController::class, 'send_email_to_specific_admin'])->name('send_email_to_specific_admin');
 Route::get('check-existing-email', [CheckoutController::class, 'check_existing_email'])->name('check_existing_email');
 Route::post('authenticate-user', [CheckoutController::class, 'authenticate_user'])->name('authenticate_user');
+Route::post('apply-discount-code', [CheckoutController::class, 'apply_discount_code'])->name('apply_discount_code');
+

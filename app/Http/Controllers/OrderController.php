@@ -27,6 +27,8 @@ use Stripe\Webhook;
 use Symfony\Component\HttpFoundation\Response;
 
 use App\Helpers\SettingHelper;
+use App\Models\CustomerDiscountUses;
+use App\Models\Discount;
 use App\Models\OrderStatus;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
@@ -69,7 +71,11 @@ class OrderController extends Controller
         $existing_contact = Contact::where('user_id', Auth::id())->first();
         $session_contact_id = Session::get('contact_id');
         $order_status = OrderStatus::where('status', 'New')->first();
-        
+        $discount_amount = !empty($request->discount_amount) ? floatval($request->discount_amount) : floatval(0);
+        $discount_type = $request->discount_variation;
+        $discount_id =  $request->discount_id;
+        $total_tax_rate = !empty($request->total_tax) ? $request->total_tax : 0;
+        $discount_variation_value = !empty($request->discount_variation_value) ? $request->discount_variation_value : 0;
         if (!empty($session_contact_id)) {
             $contact = Contact::where('contact_id', $session_contact_id)->first();
             if ($contact) {
@@ -99,6 +105,17 @@ class OrderController extends Controller
                 } else {
                     return redirect('/');
                 }
+                $enable_discount_setting = AdminSetting::where('option_name', 'enable_discount')->first();
+                if (!empty($enable_discount_setting) && strtolower($enable_discount_setting->option_value) == 'yes') {
+                    // $shipment_price = !empty($request->shipment_price) ? $request->shipment_price : 0;
+                    // $total_tax = !empty($request->total_tax) ? $request->total_tax : 0;
+                    // $total_amount_with_discount = $cart_total - $discount_amount;
+                    // $order_total = $total_amount_with_discount + $total_tax + $shipment_price;
+                    $order_total = floatval($request->incl_tax);
+                } else {
+                    $order_total = floatval($request->incl_tax);
+                }
+                
 
                 $is_primary = Contact::where('contact_id', $session_contact_id)->first();
                 $enable_stripe_checkout_setting = AdminSetting::where('option_name', 'enable_stripe_checkout')->first();
@@ -339,14 +356,33 @@ class OrderController extends Controller
                     $order->logisticsCarrier = $paymentMethod;
                     $order->tax_class_id = $request->tax_class_id;
                     $order->user_switch = $user_switch;
-                    $order->total_including_tax = $request->incl_tax;
                     $order->po_number = $request->po_number;
                     $order->paymentTerms = $request->paymentTerms;
                     $order->memo = $request->memo;
                     $order->date = $request->date;
                     $order->shipment_price = $request->shipment_price;
+                    $order->total_including_tax = $order_total;
+                    $order->discount_id = $discount_id;
+                    $order->discount_amount = $discount_amount;
+                    $order->tax_rate = $total_tax_rate;
                     $order->is_stripe = 1;
                     $order->save();
+
+                    
+                    if (!empty($enable_discount_setting) && strtolower($enable_discount_setting->option_value) == 'yes') {
+                        if (!empty($order->discount_id)) {
+                            $update_discount_count = Discount::where('id', $order->discount_id)->first();
+                            if (!empty($update_discount_count)) {
+                                $update_discount_count->usage_count = !empty($update_discount_count->usage_count ? $update_discount_count->usage_count : 0)  + 1;
+                                $update_discount_count->save();
+
+                                $customer_discount_uses = new CustomerDiscountUses();
+                                $customer_discount_uses->discount_id = $order->discount_id;
+                                $customer_discount_uses->contact_id = $order->memberId;
+                                $customer_discount_uses->save();
+                            }
+                        }
+                    }
 
                     $order_id =  $order->id;
                     $currentOrder = ApiOrder::where('id', $order->id)->first();
@@ -379,118 +415,223 @@ class OrderController extends Controller
                         $tax_rate = 0;
                     }
                     if (session()->has('cart')) {
-                        foreach ($cart_items as $cart_item) {
-                            $OrderItem = new ApiOrderItem;
-                            $OrderItem->order_id = $order_id;
-                            $OrderItem->product_id = $cart_item['product_id'];
-                            $OrderItem->quantity =  $cart_item['quantity'];
-                            $OrderItem->price = $cart_item['price'];
-                            $OrderItem->option_id = $cart_item['option_id'];
-                            $OrderItem->save();
-
-                            $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
-                            $products = $stripe->products->create([
-                                'name' => $cart_item['name'],
-                            ]);
+                        $checkout_session = null;
+                        if (!empty($enable_discount_setting) && strtolower($enable_discount_setting->option_value) == 'yes' && ($discount_amount > 0)) {
+                            $checkout = $this->apply_discount($tax_rate,  $discount_amount, $discount_type, $order_id, $currentOrder, $cart_items, $request , $discount_variation_value , $product_prices , $type = 'discount', $order_total);
+                            if ($checkout) {
+                                session()->forget('cart');
+                                return redirect($checkout);
+                            }
+                            // foreach ($cart_items as $cart_item) {
+                            //     $OrderItem = new ApiOrderItem;
+                            //     $OrderItem->order_id = $order_id;
+                            //     $OrderItem->product_id = $cart_item['product_id'];
+                            //     $OrderItem->quantity =  $cart_item['quantity'];
+                            //     $OrderItem->price = $cart_item['price'];
+                            //     $OrderItem->option_id = $cart_item['option_id'];
+                            //     $OrderItem->save();
+    
+                            //     $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
+                            //     $products = $stripe->products->create([
+                            //         'name' => $cart_item['name'],
+                            //     ]);
+                                
+                            //     $productPrice = $stripe->prices->create([
+                            //         'unit_amount' => $cart_item['price'] * 100,
+                            //         'currency' => 'usd',
+                            //         'product' => $products->id,
+                            //         'metadata' => [
+                            //             'quantity'=> $cart_item['quantity']
+                            //         ]
+                            //     ]);
+                            //     array_push($product_prices, $productPrice);
+                            // }
+                            // if (!empty($tax_rate) && $tax_rate > 0) {
+                            //     $formatted_tax = number_format($tax_rate, 2);
+                            //     $formatted_tax_rate = str_replace(',', '', $formatted_tax);
+                            //     $formatted_tax_value = number_format(($formatted_tax_rate * 100) , 2);
+                            //     $tax_value = str_replace(',', '', $formatted_tax_value);
+                            //     $products_tax= $stripe->products->create([
+                            //         'name' => 'Tax',
+                            //     ]);
+    
+                            //     $taxproductPrice = $stripe->prices->create([
+                            //         'unit_amount_decimal' => $tax_value,
+                            //         'currency' => 'usd',
+                            //         'product' => $products_tax->id
+                            //     ]);
+                            // }
+    
+                            // for ($i = 0; $i <= count($product_prices) - 1; $i++){
+                            //     $items[] = [
+                            //         'price' => $product_prices[$i]->id,
+                            //         'quantity' => $product_prices[$i]['metadata']['quantity'],
+                            //     ];  
+                            // }
+                            // if (!empty($tax_rate) && $tax_rate > 0) {
+                            //     $items[] = [
+                            //         'price' => $taxproductPrice->id,
+                            //         'quantity' => '1',
+                            //     ];
+                            // }
+    
+                           
+    
+                            // // adding shipping price to order
+                            // if (!empty($request->original_shipment_price) && $request->original_shipment_price > 0) {
+                            //     $shipment_price = number_format(($request->original_shipment_price * 100) , 2);
+                            //     $shipment_value = str_replace(',', '', $shipment_price);
+                            //     $shipment_product = $stripe->products->create([
+                            //         'name' => 'Shipment',
+                            //     ]);
+                            //     $shipment_product_price = $stripe->prices->create([
+                            //         'unit_amount_decimal' => $shipment_value,
+                            //         'currency' => 'usd',
+                            //         'product' => $shipment_product->id
+                            //     ]);
+                            //     $items[] = [
+                            //         'price' => $shipment_product_price->id,
+                            //         'quantity' => '1',
+                            //     ];
+                            // }
+    
                             
-                            $productPrice = $stripe->prices->create([
-                                'unit_amount' => $cart_item['price'] * 100,
-                                'currency' => 'usd',
-                                'product' => $products->id,
-                                'metadata' => [
-                                    'quantity'=> $cart_item['quantity']
-                                ]
-                            ]);
-                            array_push($product_prices, $productPrice);
-                        }
-                        if (!empty($tax_rate) && $tax_rate > 0) {
-                            $formatted_tax = number_format($tax_rate, 2);
-                            $formatted_tax_rate = str_replace(',', '', $formatted_tax);
-                            $formatted_tax_value = number_format(($formatted_tax_rate * 100) , 2);
-                            $tax_value = str_replace(',', '', $formatted_tax_value);
-                            $products_tax= $stripe->products->create([
-                                'name' => 'Tax',
-                            ]);
+    
+                            // $line_items = [
+                            //     'line_items' => 
+                            //     [
+                            //         $items
+                            //     ]
+                            // ];
+                            // $adding_discount = $stripe->coupons->create([
+                            //     'percent_off' => $discount_variation_value,
+                            //     'duration' => 'once',
+                            //     'currency' => 'usd',
+                            // ]);
 
-                            $taxproductPrice = $stripe->prices->create([
-                                'unit_amount_decimal' => $tax_value,
-                                'currency' => 'usd',
-                                'product' => $products_tax->id
-                            ]);
-                        }
-
-                        for ($i = 0; $i <= count($product_prices) - 1; $i++){
-                            $items[] = [
-                                'price' => $product_prices[$i]->id,
-                                'quantity' => $product_prices[$i]['metadata']['quantity'],
-                            ];  
-                        }
-                        if (!empty($tax_rate) && $tax_rate > 0) {
-                            $items[] = [
-                                'price' => $taxproductPrice->id,
-                                'quantity' => '1',
-                            ];
-                        }
-
-                        // adding shipping price to order
-                        if (!empty($request->shipment_price) && $request->shipment_price > 0) {
-                            $shipment_price = number_format(($request->shipment_price * 100) , 2);
-                            $shipment_value = str_replace(',', '', $shipment_price);
-                            $shipment_product = $stripe->products->create([
-                                'name' => 'Shipment',
-                            ]);
-                            $shipment_product_price = $stripe->prices->create([
-                                'unit_amount_decimal' => $shipment_value,
-                                'currency' => 'usd',
-                                'product' => $shipment_product->id
-                            ]);
-                            $items[] = [
-                                'price' => $shipment_product_price->id,
-                                'quantity' => '1',
-                            ];
-                        }
-
-                        $line_items = [
-                            'line_items' => 
-                            [
-                                $items
-                            ]
-                        ];
-                        $checkout_session = $stripe->checkout->sessions->create([
-                            'success_url' => url('/thankyou/' . $order_id) . '?session_id={CHECKOUT_SESSION_ID}',
-                            'cancel_url' => url('/checkout'),
-                            $line_items,
-                            'mode' => 'payment',
-                            'payment_intent_data'=> [
-                                "metadata" => [
-                                    "order_id"=> $order_id,
-                                ]
-                            ],
-                            // 'shipping_cost' =>  !empty($request->shipment_price) ? $request->shipment_price : 0,
-                            'customer_email' => auth()->user()->email,
+                            // $checkout_session = $stripe->checkout->sessions->create([
+                            //     'success_url' => url('/thankyou/' . $order_id) . '?session_id={CHECKOUT_SESSION_ID}',
+                            //     'cancel_url' => url('/checkout'),
+                            //     $line_items,
+                            //     'mode' => 'payment',
+                            //     'discounts' => [['coupon' => $adding_discount->id]],
+                            //     'payment_intent_data'=> [
+                            //         "metadata" => [
+                            //             "order_id"=> $order_id,
+                            //         ]
+                            //     ],
+                            //     // 'shipping_cost' =>  !empty($request->shipment_price) ? $request->shipment_price : 0,
+                            //     'customer_email' => auth()->user()->email,
+                                
+                            // ]);
+                        } 
+                        else {
+                            $checkout = $this->checkout_without_discount($tax_rate,  $discount_amount, $discount_type, $order_id, $currentOrder, $cart_items, $request , $discount_variation_value , $product_prices , $type = 'no_discount', $order_total);
+                            if ($checkout) {
+                                session()->forget('cart');
+                                return redirect($checkout->url);
+                            }
+                            // foreach ($cart_items as $cart_item) {
+                            //     $OrderItem = new ApiOrderItem;
+                            //     $OrderItem->order_id = $order_id;
+                            //     $OrderItem->product_id = $cart_item['product_id'];
+                            //     $OrderItem->quantity =  $cart_item['quantity'];
+                            //     $OrderItem->price = $cart_item['price'];
+                            //     $OrderItem->option_id = $cart_item['option_id'];
+                            //     $OrderItem->save();
+    
+                            //     $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
+                            //     $products = $stripe->products->create([
+                            //         'name' => $cart_item['name'],
+                            //     ]);
+                                
+                            //     $productPrice = $stripe->prices->create([
+                            //         'unit_amount' => $cart_item['price'] * 100,
+                            //         'currency' => 'usd',
+                            //         'product' => $products->id,
+                            //         'metadata' => [
+                            //             'quantity'=> $cart_item['quantity']
+                            //         ]
+                            //     ]);
+                            //     array_push($product_prices, $productPrice);
+                            // }
+                            // if (!empty($tax_rate) && $tax_rate > 0) {
+                            //     $formatted_tax = number_format($tax_rate, 2);
+                            //     $formatted_tax_rate = str_replace(',', '', $formatted_tax);
+                            //     $formatted_tax_value = number_format(($formatted_tax_rate * 100) , 2);
+                            //     $tax_value = str_replace(',', '', $formatted_tax_value);
+                            //     $products_tax= $stripe->products->create([
+                            //         'name' => 'Tax',
+                            //     ]);
+    
+                            //     $taxproductPrice = $stripe->prices->create([
+                            //         'unit_amount_decimal' => $tax_value,
+                            //         'currency' => 'usd',
+                            //         'product' => $products_tax->id
+                            //     ]);
+                            // }
+    
+                            // for ($i = 0; $i <= count($product_prices) - 1; $i++){
+                            //     $items[] = [
+                            //         'price' => $product_prices[$i]->id,
+                            //         'quantity' => $product_prices[$i]['metadata']['quantity'],
+                            //     ];  
+                            // }
+                            // if (!empty($tax_rate) && $tax_rate > 0) {
+                            //     $items[] = [
+                            //         'price' => $taxproductPrice->id,
+                            //         'quantity' => '1',
+                            //     ];
+                            // }
+    
+                           
+    
+                            // // adding shipping price to order
+                            // if (!empty($request->original_shipment_price) && $request->original_shipment_price > 0) {
+                            //     $shipment_price = number_format(($request->original_shipment_price * 100) , 2);
+                            //     $shipment_value = str_replace(',', '', $shipment_price);
+                            //     $shipment_product = $stripe->products->create([
+                            //         'name' => 'Shipment',
+                            //     ]);
+                            //     $shipment_product_price = $stripe->prices->create([
+                            //         'unit_amount_decimal' => $shipment_value,
+                            //         'currency' => 'usd',
+                            //         'product' => $shipment_product->id
+                            //     ]);
+                            //     $items[] = [
+                            //         'price' => $shipment_product_price->id,
+                            //         'quantity' => '1',
+                            //     ];
+                            // }
+    
                             
-                        ]);
-                        // $go_to_shipstation = false;
-                        // if (!empty($order_contact) && !empty($order_contact->is_parent == 1) && !empty($order_contact->address1) && !empty($order_contact->postalAddress1)) {
-                        //     $go_to_shipstation = true;
-                        // }
-                        // $check_shipstation_create_order_status = AdminSetting::where('option_name', 'create_order_in_shipstation')->first();
-                        // if (!empty($check_shipstation_create_order_status) && strtolower($check_shipstation_create_order_status->option_value) == 'yes' && ($go_to_shipstation == true)) {
-                        //     $shiping_order = UserHelper::shipping_order($order_id , $currentOrder , $order_contact);
-                        //     if ($shiping_order['statusCode'] == 200) {
-                        //         $orderUpdate = ApiOrder::where('id', $order_id)->update([
-                        //             'shipstation_orderId' => $shiping_order['responseBody']->orderId,
-                        //         ]);
-                        //     }
-                        // }
+    
+                            // $line_items = [
+                            //     'line_items' => 
+                            //     [
+                            //         $items
+                            //     ]
+                            // ];
+
+                            // $checkout_session = $stripe->checkout->sessions->create([
+                            //     'success_url' => url('/thankyou/' . $order_id) . '?session_id={CHECKOUT_SESSION_ID}',
+                            //     'cancel_url' => url('/checkout'),
+                            //     $line_items,
+                            //     'mode' => 'payment',
+                            //     'payment_intent_data'=> [
+                            //         "metadata" => [
+                            //             "order_id"=> $order_id,
+                            //         ]
+                            //     ],
+                            //     // 'shipping_cost' =>  !empty($request->shipment_price) ? $request->shipment_price : 0,
+                            //     'customer_email' => auth()->user()->email,
+                            // ]);
+                        }
+                        
                     } else {
                         session()->forget('cart');
                         return redirect('/');
                     }
-                    
-                    session()->forget('cart');
-                    return redirect($checkout_session->url);
-                    
                 }
                 else {
                     $order = new ApiOrder;
@@ -522,13 +663,32 @@ class OrderController extends Controller
                     $order->logisticsCarrier = $paymentMethod;
                     $order->tax_class_id = $request->tax_class_id;
                     $order->user_switch = $user_switch;
-                    $order->total_including_tax = $request->incl_tax;
                     $order->po_number = $request->po_number;
                     $order->paymentTerms = $request->paymentTerms;
                     $order->memo = $request->memo;
                     $order->date = $request->date;
                     $order->shipment_price = $request->shipment_price;
+                    $order->total_including_tax = $order_total;
+                    $order->discount_id = $discount_id;
+                    $order->discount_amount = $discount_amount;
+                    $order->tax_rate = $total_tax_rate;
                     $order->save();
+
+
+                    if (!empty($enable_discount_setting) && strtolower($enable_discount_setting->option_value) == 'yes') {
+                        if (!empty($order->discount_id)) {
+                            $update_discount_count = Discount::where('id', $order->discount_id)->first();
+                            if (!empty($update_discount_count)) {
+                                $update_discount_count->usage_count = !empty($update_discount_count->usage_count ? $update_discount_count->usage_count : 0)  + 1;
+                                $update_discount_count->save();
+
+                                $customer_discount_uses = new CustomerDiscountUses();
+                                $customer_discount_uses->discount_id = $order->discount_id;
+                                $customer_discount_uses->contact_id = $order->memberId;
+                                $customer_discount_uses->save();
+                            }
+                        }
+                    }
 
                     $order_id =  $order->id;
                     $currentOrder = ApiOrder::where('id', $order->id)->first();
@@ -1224,6 +1384,517 @@ class OrderController extends Controller
         }
         
         return response()->json(['success' => true , 'message' => 'Order status updated successfully.']);
+    }
+
+    public function apply_discount($tax_rate,  $discount_amount, $discount_type, $order_id, $currentOrder, $cart_items, $request , $discount_variation_value , $product_prices , $type = 'discount', $order_total) {
+        $discount_variation_value  = $discount_variation_value;
+        $percentage = null;
+        if ($discount_variation_value >= 100  && $discount_type == 'percentage') {
+            foreach ($cart_items as $cart_item) {
+                $OrderItem = new ApiOrderItem;
+                $OrderItem->order_id = $order_id;
+                $OrderItem->product_id = $cart_item['product_id'];
+                $OrderItem->quantity =  $cart_item['quantity'];
+                $OrderItem->price = $cart_item['price'];
+                $OrderItem->option_id = $cart_item['option_id'];
+                $OrderItem->save();
+            }
+            $dateCreated = Carbon::now();
+            $createdDate = Carbon::now();
+            $session_contact_id = Session::get('contact_id');
+            $active_contact_id = null;
+            $is_primary = null;
+            if (!empty($session_contact_id)) {
+                $contact = Contact::where('contact_id', $session_contact_id)->first();
+                if ($contact) {
+                    $active_contact_id = $contact->contact_id;
+                } else {
+                    $contact = Contact::where('secondary_id', $session_contact_id)->first();
+                    $active_contact_id = $contact->parent_id;
+                }
+            }
+            if ($active_contact_id) {
+                $is_primary = Contact::where('contact_id', $session_contact_id)->first();
+            }
+            $current_Order = ApiOrder::where('id', $order_id)->with(
+                'user.contact',
+                'apiOrderItem.product.options',
+                'texClasses'
+            )->first();
+            if(!empty($current_Order)) {
+                $current_Order->payment_status = 'paid';
+                $current_Order->save();
+
+                $order_comment = new OrderComment;
+                $order_comment->order_id = $order_id;
+                $order_comment->comment = 'Order marked as paid through qcom because of 100% discount.';
+                $order_comment->save();
+
+                
+                $order_items = ApiOrderItem::with('order.texClasses', 'product.options')
+                ->where('order_id', $order_id)
+                ->get();
+                
+                $check_shipstation_create_order_status = AdminSetting::where('option_name', 'create_order_in_shipstation')->first();
+                if (!empty($check_shipstation_create_order_status) && strtolower($check_shipstation_create_order_status->option_value) == 'yes') {
+                    $order_contact = Contact::where('contact_id', $current_Order->memberId)->orWhere('parent_id' , $current_Order->memberId)->first();
+                    if (!empty($order_contact)) {
+                        UserHelper::shipping_order($order_id , $current_Order , $order_contact);
+                        $shiping_order = UserHelper::shipping_order($order_id , $current_Order , $order_contact);
+                        if ($shiping_order['statusCode'] == 200) {
+                            $orderUpdate = ApiOrder::where('id', $order_id)->update([
+                                'shipstation_orderId' => $shiping_order['responseBody']->orderId,
+                            ]);
+                        }
+                    }
+                }
+                $customer_email = Contact::where('contact_id', $current_Order->memberId)->first();
+                // $customer_email  = $payment_succeeded->data->object->billing_details->email;
+                if (!empty($customer_email)) {
+                    $contact = Contact::where('email', $customer_email->email)->first();
+                }
+                $user_email = Auth::user();
+                $count = $order_items->count();
+                $best_products = Product::where('status', '!=', 'Inactive')->orderBy('views', 'DESC')->limit(4)->get();
+                $addresses = [
+                    'billing_address' => [
+                        'firstName' => $contact->firstName,
+                        'lastName' => $contact->lastName,
+                        'address1' => $contact->address1,
+                        'address2' => $contact->address2,
+                        'city' => $contact->city,
+                        'state' => $contact->state,
+                        'zip' => $contact->postCode,
+                        'mobile' => $contact->mobile,
+                        'phone' => $contact->phone,
+                    ],
+                    'shipping_address' => [
+                        'postalAddress1' =>$contact->postalAddress1,
+                        'postalAddress2' =>$contact->postalAddress2,
+                        'postalCity' =>$contact->postalCity,
+                        'postalState' =>$contact->postalState,
+                        'postalPostCode' =>$contact->postalPostCode,
+                    ],
+                    'payment_terms' =>  'Stripe',
+                    'shipping_fee' => !empty($current_Order->shipment_price) ? $current_Order->shipment_price : '',
+                    'best_product' => $best_products,
+                    'user_email' =>   $user_email,
+                    'currentOrder' => $current_Order,
+                    'count' => $count,
+                    'order_id' => $order_id,
+                    'company' => !empty($current_Order->user->contact) ?  $current_Order->user->contact[0]->company : '',
+                    'order_status' => '',
+                ];
+                $name = $contact->firstName;
+                $email =  $contact->email;
+                $reference  =  $current_Order->reference;
+                $template = 'emails.admin-order-received';
+                $admin_users = DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
+
+                $admin_users = $admin_users->toArray();
+
+                $users_with_role_admin = User::select("email")
+                    ->whereIn('id', $admin_users)
+                    ->get();
+                $parent_email = Contact::where('contact_id', $active_contact_id)->first();
+                $data = [
+                    'name' =>  $name,
+                    'email' => $email,
+                    'subject' => 'New order received',
+                    'reference' => $reference,
+                    'order_items' => $order_items,
+                    'dateCreated' => $dateCreated,
+                    'addresses' => $addresses,
+                    'best_product' => $best_products,
+                    'currentOrder' => $current_Order,
+                    'user_email' => $user_email,
+                    'count' => $count,
+                    'from' => SettingHelper::getSetting('noreply_email_address')
+                ];
+
+                if (!empty($users_with_role_admin)) {
+                    foreach ($users_with_role_admin as $role_admin) {
+                        $subject = 'New order received';
+                        $adminTemplate = 'emails.admin-order-received';
+                        $data['email'] = $role_admin->email;
+                        MailHelper::sendMailNotification('emails.admin-order-received', $data);
+                    }
+                }
+
+                if (!empty($customer_email->email)) {
+                    $data['email'] = $customer_email->email;
+                    $data['subject'] = 'Your order has been received';
+                    MailHelper::sendMailNotification('emails.admin-order-received', $data);
+                }
+
+                session()->forget('cart');
+                $checkout_session = '/thankyou/' .$order_id;
+                return $checkout_session;
+            }            
+        }
+        elseif ($order_total == 0  && $discount_type == 'fixed') {
+            foreach ($cart_items as $cart_item) {
+                $OrderItem = new ApiOrderItem;
+                $OrderItem->order_id = $order_id;
+                $OrderItem->product_id = $cart_item['product_id'];
+                $OrderItem->quantity =  $cart_item['quantity'];
+                $OrderItem->price = $cart_item['price'];
+                $OrderItem->option_id = $cart_item['option_id'];
+                $OrderItem->save();
+            }
+            $dateCreated = Carbon::now();
+            $createdDate = Carbon::now();
+            $session_contact_id = Session::get('contact_id');
+            $active_contact_id = null;
+            $is_primary = null;
+            if (!empty($session_contact_id)) {
+                $contact = Contact::where('contact_id', $session_contact_id)->first();
+                if ($contact) {
+                    $active_contact_id = $contact->contact_id;
+                } else {
+                    $contact = Contact::where('secondary_id', $session_contact_id)->first();
+                    $active_contact_id = $contact->parent_id;
+                }
+            }
+            if ($active_contact_id) {
+                $is_primary = Contact::where('contact_id', $session_contact_id)->first();
+            }
+            $current_Order = ApiOrder::where('id', $order_id)->with(
+                'user.contact',
+                'apiOrderItem.product.options',
+                'texClasses'
+            )->first();
+            if(!empty($current_Order)) {
+                $current_Order->payment_status = 'paid';
+                $current_Order->save();
+
+                $order_comment = new OrderComment;
+                $order_comment->order_id = $order_id;
+                $order_comment->comment = 'Order marked as paid through qcom because of 100% discount.';
+                $order_comment->save();
+
+                
+                $order_items = ApiOrderItem::with('order.texClasses', 'product.options')
+                ->where('order_id', $order_id)
+                ->get();
+                
+                $check_shipstation_create_order_status = AdminSetting::where('option_name', 'create_order_in_shipstation')->first();
+                if (!empty($check_shipstation_create_order_status) && strtolower($check_shipstation_create_order_status->option_value) == 'yes') {
+                    $order_contact = Contact::where('contact_id', $current_Order->memberId)->orWhere('parent_id' , $current_Order->memberId)->first();
+                    if (!empty($order_contact)) {
+                        UserHelper::shipping_order($order_id , $current_Order , $order_contact);
+                        $shiping_order = UserHelper::shipping_order($order_id , $current_Order , $order_contact);
+                        if ($shiping_order['statusCode'] == 200) {
+                            $orderUpdate = ApiOrder::where('id', $order_id)->update([
+                                'shipstation_orderId' => $shiping_order['responseBody']->orderId,
+                            ]);
+                        }
+                    }
+                }
+                $customer_email = Contact::where('contact_id', $current_Order->memberId)->first();
+                // $customer_email  = $payment_succeeded->data->object->billing_details->email;
+                if (!empty($customer_email)) {
+                    $contact = Contact::where('email', $customer_email->email)->first();
+                }
+                $user_email = Auth::user();
+                $count = $order_items->count();
+                $best_products = Product::where('status', '!=', 'Inactive')->orderBy('views', 'DESC')->limit(4)->get();
+                $addresses = [
+                    'billing_address' => [
+                        'firstName' => $contact->firstName,
+                        'lastName' => $contact->lastName,
+                        'address1' => $contact->address1,
+                        'address2' => $contact->address2,
+                        'city' => $contact->city,
+                        'state' => $contact->state,
+                        'zip' => $contact->postCode,
+                        'mobile' => $contact->mobile,
+                        'phone' => $contact->phone,
+                    ],
+                    'shipping_address' => [
+                        'postalAddress1' =>$contact->postalAddress1,
+                        'postalAddress2' =>$contact->postalAddress2,
+                        'postalCity' =>$contact->postalCity,
+                        'postalState' =>$contact->postalState,
+                        'postalPostCode' =>$contact->postalPostCode,
+                    ],
+                    'payment_terms' =>  'Stripe',
+                    'shipping_fee' => !empty($current_Order->shipment_price) ? $current_Order->shipment_price : '',
+                    'best_product' => $best_products,
+                    'user_email' =>   $user_email,
+                    'currentOrder' => $current_Order,
+                    'count' => $count,
+                    'order_id' => $order_id,
+                    'company' => !empty($current_Order->user->contact) ?  $current_Order->user->contact[0]->company : '',
+                    'order_status' => '',
+                ];
+                $name = $contact->firstName;
+                $email =  $contact->email;
+                $reference  =  $current_Order->reference;
+                $template = 'emails.admin-order-received';
+                $admin_users = DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
+
+                $admin_users = $admin_users->toArray();
+
+                $users_with_role_admin = User::select("email")
+                    ->whereIn('id', $admin_users)
+                    ->get();
+                $parent_email = Contact::where('contact_id', $active_contact_id)->first();
+                $data = [
+                    'name' =>  $name,
+                    'email' => $email,
+                    'subject' => 'New order received',
+                    'reference' => $reference,
+                    'order_items' => $order_items,
+                    'dateCreated' => $dateCreated,
+                    'addresses' => $addresses,
+                    'best_product' => $best_products,
+                    'currentOrder' => $current_Order,
+                    'user_email' => $user_email,
+                    'count' => $count,
+                    'from' => SettingHelper::getSetting('noreply_email_address')
+                ];
+
+                if (!empty($users_with_role_admin)) {
+                    foreach ($users_with_role_admin as $role_admin) {
+                        $subject = 'New order received';
+                        $adminTemplate = 'emails.admin-order-received';
+                        $data['email'] = $role_admin->email;
+                        MailHelper::sendMailNotification('emails.admin-order-received', $data);
+                    }
+                }
+
+                if (!empty($customer_email->email)) {
+                    $data['email'] = $customer_email->email;
+                    $data['subject'] = 'Your order has been received';
+                    MailHelper::sendMailNotification('emails.admin-order-received', $data);
+                }
+
+                session()->forget('cart');
+                $checkout_session = '/thankyou/' .$order_id;
+                return $checkout_session;
+            }            
+        } 
+        else {
+            foreach ($cart_items as $cart_item) {
+                $OrderItem = new ApiOrderItem;
+                $OrderItem->order_id = $order_id;
+                $OrderItem->product_id = $cart_item['product_id'];
+                $OrderItem->quantity =  $cart_item['quantity'];
+                $OrderItem->price = $cart_item['price'];
+                $OrderItem->option_id = $cart_item['option_id'];
+                $OrderItem->save();
+    
+                $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
+                $products = $stripe->products->create([
+                    'name' => $cart_item['name'],
+                ]);
+                $unit_price = 0;
+                if ($discount_type == 'percentage') {
+                    $percentage = 'percentage';
+                    $unit_price = $cart_item['price'] - ($cart_item['price'] * $discount_variation_value / 100);
+                } else {
+                    $unit_price = $cart_item['price'] - $discount_variation_value;
+                }
+                $productPrice = $stripe->prices->create([
+                    'unit_amount' => $unit_price * 100,
+                    'currency' => 'usd',
+                    'product' => $products->id,
+                    'metadata' => [
+                        'quantity'=> $cart_item['quantity']
+                    ]
+                ]);
+                array_push($product_prices, $productPrice);
+            }
+            if (!empty($tax_rate) && $tax_rate > 0) {
+                $formatted_tax = number_format($tax_rate, 2);
+                $formatted_tax_rate = str_replace(',', '', $formatted_tax);
+                $formatted_tax_value = number_format(($formatted_tax_rate * 100) , 2);
+                $tax_value = str_replace(',', '', $formatted_tax_value);
+                $products_tax= $stripe->products->create([
+                    'name' => 'Tax',
+                ]);
+                $tax_unit_price = 0;
+                if ($discount_type == 'percentage') {
+                    $tax_unit_price = intval($tax_value) - (intval($tax_value) * $discount_variation_value / 100);
+                } else {
+                    $tax_unit_price = intval($tax_value) - $discount_variation_value;
+                }
+                $taxproductPrice = $stripe->prices->create([
+                    'unit_amount_decimal' => $tax_unit_price,
+                    'currency' => 'usd',
+                    'product' => $products_tax->id
+                ]);
+    
+                
+            }
+    
+            for ($i = 0; $i <= count($product_prices) - 1; $i++){
+                $items[] = [
+                    'price' => $product_prices[$i]->id,
+                    'quantity' => $product_prices[$i]['metadata']['quantity'],
+                ];  
+            }
+            if (!empty($tax_rate) && $tax_rate > 0) {
+                $items[] = [
+                    'price' => $taxproductPrice->id,
+                    'quantity' => '1',
+                ];
+            }
+    
+            // adding shipping price to order
+            if (!empty($request->original_shipment_price) && $request->original_shipment_price > 0) {
+                $shipment_price = number_format(($request->original_shipment_price * 100) , 2);
+                $shipment_value = str_replace(',', '', $shipment_price);
+                $shipment_unit_price = 0;
+                if ($discount_type == 'percentage') {
+                    $shipment_unit_price = intval( $shipment_value) - (intval($shipment_value) * $discount_variation_value / 100);
+                } else {
+                    $shipment_unit_price = intval( $shipment_value) - $discount_variation_value;
+                }
+                $shipment_product = $stripe->products->create([
+                    'name' => 'Shipment',
+                ]);
+                $shipment_product_price = $stripe->prices->create([
+                    'unit_amount_decimal' => $shipment_unit_price,
+                    'currency' => 'usd',
+                    'product' => $shipment_product->id
+                ]);
+                $items[] = [
+                    'price' => $shipment_product_price->id,
+                    'quantity' => '1',
+                ];
+            }
+            $line_items = [
+                'line_items' => 
+                [
+                    $items
+                ]
+            ];
+            $adding_discount = $stripe->coupons->create([
+                'percent_off' => $discount_variation_value,
+                'duration' => 'once',
+                'currency' => 'usd',
+            ]);
+    
+            $checkout_session = $stripe->checkout->sessions->create([
+                'success_url' => url('/thankyou/' . $order_id) . '?session_id={CHECKOUT_SESSION_ID}',
+                'cancel_url' => url('/checkout'),
+                $line_items,
+                'mode' => 'payment',
+                'discounts' => [['coupon' => $adding_discount->id]],
+                'payment_intent_data'=> [
+                    "metadata" => [
+                        "order_id"=> $order_id,
+                    ]
+                ],
+                // 'shipping_cost' =>  !empty($request->shipment_price) ? $request->shipment_price : 0,
+                'customer_email' => auth()->user()->email,
+                
+            ]);
+    
+            return $checkout_session;
+        }    
+    }
+    
+    public function checkout_without_discount($tax_rate,  $discount_amount, $discount_type, $order_id, $currentOrder, $cart_items, $request , $discount_variation_value , $product_prices) {
+        foreach ($cart_items as $cart_item) {
+            $OrderItem = new ApiOrderItem;
+            $OrderItem->order_id = $order_id;
+            $OrderItem->product_id = $cart_item['product_id'];
+            $OrderItem->quantity =  $cart_item['quantity'];
+            $OrderItem->price = $cart_item['price'];
+            $OrderItem->option_id = $cart_item['option_id'];
+            $OrderItem->save();
+
+            $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
+            $products = $stripe->products->create([
+                'name' => $cart_item['name'],
+            ]);
+            
+            $productPrice = $stripe->prices->create([
+                'unit_amount' => $cart_item['price'] * 100,
+                'currency' => 'usd',
+                'product' => $products->id,
+                'metadata' => [
+                    'quantity'=> $cart_item['quantity']
+                ]
+            ]);
+            array_push($product_prices, $productPrice);
+        }
+        if (!empty($tax_rate) && $tax_rate > 0) {
+            $formatted_tax = number_format($tax_rate, 2);
+            $formatted_tax_rate = str_replace(',', '', $formatted_tax);
+            $formatted_tax_value = number_format(($formatted_tax_rate * 100) , 2);
+            $tax_value = str_replace(',', '', $formatted_tax_value);
+            $products_tax= $stripe->products->create([
+                'name' => 'Tax',
+            ]);
+
+            $taxproductPrice = $stripe->prices->create([
+                'unit_amount_decimal' => $tax_value,
+                'currency' => 'usd',
+                'product' => $products_tax->id
+            ]);
+        }
+
+        for ($i = 0; $i <= count($product_prices) - 1; $i++){
+            $items[] = [
+                'price' => $product_prices[$i]->id,
+                'quantity' => $product_prices[$i]['metadata']['quantity'],
+            ];  
+        }
+        if (!empty($tax_rate) && $tax_rate > 0) {
+            $items[] = [
+                'price' => $taxproductPrice->id,
+                'quantity' => '1',
+            ];
+        }
+
+       
+
+        // adding shipping price to order
+        if (!empty($request->original_shipment_price) && $request->original_shipment_price > 0) {
+            $shipment_price = number_format(($request->original_shipment_price * 100) , 2);
+            $shipment_value = str_replace(',', '', $shipment_price);
+            $shipment_product = $stripe->products->create([
+                'name' => 'Shipment',
+            ]);
+            $shipment_product_price = $stripe->prices->create([
+                'unit_amount_decimal' => $shipment_value,
+                'currency' => 'usd',
+                'product' => $shipment_product->id
+            ]);
+            $items[] = [
+                'price' => $shipment_product_price->id,
+                'quantity' => '1',
+            ];
+        }
+
+        
+
+        $line_items = [
+            'line_items' => 
+            [
+                $items
+            ]
+        ];
+
+        $checkout_session = $stripe->checkout->sessions->create([
+            'success_url' => url('/thankyou/' . $order_id) . '?session_id={CHECKOUT_SESSION_ID}',
+            'cancel_url' => url('/checkout'),
+            $line_items,
+            'mode' => 'payment',
+            'payment_intent_data'=> [
+                "metadata" => [
+                    "order_id"=> $order_id,
+                ]
+            ],
+            // 'shipping_cost' =>  !empty($request->shipment_price) ? $request->shipment_price : 0,
+            'customer_email' => auth()->user()->email,
+        ]);
+
+        return $checkout_session;
     }
 }
 

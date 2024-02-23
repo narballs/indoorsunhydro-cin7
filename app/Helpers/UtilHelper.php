@@ -176,10 +176,10 @@ class UtilHelper
                     ->delete();
             }
                 
-            self::saveDailyApiLog('product_stock');
+            self::saveDailyApiLog('product_detail_update_stock');
         }
         catch (\Exception $e) {
-            self::saveDailyApiLog('product_stock');
+            self::saveDailyApiLog('product_detail_update_stock');
             return $stock_updated;
         }
 
