@@ -252,7 +252,7 @@ class GoogleContentController extends Controller
             
                     $product->setPrice($price);
                     $merchant_id = config('services.google.merchant_center_id');
-                    $result = $service->products->insert($merchant_id, $product , $product->getOfferId());
+                    $result = $service->products->insert($merchant_id, $product);
                 }
 
             }
