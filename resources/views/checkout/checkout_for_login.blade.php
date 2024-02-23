@@ -644,7 +644,8 @@ $cart_price = 0;
                                                 <input type="hidden" name="discount_variation" id="" class="discount_variation" value="{{$discount_code->discount_variation}}">
                                                 <input type="hidden" name="discount_variation_value" id="" class="discount_variation_value" value="{{$discount_code->discount_variation_value}}">
                                                 @if (strtolower($discount_code->mode) === 'manuall')
-                                                    <div class="row my-5 align-items-center discount_form">
+                                                    <div class="row my-3 align-items-center discount_form">
+                                                        <p for="" class="checkout_product_heading mb-2 ml-0">Enter Promo Code</p>
                                                         <div class="col-md-9">
                                                             <div class="form-group mb-0">
                                                                 <input type="text" name="coupen_code" id="coupen_code" class="coupen_code_input form-control">
@@ -666,6 +667,8 @@ $cart_price = 0;
                                                                     Discount (${{ number_format($discount_code->discount_variation_value, 2) }})
                                                                 @endif
                                                             </span>
+                                                            <span class="coupen_code_name">(<label for="">Coupon Code : </label>{{!empty($discount_code) && !empty($discount_code->discount_code)  ? $discount_code->discount_code : ''}}</span>)
+                                                            <span class="remove_coupen_code"><a href="{{url('/checkout')}}">Remove Code</a></span>
                                                         </div>
                                                         <div class="col-md-3 col-3 text-right">
                                                             <span class="checkout_discount_rate_manuall">
@@ -674,7 +677,8 @@ $cart_price = 0;
                                                         </div>
                                                     </div>
                                                 @else
-                                                    <div class="row justify-content-center border-bottom align-items-center py-2">
+                                                <div class="row my-2 justify-content-center border-bottom align-items-center py-2">
+                                                        <p for="" class="checkout_product_heading mb-2 ml-0">Enter Promo Code</p>
                                                         <div class="col-md-9 col-9">
                                                             <span class="checkout_discount_rate_heading">
                                                                 @if ($discount_code->discount_variation === 'percentage')
