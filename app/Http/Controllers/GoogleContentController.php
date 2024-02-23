@@ -219,6 +219,41 @@ class GoogleContentController extends Controller
                     $product->setPrice($price);
                     $merchant_id = config('services.google.merchant_center_id');
                     $result = $service->products->insert($merchant_id, $product);
+                } else {
+                    $product = new ServiceProduct();
+                    $product->setOfferId(substr($add_product['code'], 0, 50));
+                    $product->setTitle($add_product['title']);
+                    $product->setDescription($add_product['description']);
+                    $product->setLink($add_product['link']);
+                    $product->setImageLink($add_product['image_link']);
+                    $product->setContentLanguage('en');
+                    $product->setTargetCountry('US');
+                    $product->setChannel('online');
+                    $product->setAvailability($add_product['availability']);
+                    $product->setCondition($add_product['condition']);
+                    $product->setBrand($add_product['brand']);
+                    // $product->setGoogleProductCategory($add_product['google_product_category']);
+                    $product->setGtin($add_product['barcode']);
+                    // $product->setmultipack('5000');
+                    // $product->setIdentifierExists(false);
+                    $product->setMpn($add_product['code']);
+                    $product->setAgeGroup('adult');
+                    // $product->setColor('universal');
+                    $product->setGender('unisex');
+                    // $product->setSizes(['Large']);
+
+                    $shippingWeight = new \Google\Service\ShoppingContent\ProductShippingWeight();
+                    $shippingWeight->setValue($add_product['product_weight']);
+                    $shippingWeight->setUnit('lb');
+                    $product->setShippingWeight($shippingWeight);
+
+                    $price = new Price();
+                    $price->setValue($add_product['price']);
+                    $price->setCurrency('USD');
+            
+                    $product->setPrice($price);
+                    $merchant_id = config('services.google.merchant_center_id');
+                    $result = $service->products->insert($merchant_id, $product , $product->getOfferId());
                 }
 
             }
