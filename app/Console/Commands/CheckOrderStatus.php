@@ -60,6 +60,7 @@ class CheckOrderStatus extends Command
         $pending_orders = ApiOrder::with(['createdby', 'processedby', 'contact'])
         ->where('order_id' , null)
         ->where('isApproved' , 0)
+        ->where('payment_status' , '!=' , 'unpaid')
         // ->whereBetween('created_at', [Carbon::now()->subHours(3), Carbon::now()])
         ->where('created_at', '<', now()->subHours(3))
         ->orderBy('id' , 'Desc')->get();
