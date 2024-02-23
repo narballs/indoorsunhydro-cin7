@@ -526,7 +526,6 @@ class OrderController extends Controller
                             // ]);
                         } 
                         else {
-                            dd('hi');
                             $checkout = $this->checkout_without_discount($tax_rate,  $discount_amount, $discount_type, $order_id, $currentOrder, $cart_items, $request , $discount_variation_value , $product_prices , $type = 'no_discount', $order_total);
                             if ($checkout) {
                                 session()->forget('cart');
