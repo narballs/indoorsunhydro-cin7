@@ -218,6 +218,11 @@ class DiscountController extends Controller
             
             $customerDiscount->delete();
         }
+        $customerDiscountsUses = CustomerDiscountUses::where('discount_id', $discount->id)->get();
+        foreach ($customerDiscountsUses as $customerDiscountsUse) {
+            
+            $customerDiscountsUse->delete();
+        }
         $discount->delete();
         return redirect()->route('discounts.index')->with('success', 'Discount deleted successfully.');      
     }
