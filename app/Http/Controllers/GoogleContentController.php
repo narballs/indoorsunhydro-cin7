@@ -151,12 +151,14 @@ class GoogleContentController extends Controller
         $result  = null;
 
         $productStatusList = [];
+        $feedIds = [];
         $pageToken = null;
         do {
             try {
                 $products = $service->products->listProducts(config('services.google.merchant_center_id'), ['maxResults' => 250, 'pageToken' => $pageToken]);
 
                 foreach ($products->getResources() as $product) {
+                    dd($product);
                     $productId = $product['id'];
                     $mpn = $product['mpn'];
                     $productStatusList[] = [
