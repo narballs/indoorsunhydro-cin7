@@ -97,7 +97,7 @@ class StockChecking extends Command
                     ]
                 );
 
-                UtilHelper::saveDailyApiLog('update_stcok');
+                UtilHelper::saveDailyApiLog('auto_update_stock');
 
 
                 $api_product_stock = $res->getBody()->getContents();
