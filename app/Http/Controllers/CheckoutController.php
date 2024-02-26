@@ -1039,6 +1039,8 @@ class CheckoutController extends Controller
                             $data['subject'] = $content;
                             MailHelper::sendMailNotification('emails.approval-notifications', $data);
                         } else {
+                            $data['name'] = $created_contact->firstName . ' ' . $created_contact->lastName;
+                            $data['email'] =  $created_contact->email;
                             $data['content'] = $content;
                             $data['subject'] = 'Your account registration request';
                             MailHelper::sendMailNotification('emails.user_registration_notification', $data);
