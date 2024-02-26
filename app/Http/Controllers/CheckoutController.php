@@ -217,10 +217,13 @@ class CheckoutController extends Controller
         $states = UsState::all();
         $cart_items = UserHelper::switch_price_tier($request);
         $cart_total = 0;
-        foreach ($cart_items as $cart_item) {
-            $row_price = $cart_item['quantity'] * $cart_item['price'];
-            $cart_total = $row_price + $cart_total;
+        if (!empty($cart_items)) {
+            foreach ($cart_items as $cart_item) {
+                $row_price = $cart_item['quantity'] * $cart_item['price'];
+                $cart_total = $row_price + $cart_total;
+            }
         }
+        
         if (!auth()->user()) {
             $tax_class = TaxClass::where('is_default', 1)->first();
             $shipment_price = 0;
@@ -230,7 +233,7 @@ class CheckoutController extends Controller
         $selected_company = Session::get('company');
         if (!$selected_company) {
             Session::flash('message', "Please select a company for which you want to make an order for");
-            return redirect('/cart/');
+            return redirect('/cart');
         }
         $contact = Contact::where('user_id', $user_id)
             ->where('status', 1)
@@ -722,7 +725,9 @@ class CheckoutController extends Controller
         $message = '';
         $admin = false; 
         $already_in_cin7 = false; 
-        $registrstion_status = false;
+        $registration_status = false;
+        $auto_approved = false;
+        $content = null;
         if (auth()->attempt($credentials)) {
             if (auth()->user()->allow_access == 0) {
                 Session::flush();
@@ -938,31 +943,46 @@ class CheckoutController extends Controller
                     $response = json_decode($response->getBody()->getContents());
                     if ($response[0]->success == false) {
                         $message = 'User already exists in Cin7 . Please contact support.';
-                        $registrstion_status = false;
+                        $registration_status = false;
                     } else {
                         
-                        $contact->contact_id = $response[0]->id;
-                        $contact->save();
-                        $created_contact = Contact::where('id', $contact->id)->first();
-                        $registrstion_status = true;
-                        $admin_users =  DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
-                        $admin_users = $admin_users->toArray();
-
-                        $users_with_role_admin = User::select("email")
-                            ->whereIn('id', $admin_users)
-                            ->get();
-
-                        $user_log = UserLog::create([
-                            'user_id' => $created_contact->user_id,
-                            'action' => 'Signup',
-                            'user_notes' => 'new contact created' . Carbon::now()->toDateTimeString()
-                        ]);
-                        
-                        $content = null;
                         if (!empty($toggle_registration) && strtolower($toggle_registration->option_value) == 'yes') {
+                            $contact->contact_id = $response[0]->id;
+                            $contact->save();
+                            $created_contact = Contact::where('id', $contact->id)->first();
+                            $registration_status = true;
+                            $admin_users =  DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
+                            $admin_users = $admin_users->toArray();
+
+                            $users_with_role_admin = User::select("email")
+                                ->whereIn('id', $admin_users)
+                                ->get();
+
+                            $user_log = UserLog::create([
+                                'user_id' => $created_contact->user_id,
+                                'action' => 'Signup',
+                                'user_notes' => 'new contact created' . Carbon::now()->toDateTimeString()
+                            ]);
                             $content = 'Your account has been created successfully and approved by admin.';
+                            $auto_approved = true;
                         } else {
+                            $contact->save();
+                            $created_contact = Contact::where('id', $contact->id)->first();
+                            $registration_status = true;
+                            $admin_users =  DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
+                            $admin_users = $admin_users->toArray();
+
+                            $users_with_role_admin = User::select("email")
+                                ->whereIn('id', $admin_users)
+                                ->get();
+
+                            $user_log = UserLog::create([
+                                'user_id' => $created_contact->user_id,
+                                'action' => 'Signup',
+                                'user_notes' => 'new contact created' . Carbon::now()->toDateTimeString()
+                            ]);
                             $content = 'Your account registration request has been submitted. You will receive an email once your account has been approved.';
+                            $auto_approved = false;
                         }
                         $data = [
                             'user' => $user,
@@ -988,11 +1008,17 @@ class CheckoutController extends Controller
                         // }
 
                         if (!empty($created_contact)) {
-                            $data['contact_name'] = $created_contact->firstName . ' ' . $created_contact->lastName;
-                            $data['contact_email'] = $created_contact->email;
-                            $data['content'] = 'Your account has been approved';
-                            $data['subject'] = 'Your account has been approved';
-                            MailHelper::sendMailNotification('emails.approval-notifications', $data);
+                            if ($auto_approved == true) {
+                                $data['contact_name'] = $created_contact->firstName . ' ' . $created_contact->lastName;
+                                $data['contact_email'] = $created_contact->email;
+                                $data['content'] = 'Your account has been approved';
+                                $data['subject'] = 'Your account has been approved';
+                                MailHelper::sendMailNotification('emails.approval-notifications', $data);
+                            } else {
+                                $data['content'] = $content;
+                                $data['subject'] = 'Your account registration request ';
+                                MailHelper::sendMailNotification('emails.user_registration_notification', $data);
+                            }
                         }
                        
                         $access = true;
@@ -1027,10 +1053,10 @@ class CheckoutController extends Controller
                     // $message = $e->getMessage();
                     $message = 'Something went wrong. Please contact admin .';
                     $access = true;
-                    $registrstion_status = false;
+                    $registration_status = false;
                 }
             }
-            return response()->json(['status' => 'error', 'message' => $message, 'access' => $access , 'registration_status' => $registrstion_status]);
+            return response()->json(['status' => 'error', 'message' => $message, 'access' => $access , 'registration_status' => $registration_status, 'auto_approved' => $auto_approved]);
         }   
     }
 
