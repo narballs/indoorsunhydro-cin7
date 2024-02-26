@@ -1002,7 +1002,7 @@
 									@foreach($item->product->options as $option)
 									<tr>
 										<td>
-											<div class="row">
+											<div class="row align-items-center">
 												<div class="col-md-2 py-2 mobile_thankyou_img_div">
 													@if ($option->image)
 													<img class="img-fluid img-thumbnail m_chechout_image" src="{{$option->image}}" alt=""
@@ -1016,33 +1016,33 @@
 														href=" {{ url('product-detail/'. $item->product->id.'/'.$option->option_id.'/'.$item->product->slug) }}">
 														{{$item->product->name}}
 													</a>
-													<br>
+													{{-- <br>
 													<p class="order-confirmation-page-product-title">Title:<span
 															class="order-confirmation-page-product-item">
 															{{$item->product->name}}</span>
-													</p>
+													</p> --}}
 												</div>
 											</div>
 										</td>
-										<td>
+										<td class="align-middle">
 											<div class="row">
 												<div class="col-md-12">
-													<p class="pt-4 order-confirmation-page-product-quantity">
+													<p class="mb-0 order-confirmation-page-product-quantity">
 														{{$item->product->code}}</p>
 												</div>
 											</div>
 										</td>
 										{{-- <td>Shipping</td> --}}
-										<td>
+										<td class="align-middle">
 											<div class="row">
 												<div class="col-md-12">
-													<p class="pt-4 order-confirmation-page-product-quantity">
+													<p class="mb-0 order-confirmation-page-product-quantity">
 														{{$item->quantity}}</p>
 												</div>
 											</div>
 										</td>
-										<td>
-											<p class="pt-4 order-confirmation-page-product-price">
+										<td class="align-middle">
+											<p class="mb-0 order-confirmation-page-product-price">
 												${{number_format($item->price,2)}}</p>
 										</td>
 									</tr>
