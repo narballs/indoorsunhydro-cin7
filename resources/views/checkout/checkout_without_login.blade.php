@@ -780,10 +780,14 @@ $cart_price = 0;
                     success: function(response) {
                         if (response.status == 'success') {
                             if (response.access === true) {
-                                if (response.is_admin === true) {
-                                    window.location.href = '/admin/dashboard';
+                                if (response.auto_approved == true) {
+                                    if (response.is_admin === true) {
+                                        window.location.href = '/admin/dashboard';
+                                    } else {
+                                        window.location.href = '/checkout';
+                                    }
                                 } else {
-                                    window.location.href = '/checkout';
+                                    window.location.href = '/cart';
                                 }
                             } else {
                                 $('.update_checkout_loader').addClass('d-none');

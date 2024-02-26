@@ -719,6 +719,7 @@ class CheckoutController extends Controller
         $credentials = $request->only('email', 'password');
         
         $user = User::where('email', $request->email)->first();
+        $main_contact = Contact::where('email', $request->email)->first();
         $email_user = session::put('user', $user);
         $cart = [];
         $access = false;
@@ -738,6 +739,9 @@ class CheckoutController extends Controller
                 // return redirect()->back();
             } else {
                 $user_id = auth()->user()->id;
+                if (!empty($main_contact) && $main_contact->status == 1) {
+                    $auto_approved = false;
+                }
                 if ($request->session()->has('cart_hash')) {
                     $cart_hash = $request->session()->get('cart_hash');
                     $cart_items = Cart::where('cart_hash', $cart_hash)->where('is_active', 1)->where('user_id', 0)->get();
@@ -811,8 +815,9 @@ class CheckoutController extends Controller
                 }
                 $message = 'Successfully Logged in';
                 $access = true;
+                $auto_approved = true;
             }
-            return response()->json(['status' => 'success', 'message' => $message, 'access' => $access , 'is_admin' , $admin]);
+            return response()->json(['status' => 'success', 'message' => $message, 'access' => $access , 'is_admin' , $admin , 'auto_approved' => $auto_approved]);
             
         } 
         else {
