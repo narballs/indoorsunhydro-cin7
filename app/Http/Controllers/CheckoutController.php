@@ -928,25 +928,43 @@ class CheckoutController extends Controller
                     ]);
                     
                     $api_contact = $contact->toArray();
-                    $client = new \GuzzleHttp\Client();
-                    $url = "https://api.cin7.com/api/v1/Contacts/";
-                    $response = $client->post($url, [
-                        'headers' => ['Content-type' => 'application/json'],
-                        'auth' => [
-                            SettingHelper::getSetting('cin7_auth_username'),
-                            SettingHelper::getSetting('cin7_auth_password')
-                        ],
-                        'json' => [
-                            $api_contact
-                        ],
-                    ]);
-                    $response = json_decode($response->getBody()->getContents());
-                    if ($response[0]->success == false) {
-                        $message = 'User already exists in Cin7 . Please contact support.';
-                        $registration_status = false;
-                    } else {
+                    // $client = new \GuzzleHttp\Client();
+                    // $url = "https://api.cin7.com/api/v1/Contacts/";
+                    // $response = $client->post($url, [
+                    //     'headers' => ['Content-type' => 'application/json'],
+                    //     'auth' => [
+                    //         SettingHelper::getSetting('cin7_auth_username'),
+                    //         SettingHelper::getSetting('cin7_auth_password')
+                    //     ],
+                    //     'json' => [
+                    //         $api_contact
+                    //     ],
+                    // ]);
+                    // $response = json_decode($response->getBody()->getContents());
+                    // if ($response[0]->success == false) {
+                    //     $message = 'User already exists in Cin7 . Please contact support.';
+                    //     $registration_status = false;
+                    // } else {
                         
-                        if (!empty($toggle_registration) && strtolower($toggle_registration->option_value) == 'yes') {
+                    if (!empty($toggle_registration) && strtolower($toggle_registration->option_value) == 'yes') {
+                        $client = new \GuzzleHttp\Client();
+                        $url = "https://api.cin7.com/api/v1/Contacts/";
+                        $response = $client->post($url, [
+                            'headers' => ['Content-type' => 'application/json'],
+                            'auth' => [
+                                SettingHelper::getSetting('cin7_auth_username'),
+                                SettingHelper::getSetting('cin7_auth_password')
+                            ],
+                            'json' => [
+                                $api_contact
+                            ],
+                        ]);
+                        $response = json_decode($response->getBody()->getContents());
+                        if ($response[0]->success == false) {
+                            $message = 'User already exists in Cin7 . Please contact support.';
+                            $registration_status = false;
+                        }
+                        else {
                             $contact->contact_id = $response[0]->id;
                             $contact->save();
                             $created_contact = Contact::where('id', $contact->id)->first();
@@ -965,90 +983,94 @@ class CheckoutController extends Controller
                             ]);
                             $content = 'Your account has been created successfully and approved by admin.';
                             $auto_approved = true;
-                        } else {
-                            $contact->save();
-                            $created_contact = Contact::where('id', $contact->id)->first();
-                            $registration_status = true;
-                            $admin_users =  DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
-                            $admin_users = $admin_users->toArray();
-
-                            $users_with_role_admin = User::select("email")
-                                ->whereIn('id', $admin_users)
-                                ->get();
-
-                            $user_log = UserLog::create([
-                                'user_id' => $created_contact->user_id,
-                                'action' => 'Signup',
-                                'user_notes' => 'new contact created' . Carbon::now()->toDateTimeString()
-                            ]);
-                            $content = 'Your account registration request has been submitted. You will receive an email once your account has been approved.';
-                            $auto_approved = false;
-                        }
-                        $data = [
-                            'user' => $user,
-                            'subject' => 'New Register User',
-                            'name' => $user->first_name . ' ' . $user->last_name,
-                            'content' => $content,
-                            'email' => $user->email,
-                            'subject' => 'Your account registration request ',
-                            'from' => 'noreply@indoorsunhydro.com',
-                        ];
-                        
-                        if (!empty($users_with_role_admin)) {
-                            foreach ($users_with_role_admin as $role_admin) {
-                                $subject = 'New Register User';
-                                $data['email'] = $role_admin->email;
-                                MailHelper::sendMailNotification('emails.admin_notification', $data);
-                            }
-                        }
-
-                        // if (!empty($user->email)) {
-                        //     $data['email'] = $user->email;
-                        //     MailHelper::sendMailNotification('emails.admin_notification', $data);
-                        // }
-
-                        if (!empty($created_contact)) {
-                            if ($auto_approved == true) {
-                                $data['contact_name'] = $created_contact->firstName . ' ' . $created_contact->lastName;
-                                $data['contact_email'] = $created_contact->email;
-                                $data['content'] = 'Your account has been approved';
-                                $data['subject'] = 'Your account has been approved';
-                                MailHelper::sendMailNotification('emails.approval-notifications', $data);
-                            } else {
-                                $data['content'] = $content;
-                                $data['subject'] = 'Your account registration request ';
-                                MailHelper::sendMailNotification('emails.user_registration_notification', $data);
-                            }
-                        }
-                       
-                        $access = true;
-                        $message = 'Registration successfull and approved by admin.';
-                        if (!empty($created_contact)) {
-                            $auth_user = Auth::loginUsingId($created_contact->user_id);
-                            if ($request->session()->has('cart_hash')) {
-                                $cart_hash = $request->session()->get('cart_hash');
-                                $cart_items = Cart::where('cart_hash', $cart_hash)->where('is_active', 1)->where('user_id', 0)->get();
-                                foreach ($cart_items as $cart_item) {
-                                    $cart_item->user_id = $user_id;
-                                    $cart_item->save();
-                                }
-                            }
-                            $companies = Contact::where('user_id', $auth_user->id)->get();
-                            if (count($companies) > 0 ) {
-                                if ($companies[0]->contact_id == null) {
-                                    UserHelper::switch_company($companies[0]->secondary_id);
-                                } else {
-                                    UserHelper::switch_company($companies[0]->contact_id);
-                                }
-                                Session::put('companies', $companies);
-                            }
-                        } else {
-                            $access = false;
-                            $message = 'Something went wrong. Please try again.';
                         }
                         
+                    } else {
+                        $contact->save();
+                        $created_contact = Contact::where('id', $contact->id)->first();
+                        $registration_status = true;
+                        $admin_users =  DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
+                        $admin_users = $admin_users->toArray();
 
+                        $users_with_role_admin = User::select("email")
+                            ->whereIn('id', $admin_users)
+                            ->get();
+
+                        $user_log = UserLog::create([
+                            'user_id' => $created_contact->user_id,
+                            'action' => 'Signup',
+                            'user_notes' => 'new contact created' . Carbon::now()->toDateTimeString()
+                        ]);
+                        $content = 'Your account registration request has been submitted. You will receive an email once your account has been approved.';
+                        $auto_approved = false;
                     }
+                    $data = [
+                        'user' => $user,
+                        'subject' => 'New Register User',
+                        'name' => $user->first_name . ' ' . $user->last_name,
+                        'content' => $content,
+                        'email' => $user->email,
+                        'subject' => 'Your account registration request ',
+                        'from' => 'noreply@indoorsunhydro.com',
+                    ];
+                    
+                    if (!empty($users_with_role_admin)) {
+                        foreach ($users_with_role_admin as $role_admin) {
+                            $subject = 'New Register User';
+                            $data['email'] = $role_admin->email;
+                            MailHelper::sendMailNotification('emails.admin_notification', $data);
+                        }
+                    }
+
+                    // if (!empty($user->email)) {
+                    //     $data['email'] = $user->email;
+                    //     MailHelper::sendMailNotification('emails.admin_notification', $data);
+                    // }
+
+                    if (!empty($created_contact)) {
+                        if ($auto_approved == true) {
+                            $data['contact_name'] = $created_contact->firstName . ' ' . $created_contact->lastName;
+                            $data['contact_email'] = $created_contact->email;
+                            $data['content'] = $content;
+                            $data['subject'] = $content;
+                            MailHelper::sendMailNotification('emails.approval-notifications', $data);
+                        } else {
+                            $data['contact_name'] = $created_contact->firstName . ' ' . $created_contact->lastName;
+                            $data['contact_email'] = $created_contact->email;
+                            $data['content'] = $content;
+                            $data['subject'] = 'Your account registration request';
+                            MailHelper::sendMailNotification('emails.user_registration_notification', $data);
+                        }
+                    }
+                    
+                    $access = true;
+                    $message = $content;
+                    if (!empty($created_contact)) {
+                        $auth_user = Auth::loginUsingId($created_contact->user_id);
+                        if ($request->session()->has('cart_hash')) {
+                            $cart_hash = $request->session()->get('cart_hash');
+                            $cart_items = Cart::where('cart_hash', $cart_hash)->where('is_active', 1)->where('user_id', 0)->get();
+                            foreach ($cart_items as $cart_item) {
+                                $cart_item->user_id = $user_id;
+                                $cart_item->save();
+                            }
+                        }
+                        $companies = Contact::where('user_id', $auth_user->id)->get();
+                        if (count($companies) > 0 ) {
+                            if ($companies[0]->contact_id == null) {
+                                UserHelper::switch_company($companies[0]->secondary_id);
+                            } else {
+                                UserHelper::switch_company($companies[0]->contact_id);
+                            }
+                            Session::put('companies', $companies);
+                        }
+                    } else {
+                        $access = false;
+                        $message = 'Something went wrong. Please try again.';
+                    }
+                        
+
+                    
                 } catch (\Exception $e) {
                     // $message = $e->getMessage();
                     $message = 'Something went wrong. Please contact admin .';
