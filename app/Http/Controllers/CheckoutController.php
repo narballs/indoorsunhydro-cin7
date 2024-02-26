@@ -739,79 +739,81 @@ class CheckoutController extends Controller
                 // return redirect()->back();
             } else {
                 $user_id = auth()->user()->id;
-                if (!empty($main_contact) && $main_contact->status == 1) {
+                if (!empty($main_contact) && $main_contact->status == 0) {
                     $auto_approved = false;
                 }
-                if ($request->session()->has('cart_hash')) {
-                    $cart_hash = $request->session()->get('cart_hash');
-                    $cart_items = Cart::where('cart_hash', $cart_hash)->where('is_active', 1)->where('user_id', 0)->get();
-                    foreach ($cart_items as $cart_item) {
-                        $cart_item->user_id = $user_id;
-                        $cart_item->save();
-                    }
-                }
-                if ($user->hasRole(['Admin'])) {
-                    session()->flash('message', 'Successfully Logged in');
-                    $companies = Contact::where('user_id', auth()->user()->id)->get();
-                    if ($companies->count() == 1) {
-                        
-                        if ($companies[0]->contact_id == null) {
-                            UserHelper::switch_company($companies[0]->secondary_id);
-                        } else {
-                            UserHelper::switch_company($companies[0]->contact_id);
+                else {
+                    if ($request->session()->has('cart_hash')) {
+                        $cart_hash = $request->session()->get('cart_hash');
+                        $cart_items = Cart::where('cart_hash', $cart_hash)->where('is_active', 1)->where('user_id', 0)->get();
+                        foreach ($cart_items as $cart_item) {
+                            $cart_item->user_id = $user_id;
+                            $cart_item->save();
                         }
                     }
-                    Session::put('companies', $companies);
-                    $admin = true;
-                } else {
-                    $companies = Contact::where('user_id', auth()->user()->id)->get();
-                    if ($companies->count() == 1) {
-                        if ($companies[0]->contact_id == null) {
-                            UserHelper::switch_company($companies[0]->secondary_id);
-                        } else {
-                            UserHelper::switch_company($companies[0]->contact_id);
+                    if ($user->hasRole(['Admin'])) {
+                        session()->flash('message', 'Successfully Logged in');
+                        $companies = Contact::where('user_id', auth()->user()->id)->get();
+                        if ($companies->count() == 1) {
+                            
+                            if ($companies[0]->contact_id == null) {
+                                UserHelper::switch_company($companies[0]->secondary_id);
+                            } else {
+                                UserHelper::switch_company($companies[0]->contact_id);
+                            }
                         }
-                    }
-                    if ($companies->count() == 2) {
-                        foreach ($companies as $company) {
-                            if ($company->status == 1) {
-                                if ($company->contact_id == null) {
-                                    UserHelper::switch_company($company->secondary_id);
-                                } else {
-                                    UserHelper::switch_company($company->contact_id);
+                        Session::put('companies', $companies);
+                        $admin = true;
+                    } else {
+                        $companies = Contact::where('user_id', auth()->user()->id)->get();
+                        if ($companies->count() == 1) {
+                            if ($companies[0]->contact_id == null) {
+                                UserHelper::switch_company($companies[0]->secondary_id);
+                            } else {
+                                UserHelper::switch_company($companies[0]->contact_id);
+                            }
+                        }
+                        if ($companies->count() == 2) {
+                            foreach ($companies as $company) {
+                                if ($company->status == 1) {
+                                    if ($company->contact_id == null) {
+                                        UserHelper::switch_company($company->secondary_id);
+                                    } else {
+                                        UserHelper::switch_company($company->contact_id);
+                                    }
                                 }
                             }
                         }
+                        Session::put('companies', $companies);
+                        // if (!empty(session()->get('cart'))) {
+                        //     return redirect()->route('cart');
+                        // } else {
+                            if ($user->is_updated == 1) {
+    
+                                $companies = Contact::where('user_id', auth()->user()->id)->get();
+    
+                                if ($companies[0]->contact_id == null) {
+                                    UserHelper::switch_company($companies[0]->secondary_id);
+                                } else {
+                                    UserHelper::switch_company($companies[0]->contact_id);
+                                }
+                                // Session::put('companies', $companies);
+                                $previousUrl = session('previous_url', '/'); 
+                                // return redirect()->intended($previousUrl);
+                                // return redirect()->route('my_account');
+                            } else {
+                                $companies = Contact::where('user_id', auth()->user()->id)->get();
+                                // Session::put('companies', $companies);
+                                if ($companies[0]->contact_id == null) {
+                                    UserHelper::switch_company($companies[0]->secondary_id);
+                                } else {
+                                    UserHelper::switch_company($companies[0]->contact_id);
+                                }
+                                // return redirect('/');
+                            }
+                            $admin = false;
+                        // }
                     }
-                    Session::put('companies', $companies);
-                    // if (!empty(session()->get('cart'))) {
-                    //     return redirect()->route('cart');
-                    // } else {
-                        if ($user->is_updated == 1) {
-
-                            $companies = Contact::where('user_id', auth()->user()->id)->get();
-
-                            if ($companies[0]->contact_id == null) {
-                                UserHelper::switch_company($companies[0]->secondary_id);
-                            } else {
-                                UserHelper::switch_company($companies[0]->contact_id);
-                            }
-                            // Session::put('companies', $companies);
-                            $previousUrl = session('previous_url', '/'); 
-                            // return redirect()->intended($previousUrl);
-                            // return redirect()->route('my_account');
-                        } else {
-                            $companies = Contact::where('user_id', auth()->user()->id)->get();
-                            // Session::put('companies', $companies);
-                            if ($companies[0]->contact_id == null) {
-                                UserHelper::switch_company($companies[0]->secondary_id);
-                            } else {
-                                UserHelper::switch_company($companies[0]->contact_id);
-                            }
-                            // return redirect('/');
-                        }
-                        $admin = false;
-                    // }
                 }
                 $message = 'Successfully Logged in';
                 $access = true;
