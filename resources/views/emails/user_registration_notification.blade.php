@@ -4,7 +4,7 @@
     <title>{{ \App\Helpers\SettingHelper::getSetting('website_name') }}</title>
 </head>
 <body>
-    <p>Hi {{name}},</p>
+    <p>Hi {{$name}},</p>
     <p>
         {{$content}} <a href="{{url('admin/users')}}">{{ \App\Helpers\SettingHelper::getSetting('website_name') }}</a>.
     </p>
