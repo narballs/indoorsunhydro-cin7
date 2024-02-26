@@ -328,7 +328,7 @@ $cart_price = 0;
                                 ?>
                                 <tr>
                                     <td>
-                                        <div class="row">
+                                        <div class="row align-items-center">
                                             <div class="col-md-2 py-2">
                                                 @if ($cart['image'])
                                                     <img class="img-fluid img-thumbnail" src="{{ $cart['image'] }}"
@@ -344,27 +344,27 @@ $cart_price = 0;
                                                     {{ $cart['name'] }}
                                                 </a>
                                                 <br>
-                                                <p class="product-title-thank-you-page ">Title:<span
+                                                {{-- <p class="product-title-thank-you-page ">Title:<span
                                                         class="product-title-thank-you-page-title">
                                                         {{ $cart['name'] }}</span>
-                                                </p>
-                                                <p class="product-delete-icon-thank-you-page-icon">
+                                                </p> --}}
+                                                {{-- <p class="product-delete-icon-thank-you-page-icon">
                                                     <img class="img-fluid" src="/theme/img/thank-you-page-delete.icon.png"
                                                         alt="">
-                                                </p>
+                                                </p> --}}
                                             </div>
                                         </div>
                                     </td>
-                                    <td>
+                                    <td class="align-middle">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <p class="pt-4 thank-you-page-product-items-cart">{{ $cart['quantity'] }}
+                                                <p class="mb-0 thank-you-page-product-items-cart">{{ $cart['quantity'] }}
                                                 </p>
                                             </div>
                                         </div>
                                     </td>
-                                    <td>
-                                        <p class="pt-4 thank-you-page-product-items-price">
+                                    <td class="align-middle">
+                                        <p class="mb-0 thank-you-page-product-items-price">
                                             ${{ number_format($cart['price'], 2) }}</p>
                                     </td>
                                 </tr>
@@ -784,10 +784,10 @@ $cart_price = 0;
                                                                         {{$cart['name']}}
                                                                     </a>
                                                                 </p>
-                                                                <p class="product-title-thank-you-page mb-0">Title:<span
+                                                                {{-- <p class="product-title-thank-you-page mb-0">Title:<span
                                                                     class="product-title-thank-you-page-title">
                                                                     {{ $cart['name'] }}</span>
-                                                                </p>
+                                                                </p> --}}
                                                                 <p class=" mb-0 order-confirmation-page-product-price text-right"> ${{number_format($cart['price'],2)}}</p>
                                                             </div>
                                                         </td>
