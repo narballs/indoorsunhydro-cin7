@@ -983,6 +983,7 @@ class CheckoutController extends Controller
                             ]);
                             $content = 'Your account has been created successfully and approved by admin.';
                             $auto_approved = true;
+                            $message = $content;
                         }
                         
                     } else {
@@ -1003,6 +1004,7 @@ class CheckoutController extends Controller
                         ]);
                         $content = 'Your account registration request has been submitted. You will receive an email once your account has been approved.';
                         $auto_approved = false;
+                        $message = $content;
                     }
                     $data = [
                         'user' => $user,
@@ -1035,8 +1037,6 @@ class CheckoutController extends Controller
                             $data['subject'] = $content;
                             MailHelper::sendMailNotification('emails.approval-notifications', $data);
                         } else {
-                            $data['contact_name'] = $created_contact->firstName . ' ' . $created_contact->lastName;
-                            $data['contact_email'] = $created_contact->email;
                             $data['content'] = $content;
                             $data['subject'] = 'Your account registration request';
                             MailHelper::sendMailNotification('emails.user_registration_notification', $data);
@@ -1044,7 +1044,7 @@ class CheckoutController extends Controller
                     }
                     
                     $access = true;
-                    $message = $content;
+                    
                     if (!empty($created_contact)) {
                         $auth_user = Auth::loginUsingId($created_contact->user_id);
                         if ($request->session()->has('cart_hash')) {
