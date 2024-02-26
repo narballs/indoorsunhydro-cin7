@@ -780,10 +780,14 @@ $cart_price = 0;
                     success: function(response) {
                         if (response.status == 'success') {
                             if (response.access === true) {
-                                if (response.is_admin === true) {
-                                    window.location.href = '/admin/dashboard';
+                                if (response.auto_approved == true) {
+                                    if (response.is_admin === true) {
+                                        window.location.href = '/admin/dashboard';
+                                    } else {
+                                        window.location.href = '/checkout';
+                                    }
                                 } else {
-                                    window.location.href = '/checkout';
+                                    window.location.href = '/cart';
                                 }
                             } else {
                                 $('.update_checkout_loader').addClass('d-none');
@@ -791,9 +795,16 @@ $cart_price = 0;
                             }
                         } else {
                             if (response.registration_status == true) {
-                                $('.update_checkout_loader').addClass('d-none');
-                                $('.error_div').text(response.message);
-                                window.location.href = '/checkout';
+                                if (response.auto_approved == true) {
+                                    $('.update_checkout_loader').addClass('d-none');
+                                    $('.error_div').text(response.message);
+                                    window.location.href = '/checkout';
+                                } else {
+                                    $('.update_checkout_loader').addClass('d-none');
+                                    $('.error_div').text(response.message);
+                                    window.location.href = '/cart';
+                                }
+                                
                             } else {
                                 $('.update_checkout_loader').addClass('d-none');
                                 $('.error_div').text(response.message);
