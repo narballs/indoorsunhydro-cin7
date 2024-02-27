@@ -832,7 +832,7 @@ class CheckoutController extends Controller
                         'address' => 'required',
                         // 'city' => 'required',
                         'state' => 'required',
-                        'zip_code' => 'required',
+                        'zip_code' => ['required', 'regex:/^\d{5}(-\d{4})?$/'],
                         'phone' => 'required',
                         'postal_address1' => 'required',
                         'postal_state' => 'required',
@@ -847,7 +847,7 @@ class CheckoutController extends Controller
                         'address' => 'required',
                         // 'city' => 'required',
                         'state' => 'required',
-                        'zip_code' => 'required',
+                        'zip_code' => ['required', 'regex:/^\d{5}(-\d{4})?$/'],
                         'phone' => 'required',
                     ]);
                 }

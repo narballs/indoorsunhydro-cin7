@@ -1109,7 +1109,136 @@
                         window.location.href = "{{ url('my-account/address') }}";
                     }, 1000);
                 }
+            },
+            error: function(response) {
+                if (type === 'update shipping address') {
+                    
+                    $('#address_loader_shipping').addClass('d-none');
+                    var error_message = response.responseJSON;
+                    var error_text = '';
+                    if (typeof error_message.errors.first_name != 'undefined') {
+                        error_text = error_message.errors.first_name;
+                        $('#error_first_name_shipping').html(error_text);
+                    } else {
+                        error_text = '';
+                        $('#error_first_name_shipping').html(error_text);
+                    }
+                    if (typeof error_message.errors.last_name != 'undefined') {
+                        var error_text = error_message.errors.last_name;
+                        $('#error_last_name_shipping').html(error_text);
+                    } else {
+                        error_text = '';
+                        $('#error_last_name_shipping').html(error_text);
+                    }
+                    if (typeof error_message.errors.company_name != 'undefined') {
+                        var error_text = error_message.errors.company_name;
+                        $('#error_company_shipping').html(error_text);
+                    } else {
+                        error_text = '';
+                        $('#error_company_shipping').html(error_text);
+                    }
+                    if (typeof error_message.errors.address != 'undefined') {
+                        var error_text = error_message.errors.address;
+                        $('#error_address1_shipping').html(error_text);
+                    } else {
+                        error_text = '';
+                        $('#error_address1_shipping').html(error_text);
+                    }
+
+                    if (typeof error_message.errors.zip != 'undefined') {
+                        var error_text = error_message.errors.zip;
+                        $('#error_zip_shipping').html(error_text);
+                    } else {
+                        error_text = '';
+                        $('#error_zip_shipping').html(error_text);
+                    }
+                    if (typeof error_message.errors.town_city != 'undefined') {
+                        var error_text = error_message.errors.town_city;
+                        $('#error_city_shipping').html(error_text);
+                    } else {
+                        error_text = '';
+                        $('#error_city_shipping').html(error_text);
+                    }
+                    if (typeof error_message.errors.zip != 'undefined') {
+                        var error_text = error_message.zip;
+                        $('#error_zip_shipping').html(error_text);
+                    } else {
+                        error_text = '';
+                        $('#error_zip_shipping').html(error_text);
+                    }
+                    if (typeof error_message.errors.phone != 'undefined') {
+                        var error_text = error_message.errors.phone;
+                        $('#error_phone_shipping').html(error_text);
+                    } else {
+                        error_text = '';
+                        $('#error_phone_shipping').html(error_text);
+                    }
+
+                } else {
+                    $('#address_loader').addClass('d-none');
+                    var error_message = response.responseJSON;
+                    var error_text = '';
+                    if (typeof error_message.errors.first_name != 'undefined') {
+                        error_text = error_message.errors.first_name;
+                        $('#error_first_name').html(error_text);
+                    } else {
+                        error_text = '';
+                        $('#error_first_name').html(error_text);
+                    }
+                    if (typeof error_message.errors.last_name != 'undefined') {
+                        var error_text = error_message.errors.last_name;
+                        $('#error_last_name').html(error_text);
+                    } else {
+                        error_text = '';
+                        $('#error_last_name').html(error_text);
+                    }
+                    if (typeof error_message.errors.company_name != 'undefined') {
+                        var error_text = error_message.errors.company_name;
+                        $('#error_company').html(error_text);
+                    } else {
+                        error_text = '';
+                        $('#error_company').html(error_text);
+                    }
+                    if (typeof error_message.errors.address != 'undefined') {
+                        var error_text = error_message.errors.address;
+                        $('#error_address1').html(error_text);
+                    } else {
+                        error_text = '';
+                        $('#error_address1').html(error_text);
+                    }
+
+                    if (typeof error_message.errors.zip != 'undefined') {
+                        var error_text = error_message.errors.zip;
+                        $('#error_zip').html(error_text);
+                    } else {
+                        error_text = '';
+                        $('#error_zip').html(error_text);
+                    }
+                    if (typeof error_message.errors.town_city != 'undefined') {
+                        var error_text = error_message.errors.town_city;
+                        $('#error_city').html(error_text);
+                    } else {
+                        error_text = '';
+                        $('#error_city').html(error_text);
+                    }
+                    if (typeof error_message.errors.zip != 'undefined') {
+                        var error_text = error_message.zip;
+                        $('#error_zip').html(error_text);
+                    } else {
+                        error_text = '';
+                        $('#error_zip').html(error_text);
+                    }
+                    if (typeof error_message.errors.phone != 'undefined') {
+                        var error_text = error_message.errors.phone;
+                        $('#error_phone').html(error_text);
+                    } else {
+                        error_text = '';
+                        $('#error_phone').html(error_text);
+                    }
+                    
+                }
             }
+
         });
     }
 
@@ -1336,7 +1465,7 @@
                                 <label for="firstName">First name</label>
                                 <input type="text" class="form-control bg-light" id="shipping_first_name" name="firstName"
                                     placeholder="First name" value="{{!empty($address_user->firstName) ? $address_user->firstName  : ''}}" required>
-                                <div id="error_first_name" class="text-danger">
+                                <div id="error_first_name_shipping" class="text-danger">
 
                                 </div>
                             </div>
@@ -1345,7 +1474,7 @@
                                 <label for="lastName">Last name</label>
                                 <input type="text" class="form-control bg-light" id="shipping_last_name" name="lastName" placeholder=""
                                     value="{{!empty($address_user->lastName) ? $address_user->lastName : '' }}" required>
-                                <div id="error_last_name" class="text-danger">
+                                <div id="error_last_name_shipping" class="text-danger">
 
                                 </div>
                             </div>
@@ -1408,21 +1537,21 @@
                             <input type="text" class="form-control bg-light shipping_address_1" name="address"  id="address1"
                             value="{{ !empty($address_user->address1) ? $address_user->address1 : '' }}" placeholder="House number and street name"
                             required>
-                            <div id="error_address1" class="text-danger"></div>
+                            <div id="error_address1_shipping" class="text-danger"></div>
                         </div>
                         <div class="mb-3">
                             <label for="address2">Address 2 <span class="text-muted">(Optional)</span></label>
                             <input type="text" class="form-control bg-light shipping_address_2" name="address2"
                                 value="{{ !empty($address_user->address2) ? $address_user->address2 : '' }}"
                                 placeholder="Apartment, suite, unit etc (optional)">
-                                <div id="error_address2" class="text-danger"></div>
+                                <div id="error_address2_shipping" class="text-danger"></div>
                         </div>
                        
                         <div class="mb-3">
                             <label for="town">Town/City <span class="text-muted">(Optional)</span></label>
                             <input type="text" class="form-control bg-light shipping_city" name="town_city"
                                 value="{{ !empty($address_user->city) ?  $address_user->city  : ''}}" placeholder="Enter your town">
-                                <div id="error_city" class="text-danger"></div>
+                                <div id="error_city_shipping" class="text-danger"></div>
                         </div>
                         
                         <div class="row">
@@ -1453,7 +1582,7 @@
                                 <input type="text" class="form-control bg-light shipping_post_code" name="zip"
                                     placeholder="Enter zip code" value="{{ !empty($address_user->postCode) ?  $address_user->postCode: ''}}"
                                     required>
-                                <div id="error_zip" class="text-danger">
+                                <div id="error_zip_shipping" class="text-danger">
 
                                 </div>
                             </div>
@@ -1465,7 +1594,7 @@
                                 <label for="phone">Phone</label>
                                 <input type="text" class="form-control bg-light shipping_phone" name="phone"
                                     placeholder="Enter your phone" value="{{!empty($address_user->phone) ? $address_user->phone : '' }}" required>
-                                <div id="error_phone" class="text-danger"></div>
+                                <div id="error_phone_shipping" class="text-danger"></div>
 
 
 
