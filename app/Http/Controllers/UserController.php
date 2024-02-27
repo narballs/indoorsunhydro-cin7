@@ -672,10 +672,7 @@ class UserController extends Controller
                 ],
                 'state_id' => 'required',
                 'city_id' => 'required',
-                'zip' => [
-                    'required',
-                    'regex:/^\d{5}(?:[- ]?\d{4})?$/s'
-                ]
+                'zip' => ['required', 'regex:/^\d{5}(-\d{4})?$/'],
             ],
             [
                 'state_id.required' => 'The state field is required.',
@@ -1715,7 +1712,7 @@ class UserController extends Controller
             'address' => 'required',
             'state' => 'required',
             'phone' => 'required',
-            'zip' => 'required'
+            'zip' => ['required', 'regex:/^\d{5}(-\d{4})?$/'],
         ]);
 
         $response  = null;

@@ -1048,7 +1048,7 @@ $cart_price = 0;
                                 <label for="firstName">First name</label>
                                 <input type="text" class="form-control bg-light" name="firstName" id="billing_first_name"
                                     placeholder="First name" value="{{!empty($user_address->firstName) ? $user_address->firstName : ''}}" required>
-                                <div id="error_first_name" class="text-danger">
+                                <div id="error_first_name_billing" class="text-danger">
 
                                 </div>
                             </div>
@@ -1057,7 +1057,7 @@ $cart_price = 0;
                                 <label for="lastName">Last name</label>
                                 <input type="text" class="form-control bg-light" name="lastName" id="billing_last_name" placeholder=""
                                     value="{{!empty($user_address->lastName) ? $user_address->lastName : ''}}" required>
-                                <div id="error_last_name" class="text-danger">
+                                <div id="error_last_name_billing" class="text-danger">
 
                                 </div>
                             </div>
@@ -1121,21 +1121,21 @@ $cart_price = 0;
                             <input type="text" class="form-control bg-light billing_address_1 " name="address" id="address1"
                             value="{{ !empty($user_address->postalAddress1) ?  $user_address->postalAddress1 : '' }}" placeholder="House number and street name"
                             required>
-                            <div id="error_address1" class="text-danger"></div>
+                            <div id="error_address1_billing" class="text-danger"></div>
                         </div>
                         <div class="mb-3">
                             <label for="address2">Address 2 <span class="text-muted">(Optional)</span></label>
                             <input type="text" class="form-control bg-light billing_address_2" name="address2"
                                 value="{{ !empty($user_address->postalAddress2) ?  $user_address->postalAddress2 : '' }}"
                                 placeholder="Apartment, suite, unit etc (optional)">
-                                <div id="error_address2" class="text-danger"></div>
+                                <div id="error_address2_billing" class="text-danger"></div>
                         </div>
                        
                         <div class="mb-3">
                             <label for="town">Town/City <span class="text-muted">(Optional)</span></label>
                             <input type="text" class="form-control bg-light billing_city" name="town_city"
                                 value="{{ !empty($user_address->postalCity) ? $user_address->postalCity : '' }}" placeholder="Enter your town">
-                                <div id="error_city" class="text-danger"></div>
+                                <div id="error_city_billing" class="text-danger"></div>
                         </div>
                         
                         <div class="row">
@@ -1166,7 +1166,7 @@ $cart_price = 0;
                                 <input type="text" class="form-control bg-light billing_post_code" name="zip"
                                     placeholder="Enter zip code" value="{{ !empty($user_address->postalPostCode) ? $user_address->postalPostCode : ''}}"
                                     required>
-                                <div id="error_zip" class="text-danger">
+                                <div id="error_zip_billing" class="text-danger">
 
                                 </div>
                             </div>
@@ -1178,7 +1178,7 @@ $cart_price = 0;
                                 <label for="phone">Phone</label>
                                 <input type="text" class="form-control bg-light billing_phone" name="phone"
                                     placeholder="Enter your phone" value="{{!empty($user_address->phone) ? $user_address->phone  : ''}}" required>
-                                <div id="error_phone" class="text-danger"></div>
+                                <div id="error_phone_billing" class="text-danger"></div>
 
 
 
@@ -1232,7 +1232,7 @@ $cart_price = 0;
                                 <label for="firstName">First name</label>
                                 <input type="text" class="form-control bg-light" id="shipping_first_name" name="firstName"
                                     placeholder="First name" value="{{!empty($user_address->firstName) ? $user_address->firstName  : ''}}" required>
-                                <div id="error_first_name" class="text-danger">
+                                <div id="error_first_name_shipping" class="text-danger">
 
                                 </div>
                             </div>
@@ -1241,7 +1241,7 @@ $cart_price = 0;
                                 <label for="lastName">Last name</label>
                                 <input type="text" class="form-control bg-light" id="shipping_last_name" name="lastName" placeholder=""
                                     value="{{!empty($user_address->lastName) ? $user_address->lastName : '' }}" required>
-                                <div id="error_last_name" class="text-danger">
+                                <div id="error_last_name_shipping" class="text-danger">
 
                                 </div>
                             </div>
@@ -1304,21 +1304,21 @@ $cart_price = 0;
                             <input type="text" class="form-control bg-light shipping_address_1" name="address"  id="address1"
                             value="{{ !empty($user_address->address1) ? $user_address->address1 : '' }}" placeholder="House number and street name"
                             required>
-                            <div id="error_address1" class="text-danger"></div>
+                            <div id="error_address_1_shipping" class="text-danger"></div>
                         </div>
                         <div class="mb-3">
                             <label for="address2">Address 2 <span class="text-muted">(Optional)</span></label>
                             <input type="text" class="form-control bg-light shipping_address_2" name="address2"
                                 value="{{ !empty($user_address->address2) ? $user_address->address2 : '' }}"
                                 placeholder="Apartment, suite, unit etc (optional)">
-                                <div id="error_address2" class="text-danger"></div>
+                                <div id="error_address_2_shipping" class="text-danger"></div>
                         </div>
                        
                         <div class="mb-3">
                             <label for="town">Town/City <span class="text-muted">(Optional)</span></label>
                             <input type="text" class="form-control bg-light shipping_city" name="town_city"
                                 value="{{ !empty($user_address->city) ?  $user_address->city  : ''}}" placeholder="Enter your town">
-                                <div id="error_city" class="text-danger"></div>
+                                <div id="error_city_shipping" class="text-danger"></div>
                         </div>
                         
                         <div class="row">
@@ -1349,7 +1349,7 @@ $cart_price = 0;
                                 <input type="text" class="form-control bg-light shipping_post_code" name="zip"
                                     placeholder="Enter zip code" value="{{ !empty($user_address->postCode) ?  $user_address->postCode: ''}}"
                                     required>
-                                <div id="error_zip" class="text-danger">
+                                <div id="error_zip_shipping" class="text-danger">
 
                                 </div>
                             </div>
@@ -1361,10 +1361,7 @@ $cart_price = 0;
                                 <label for="phone">Phone</label>
                                 <input type="text" class="form-control bg-light shipping_phone" name="phone"
                                     placeholder="Enter your phone" value="{{!empty($user_address->phone) ? $user_address->phone : '' }}" required>
-                                <div id="error_phone" class="text-danger"></div>
-
-
-
+                                <div id="error_phone_shipping" class="text-danger"></div>
                             </div>
                         </div>
                     </form>
@@ -1620,6 +1617,120 @@ $cart_price = 0;
                                     }
                                     window.location.href = "{{ url('/checkout') }}";
                                 }, 2000);
+                            }
+                        },
+                        error: function(response) {
+                            if (type === 'update shipping address') {
+                                
+                                $('#address_loader_shipping').addClass('d-none');
+                                var error_message = response.responseJSON;
+                                var error_text = '';
+                                if (typeof error_message.errors.first_name != 'undefined') {
+                                    error_text = error_message.errors.first_name;
+                                    $('#error_first_name_shipping').html(error_text);
+                                } else {
+                                    error_text = '';
+                                    $('#error_first_name_shipping').html(error_text);
+                                }
+                                if (typeof error_message.errors.last_name != 'undefined') {
+                                    var error_text = error_message.errors.last_name;
+                                    $('#error_last_name_shipping').html(error_text);
+                                } else {
+                                    error_text = '';
+                                    $('#error_last_name_shipping').html(error_text);
+                                }
+                                if (typeof error_message.errors.company_name != 'undefined') {
+                                    var error_text = error_message.errors.company_name;
+                                    $('#error_company_shipping').html(error_text);
+                                } else {
+                                    error_text = '';
+                                    $('#error_company_shipping').html(error_text);
+                                }
+                                if (typeof error_message.errors.address != 'undefined') {
+                                    var error_text = error_message.errors.address;
+                                    $('#error_address1_shipping').html(error_text);
+                                } else {
+                                    error_text = '';
+                                    $('#error_address1_shipping').html(error_text);
+                                }
+
+                                if (typeof error_message.errors.zip != 'undefined') {
+                                    var error_text = error_message.errors.zip;
+                                    $('#error_zip_shipping').html(error_text);
+                                } else {
+                                    error_text = '';
+                                    $('#error_zip_shipping').html(error_text);
+                                }
+                                if (typeof error_message.errors.town_city != 'undefined') {
+                                    var error_text = error_message.errors.town_city;
+                                    $('#error_city_shipping').html(error_text);
+                                } else {
+                                    error_text = '';
+                                    $('#error_city_shipping').html(error_text);
+                                }
+                                if (typeof error_message.errors.phone != 'undefined') {
+                                    var error_text = error_message.errors.phone;
+                                    $('#error_phone_shipping').html(error_text);
+                                } else {
+                                    error_text = '';
+                                    $('#error_phone_shipping').html(error_text);
+                                }
+
+                            } else {
+                                $('#address_loader').addClass('d-none');
+                                var error_message = response.responseJSON;
+                                var error_text = '';
+                                if (typeof error_message.errors.first_name != 'undefined') {
+                                    error_text = error_message.errors.first_name;
+                                    $('#error_first_name_billing').html(error_text);
+                                } else {
+                                    error_text = '';
+                                    $('#error_first_name_billing').html(error_text);
+                                }
+                                if (typeof error_message.errors.last_name != 'undefined') {
+                                    var error_text = error_message.errors.last_name;
+                                    $('#error_last_name_billing').html(error_text);
+                                } else {
+                                    error_text = '';
+                                    $('#error_last_name_billing').html(error_text);
+                                }
+                                if (typeof error_message.errors.company_name != 'undefined') {
+                                    var error_text = error_message.errors.company_name;
+                                    $('#error_company_billing').html(error_text);
+                                } else {
+                                    error_text = '';
+                                    $('#error_company_billing').html(error_text);
+                                }
+                                if (typeof error_message.errors.address != 'undefined') {
+                                    var error_text = error_message.errors.address;
+                                    $('#error_address1_billing').html(error_text);
+                                } else {
+                                    error_text = '';
+                                    $('#error_address1_billing').html(error_text);
+                                }
+
+                                if (typeof error_message.errors.zip != 'undefined') {
+                                    var error_text = error_message.errors.zip;
+                                    $('#error_zip_billing').html(error_text);
+                                } else {
+                                    error_text = '';
+                                    $('#error_zip_billing').html(error_text);
+                                }
+                                if (typeof error_message.errors.town_city != 'undefined') {
+                                    var error_text = error_message.errors.town_city;
+                                    $('#error_city_billing').html(error_text);
+                                } else {
+                                    error_text = '';
+                                    $('#error_city_billing').html(error_text);
+                                }
+                                if (typeof error_message.errors.phone != 'undefined') {
+                                    var error_text = error_message.errors.phone;
+                                    $('#error_phone_billing').html(error_text);
+                                } else {
+                                    error_text = '';
+                                    $('#error_phone_billing').html(error_text);
+                                }
+                                
                             }
                         }
                     });
