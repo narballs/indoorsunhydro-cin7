@@ -221,6 +221,7 @@ class UserHelper
             $carrier_code = $carrier_code->option_value;
             $service_code = $service_code->option_value;
         }
+        
         $created_date = \Carbon\Carbon::parse($currentOrder->createdDate);
         $getDate =$created_date->format('Y-m-d');
         $getTime = date('H:i:s' ,strtotime($currentOrder->createdDate));
@@ -264,11 +265,11 @@ class UserHelper
             'billTo' => [
                 "name" => $order_contact->firstName . ' ' . $order_contact->lastName,
                 "company" => $order_contact->company,
-                "street1" => $order_contact->address1 ? $order_contact->address1 : $order_contact->postalAddress1,
-                "street2" => $order_contact->address2 ? $order_contact->address2 : $order_contact->postalAddress2,
-                "city" => $order_contact->city ? $order_contact->city : $order_contact->postalCity,
-                "state" => $order_contact->state ? $order_contact->state : $order_contact->postalState,
-                "postalCode" => $order_contact->postCode ? $order_contact->postCode : $order_contact->postalPostCode,
+                "street1" => $order_contact->postalAddress1 ? $order_contact->postalAddress1 : $order_contact->address1,
+                "street2" => $order_contact->postalAddress2 ? $order_contact->postalAddress2 : $order_contact->address2,
+                "city" => $order_contact->postalCity ? $order_contact->postalCity : $order_contact->city,
+                "state" => $order_contact->postalState ? $order_contact->postalState : $order_contact->state,
+                "postalCode" => $order_contact->postalPostCode ? $order_contact->postalPostCode : $order_contact->postCode,
                 "country"=>"US",
                 "phone" => $order_contact->phone ? $order_contact->phone : $order_contact->mobile,
                 // "residential"=>true
