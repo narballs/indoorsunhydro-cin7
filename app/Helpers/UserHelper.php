@@ -240,7 +240,7 @@ class UserHelper
             "amountPaid" => number_format($currentOrder->total_including_tax , 2),
             "taxAmount" => number_format($tax, 2),
             'shipTo' => [
-                "name" => $order_contact->firstName . $order_contact->lastName,
+                "name" => $order_contact->firstName .' '. $order_contact->lastName,
                 "company" => $order_contact->company,
                 "street1" => $order_contact->address1 ? $order_contact->address1 : $order_contact->postalAddress1,
                 "street2" => $order_contact->address2 ? $order_contact->address2 : $order_contact->postalAddress2,
@@ -249,10 +249,10 @@ class UserHelper
                 "postalCode" => $order_contact->postCode ? $order_contact->postCode : $order_contact->postalPostCode,
                 "country"=>"US",
                 "phone" => $order_contact->phone ? $order_contact->phone : $order_contact->mobile,
-                "residential"=>true
+                // "residential"=>true
             ],
             'billTo' => [
-                "name" => $order_contact->firstName . $order_contact->lastName,
+                "name" => $order_contact->firstName . ' ' . $order_contact->lastName,
                 "company" => $order_contact->company,
                 "street1" => $order_contact->address1 ? $order_contact->address1 : $order_contact->postalAddress1,
                 "street2" => $order_contact->address2 ? $order_contact->address2 : $order_contact->postalAddress2,
@@ -261,7 +261,7 @@ class UserHelper
                 "postalCode" => $order_contact->postCode ? $order_contact->postCode : $order_contact->postalPostCode,
                 "country"=>"US",
                 "phone" => $order_contact->phone ? $order_contact->phone : $order_contact->mobile,
-                "residential"=>true
+                // "residential"=>true
             ],
             'weight' => [
                 'value' => $produts_weight,

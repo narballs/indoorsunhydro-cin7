@@ -159,7 +159,7 @@ class CheckoutController extends Controller
                     'serviceCode' => $service_code ,
                     'fromPostalCode' => '95826',
                     'toCountry' => 'US',
-                    'toPostalCode' => $user_address->postalPostCode ? $user_address->postalPostCode : $user_address->postCode,
+                    'toPostalCode' => $user_address->postCode ? $user_address->postCode : $user_address->postalPostCode,
                     'weight' => [
                         'value' => $products_weight,
                         'units' => 'pounds'
@@ -330,7 +330,7 @@ class CheckoutController extends Controller
                     'serviceCode' => $service_code ,
                     'fromPostalCode' => '95826',
                     'toCountry' => 'US',
-                    'toPostalCode' => $user_address->postalPostCode ? $user_address->postalPostCode : $user_address->postCode,
+                    'toPostalCode' => $user_address->postCode ? $user_address->postCode : $user_address->postalPostCode,
                     'weight' => [
                         'value' => $products_weight,
                         'units' => 'pounds'
