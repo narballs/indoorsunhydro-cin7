@@ -211,17 +211,17 @@ class UserHelper
         $ship_station_api_secret = config('services.shipstation.secret');
         $carrier_code = AdminSetting::where('option_name', 'shipping_carrier_code')->first();
         $service_code = AdminSetting::where('option_name', 'shipping_service_code')->first();
-        $carrier_code_2 = AdminSetting::where('option_name', 'shipping_carrier_code_2')->first();
-        $service_code_2 = AdminSetting::where('option_name', 'shipping_service_code_2')->first();
+        // $carrier_code_2 = AdminSetting::where('option_name', 'shipping_carrier_code_2')->first();
+        // $service_code_2 = AdminSetting::where('option_name', 'shipping_service_code_2')->first();
 
-        if ($produts_weight > 150) {
-            $carrier_code = $carrier_code_2->option_value;
-            $service_code = $service_code_2->option_value;
-        } else {
-            $carrier_code = $carrier_code->option_value;
-            $service_code = $service_code->option_value;
-        }
-        
+        // if ($produts_weight > 150) {
+        //     $carrier_code = $carrier_code_2->option_value;
+        //     $service_code = $service_code_2->option_value;
+        // } else {
+        //     $carrier_code = $carrier_code->option_value;
+        //     $service_code = $service_code->option_value;
+        // }
+
         $created_date = \Carbon\Carbon::parse($currentOrder->createdDate);
         $getDate =$created_date->format('Y-m-d');
         $getTime = date('H:i:s' ,strtotime($currentOrder->createdDate));
