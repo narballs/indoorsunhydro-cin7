@@ -159,7 +159,7 @@ class CheckoutController extends Controller
                     'serviceCode' => $service_code ,
                     'fromPostalCode' => '95826',
                     'toCountry' => 'US',
-                    'toPostalCode' => $user_address->postalPostCode ? $user_address->postalPostCode : $user_address->postCode,
+                    'toPostalCode' => $user_address->postCode ? $user_address->postCode : $user_address->postalPostCode,
                     'weight' => [
                         'value' => $products_weight,
                         'units' => 'pounds'
@@ -316,7 +316,7 @@ class CheckoutController extends Controller
                 $service_code = AdminSetting::where('option_name', 'shipping_service_code')->first();
                 $carrier_code_2 = AdminSetting::where('option_name', 'shipping_carrier_code_2')->first();
                 $service_code_2 = AdminSetting::where('option_name', 'shipping_service_code_2')->first();
-
+                $shipping_package = AdminSetting::where('option_name', 'shipping_package')->first();
                 if ($products_weight > 150) {
                     $carrier_code = $carrier_code_2->option_value;
                     $service_code = $service_code_2->option_value;
@@ -324,13 +324,17 @@ class CheckoutController extends Controller
                     $carrier_code = $carrier_code->option_value;
                     $service_code = $service_code->option_value;
                 }
-
                 $data = [
                     'carrierCode' => $carrier_code ,
                     'serviceCode' => $service_code ,
                     'fromPostalCode' => '95826',
+                    // 'fromCity' => 'Sacramento',
+                    // 'fromState' => 'CA',
                     'toCountry' => 'US',
-                    'toPostalCode' => $user_address->postalPostCode ? $user_address->postalPostCode : $user_address->postCode,
+                    // 'toState' => $user_address->state ? $user_address->state : $user_address->postalState,
+                    // 'toCity' => $user_address->city ? $user_address->city : $user_address->postalCity,
+                    'toPostalCode' => $user_address->postCode ? $user_address->postCode : $user_address->postalPostCode,
+                    'packageCode' => !empty($shipping_package->option_value) ? $shipping_package->option_value : 'package',
                     'weight' => [
                         'value' => $products_weight,
                         'units' => 'pounds'
@@ -347,7 +351,6 @@ class CheckoutController extends Controller
                         'headers' => $headers,
                         'json' => $data,
                     ]);
-
                     $statusCode = $response->getStatusCode();
                     $responseBody = $response->getBody()->getContents();
                 } catch (\Exception $e) {
@@ -358,7 +361,7 @@ class CheckoutController extends Controller
                 if ($responseBody != null) {
                     $shipping_response = json_decode($responseBody);
                     foreach ($shipping_response as $shipping_response) {
-                        $shipment_price = $shipping_response->shipmentCost;
+                        $shipment_price = $shipping_response->shipmentCost + $shipping_response->otherCost;
                     } 
                 }
             } else {
