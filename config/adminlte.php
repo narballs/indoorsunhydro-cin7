@@ -398,6 +398,11 @@ return [
             // 'classes' => 'd-none',
         ],
         [
+            'text'    => 'Shipping Quotes',
+            'url'  => 'admin/shipping-quotes',
+            // 'classes' => 'd-none',
+        ],
+        [
             'text'    => 'Recycle Bin',
             'url'  => 'admin/recycle-bin',
         ],
