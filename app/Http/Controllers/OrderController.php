@@ -541,7 +541,7 @@ class OrderController extends Controller
                             // ]);
                         } 
                         else {
-                            $checkout = $this->checkout_without_discount($tax_rate,  $discount_amount, $discount_type, $order_id, $currentOrder, $cart_items, $request , $discount_variation_value , $product_prices , $order_total , $actual_shipping_price);
+                            $checkout = $this->checkout_without_discount($tax_rate,  $discount_amount, $discount_type, $order_id, $currentOrder, $cart_items, $request , $discount_variation_value , $product_prices , $order_total );
                             if ($checkout) {
                                 session()->forget('cart');
                                 return redirect($checkout->url);
@@ -1812,7 +1812,18 @@ class OrderController extends Controller
         }    
     }
     
-    public function checkout_without_discount($tax_rate,  $discount_amount, $discount_type, $order_id, $currentOrder, $cart_items, $request , $discount_variation_value , $product_prices , $order_total , $actual_shipping_price) {
+    public function checkout_without_discount($tax_rate,  $discount_amount, $discount_type, $order_id, $currentOrder, $cart_items, $request , $discount_variation_value , $product_prices , $order_total ) {
+        
+        $original_shipment_price = 0;
+        if (!empty($admin_area_for_shipping) && strtolower($admin_area_for_shipping->option_value) == 'yes') {
+            if (!empty($request->products_weight) && $request->product_weight > 150) {
+                $original_shipment_price = $request->shipment_cost_single;
+            } else {
+                $original_shipment_price = $request->shipping_multi_price;
+            }
+        } else {
+            $original_shipment_price = $request->original_shipment_price;
+        }    
         foreach ($cart_items as $cart_item) {
             $OrderItem = new ApiOrderItem;
             $OrderItem->order_id = $order_id;
@@ -1869,8 +1880,8 @@ class OrderController extends Controller
        
 
         // adding shipping price to order
-        if (!empty($actual_shipping_price) && $actual_shipping_price > 0) {
-            $shipment_price = number_format(($actual_shipping_price * 100) , 2);
+        if (!empty($original_shipment_price) && $original_shipment_price > 0) {
+            $shipment_price = number_format(($original_shipment_price * 100) , 2);
             $shipment_value = str_replace(',', '', $shipment_price);
             $shipment_product = $stripe->products->create([
                 'name' => 'Shipment',
