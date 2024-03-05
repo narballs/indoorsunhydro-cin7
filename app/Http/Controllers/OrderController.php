@@ -59,7 +59,7 @@ class OrderController extends Controller
         $actual_shipping_price = 0;
         $admin_area_for_shipping = AdminSetting::where('option_name', 'admin_area_for_shipping')->first();
         if (!empty($admin_area_for_shipping) && strtolower($admin_area_for_shipping->option_value) == 'yes') {
-            if (!empty($request->products_weight) && $request->product_weight > 150) {
+            if (!empty($request->product_weight) && $request->product_weight > 150) {
                 $actual_shipping_price = $request->shipment_cost_single;
                 $shipping_service_code = $request->shipping_service_code;
                 $shipping_carrier_code = $request->shipping_carrier_code;
