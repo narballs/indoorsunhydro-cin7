@@ -377,6 +377,8 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/order/update', [OrderController::class, 'update_order'])->name('update_order');
         Route::post('/order/add-product', [OrderController::class, 'addProduct'])->name('add_product');
         Route::get('/order/search-product', [OrderController::class, 'searchProduct'])->name('search_product');
+        Route::get('/shipping-quotes', [AdminSettingsController::class, 'shipping_quotes'])->name('shipping_quotes');
+        Route::post('/update-shipping-quotes', [AdminSettingsController::class, 'update_shipping_quotes'])->name('update_shipping_quotes');
     });
 
     Route::get('admin/logout', function () {
