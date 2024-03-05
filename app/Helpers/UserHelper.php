@@ -246,7 +246,7 @@ class UserHelper
             'serviceCode' => !empty($produts_weight) && $produts_weight > 150 ? $service_code_2->option_value : $api_order->shipping_service_code,
             'orderStatus' => $orderStatus,
             'customerEmail'=> $order_contact->email,
-            'packageCode' => !empty($shipping_package->option_value) ? $shipping_package->option_value : 'package',
+            'packageCode' => !empty($produts_weight) && $produts_weight > 150 ? 'container' : 'package',
             'shippingAmount' => number_format($currentOrder->shipment_price , 2),
             "amountPaid" => number_format($currentOrder->total_including_tax , 2),
             "taxAmount" => number_format($tax, 2),
