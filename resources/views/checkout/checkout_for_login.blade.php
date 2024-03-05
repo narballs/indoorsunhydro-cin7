@@ -709,10 +709,55 @@ $cart_price = 0;
                                                 </span>
                                             </div>
                                         </div>
-                                        <div class="row justify-content-center border-bottom align-items-center py-2">
-                                            <div class="col-md-9 col-9"><span class="checkout_shipping_heading">Shipment Price</span></div>
-                                            <div class="col-md-3 col-3 text-right"><span class="checkout_shipping_price">${{number_format($shipment_price , 2)}}</span></div>
-                                        </div>
+                                        <input type="hidden" value="{{$products_weight}}" name="product_weight">
+                                        @if (!empty($admin_area_for_shipping) && strtolower($admin_area_for_shipping->option_value) == 'yes')
+                                            @if (!empty($products_weight) && $products_weight > 150)
+                                                <input type="hidden" name="shipment_cost_single" id="shipment_price_heavy_weight" value="{{ $shipping_quote->shipmentCost + $shipping_quote->otherCost }}">
+                                                <div class="row justify-content-center border-bottom align-items-center py-2">
+                                                    <div class="col-md-9 col-9"><span class="checkout_shipping_heading">Shipment Price</span></div>
+                                                    <div class="col-md-3 col-3 text-right"><span class="checkout_shipping_price">${{number_format($shipment_price , 2)}}</span></div>
+                                                </div>
+                                            @else
+                                                <div class="row justify-content-center border-bottom align-items-center py-2">
+                                                    @if (count($admin_selected_shipping_quote) > 0)
+                                                        <div class="col-md-12">
+                                                            <p class="checkout_product_heading ml-0 mb-2">Shipping Methods</p>
+                                                        </div>
+                                                        @if (count($admin_selected_shipping_quote) == 1)
+                                                            @foreach ($admin_selected_shipping_quote as $shipping_quote)
+                                                                <div class="col-md-9 col-9">
+                                                                    <input type="radio" name="shipping_multi_price" id="" value="{{$shipping_quote->shipmentCost + $shipping_quote->otherCost}}" checked>
+                                                                    <span class="checkout_shipping_heading">{{$shipping_quote->serviceName}}</span>
+                                                                </div>
+                                                            <div class="col-md-3 col-3 text-right">
+                                                                <span class="checkout_shipping_heading">{{number_format($shipping_quote->shipmentCost + $shipping_quote->otherCost , 2)}}</span>
+                                                            </div>
+                                                            <input type="hidden" name="shipment_cost_multiple" id="shipment_price_single" value="{{ $shipping_quote->shipmentCost + $shipping_quote->otherCost }}">
+                                                            @endforeach
+                                                        @else
+                                                            @foreach ($admin_selected_shipping_quote as $shipping_quote)
+                                                                <div class="col-md-9 col-9">
+                                                                    <input type="radio" name="shipping_multi_price" id="" value="{{$shipping_quote->shipmentCost + $shipping_quote->otherCost}}">
+                                                                    <span class="checkout_shipping_heading">{{$shipping_quote->serviceName}}</span>
+                                                                </div>
+                                                                <div class="col-md-3 col-3 text-right">
+                                                                    <span class="checkout_shipping_heading">{{number_format($shipping_quote->shipmentCost + $shipping_quote->otherCost , 2)}}</span>
+                                                                </div>
+                                                                <input type="hidden" name="shipment_cost_multiple" id="shipment_price_{{$shipping_quote->serviceCode}}" class="shipstation_multi_shipment_price" value="{{ $shipping_quote->shipmentCost }}">
+                                                            @endforeach
+                                                        @endif
+                                                    @else
+                                                        <div class="col-md-9 col-9"><span class="checkout_shipping_heading">Shipment Price</span></div>
+                                                        <div class="col-md-3 col-3 text-right"><span class="checkout_shipping_price">${{number_format($shipment_price , 2)}}</span></div>
+                                                    @endif
+                                                </div>
+                                            @endif 
+                                        @else
+                                            <div class="row justify-content-center border-bottom align-items-center py-2">
+                                                <div class="col-md-9 col-9"><span class="checkout_shipping_heading">Shipment Price</span></div>
+                                                <div class="col-md-3 col-3 text-right"><span class="checkout_shipping_price">${{number_format($shipment_price , 2)}}</span></div>
+                                            </div>
+                                        @endif
                                         <div class="row justify-content-center  align-items-center py-2">
                                             <div class="col-md-9 col-9"><span class="checkout_total_heading">Total</span></div>
                                             <div class="col-md-3 col-3 text-right"><span class="checkout_total_price">${{ number_format($total_including_tax, 2) }}</span></div>

@@ -53,6 +53,21 @@ class OrderController extends Controller
                 'method_name' => 'required',
             ]
         );
+        $actual_shipping_price = 0;
+        $admin_area_for_shipping = AdminSetting::where('option_name', 'admin_area_for_shipping')->first();
+        if (!empty($admin_area_for_shipping) && strtolower($admin_area_for_shipping->option_value) == 'yes') {
+            if (!empty($request->products_weight) && $request->product_weight > 150) {
+                $actual_shipping_price = $request->shipment_cost_single;
+            } else {
+                if (empty($request->shipping_multi_price)) {
+                    return back()->with('error', 'Shipping price is required. Please select shipping method.');
+                } else {
+                    $actual_shipping_price = $request->shipping_multi_price;
+                }
+            }
+        } else {
+            $actual_shipping_price = $request->shipment_price;
+        }
         $address_1_shipping = $request->address_1_shipping;
         $state_shipping = $request->state_shipping;
         $zip_code_shipping = $request->zip_code_shipping;
@@ -360,7 +375,7 @@ class OrderController extends Controller
                     $order->paymentTerms = $request->paymentTerms;
                     $order->memo = $request->memo;
                     $order->date = $request->date;
-                    $order->shipment_price = $request->shipment_price;
+                    $order->shipment_price = $actual_shipping_price;
                     $order->total_including_tax = $order_total;
                     $order->discount_id = $discount_id;
                     $order->discount_amount = $discount_amount;
@@ -526,7 +541,7 @@ class OrderController extends Controller
                             // ]);
                         } 
                         else {
-                            $checkout = $this->checkout_without_discount($tax_rate,  $discount_amount, $discount_type, $order_id, $currentOrder, $cart_items, $request , $discount_variation_value , $product_prices , $type = 'no_discount', $order_total);
+                            $checkout = $this->checkout_without_discount($tax_rate,  $discount_amount, $discount_type, $order_id, $currentOrder, $cart_items, $request , $discount_variation_value , $product_prices , $order_total );
                             if ($checkout) {
                                 session()->forget('cart');
                                 return redirect($checkout->url);
@@ -667,7 +682,7 @@ class OrderController extends Controller
                     $order->paymentTerms = $request->paymentTerms;
                     $order->memo = $request->memo;
                     $order->date = $request->date;
-                    $order->shipment_price = $request->shipment_price;
+                    $order->shipment_price = $actual_shipping_price;
                     $order->total_including_tax = $order_total;
                     $order->discount_id = $discount_id;
                     $order->discount_amount = $discount_amount;
@@ -1386,7 +1401,7 @@ class OrderController extends Controller
         return response()->json(['success' => true , 'message' => 'Order status updated successfully.']);
     }
 
-    public function apply_discount($tax_rate,  $discount_amount, $discount_type, $order_id, $currentOrder, $cart_items, $request , $discount_variation_value , $product_prices , $type = 'discount', $order_total) {
+    public function apply_discount($tax_rate,  $discount_amount, $discount_type, $order_id, $currentOrder, $cart_items, $request , $discount_variation_value , $product_prices , $order_total) {
         $discount_variation_value  = $discount_variation_value;
         $percentage = null;
         if ($discount_variation_value >= 100  && $discount_type == 'percentage') {
@@ -1797,7 +1812,18 @@ class OrderController extends Controller
         }    
     }
     
-    public function checkout_without_discount($tax_rate,  $discount_amount, $discount_type, $order_id, $currentOrder, $cart_items, $request , $discount_variation_value , $product_prices) {
+    public function checkout_without_discount($tax_rate,  $discount_amount, $discount_type, $order_id, $currentOrder, $cart_items, $request , $discount_variation_value , $product_prices , $order_total ) {
+        
+        $original_shipment_price = 0;
+        if (!empty($admin_area_for_shipping) && strtolower($admin_area_for_shipping->option_value) == 'yes') {
+            if (!empty($request->products_weight) && $request->product_weight > 150) {
+                $original_shipment_price = $request->shipment_cost_single;
+            } else {
+                $original_shipment_price = $request->shipping_multi_price;
+            }
+        } else {
+            $original_shipment_price = $request->original_shipment_price;
+        }    
         foreach ($cart_items as $cart_item) {
             $OrderItem = new ApiOrderItem;
             $OrderItem->order_id = $order_id;
@@ -1854,8 +1880,8 @@ class OrderController extends Controller
        
 
         // adding shipping price to order
-        if (!empty($request->original_shipment_price) && $request->original_shipment_price > 0) {
-            $shipment_price = number_format(($request->original_shipment_price * 100) , 2);
+        if (!empty($original_shipment_price) && $original_shipment_price > 0) {
+            $shipment_price = number_format(($original_shipment_price * 100) , 2);
             $shipment_value = str_replace(',', '', $shipment_price);
             $shipment_product = $stripe->products->create([
                 'name' => 'Shipment',
