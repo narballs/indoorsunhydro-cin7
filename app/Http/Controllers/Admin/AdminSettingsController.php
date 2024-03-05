@@ -409,12 +409,13 @@ class AdminSettingsController extends Controller
             $adding_surcharges->save();
             
         } else {
-
-            $adding_surcharges = new SurchargeSetting();
-            $adding_surcharges->apply_surcharge = !empty($request->apply_surcharge) ? 1 : 0;
-            $adding_surcharges->surcharge_type = $request->surcharge_type;
-            $adding_surcharges->surcharge_value = $request->surcharge_value;
-            $adding_surcharges->save();
+            if (!empty($request->surcharge_value) && !empty($request->surcharge_type)) {
+                $adding_surcharges = new SurchargeSetting();
+                $adding_surcharges->apply_surcharge = !empty($request->apply_surcharge) ? 1 : 0;
+                $adding_surcharges->surcharge_type = $request->surcharge_type;
+                $adding_surcharges->surcharge_value = $request->surcharge_value;
+                $adding_surcharges->save();
+            }
         }
         
         return redirect()->back()->with('success', 'Shipping quotes updated successfully.');
