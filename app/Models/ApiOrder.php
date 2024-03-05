@@ -50,7 +50,9 @@ class ApiOrder extends Model
         'is_default',
         'discount_id',
         'discount_amount',
-        'tax_rate'
+        'tax_rate',
+        'shipping_carrier_code',
+        'shipping_service_code',
     ];
     public function contact()
     {

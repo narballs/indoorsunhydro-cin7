@@ -36,6 +36,7 @@ use App\Models\Discount;
 use App\Models\ProductOption;
 use App\Models\SelectedShippingQuote;
 use App\Models\ShippingQuote;
+use App\Models\SurchargeSetting;
 use App\Models\UsCity;
 use App\Models\UserLog;
 use JeroenNoten\LaravelAdminLte\View\Components\Form\Select;
@@ -274,7 +275,7 @@ class CheckoutController extends Controller
             $shipping_quotes = ShippingQuote::with('selected_shipping_quote')->get();
             $selected_shipment_quotes = SelectedShippingQuote::with('shipping_quote')->get();
             $admin_area_for_shipping = AdminSetting::where('option_name', 'admin_area_for_shipping')->first();
-            
+            $surcharge_settings = SurchargeSetting::where('apply_surcharge', 1)->first(); 
             if (!empty($contact->contact_id)) {
                 $user_address = Contact::where('user_id', $user_id)->where('contact_id' , $contact->contact_id)->first();
             } else {
@@ -315,12 +316,33 @@ class CheckoutController extends Controller
             $shipment_price = 0;
             $admin_selected_shipping_quote = [];
             $shipstation_shipment_prices = [];
-            
+            $surcharge_value = 0;
+            $shipping_carrier_code = null;
+            $shipping_service_code = null;
+            $carrier_code = AdminSetting::where('option_name', 'shipping_carrier_code')->first();
+            $service_code = AdminSetting::where('option_name', 'shipping_service_code')->first();
+            $carrier_code_2 = AdminSetting::where('option_name', 'shipping_carrier_code_2')->first();
+            $service_code_2 = AdminSetting::where('option_name', 'shipping_service_code_2')->first();   
             // adding shipment rates
             if ($charge_shipment_fee == true) {
                 if (!empty($admin_area_for_shipping) && strtolower($admin_area_for_shipping->option_value) == 'yes') {
+                    if ($products_weight > 150) {
+                        $shipping_carrier_code = $carrier_code_2->option_value;
+                        $shipping_service_code = $service_code_2->option_value;
+                    }
+                    else {
+                        $shipping_carrier_code = null;
+                        $shipping_service_code = null;
+                    }
                     $get_shipping_rates = $this->get_shipping_rate($products_weight, $user_address , $selected_shipment_quotes ,$shipping_quotes, $shipment_prices, $shipment_price);
                     $shipment_price = $get_shipping_rates['shipment_price'];
+                    $shipping_carrier_code = $get_shipping_rates['shipping_carrier_code'];
+                    // if (!empty($surcharge_settings) && $surcharge_settings->surcharge_type === 'fixed') {
+                    //     $surcharge_value = $surcharge_settings->surcharge_value;
+                    // } else {
+                    //     $surcharge_value = $surcharge_settings->surcharge_value * $get_shipping_rates['shipment_price'] / 100;
+                    // }
+                    // $shipment_price = $get_shipping_rates['shipment_price'] + $surcharge_value;
                     $shipstation_shipment_prices = $get_shipping_rates['shipment_prices'];
                     if (count($selected_shipment_quotes) > 0) {
                         foreach ($selected_shipment_quotes as $selected_shipment_quote) {
@@ -343,10 +365,7 @@ class CheckoutController extends Controller
                     $ship_station_host_url = config('services.shipstation.host_url');
                     $ship_station_api_key = config('services.shipstation.key');
                     $ship_station_api_secret = config('services.shipstation.secret');
-                    $carrier_code = AdminSetting::where('option_name', 'shipping_carrier_code')->first();
-                    $service_code = AdminSetting::where('option_name', 'shipping_service_code')->first();
-                    $carrier_code_2 = AdminSetting::where('option_name', 'shipping_carrier_code_2')->first();
-                    $service_code_2 = AdminSetting::where('option_name', 'shipping_service_code_2')->first();
+                    
                     $shipping_package = AdminSetting::where('option_name', 'shipping_package')->first();
                     if ($products_weight > 150) {
                         $carrier_code = $carrier_code_2->option_value;
@@ -356,12 +375,15 @@ class CheckoutController extends Controller
                         $service_code = $service_code->option_value;
                     }
 
+                    $shipping_carrier_code = $carrier_code;
+                    $shipping_service_code = $service_code;
+
                     $data = [
                         'carrierCode' => $carrier_code ,
                         'serviceCode' => $service_code ,
                         'fromPostalCode' => '95826',
                         'toCountry' => 'US',
-                        'toPostalCode' => $user_address->postalPostCode ? $user_address->postalPostCode : $user_address->postCode,
+                        'toPostalCode' => $user_address->postCode ? $user_address->postCode : $user_address->postalPostCode,
                         'weight' => [
                             'value' => $products_weight,
                             'units' => 'pounds'
@@ -388,6 +410,7 @@ class CheckoutController extends Controller
                     
                     if ($responseBody != null) {
                         $shipping_response = json_decode($responseBody);
+                        
                         foreach ($shipping_response as $shipping_response) {
                             $shipment_price = $shipping_response->shipmentCost + $shipping_response->otherCost;
                         } 
@@ -448,7 +471,9 @@ class CheckoutController extends Controller
                 'shipment_prices' , 
                 'products_weight',
                 'shipping_quotes' , 
-                'admin_selected_shipping_quote'
+                'admin_selected_shipping_quote','surcharge_settings',
+                'shipping_carrier_code' , 'shipping_service_code', 'shipstation_shipment_prices'
+                
             ));
         } else {
             return redirect()->back()->with('message', 'Your account is disabled. You can not proceed with checkout. Please contact us.');
@@ -617,7 +642,7 @@ class CheckoutController extends Controller
                     if (!empty($check_shipstation_create_order_status) && strtolower($check_shipstation_create_order_status->option_value) == 'yes') {
                         $order_contact = Contact::where('contact_id', $currentOrder->memberId)->orWhere('parent_id' , $currentOrder->memberId)->first();
                         if (!empty($order_contact)) {
-                            UserHelper::shipping_order($order_id , $currentOrder , $order_contact);
+                            // UserHelper::shipping_order($order_id , $currentOrder , $order_contact);
                             $shiping_order = UserHelper::shipping_order($order_id , $currentOrder , $order_contact);
                             if ($shiping_order['statusCode'] == 200) {
                                 $orderUpdate = ApiOrder::where('id', $order_id)->update([
@@ -1224,16 +1249,17 @@ class CheckoutController extends Controller
         $ship_station_api_secret = config('services.shipstation.secret');
         $carrier_code_2 = AdminSetting::where('option_name', 'shipping_carrier_code_2')->first();
         $service_code_2 = AdminSetting::where('option_name', 'shipping_service_code_2')->first();
-
+        $shipping_carrier_code = null;
     
         foreach ($shipping_quotes as $quote) {
             if (!empty($quote->selected_shipping_quote)) {
+                $shipping_carrier_code = $quote->carrier_code;
                 $data = [
                     'carrierCode' => $products_weight > 150 ? $carrier_code_2->option_value : $quote->carrier_code,
                     'serviceCode' => $products_weight > 150 ? $service_code_2->option_value : null,
                     'fromPostalCode' => '95826',
                     'toCountry' => 'US',
-                    'toPostalCode' => $user_address->postalPostCode ? $user_address->postalPostCode : $user_address->postCode,
+                    'toPostalCode' => $user_address->postCode ? $user_address->postCode : $user_address->postalPostCode,
                     'weight' => [
                         'value' => $products_weight,
                         'units' => 'pounds'
@@ -1263,7 +1289,8 @@ class CheckoutController extends Controller
         }
         return [
             'shipment_prices' => !empty($shipment_prices) ? $shipment_prices[0] : null,
-            'shipment_price' => $shipment_price
+            'shipment_price' => $shipment_price,
+            'shipping_carrier_code' => $products_weight > 150 ? $carrier_code_2->option_value : $shipping_carrier_code,    
         ];
     }
     
