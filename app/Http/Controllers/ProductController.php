@@ -494,8 +494,6 @@ class ProductController extends Controller
 
     public function showProductDetail(Request $request ,$id, $option_id)
     {
-        
-        
         $similar_products = null;
         $product = Product::with('categories' , 'brand')
         ->where('id', $id)
@@ -530,17 +528,45 @@ class ProductController extends Controller
         $contact_id = '';
         $locations= null;
         $stock_updated_helper = null;
-        
-            
-        // Fetch stock from API
-        $stock_updated_helper = UtilHelper::updateProductStock($product, $option_id);
-        if ($stock_updated_helper != null) {
+        $inventory_update_time_flag = false;
+        $date_difference = null;
+        $threshold_minutes = 5; // Adjust this threshold as needed
 
-            $stock_updated = $stock_updated_helper['stock_updated'];
+        // Retrieve the record for the given option_id
+        $product_option = ProductOption::where('option_id', $option_id)->first();
+
+        // Check if a record exists
+        if (!empty($product_option)) {
+            $last_update_time = $product_option->inventory_update_time;
+
+            if ($last_update_time !== null) {
+                $get_time_difference = now()->diffInMinutes($last_update_time);
+                $date_difference = $get_time_difference;
+                if ($date_difference >= $threshold_minutes) {
+                    $inventory_update_time_flag = true;
+                    $product_option->update(['inventory_update_time' => now()]);
+                } else {
+                    $inventory_update_time_flag = false;
+                }
+            } else {
+                $product_option->update(['inventory_update_time' => now()]);
+                $inventory_update_time_flag = true;
+            }
+        } else {
+            $inventory_update_time_flag = true;
+        }
+        // Fetch stock from API
+
+        if ($inventory_update_time_flag == true) {
+            $stock_updated_helper = UtilHelper::updateProductStock($product, $option_id);
+            if ($stock_updated_helper != null) {
+                $stock_updated = $stock_updated_helper['stock_updated'];
+            } else {
+                $stock_updated = false;
+            }
         } else {
             $stock_updated = false;
         }
-
         $product_stocks = ProductStock::where('product_id' ,  $product->product_id)
             ->where('option_id' , $option_id)
             ->orderBy('created_at', 'desc')
@@ -601,14 +627,13 @@ class ProductController extends Controller
             ->get();
         $total_stock = 0;
         if ($stock_updated) {
-            // foreach ($product_stocks as $product_stock) {
-            //     $total_stock += $product_stock->available_stock;
-            // }
-
             if (!empty($stock_updated_helper['total_stock'])) {
                 $total_stock = $stock_updated_helper['total_stock'] >= 0 ? $stock_updated_helper['total_stock'] : 0;
             }
-        }
+        } 
+        // else {
+        //     $total_stock = $productOption->stockAvailable;
+        // }
         if (!empty($stock_updated_helper['branch_with_stocks'])) {
             $locations = $stock_updated_helper['branch_with_stocks'];
         }

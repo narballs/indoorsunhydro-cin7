@@ -31,6 +31,7 @@ class ProductOption extends Model
         "stockAvailable",
         "stockOnHand",
         "image",
+        'inventory_update_time'
     ];
 
     public function products()

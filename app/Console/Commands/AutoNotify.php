@@ -72,7 +72,7 @@ class AutoNotify extends Command
                     $update_stock_notification->status = 1;
                     $update_stock_notification->save();
 
-                    $notification_count += $stock_notification->cont();
+                    $notification_count += $stock_notification->count();
                 }
             }
             
