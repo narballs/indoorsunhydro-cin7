@@ -628,12 +628,12 @@ $cart_price = 0;
                                         <input type="hidden" name="address_1_shipping" value="{{ !empty($user_address->address1) ?  $user_address->address1 : '' }}">
                                         <input type="hidden" name="state_shipping" value="{{ !empty($user_address->state) ?  $user_address->state : '' }}">
                                         <input type="hidden" name="zip_code_shipping" value="{{ !empty($user_address->postCode) ?  $user_address->postCode : '' }}">
-                                        <input type="hidden" name="incl_tax" id="incl_tax" value="{{ $total_including_tax }}">
+                                        <input type="hidden" name="incl_tax" id="incl_tax" value="{{ number_format($total_including_tax, 2, '.', '') }}">
                                         <input type="hidden" name="original_shipment_price" id="original_shipment_price" value="{{ $shipment_price }}">
                                         <input type="hidden" name="shipment_price" id="shipment_price" value="{{ $shipment_price }}">
-                                        <input type="hidden" name="discount_amount" class="discount_amount" id="discount_amount" value="{{ number_format($discount_amount , 2) }}">
-                                        <input type="hidden" name="items_total_price" class="items_total_price" id="" value="{{ number_format($cart_total, 2) }}">
-                                        <input type="hidden" name="total_tax" class="total_tax" id="" value="{{ number_format($tax , 2) }}">
+                                        <input type="hidden" name="discount_amount" class="discount_amount" id="discount_amount" value="{{ number_format($discount_amount , 2, '.', '') }}">
+                                        <input type="hidden" name="items_total_price" class="items_total_price" id="" value="{{ number_format($cart_total, 2, '.', '') }}">
+                                        <input type="hidden" name="total_tax" class="total_tax" id="" value="{{ number_format($tax , 2, '.', '') }}">
                                         @if(!empty($tax_class))
                                         <input type="hidden" name="tax_class_id" id="tax_class_id" value="{{ $tax_class->id }}">
                                         @else
@@ -727,28 +727,12 @@ $cart_price = 0;
                                             @if (!empty($products_weight) && $products_weight > 150)
                                                 <input type="hidden" name="shipping_carrier_code" id="" value="{{$shipping_carrier_code}}">
                                                 <input type="hidden" name="shipping_service_code" id="" value="{{$shipping_service_code}}">
-                                                <input type="hidden" name="shipment_cost_single" id="shipment_price_heavy_weight" value="{{count($shipstation_shipment_prices) > 0 ? $shipstation_shipment_prices[0]->shipmentCost + $shipstation_shipment_prices[0]->otherCost  : 0 }}">
+                                                <input type="hidden" name="shipment_cost_single" id="shipment_price_heavy_weight" value="{{count($shipstation_shipment_prices) > 0 ? number_format($shipstation_shipment_prices[0]->shipmentCost + $shipstation_shipment_prices[0]->otherCost , 2, '.', '')  : 0 }}">
                                                 <div class="row justify-content-center border-bottom align-items-center py-2">
                                                     <div class="col-md-9 col-9"><span class="checkout_shipping_heading">Shipment Price</span></div>
                                                     <div class="col-md-3 col-3 text-right"><span class="checkout_shipping_price">${{count($shipstation_shipment_prices) > 0 ? number_format($shipstation_shipment_prices[0]->shipmentCost + $shipstation_shipment_prices[0]->otherCost , 2)  : 0}}</span></div>
                                                     {{-- <div class="col-md-3 col-3 text-right"><span class="checkout_shipping_price">${{number_format($shipment_price , 2)}}</span></div> --}}
                                                 </div>
-                                                {{-- @if (!empty($surcharge_settings) && $surcharge_settings->apply_surcharge == 1)
-                                                    @if (!empty($surcharge_settings->surcharge_type) && $surcharge_settings->surcharge_type == 'fixed')
-                                                        @php
-                                                            $surcharge_value = $surcharge_settings->surcharge_value;
-                                                        @endphp
-                                                    @else
-                                                        @php
-                                                            $surcharge_value = $shipment_price * ($surcharge_settings->surcharge_value / 100);
-                                                        @endphp
-                                                    @endif
-                                                    <input type="hidden" name="surcharge_value" id="" value="{{$surcharge_value}}">
-                                                    <div class="row justify-content-center border-bottom align-items-center py-2">
-                                                        <div class="col-md-9 col-9"><span class="checkout_shipping_heading">Shipping Surcharge</span></div>
-                                                        <div class="col-md-3 col-3 text-right"><span class="checkout_surcharge_price">${{number_format($surcharge_value , 2)}}</span></div>
-                                                    </div>
-                                                @endif --}}
                                             @else
                                                 <div class="row justify-content-center border-bottom align-items-center py-2">
                                                     @if (count($admin_selected_shipping_quote) > 0)
@@ -757,64 +741,60 @@ $cart_price = 0;
                                                         </div>
                                                         @if (count($admin_selected_shipping_quote) == 1)
                                                             @foreach ($admin_selected_shipping_quote as $shipping_quote)
+                                                                @php
+                                                                    $shipment_cost_without_surcharge = $shipping_quote->shipmentCost + $shipping_quote->otherCost;
+                                                                    if (!empty($surcharge_settings) && $surcharge_settings->apply_surcharge == 1) {
+                                                                        if (!empty($surcharge_settings->surcharge_type) && $surcharge_settings->surcharge_type == 'fixed') {
+                                                                            $surcharge_value = $surcharge_settings->surcharge_value;
+                                                                        } else {
+                                                                            $surcharge_value = $shipment_cost_without_surcharge * ($surcharge_settings->surcharge_value / 100);
+                                                                        }
+                                                                    }
+                                                                    $shipment_cost_with_surcharge = $shipment_cost_without_surcharge + $surcharge_value;
+                                                                    $adding_shipping_cost_to_total = 0;
+                                                                    if (!empty($shipment_cost_with_surcharge)) {
+                                                                        $adding_shipping_cost_to_total = $total_including_tax + $shipment_cost_with_surcharge;
+                                                                    } else {
+                                                                        $adding_shipping_cost_to_total = $total_including_tax + $shipment_cost_without_surcharge;
+                                                                    }
+                                                                @endphp
+                                                                
+                                                                <input type="hidden" name="original_shipping_cost_from_shipstation" id="" value="{{ number_format($shipment_cost_without_surcharge , 2, '.', '')}}">
                                                                 <input type="hidden" name="shipping_carrier_code" id="" value="{{$shipping_carrier_code}}">
                                                                 <input type="radio" name="shipping_service_code" id="" class="d-none" value="{{$shipping_quote->serviceCode}}" checked>
                                                                 <div class="col-md-9 col-9">
-                                                                    <input type="radio" name="shipping_multi_price" class="shipping_multi_price" id="single_shipping_quote" value="{{$shipping_quote->shipmentCost + $shipping_quote->otherCost}}" checked>
+                                                                    <input type="radio" name="shipping_multi_price" class="shipping_multi_price" id="single_shipping_quote" value="{{!empty($shipment_cost_with_surcharge) ? number_format($shipment_cost_with_surcharge , 2, '.', '') : number_format($shipment_cost_without_surcharge , 2, '.', '')}}" checked>
                                                                     <span class="checkout_shipping_heading">{{$shipping_quote->serviceName}}</span>
                                                                 </div>
                                                                 <div class="col-md-3 col-3 text-right">
-                                                                    <span class="checkout_shipping_price">${{number_format($shipping_quote->shipmentCost + $shipping_quote->otherCost , 2)}}</span>
+                                                                    <span class="checkout_shipping_price">${{!empty($shipment_cost_with_surcharge) ? number_format($shipment_cost_with_surcharge , 2) : number_format($shipment_cost_without_surcharge , 2)}}</span>
                                                                 </div>
-                                                                <input type="hidden" name="shipment_cost_multiple" id="shipment_price_single" value="{{ $shipping_quote->shipmentCost + $shipping_quote->otherCost }}">
-                                                               
-                                                                {{-- @if (!empty($surcharge_settings) && $surcharge_settings->apply_surcharge == 1)
-                                                                    @if (!empty($surcharge_settings->surcharge_type) && $surcharge_settings->surcharge_type == 'fixed')
-                                                                        @php
-                                                                            $surcharge_value = $surcharge_settings->surcharge_value;
-                                                                        @endphp
-                                                                    @else
-                                                                        @php
-                                                                            $total_ship_cost = 0;
-                                                                            $total_ship_cost = $shipping_quote->shipmentCost + $shipping_quote->otherCost;  
-                                                                            $surcharge_value = $total_ship_cost * $surcharge_settings->surcharge_value / 100;
-                                                                        @endphp
-                                                                    @endif
-                                                                    <input type="hidden" name="surcharge_value" id="" value="{{$surcharge_value}}">
-                                                                    <div class="col-md-9 col-9"><span class="checkout_shipping_heading">{{$shipping_quote->serviceName .' ' . 'Surcharge'}} </span></div>
-                                                                    <div class="col-md-3 col-3 text-right"><span class="checkout_surcharge_price">${{number_format($surcharge_value , 2)}}</span></div>
-                                                                @endif --}}
+                                                                <input type="hidden" name="shipment_cost_multiple" id="shipment_price_single" value="{{!empty($shipment_cost_with_surcharge) ? number_format($shipment_cost_with_surcharge , 2, '.', '') : number_format($shipment_cost_without_surcharge , 2, '.', '')}}">
                                                             @endforeach
                                                         @else
                                                             @foreach ($admin_selected_shipping_quote as $shipping_quote)
+                                                                @php
+                                                                    $shipment_cost_without_surcharge = $shipping_quote->shipmentCost + $shipping_quote->otherCost;
+                                                                    if (!empty($surcharge_settings) && $surcharge_settings->apply_surcharge == 1) {
+                                                                        if (!empty($surcharge_settings->surcharge_type) && $surcharge_settings->surcharge_type == 'fixed') {
+                                                                            $surcharge_value = $surcharge_settings->surcharge_value;
+                                                                        } else {
+                                                                            $surcharge_value = $shipment_cost_without_surcharge * ($surcharge_settings->surcharge_value / 100);
+                                                                        }
+                                                                    }
+                                                                    $shipment_cost_with_surcharge = $shipment_cost_without_surcharge + $surcharge_value;
+                                                                @endphp
                                                                 <div class="col-md-9 col-9">
+                                                                    <input type="hidden" name="original_shipping_cost_from_shipstation" id="" value="{{ number_format($shipment_cost_without_surcharge , 2, '.', '')}}">
                                                                     <input type="hidden" name="shipping_carrier_code" id="" value="{{$shipping_carrier_code}}">
                                                                     <input type="radio" name="shipping_service_code" id="" class="shipping_service_code d-none" value="{{$shipping_quote->serviceCode}}">
-                                                                    <input type="radio" name="shipping_multi_price" class="shipping_multi_price" id="" value="{{$shipping_quote->shipmentCost + $shipping_quote->otherCost}}" onclick="assign_service_code(this)">
+                                                                    <input type="radio" name="shipping_multi_price" class="shipping_multi_price" id="" value="{{!empty($shipment_cost_with_surcharge) ? number_format($shipment_cost_with_surcharge , 2, '.', '') : number_format($shipment_cost_without_surcharge , 2, '.', '')}}" onclick="assign_service_code(this)">
                                                                     <span class="checkout_shipping_heading">{{$shipping_quote->serviceName}}</span>
                                                                 </div>
                                                                 <div class="col-md-3 col-3 text-right">
-                                                                    <span class="checkout_shipping_price">${{number_format($shipping_quote->shipmentCost + $shipping_quote->otherCost , 2)}}</span>
+                                                                    <span class="checkout_shipping_price">${{!empty($shipment_cost_with_surcharge) ? number_format($shipment_cost_with_surcharge , 2) : number_format($shipment_cost_without_surcharge , 2)}}</span>
                                                                 </div>
-                                                                <input type="hidden" name="shipment_cost_multiple" id="shipment_price_{{$shipping_quote->serviceCode}}" class="shipstation_multi_shipment_price" value="{{ $shipping_quote->shipmentCost }}">
-                                                                
-                                                                {{-- @if (!empty($surcharge_settings) && $surcharge_settings->apply_surcharge == 1)
-                                                                    @if (!empty($surcharge_settings->surcharge_type) && $surcharge_settings->surcharge_type == 'fixed')
-                                                                        @php
-                                                                            $surcharge_value = $surcharge_settings->surcharge_value;
-                                                                        @endphp
-                                                                    @else
-                                                                        @php
-                                                                            $total_ship_cost = 0;
-                                                                            $total_ship_cost = $shipping_quote->shipmentCost + $shipping_quote->otherCost;  
-                                                                            $surcharge_value = $total_ship_cost * $surcharge_settings->surcharge_value / 100;
-                                                                        @endphp
-                                                                    @endif
-                                                                    <input type="hidden" name="surcharge_value" id="" value="{{$surcharge_value}}">
-                                                                    <div class="col-md-9 col-9"><span class="checkout_shipping_heading">{{$shipping_quote->serviceName .' ' . 'Surcharge'}} </span></div>
-                                                                    <div class="col-md-3 col-3 text-right"><span class="checkout_surcharge_price">${{number_format($surcharge_value , 2)}}</span></div> 
-                                                                @endif --}}
-                                                                
+                                                                <input type="hidden" name="shipment_cost_multiple" id="shipment_price_{{$shipping_quote->serviceCode}}" class="shipstation_multi_shipment_price" value="{{!empty($shipment_cost_with_surcharge) ? number_format($shipment_cost_with_surcharge , 2, '.', '') : number_format($shipment_cost_without_surcharge , 2, '.', '')}}">
                                                             @endforeach
                                                         @endif
                                                     @else
@@ -831,28 +811,10 @@ $cart_price = 0;
                                                 <div class="col-md-9 col-9"><span class="checkout_shipping_heading">Shipment Price</span></div>
                                                 <div class="col-md-3 col-3 text-right"><span class="checkout_shipping_price">${{number_format($shipment_price , 2)}}</span></div>
                                             </div>
-                                            {{-- @if (!empty($surcharge_settings) && $surcharge_settings->apply_surcharge == 1)
-                                                @if (!empty($surcharge_settings->surcharge_type) && $surcharge_settings->surcharge_type == 'fixed')
-                                                    @php
-                                                        $surcharge_value = $surcharge_settings->surcharge_value;
-                                                    @endphp
-                                                @else
-                                                    @php
-                                                        $total_ship_cost = 0;
-                                                        $total_ship_cost = $shipping_quote->shipmentCost + $shipping_quote->otherCost;  
-                                                        $surcharge_value = $total_ship_cost * $surcharge_settings->surcharge_value / 100;
-                                                    @endphp
-                                                @endif
-                                                <input type="hidden" name="surcharge_value" id="" value="{{$surcharge_value}}">
-                                            @endif
-                                            <div class="row justify-content-center border-bottom align-items-center py-2">
-                                                <div class="col-md-9 col-9"><span class="checkout_shipping_heading">Shipping Surcharge</span></div>
-                                                <div class="col-md-3 col-3 text-right"><span class="checkout_surcharge_price">${{number_format($surcharge_value , 2)}}</span></div>
-                                            </div> --}}
                                         @endif
                                         <div class="row justify-content-center  align-items-center py-2">
                                             <div class="col-md-9 col-9"><span class="checkout_total_heading">Total</span></div>
-                                            <div class="col-md-3 col-3 text-right"><span class="checkout_total_price">${{ number_format($total_including_tax, 2) }}</span></div>
+                                            <div class="col-md-3 col-3 text-right"><span class="checkout_total_price" id="checkout_order_total">${{ number_format($total_including_tax, 2) }}</span></div>
                                         </div>
                                     </div>
                                 </div>
@@ -2748,7 +2710,7 @@ $cart_price = 0;
                     }
                 }
                 function apply_discount_to_percentage(response ,cartTotal ,cart_total_including_tax_shipping , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal) {
-                    var productTotal = $('.items_total_price').val() != null ?  parseFloat($('.items_total_price').val().replace(',', '')) : 0;
+                    var productTotal = $('.items_total_price').val() != null ?  parseFloat($('.items_total_price').val()) : 0;
                     var total_shipping_price = 0;
                     var total_tax_price = 0;
                     var multi_shipping_price = 0;
@@ -2829,7 +2791,7 @@ $cart_price = 0;
                     
                 }
                 function apply_discount_to_fixed(response , cartTotal,cart_total_including_tax_shipping , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal) {
-                    var productTotal = $('.items_total_price').val() != null ?  parseFloat($('.items_total_price').val().replace(',', '')) : 0;
+                    var productTotal = $('.items_total_price').val() != null ?  parseFloat($('.items_total_price').val()) : 0;
                     var multi_shipping_price = 0;
                     var order_weight_greater_then_150 = 0;
                     var product_weight = $('.product_weight').val() != null ?  parseFloat($('.product_weight').val()) : 0;
@@ -2947,18 +2909,37 @@ $cart_price = 0;
                 }
 
                 function assign_service_code(element) {
+                    var product_total = $('.items_total_price').val() != null ? parseFloat($('.items_total_price').val()) : 0;
+                    var tax = $('.total_tax').val() != null ? parseFloat($('.total_tax').val()) : 0;
+                    var total_including_shipping = 0;
                     $('.shipping_service_code').each(function() {
                         $(this).removeAttr('checked');
                     });
                     if ($(element).is(':checked')) {
                         $(element).parent().find('.shipping_service_code').removeClass('d-none').attr('checked', 'checked');
                         $(element).parent().find('.shipping_service_code').addClass('d-none');
+                        total_including_shipping =  product_total + tax + parseFloat($(element).val());
+                        $('#incl_tax').val(total_including_shipping.toFixed(2));
+                        $('#checkout_order_total').html('$' + total_including_shipping.toFixed(2));
+                    }
+                }
+
+                function update_total_with_shipping_selected() {
+                    var single_shipping_quote = $('#single_shipping_quote');
+                    if (single_shipping_quote.attr('checked')) {
+                        var product_total = $('.items_total_price').val() != null ? parseFloat($('.items_total_price').val()) : 0;
+                        var tax = $('.total_tax').val() != null ? parseFloat($('.total_tax').val()) : 0;
+                        var total_including_shipping = 0;
+                        total_including_shipping =  product_total + tax + parseFloat(single_shipping_quote.val());
+                        $('#incl_tax').val(total_including_shipping.toFixed(2));
+                        $('#checkout_order_total').html('$' + total_including_shipping.toFixed(2));
                     }
                 }
             </script>
             @include('partials.footer')
             <script>
                 $(document).ready(function() {
+                    update_total_with_shipping_selected();
                     const currentDate = new Date();
                     const formattedDate = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')}T${String(currentDate.getHours()).padStart(2, '0')}:${String(currentDate.getMinutes()).padStart(2, '0')}`;
                     $('.datetime_').val(formattedDate);
