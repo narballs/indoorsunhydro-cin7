@@ -11,7 +11,10 @@ use App\Models\AdminSetting;
 use App\Models\Contact;
 use App\Models\ContactLogs;
 use App\Models\ProductStockNotification;
+use App\Models\SelectedShippingQuote;
+use App\Models\ShippingQuote;
 use App\Models\SpecificAdminNotification;
+use App\Models\SurchargeSetting;
 use App\Models\User;
 use App\Models\UserLog;
 use Illuminate\Support\Facades\DB;
@@ -371,4 +374,52 @@ class AdminSettingsController extends Controller
             'msg' => 'Admins Selected Succesfully'
         ]);
     }
+
+    public function shipping_quotes() {
+        $shipping_quotes = ShippingQuote::with('selected_shipping_quote')->get();
+        $surcharge_settings = SurchargeSetting::first();
+        return view('admin.shipping_quotes.index', compact('shipping_quotes', 'surcharge_settings'));
+    }
+
+    public function update_shipping_quotes(Request $request) {
+        $shipping_quotes = $request->shipping_quote;
+        $selected_shipping_quotes = SelectedShippingQuote::all();
+        if (!empty($selected_shipping_quotes)) {
+            foreach ($selected_shipping_quotes as $selected_shipping_quote) {
+                $selected_shipping_quote->delete();
+            }
+        }
+        if (!empty($shipping_quotes)) {
+            foreach ($shipping_quotes as $shipping_quote) {
+                $selected_shipping_quote = new SelectedShippingQuote();
+                $selected_shipping_quote->shipping_quote_id = $shipping_quote;
+                $selected_shipping_quote->save();
+            }
+        }
+
+        $check_surcharge_settings = SurchargeSetting::first();
+        if (!empty($check_surcharge_settings)) {
+            $surcharge_settings = SurchargeSetting::first();
+            $surcharge_settings->delete();
+
+            $adding_surcharges = new SurchargeSetting();
+            $adding_surcharges->apply_surcharge = !empty($request->apply_surcharge) ? 1 : 0;
+            $adding_surcharges->surcharge_type = $request->surcharge_type;
+            $adding_surcharges->surcharge_value = $request->surcharge_value;
+            $adding_surcharges->save();
+            
+        } else {
+            if (!empty($request->surcharge_value) && !empty($request->surcharge_type)) {
+                $adding_surcharges = new SurchargeSetting();
+                $adding_surcharges->apply_surcharge = !empty($request->apply_surcharge) ? 1 : 0;
+                $adding_surcharges->surcharge_type = $request->surcharge_type;
+                $adding_surcharges->surcharge_value = $request->surcharge_value;
+                $adding_surcharges->save();
+            }
+        }
+        
+        return redirect()->back()->with('success', 'Shipping quotes updated successfully.');
+    }
+
+    
 }

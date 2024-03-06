@@ -184,6 +184,14 @@
         font-weight: 500;
         line-height: 36px; /* 150% */
     }
+    .checkout_surcharge_price{
+        color: #111;
+        font-family: 'Poppins';
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 36px; /* 150% */
+    }
     .checkout_total_heading {
         color: #212529;
         font-family: 'Poppins';
@@ -709,10 +717,139 @@ $cart_price = 0;
                                                 </span>
                                             </div>
                                         </div>
-                                        <div class="row justify-content-center border-bottom align-items-center py-2">
-                                            <div class="col-md-9 col-9"><span class="checkout_shipping_heading">Shipment Price</span></div>
-                                            <div class="col-md-3 col-3 text-right"><span class="checkout_shipping_price">${{number_format($shipment_price , 2)}}</span></div>
-                                        </div>
+                                        <input type="hidden" value="{{$products_weight}}" name="product_weight" class="product_weight">
+                                        @php
+                                            $surcharge_value = 0;
+                                        @endphp
+                                        @if (!empty($admin_area_for_shipping) && strtolower($admin_area_for_shipping->option_value) == 'yes')
+                                            <input type="hidden" name="admin_control_shipping" id="admin_control_shipping" value="true">
+                                            
+                                            @if (!empty($products_weight) && $products_weight > 150)
+                                                <input type="hidden" name="shipping_carrier_code" id="" value="{{$shipping_carrier_code}}">
+                                                <input type="hidden" name="shipping_service_code" id="" value="{{$shipping_service_code}}">
+                                                <input type="hidden" name="shipment_cost_single" id="shipment_price_heavy_weight" value="{{count($shipstation_shipment_prices) > 0 ? $shipstation_shipment_prices[0]->shipmentCost + $shipstation_shipment_prices[0]->otherCost  : 0 }}">
+                                                <div class="row justify-content-center border-bottom align-items-center py-2">
+                                                    <div class="col-md-9 col-9"><span class="checkout_shipping_heading">Shipment Price</span></div>
+                                                    <div class="col-md-3 col-3 text-right"><span class="checkout_shipping_price">${{count($shipstation_shipment_prices) > 0 ? number_format($shipstation_shipment_prices[0]->shipmentCost + $shipstation_shipment_prices[0]->otherCost , 2)  : 0}}</span></div>
+                                                    {{-- <div class="col-md-3 col-3 text-right"><span class="checkout_shipping_price">${{number_format($shipment_price , 2)}}</span></div> --}}
+                                                </div>
+                                                {{-- @if (!empty($surcharge_settings) && $surcharge_settings->apply_surcharge == 1)
+                                                    @if (!empty($surcharge_settings->surcharge_type) && $surcharge_settings->surcharge_type == 'fixed')
+                                                        @php
+                                                            $surcharge_value = $surcharge_settings->surcharge_value;
+                                                        @endphp
+                                                    @else
+                                                        @php
+                                                            $surcharge_value = $shipment_price * ($surcharge_settings->surcharge_value / 100);
+                                                        @endphp
+                                                    @endif
+                                                    <input type="hidden" name="surcharge_value" id="" value="{{$surcharge_value}}">
+                                                    <div class="row justify-content-center border-bottom align-items-center py-2">
+                                                        <div class="col-md-9 col-9"><span class="checkout_shipping_heading">Shipping Surcharge</span></div>
+                                                        <div class="col-md-3 col-3 text-right"><span class="checkout_surcharge_price">${{number_format($surcharge_value , 2)}}</span></div>
+                                                    </div>
+                                                @endif --}}
+                                            @else
+                                                <div class="row justify-content-center border-bottom align-items-center py-2">
+                                                    @if (count($admin_selected_shipping_quote) > 0)
+                                                        <div class="col-md-12">
+                                                            <p class="checkout_product_heading ml-0 mb-2">Shipping Methods</p>
+                                                        </div>
+                                                        @if (count($admin_selected_shipping_quote) == 1)
+                                                            @foreach ($admin_selected_shipping_quote as $shipping_quote)
+                                                                <input type="hidden" name="shipping_carrier_code" id="" value="{{$shipping_carrier_code}}">
+                                                                <input type="radio" name="shipping_service_code" id="" class="d-none" value="{{$shipping_quote->serviceCode}}" checked>
+                                                                <div class="col-md-9 col-9">
+                                                                    <input type="radio" name="shipping_multi_price" class="shipping_multi_price" id="single_shipping_quote" value="{{$shipping_quote->shipmentCost + $shipping_quote->otherCost}}" checked>
+                                                                    <span class="checkout_shipping_heading">{{$shipping_quote->serviceName}}</span>
+                                                                </div>
+                                                                <div class="col-md-3 col-3 text-right">
+                                                                    <span class="checkout_shipping_price">${{number_format($shipping_quote->shipmentCost + $shipping_quote->otherCost , 2)}}</span>
+                                                                </div>
+                                                                <input type="hidden" name="shipment_cost_multiple" id="shipment_price_single" value="{{ $shipping_quote->shipmentCost + $shipping_quote->otherCost }}">
+                                                               
+                                                                {{-- @if (!empty($surcharge_settings) && $surcharge_settings->apply_surcharge == 1)
+                                                                    @if (!empty($surcharge_settings->surcharge_type) && $surcharge_settings->surcharge_type == 'fixed')
+                                                                        @php
+                                                                            $surcharge_value = $surcharge_settings->surcharge_value;
+                                                                        @endphp
+                                                                    @else
+                                                                        @php
+                                                                            $total_ship_cost = 0;
+                                                                            $total_ship_cost = $shipping_quote->shipmentCost + $shipping_quote->otherCost;  
+                                                                            $surcharge_value = $total_ship_cost * $surcharge_settings->surcharge_value / 100;
+                                                                        @endphp
+                                                                    @endif
+                                                                    <input type="hidden" name="surcharge_value" id="" value="{{$surcharge_value}}">
+                                                                    <div class="col-md-9 col-9"><span class="checkout_shipping_heading">{{$shipping_quote->serviceName .' ' . 'Surcharge'}} </span></div>
+                                                                    <div class="col-md-3 col-3 text-right"><span class="checkout_surcharge_price">${{number_format($surcharge_value , 2)}}</span></div>
+                                                                @endif --}}
+                                                            @endforeach
+                                                        @else
+                                                            @foreach ($admin_selected_shipping_quote as $shipping_quote)
+                                                                <div class="col-md-9 col-9">
+                                                                    <input type="hidden" name="shipping_carrier_code" id="" value="{{$shipping_carrier_code}}">
+                                                                    <input type="radio" name="shipping_service_code" id="" class="shipping_service_code d-none" value="{{$shipping_quote->serviceCode}}">
+                                                                    <input type="radio" name="shipping_multi_price" class="shipping_multi_price" id="" value="{{$shipping_quote->shipmentCost + $shipping_quote->otherCost}}" onclick="assign_service_code(this)">
+                                                                    <span class="checkout_shipping_heading">{{$shipping_quote->serviceName}}</span>
+                                                                </div>
+                                                                <div class="col-md-3 col-3 text-right">
+                                                                    <span class="checkout_shipping_price">${{number_format($shipping_quote->shipmentCost + $shipping_quote->otherCost , 2)}}</span>
+                                                                </div>
+                                                                <input type="hidden" name="shipment_cost_multiple" id="shipment_price_{{$shipping_quote->serviceCode}}" class="shipstation_multi_shipment_price" value="{{ $shipping_quote->shipmentCost }}">
+                                                                
+                                                                {{-- @if (!empty($surcharge_settings) && $surcharge_settings->apply_surcharge == 1)
+                                                                    @if (!empty($surcharge_settings->surcharge_type) && $surcharge_settings->surcharge_type == 'fixed')
+                                                                        @php
+                                                                            $surcharge_value = $surcharge_settings->surcharge_value;
+                                                                        @endphp
+                                                                    @else
+                                                                        @php
+                                                                            $total_ship_cost = 0;
+                                                                            $total_ship_cost = $shipping_quote->shipmentCost + $shipping_quote->otherCost;  
+                                                                            $surcharge_value = $total_ship_cost * $surcharge_settings->surcharge_value / 100;
+                                                                        @endphp
+                                                                    @endif
+                                                                    <input type="hidden" name="surcharge_value" id="" value="{{$surcharge_value}}">
+                                                                    <div class="col-md-9 col-9"><span class="checkout_shipping_heading">{{$shipping_quote->serviceName .' ' . 'Surcharge'}} </span></div>
+                                                                    <div class="col-md-3 col-3 text-right"><span class="checkout_surcharge_price">${{number_format($surcharge_value , 2)}}</span></div> 
+                                                                @endif --}}
+                                                                
+                                                            @endforeach
+                                                        @endif
+                                                    @else
+                                                        <div class="col-md-9 col-9"><span class="checkout_shipping_heading">Shipment Price</span></div>
+                                                        <div class="col-md-3 col-3 text-right"><span class="checkout_shipping_price">${{number_format($shipment_price , 2)}}</span></div>
+                                                    @endif
+                                                </div>
+                                            @endif 
+                                        @else
+                                            <input type="hidden" name="admin_control_shipping" id="admin_control_shipping" value="false">
+                                            <input type="hidden" name="shipping_carrier_code" id="" value="{{$shipping_carrier_code}}">
+                                            <input type="hidden" name="shipping_service_code" id="" value="{{$shipping_service_code}}">
+                                            <div class="row justify-content-center border-bottom align-items-center py-2">
+                                                <div class="col-md-9 col-9"><span class="checkout_shipping_heading">Shipment Price</span></div>
+                                                <div class="col-md-3 col-3 text-right"><span class="checkout_shipping_price">${{number_format($shipment_price , 2)}}</span></div>
+                                            </div>
+                                            {{-- @if (!empty($surcharge_settings) && $surcharge_settings->apply_surcharge == 1)
+                                                @if (!empty($surcharge_settings->surcharge_type) && $surcharge_settings->surcharge_type == 'fixed')
+                                                    @php
+                                                        $surcharge_value = $surcharge_settings->surcharge_value;
+                                                    @endphp
+                                                @else
+                                                    @php
+                                                        $total_ship_cost = 0;
+                                                        $total_ship_cost = $shipping_quote->shipmentCost + $shipping_quote->otherCost;  
+                                                        $surcharge_value = $total_ship_cost * $surcharge_settings->surcharge_value / 100;
+                                                    @endphp
+                                                @endif
+                                                <input type="hidden" name="surcharge_value" id="" value="{{$surcharge_value}}">
+                                            @endif
+                                            <div class="row justify-content-center border-bottom align-items-center py-2">
+                                                <div class="col-md-9 col-9"><span class="checkout_shipping_heading">Shipping Surcharge</span></div>
+                                                <div class="col-md-3 col-3 text-right"><span class="checkout_surcharge_price">${{number_format($surcharge_value , 2)}}</span></div>
+                                            </div> --}}
+                                        @endif
                                         <div class="row justify-content-center  align-items-center py-2">
                                             <div class="col-md-9 col-9"><span class="checkout_total_heading">Total</span></div>
                                             <div class="col-md-3 col-3 text-right"><span class="checkout_total_price">${{ number_format($total_including_tax, 2) }}</span></div>
@@ -2614,64 +2751,209 @@ $cart_price = 0;
                     var productTotal = $('.items_total_price').val() != null ?  parseFloat($('.items_total_price').val().replace(',', '')) : 0;
                     var total_shipping_price = 0;
                     var total_tax_price = 0;
+                    var multi_shipping_price = 0;
+                    var order_weight_greater_then_150 = 0;
+                    var product_weight = $('.product_weight').val() != null ?  parseFloat($('.product_weight').val()) : 0;
+                    var admin_area_for_shipping = $('#admin_control_shipping').val();
                     $('.discount_variation').val('percentage');
                     $('.discount_variation_value').val(response.discount_variation_value);
-                    add_discount = ((productTotal + parseFloat(total_tax) + parseFloat(shipment_price))  * parseFloat(response.discount_variation_value) / 100);
-                    $('#discount_amount').val(add_discount.toFixed(2));
-                    $('.checkout_discount_rate_manuall').html('$' + add_discount.toFixed(2));
-                    tax_discount = (total_tax * response.discount_variation_value / 100);
-                    shipping_discount = (shipment_price * response.discount_variation_value / 100);
+                    if (admin_area_for_shipping === 'true') {
+                        if (product_weight > 150) {
+                            order_weight_greater_then_150 = $('#shipment_price_heavy_weight').val() != null ? parseFloat($('#shipment_price_heavy_weight').val()) : 0;
+                            // shipment_price = order_weight_greater_then_150 + (order_weight_greater_then_150 * order_weight_greater_then_150 / 100);
+                            shipment_price = order_weight_greater_then_150; 
+                            add_discount = ((productTotal + parseFloat(total_tax) + parseFloat(shipment_price))  * parseFloat(response.discount_variation_value) / 100);
+                            $('#discount_amount').val(add_discount.toFixed(2));
+                            $('.checkout_discount_rate_manuall').html('$' + add_discount.toFixed(2));
+                            tax_discount = (total_tax * response.discount_variation_value / 100);
+                            shipping_discount = (shipment_price * response.discount_variation_value / 100);
+                            
+                            subtotal = (productTotal + parseFloat(total_tax) + parseFloat(shipment_price)) - add_discount;
+                            total = subtotal;
+                            total_shipping_price = shipment_price - shipping_discount;
+                            total_tax_price = total_tax - tax_discount;
+                            $('#shipment_price_heavy_weight').val(total_shipping_price.toFixed(2));
+                            $('.total_tax').val(total_tax_price.toFixed(2));
+                            $('#incl_tax').val(total.toFixed(2));
+                            $('.checkout_total_price').html('$' + total.toFixed(2));
+                            $('.checkout_tax_rate').html('$' + total_tax_price.toFixed(2));
+                            // $('.checkout_shipping_price').html('$' + total_shipping_price.toFixed(2));
+                            $('#shipment_price_heavy_weight').next().find('.checkout_shipping_price').html('$' + total_shipping_price.toFixed(2));
+                        } else {
+                            $('.shipping_multi_price').each(function() {
+                                // multi_shipping_price = parseFloat($(this).val()) + (parseFloat($(this).val()) * response.discount_variation_value / 100);
+                                shipment_price = $(this).val();
+                                add_discount = ((productTotal + parseFloat(total_tax) + parseFloat(shipment_price))  * parseFloat(response.discount_variation_value) / 100);
+                                console.log(add_discount ,'discount');
+                                $('#discount_amount').val(add_discount.toFixed(2));
+                                $('.checkout_discount_rate_manuall').html('$' + add_discount.toFixed(2));
+                                tax_discount = (total_tax * response.discount_variation_value / 100);
+                                shipping_discount = (shipment_price * response.discount_variation_value / 100);
+                                
+                                subtotal = (productTotal + parseFloat(total_tax) + parseFloat(shipment_price)) - add_discount;
+                                console.log(subtotal ,'subtotal');
+                                total = subtotal;
+                                total_shipping_price = shipment_price - shipping_discount;
+                                total_tax_price = total_tax - tax_discount;
+                                $(this).val(total_shipping_price.toFixed(2));
+                                $('.total_tax').val(total_tax_price.toFixed(2));
+                                $('#incl_tax').val(total.toFixed(2));
+                                $('.checkout_total_price').html('$' + total.toFixed(2));
+                                $('.checkout_tax_rate').html('$' + total_tax_price.toFixed(2));
+                                // $('.checkout_shipping_price').html('$' + total_shipping_price.toFixed(2));
+                                $(this).parent().next().find('.checkout_shipping_price').html('$' + total_shipping_price.toFixed(2));
+                            });
+                        
+                        }
+                    } else {
+                        shipment_price = shipment_price;
+                        
+                        add_discount = ((productTotal + parseFloat(total_tax) + parseFloat(shipment_price))  * parseFloat(response.discount_variation_value) / 100);
+                        $('#discount_amount').val(add_discount.toFixed(2));
+                        $('.checkout_discount_rate_manuall').html('$' + add_discount.toFixed(2));
+                        tax_discount = (total_tax * response.discount_variation_value / 100);
+                        shipping_discount = (shipment_price * response.discount_variation_value / 100);
+                        
+                        subtotal = (productTotal + parseFloat(total_tax) + parseFloat(shipment_price)) - add_discount;
+                        total = subtotal;
+                        total_shipping_price = shipment_price - shipping_discount;
+                        total_tax_price = total_tax - tax_discount;
+                        $('#shipment_price').val(total_shipping_price.toFixed(2));
+                        $('.total_tax').val(total_tax_price.toFixed(2));
+                        $('#incl_tax').val(total.toFixed(2));
+                        $('.checkout_total_price').html('$' + total.toFixed(2));
+                        $('.checkout_tax_rate').html('$' + total_tax_price.toFixed(2));
+                        $('.checkout_shipping_price').html('$' + total_shipping_price.toFixed(2));
+                    }
                     
-                    subtotal = (productTotal + parseFloat(total_tax) + parseFloat(shipment_price)) - add_discount;
-                    total = subtotal;
-                    total_shipping_price = shipment_price - shipping_discount;
-                    total_tax_price = total_tax - tax_discount;
-                    $('#shipment_price').val(total_shipping_price.toFixed(2));
-                    $('.total_tax').val(total_tax_price.toFixed(2));
-                    $('#incl_tax').val(total.toFixed(2));
-                    $('.checkout_total_price').html('$' + total.toFixed(2));
-                    $('.checkout_tax_rate').html('$' + total_tax_price.toFixed(2));
-                    $('.checkout_shipping_price').html('$' + total_shipping_price.toFixed(2));
+                    
                 }
                 function apply_discount_to_fixed(response , cartTotal,cart_total_including_tax_shipping , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal) {
                     var productTotal = $('.items_total_price').val() != null ?  parseFloat($('.items_total_price').val().replace(',', '')) : 0;
+                    var multi_shipping_price = 0;
+                    var order_weight_greater_then_150 = 0;
+                    var product_weight = $('.product_weight').val() != null ?  parseFloat($('.product_weight').val()) : 0;
+                    var admin_area_for_shipping = $('#admin_control_shipping').val();
                     $('.discount_variation').val('fixed');
                     $('.discount_variation_value').val(response.discount_variation_value);
                     add_discount = response.discount_variation_value;
                     tax_discount = parseInt(response.discount_variation_value);
                     shipping_discount = parseInt(response.discount_variation_value);
-                    
                     var  total_shipping_price = 0;
                     var  total_tax_price = 0;
-                    if (tax_discount > total_tax) {
-                        total_tax_price = 0;
-                    } else {
-                        total_tax_price = total_tax - tax_discount;
-                    }
-                    if (shipping_discount > shipment_price) {
-                        total_shipping_price = 0;
-                    } else {
-                        total_shipping_price = shipment_price - shipping_discount;
-                    }
+                    if (admin_area_for_shipping === 'true') {
+                        if (product_weight > 150) {
+                            order_weight_greater_then_150 = $('#shipment_price_heavy_weight').val() != null ? parseFloat($('#shipment_price_heavy_weight').val()) : 0;
+                            shipment_price = order_weight_greater_then_150; 
+                            if (tax_discount > total_tax) {
+                                total_tax_price = 0;
+                            } else {
+                                total_tax_price = total_tax - tax_discount;
+                            }
+                            if (shipping_discount > shipment_price) {
+                                total_shipping_price = 0;
+                            } else {
+                                total_shipping_price = shipment_price - shipping_discount;
+                            }
 
-                    if (add_discount > productTotal) {
-                        subtotal = 0;
-                        total = 0;
-                    } else if(total_tax_price == 0  && total_shipping_price == 0) {
-                        subtotal = productTotal - add_discount;
-                        total = subtotal;
-                    } else {
-                        subtotal = cart_total_including_tax_shipping - add_discount;
-                        total = subtotal;
+                            if (add_discount > productTotal) {
+                                subtotal = 0;
+                                total = 0;
+                            } else if(total_tax_price == 0  && total_shipping_price == 0) {
+                                subtotal = productTotal - add_discount;
+                                total = subtotal;
+                            } else {
+                                subtotal = productTotal - add_discount;
+                                total = subtotal;
+                            }
+                            $('#discount_amount').val(add_discount.toFixed(2));
+                            $('.checkout_discount_rate_manuall').html('$' + add_discount.toFixed(2));
+                            $('#shipment_price').val(total_shipping_price.toFixed(2));
+                            $('.total_tax').val(total_tax_price.toFixed(2));
+                            $('#incl_tax').val(total.toFixed(2));
+                            $('.checkout_total_price').html('$' + total.toFixed(2));
+                            $('.checkout_tax_rate').html('$' + total_tax_price.toFixed(2));
+                            // $('.checkout_shipping_price').html('$' + total_shipping_price.toFixed(2));
+                            $('#shipment_price_heavy_weight').next().find('.checkout_shipping_price').html('$' + total_shipping_price.toFixed(2));
+                        } else {
+                            $('.shipping_multi_price').each(function() {
+                                shipment_price = $(this).val();
+                                if (tax_discount > total_tax) {
+                                total_tax_price = 0;
+                                } else {
+                                    total_tax_price = total_tax - tax_discount;
+                                }
+                                if (shipping_discount > shipment_price) {
+                                    total_shipping_price = 0;
+                                } else {
+                                    total_shipping_price = shipment_price - shipping_discount;
+                                }
+
+                                if (add_discount > productTotal) {
+                                    subtotal = 0;
+                                    total = 0;
+                                } else if(total_tax_price == 0  && total_shipping_price == 0) {
+                                    subtotal = productTotal - add_discount;
+                                    total = subtotal;
+                                } else {
+                                    subtotal = productTotal - add_discount;
+                                    total = subtotal;
+                                }
+                                $('#discount_amount').val(add_discount.toFixed(2));
+                                $('.checkout_discount_rate_manuall').html('$' + add_discount.toFixed(2));
+                                $('#shipment_price').val(total_shipping_price.toFixed(2));
+                                $('.total_tax').val(total_tax_price.toFixed(2));
+                                $('#incl_tax').val(total.toFixed(2));
+                                $('.checkout_total_price').html('$' + total.toFixed(2));
+                                $('.checkout_tax_rate').html('$' + total_tax_price.toFixed(2));
+                                // $('.checkout_shipping_price').html('$' + total_shipping_price.toFixed(2));
+                                $(this).parent().next().find('.checkout_shipping_price').html('$' + total_shipping_price.toFixed(2));
+                            });
+                            
+                        }
                     }
-                    $('#discount_amount').val(add_discount.toFixed(2));
-                    $('.checkout_discount_rate_manuall').html('$' + add_discount.toFixed(2));
-                    $('#shipment_price').val(total_shipping_price.toFixed(2));
-                    $('.total_tax').val(total_tax_price.toFixed(2));
-                    $('#incl_tax').val(total.toFixed(2));
-                    $('.checkout_total_price').html('$' + total.toFixed(2));
-                    $('.checkout_tax_rate').html('$' + total_tax_price.toFixed(2));
-                    $('.checkout_shipping_price').html('$' + total_shipping_price.toFixed(2));
+                    else {
+                        if (tax_discount > total_tax) {
+                            total_tax_price = 0;
+                        } else {
+                            total_tax_price = total_tax - tax_discount;
+                        }
+                        if (shipping_discount > shipment_price) {
+                            total_shipping_price = 0;
+                        } else {
+                            total_shipping_price = shipment_price - shipping_discount;
+                        }
+
+                        if (add_discount > productTotal) {
+                            subtotal = 0;
+                            total = 0;
+                        } else if(total_tax_price == 0  && total_shipping_price == 0) {
+                            subtotal = productTotal - add_discount;
+                            total = subtotal;
+                        } else {
+                            subtotal = productTotal - add_discount;
+                            total = subtotal;
+                        }
+                        $('#discount_amount').val(add_discount.toFixed(2));
+                        $('.checkout_discount_rate_manuall').html('$' + add_discount.toFixed(2));
+                        $('#shipment_price').val(total_shipping_price.toFixed(2));
+                        $('.total_tax').val(total_tax_price.toFixed(2));
+                        $('#incl_tax').val(total.toFixed(2));
+                        $('.checkout_total_price').html('$' + total.toFixed(2));
+                        $('.checkout_tax_rate').html('$' + total_tax_price.toFixed(2));
+                        $('.checkout_shipping_price').html('$' + total_shipping_price.toFixed(2));
+                    }
+                        
+                }
+
+                function assign_service_code(element) {
+                    $('.shipping_service_code').each(function() {
+                        $(this).removeAttr('checked');
+                    });
+                    if ($(element).is(':checked')) {
+                        $(element).parent().find('.shipping_service_code').removeClass('d-none').attr('checked', 'checked');
+                        $(element).parent().find('.shipping_service_code').addClass('d-none');
+                    }
                 }
             </script>
             @include('partials.footer')

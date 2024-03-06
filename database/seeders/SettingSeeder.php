@@ -287,6 +287,11 @@ class SettingSeeder extends Seeder
                 'type' => 'yes/no',
                 'option_value' => 'No',
             ],
+            [
+                'option_name' => 'admin_area_for_shipping', 
+                'type' => 'yes/no',
+                'option_value' => 'No',
+            ],
 
             
         ];
