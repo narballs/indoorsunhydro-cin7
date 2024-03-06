@@ -249,7 +249,7 @@ class UserHelper
             'packageCode' => !empty($produts_weight) && $produts_weight > 150 ? 'container' : 'package',
             'shippingAmount' => number_format($currentOrder->shipment_price , 2),
             "amountPaid" => number_format($currentOrder->total_including_tax , 2),
-            "taxAmount" => number_format($tax, 2),
+            "taxAmount" => number_format($currentOrder->tax_rate, 2),
             'shipTo' => [
                 "name" => $order_contact->firstName .' '. $order_contact->lastName,
                 "company" => $order_contact->company,
