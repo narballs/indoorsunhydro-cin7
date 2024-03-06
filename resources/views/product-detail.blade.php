@@ -171,9 +171,24 @@
                                                     </div>
                                                 @endif
                                             </div>
-                                            @if($stock_updated)
+                                            @if ($inventory_update_time_flag == true)
+                                                @if($stock_updated)
+                                                    <div class="col-md-12 mx-3">
+                                                        @if (!empty($locations))
+                                                            @foreach ($locations as $location)
+                                                                <div>
+                                                                    <p class="mb-1"> 
+                                                                        <i class="fa fa-map-marker mr-2"></i>{{$location['branch_name'] . ':'}}
+                                                                        <span class="text-success">{{$location['available']}}</span>
+                                                                    </p>
+                                                                </div>
+                                                            @endforeach
+                                                        @endif
+                                                    </div>
+                                                @endif
+                                            @else
                                                 <div class="col-md-12 mx-3">
-                                                    @if (!empty($locations))
+                                                    @if (count($locations) > 0)
                                                         @foreach ($locations as $location)
                                                             <div>
                                                                 <p class="mb-1"> 
@@ -328,7 +343,6 @@
         </div>
     </div>
 </div>
-
 <div id="popover-form">
     <form id="myform" class="form-inline p-0 w-100" role="form">
         <div class="form-group" style="width:800px">
@@ -342,13 +356,21 @@
                     z-index:9999;
                 ">
                 <span style="width: 800px !important">
-                    @if (!$stock_updated)
-                        Unable to show accurate stock levels.<br />
-                    @endif
-                    @if (!empty($locations))
-                        @foreach ($locations as $location)
-                            {{ $location['branch_name'] }}: {{ $location['available'] >= 0 ? $location['available'] : 0  }}<br />
-                        @endforeach
+                    @if ($inventory_update_time_flag == true)
+                        @if (!$stock_updated)
+                            Unable to show accurate stock levels.<br />
+                        @endif
+                        @if (!empty($locations))
+                            @foreach ($locations as $location)
+                                {{ $location['branch_name'] }}: {{ $location['available'] >= 0 ? $location['available'] : 0  }}<br />
+                            @endforeach
+                        @endif
+                    @else
+                        @if (count($locations) > 0)
+                            @foreach ($locations as $location)
+                                {{ $location['branch_name'] }}: {{ $location['available'] >= 0 ? $location['available'] : 0  }}<br />
+                            @endforeach
+                        @endif
                     @endif
                 </span>
             </div>
@@ -414,9 +436,24 @@
                         </div>
                     </div>
                     <div class="row">
-                        @if($stock_updated)
+                        @if ($inventory_update_time_flag == true)
+                            @if($stock_updated)
+                                <div class="col-md-12">
+                                    @if (!empty($locations))
+                                        @foreach ($locations as $location)
+                                            <div>
+                                                <p class="mb-1 instock-label"> 
+                                                    <i class="fa fa-map-marker mr-2"></i>{{$location['branch_name'] . ':'}}
+                                                    <span class="text-success">{{$location['available'] >= 0 ?  $location['available'] : 0}}</span>
+                                                </p>
+                                            </div>
+                                        @endforeach
+                                    @endif
+                                </div>
+                            @endif
+                        @else
                             <div class="col-md-12">
-                                @if (!empty($locations))
+                                @if (count($locations) > 0)
                                     @foreach ($locations as $location)
                                         <div>
                                             <p class="mb-1 instock-label"> 
