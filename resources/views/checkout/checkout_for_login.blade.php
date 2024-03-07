@@ -2926,13 +2926,16 @@ $cart_price = 0;
 
                 function update_total_with_shipping_selected() {
                     var single_shipping_quote = $('#single_shipping_quote');
-                    if (single_shipping_quote.attr('checked')) {
-                        var product_total = $('.items_total_price').val() != null ? parseFloat($('.items_total_price').val()) : 0;
-                        var tax = $('.total_tax').val() != null ? parseFloat($('.total_tax').val()) : 0;
-                        var total_including_shipping = 0;
-                        total_including_shipping =  product_total + tax + parseFloat(single_shipping_quote.val());
-                        $('#incl_tax').val(total_including_shipping.toFixed(2));
-                        $('#checkout_order_total').html('$' + total_including_shipping.toFixed(2));
+                    var admin_area_for_shipping_check = $('#admin_control_shipping').val();
+                    if (admin_area_for_shipping_check === 'true') { 
+                        if (single_shipping_quote.attr('checked')) {
+                            var product_total = $('.items_total_price').val() != null ? parseFloat($('.items_total_price').val()) : 0;
+                            var tax = $('.total_tax').val() != null ? parseFloat($('.total_tax').val()) : 0;
+                            var total_including_shipping = 0;
+                            total_including_shipping =  product_total + tax + parseFloat(single_shipping_quote.val());
+                            $('#incl_tax').val(total_including_shipping.toFixed(2));
+                            $('#checkout_order_total').html('$' + total_including_shipping.toFixed(2));
+                        }
                     }
                 }
 
