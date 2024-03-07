@@ -188,23 +188,30 @@ class UserHelper
         $api_order = ApiOrder::where('id', $order_id)->first();
         $shipping_package = AdminSetting::where('option_name', 'shipping_package')->first();
         $order_items = ApiOrderItem::with('order.texClasses', 'product.options', 'product')->where('order_id', $order_id)->get();
-        for ($i = 0; $i <= count($order_items) - 1; $i++){
-            $items[] = [
-                'name' => $order_items[0]->product->name,
-                'sku' => $order_items[0]->product->code,
-                'quantity' => $order_items[0]->quantity,
-                'unitPrice' => $order_items[0]->price,
-            ];  
-        }
+        // for ($i = 0; $i <= count($order_items) - 1; $i++){
+        //     $items[] = [
+        //         'name' => $order_items[0]->product->name,
+        //         'sku' => $order_items[0]->product->code,
+        //         'quantity' => $order_items[0]->quantity,
+        //         'unitPrice' => $order_items[0]->price,
+        //     ];  
+        // }
+
+        
 
         $produts_weight = 0;
         foreach ($order_items as $order_item) {
+            $items[] = [
+                'name' => $order_item->product->name,
+                'sku' => $order_item->product->code,
+                'quantity' => $order_item->quantity,
+                'unitPrice' => $order_item->price,
+            ];
             $product_options = ProductOption::where('product_id', $order_item['product_id'])->where('option_id' , $order_item['option_id'])->get();
             foreach ($product_options as $product_option) {
                 $produts_weight += $product_option->optionWeight * $order_item['quantity'];
             }
         }
-        
         $client = new \GuzzleHttp\Client();
         $shipstation_order_url = config('services.shipstation.shipment_order_url');
         $ship_station_api_key = config('services.shipstation.key');

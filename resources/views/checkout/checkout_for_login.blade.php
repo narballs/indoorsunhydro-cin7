@@ -2926,20 +2926,38 @@ $cart_price = 0;
 
                 function update_total_with_shipping_selected() {
                     var single_shipping_quote = $('#single_shipping_quote');
-                    if (single_shipping_quote.attr('checked')) {
-                        var product_total = $('.items_total_price').val() != null ? parseFloat($('.items_total_price').val()) : 0;
-                        var tax = $('.total_tax').val() != null ? parseFloat($('.total_tax').val()) : 0;
-                        var total_including_shipping = 0;
-                        total_including_shipping =  product_total + tax + parseFloat(single_shipping_quote.val());
-                        $('#incl_tax').val(total_including_shipping.toFixed(2));
-                        $('#checkout_order_total').html('$' + total_including_shipping.toFixed(2));
+                    var admin_area_for_shipping_check = $('#admin_control_shipping').val();
+                    if (admin_area_for_shipping_check === 'true') { 
+                        if (single_shipping_quote.attr('checked')) {
+                            var product_total = $('.items_total_price').val() != null ? parseFloat($('.items_total_price').val()) : 0;
+                            var tax = $('.total_tax').val() != null ? parseFloat($('.total_tax').val()) : 0;
+                            var total_including_shipping = 0;
+                            total_including_shipping =  product_total + tax + parseFloat(single_shipping_quote.val());
+                            $('#incl_tax').val(total_including_shipping.toFixed(2));
+                            $('#checkout_order_total').html('$' + total_including_shipping.toFixed(2));
+                        }
                     }
+                }
+
+                function update_total_with_shipping_for_greater_weight () {
+                    var order_weight_greater_then_150 = $('#shipment_price_heavy_weight').val() != null ? parseFloat($('#shipment_price_heavy_weight').val()) : 0;
+                    var product_total = $('.items_total_price').val() != null ? parseFloat($('.items_total_price').val()) : 0;
+                    var tax = $('.total_tax').val() != null ? parseFloat($('.total_tax').val()) : 0;
+                    var total_including_shipping = 0;
+                    total_including_shipping =  product_total + tax + order_weight_greater_then_150;
+                    $('#incl_tax').val(total_including_shipping.toFixed(2));
+                    $('#checkout_order_total').html('$' + total_including_shipping.toFixed(2));
                 }
             </script>
             @include('partials.footer')
             <script>
                 $(document).ready(function() {
                     update_total_with_shipping_selected();
+                    var admin_area_for_shipping_check = $('#admin_control_shipping').val();
+                    var product_weight = $('.product_weight').val() != null ?  parseFloat($('.product_weight').val()) : 0;
+                    if (admin_area_for_shipping_check === 'true' && product_weight > 150) {
+                        update_total_with_shipping_for_greater_weight();
+                    }   
                     const currentDate = new Date();
                     const formattedDate = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')}T${String(currentDate.getHours()).padStart(2, '0')}:${String(currentDate.getMinutes()).padStart(2, '0')}`;
                     $('.datetime_').val(formattedDate);
