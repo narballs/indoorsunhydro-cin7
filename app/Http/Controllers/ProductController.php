@@ -530,7 +530,7 @@ class ProductController extends Controller
         $stock_updated_helper = null;
         $inventory_update_time_flag = false;
         $date_difference = null;
-        $threshold_minutes = 5; // Adjust this threshold as needed
+        $threshold_minutes = 3; // Adjust this threshold as needed
         $stock_with_branches = null;
         $branch_locations = null;
 

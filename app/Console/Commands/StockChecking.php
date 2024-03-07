@@ -10,6 +10,7 @@ use App\Models\ApiSyncLog;
 use App\Models\InventoryLocation;
 use App\Models\Product;
 use App\Models\ProductOption;
+use App\Models\ProductStock;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
@@ -125,14 +126,38 @@ class StockChecking extends Command
             $stock_available = 0;
             $stock_on_hand = 0;
             if ($api_product_stock) {
-                foreach ($api_product_stock as $product_stock) {
-                    $product_id = $product_stock->productId;
-                    $option_id = $product_stock->productOptionId;
-                    $product = Product::where('product_id', $product_id)->first();
-                    if (!empty($product)) {
-                        $stock_updated = UtilHelper::updateProductStock($product, $option_id);
-                        if ($stock_updated) {
-                            $this->info('Stock Updated for product#' . $product_id);
+                // foreach ($api_product_stock as $product_stock) {
+                //     $product_id = $product_stock->productId;
+                //     $option_id = $product_stock->productOptionId;
+                //     $product = Product::where('product_id', $product_id)->first();
+                //     if (!empty($product)) {
+                //         $stock_updated = UtilHelper::updateProductStock($product, $option_id);
+                //         if ($stock_updated) {
+                //             $this->info('Stock Updated for product#' . $product_id);
+                //         }
+                //     }
+                // }
+
+                foreach ($api_product_stock as $product_option_stock) {
+                    if (!in_array($product_option_stock->branchId, $skip_branches)) {
+                        $product_stock = ProductStock::where('product_id' ,  $product_option_stock->productId)
+                        ->where('branch_id' , $product_option_stock->branchId)
+                        ->where('option_id' , $product_option_stock->productOptionId)
+                        ->first();
+                        $stock_available += $product_option_stock->available;
+                        if (!empty($product_stock)) {
+                            $product_stock->available_stock = $stock_available;
+                            $product_stock->save();
+                            $this->info('Stock Updated for product option#' . $product_stock->option_id);
+                        } else {
+                            $product_stock = ProductStock::create([
+                                'available_stock' => $stock_available,
+                                'branch_id' => $product_option_stock->branchId,
+                                'product_id' => $product_option_stock->productId,
+                                'branch_name' => $product_option_stock->branchName,
+                                'option_id' => $product_option_stock->productOptionId
+                            ]);
+                            $this->info('Stock Created for product option#' . $product_stock->option_id);
                         }
                     }
                 }
