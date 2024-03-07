@@ -179,7 +179,7 @@
                                                                 <div>
                                                                     <p class="mb-1"> 
                                                                         <i class="fa fa-map-marker mr-2"></i>{{$location['branch_name'] . ':'}}
-                                                                        <span class="text-success">{{$location['available']}}</span>
+                                                                        <span class="text-success">{{ $location['available'] >= 0 ? $location['available'] : 0  }}</span>
                                                                     </p>
                                                                 </div>
                                                             @endforeach
@@ -193,7 +193,7 @@
                                                             <div>
                                                                 <p class="mb-1"> 
                                                                     <i class="fa fa-map-marker mr-2"></i>{{$location['branch_name'] . ':'}}
-                                                                    <span class="text-success">{{$location['available']}}</span>
+                                                                    <span class="text-success">{{ $location['available'] >= 0 ? $location['available'] : 0  }}</span>
                                                                 </p>
                                                             </div>
                                                         @endforeach
