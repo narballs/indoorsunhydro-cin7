@@ -125,6 +125,8 @@ class StockChecking extends Command
             }
             $stock_available = 0;
             $stock_on_hand = 0;
+            $stock_available_product_option = 0;
+            $stock_on_hand_product_option = 0;
             if ($api_product_stock) {
                 // foreach ($api_product_stock as $product_stock) {
                 //     $product_id = $product_stock->productId;
@@ -165,11 +167,11 @@ class StockChecking extends Command
                 foreach ($api_product_stock as $product_option_stock) {
                     $single_product_option = ProductOption::with('price')->where('option_id',$product_option_stock->productOptionId)->first();
                     if (!in_array($product_option_stock->branchId, $skip_branches)) {
-                        $stock_available += $product_option_stock->available;
-                        $stock_on_hand += $product_option_stock->stockOnHand;
+                        $stock_available_product_option += $product_option_stock->available;
+                        $stock_on_hand_product_option += $product_option_stock->stockOnHand;
                         if (!empty($single_product_option)) {
-                            $single_product_option->stockAvailable = $stock_available;
-                            $single_product_option->stockOnHand = $stock_on_hand;
+                            $single_product_option->stockAvailable = $stock_available_product_option;
+                            $single_product_option->stockOnHand = $stock_on_hand_product_option;
                             $single_product_option->save();
                             $this->info('Stock Updated for product option#' . $single_product_option->option_id);
                         }
