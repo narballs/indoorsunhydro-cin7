@@ -24,10 +24,18 @@
     </td>
 
     <td class="customer-items-row">
-        @if ($contact->contact_id == '' || $contact->user_id == '')
-            <span class="badge badge-danger">Unmerged</span>
+        @if ($contact->is_parent == 1)
+            @if ($contact->contact_id == '' || $contact->user_id == '')
+                <span class="badge badge-danger">Unmerged</span>
+            @else
+                <span class="badge badge-success">Merged</span>
+            @endif
         @else
-            <span class="badge badge-success">Merged</span>
+            @if ($contact->secondary_id == '' || $contact->user_id == '')
+                <span class="badge badge-danger">Unmerged</span>
+            @else
+                <span class="badge badge-success">Merged</span>
+            @endif
         @endif
     </td>
 
