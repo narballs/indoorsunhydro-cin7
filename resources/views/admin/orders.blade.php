@@ -250,7 +250,7 @@
                                             </td>
                                             <td data-label="Reference :" class="td_padding_row">{{ $order->reference }}</td>
                                             <td data-label="Date Created :" class="td_padding_row">
-                                                {{ date('m/d/Y', strtotime($order->created_at)) }}
+                                                {{$order->created_at }}
                                             </td>
                                             <td data-label="Primary Account Email :" class="td_padding_row">
                                                 @if ($order->contact)
