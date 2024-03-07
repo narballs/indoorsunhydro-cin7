@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AdminSetting;
 use App\Models\ApiOrderItem;
 use App\Models\Category;
 use App\Models\Page;
@@ -82,8 +83,8 @@ class HomeController extends Controller
             ->get();
 
 
-        
-        return view('index', compact('categories' , 'product_views','best_selling_products','lists','user_buy_list_options' , 'contact_id'));
+        $notify_user_about_product_stock = AdminSetting::where('option_name', 'notify_user_about_product_stock')->first();
+        return view('index', compact('categories' , 'product_views','best_selling_products','lists','user_buy_list_options' , 'contact_id' , 'notify_user_about_product_stock'));
     }
 
     public function show_page($slug) {
