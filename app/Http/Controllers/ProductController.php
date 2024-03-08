@@ -1108,7 +1108,7 @@ class ProductController extends Controller
                 "quantity" => $request->quantity,
                 "price" => $price,
                 "code" => $productOption->code,
-                "image" => $productOption->image,
+                "image" => !empty($productOption->products) && !empty($productOption->products->images) ? $productOption->products->images : '',
                 'option_id' => $productOption->option_id,
                 "slug" => $productOption->products->slug,
                 "cart_hash" => session()->get('cart_hash')
