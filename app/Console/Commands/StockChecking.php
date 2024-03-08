@@ -74,7 +74,6 @@ class StockChecking extends Command
         $product_stock_sync_date = $product_stock_sync_raw_date->format('Y-m-d');
         $product_stock_sync_time = $product_stock_sync_raw_date->format('H:i:s');
         $api_formatted_product_stock_sync_date = $product_stock_sync_date . 'T' . $product_stock_sync_time . 'Z';
-
         $client2 = new \GuzzleHttp\Client();
 
         // Find total stock pages
