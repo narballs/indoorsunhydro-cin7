@@ -170,16 +170,16 @@ class UtilHelper
                     // $total_stock += $product_stock->available_stock;
                 }
 
-                $update_product_option = ProductOption::find($option_id);
-                if (!empty($update_product_option)) {
-                    $update_product_option->stockAvailable = $total_stock;
-                    $update_product_option->save();
-                } else {
-                    continue;
-                }
+                
 
                 $stock_updated = true;
             }
+
+            $update_product_option = ProductOption::find($option_id);
+            if (!empty($update_product_option)) {
+                $update_product_option->stockAvailable = $total_stock;
+                $update_product_option->save();
+            } 
             
             if (!empty($branch_ids)) {
                 ProductStock::where('product_id' ,  $product->product_id)
