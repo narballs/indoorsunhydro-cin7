@@ -149,7 +149,7 @@ class UtilHelper
                     
                     $branch_ids[] = $location_inventory->branchId;
                     if (!in_array($location_inventory->branchId, $skip_branches)) {
-                        $total_stock += $location_inventory->available;
+                        $total_stock += $location_inventory->available >=0 ? $location_inventory->available : 0;
                     }
                 }
                 else {
@@ -161,7 +161,7 @@ class UtilHelper
                         'option_id' => $option_id
                     ]);
                     if (!in_array($location_inventory->branchId, $skip_branches)) {
-                        $total_stock += $location_inventory->available;
+                        $total_stock += $location_inventory->available >=0 ? $location_inventory->available : 0;
                     }
                     // $total_stock += $product_stock->available_stock;
                 }
