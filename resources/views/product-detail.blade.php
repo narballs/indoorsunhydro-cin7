@@ -1106,20 +1106,19 @@
         //   jQuery('<div class="quantity-nav"><div class="quantity-div quantity-up">&#xf106;</div><div class="quantity-div quantity-down">&#xf107</div></div>').insertAfter('.quantity input');
         jQuery('.quantity').each(function () {
             var spinner = jQuery(this),
-                input = spinner.find('input[type="number"]'),
+                desktop_input = spinner.find('input[type="number"]'),
                 btnUp = spinner.find('.quantity-up'),
                 btnDown = spinner.find('.quantity-down'),
-                min = input.attr('min'),
-                max = input.attr('max');
+                min = desktop_input.attr('min'),
+                max = desktop_input.attr('max');
 
             btnUp.click(function () {
-                var oldValue = parseFloat(input.val());
-                // if (oldValue >= max) {
-                // var newVal = oldValue;
-                // } else {
-                // var  = oldValue + 1;
-                // }
-                newVal = oldValue + 1;
+                var oldValue = parseInt(desktop_input.val());
+                if (oldValue >= max) {
+                    var newVal = oldValue;
+                } else {
+                    var newVal = oldValue + 1;
+                }
                 spinner.find("input[id=quantity]").val(newVal);
                 let stock = jQuery(".stock_number").html();
                 let stock_number = parseInt(stock);
@@ -1135,7 +1134,7 @@
 
             btnDown.click(function () {
                 // alert('hi');
-                var oldValue = parseFloat(input.val());
+                var oldValue = parseInt(desktop_input.val());
                 if (oldValue <= min) {
                 var newVal = oldValue;
                 } else {
@@ -1154,6 +1153,14 @@
                 }
             //   spinner.find("input").trigger("change");
             });
+
+            desktop_input.change(function() {
+                var input_qty = $(this).val();
+                var qty_stock_number = $(this).attr('max');
+                if (input_qty >= qty_stock_number) {
+                    $(this).val(qty_stock_number);
+                }
+            })
 
         });
         //mobile
@@ -1213,21 +1220,20 @@
         });
         // jQuery('.qty_mbl_holder').each(function () {
             // var spinner = jQuery(this),
-            var input = $('.mobile_qty');
-            var btnUp = $('.up_qty_mbl');
-            var btnDown = $('.down_qty_mbl');
-            var min = input.attr('min');
-            var max = input.attr('max');
+            var mobile_input = jQuery('.mobile_qty');
+            var btnUp = jQuery('.up_qty_mbl');
+            var btnDown = jQuery('.down_qty_mbl');
+            var min = mobile_input.attr('min');
+            var max = mobile_input.attr('max');
 
             btnUp.click(function () {
-                var oldValue = parseFloat(input.val());
-                // if (oldValue >= max) {
-                //     var newVal = oldValue;
-                // } else {
-                //     var newVal = oldValue + 1;
-                // }
-                var newVal = oldValue + 1;
-                input.val(newVal);
+                var oldValue = parseInt(mobile_input.val());
+                if (oldValue >= max) {
+                    var newVal = oldValue;
+                } else {
+                    var newVal = oldValue + 1;
+                }
+                mobile_input.val(newVal);
                 let stock = jQuery(".stock_number").html();
                 let stock_number = parseInt(stock);
                 if (newVal === stock_number) {
@@ -1237,18 +1243,18 @@
                     btnUp.removeClass('greyed');
                     btnDown.removeClass('greyed');
                 }
-            //   spinner.find("input[id=quantity").trigger("change");
+            //   spinner.find("mobile_input[id=quantity").trigger("change");
             });
 
             btnDown.click(function () {
                 // alert('hi');
-                var oldValue = parseFloat(input.val());
+                var oldValue = parseInt(mobile_input.val());
                 if (oldValue <= min) {
                 var newVal = oldValue;
                 } else {
                 var newVal = oldValue - 1;
                 }
-                input.val(newVal);
+                mobile_input.val(newVal);
                 let stock = jQuery(".stock_number").html();
                 let stock_number = parseInt(stock);
                 if (newVal !== stock_number) {
@@ -1260,6 +1266,14 @@
                     btnDown.addClass('greyed');
                 }
             //   spinner.find("input").trigger("change");
+            });
+
+            mobile_input.change(function() {
+                var input_value = $(this).val();
+                var stock_number = $(this).attr('max');
+                if (input_value >= stock_number) {
+                    $(this).val(stock_number);
+                }
             });
 
         // });

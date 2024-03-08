@@ -131,7 +131,7 @@
                                                     <td class="align-middle">
                                                         <span class="mb-0" style="font-weight: 500;">
                                                             <a class="cart-page-items"
-                                                                href="{{ url('product-detail/' . $pk_product_id . '/' . $cart['option_id'] . '/' . $cart['slug']) }}" ">{{ $cart['code'] }}
+                                                                href="{{ url('product-detail/' . $pk_product_id . '/' . $cart['option_id'] . '/' . $cart['slug']) }}">{{ $cart['code'] }}
                                                             </a>
                                                         </span>
                                                     </td>
