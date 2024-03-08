@@ -145,7 +145,7 @@ class StockChecking extends Command
                         ->where('branch_id' , $product_option_stock->branchId)
                         ->where('option_id' , $product_option_stock->productOptionId)
                         ->first();
-                        $stock_available += $product_option_stock->available;
+                        $stock_available += $product_option_stock->available >=0 ? $product_option_stock->available : 0;
                         if (!empty($product_stock)) {
                             $product_stock->available_stock = $stock_available;
                             $product_stock->save();
@@ -166,7 +166,7 @@ class StockChecking extends Command
                 foreach ($api_product_stock as $product_option_stock) {
                     $single_product_option = ProductOption::with('price')->where('option_id',$product_option_stock->productOptionId)->first();
                     if (!in_array($product_option_stock->branchId, $skip_branches)) {
-                        $stock_available_product_option += $product_option_stock->available;
+                        $stock_available_product_option += $product_option_stock->available >= 0 ? $product_option_stock->available : 0;
                         $stock_on_hand_product_option += $product_option_stock->stockOnHand;
                         if (!empty($single_product_option)) {
                             $single_product_option->stockAvailable = $stock_available_product_option;
