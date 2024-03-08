@@ -174,8 +174,7 @@ class UtilHelper
 
                 $stock_updated = true;
             }
-
-            $update_product_option = ProductOption::find($option_id);
+            $update_product_option = ProductOption::where('option_id' , $option_id)->first();
             if (!empty($update_product_option)) {
                 $update_product_option->stockAvailable = $total_stock;
                 $update_product_option->save();
