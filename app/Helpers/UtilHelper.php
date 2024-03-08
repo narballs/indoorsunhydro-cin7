@@ -139,13 +139,7 @@ class UtilHelper
                     'available' => $location_inventory->available
                 ];
 
-                $update_product_option = ProductOption::find($option_id);
-                if (!empty($update_product_option)) {
-                    $update_product_option->stockAvailable = $total_stock;
-                    $update_product_option->save();
-                } else {
-                    continue;
-                }
+                
                 $product_stock = ProductStock::where('branch_id' , $location_inventory->branchId)
                     ->where('product_id' ,  $product->product_id)
                     ->where('option_id' , $option_id)
@@ -174,6 +168,14 @@ class UtilHelper
                         $total_stock += $location_inventory->available >=0 ? $location_inventory->available : 0;
                     }
                     // $total_stock += $product_stock->available_stock;
+                }
+
+                $update_product_option = ProductOption::find($option_id);
+                if (!empty($update_product_option)) {
+                    $update_product_option->stockAvailable = $total_stock;
+                    $update_product_option->save();
+                } else {
+                    continue;
                 }
 
                 $stock_updated = true;
