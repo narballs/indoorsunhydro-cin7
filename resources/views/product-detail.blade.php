@@ -188,7 +188,7 @@
                                                 @endif
                                             @else
                                                 <div class="col-md-12 mx-3">
-                                                    @if (count($locations) > 0)
+                                                    @if (!empty($locations))
                                                         @foreach ($locations as $location)
                                                             <div>
                                                                 <p class="mb-1"> 
@@ -366,7 +366,7 @@
                             @endforeach
                         @endif
                     @else
-                        @if (count($locations) > 0)
+                        @if (!empty($locations))
                             @foreach ($locations as $location)
                                 {{ $location['branch_name'] }}: {{ $location['available'] >= 0 ? $location['available'] : 0  }}<br />
                             @endforeach
@@ -453,7 +453,7 @@
                             @endif
                         @else
                             <div class="col-md-12">
-                                @if (count($locations) > 0)
+                                @if (!empty($locations))
                                     @foreach ($locations as $location)
                                         <div>
                                             <p class="mb-1 instock-label"> 
