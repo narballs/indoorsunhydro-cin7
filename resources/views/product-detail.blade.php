@@ -1046,6 +1046,9 @@
         height: 80px;
         width: 80px;
     }
+    .notify_stock_btn_class {
+        border-radius: 6px;
+    }
 </style>
 <script>
     jQuery(document).ready(function(){
@@ -1444,15 +1447,28 @@
 
         function buildDataColumn(productData) {
             var column = $('#get_column').val();
+            var stock_label = '';  
+            var text_class = '';  
             retail_price = 0;
             for (var i = 0; i < productData.options.length; i++) {
+                if (productData.options[i].stockAvailable > 0) {
+                    stock_label = 'In Stock';
+                    text_class = 'text-success';
+                } else {
+                    stock_label = 'Out of Stock';
+                    text_class = 'text-danger';
+                }
                 retail_price = productData.options[i].default_price[column]
+
                 var dataHtml = '            <div class="col-md-8 data-div data-div-account">';
                 dataHtml += '                <div class="row">';
                 dataHtml += '                    <div class="col-md-10">';
                 dataHtml += '                        <p class="product_name mb-1">';
                 dataHtml += '                            <a class="product_name" id="prd_name_' + productData.id + '" href="' + '/product-detail/' + productData.id + '/' + productData.options[i].option_id +'/'+ productData.code +'">' + productData.name + '</a>';
                 dataHtml += '                        </p>';
+                dataHtml += '                    </div>';
+                dataHtml += '                    <div class="col-md-10">';
+                dataHtml += '                        <p class="'+text_class+' mb-0">'+stock_label+'</p>';
                 dataHtml += '                    </div>';
                 dataHtml += '                    <div class="col-md-10">';
                 dataHtml += '                        <p class="product_price mb-1">$' + retail_price + '</p>';
@@ -1470,13 +1486,31 @@
         }
 
         function buildButtonRow(productData) {
+            var auth_user = $('#auth_user_email').val();
             for (var i = 0; i < productData.options.length; i++) {
                 var buttonRowHtml = '        <div class="row justify-content-center mt-4">';
-                buttonRowHtml += '            <div class="col-md-10">';
-                buttonRowHtml += '                <button type="button" class="buy_frequent_again_btn border-0 w-100 p-2" onclick="similar_product_add_to_cart(\'' + productData.id + '\', \'' + productData.options[i].option_id + '\')">Add to Cart</button>';
-                buttonRowHtml += '            </div>';
-                buttonRowHtml += '            <div class="col-md-10 mt-4 border-div d-flex align-items-center align-self-center"></div>';
-                buttonRowHtml += '        </div>';
+                if (productData.options[i].stockAvailable > 0) {
+                    buttonRowHtml += '            <div class="col-md-10">';
+                    buttonRowHtml += '                <button type="button" class="buy_frequent_again_btn border-0 w-100 p-2" onclick="similar_product_add_to_cart(\'' + productData.id + '\', \'' + productData.options[i].option_id + '\')">Add to Cart</button>';
+                    buttonRowHtml += '            </div>';
+                    buttonRowHtml += '            <div class="col-md-10 mt-4 border-div d-flex align-items-center align-self-center"></div>';
+                    buttonRowHtml += '        </div>';
+                } else {
+                    if (auth_user === '') {
+                        buttonRowHtml += '            <div class="col-md-10">';
+                        buttonRowHtml += '                <button type="button" id="notify_popup_modal" onclick="show_notify_popup_modal_similar(\'' + productData.id + '\', \'' + productData.code + '\')" class="w-100 ml-0 bg-primary h-auto product-detail-button-cards notify_stock_btn_class text-uppercase notify_popup_modal_btn rounded><a class="text-white">Notify</a></button>';
+                        buttonRowHtml += '            </div>';
+                        buttonRowHtml += '            <div class="col-md-10 mt-4 border-div d-flex align-items-center align-self-center"></div>';
+                        buttonRowHtml += '        </div>';
+                    } else {
+                        buttonRowHtml += '            <div class="col-md-10">';
+                        buttonRowHtml += '                <button type="button" id="notify_popup_modal" data-product-id= '+productData.id+' onclick="notify_user_about_product_stock_similar(\'' + productData.id + '\', \'' + productData.code + '\')" class="w-100 ml-0 bg-primary h-auto product-detail-button-cards notify_stock_btn_class text-uppercase notify_popup_modal_btn rounded d-flex align-items-center justify-content-center"><a class="text-white">Notify</a><div class="spinner-border text-white custom_stock_spinner stock_spinner_'+productData.id+' ml-1 d-none" role="status"><span class="sr-only"></span></div></button>';
+                        buttonRowHtml += '            </div>';
+                        buttonRowHtml += '            <div class="col-md-10 mt-4 border-div d-flex align-items-center align-self-center"></div>';
+                        buttonRowHtml += '        </div>';
+                    }
+                }
+                
             }
              return buttonRowHtml;
         }
