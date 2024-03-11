@@ -58,25 +58,32 @@ class OrderController extends Controller
         $shipping_carrier_code = null;
         $actual_shipping_price = 0;
         $admin_area_for_shipping = AdminSetting::where('option_name', 'admin_area_for_shipping')->first();
-        if (!empty($admin_area_for_shipping) && strtolower($admin_area_for_shipping->option_value) == 'yes') {
-            if (!empty($request->product_weight) && $request->product_weight > 150) {
-                $actual_shipping_price = $request->shipment_cost_single;
-                $shipping_service_code = $request->shipping_service_code;
-                $shipping_carrier_code = $request->shipping_carrier_code;
-            } else {
-                if (empty($request->shipping_multi_price)) {
-                    return back()->with('error', 'Shipping price is required. Please select shipping method.');
-                } else {
-                    $actual_shipping_price = $request->shipping_multi_price;
+        if (!empty($request->charge_shipment_to_customer) && $request->charge_shipment_to_customer == 1) {
+            if (!empty($admin_area_for_shipping) && strtolower($admin_area_for_shipping->option_value) == 'yes') {
+                if (!empty($request->product_weight) && $request->product_weight > 150) {
+                    $actual_shipping_price = $request->shipment_cost_single;
                     $shipping_service_code = $request->shipping_service_code;
                     $shipping_carrier_code = $request->shipping_carrier_code;
+                } else {
+                    if (empty($request->shipping_multi_price)) {
+                        return back()->with('error', 'Shipping price is required. Please select shipping method.');
+                    } else {
+                        $actual_shipping_price = $request->shipping_multi_price;
+                        $shipping_service_code = $request->shipping_service_code;
+                        $shipping_carrier_code = $request->shipping_carrier_code;
+                    }
                 }
+            } else {
+                $actual_shipping_price = $request->shipment_price;
+                $shipping_service_code = $request->shipping_service_code;
+                $shipping_carrier_code = $request->shipping_carrier_code;
             }
-        } else {
+        } else{
             $actual_shipping_price = $request->shipment_price;
             $shipping_service_code = $request->shipping_service_code;
             $shipping_carrier_code = $request->shipping_carrier_code;
         }
+        
         $address_1_shipping = $request->address_1_shipping;
         $state_shipping = $request->state_shipping;
         $zip_code_shipping = $request->zip_code_shipping;
@@ -1282,11 +1289,35 @@ class OrderController extends Controller
         $order = ApiOrder::where('id', $order_id)->first();
         $previous_order_status = OrderStatus::where('id', $order->order_status_id)->first();
         $current_order_status = OrderStatus::where('id', $order_status_id)->first();
-        $order->update([
-            'order_status_id' => $order_status_id,
-            'payment_status' => $payment_status,
-            'isApproved' => $current_order_status->status == 'Cancelled' ? 2 : $order->isApproved
-        ]);
+        if ($order->is_stripe === 1) {
+            $order->update([
+                'order_status_id' => $order_status_id,
+                'payment_status' => $order->payment_status,
+                'isApproved' => $current_order_status->status == 'Cancelled' ? 2 : $order->isApproved
+            ]);
+
+            if ($order->isApproved == 2 && $order->payment_status == 'paid') {
+                $order->update([
+                    'payment_status' => 'unpaid'
+                ]);
+            } 
+            elseif ($order->isApproved == 2 && $order->payment_status == 'unpaid') {
+                $order->update([
+                    'payment_status' => 'unpaid'
+                ]);
+            } 
+            else {
+                $order->update([
+                    'payment_status' => $payment_status
+                ]);
+            }
+        } else {
+            $order->update([
+                'order_status_id' => $order_status_id,
+                'isApproved' => $current_order_status->status == 'Cancelled' ? 2 : $order->isApproved
+            ]);
+        }
+        
 
 
         $update_order_status_comment = new OrderComment;
@@ -1333,6 +1364,7 @@ class OrderController extends Controller
                 'postalState' => $customer->contact->postalPostCode,
                 'postalPostCode' => $customer->contact->postalPostCode
             ],
+            'payment_terms' => !empty($customer->contact->payment_terms) ? $customer->contact->payment_terms : '30 Days from Invoice',
             'best_product' => $best_products,
             'user_email' =>   $customer->contact->email,
             'currentOrder' => $currentOrder,
@@ -1377,9 +1409,12 @@ class OrderController extends Controller
                 MailHelper::sendMailNotification('emails.admin-order-received', $data);
             }
         }
-        $data['subject'] = 'Your Indoorsun Hydro order' .'#'.$currentOrder->id. ' ' .'status has been updated';
-        $data['email'] = $email;
-        MailHelper::sendMailNotification('emails.admin-order-received', $data);
+
+        if (!empty($email)) {
+            $data['subject'] = 'Your Indoorsun Hydro order' .'#'.$currentOrder->id. ' ' .'status has been updated';
+            $data['email'] = $email;
+            MailHelper::sendMailNotification('emails.admin-order-received', $data);
+        }
 
 
         $email_sent_to_users = [];

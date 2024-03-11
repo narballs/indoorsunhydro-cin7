@@ -651,5 +651,9 @@
             // Prevent the default action of the Enter key
             event.preventDefault();
         }
+        if ($('.notify_popup_modal_similar_portion').hasClass('show') && event.keyCode === 13) {
+            // Prevent the default action of the Enter key
+            event.preventDefault();
+        }
     });
 </script>
