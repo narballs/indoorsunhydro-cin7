@@ -1357,6 +1357,7 @@ class OrderController extends Controller
                 'postalState' => $customer->contact->postalPostCode,
                 'postalPostCode' => $customer->contact->postalPostCode
             ],
+            'payment_terms' => !empty($customer->contact->payment_terms) ? $customer->contact->payment_terms : '30 Days from Invoice',
             'best_product' => $best_products,
             'user_email' =>   $customer->contact->email,
             'currentOrder' => $currentOrder,
@@ -1401,9 +1402,12 @@ class OrderController extends Controller
                 MailHelper::sendMailNotification('emails.admin-order-received', $data);
             }
         }
-        $data['subject'] = 'Your Indoorsun Hydro order' .'#'.$currentOrder->id. ' ' .'status has been updated';
-        $data['email'] = $email;
-        MailHelper::sendMailNotification('emails.admin-order-received', $data);
+
+        if (!empty($email)) {
+            $data['subject'] = 'Your Indoorsun Hydro order' .'#'.$currentOrder->id. ' ' .'status has been updated';
+            $data['email'] = $email;
+            MailHelper::sendMailNotification('emails.admin-order-received', $data);
+        }
 
 
         $email_sent_to_users = [];
