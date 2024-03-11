@@ -978,6 +978,124 @@
 {{--  notify user pop up modal end --}}
 
 @include('partials.similar_products_slider')
+<div class="modal fade notify_popup_modal_similar_portion" id="notify_user_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Notify User About Product Stock Portion</h5>
+            <button type="button" class="close" onclick="close_notify_user_modal_similar()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="">Email <span class="text-danger">*</span></label>
+                        <input type="hidden" name="sku" id="sku_value" class="similar_productSku_value" value="">
+                        <input type="hidden" name="product_id" id="product_id_value" class="similar_productId_value" value="">
+                        <div class="col-md-12">
+                            <input type="text" name="notify_user_email" id="notify_user_email" class="form-control similar_notifyEmail_sidebar" value="" placeholder="Enter your email">
+                            <div class="text-danger email_required_alert_similar"></div>
+                        </div>
+    
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <div class="spinner-border text-primary stock_spinner_modal_similar d-none" role="status">
+                <span class="sr-only"></span>
+            </div>
+            <button type="button" class="btn btn-secondary" onclick="notify_user_about_product_stock_similar_portion ($('.similar_productId_value').val() , $('.similar_productSku_value').val())">Submit</button>
+            <!-- You can add additional buttons here if needed -->
+        </div>
+        </div>
+    </div>
+</div>
+{{--  notify user pop up modal end --}}
+<script>
+    // stock notification for similar products
+    function show_notify_popup_modal_similar_portion (id , sku_value) {
+        $('.notify_popup_modal_similar_portion').modal('show');
+        $('.similar_productId_value').val(id);
+        $('.similar_productSku_value').val(sku_value);
+    } 
+    function close_notify_user_modal_similar () {
+        $('.notify_popup_modal_similar_portion').modal('hide');
+        $('.notify_stock_btn_class').each(function() {
+            $(this).attr('disabled', false);
+        });
+    }
+    
+    function  notify_user_about_product_stock_similar_portion  (id , sku_value) {
+        $('.notify_stock_btn_class').each(function() {
+            var p_id = $(this).attr('data-product-id');
+            if (p_id != id) {
+                $(this).attr('disabled', true);
+            }
+        });
+        var email = $('.similar_notifyEmail_sidebar').val();
+        var sku = sku_value;
+        var product_id = id;
+        $('.stock_spinner_modal_similar').removeClass('d-none');
+        $('.stock_spinner_'+product_id).removeClass('d-none');
+        if (email != '') {
+            $('.email_required_alert_similar').html('');
+        }
+        if (email == '') {
+            $('.email_required_alert_similar').html('Email is Required');
+            $('.stock_spinner_modal_similar').addClass('d-none');
+            $('.stock_spinner_'+product_id).addClass('d-none');
+            return false;
+        }
+        else {
+            $.ajax({
+                url: "{{ url('product-stock/notification') }}",
+                method: 'post',
+                data: {
+                "_token": "{{ csrf_token() }}",
+                    email : email,
+                    sku : sku,
+                    product_id : product_id
+                },
+                success: function(response){
+
+                    if (response.status === true) {
+                        $('.stock_spinner_modal_similar').addClass('d-none');
+                        $('.stock_spinner_'+product_id).addClass('d-none');
+                        $('.notify_user_div_detail').removeClass('d-none');
+                        close_notify_user_modal_similar();
+                        $('.notify_text_detail').html(response.message);
+                    } else {
+                        $('.stock_spinner_modal_similar').addClass('d-none');
+                        $('.stock_spinner_'+product_id).addClass('d-none');
+                        $('.notify_user_div_detail').removeClass('d-none');
+                        $('.notify_text_detail').html('Something went wrong!');
+                    }
+                },
+                error: function(response) {
+                    var error_message = response.responseJSON;
+                    $('.stock_spinner_modal_similar').addClass('d-none');
+                    $('.stock_spinner_'+product_id).addClass('d-none');
+                    $('.notify_user_div').addClass('d-none');
+                    var error_text  = error_message.errors.email[0];
+                    $('.email_required_alert').html(error_text)
+                },
+                complete: function() {
+                    // Re-enable all buttons with class 'notify_stock_btn_class'
+                    $('.notify_stock_btn_class').prop('disabled', false);
+                }
+            });
+        }
+    }
+    
+    function hide_notify_user_div() {
+        $('.notify_text_detail').html('');
+        $('.notify_user_div_detail').addClass('d-none');
+    }
+    // end
+</script>
 @include('partials.product-footer')
 @include('partials.footer')
 <style>
@@ -1371,6 +1489,7 @@
         var p_id= jQuery('#p_id').val();
         var option_id=jQuery('#option_id').val();
         var slug= jQuery('#product_slug').val();
+        var auth_user = $('.notifyEmail').val() === '' ? null : $('.notifyEmail').val();    
         loadSimilarProducts(1);
         
         function loadSimilarProducts(page) {
@@ -1381,6 +1500,7 @@
                 data: { page: page },
                 dataType: 'json',
                 success: function(response) {
+                    
                     if (response.data.length > 0) {
                         var html = buildSimilarProductsHtml(response);
                         $('#products-container').html(html);
@@ -1486,7 +1606,6 @@
         }
 
         function buildButtonRow(productData) {
-            var auth_user = $('#auth_user_email').val();
             for (var i = 0; i < productData.options.length; i++) {
                 var buttonRowHtml = '        <div class="row justify-content-center mt-4">';
                 if (productData.options[i].stockAvailable > 0) {
@@ -1496,15 +1615,15 @@
                     buttonRowHtml += '            <div class="col-md-10 mt-4 border-div d-flex align-items-center align-self-center"></div>';
                     buttonRowHtml += '        </div>';
                 } else {
-                    if (auth_user === '') {
+                    if (auth_user === null) {
                         buttonRowHtml += '            <div class="col-md-10">';
-                        buttonRowHtml += '                <button type="button" id="notify_popup_modal" onclick="show_notify_popup_modal_similar(\'' + productData.id + '\', \'' + productData.code + '\')" class="w-100 ml-0 bg-primary h-auto product-detail-button-cards notify_stock_btn_class text-uppercase notify_popup_modal_btn rounded><a class="text-white">Notify</a></button>';
+                        buttonRowHtml += '                <button type="button" id="notify_popup_modal" onclick="show_notify_popup_modal_similar_portion(\'' + productData.id + '\', \'' + productData.code + '\')" class="w-100 ml-0 bg-primary h-auto product-detail-button-cards notify_stock_btn_class text-uppercase notify_popup_modal_btn rounded><a class="text-white">Notify</a></button>';
                         buttonRowHtml += '            </div>';
                         buttonRowHtml += '            <div class="col-md-10 mt-4 border-div d-flex align-items-center align-self-center"></div>';
                         buttonRowHtml += '        </div>';
                     } else {
                         buttonRowHtml += '            <div class="col-md-10">';
-                        buttonRowHtml += '                <button type="button" id="notify_popup_modal" data-product-id= '+productData.id+' onclick="notify_user_about_product_stock_similar(\'' + productData.id + '\', \'' + productData.code + '\')" class="w-100 ml-0 bg-primary h-auto product-detail-button-cards notify_stock_btn_class text-uppercase notify_popup_modal_btn rounded d-flex align-items-center justify-content-center"><a class="text-white">Notify</a><div class="spinner-border text-white custom_stock_spinner stock_spinner_'+productData.id+' ml-1 d-none" role="status"><span class="sr-only"></span></div></button>';
+                        buttonRowHtml += '                <button type="button" id="notify_popup_modal" data-product-id= '+productData.id+' onclick="notify_user_about_product_stock_similar_portion(\'' + productData.id + '\', \'' + productData.code + '\')" class="w-100 ml-0 bg-primary h-auto product-detail-button-cards notify_stock_btn_class text-uppercase notify_popup_modal_btn rounded d-flex align-items-center justify-content-center"><a class="text-white">Notify</a><div class="spinner-border text-white custom_stock_spinner stock_spinner_'+productData.id+' ml-1 d-none" role="status"><span class="sr-only"></span></div></button>';
                         buttonRowHtml += '            </div>';
                         buttonRowHtml += '            <div class="col-md-10 mt-4 border-div d-flex align-items-center align-self-center"></div>';
                         buttonRowHtml += '        </div>';
