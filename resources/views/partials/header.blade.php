@@ -248,4 +248,5 @@
 @if (auth()->user())
     <input type="hidden" name="notify_user_email_input" class="notifyEmail" id="auth_user_email" value="{{auth()->user()->email}}">
     <input type="hidden" name="notify_user_email_input" class="similar_notifyEmail" id="auth_user_email" value="{{auth()->user()->email}}">
+    <input type="hidden" name="notify_user_email_input" class="similar_notifyEmail_sidebar" id="auth_user_email" value="{{auth()->user()->email}}">
 @endif
