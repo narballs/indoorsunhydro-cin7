@@ -1046,6 +1046,9 @@
         height: 80px;
         width: 80px;
     }
+    .notify_stock_btn_class {
+        border-radius: 6px;
+    }
 </style>
 <script>
     jQuery(document).ready(function(){
@@ -1470,13 +1473,31 @@
         }
 
         function buildButtonRow(productData) {
+            var auth_user = $('#auth_user_email').val();
             for (var i = 0; i < productData.options.length; i++) {
                 var buttonRowHtml = '        <div class="row justify-content-center mt-4">';
-                buttonRowHtml += '            <div class="col-md-10">';
-                buttonRowHtml += '                <button type="button" class="buy_frequent_again_btn border-0 w-100 p-2" onclick="similar_product_add_to_cart(\'' + productData.id + '\', \'' + productData.options[i].option_id + '\')">Add to Cart</button>';
-                buttonRowHtml += '            </div>';
-                buttonRowHtml += '            <div class="col-md-10 mt-4 border-div d-flex align-items-center align-self-center"></div>';
-                buttonRowHtml += '        </div>';
+                if (productData.options[i].stockAvailable > 0) {
+                    buttonRowHtml += '            <div class="col-md-10">';
+                    buttonRowHtml += '                <button type="button" class="buy_frequent_again_btn border-0 w-100 p-2" onclick="similar_product_add_to_cart(\'' + productData.id + '\', \'' + productData.options[i].option_id + '\')">Add to Cart</button>';
+                    buttonRowHtml += '            </div>';
+                    buttonRowHtml += '            <div class="col-md-10 mt-4 border-div d-flex align-items-center align-self-center"></div>';
+                    buttonRowHtml += '        </div>';
+                } else {
+                    if (auth_user === '') {
+                        buttonRowHtml += '            <div class="col-md-10">';
+                        buttonRowHtml += '                <button type="button" id="notify_popup_modal" onclick="show_notify_popup_modal_similar(\'' + productData.id + '\', \'' + productData.code + '\')" class="w-100 ml-0 bg-primary h-auto product-detail-button-cards notify_stock_btn_class text-uppercase notify_popup_modal_btn rounded><a class="text-white">Notify</a></button>';
+                        buttonRowHtml += '            </div>';
+                        buttonRowHtml += '            <div class="col-md-10 mt-4 border-div d-flex align-items-center align-self-center"></div>';
+                        buttonRowHtml += '        </div>';
+                    } else {
+                        buttonRowHtml += '            <div class="col-md-10">';
+                        buttonRowHtml += '                <button type="button" id="notify_popup_modal" data-product-id= '+productData.id+' onclick="notify_user_about_product_stock_similar(\'' + productData.id + '\', \'' + productData.code + '\')" class="w-100 ml-0 bg-primary h-auto product-detail-button-cards notify_stock_btn_class text-uppercase notify_popup_modal_btn rounded d-flex align-items-center justify-content-center"><a class="text-white">Notify</a><div class="spinner-border text-white custom_stock_spinner stock_spinner_'+productData.id+' ml-1 d-none" role="status"><span class="sr-only"></span></div></button>';
+                        buttonRowHtml += '            </div>';
+                        buttonRowHtml += '            <div class="col-md-10 mt-4 border-div d-flex align-items-center align-self-center"></div>';
+                        buttonRowHtml += '        </div>';
+                    }
+                }
+                
             }
              return buttonRowHtml;
         }
