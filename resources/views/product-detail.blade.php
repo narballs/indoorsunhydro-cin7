@@ -1447,15 +1447,28 @@
 
         function buildDataColumn(productData) {
             var column = $('#get_column').val();
+            var stock_label = '';  
+            var text_class = '';  
             retail_price = 0;
             for (var i = 0; i < productData.options.length; i++) {
+                if (productData.options[i].stockAvailable > 0) {
+                    stock_label = 'In Stock';
+                    text_class = 'text-success';
+                } else {
+                    stock_label = 'Out of Stock';
+                    text_class = 'text-danger';
+                }
                 retail_price = productData.options[i].default_price[column]
+
                 var dataHtml = '            <div class="col-md-8 data-div data-div-account">';
                 dataHtml += '                <div class="row">';
                 dataHtml += '                    <div class="col-md-10">';
                 dataHtml += '                        <p class="product_name mb-1">';
                 dataHtml += '                            <a class="product_name" id="prd_name_' + productData.id + '" href="' + '/product-detail/' + productData.id + '/' + productData.options[i].option_id +'/'+ productData.code +'">' + productData.name + '</a>';
                 dataHtml += '                        </p>';
+                dataHtml += '                    </div>';
+                dataHtml += '                    <div class="col-md-10">';
+                dataHtml += '                        <p class="'+text_class+' mb-0">'+stock_label+'</p>';
                 dataHtml += '                    </div>';
                 dataHtml += '                    <div class="col-md-10">';
                 dataHtml += '                        <p class="product_price mb-1">$' + retail_price + '</p>';
