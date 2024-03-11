@@ -221,6 +221,7 @@ class CheckoutController extends Controller
         $states = UsState::all();
         $cart_items = UserHelper::switch_price_tier($request);
         $cart_total = 0;
+        $charge_shipment_to_customer = 0;
         if (!empty($cart_items)) {
             foreach ($cart_items as $cart_item) {
                 $row_price = $cart_item['quantity'] * $cart_item['price'];
@@ -291,6 +292,7 @@ class CheckoutController extends Controller
             $charge_shipment_fee = false;
             if (!empty($user_address) && $user_address->charge_shipping == 1) {
                 $charge_shipment_fee = true;
+                $charge_shipment_to_customer = 1;
             }
 
             $tax_class = TaxClass::where('name', $user_address->tax_class)->first();
@@ -472,7 +474,7 @@ class CheckoutController extends Controller
                 'products_weight',
                 'shipping_quotes' , 
                 'admin_selected_shipping_quote','surcharge_settings',
-                'shipping_carrier_code' , 'shipping_service_code', 'shipstation_shipment_prices'
+                'shipping_carrier_code' , 'shipping_service_code', 'shipstation_shipment_prices' , 'charge_shipment_to_customer'
                 
             ));
         } else {

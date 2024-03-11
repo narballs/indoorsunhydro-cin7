@@ -501,11 +501,13 @@ $cart_price = 0;
         ?>
     @endforeach
 @endif
-<?php $zip_code_is_valid = true; ?>
+<?php $zip_code_is_valid = true;
+?>
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-md-10">
             <form action="{{ url('order') }}" method="POST" id="order_form" name="order_form" class="">
+                <input type="hidden" name="charge_shipment_to_customer" id="charge_shipment_to_customer" value="{{$charge_shipment_to_customer}}">
                 <div class="row main_row_checkout justify-content-between">
                     <div class="col-md-12 col-lg-12 col-xl-5 col-12 order-xl-2 custom-width">
                         <div class="row mt-2 mb-2">
