@@ -571,7 +571,7 @@ class CheckoutController extends Controller
         $payload = $request->getContent();
         $stripeSignature = $request->header('Stripe-Signature');
         $webhookSecret = config('services.stripe.webhook_secret');
-        
+        $charge_id = null;
         try {
             $event = Webhook::constructEvent($payload, $stripeSignature, $webhookSecret);
         } catch (\Stripe\Exception\SignatureVerificationException $e) {
@@ -586,6 +586,8 @@ class CheckoutController extends Controller
                     $event->id,
                     []
                 );
+                $charge = $event->data->object;
+                $chargeId = $charge->id;
                 $dateCreated = Carbon::now();
                 $createdDate = Carbon::now();
                 $session_contact_id = Session::get('contact_id');
@@ -613,6 +615,7 @@ class CheckoutController extends Controller
                 if(!empty($currentOrder)) {
                     if ($payment_succeeded->data->object->paid == true) {
                         $currentOrder->payment_status = 'paid';
+                        $currentOrder->charge_id = $chargeId;
                         $currentOrder->save();
     
                         $order_comment = new OrderComment;
@@ -624,6 +627,7 @@ class CheckoutController extends Controller
     
                     } else {
                         $currentOrder->payment_status = 'unpaid';
+                        $currentOrder->charge_id = $chargeId;
                         $currentOrder->save();
     
     
@@ -746,6 +750,7 @@ class CheckoutController extends Controller
                 if (!empty($currentOrder)) {
                     if ($payment_failed->data->object->paid != true) {
                         $currentOrder->payment_status =  'unpaid';
+                        $currentOrder->charge_id = null;
                         $currentOrder->save();
                     }
                     

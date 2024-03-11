@@ -1282,11 +1282,35 @@ class OrderController extends Controller
         $order = ApiOrder::where('id', $order_id)->first();
         $previous_order_status = OrderStatus::where('id', $order->order_status_id)->first();
         $current_order_status = OrderStatus::where('id', $order_status_id)->first();
-        $order->update([
-            'order_status_id' => $order_status_id,
-            'payment_status' => $payment_status,
-            'isApproved' => $current_order_status->status == 'Cancelled' ? 2 : $order->isApproved
-        ]);
+        if ($order->is_stripe === 1) {
+            $order->update([
+                'order_status_id' => $order_status_id,
+                'payment_status' => $order->payment_status,
+                'isApproved' => $current_order_status->status == 'Cancelled' ? 2 : $order->isApproved
+            ]);
+
+            if ($order->isApproved == 2 && $order->payment_status == 'paid') {
+                $order->update([
+                    'payment_status' => 'unpaid'
+                ]);
+            } 
+            elseif ($order->isApproved == 2 && $order->payment_status == 'unpaid') {
+                $order->update([
+                    'payment_status' => 'unpaid'
+                ]);
+            } 
+            else {
+                $order->update([
+                    'payment_status' => $payment_status
+                ]);
+            }
+        } else {
+            $order->update([
+                'order_status_id' => $order_status_id,
+                'isApproved' => $current_order_status->status == 'Cancelled' ? 2 : $order->isApproved
+            ]);
+        }
+        
 
 
         $update_order_status_comment = new OrderComment;
