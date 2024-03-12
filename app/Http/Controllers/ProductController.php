@@ -534,6 +534,8 @@ class ProductController extends Controller
         $stock_with_branches = null;
         $branch_locations = null;
 
+
+        $customer_demand_inventory_number = !empty($request->latest_inventory_number) ? intval($request->latest_inventory_number) : 0;
         // Retrieve the record for the given option_id
         $product_option = ProductOption::where('option_id', $option_id)->first();
 
@@ -558,31 +560,50 @@ class ProductController extends Controller
             $inventory_update_time_flag = true;
         }
         // Fetch stock from API
-
-        if ($inventory_update_time_flag == true) {
-            $stock_updated_helper = UtilHelper::updateProductStock($product, $option_id);
-            if ($stock_updated_helper != null) {
-                $stock_updated = $stock_updated_helper['stock_updated'];
-                $stock_with_branches = $stock_updated_helper['branch_with_stocks'];
-                if (!empty($stock_with_branches)) {
-                    $product_stock = ProductStock::where('product_id' ,  $product->product_id)
-                        ->where('option_id' , $option_id)
-                        ->get();
-                    if (count($product_stock) > 0) {
-                        foreach ($stock_with_branches as $branch_stock) {
-                            $stock_found = false;
-                        
-                            foreach ($product_stock as $stock) {
-                                if ($branch_stock['branch_id'] == $stock->branch_id) {
-                                    $stock->available_stock = $branch_stock['available'];
-                                    $stock->save();
-                                    $stock_found = true;
-                                    break; // Exit the inner loop since we found a matching stock
+        if ($customer_demand_inventory_number === 1) {
+            if ($inventory_update_time_flag == true) {
+                $stock_updated_helper = UtilHelper::updateProductStock($product, $option_id);
+                if ($stock_updated_helper != null) {
+                    $stock_updated = $stock_updated_helper['stock_updated'];
+                    $stock_with_branches = $stock_updated_helper['branch_with_stocks'];
+                    if (!empty($stock_with_branches)) {
+                        $product_stock = ProductStock::where('product_id' ,  $product->product_id)
+                            ->where('option_id' , $option_id)
+                            ->get();
+                        if (count($product_stock) > 0) {
+                            foreach ($stock_with_branches as $branch_stock) {
+                                $stock_found = false;
+                            
+                                foreach ($product_stock as $stock) {
+                                    if ($branch_stock['branch_id'] == $stock->branch_id) {
+                                        $stock->available_stock = $branch_stock['available'];
+                                        $stock->save();
+                                        $stock_found = true;
+                                        break; // Exit the inner loop since we found a matching stock
+                                    }
+                                }
+                            
+                                if (!$stock_found) {
+                                    // Create a new product stock if no matching stock found for the current branch
+                                    ProductStock::create([
+                                        'available_stock' => $branch_stock['available'],
+                                        'branch_id' => $branch_stock['branch_id'],
+                                        'product_id' => $product->product_id,
+                                        'branch_name' => $branch_stock['branch_name'],
+                                        'option_id' => $option_id
+                                    ]);
                                 }
                             }
-                        
-                            if (!$stock_found) {
-                                // Create a new product stock if no matching stock found for the current branch
+                            
+                            // Delete any product stocks that are not in $stock_with_branches
+                            $product_stock_ids = collect($stock_with_branches)->pluck('branch_id');
+                            foreach ($product_stock as $stock) {
+                                if (!$product_stock_ids->contains($stock->branch_id)) {
+                                    $stock->delete();
+                                }
+                            }
+                        } else {
+                            foreach ($stock_with_branches as $branch_stock) {
                                 ProductStock::create([
                                     'available_stock' => $branch_stock['available'],
                                     'branch_id' => $branch_stock['branch_id'],
@@ -593,30 +614,28 @@ class ProductController extends Controller
                             }
                         }
                         
-                        // Delete any product stocks that are not in $stock_with_branches
-                        $product_stock_ids = collect($stock_with_branches)->pluck('branch_id');
-                        foreach ($product_stock as $stock) {
-                            if (!$product_stock_ids->contains($stock->branch_id)) {
-                                $stock->delete();
-                            }
-                        }
-                    } else {
-                        foreach ($stock_with_branches as $branch_stock) {
-                            ProductStock::create([
-                                'available_stock' => $branch_stock['available'],
-                                'branch_id' => $branch_stock['branch_id'],
-                                'product_id' => $product->product_id,
-                                'branch_name' => $branch_stock['branch_name'],
-                                'option_id' => $option_id
-                            ]);
-                        }
                     }
-                    
+                } else {
+                    $stock_updated = false;
                 }
             } else {
+                $get_stock_with_branches = ProductStock::where('product_id' ,  $product->product_id)
+                    ->where('option_id' , $option_id)
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+                if (count($get_stock_with_branches) > 0) {
+                    foreach ($get_stock_with_branches as $branch_stock) {
+                        $branch_locations[] = [
+                            'branch_id' => $branch_stock->branch_id,
+                            'branch_name' => $branch_stock->branch_name,
+                            'available' => $branch_stock->available_stock
+                        ];
+                    }
+                }
                 $stock_updated = false;
             }
-        } else {
+        }
+        else {
             $get_stock_with_branches = ProductStock::where('product_id' ,  $product->product_id)
                 ->where('option_id' , $option_id)
                 ->orderBy('created_at', 'desc')
@@ -699,14 +718,18 @@ class ProductController extends Controller
         // else {
         //     $total_stock = $productOption->stockAvailable;
         // }
-        if ($inventory_update_time_flag == false) {
-            $locations = $branch_locations;
-        }
-        else {
-            if (!empty($stock_updated_helper['branch_with_stocks'])) {
-                $locations = $stock_updated_helper['branch_with_stocks'];
+        if ($customer_demand_inventory_number == 1) {
+            if ($inventory_update_time_flag == false) {
+                $locations = $branch_locations;
             }
-        }
+            else {
+                if (!empty($stock_updated_helper['branch_with_stocks'])) {
+                    $locations = $stock_updated_helper['branch_with_stocks'];
+                }
+            }
+        } else {
+            $locations = $branch_locations;
+        } 
         
         $notify_user_about_product_stock = AdminSetting::where('option_name', 'notify_user_about_product_stock')->first();
 
@@ -721,7 +744,7 @@ class ProductController extends Controller
             'stock_updated',
             'product_stocks',
             'notify_user_about_product_stock',
-            'similar_products','total_stock','best_selling_products','locations', 'inventory_update_time_flag'
+            'similar_products','total_stock','best_selling_products','locations', 'inventory_update_time_flag' , 'customer_demand_inventory_number'
         ));
 
         
