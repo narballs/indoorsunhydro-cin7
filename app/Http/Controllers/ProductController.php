@@ -539,28 +539,29 @@ class ProductController extends Controller
         // Retrieve the record for the given option_id
         $product_option = ProductOption::where('option_id', $option_id)->first();
 
-        // Check if a record exists
-        if (!empty($product_option)) {
-            $last_update_time = $product_option->inventory_update_time;
-
-            if ($last_update_time !== null) {
-                $get_time_difference = now()->diffInMinutes($last_update_time);
-                $date_difference = $get_time_difference;
-                if ($date_difference >= $threshold_minutes) {
-                    $inventory_update_time_flag = true;
-                    $product_option->update(['inventory_update_time' => now()]);
-                } else {
-                    $inventory_update_time_flag = false;
-                }
-            } else {
-                $product_option->update(['inventory_update_time' => now()]);
-                $inventory_update_time_flag = true;
-            }
-        } else {
-            $inventory_update_time_flag = true;
-        }
+        
         // Fetch stock from API
         if ($customer_demand_inventory_number === 1) {
+            // Check if a record exists
+            if (!empty($product_option)) {
+                $last_update_time = $product_option->inventory_update_time;
+
+                if ($last_update_time !== null) {
+                    $get_time_difference = now()->diffInMinutes($last_update_time);
+                    $date_difference = $get_time_difference;
+                    if ($date_difference >= $threshold_minutes) {
+                        $inventory_update_time_flag = true;
+                        $product_option->update(['inventory_update_time' => now()]);
+                    } else {
+                        $inventory_update_time_flag = false;
+                    }
+                } else {
+                    $product_option->update(['inventory_update_time' => now()]);
+                    $inventory_update_time_flag = true;
+                }
+            } else {
+                $inventory_update_time_flag = true;
+            }
             if ($inventory_update_time_flag == true) {
                 $stock_updated_helper = UtilHelper::updateProductStock($product, $option_id);
                 if ($stock_updated_helper != null) {

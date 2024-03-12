@@ -384,12 +384,16 @@
                                 @foreach ($locations as $location)
                                     {{ $location['branch_name'] }}: {{ $location['available'] >= 0 ? $location['available'] : 0  }}<br />
                                 @endforeach
+                            @else
+                                Unable to show accurate stock levels.<br />
                             @endif
                         @else
                             @if (!empty($locations))
                                 @foreach ($locations as $location)
                                     {{ $location['branch_name'] }}: {{ $location['available'] >= 0 ? $location['available'] : 0  }}<br />
                                 @endforeach
+                            @else
+                                Unable to show accurate stock levels.<br />
                             @endif
                         @endif
                     @else
@@ -397,6 +401,8 @@
                             @foreach ($locations as $location)
                                 {{ $location['branch_name'] }}: {{ $location['available'] >= 0 ? $location['available'] : 0  }}<br />
                             @endforeach
+                        @else
+                            Unable to show accurate stock levels.<br />
                         @endif
                     @endif
                 </span>
