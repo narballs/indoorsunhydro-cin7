@@ -721,6 +721,8 @@
         $('.button_swap_quantity_'+id).css('display', 'block');
         $('.cart-total-'+id).css('display', 'none');
     }
+
+   
 </script>
 <script>
     jQuery('#brand').select2({
