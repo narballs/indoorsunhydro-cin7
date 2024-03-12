@@ -1335,6 +1335,12 @@ class CheckoutController extends Controller
                 $currentOrder->payment_status = 'refunded';
                 $currentOrder->save();
 
+
+                $order_comment = new OrderComment;
+                $order_comment->order_id = $order_id;
+                $order_comment->comment = 'Order marked as refunded through webhook. (charge.refunded)';
+                $order_comment->save();
+
                 // Log refund information or perform any other necessary actions
                 Log::info('Refund processed for order ID: ' . $order_id . ', Amount: $' . $refundAmount);
             }
