@@ -78,6 +78,7 @@
                                                 </a>
                                             </div>
                                             @endif
+                                           
                                         </div>
                                     </div>
                                     <div class="col-md-12">
@@ -86,6 +87,9 @@
                                                 <span class="text-danger product-detail-price" id="product_price">
                                                     ${{number_format($retail_price, 2)}}
                                                 </span>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <button type="button" class="btn btn-info" onclick="get_latest_inventory_number()">Click here to get latest Inventory numbers</button>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="mt-4 mb-3"> <span class="text-uppercase text-muted brand"></span>                                                
@@ -171,8 +175,23 @@
                                                     </div>
                                                 @endif
                                             </div>
-                                            @if ($inventory_update_time_flag == true)
-                                                @if($stock_updated)
+                                            @if ($customer_demand_inventory_number === 1)
+                                                @if ($inventory_update_time_flag == true)
+                                                    @if($stock_updated)
+                                                        <div class="col-md-12 mx-3">
+                                                            @if (!empty($locations))
+                                                                @foreach ($locations as $location)
+                                                                    <div>
+                                                                        <p class="mb-1"> 
+                                                                            <i class="fa fa-map-marker mr-2"></i>{{$location['branch_name'] . ':'}}
+                                                                            <span class="text-success">{{ $location['available'] >= 0 ? $location['available'] : 0  }}</span>
+                                                                        </p>
+                                                                    </div>
+                                                                @endforeach
+                                                            @endif
+                                                        </div>
+                                                    @endif
+                                                @else
                                                     <div class="col-md-12 mx-3">
                                                         @if (!empty($locations))
                                                             @foreach ($locations as $location)
@@ -356,20 +375,34 @@
                     z-index:9999;
                 ">
                 <span style="width: 800px !important">
-                    @if ($inventory_update_time_flag == true)
-                        @if (!$stock_updated)
-                            Unable to show accurate stock levels.<br />
-                        @endif
-                        @if (!empty($locations))
-                            @foreach ($locations as $location)
-                                {{ $location['branch_name'] }}: {{ $location['available'] >= 0 ? $location['available'] : 0  }}<br />
-                            @endforeach
+                    @if ($customer_demand_inventory_number === 1)
+                        @if ($inventory_update_time_flag == true)
+                            @if (!$stock_updated)
+                                Unable to show accurate stock levels.<br />
+                            @endif
+                            @if (!empty($locations))
+                                @foreach ($locations as $location)
+                                    {{ $location['branch_name'] }}: {{ $location['available'] >= 0 ? $location['available'] : 0  }}<br />
+                                @endforeach
+                            @else
+                                Unable to show accurate stock levels.<br />
+                            @endif
+                        @else
+                            @if (!empty($locations))
+                                @foreach ($locations as $location)
+                                    {{ $location['branch_name'] }}: {{ $location['available'] >= 0 ? $location['available'] : 0  }}<br />
+                                @endforeach
+                            @else
+                                Unable to show accurate stock levels.<br />
+                            @endif
                         @endif
                     @else
                         @if (!empty($locations))
                             @foreach ($locations as $location)
                                 {{ $location['branch_name'] }}: {{ $location['available'] >= 0 ? $location['available'] : 0  }}<br />
                             @endforeach
+                        @else
+                            Unable to show accurate stock levels.<br />
                         @endif
                     @endif
                 </span>
@@ -399,6 +432,11 @@
                             <span class="product-detail-price" id="product_price">
                                 ${{number_format($retail_price,2)}}</span>
                         </div>
+
+                        
+                    </div>
+                    <div class="d-flex w-100">
+                        <button type="button" class="btn btn-info btn-sm p-1 mb-2" onclick="get_latest_inventory_number()">Get latest Inventory numbers</button>
                     </div>
                     <div class="row"> 
                         <span class="text-uppercase text-muted brand"></span>
@@ -436,8 +474,23 @@
                         </div>
                     </div>
                     <div class="row">
-                        @if ($inventory_update_time_flag == true)
-                            @if($stock_updated)
+                        @if ($customer_demand_inventory_number === 1)
+                            @if ($inventory_update_time_flag == true)
+                                @if($stock_updated)
+                                    <div class="col-md-12">
+                                        @if (!empty($locations))
+                                            @foreach ($locations as $location)
+                                                <div>
+                                                    <p class="mb-1 instock-label"> 
+                                                        <i class="fa fa-map-marker mr-2"></i>{{$location['branch_name'] . ':'}}
+                                                        <span class="text-success">{{$location['available'] >= 0 ?  $location['available'] : 0}}</span>
+                                                    </p>
+                                                </div>
+                                            @endforeach
+                                        @endif
+                                    </div>
+                                @endif
+                            @else
                                 <div class="col-md-12">
                                     @if (!empty($locations))
                                         @foreach ($locations as $location)
@@ -1714,6 +1767,12 @@
         function hide_notify_user_div() {
             $('.notify_text_detail').html('');
             $('.notify_user_div_detail').addClass('d-none');
+        }
+
+        function get_latest_inventory_number() {
+            var url = window.location.href;
+            url += '?latest_inventory_number=1'; // You can dynamically set the inventory number here
+            window.location = url;
         }
 
     // });
