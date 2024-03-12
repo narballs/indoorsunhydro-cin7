@@ -9,7 +9,14 @@
 @section('content')
     <!-- sdfkjlsdkfjsdlkfk -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    
     <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-info alert-dismissible success_text_div d-none">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <span class="success_text text-white"></span>
+            </div>
+        </div>
         <div class="col-md-8 d-flex mb-3">
             <div class="col-md-12">
                 <div class="row">
@@ -104,6 +111,7 @@
     </div>
     <div class="bg-success text-white text-center w-50 mb-2" id="fullfill_success"></div>
     <div class="bg-warning text-white text-center w-50 mb-2" id="fullfill_failed"></div>
+    
     <div class="">
         <div class="row">
             <div class="col-md-12">
@@ -1173,12 +1181,17 @@
                     "payment_status": payment_status
                 },
                 success: function(response) {
-                    console.log(response);
                     if (response.success == true) {
                         $('.order-status-spinner').addClass('d-none');
+                        $('.success_text_div').removeClass('d-none');
+                        $('.success_text').text(response.message);
                         cancel_order_changes(order_id);
                         window.location.href="/admin/order-detail/" + order_id;
 
+                    } else {
+                        $('.order-status-spinner').addClass('d-none');
+                        $('.success_text_div').removeClass('d-none');
+                        $('.success_text').text(response.message);
                     }
                 }
             });
