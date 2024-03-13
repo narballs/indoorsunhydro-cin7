@@ -228,13 +228,14 @@
                                                 @if (!empty($order->primaryId) && !empty($order->primary_contact))
                                                     <span title="Secondary Contact" class="created_by_order">
                                                         {{ $order->primary_contact->firstName }}
-                                                        {{ $order->primary_contact->lastName }}</span><br>
+                                                        {{ $order->primary_contact->lastName }}
+                                                    </span><br>
                                                 @elseif (!empty($order->secondaryId) && !empty($order->secondary_contact))
                                                     <span title="Secondary Contact"
                                                         class="created_by_order">{{ $order->secondary_contact->firstName }}
                                                         {{ $order->secondary_contact->lastName }}</span><br>
                                                 @elseif (!empty($order->contact))
-                                                    {{ $order->contact->firstName }} {{ $order->contact->lastName }}
+                                                    <span title="Secondary Contact" class="created_by_order">{{ $order->contact->firstName }} {{ $order->contact->lastName }}</span><br>
                                                 @endif
                                                 <span class="order_submited_email">
                                                     @if (!empty($order->primaryId) && !empty($order->primary_contact))
@@ -244,7 +245,7 @@
                                                         <span
                                                             title="Secondary Contact">{{ $order->secondary_contact->email }}</span>
                                                     @elseif (!empty($order->contact))
-                                                        {{ $order->contact->email }} {{ $order->contact->lastName }}
+                                                        <span title="Secondary Contact">{{ $order->contact->email }}</span>
                                                     @endif
                                                 </span>
                                             </td>

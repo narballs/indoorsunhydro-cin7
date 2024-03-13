@@ -1283,6 +1283,8 @@ class OrderController extends Controller
 
     // uppdate order status manually 
     public function update_order_status_by_admin(Request $request) {
+        $request_status =  true;
+        $message = 'Order status updated and  successfully.';
         $order_id = $request->order_id;
         $payment_status = $request->payment_status;
         $order_status_id = $request->order_status_id;
@@ -1290,6 +1292,29 @@ class OrderController extends Controller
         $previous_order_status = OrderStatus::where('id', $order->order_status_id)->first();
         $current_order_status = OrderStatus::where('id', $order_status_id)->first();
         if ($order->is_stripe === 1) {
+            if (strtolower($current_order_status->status) === 'refunded') {
+                $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
+                try {
+                    $refund = $stripe->refunds->create(['charge' => $order->charge_id]);
+                    if ($refund->status === 'succeeded') {
+                        $request_status = true;
+                        $message = 'Refund request has been successfully created.';
+                        $order->update([
+                            'order_status_id' => $order_status_id,
+                            'isApproved' => $current_order_status->status == 'Refunded' ? 2 : $order->isApproved
+                        ]);
+                    } else {
+                        $request_status = false;
+                        $message = 'Refund failed';
+                        return response()->json(['success' => false , 'message' => $message]);
+                    }
+                } 
+                catch (\Exception $e) {
+                    $request_status = false;
+                    $message = $e->getMessage();
+                    return response()->json(['success' => false , 'message' => $message]);
+                }
+            }
             $order->update([
                 'order_status_id' => $order_status_id,
                 'payment_status' => $order->payment_status,
@@ -1434,7 +1459,7 @@ class OrderController extends Controller
             }
         }
         
-        return response()->json(['success' => true , 'message' => 'Order status updated successfully.']);
+        return response()->json(['success' => $request_status , 'message' => $message]);
     }
 
     public function apply_discount($tax_rate,  $discount_amount, $discount_type, $order_id, $currentOrder, $cart_items, $request , $discount_variation_value , $product_prices , $order_total , $actual_shipping_price) {
