@@ -702,7 +702,39 @@
                   quantity: 1
                },
             success: function(response) {
-            if(response.status == 'success') {
+               if(response.status == 'error') {
+                     var cart_items = response.cart_items;
+                     var cart_total = 0;
+                     var total_cart_quantity = 0;
+
+                     for (var key in cart_items) {
+                        var item = cart_items[key];
+
+                        var product_id = item.prd_id;
+                        var price = parseFloat(item.price);
+                        var quantity = parseFloat(item.quantity);
+
+                        var subtotal = parseFloat(price * quantity);
+                        var cart_total = cart_total + subtotal;
+                        var total_cart_quantity = total_cart_quantity + quantity;
+                        $('#subtotal_' + product_id).html('$'+subtotal);
+                        var product_name = document.getElementById("product_name_"+jQuery('#p_'+id).val()).innerHTML;
+                     }
+                     // jQuery('.cart-total-' + id).html($('#swap_qty_number_' + id).val());
+                     // jQuery('.cart-total-number-' + id).html($('.swap_qty_number_' + id).val());
+                     jQuery('.cart-total-number-' + id).html(response.actual_stock);
+                    jQuery('.swap_qty_number_'+id).val(response.actual_stock);
+                     Swal.fire({
+                        toast: true,
+                        icon: 'error',
+                        title: response.message,
+                        timer: 3000,
+                        showConfirmButton: false,
+                        position: 'top',
+                        timerProgressBar: true
+                     });
+               }
+               if(response.status == 'success') {
                      var cart_items = response.cart_items;
                      var cart_total = 0;
                      var total_cart_quantity = 0;
