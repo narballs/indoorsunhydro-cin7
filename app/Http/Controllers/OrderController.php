@@ -411,7 +411,8 @@ class OrderController extends Controller
                     $currentOrder = ApiOrder::where('id', $order->id)->first();
                     $apiApproval = $currentOrder->apiApproval;
                     $random_string = Str::random(10);
-                    $currentOrder->reference = 'DEV4' . '-QCOM-' .$random_string . '-' .$order_id;
+                    
+                    $currentOrder->reference = 'Stripe-Paid-CC-' .$random_string . '-' .$order_id;
 
                     $currentOrder->save();
                     $currentOrder = ApiOrder::where('id', $order_id)->with(

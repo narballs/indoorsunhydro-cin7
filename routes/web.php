@@ -32,6 +32,7 @@ use App\Http\Controllers\Admin\PagesController;
 use App\Http\Controllers\GoogleContentController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\ProductStockNotificationController;
+use App\Http\Controllers\GetProductDimensionController;
 use App\Models\TaxClass;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -429,4 +430,5 @@ Route::post('admin/send-email-to-specific-admins', [AdminSettingsController::cla
 Route::get('check-existing-email', [CheckoutController::class, 'check_existing_email'])->name('check_existing_email');
 Route::post('authenticate-user', [CheckoutController::class, 'authenticate_user'])->name('authenticate_user');
 Route::post('apply-discount-code', [CheckoutController::class, 'apply_discount_code'])->name('apply_discount_code');
+Route::get('get-product-dimension', [GetProductDimensionController::class, 'get_product_dimension'])->name('get_product_dimension');
 

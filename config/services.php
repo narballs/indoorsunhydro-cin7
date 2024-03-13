@@ -40,6 +40,9 @@ return [
         'shipment_order_url' => env('SHIPMENT_ORDER_URL'),
         'shipment_label_url' => env('SHIPMENT_LABEL_URL'),
     ],
+    'ai' => [
+        'ai_key' => env('OPEN_AI_KEY'),
+    ],
     'cin7' => [
         'get_contact_url' => env('Cin7_GET_CONTACT_URL'),
     ],
