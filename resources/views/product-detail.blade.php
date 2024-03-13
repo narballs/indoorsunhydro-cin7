@@ -1236,18 +1236,48 @@
                 quantity: jQuery('#quantity').val()
                 },
                 success: function(response){
-                if(response.status == 'success'){
+                var cart_total = 0;
+                var total_cart_quantity = 0;
+                
+                if(response.status == 'error'){
                     var cart_items = response.cart_items;
-                    var cart_total = 0;
-                    var total_cart_quantity = 0;
 
                     for (var key in cart_items) {
                         var item = cart_items[key];
-                        var code =parseFloat(item.code)
+                        var code =item.code;
                         var product_id = item.prd_id;
                         var price = parseFloat(item.price);
-                        var quantity = parseFloat(item.quantity);
-                        var subtotal = parseInt(price * quantity);
+                        var quantity = parseInt(item.quantity);
+                        var subtotal = parseFloat(price * quantity);
+                        var cart_total = cart_total + subtotal;
+                        var total_cart_quantity = total_cart_quantity + quantity;
+                        $('#subtotal_' + product_id).html('$'+subtotal);
+                        
+                    }
+                    $src = $('#main-image').attr('src');
+                    var product_name = document.getElementById("product_name").innerHTML;
+                    var product_price = document.getElementById("product_price").innerHTML;
+                    Swal.fire({
+                        toast: true,
+                        icon: 'error',
+                        title: response.message,
+                        timer: 3000,
+                        imageUrl: $src,
+                        showConfirmButton: false,
+                        position: 'top',
+                        timerProgressBar: true
+                    });
+                }
+                if(response.status == 'success'){
+                    var cart_items = response.cart_items;
+
+                    for (var key in cart_items) {
+                        var item = cart_items[key];
+                        var code =item.code;
+                        var product_id = item.prd_id;
+                        var price = parseFloat(item.price);
+                        var quantity = parseInt(item.quantity);
+                        var subtotal = parseFloat(price * quantity);
                         var cart_total = cart_total + subtotal;
                         var total_cart_quantity = total_cart_quantity + quantity;
                         $('#subtotal_' + product_id).html('$'+subtotal);
@@ -1351,6 +1381,37 @@
                 quantity: jQuery('.mobile_qty').val()
                 },
                 success: function(response){
+                if(response.status == 'error'){
+                    var cart_items = response.cart_items;
+                    var cart_total = 0;
+                    var total_cart_quantity = 0;
+
+                    for (var key in cart_items) {
+                        var item = cart_items[key];
+                        var code =parseFloat(item.code)
+                        var product_id = item.prd_id;
+                        var price = parseFloat(item.price);
+                        var quantity = parseFloat(item.quantity);
+                        var subtotal = parseInt(price * quantity);
+                        var cart_total = cart_total + subtotal;
+                        var total_cart_quantity = total_cart_quantity + quantity;
+                        $('#subtotal_' + product_id).html('$'+subtotal);
+                        
+                    }
+                    $src = $('#main-image').attr('src');
+                    var product_name = document.getElementById("product_name").innerHTML;
+                    var product_price = document.getElementById("product_price").innerHTML;
+                    Swal.fire({
+                        toast: true,
+                        icon: 'error',
+                        // title: jQuery('.mobile_qty').val() + ' X ' + product_name + '<div class="text-dark fw-bold fs-5">'+ product_price +'</div>'+ '<br>' + 'added to your cart',
+                        timer: 2000,
+                        text: response.message,
+                        // imageUrl: "{{asset('theme/img/add_to_cart_gif.gif')}}",
+                        showConfirmButton: false,
+                        timerProgressBar: true
+                    });
+                }
                 if(response.status == 'success'){
                     var cart_items = response.cart_items;
                     var cart_total = 0;
@@ -1494,6 +1555,35 @@
                 quantity: 1,
             },
             success: function(response) {
+                if (response.status == 'error') {
+                    var cart_items = response.cart_items;
+                    var cart_total = 0;
+                    var total_cart_quantity = 0;
+
+                    for (var key in cart_items) {
+                        var item = cart_items[key];
+
+                        var product_id = item.prd_id;
+                        var price = parseFloat(item.price);
+                        var quantity = parseFloat(item.quantity);
+
+                        var subtotal = parseFloat(price * quantity);
+                        var cart_total = cart_total + subtotal;
+                        var total_cart_quantity = total_cart_quantity + quantity;
+                        jQuery('#subtotal_' + product_id).html('$' + subtotal);
+                        var product_name = jQuery('#prd_name_' + id).html();
+                    }
+
+                    Swal.fire({
+                        toast: true,
+                        icon: 'error',
+                        title: response.message,
+                        timer: 3000,
+                        showConfirmButton: false,
+                        position: 'top',
+                        timerProgressBar: true
+                    });
+                }
                 if (response.status == 'success') {
                     var cart_items = response.cart_items;
                     var cart_total = 0;
