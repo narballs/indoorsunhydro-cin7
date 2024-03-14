@@ -653,7 +653,7 @@
 						<div class="row ms-1 p-4 me-1 order-confirmation-page-invoice-row " style=" padding-top: 50px !important;">
 							<div class=" col-md-3">
 								<p class="order-confirmation-page-order-number-title">Order Number</p>
-								<p class="order-confirmation-page-order-number-item">
+								<p class="order-confirmation-page-order-number-item getorderID">
 									{{$order->apiOrderItem[0]['order_id']}}
 								</p>
 							</div>
@@ -703,6 +703,7 @@
 								</p>
 							</div>
 							<div class="col-md-3">
+								<input type="hidden" name="getorderTotal" value="{{number_format($order->total_including_tax, 2)}}" class="getorderTotal" id="">
 								<p class="order-confirmation-page-order-number-title">Total</p>
 								<p class="order-confirmation-page-order-number-item">
 									${{number_format($order->total_including_tax, 2)}}
@@ -1204,3 +1205,22 @@
 
 @include('partials.product-footer')
 @include('partials.footer')
+
+<script>
+	$(document).ready(function() {
+		var order_id = parseInt($('.getorderID').html());
+		var currency = 'USD';
+		var orderTotal = $('.getorderTotal').val();
+		var send_to = 'AW-11475808917/uLuQCJO2t40ZEJXli-Aq';
+		console.log(order_id , currency , orderTotal , send_to);
+		if (window.location.pathname.match('/thankyou/')) {
+			gtag('event', 'conversion', {
+				'send_to': 'AW-11475808917/uLuQCJO2t40ZEJXli-Aq',
+				'value':orderTotal,
+				'currency': 'USD',
+				'transaction_id': order_id
+			});
+		}
+
+	});
+</script>
