@@ -1293,7 +1293,7 @@ class ProductController extends Controller
     {
         $quantity = $request->post('items_quantity');
         $cart_items = session()->get('cart');
-
+        
         $user_id = auth()->id();
         
         if (!empty($quantity)) {
@@ -1371,6 +1371,8 @@ class ProductController extends Controller
                     if ($product_in_active_cart->quantity == 1) {
                         $product_in_active_cart->delete();
                         unset($cart[$id]);
+                        $status = 'success';
+                        $message = 'Product removed from cart successfully';
                     } else {
                         $current_quantity = $product_in_active_cart->quantity;
                         $current_quantity = $product_in_active_cart->quantity;
@@ -1379,13 +1381,14 @@ class ProductController extends Controller
                         $product_in_active_cart->quantity = $current_quantity - $request->quantity;
                         $product_in_active_cart->save();
                         if (intval($product_in_active_cart->quantity) > intval($actual_stock)) {
+                            $cart[$id]['quantity'] -= $request->quantity;
                             $status = 'error';
                             $message = 'You can not add this item more than ' . intval($actual_stock) . ' in the cart';
                         } 
                         else {
                             $cart[$id]['quantity'] -= $request->quantity;
                             $status = 'success';
-                            $message = 'Product added to cart successfully';
+                            $message = 'Product removed from cart successfully';
                         }
                         
                     }
