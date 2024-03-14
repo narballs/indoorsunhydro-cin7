@@ -1204,8 +1204,6 @@
 </div>
 
 @include('partials.product-footer')
-@include('partials.footer')
-
 <script>
 	$(document).ready(function() {
 		var order_id = parseInt($('.getorderID').html());
@@ -1224,3 +1222,5 @@
 
 	});
 </script>
+@include('partials.footer')
+
