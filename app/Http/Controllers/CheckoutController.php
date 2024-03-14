@@ -1333,6 +1333,7 @@ class CheckoutController extends Controller
             if (!empty($currentOrder)) {
                 // Update order status or perform any other actions related to the refund
                 $currentOrder->payment_status = 'refunded';
+                $currentOrder->is_refunded = 1;
                 $currentOrder->save();
 
 

@@ -126,6 +126,8 @@
                                                 $total_quatity = $cart['quantity'];
                                                 $total_price = $cart['price'] * $total_quatity;
                                                 $cart_total = $cart_total + $total_price;
+                                                $stock_per_product = 0;
+                                                $stock_per_product = App\Helpers\UserHelper::get_stock_per_product_option($pk_product_id, $cart['option_id']);  
                                                 ?>
                                                 <tr id="{{ 'row_' . $pk_product_id }}" class="quantities">
                                                     <td class="align-middle">
@@ -164,7 +166,7 @@
                                                         <div class="mt-4 ml-1">
                                                             <div class="quantity">
                                                                 <input type="number" name="quantity" class="quantity_calculator" id={{ 'row_quantity_' . $pk_product_id }}
-                                                                    min="1" max="20" step="1"
+                                                                    min="1" max="{{$stock_per_product}}" step="1" data-old = "{{ $cart['quantity'] }}"
                                                                     value="{{ $cart['quantity'] }}" onchange="update_cart_products({{ $pk_product_id }})">
                                                                 <input type="hidden" name="p_id" id="p_id"
                                                                     value="{{ $cart['product_id'] }}">
@@ -636,7 +638,7 @@
                                                                                                 <i class="fa fa-angle-left text-dark align-middle" style="font-size: 8px;"></i>
                                                                                             </button>
                                                                                             <div class="">
-                                                                                                <input type="number" class="py-1 text-center mb-0 qtyMob_input bg-white"  min="0" class="itm_qty" id="itm_qty{{ $pk_product_id }}"
+                                                                                                <input type="number" class="py-1 text-center mb-0 qtyMob_input bg-white"  min="0" class="itm_qty" max="4" id="itm_qty{{ $pk_product_id }}"
                                                                                                 data-type="{{ $pk_product_id }}" value="{{ $cart['quantity'] }}" style="width: 31px;font-weight: 600;font-size: 10px !important;
                                                                                                 color: #7CC633;background-color: #ffffff !important;border-top:0.485995px solid #EBEBEB !important;border-bottom:0.485995px solid #EBEBEB !important;line-height: 15px !important;border-left:0px !important;border-right:0px !important;">
                                                                                             </div>
@@ -870,11 +872,27 @@
     
 
     /* *****   INCREASE QTY   ****  */
-    function increase_qty(pk_product_id) {
-        var qty_input = parseFloat($('#row_quantity_' + pk_product_id).val());
-        var new_qty = parseFloat(qty_input + 1);
-        var new_qty_value = $('#row_quantity_' + pk_product_id).val(new_qty);
+    function increase_qty(pk_product_id) { 
+        var old_qty = parseInt($('#row_quantity_' + pk_product_id).attr('data-old'));
+        var stock_available = parseInt($('#row_quantity_' + pk_product_id).attr('max'));
+        var qty_input = parseInt($('#row_quantity_' + pk_product_id).val());
         var product_id = pk_product_id;
+        var new_qty = parseInt(qty_input + 1);
+        if (new_qty > stock_available) {
+            Swal.fire({
+                toast: true,
+                icon: 'error',
+                title: 'Maximum stock limit reached',
+                timer: 3000,
+                showConfirmButton: false,
+                position: 'top',
+                timerProgressBar: true
+            });
+            $('#row_quantity_' + pk_product_id).val(old_qty);
+            return false;
+        }
+        var new_qty_value = $('#row_quantity_' + pk_product_id).val(new_qty);
+        
 
         jQuery.ajax({
             url: "{{ url('update-cart') }}",
@@ -947,15 +965,31 @@
 
     /* *****   DECREASE QTY   ****  */
     function decrease_qty(pk_product_id) {
+        var product_id = pk_product_id;
+        var old_qty = parseInt($('#row_quantity_' + pk_product_id).attr('data-old'));
+        var stock_available = parseInt($('#row_quantity_' + pk_product_id).attr('max'));
         var qty_input = parseFloat($('#row_quantity_' + pk_product_id).val());
         if (qty_input > 1) {
             var new_qty = parseFloat(qty_input - 1);
+            if (new_qty > stock_available) {
+                Swal.fire({
+                    toast: true,
+                    icon: 'error',
+                    title: 'Maximum stock limit reached',
+                    timer: 3000,
+                    showConfirmButton: false,
+                    position: 'top',
+                    timerProgressBar: true
+                });
+                $('#row_quantity_' + pk_product_id).val(old_qty);
+                return false;
+            }
             var new_qty_value = $('#row_quantity_' + pk_product_id).val(new_qty);
         } else {
             var new_qty = parseFloat(1);
             var new_qty_value = $('#row_quantity_' + pk_product_id).val(1);
         }
-        var product_id = pk_product_id;
+        
         jQuery.ajax({
             url: "{{ url('update-cart') }}",
             method: 'post',
@@ -1025,16 +1059,35 @@
 
     // on change update cart
     function update_cart_products(pk_product_id) {
-        var qty_input = parseFloat($('#row_quantity_' + pk_product_id).val());
-        var new_qty = parseFloat(qty_input);
         var product_id = pk_product_id;
-
+        var qty_input = 0;
+        var old_qty = parseInt($('#row_quantity_' + pk_product_id).attr('data-old'));
+        if (($('#row_quantity_' + pk_product_id).val() != '') && $('#row_quantity_' + pk_product_id).val()) {
+            qty_input = parseInt($('#row_quantity_' + pk_product_id).val());
+        } else {
+            qty_input = 1;
+        }
+        var stock_available = parseInt($('#row_quantity_' + pk_product_id).attr('max'));
+        if (qty_input > stock_available) {
+            Swal.fire({
+                toast: true,
+                icon: 'error',
+                title: 'Maximum stock limit reached',
+                timer: 3000,
+                showConfirmButton: false,
+                position: 'top',
+                timerProgressBar: true
+            });
+            $('#row_quantity_' + pk_product_id).val(old_qty);
+            return false;
+        } 
+        $('#row_quantity_' + pk_product_id).val(qty_input)
         jQuery.ajax({
             url: "{{ url('update-cart') }}",
             method: 'post',
             data: {
                 "_token": "{{ csrf_token() }}",
-                "items_quantity": new_qty,
+                "items_quantity": qty_input,
                 "product_id": product_id
             },
             success: function(response) {
