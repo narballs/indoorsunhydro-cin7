@@ -1914,15 +1914,15 @@ $cart_price = 0;
                                                 success: function(response) {
                                                     $("#order_form").submit();
                                                     // Generate dynamic transaction ID and purchase value
-                                                    var transaction_id = 'T_' + Date.now();
-                                                    var purchase_value = calculatePurchaseValue(); // You need to define this function
+                                                    // var transaction_id = 'T_' + Date.now();
+                                                    // var purchase_value = calculatePurchaseValue(); // You need to define this function
 
-                                                    // Add gtag event for purchase
-                                                    gtag('event', 'purchase', {
-                                                        'transaction_id': transaction_id,
-                                                        'value': purchase_value,
-                                                        // Add other parameters as needed
-                                                    });
+                                                    // // Add gtag event for purchase
+                                                    // gtag('event', 'purchase', {
+                                                    //     'transaction_id': transaction_id,
+                                                    //     'value': purchase_value,
+                                                    //     // Add other parameters as needed
+                                                    // });
                                                 }
                                             });
                                         }
@@ -1940,15 +1940,15 @@ $cart_price = 0;
                                     }
                                     $("#order_form").submit();
                                     // Generate dynamic transaction ID and purchase value
-                                    var transaction_id = 'T_' + Date.now();
-                                    var purchase_value = calculatePurchaseValue(); // You need to define this function
+                                    // var transaction_id = 'T_' + Date.now();
+                                    // var purchase_value = calculatePurchaseValue(); // You need to define this function
 
-                                    // Add gtag event for purchase
-                                    gtag('event', 'purchase', {
-                                        'transaction_id': transaction_id,
-                                        'value': purchase_value,
-                                        // Add other parameters as needed
-                                    });
+                                    // // Add gtag event for purchase
+                                    // gtag('event', 'purchase', {
+                                    //     'transaction_id': transaction_id,
+                                    //     'value': purchase_value,
+                                    //     // Add other parameters as needed
+                                    // });
                                 }
                             }
                         });
