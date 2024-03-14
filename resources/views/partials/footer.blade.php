@@ -10,6 +10,24 @@
 <script src="https://unpkg.com/feather-icons"></script>
 <script id="ze-snippet" src="{{asset('zendesk.js?key=c226feaf-aefa-49d4-ae97-5b83a096f475')}}"></script>
 <script>
+	$(document).ready(function() {
+		var order_id = parseInt($('.getorderID').html());
+		var currency = 'USD';
+		var orderTotal = $('.getorderTotal').val();
+		var send_to = 'AW-11475808917/uLuQCJO2t40ZEJXli-Aq';
+		console.log(order_id , currency , orderTotal , send_to);
+		if (window.location.pathname.match('/thankyou/')) {
+			gtag('event', 'conversion', {
+				'send_to': 'AW-11475808917/uLuQCJO2t40ZEJXli-Aq',
+				'value':orderTotal,
+				'currency': 'USD',
+				'transaction_id': order_id
+			});
+		}
+
+	});
+</script>
+<script>
     function adding_quantity(product_id , option_id) {
         updateBodyClickEventStatus(false);
         var plus = parseInt($('.swap_qty_number_' + product_id).val()) === '' ? 1 : parseInt($('.swap_qty_number_' + product_id).val());
