@@ -54,30 +54,41 @@ class GoogleContent extends Command
         $client = new Google_Client();
         $client->setClientId(config('services.google.client_id'));
         $client->setClientSecret(config('services.google.client_secret'));
-        $client->setRedirectUri(config('services.google.redirect'));
-        $client->setScopes(['https://www.googleapis.com/auth/content']);
-
-        return redirect($client->createAuthUrl());
-    }
-
-
-
-    public function handleCallback(Request $request)
-    {
-        $client = new Google_Client();
-        $client->setClientId(config('services.google.client_id'));
-        $client->setClientSecret(config('services.google.client_secret'));
-        $client->setRedirectUri(config('services.google.redirect'));
+        $client->setRedirectUri('urn:ietf:wg:oauth:2.0:oob'); // Use 'urn:ietf:wg:oauth:2.0:oob' for command-line authentication
         $client->setScopes([
             'openid',
             'profile',
             'email',
-            'https://www.googleapis.com/auth/content', // Add other necessary scopes
+            'https://www.googleapis.com/auth/content'
         ]);
-        $code = $request->input('code');
+
+        $authUrl = $client->createAuthUrl();
+        
+        // Prompt the user to visit the URL for authentication
+        $this->line('Please visit the following URL to authenticate:');
+        $this->line($authUrl);
+        
+        // Wait for the user to enter the authorization code
+        $code = $this->ask('Enter the authorization code:');
+        
+        // Fetch access token using the authorization code
         $token = $client->fetchAccessTokenWithAuthCode($code);
-        $result  = $this->insertProducts($token , $client);
-        return $result;
+        
+        // Handle the authentication result
+        if (isset($token['error'])) {
+            $this->error('Authentication failed: ' . $token['error_description']);
+            return;
+        }
+        
+        // If authentication succeeded, proceed with syncing products
+        $result = $this->insertProducts($token, $client);
+        
+        // Handle the result
+        if ($result) {
+            $this->info('Products inserted successfully.');
+        } else {
+            $this->error('Failed to insert products.');
+        }
     }
 
     public function insertProducts($token, $client)
