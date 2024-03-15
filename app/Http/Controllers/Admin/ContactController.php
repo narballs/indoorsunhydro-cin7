@@ -73,7 +73,8 @@ class ContactController extends Controller
         $activeCustomer = $request->get('active-customer');
         $pendingApproval = $request->get('pending-approval');
         $sort_by_created_at = $request->get('sort_by_created_at');
-        $contact_query = Contact::withTrashed()->where('type', 'Customer');
+        // $contact_query = Contact::withTrashed()->where('type', 'Customer');
+        $contact_query = Contact::where('type', 'Customer');
         if (!empty($activeCustomer)) {
             if ($activeCustomer == 'active-customer') {
                 $contact_query = $contact_query->where('contact_id', '!=', null);
