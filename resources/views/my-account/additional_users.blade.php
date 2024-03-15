@@ -36,7 +36,7 @@
                                                 </div>
                                                 <div class="card-body">
                                                     @php
-                                                       $secondary_contacts = App\Models\Contact::withTrashed()->with('allow_user')->where('company', $company->company)->get();
+                                                       $secondary_contacts = App\Models\Contact::with('allow_user')->where('company', $company->company)->get();
                                                     @endphp
                                                     <div class="table-responsive">
                                                         <table class="table address-table-items-data m-0 ">
@@ -62,20 +62,21 @@
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                                                <?php $processed_contacts = []; ?>
+                                                                <?php //$processed_contacts = []; ?>
                                                                 @foreach ($secondary_contacts as $key => $contact)
                                                                     <?php 
                                                                         
-                                                                        if (!empty($contact->is_deleted)) {
-                                                                            if (!isset($processed_contacts[$contact->email])) {
-                                                                                $processed_contacts[$contact->email] = $contact->email;
-                                                                            }
-                                                                            else {
-                                                                                continue;
-                                                                            }
-                                                                        }
+                                                                        // if (!empty($contact->is_deleted)) {
+                                                                        //     if (!isset($processed_contacts[$contact->email])) {
+                                                                        //         $processed_contacts[$contact->email] = $contact->email;
+                                                                        //     }
+                                                                        //     else {
+                                                                        //         continue;
+                                                                        //     }
+                                                                        // }
                                                                     ?>
-                                                                    <tr class="{{!empty($contact->is_deleted) ? 'bg-deleted' : ''}}" title="{{!empty($contact->is_deleted) ?  'deleted on ' . $contact->is_deleted : ''}}">
+                                                                    {{-- <tr class="{{!empty($contact->is_deleted) ? 'bg-deleted' : ''}}" title="{{!empty($contact->is_deleted) ?  'deleted on ' . $contact->is_deleted : ''}}"> --}}
+                                                                    <tr class="" title="">
                                                                         <td class="table-items justify-content-start align-items-lg-center user_table_items pt-0 align-middle">
                                                                             <div class="custom-control custom-checkbox tabel-checkbox d-flex align-items-center">
                                                                                 <span> {{ $key + 1 }}</span>
