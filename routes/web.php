@@ -308,7 +308,7 @@ Route::get('/products/buy-again', [ProductController::class, 'buy_again']);
 Route::group(['middleware' => ['auth']], function () {
     Route::resource('admin/roles', RoleController::class);
     Route::resource('admin/users', UserController::class);
-    Route::resource('admin/roles', RoleController::class);
+    // Route::resource('admin/roles', RoleController::class);
     Route::get('admin/dashboard', [DashboardController::class, 'index'])->name('admin.view');
     Route::get('admin/orders', [OrderManagementController::class, 'index'])->name('admin.orders');
     Route::get('admin/order/create', [OrderManagementController::class, 'create'])->name('admin.order.create');
