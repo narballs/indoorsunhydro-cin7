@@ -265,6 +265,22 @@
                                         </tr>
                                     </tbody>
                                 </table>
+                                <table border="0" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <td style="color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
+                                                Delievery Option
+                                            </td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
+                                                {{ !empty($addresses['delievery_method'] ? $addresses['delievery_method'] : '') }}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </td>
                         </tr>
                     </table>
