@@ -810,7 +810,7 @@ class OrderController extends Controller
                         'order_id' => $order_id,
                         'company' => $currentOrder->contact->company, 
                         'order_status' => '',
-                        'delievery_method' => $currentOrder->paymentTerms,
+                        'delievery_method' => $currentOrder->logisticsCarrier,
                     ];
                     $name = $customer->contact->firstName;
                     $email =  $customer->contact->email;
@@ -1399,7 +1399,7 @@ class OrderController extends Controller
             'order_id' => $order_id,
             'company' => $currentOrder->contact->company, 
             'order_status' => 'updated',
-            'delievery_method' => $currentOrder->paymentTerms,
+            'delievery_method' => $currentOrder->logisticsCarrier,
         ];
 
         $name = $customer->contact->firstName;
@@ -1563,7 +1563,7 @@ class OrderController extends Controller
                     'order_id' => $order_id,
                     'company' => !empty($current_Order->user->contact) ?  $current_Order->user->contact[0]->company : '',
                     'order_status' => '',
-                    'delievery_method' => $currentOrder->paymentTerms,
+                    'delievery_method' => $currentOrder->logisticsCarrier,
                 ];
                 $name = $contact->firstName;
                 $email =  $contact->email;
@@ -1707,7 +1707,7 @@ class OrderController extends Controller
                     'order_id' => $order_id,
                     'company' => !empty($current_Order->user->contact) ?  $current_Order->user->contact[0]->company : '',
                     'order_status' => '',
-                    'delievery_method' => $currentOrder->paymentTerms,
+                    'delievery_method' => $currentOrder->logisticsCarrier,
                 ];
                 $name = $contact->firstName;
                 $email =  $contact->email;
