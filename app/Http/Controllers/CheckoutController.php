@@ -693,6 +693,7 @@ class CheckoutController extends Controller
                         'order_id' => $order_id,
                         'company' => !empty($currentOrder->user->contact) ?  $currentOrder->user->contact[0]->company : '',
                         'order_status' => '',
+                        'delievery_method' => $currentOrder->paymentTerms,
                     ];
                     $name = $contact->firstName;
                     $email =  $contact->email;
