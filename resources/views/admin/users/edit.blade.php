@@ -36,7 +36,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="form-group">
                 <strong>Email:</strong>
-                {!! Form::text('email', null, ['placeholder' => 'Email', 'class' => 'form-control']) !!}
+                {!! Form::text('email', null, ['placeholder' => 'Email', 'class' => 'form-control' , 'autocomplete' => 'off']) !!}
             </div>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12">
