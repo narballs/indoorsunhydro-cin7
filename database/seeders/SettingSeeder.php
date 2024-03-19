@@ -292,6 +292,11 @@ class SettingSeeder extends Seeder
                 'type' => 'yes/no',
                 'option_value' => 'No',
             ],
+            [
+                'option_name' => 'free_shipping_state', 
+                'type' => 'text',
+                'option_value' => 'California',
+            ],
 
             
         ];
