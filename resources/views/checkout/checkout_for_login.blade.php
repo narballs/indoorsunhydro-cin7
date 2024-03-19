@@ -636,6 +636,7 @@ $cart_price = 0;
                                         <input type="hidden" name="discount_amount" class="discount_amount" id="discount_amount" value="{{ number_format($discount_amount , 2, '.', '') }}">
                                         <input type="hidden" name="items_total_price" class="items_total_price" id="" value="{{ number_format($cart_total, 2, '.', '') }}">
                                         <input type="hidden" name="total_tax" class="total_tax" id="" value="{{ number_format($tax , 2, '.', '') }}">
+                                        <input type="hidden" name="shipping_free_over_1000" id="shipping_free_over_1000" value="{{$shipping_free_over_1000}}">
                                         @if(!empty($tax_class))
                                         <input type="hidden" name="tax_class_id" id="tax_class_id" value="{{ $tax_class->id }}">
                                         @else

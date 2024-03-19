@@ -59,19 +59,25 @@ class OrderController extends Controller
         $actual_shipping_price = 0;
         $admin_area_for_shipping = AdminSetting::where('option_name', 'admin_area_for_shipping')->first();
         if (!empty($request->charge_shipment_to_customer) && $request->charge_shipment_to_customer == 1) {
-            if (!empty($admin_area_for_shipping) && strtolower($admin_area_for_shipping->option_value) == 'yes') {
-                if (!empty($request->product_weight) && $request->product_weight > 150) {
-                    $actual_shipping_price = $request->shipment_cost_single;
-                    $shipping_service_code = $request->shipping_service_code;
-                    $shipping_carrier_code = $request->shipping_carrier_code;
-                } else {
-                    if (empty($request->shipping_multi_price)) {
-                        return back()->with('error', 'Shipping price is required. Please select shipping method.');
-                    } else {
-                        $actual_shipping_price = $request->shipping_multi_price;
+            if (empty($request->shipping_free_over_1000) && ($request->shipping_free_over_1000 != '1')) {
+                if (!empty($admin_area_for_shipping) && strtolower($admin_area_for_shipping->option_value) == 'yes') {
+                    if (!empty($request->product_weight) && $request->product_weight > 150) {
+                        $actual_shipping_price = $request->shipment_cost_single;
                         $shipping_service_code = $request->shipping_service_code;
                         $shipping_carrier_code = $request->shipping_carrier_code;
+                    } else {
+                        if (empty($request->shipping_multi_price)) {
+                            return back()->with('error', 'Shipping price is required. Please select shipping method.');
+                        } else {
+                            $actual_shipping_price = $request->shipping_multi_price;
+                            $shipping_service_code = $request->shipping_service_code;
+                            $shipping_carrier_code = $request->shipping_carrier_code;
+                        }
                     }
+                } else {
+                    $actual_shipping_price = $request->shipment_price;
+                    $shipping_service_code = $request->shipping_service_code;
+                    $shipping_carrier_code = $request->shipping_carrier_code;
                 }
             } else {
                 $actual_shipping_price = $request->shipment_price;
