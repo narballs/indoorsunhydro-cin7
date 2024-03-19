@@ -321,21 +321,21 @@ class CheckoutController extends Controller
                 }
             }
             $shipment_price = 0;
-            $shipping_free_over_1000 = false;
+            $shipping_free_over_1000 = 0;
             $sub_total_of_cart = $sub_total_of_cart + ($sub_total_of_cart * $get_tax_rate / 100);
             $free_shipping_state = AdminSetting::where('option_name', 'free_shipping_state')->first();
             if (!empty($free_shipping_state)) {
                 if ($free_shipping_state->option_value == $user_address->state || $user_address->state == 'CA') {
                     if ($sub_total_of_cart >= 1000) {
-                        $shipping_free_over_1000 = true;
+                        $shipping_free_over_1000 = 1;
                     } else {
-                        $shipping_free_over_1000 = false;
+                        $shipping_free_over_1000 = 0;
                     }
                 } else {
-                    $shipping_free_over_1000 = false;
+                    $shipping_free_over_1000 = 0;
                 }
             } else {
-                $shipping_free_over_1000 = false;
+                $shipping_free_over_1000 = 0;
             }
 
             $admin_selected_shipping_quote = [];
@@ -349,7 +349,7 @@ class CheckoutController extends Controller
             $service_code_2 = AdminSetting::where('option_name', 'shipping_service_code_2')->first();   
             // adding shipment rates
             if ($charge_shipment_fee == true) {
-                if ($shipping_free_over_1000 == true) {
+                if ($shipping_free_over_1000 == 1) {
                     $shipment_price = 0;
                 } 
                 else {
@@ -501,7 +501,7 @@ class CheckoutController extends Controller
                 'products_weight',
                 'shipping_quotes' , 
                 'admin_selected_shipping_quote','surcharge_settings',
-                'shipping_carrier_code' , 'shipping_service_code', 'shipstation_shipment_prices' , 'charge_shipment_to_customer'
+                'shipping_carrier_code' , 'shipping_service_code', 'shipstation_shipment_prices' , 'charge_shipment_to_customer', 'shipping_free_over_1000'
                 
             ));
         } else {
