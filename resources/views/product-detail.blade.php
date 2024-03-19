@@ -83,13 +83,13 @@
                                     </div>
                                     <div class="col-md-12">
                                         <div class="row align-items-center">
-                                            <div class="col-md-7 col-lg-8 col-xl-8">
+                                            <div class="col-md-3">
                                                 <span class="text-danger product-detail-price" id="product_price">
                                                     ${{number_format($retail_price, 2)}}
                                                 </span>
                                             </div>
-                                            <div class="col-md-5 col-lg-4 col-xl-4">
-                                                <button type="button" class="btn btn-light update_inventory_number float-right" onclick="get_latest_inventory_number()"><i class="fa fa-refresh"></i><span class="mx-2">Update Stock</span></button>
+                                            <div class="col-md-9">
+                                                <button type="button" class="btn btn-light update_inventory_number" onclick="get_latest_inventory_number()"><i class="fa fa-refresh"></i><span class="mx-2">Update Stock</span></button>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="mt-4 mb-3"> <span class="text-uppercase text-muted brand"></span>                                                
@@ -1167,6 +1167,7 @@
         font-weight: 400;
         line-height: 21px;
         letter-spacing: 0.55px;
+        border:1px solid #dae0e5;
     }
     .update_inventory_number:hover {
         color:#7bc533;
