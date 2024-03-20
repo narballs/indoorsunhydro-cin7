@@ -1,0 +1,9 @@
+{"web":{"client_id":"422234956352-22at2blveo38ed84f20u7nh8b5uibbbd.apps.googleusercontent.com",
+"project_id":"indoorsunhydro",
+"auth_uri":"https://accounts.google.com/o/oauth2/auth",
+"token_uri":"https://oauth2.googleapis.com/token",
+"auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs",
+"client_secret":"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",
+"redirect_uris":["http://localhost:8000/auth/google/callback",
+"https://stage.indoorsunhydro.com/auth/google/callback",
+"https://indoorsunhydro.com/auth/google/callback"]}}
