@@ -57,9 +57,8 @@ class GoogleContent extends Command
         ]);
 
         // Automatically authorize using domain-wide delegation
-        $client->setSubject('indoorsunhydro@indoorsunhydro.iam.gserviceaccount.com');
+        // $client->setSubject('indoorsunhydro@indoorsunhydro.iam.gserviceaccount.com');
         $token = $client->fetchAccessTokenWithAssertion();
-
         // Check if access token is retrieved successfully
         if (isset($token['access_token'])) {
             // Insert products to Google Merchant Center
