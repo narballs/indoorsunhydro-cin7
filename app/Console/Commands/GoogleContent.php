@@ -51,57 +51,59 @@ class GoogleContent extends Command
      */
     public function handle()
     {
-        // Initialize Google Client
+    //     // Initialize Google Client
         $client = new Google_Client();
         $client->setAuthConfig('master_credentials.json');
+        // dd($client);
         $client->addScope('https://www.googleapis.com/auth/content');
 
         // Automatically authorize using domain-wide delegation
-        $client->setSubject('engrdanishsabir00@gmail.com'); // Impersonate a user in your domain
-        $client->fetchAccessTokenWithAssertion();
-
-        // Insert products using authorized client
-        $result = $this->insertProducts($client);
+        $client->setSubject('indoorsunhydro@indoorsunhydro.iam.gserviceaccount.com');
+        $token  = $client->fetchAccessTokenWithAssertion();
+        $result = $this->insertProducts($client , $token);
 
         if ($result) {
             $this->info('Products inserted successfully.');
         } else {
             $this->error('Failed to insert products.');
         }
+        
     }
 
 
-    private function insertProducts($client)
+    public function insertProducts($client , $token)
     {
+        
+        
         $price_column = null;
         $default_price_column = AdminSetting::where('option_name', 'default_price_column')->first();
         if (!empty($default_price_column)) {
             $price_column = $default_price_column->option_value;
-        } else {
+        }
+        else {
             $price_column = 'retailUSD';
         }
         $product_array = [];
-
         $product_categories = Category::where('is_active', 1)->pluck('category_id')->toArray();
-        $all_products_ids = Product::whereIn('category_id', $product_categories)
-            ->pluck('product_id')->toArray();
-        $product_options_ids = ProductOption::whereIn('product_id', $all_products_ids)
-            ->where('status', '!=', 'Disabled')
-            ->where('optionWeight', '>', 0)
-            ->pluck('option_id')->toArray();
-        $product_pricing_option_ids = Pricingnew::whereIn('option_id', $product_options_ids)
-            ->where($price_column, '>', 0)
-            ->pluck('option_id')
-            ->toArray();
-        $products_ids = ProductOption::whereIn('option_id', $product_pricing_option_ids)
-            ->pluck('product_id')->toArray();
-        $products = Product::with('options', 'options.defaultPrice', 'product_brand', 'product_image', 'categories')->whereIn('product_id', $products_ids)
-            ->where('status', '!=', 'Inactive')
-            ->where('barcode', '!=', '')
-            ->get();
+        $all_products_ids = Product::whereIn('category_id' , $product_categories)
+        ->pluck('product_id')->toArray();
+        $product_options_ids = ProductOption::whereIn('product_id' , $all_products_ids)
+        ->where('status', '!=', 'Disabled')
+        ->where('optionWeight', '>', 0)
+        ->pluck('option_id')->toArray();
+        $product_pricing_option_ids = Pricingnew::whereIn('option_id' , $product_options_ids)
+        ->where($price_column , '>' , 0)
+        ->pluck('option_id')
+        ->toArray();
+        $products_ids = ProductOption::whereIn('option_id' , $product_pricing_option_ids)
+        ->pluck('product_id')->toArray();
+        $products = Product::with('options','options.defaultPrice','product_brand','product_image','categories')->whereIn('product_id' , $products_ids)
+        ->where('status' , '!=' , 'Inactive')
+        ->where('barcode' , '!=' , '')
+        ->get();
         if (count($products) > 0) {
             foreach ($products as $product) {
-
+                
                 if (count($product->options) > 0) {
                     foreach ($product->options as $option) {
                         $category = 'General > General';
@@ -111,10 +113,11 @@ class GoogleContent extends Command
                             } else if (!empty($product->categories->parent_id) && !empty($product->categories->category_id) && $product->categories->parent_id != 0) {
                                 $category = $product->categories->parent_id;
                             }
-                        } else {
+                        }
+                        else {
                             $category = 'General > General';
                         }
-
+                        
                         $product_array[] = [
                             'id' => $product->id,
                             'title' => $product->name,
@@ -134,9 +137,12 @@ class GoogleContent extends Command
                 }
             }
         }
-
+        
+        // $chunks = array_chunk($product_array, 100);
+        $client->setAccessToken($token['access_token']); // Use the stored access token
+        
         $service = new ShoppingContent($client);
-        $result = null;
+        $result  = null;
 
         $productStatusList = [];
         $feedIds = [];
@@ -160,7 +166,8 @@ class GoogleContent extends Command
                     'message' => 'Failed to retrieve products from Google Merchant Center.'
                 ]);
             }
-        } while (!empty($pageToken));
+        } 
+        while (!empty($pageToken));
         if (!empty($product_array)) {
             foreach ($product_array as $index => $add_product) {
                 $isDuplicate = false;
@@ -184,10 +191,15 @@ class GoogleContent extends Command
                     $product->setAvailability($add_product['availability']);
                     $product->setCondition($add_product['condition']);
                     $product->setBrand($add_product['brand']);
+                    // $product->setGoogleProductCategory($add_product['google_product_category']);
                     $product->setGtin($add_product['barcode']);
+                    // $product->setmultipack('5000');
+                    // $product->setIdentifierExists(false);
                     $product->setMpn($add_product['code']);
                     $product->setAgeGroup('adult');
+                    // $product->setColor('universal');
                     $product->setGender('unisex');
+                    // $product->setSizes(['Large']);
 
                     $shippingWeight = new \Google\Service\ShoppingContent\ProductShippingWeight();
                     $shippingWeight->setValue($add_product['product_weight']);
@@ -197,22 +209,59 @@ class GoogleContent extends Command
                     $price = new Price();
                     $price->setValue($add_product['price']);
                     $price->setCurrency('USD');
+            
                     $product->setPrice($price);
-
                     $merchant_id = config('services.google.merchant_center_id');
                     $result = $service->products->insert($merchant_id, $product);
-                } else {
-                    // Handle the case when the product is duplicate
+                } 
+                else {
+                    $product = new ServiceProduct();
+                    $product->setOfferId(substr($add_product['code'], 0, 50));
+                    $product->setTitle($add_product['title']);
+                    $product->setDescription($add_product['description']);
+                    $product->setLink($add_product['link']);
+                    $product->setImageLink($add_product['image_link']);
+                    $product->setContentLanguage('en');
+                    $product->setTargetCountry('US');
+                    $product->setChannel('online');
+                    $product->setAvailability($add_product['availability']);
+                    $product->setCondition($add_product['condition']);
+                    $product->setBrand($add_product['brand']);
+                    // $product->setGoogleProductCategory($add_product['google_product_category']);
+                    $product->setGtin($add_product['barcode']);
+                    // $product->setmultipack('5000');
+                    // $product->setIdentifierExists(false);
+                    $product->setMpn($add_product['code']);
+                    $product->setAgeGroup('adult');
+                    // $product->setColor('universal');
+                    $product->setGender('unisex');
+                    // $product->setSizes(['Large']);
+
+                    $shippingWeight = new \Google\Service\ShoppingContent\ProductShippingWeight();
+                    $shippingWeight->setValue($add_product['product_weight']);
+                    $shippingWeight->setUnit('lb');
+                    $product->setShippingWeight($shippingWeight);
+
+                    $price = new Price();
+                    $price->setValue($add_product['price']);
+                    $price->setCurrency('USD');
+            
+                    $product->setPrice($price);
+                    $merchant_id = config('services.google.merchant_center_id');
+                    $result = $service->products->insert($merchant_id, $product);
                 }
+
             }
-            return $result;
-        } else {
-            return $result;
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Products inserted successfully'
+            ]);              
+        } 
+        else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'No products found'
+            ]);
         }
-    }
-
-
-
-
-    
+    }   
 }
