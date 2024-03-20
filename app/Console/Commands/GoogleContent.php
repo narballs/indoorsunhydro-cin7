@@ -51,39 +51,18 @@ class GoogleContent extends Command
      */
     public function handle()
     {
+        // Initialize Google Client
         $client = new Google_Client();
-        $client->setClientId(config('services.google.client_id'));
-        $client->setClientSecret(config('services.google.client_secret'));
-        $client->setRedirectUri('urn:ietf:wg:oauth:2.0:oob'); // Use 'urn:ietf:wg:oauth:2.0:oob' for command-line authentication
-        $client->setScopes([
-            'openid',
-            'profile',
-            'email',
-            'https://www.googleapis.com/auth/content'
-        ]);
+        $client->setAuthConfig('master_credentials.json');
+        $client->addScope('https://www.googleapis.com/auth/content');
 
-        $authUrl = $client->createAuthUrl();
-        
-        // Prompt the user to visit the URL for authentication
-        $this->line('Please visit the following URL to authenticate:');
-        $this->line($authUrl);
-        
-        // Wait for the user to enter the authorization code
-        $code = $this->ask('Enter the authorization code:');
-        
-        // Fetch access token using the authorization code
-        $token = $client->fetchAccessTokenWithAuthCode($code);
-        
-        // Handle the authentication result
-        if (isset($token['error'])) {
-            $this->error('Authentication failed: ' . $token['error_description']);
-            return;
-        }
-        
-        // If authentication succeeded, proceed with syncing products
-        $result = $this->insertProducts($token, $client);
-        
-        // Handle the result
+        // Automatically authorize using domain-wide delegation
+        $client->setSubject('engrdanishsabir00@gmail.com'); // Impersonate a user in your domain
+        $client->fetchAccessTokenWithAssertion();
+
+        // Insert products using authorized client
+        $result = $this->insertProducts($client);
+
         if ($result) {
             $this->info('Products inserted successfully.');
         } else {
@@ -91,7 +70,8 @@ class GoogleContent extends Command
         }
     }
 
-    public function insertProducts($token, $client)
+
+    private function insertProducts($client)
     {
         $price_column = null;
         $default_price_column = AdminSetting::where('option_name', 'default_price_column')->first();
@@ -155,8 +135,6 @@ class GoogleContent extends Command
             }
         }
 
-        $client->setAccessToken($token['access_token']); // Use the stored access token
-
         $service = new ShoppingContent($client);
         $result = null;
 
@@ -206,15 +184,10 @@ class GoogleContent extends Command
                     $product->setAvailability($add_product['availability']);
                     $product->setCondition($add_product['condition']);
                     $product->setBrand($add_product['brand']);
-                    // $product->setGoogleProductCategory($add_product['google_product_category']);
                     $product->setGtin($add_product['barcode']);
-                    // $product->setmultipack('5000');
-                    // $product->setIdentifierExists(false);
                     $product->setMpn($add_product['code']);
                     $product->setAgeGroup('adult');
-                    // $product->setColor('universal');
                     $product->setGender('unisex');
-                    // $product->setSizes(['Large']);
 
                     $shippingWeight = new \Google\Service\ShoppingContent\ProductShippingWeight();
                     $shippingWeight->setValue($add_product['product_weight']);
@@ -224,13 +197,12 @@ class GoogleContent extends Command
                     $price = new Price();
                     $price->setValue($add_product['price']);
                     $price->setCurrency('USD');
-
                     $product->setPrice($price);
+
                     $merchant_id = config('services.google.merchant_center_id');
                     $result = $service->products->insert($merchant_id, $product);
                 } else {
                     // Handle the case when the product is duplicate
-                    // You can skip insertion or update existing product
                 }
             }
             return $result;
@@ -238,6 +210,7 @@ class GoogleContent extends Command
             return $result;
         }
     }
+
 
 
 
