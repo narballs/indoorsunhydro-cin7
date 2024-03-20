@@ -62,7 +62,7 @@
                                             $retail_price = $price->$user_price_column;
                                         }
                                     ?>
-                                    <div class="product-detail-heading col-xl-12 col-lg-12 col-md-12 col-xs-12"
+                                    <div class="product-detail-heading col-xl-12 col-lg-12 col-md-12 col-xs-12 mb-2"
                                         id="product_name">
                                         <div class="row">
                                             <div class="col-md-11">
@@ -83,13 +83,13 @@
                                     </div>
                                     <div class="col-md-12">
                                         <div class="row align-items-center">
-                                            <div class="col-md-12">
+                                            <div class="col-md-3">
                                                 <span class="text-danger product-detail-price" id="product_price">
                                                     ${{number_format($retail_price, 2)}}
                                                 </span>
                                             </div>
-                                            <div class="col-md-12">
-                                                <button type="button" class="btn btn-info" onclick="get_latest_inventory_number()">Click here to get latest Inventory numbers</button>
+                                            <div class="col-md-9">
+                                                <button type="button" class="btn btn-light update_inventory_number" onclick="get_latest_inventory_number()"><i class="fa fa-refresh"></i><span class="mx-2">Update Stock</span></button>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="mt-4 mb-3"> <span class="text-uppercase text-muted brand"></span>                                                
@@ -435,10 +435,14 @@
 
                         
                     </div>
-                    <div class="d-flex w-100">
+                    {{-- <div class="d-flex w-100">
                         <button type="button" class="btn btn-info btn-sm p-1 mb-2" onclick="get_latest_inventory_number()">Get latest Inventory numbers</button>
-                    </div>
+                    </div> --}}
+                    
                     <div class="row"> 
+                        <div class="d-flex w-100">
+                            <button type="button" class="btn btn-light update_inventory_number btn-sm mb-3" onclick="get_latest_inventory_number()"><i class="fa fa-refresh"></i><span class="mx-2">Update Stock</span></button>
+                        </div>
                         <span class="text-uppercase text-muted brand"></span>
 
                         <div class="price d-flex flex-row align-items-center">
@@ -1155,6 +1159,19 @@
     .greyed {
         background: #eaeaea;
     }
+    .update_inventory_number {
+        color:#7bc533;
+        font-family: 'poppins';
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 21px;
+        letter-spacing: 0.55px;
+        border:1px solid #dae0e5;
+    }
+    .update_inventory_number:hover {
+        color:#7bc533;
+    }
     .buy_again_heading {
         color: #242424;
         font-family: 'Poppins';
@@ -1219,6 +1236,22 @@
     }
     .notify_stock_btn_class {
         border-radius: 6px;
+    }
+
+    @media screen and (max-width: 600px) {
+        .update_inventory_number {
+            color:#7bc533;
+            font-family: 'poppins';
+            font-size: 12px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 21px;
+            letter-spacing: 0.55px;
+            padding: 3px;
+        }
+        .update_inventory_number:hover {
+            color:#7bc533;
+        }
     }
 </style>
 <script>
