@@ -48,7 +48,7 @@ class GoogleContent extends Command
     {
         // Initialize Google Client
         $client = new GoogleClient();
-        $client->setAuthConfig('master_credentials.json');
+        $client->setAuthConfig('new_auth_json.json');
         $client->setScopes([
             'openid',
             'profile',
