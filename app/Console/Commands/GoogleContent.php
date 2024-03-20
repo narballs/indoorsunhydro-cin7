@@ -55,7 +55,12 @@ class GoogleContent extends Command
         $client = new Google_Client();
         $client->setAuthConfig('master_credentials.json');
         // dd($client);
-        $client->addScope('https://www.googleapis.com/auth/content');
+        $client->setScopes([
+            'openid',
+            'profile',
+            'email',
+            'https://www.googleapis.com/auth/content', // Add other necessary scopes
+        ]);
 
         // Automatically authorize using domain-wide delegation
         $client->setSubject('indoorsunhydro@indoorsunhydro.iam.gserviceaccount.com');
