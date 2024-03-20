@@ -82,7 +82,7 @@ class GoogleContent extends Command
      * @param array $token
      * @return mixed
      */
-    private function insertProducts($token , $client)
+    private function insertProducts($client , $token)
     {
         
         $price_column = null;
