@@ -43,9 +43,9 @@
         <div class="p-4 address_div">
             <h3 class="address_header"> Contact Information </h3>
             {{-- <p class="address_flag">Say something to start a live chat!</p> --}}
-            <div class="mb-4">
+            {{-- <div class="mb-4">
                 <img src="{{asset('/theme/img/address_map.png')}}" alt="" class="map_image">
-            </div>
+            </div> --}}
             <div class="row mb-2">
                 <div class="col-md-1 icon_div">
                     <img src="{{asset('/theme/img/contact_phone_icon.svg')}}" alt="">
