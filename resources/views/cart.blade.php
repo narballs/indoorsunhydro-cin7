@@ -20,7 +20,7 @@
 @include('partials.search-bar')
 
 <input type="hidden" name="" id="initial_free_shipping_value" class="initial_free_shipping_value" value="{{$free_shipping}}">
-<div class=" cart-title mt-4  desktop-view">
+<div class="row desktop-view cart-title mt-4">
     <p style="line-height: 95px;"
         class=" fs-2 product-btn my-auto border-0 text-white text-center align-middle cart-title">
         <span class="cart-page-cart-title">CART</span>
@@ -34,7 +34,7 @@
 @php
     $address_url = 'my-account/address';
 @endphp
-<div class="container-fluid desktop-view" style="width: 1280px;margin: auto !important;">
+<div class="container-fluid desktop-view">
     <div class="row">
         @if(auth()->user())
         <div class="col-sm-12 col-md-12 col-lg-9 mt-2">
@@ -516,7 +516,7 @@
                                 {{ session('message') }}
                             </div>
                         @endif
-                        <div id="msform">
+                        <div id="">
                             <!-- progressbar -->
                             {{-- <ul id="progressbar">
 								<li class="active" id="account"><strong>Your Card</strong></li>
@@ -537,7 +537,7 @@
                                                         Location(s):
                                                     </h6>
                                                 </div>
-                                                <div class="dropdown mb-1 col-md-8 p-0">
+                                                <div class="dropdown mb-1 col-md-8 p-0 text-right">
                                                     @php
                                                         $session_contact_company = Session::get('company');
                                                         $companies = Session::get('companies');
@@ -786,7 +786,7 @@
                                 </div>
                                 
                             </fieldset>
-                            <fieldset>
+                            {{-- <fieldset>
                                 <div class="form-card">
 
                                 </div>
@@ -812,7 +812,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </fieldset>
+                            </fieldset> --}}
                         </div>
                     </div>
                 </div>

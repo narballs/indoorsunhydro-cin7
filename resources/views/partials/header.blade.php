@@ -168,6 +168,9 @@
         .custom-border {
             border: 1px solid #EBEBEB  !important;
         }
+        .top_header_banner {
+            padding: 0.5rem;
+        }
     
         /* Custom hover styles */
         @media screen and (max-width: 768px) {
@@ -184,12 +187,22 @@
                 background: #F9F9F9  !important;
             }
         }
-        @media screen and (max-width: 425px) {
+        @media screen and (max-width: 550px) {
             .quantity_count_circle {
                 font-size: 12px;
                 height: 25.19px;
             }
+            .top_header_banner {
+                padding: 0rem;
+                font-size: 15px !important;
+            }
         }
+
+        .top_header_banner {
+            padding: 0.5rem;
+            font-size: 20px;
+        }
+
         /* @media screen and (max-width: 425px) {
             .qty_minus_mobile{
                 width: 25%;
