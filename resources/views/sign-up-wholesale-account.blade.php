@@ -93,7 +93,7 @@
     .continue_sign_up_shopping:hover {
         text-decoration: none;
     }
-    @media only screen and (min-width:280px) and (max-width:425px) {
+    @media only screen and (min-width:280px) and (max-width:550px) {
         .sing-up-label {
             font-family: 'Poppins';
             font-style: normal;

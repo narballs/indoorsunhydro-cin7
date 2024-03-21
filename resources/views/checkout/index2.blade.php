@@ -15,7 +15,7 @@
         border-color: #DFDFDF;
     }
 
-    @media only screen and (max-width: 425px) and (min-width: 280px) {
+    @media only screen and (max-width: 550px) and (min-width: 280px) {
         .proceedCheckoutmbl {
             border-radius: 5px;
             background: #008BD3;

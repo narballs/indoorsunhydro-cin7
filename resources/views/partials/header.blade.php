@@ -184,7 +184,7 @@
                 background: #F9F9F9  !important;
             }
         }
-        @media screen and (max-width: 425px) {
+        @media screen and (max-width: 550px) {
             .quantity_count_circle {
                 font-size: 12px;
                 height: 25.19px;
