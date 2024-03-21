@@ -53,8 +53,12 @@
                         @foreach ($settings as $setting)
                         <tr>
                             <td>{{ $i++ }}</td>
-                            <td>{{ $setting->option_name }}</td>
-                            <td>{{$setting->option_value}}</span></td>
+                            <td>{{$setting->option_name }}</td>
+                            @if (($setting->option_name == 'cin7_auth_password') || ($setting->option_name == 'square_payment_access_token') || ($setting->option_name == 'square_payment_app_id') || ($setting->option_name == 'square_payment_secret'))
+                            <td>****************</td>
+                            @else
+                            <td>{{ $setting->option_value }}</td>
+                            @endif
                             <td><a href="{{url('/admin/settings/edit/' . $setting->id)}}" class="btn btn-primary text-white">Edit</a></td>
                         </tr>
                         @endforeach
