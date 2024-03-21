@@ -168,6 +168,9 @@
         .custom-border {
             border: 1px solid #EBEBEB  !important;
         }
+        .top_header_banner {
+            padding: 0.5rem;
+        }
     
         /* Custom hover styles */
         @media screen and (max-width: 768px) {
@@ -189,7 +192,17 @@
                 font-size: 12px;
                 height: 25.19px;
             }
+            .top_header_banner {
+                padding: 0rem;
+                font-size: 15px !important;
+            }
         }
+
+        .top_header_banner {
+            padding: 0.5rem;
+            font-size: 20px;
+        }
+
         /* @media screen and (max-width: 425px) {
             .qty_minus_mobile{
                 width: 25%;
