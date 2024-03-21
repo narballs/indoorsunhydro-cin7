@@ -1292,7 +1292,6 @@ class OrderController extends Controller
     // uppdate order status manually 
     public function update_order_status_by_admin(Request $request) {
         $request_status =  true;
-        $custom_order_status_updated = null;
         $message = 'Order status updated and  successfully.';
         $order_id = $request->order_id;
         $payment_status = $request->payment_status;
@@ -1300,7 +1299,6 @@ class OrderController extends Controller
         $order = ApiOrder::where('id', $order_id)->first();
         $previous_order_status = OrderStatus::where('id', $order->order_status_id)->first();
         $current_order_status = OrderStatus::where('id', $order_status_id)->first();
-        $custom_order_status_updated = !empty($current_order_status->status) ? $current_order_status->status : null;
         if ($order->is_stripe === 1) {
             if (strtolower($current_order_status->status) === 'refunded') {
                 $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
@@ -1406,8 +1404,10 @@ class OrderController extends Controller
             'count' => $count,
             'order_id' => $order_id,
             'company' => $currentOrder->contact->company, 
-            'order_status' => $custom_order_status_updated,
+            'order_status' => 'updated',
             'delievery_method' => $currentOrder->logisticsCarrier,
+            'new_order_status' => !empty($current_order_status->status) ? $current_order_status->status : '',
+            'previous_order_status' => !empty($previous_order_status->status) ? $previous_order_status->status : '',
         ];
 
         $name = $customer->contact->firstName;
