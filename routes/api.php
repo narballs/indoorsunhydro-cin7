@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\Api\ApiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,3 +21,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 Route::post('/webhook', [CheckoutController::class, 'webhook']);
 Route::post('/refund/webhook', [CheckoutController::class, 'refund_webhook']);
+Route::get('/products', [ApiController::class, 'products']);
