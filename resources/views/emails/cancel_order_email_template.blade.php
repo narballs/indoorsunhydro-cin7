@@ -38,43 +38,52 @@
                 <td>
                     <table width="80%" border="0" align="center">
                         <tr>
-                            <td align="" style="text-align: center;">
-                                <img class="img-fluid "
-                                    src="{{ url('/theme/img/email/approve_email_icon.png') }}">
+                            <td align="" style="text-align:center">
+                                @if(!empty($addresses['new_order_status']) && $addresses['new_order_status'] == 'Cancelled')
+                                    <span style="height: 40px;width: 40px;display: flex;background: #BEBEBE;border-radius: 25px;margin-left: 270px;">
+                                        <span style="margin-left: 11px;margin-top: 2px;color: #fff;font-size: 25px;">X</span>
+                                    </span>
+                                @else
+                                    <img class="img-fluid " src="{{ asset('/theme/img/email/approve_email_icon.png') }}">
+                                @endif
                             </td>
                         </tr>
-                        @if (!empty($addresses['order_status']) && $addresses['order_status'] === 'updated')
-                            
-                            @if (!empty($addresses['new_order_status']) && (!empty($addresses['previous_order_status'])))
-                                <tr>
-                                    <td align="" style="text-align: center;color:#000000;font-color:#000000;font-size: 11px;font-weight:400;">
-                                        Your order #{{ $addresses['order_id'] }} status has been updated from <b>{{$addresses['previous_order_status']}}</b> to <b>{{$addresses['new_order_status']}}</b>
-                                    </td>
-                                </tr>
-                            @else
-                                <tr>
-                                    <td align="" style="text-align: center;color:#000000;font-color:#000000;font-size: 11px;font-weight:400;">
-                                        Your order #{{ $addresses['order_id'] }} status has been updated.
-                                    </td>
-                                </tr>
-                            @endif
-                        @else
+                        
+                        @if(!empty($addresses['new_order_status']) && $addresses['new_order_status'] == 'Cancelled')
                             <tr>
                                 <td align="" style="text-align: center;color:#000000;font-color:#000000;font-size: 18px;font-weight:bold;">
-                                    We received your  order #{{ $addresses['order_id'] }} !
+                                    Your order has been Cancelled !
                                 </td>
                             </tr>
                             <tr>
-                                <td align="" style="text-align: center;color:#000000;font-color:#000000;font-size: 11px;font-weight:400;">
-                                    Your order #{{ $addresses['order_id'] }} is completed and ready to ship
+                                <td align="" style="text-align: center;color:#000000;font-color:#000000;font-size: 12px;font-weight:400;">
+                                    Your cancellation request  #{{ $addresses['order_id'] }} has been successfully processed.
+                                </td>
+                            </tr>
+                        @elseif (!empty($addresses['new_order_status']) && !empty($addresses['previous_order_status']))
+                            <tr>
+                                <td align="" style="text-align: center;color:#000000;font-color:#000000;font-size: 16px;font-weight:bold;">
+                                    Your order #{{ $addresses['order_id'] }} status has been updated from <b>{{$addresses['previous_order_status']}}</b> to <b>{{$addresses['new_order_status']}}</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="" style="text-align: center;color:#000000;font-color:#000000;font-size: 12px;font-weight:400;">
+                                    Suggestions , Comments and website feature requests . <a href="{{url('/contact-us')}}">Please click here to contact us</a>
+                                </td>
+                            </tr>
+                        @else
+                            <tr>
+                                <td align="" style="text-align: center;color:#000000;font-color:#000000;font-size: 16px;font-weight:bold;">
+                                    Your order #{{ $addresses['order_id'] }} status has been updated.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="" style="text-align: center;color:#000000;font-color:#000000;font-size: 12px;font-weight:400;">
+                                    Suggestions , Comments and website feature requests . <a href="{{url('/contact-us')}}">Please click here to contact us</a>
                                 </td>
                             </tr>
                         @endif
-                        <tr>
-                            <td align="" style="text-align: center;color:#000000;font-color:#000000;font-size: 11px;font-weight:400;">
-                                Suggestions , Comments and website feature requests . <a href="{{url('/contact-us')}}">Please click here to contact us</a>
-                            </td>
-                        </tr>
+                        
                     </table>
                 </td>
             </tr>
@@ -314,8 +323,8 @@
                                             </tr>
                                         </table>
                                     </td>
-                                    <td width="20%" style="color:#000000;font-color:#000000;font-size: 12px;vertical-align:top; font-weight:400;">{{ $item->quantity . 'x' }}</span></td>
-                                    <td width="20%" style="text-align: right;vertical-align:top;color:#000000;font-color:#000000;font-size: 12px; font-weight:400; ">{{ '$'. number_format($item->price, 2) }}</td>
+                                    <td width="20%" style="text-align: center;color:#000000;font-color:#000000;font-size: 12px;vertical-align:top; font-weight:400;">{{ $item->quantity . 'x' }}</span></td>
+                                    <td width="20%" style="vertical-align:top;color:#000000;font-color:#000000;font-size: 12px; font-weight:400; ">{{ '$'. number_format($item->price, 2) }}</td>
                                 </tr>
                                 
                             @endforeach
@@ -327,10 +336,10 @@
                 <td>
                     <table width="100%" border="0">
                         <tr>
-                            <td width="50%" style="color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
+                            <td width="80%" style="color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
                                 Sub Total
                             </td>
-                            <td align="right" style="text-align: right;color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
+                            <td align="" style="color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
                                 @php
                                     $sub_total = 0;
                                     foreach ($order_items as $item) {
@@ -348,7 +357,7 @@
                 <td>
                     <table width="100%" border="0">
                         <tr>
-                            <td width="50%" style="color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
+                            <td width="80%" style="color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
                                 @php
                                     $taxt_rate = 0;
                                     foreach ($order_items as $order_item) {
@@ -357,7 +366,7 @@
                                 @endphp
                                 Tax ({{ $taxt_rate }})
                             </td>
-                            <td align="right" style="text-align: right;color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
+                            <td align="" style="color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
                                 @php
                                     $tax = 0;
                                     foreach ($order_items as $item) {
@@ -369,18 +378,18 @@
                             </td>
                         </tr>
                         <tr>
-                            <td width="50%" style="color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
+                            <td width="80%" style="color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
                                 Shipping
                             </td>
-                            <td align="right" style="text-align: right;color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
+                            <td align="" style="color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
                                 {{ '$'.number_format($currentOrder->shipment_price, 2) }} 
                             </td>
                         </tr>
                         <tr>
-                            <td width="50%" style="color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
+                            <td width="80%" style="color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
                                 Discount
                             </td>
-                            <td align="right" style="text-align: right;color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
+                            <td align="" style="color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
                                 {{ '$'.number_format($currentOrder->discount_amount, 2) }}
                             </td>
                         </tr>
@@ -391,10 +400,10 @@
                 <td>
                     <table width="100%" border="0">
                         <tr>
-                            <td width="50%" style="color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
+                            <td width="80%" style="color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
                                 Total
                             </td>
-                            <td align="right" style="text-align: right;color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
+                            <td align="" style="color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
                                 @php
                                     $total = 0;
                                     foreach ($order_items as $item) {
@@ -406,6 +415,13 @@
                             </td>
                         </tr>
                     </table>
+                </td>
+            </tr>
+            <tr>
+                <td align="center">
+                    <p style="font-weight:500;font-size:12px;padding:15px;">
+                        Your refund will be processed as soon as possible, and you will receive an email notification once it has been completed. Please allow 48 hours for the refund to reflect in your account. Contact us for any queries.
+                    </p>
                 </td>
             </tr>
             <tr>
