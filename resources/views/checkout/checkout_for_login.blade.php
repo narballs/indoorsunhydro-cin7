@@ -313,7 +313,7 @@
         padding-top: 0.75rem;
         padding-bottom: 0.75rem;
     }
-    @media only screen and (max-width: 425px) and (min-width: 280px) {
+    @media only screen and (max-width: 550px) and (min-width: 280px) {
         .proceedCheckoutmbl {
             border-radius: 5px;
             background: #008BD3;
@@ -458,7 +458,7 @@
             width: 50% !important;
         }
         
-        @media (max-width: 425px) {
+        @media (max-width: 550px) {
             .main_row_checkout {
                 justify-content: center ;
             }

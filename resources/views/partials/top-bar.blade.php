@@ -4,7 +4,7 @@
 @endphp
 @if (!empty($announcement_banner) && strtolower($announcement_banner->option_value) == 'yes')
 <div class="row bg-dark">
-    <h6 class="text-white text-center p-2 mb-0">
+    <h6 class="text-white text-center top_header_banner mb-0">
         <i class="fa fa-bullhorn text-white mr-2" aria-hidden="true"></i> {{!empty($announcement_banner_text->option_value) ? $announcement_banner_text->option_value : ''}}
     </h6>
 </div>

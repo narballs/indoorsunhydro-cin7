@@ -68,7 +68,7 @@
 		}
 	}
 
-	@media  screen and (min-width : 280px ) and (max-width:425px) { 
+	@media  screen and (min-width : 280px ) and (max-width:550px) { 
 		.orderSummarymbl {
 			background: #FAFAFA;
 			border-top-right-radius: 5.24485px;
@@ -191,7 +191,7 @@
 		}
 	}
 
-	@media screen and (max-width:425px) and (min-width: 376px) {
+	@media screen and (max-width:550px) and (min-width: 376px) {
 		.logo-confirm-div-1 {
 			width: 100%;
 			display:flex;

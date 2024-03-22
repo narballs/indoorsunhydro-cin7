@@ -1406,6 +1406,8 @@ class OrderController extends Controller
             'company' => $currentOrder->contact->company, 
             'order_status' => 'updated',
             'delievery_method' => $currentOrder->logisticsCarrier,
+            'new_order_status' => !empty($current_order_status->status) ? $current_order_status->status : '',
+            'previous_order_status' => !empty($previous_order_status->status) ? $previous_order_status->status : '',
         ];
 
         $name = $customer->contact->firstName;

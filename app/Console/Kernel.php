@@ -29,7 +29,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('check:orderstatus')->everyThreeHours();
         $schedule->command('stock:checking')->everyFiveMinutes();
         $schedule->command('auto:notify')->everyThreeMinutes();
-        $schedule->command('sync:gmc')->everySixHours();
+        $schedule->command('sync:gmc')->hourly();
 
         // $schedule->command('Delete:ContactsPermanently')->daily();
 
