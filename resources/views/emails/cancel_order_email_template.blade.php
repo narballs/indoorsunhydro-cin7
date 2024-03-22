@@ -39,38 +39,54 @@
                     <table width="80%" border="0" align="center">
                         <tr>
                             <td align="" style="text-align:center">
-                                @if(!empty($addresses['new_order_status']) && $addresses['new_order_status'] == 'Cancelled')
-                                    <span style="height: 40px;width: 40px;display: flex;background: #BEBEBE;border-radius: 25px;margin-left: 270px;">
-                                        <span style="margin-left: 11px;margin-top: 2px;color: #fff;font-size: 25px;">X</span>
-                                    </span>
+                                @if (!empty($addresses['order_status']) && $addresses['order_status'] === 'updated')
+                                    @if(!empty($addresses['new_order_status']) && $addresses['new_order_status'] == 'Cancelled')
+                                        <span style="height: 40px;width: 40px;display: flex;background: #BEBEBE;border-radius: 25px;margin-left: 270px;">
+                                            <span style="margin-left: 11px;margin-top: 2px;color: #fff;font-size: 25px;">X</span>
+                                        </span>
+                                    @else
+                                        <img class="img-fluid " src="{{ asset('/theme/img/email/approve_email_icon.png') }}">
+                                    @endif
                                 @else
                                     <img class="img-fluid " src="{{ asset('/theme/img/email/approve_email_icon.png') }}">
                                 @endif
                             </td>
                         </tr>
-                        
-                        @if(!empty($addresses['new_order_status']) && $addresses['new_order_status'] == 'Cancelled')
-                            <tr>
-                                <td align="" style="text-align: center;color:#000000;font-color:#000000;font-size: 18px;font-weight:bold;">
-                                    Your order has been Cancelled !
-                                </td>
-                            </tr>
-                            <tr>
-                                <td align="" style="text-align: center;color:#000000;font-color:#000000;font-size: 12px;font-weight:400;">
-                                    Your cancellation request  #{{ $addresses['order_id'] }} has been successfully processed.
-                                </td>
-                            </tr>
-                        @elseif (!empty($addresses['new_order_status']) && !empty($addresses['previous_order_status']))
-                            <tr>
-                                <td align="" style="text-align: center;color:#000000;font-color:#000000;font-size: 16px;font-weight:bold;">
-                                    Your order #{{ $addresses['order_id'] }} status has been updated from <b>{{$addresses['previous_order_status']}}</b> to <b>{{$addresses['new_order_status']}}</b>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td align="" style="text-align: center;color:#000000;font-color:#000000;font-size: 12px;font-weight:400;">
-                                    Suggestions , Comments and website feature requests . <a href="{{url('/contact-us')}}">Please click here to contact us</a>
-                                </td>
-                            </tr>
+                        @if (!empty($addresses['order_status']) && $addresses['order_status'] === 'updated')
+                            @if(!empty($addresses['new_order_status']) && $addresses['new_order_status'] == 'Cancelled')
+                                <tr>
+                                    <td align="" style="text-align: center;color:#000000;font-color:#000000;font-size: 18px;font-weight:bold;">
+                                        Your order has been Cancelled !
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="" style="text-align: center;color:#000000;font-color:#000000;font-size: 12px;font-weight:400;">
+                                        Your cancellation request  #{{ $addresses['order_id'] }} has been successfully processed.
+                                    </td>
+                                </tr>
+                            @elseif (!empty($addresses['new_order_status']) && !empty($addresses['previous_order_status']))
+                                <tr>
+                                    <td align="" style="text-align: center;color:#000000;font-color:#000000;font-size: 16px;font-weight:bold;">
+                                        Your order #{{ $addresses['order_id'] }} status has been updated from <b>{{$addresses['previous_order_status']}}</b> to <b>{{$addresses['new_order_status']}}</b>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="" style="text-align: center;color:#000000;font-color:#000000;font-size: 12px;font-weight:400;">
+                                        Suggestions , Comments and website feature requests . <a href="{{url('/contact-us')}}">Please click here to contact us</a>
+                                    </td>
+                                </tr>
+                            @else
+                                <tr>
+                                    <td align="" style="text-align: center;color:#000000;font-color:#000000;font-size: 16px;font-weight:bold;">
+                                        Your order #{{ $addresses['order_id'] }} status has been updated.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="" style="text-align: center;color:#000000;font-color:#000000;font-size: 12px;font-weight:400;">
+                                        Suggestions , Comments and website feature requests . <a href="{{url('/contact-us')}}">Please click here to contact us</a>
+                                    </td>
+                                </tr>
+                            @endif
                         @else
                             <tr>
                                 <td align="" style="text-align: center;color:#000000;font-color:#000000;font-size: 16px;font-weight:bold;">
