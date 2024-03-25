@@ -11,6 +11,16 @@ $blogs = NavHelper::getBlogs();
     #similar_products_owl_carasoul_blog .owl-nav.disabled {
         display: block;
     }
+
+    .blog_title {
+        font-size: 22px;
+    }
+    
+    @media screen and (max-width: 768px) {
+        .blog_title {
+            font-size: 15px;
+        }
+    }
 </style>
 
 @if (count($blogs) > 0)
@@ -25,13 +35,13 @@ $blogs = NavHelper::getBlogs();
                             <a href="{{route('blog_detail' , $blog->slug)}}"><img class="img-fluid" style="height: 12.5rem;" alt="100%x280" src="{{asset('pages/blogs/thumbnails/' . $blog['thumbnail'])}}"></a>
                         </div>
                         <div class="card-body pb-2 blog-card-body-height">
-                            <h5 class="card-title">{!! \Illuminate\Support\Str::limit($blog->title, 25) !!}</h5>
-                            <p class="card-text mb-0" style="max-height: 8rem;min-height:8rem;">{!! \Illuminate\Support\Str::limit(strip_tags($blog->description), 130) !!}</p>
-                            <div class="row justify-content-between">
-                                <div class="col-md-5">
+                            <h5 class="card-title blog_title">{!! \Illuminate\Support\Str::limit($blog->title, 15) !!}</h5>
+                            <p class="card-text mb-0" style="max-height: 7rem;min-height:7rem;">{!! \Illuminate\Support\Str::limit(strip_tags($blog->description), 130) !!}</p>
+                            <div class="row justify-content-between mb-2">
+                                <div class="col-xl-5 col-lg-5 col-md-5 col-5">
                                     <small class="text-muted">{{date('Y-m-d', strtotime($blog->created_at))}}</small>
                                 </div>
-                                <div class="col-md-5">
+                                <div class="col-xl-5 col-lg-5 col-md-5 col-5">
                                     <small class="text-muted"><a href="{{route('blog_detail' , $blog->slug)}}">Read More ..</a></small>
                                 </div>
                             </div>

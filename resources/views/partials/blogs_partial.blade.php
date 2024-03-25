@@ -1,6 +1,17 @@
 @php
 	$blogs = NavHelper::getBlogs();
 @endphp
+<style>
+	.blog_title {
+        font-size: 22px;
+    }
+    
+    @media screen and (max-width: 768px) {
+        .blog_title {
+            font-size: 15px;
+        }
+    }
+</style>
 <div class="row justify-content-center mt-3">
 	<div class="col-md-10">
 		@if (count($blogs) > 0)
@@ -14,8 +25,8 @@
 							</a>
 						@endif
 						<div class="card-body blog-card-body-height">
-							<h5 class="card-title">{!! \Illuminate\Support\Str::limit($blog->title, 25) !!}</h5>
-							<p class="card-text mb-0"  style="max-height: 8rem;min-height:8rem;">{!! \Illuminate\Support\Str::limit(strip_tags($blog->description), 130) !!}</p>
+							<h5 class="card-title blog_title">{!! \Illuminate\Support\Str::limit($blog->title, 15) !!}</h5>
+							<p class="card-text mb-0"  style="max-height: 7rem;min-height:7rem;">{!! \Illuminate\Support\Str::limit(strip_tags($blog->description), 130) !!}</p>
 							<div class="row justify-content-between">
 								<div class="col-md-5 col-5 col-xl-5 col-lg-5">
 									<small class="text-muted">{{date('Y-m-d', strtotime($blog->created_at))}}</small>
