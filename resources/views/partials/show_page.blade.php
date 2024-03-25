@@ -2,6 +2,48 @@
 $blogs = NavHelper::getBlogs();;
 @endphp
 @include('partials.header')
+<style>
+    @media only screen and (max-width: 768px) {
+        .about_us_page {
+            font-size: 14px; /* Decrease font size for smaller screens */
+            line-height: 1.5; /* Adjust line height for readability */
+            max-width: 100%;
+        }
+        .about_us_page h2 {
+            font-size: 20px; /* Decrease font size for smaller screens */
+        }
+        .about_us_page h3 {
+            font-size: 18px; /* Decrease font size for smaller screens */
+        }
+        .about_us_page h4 {
+            font-size: 16px; /* Decrease font size for smaller screens */
+        }
+        .about_us_page h5 {
+            font-size: 14px; /* Decrease font size for smaller screens */
+        }
+        .about_us_page h6 {
+            font-size: 12px; /* Decrease font size for smaller screens */
+        }
+        .about_us_page p {
+            font-size: 14px; /* Decrease font size for smaller screens */
+        }
+        .about_us_page ul {
+            font-size: 14px; /* Decrease font size for smaller screens */
+        }
+        .about_us_page ol {
+            font-size: 14px; /* Decrease font size for smaller screens */
+        }
+        .about_us_page a {
+            font-size: 14px; /* Decrease font size for smaller screens */
+        }
+        .about_us_page img {
+            max-width: 100% !important;
+            height: auto;
+        }
+    }
+    
+
+</style>
 <body>
     <main>
         @include('partials.top-bar')
@@ -49,8 +91,10 @@ $blogs = NavHelper::getBlogs();;
                                     @include('partials.blogs_partial')
                                 @else
                                     <div class="card border-0 ">
-                                        <div class="card-body ">
-                                            {!! $page->description !!}
+                                        <div class="col-12">
+                                            <div class="card-body about_us_page ">
+                                                {!! $page->description !!}
+                                            </div>
                                         </div>
                                     </div>
                                 @endif
