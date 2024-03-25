@@ -83,15 +83,13 @@
                                     </div>
                                     <div class="col-md-12">
                                         <div class="row align-items-center">
-                                            <div class="col-md-3">
+                                            <div class="col-md-12">
                                                 <span class="text-danger product-detail-price" id="product_price">
                                                     ${{number_format($retail_price, 2)}}
                                                 </span>
                                             </div>
-                                            <div class="col-md-9">
-                                                <button type="button" class="btn btn-light update_inventory_number" onclick="get_latest_inventory_number()"><i class="fa fa-refresh"></i><span class="mx-2">Update Stock</span></button>
-                                            </div>
-                                            <div class="col-md-6">
+                                            
+                                            <div class="col-md-4">
                                                 <div class="mt-4 mb-3"> <span class="text-uppercase text-muted brand"></span>                                                
                                                     <div class="price d-flex flex-row align-items-center">
                                                         @if ($productOption->products->status != 'Inactive')
@@ -128,7 +126,10 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-5">
+                                                <button type="button" class="btn btn-light update_inventory_number" onclick="get_latest_inventory_number()"><i class="fa fa-refresh"></i><span class="mx-2">Update Stock</span></button>
+                                            </div>
+                                            <div class="col-md-3">
                                                 @if (!empty($productOption->option1) || !empty($productOption->option2) || !empty($productOption->option3))
                                                     @php
                                                         $image_src = [];
@@ -144,32 +145,32 @@
 
                                                     @endphp
                                                     <div class="row align-items-center">
-                                                        <div class="col-md-2">
+                                                        <div class="col-md-6 text-right">
                                                             @if (isset($image_src['option1']))
                                                                 <img src= "{{asset('theme/bootstrap5/images/' . $image_src['option1'] )}}" style="max-width: 40px;" />
                                                             @endif
                                                         </div>
-                                                        <div class="col-md-10">
+                                                        <div class="col-md-6 text-right">
                                                         <p class="mb-0">{{ $productOption->option1 }}</p>
                                                         </div>
                                                     </div>
                                                     <div class="row align-items-center">
-                                                        <div class="col-md-2">
+                                                        <div class="col-md-6 text-right">
                                                             @if (isset($image_src['option2']))
                                                                 <img src= "{{asset('theme/bootstrap5/images/' . $image_src['option2'] )}}" style="max-width: 40px;" />
                                                             @endif
                                                         </div>
-                                                        <div class="col-md-10">
+                                                        <div class="col-md-6 text-right">
                                                         <p class="mb-0">{{ $productOption->option2 }}</p> 
                                                         </div>
                                                     </div>
                                                     <div class="row align-items-center">
-                                                        <div class="col-md-2">
+                                                        <div class="col-md-6 text-right">
                                                             @if (isset($image_src['option3']))
                                                                 <img src= "{{asset('theme/bootstrap5/images/' . $image_src['option3'] )}}" style="max-width: 40px;" />
                                                             @endif
                                                         </div>
-                                                        <div class="col-md-10">
+                                                        <div class="col-md-6 text-right">
                                                         <p class="mb-0">{{ $productOption->option3 }}</p> 
                                                         </div>
                                                     </div>
@@ -439,10 +440,8 @@
                         <button type="button" class="btn btn-info btn-sm p-1 mb-2" onclick="get_latest_inventory_number()">Get latest Inventory numbers</button>
                     </div> --}}
                     
-                    <div class="row"> 
-                        <div class="d-flex w-100">
-                            <button type="button" class="btn btn-light update_inventory_number btn-sm mb-3" onclick="get_latest_inventory_number()"><i class="fa fa-refresh"></i><span class="mx-2">Update Stock</span></button>
-                        </div>
+                    <div class="row mb-3"> 
+                        
                         <span class="text-uppercase text-muted brand"></span>
 
                         <div class="price d-flex flex-row align-items-center">
@@ -476,6 +475,9 @@
                             </a>
                             @endif
                         </div>
+                    </div>
+                    <div class="d-flex w-100">
+                        <button type="button" class="btn btn-light update_inventory_number btn-sm mb-3" onclick="get_latest_inventory_number()"><i class="fa fa-refresh"></i><span class="mx-2">Update Stock</span></button>
                     </div>
                     <div class="row">
                         @if ($customer_demand_inventory_number === 1)
