@@ -6,7 +6,7 @@
 		@if (count($blogs) > 0)
 			<div class="row">
 				@foreach ($blogs as $blog)
-				<div class="col-md-4 mb-3">
+				<div class="col-md-6 col-xl-4 col-lg-6 col-12 mb-3">
 					<div class="card rounded">
 						@if (!empty($blog->image))
 							<a href="{{route('blog_detail' , $blog->slug)}}">
@@ -17,10 +17,10 @@
 							<h5 class="card-title">{!! \Illuminate\Support\Str::limit($blog->title, 25) !!}</h5>
 							<p class="card-text mb-0"  style="max-height: 8rem;min-height:8rem;">{!! \Illuminate\Support\Str::limit(strip_tags($blog->description), 130) !!}</p>
 							<div class="row justify-content-between">
-								<div class="col-md-5">
+								<div class="col-md-5 col-5 col-xl-5 col-lg-5">
 									<small class="text-muted">{{date('Y-m-d', strtotime($blog->created_at))}}</small>
 								</div>
-								<div class="col-md-5">
+								<div class="col-md-5 col-5 col-xl-5 col-lg-5">
 									<small class="text-muted"><a href="{{route('blog_detail' , $blog->slug)}}">Read More ..</a></small>
 								</div>
 							</div>
