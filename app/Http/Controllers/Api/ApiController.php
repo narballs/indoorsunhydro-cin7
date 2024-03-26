@@ -36,7 +36,7 @@ class ApiController extends Controller
         // $products_ids = ProductOption::whereIn('option_id' , $product_pricing_option_ids)
         // ->pluck('product_id')->toArray();
         $products = Product::with('options','options.defaultPrice','product_brand','product_image','categories')
-        // ->whereIn('product_id' , $products_ids)
+        // ->whereIn('product_id' , $porducts_ids)
         // ->where('status' , '!=' , 'Inactive')
         // ->where('barcode' , '!=' , '')
         ->get();
