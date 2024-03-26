@@ -484,7 +484,8 @@ class SyncAPiData extends Command
             'disP2USD' => true,
             'comccusd' => true,
             'com1USD' => true,
-            'msrpusd' => true
+            'msrpusd' => true,
+            'webPriceUSD' => true,
         ];
     }
 }

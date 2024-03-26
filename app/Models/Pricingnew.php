@@ -20,7 +20,8 @@ class Pricingnew extends Model
         'tier0USD',
         'commercialOKUSD',
         'costUSD',
-        'specialPrice'
+        'specialPrice',
+        'webPriceUSD',
     ];
     public function option()
     {
