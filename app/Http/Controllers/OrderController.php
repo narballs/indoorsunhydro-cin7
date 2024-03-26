@@ -1409,7 +1409,7 @@ class OrderController extends Controller
             'new_order_status' => !empty($current_order_status->status) ? $current_order_status->status : '',
             'previous_order_status' => !empty($previous_order_status->status) ? $previous_order_status->status : '',
         ];
-
+        $email_template = !empty($current_order_status->status) && ($current_order_status->status === 'Cancelled') ? 'emails.cancel_order_email_template' : 'emails.admin-order-received';
         $name = $customer->contact->firstName;
         $email =  $customer->contact->email;
         $reference  =  $currentOrder->reference;
@@ -1442,14 +1442,14 @@ class OrderController extends Controller
                 $adminTemplate = 'emails.admin-order-received';
                 $data['subject'] = $subject;
                 $data['email'] = $role_admin->email;
-                MailHelper::sendMailNotification('emails.admin-order-received', $data);
+                MailHelper::sendMailNotification($email_template, $data);
             }
         }
 
         if (!empty($email)) {
             $data['subject'] = 'Your Indoorsun Hydro order' .'#'.$currentOrder->id. ' ' .'status has been updated';
             $data['email'] = $email;
-            MailHelper::sendMailNotification('emails.admin-order-received', $data);
+            MailHelper::sendMailNotification($email_template, $data);
         }
 
 

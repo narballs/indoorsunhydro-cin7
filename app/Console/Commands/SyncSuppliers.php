@@ -62,7 +62,8 @@ class SyncSuppliers extends Command
         $last_synced_date = $sync_log->last_synced;
 
         $total_record_count = 0;
-        
+        $email_array = [];
+        $new_email_array = [];
         
         $this->info('Last updated time#--------------------------' . $last_synced_date);
         $this->info('Current time#--------------------------' . $current_date);
@@ -172,26 +173,27 @@ class SyncSuppliers extends Command
                             foreach ($api_contact->secondaryContacts as $apiSecondaryContact) {
                                 $secondary_contact = Contact::where('secondary_id', $apiSecondaryContact->id)
                                     ->where('parent_id', $contact->contact_id)->first();
-                                $deleteing_secondary_contact = Contact::where('parent_id' , $contact->contact_id)->where('is_parent' , 0)->get();
-                                foreach($deleteing_secondary_contact as $deleteing_secondary_contact){
-                                    if ($deleteing_secondary_contact->secondary_id != $apiSecondaryContact->id) {
-                                        $deleteing_secondary_contact->update([
-                                            'is_deleted' => now()
-                                        ]);
+                                $email_array[] = $apiSecondaryContact->email;
+                                // $deleteing_secondary_contact = Contact::where('parent_id' , $contact->contact_id)->where('is_parent' , 0)->get();
+                                // foreach($deleteing_secondary_contact as $deleteing_secondary_contact){
+                                //     if ($deleteing_secondary_contact->secondary_id != $apiSecondaryContact->id) {
+                                //         $deleteing_secondary_contact->update([
+                                //             'is_deleted' => now()
+                                //         ]);
 
-                                        if (!empty($deleteing_secondary_contact->is_deleted)) {
-                                            $user_log = new UserLog();
-                                            // $user_log->user_id = auth()->user()->id;
-                                            $user_log->contact_id = !empty($deleteing_secondary_contact->contact_id) ? $deleteing_secondary_contact->contact_id : $deleteing_secondary_contact->id;
-                                            $user_log->secondary_id = !empty($deleteing_secondary_contact->secondary_id) ? $deleteing_secondary_contact->secondary_id : $deleteing_secondary_contact->id;
-                                            $user_log->action = 'Deletion';
-                                            $user_log->user_notes = !empty($deleteing_secondary_contact->email) ? $deleteing_secondary_contact->email . ' ' . 'is ' . 'deleted in qcom at' .' '. now() . '  because it was deleted in cin7' : $deleteing_secondary_contact->firstName .' '. $deleteing_secondary_contact->lastName  . ' ' . 'is ' . 'deleted in qcom at' .' '. now() . '  because it was deleted in cin7';
-                                            $user_log->save();
-                                        }
+                                //         if (!empty($deleteing_secondary_contact->is_deleted)) {
+                                //             $user_log = new UserLog();
+                                //             // $user_log->user_id = auth()->user()->id;
+                                //             $user_log->contact_id = !empty($deleteing_secondary_contact->contact_id) ? $deleteing_secondary_contact->contact_id : $deleteing_secondary_contact->id;
+                                //             $user_log->secondary_id = !empty($deleteing_secondary_contact->secondary_id) ? $deleteing_secondary_contact->secondary_id : $deleteing_secondary_contact->id;
+                                //             $user_log->action = 'Deletion';
+                                //             $user_log->user_notes = !empty($deleteing_secondary_contact->email) ? $deleteing_secondary_contact->email . ' ' . 'is ' . 'deleted in qcom at' .' '. now() . '  because it was deleted in cin7' : $deleteing_secondary_contact->firstName .' '. $deleteing_secondary_contact->lastName  . ' ' . 'is ' . 'deleted in qcom at' .' '. now() . '  because it was deleted in cin7';
+                                //             $user_log->save();
+                                //         }
 
-                                        $deleteing_secondary_contact->delete();
-                                    }
-                                }
+                                //         $deleteing_secondary_contact->delete();
+                                //     }
+                                // }
                                 if ($secondary_contact) {
 
                                     $secondary_contact->secondary_id = $apiSecondaryContact->id;
@@ -252,7 +254,32 @@ class SyncSuppliers extends Command
                                 ]);
                                 $UserLog->save();
                             }
-                        } else {
+
+                            $deleting_secondary_by_emails = Contact::where('parent_id' , $api_contact->id)
+                            ->where('is_parent' , 0)
+                            ->whereNotIn('email', $email_array)
+                            ->get();
+
+                            if (count($deleting_secondary_by_emails) > 0) {
+                                foreach($deleting_secondary_by_emails as $deleting_secondary_by_email){
+                                    $deleting_secondary_by_email->update([
+                                        'is_deleted' => now()
+                                    ]);
+
+                                    $user_log = new UserLog();
+                                        // $user_log->user_id = auth()->user()->id;
+                                    $user_log->contact_id = !empty($deleting_secondary_by_email->contact_id) ? $deleting_secondary_by_email->contact_id : $deleting_secondary_by_email->id;
+                                    $user_log->secondary_id = !empty($deleting_secondary_by_email->secondary_id) ? $deleting_secondary_by_email->secondary_id : $deleting_secondary_by_email->id;
+                                    $user_log->action = 'Deletion';
+                                    $user_log->user_notes = !empty($deleting_secondary_by_email->email) ? $deleting_secondary_by_email->email . ' ' . 'is ' . 'deleted in qcom at' .' '. now() . '  because it was deleted in cin7' : $deleting_secondary_by_email->firstName .' '. $deleting_secondary_by_email->lastName  . ' ' . 'is ' . 'deleted in qcom at' .' '. now() . '  because it was deleted in cin7';
+                                    $user_log->save();
+                                    $deleting_secondary_by_email->delete();
+                                }
+                            }
+                                
+                                        
+                        } 
+                        else {
                             $deleteing_secondary_contact = Contact::where('parent_id' , $contact->contact_id)->where('is_parent' , 0)->get();
                             foreach($deleteing_secondary_contact as $deleteing_secondary_contact){
                                 $deleteing_secondary_contact->update([
@@ -266,10 +293,10 @@ class SyncSuppliers extends Command
                                     $user_log->action = 'Deletion';
                                     $user_log->user_notes = !empty($deleteing_secondary_contact->email) ? $deleteing_secondary_contact->email . ' ' . 'is ' . 'deleted in qcom at' .' '. now() . '  because it was deleted in cin7' : $deleteing_secondary_contact->firstName .' '. $deleteing_secondary_contact->lastName  . ' ' . 'is ' . 'deleted in qcom at' .' '. now() . '  because it was deleted in cin7';
                                     $user_log->save();
+                                    $deleteing_secondary_contact->delete();
                                 }
 
 
-                                $deleteing_secondary_contact->delete();
                             }
                         }
                     } else {
@@ -313,26 +340,27 @@ class SyncSuppliers extends Command
                         ]);
                         if ($api_contact->secondaryContacts) {
                             foreach ($api_contact->secondaryContacts as $secondaryContact) {
-                                $deleteing_secondary_contact = Contact::where('parent_id' , $api_contact->id)->get();
-                                foreach($deleteing_secondary_contact as $deleteing_secondary_contact){
-                                    if ($deleteing_secondary_contact->secondary_id != $secondaryContact->id) {
-                                        $deleteing_secondary_contact->update([
-                                            'is_deleted' => now()
-                                        ]);
-                                        if (!empty($deleteing_secondary_contact->is_deleted)) {
-                                            $user_log = new UserLog();
-                                            // $user_log->user_id = auth()->user()->id;
-                                            $user_log->contact_id = !empty($deleteing_secondary_contact->contact_id) ? $deleteing_secondary_contact->contact_id : $deleteing_secondary_contact->id;
-                                            $user_log->secondary_id = !empty($deleteing_secondary_contact->secondary_id) ? $deleteing_secondary_contact->secondary_id : $deleteing_secondary_contact->id;
-                                            $user_log->action = 'Deletion';
-                                            $user_log->user_notes = !empty($deleteing_secondary_contact->email) ? $deleteing_secondary_contact->email . ' ' . 'is ' . 'deleted in qcom at' .' '. now() . '  because it was deleted in cin7' : $deleteing_secondary_contact->firstName .' '. $deleteing_secondary_contact->lastName . ' ' . 'is ' . 'deleted in qcom at' .' '. now() . '  because it was deleted in cin7';
-                                            $user_log->save();
-                                        }
+                                $new_email_array[] = $secondaryContact->email;
+                                // $deleteing_secondary_contact = Contact::where('parent_id' , $api_contact->id)->get();
+                                // foreach($deleteing_secondary_contact as $deleteing_secondary_contact){
+                                //     if ($deleteing_secondary_contact->secondary_id != $secondaryContact->id) {
+                                //         $deleteing_secondary_contact->update([
+                                //             'is_deleted' => now()
+                                //         ]);
+                                //         if (!empty($deleteing_secondary_contact->is_deleted)) {
+                                //             $user_log = new UserLog();
+                                //             // $user_log->user_id = auth()->user()->id;
+                                //             $user_log->contact_id = !empty($deleteing_secondary_contact->contact_id) ? $deleteing_secondary_contact->contact_id : $deleteing_secondary_contact->id;
+                                //             $user_log->secondary_id = !empty($deleteing_secondary_contact->secondary_id) ? $deleteing_secondary_contact->secondary_id : $deleteing_secondary_contact->id;
+                                //             $user_log->action = 'Deletion';
+                                //             $user_log->user_notes = !empty($deleteing_secondary_contact->email) ? $deleteing_secondary_contact->email . ' ' . 'is ' . 'deleted in qcom at' .' '. now() . '  because it was deleted in cin7' : $deleteing_secondary_contact->firstName .' '. $deleteing_secondary_contact->lastName . ' ' . 'is ' . 'deleted in qcom at' .' '. now() . '  because it was deleted in cin7';
+                                //             $user_log->save();
+                                //         }
 
 
-                                        $deleteing_secondary_contact->delete();
-                                    }
-                                }
+                                //         $deleteing_secondary_contact->delete();
+                                //     }
+                                // }
                                 $secondaryContact = new Contact([
                                     'secondary_id' => $secondaryContact->id,
                                     'parent_id'  => $api_contact->id,
@@ -352,6 +380,28 @@ class SyncSuppliers extends Command
 
                                 ]);
                                 $secondaryContact->save();
+
+                                $deleting_secondary_by_emails = Contact::where('parent_id' , $api_contact->id)
+                                ->where('is_parent' , 0)
+                                ->whereNotIn('email', $new_email_array)
+                                ->get();
+
+                                if (count($deleting_secondary_by_emails) > 0) {
+                                    foreach($deleting_secondary_by_emails as $deleting_secondary_by_email){
+                                        $deleting_secondary_by_email->update([
+                                            'is_deleted' => now()
+                                        ]);
+
+                                        $user_log = new UserLog();
+                                            // $user_log->user_id = auth()->user()->id;
+                                        $user_log->contact_id = !empty($deleting_secondary_by_email->contact_id) ? $deleting_secondary_by_email->contact_id : $deleting_secondary_by_email->id;
+                                        $user_log->secondary_id = !empty($deleting_secondary_by_email->secondary_id) ? $deleting_secondary_by_email->secondary_id : $deleting_secondary_by_email->id;
+                                        $user_log->action = 'Deletion';
+                                        $user_log->user_notes = !empty($deleting_secondary_by_email->email) ? $deleting_secondary_by_email->email . ' ' . 'is ' . 'deleted in qcom at' .' '. now() . '  because it was deleted in cin7' : $deleting_secondary_by_email->firstName .' '. $deleting_secondary_by_email->lastName  . ' ' . 'is ' . 'deleted in qcom at' .' '. now() . '  because it was deleted in cin7';
+                                        $user_log->save();
+                                        $deleting_secondary_by_email->delete();
+                                    }
+                                }
                             }
                         }
                         $contact->save();
