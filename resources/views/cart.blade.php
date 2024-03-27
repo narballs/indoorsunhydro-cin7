@@ -595,11 +595,12 @@
                                             @endif
                                             <div class="p-3 mb-3" style="border: 0.793792px solid #DFDFDF;box-shadow: 0px 3.17517px 3.17517px rgba(231, 231, 231, 0.25);">
                                                 <div class="card-header bg-white p-0 border-0 d-flex align-items-center justify-content-between">
-                                                    <p class="your-cart-title ps-1"> Your Cart</p>
-                                                    <p class="cart-page-items text-danger text-right mb-2"> Price Subject to Change</p>
+                                                    <p class="your-cart-title ps-1 mb-0"> Your Cart</p>
+                                                    <p class="cart-page-items text-danger text-right mb-0"> Price Subject to Change</p>
                                                 </div>
-                                                <div class="col-md-12 p-0 pt-3" style="border-top: 1.5px solid #EBEBEB;">
-                                                    <table class="table cart_table_mobile">
+                                                {{-- <div class="col-md-12 p-0 pt-3" style="border-top: 1.5px solid #EBEBEB;"> --}}
+                                                <div class="col-md-12 p-0">
+                                                    <table class="table cart_table_mobile mb-0">
                                                         <thead>
                                                         </thead>
                                                         <tbody style="border-top: none !important">
@@ -610,6 +611,11 @@
                                                                 $stock_per_product_mbl = 0;
                                                                 $stock_per_product_mbl = App\Helpers\UserHelper::get_stock_per_product_option($pk_product_id, $cart['option_id']);
                                                             @endphp
+                                                                    <tr>
+                                                                        <td colspan="3" class="" style="vertical-align: center !important;">
+                                                                            <div class="row" style="border-top: 1px solid #EBEBEB;"></div>
+                                                                        </td>
+                                                                    </tr>
                                                                     <tr>
                                                                         <td class="p-1" style="vertical-align: middle;width:20%;background-color:#F7F7F7;">
                                                                             @if (!empty($cart['image']))
@@ -670,11 +676,7 @@
                                                                         </td>
                                                                     </tr>
                                                                     
-                                                                    <tr>
-                                                                        <td colspan="3" class="" style="vertical-align: center !important;">
-                                                                            <div class="row" style="border-top: 1px solid #EBEBEB;"></div>
-                                                                        </td>
-                                                                    </tr>
+                                                                    
                                                                 @endforeach
                                                             @endif
                                                         </tbody>
@@ -683,7 +685,7 @@
                                             </div>
                                             <div class="w-100 p-3" style="border: 0.793792px solid #DFDFDF;box-shadow: 0px 3.17517px 3.17517px rgba(231, 231, 231, 0.25);">
                                                 <div class="w-100 mb-3 pb-3 d-flex" style="border-bottom:1px solid #dee2e6;">
-                                                    <span class="mb-2 cart-total-checkout-page text-dark mb-2 w-50">
+                                                    <span class="mb-2 cart-total-checkout-page text-dark mb-2 w-50 text-left ps-1">
                                                         Cart totals
                                                     </span>
                                                     <span class="ml-2 cart-sub-total-checkout-page text-dark mt-0 w-50 text-right">
@@ -697,7 +699,7 @@
                                                     </span>
                                                 </div>
                                                 <div class="d-flex pb-3 mb-3" style="border-bottom:1px solid #dee2e6;">
-                                                    <div class="w-50 d-flex align-items-center">
+                                                    <div class="w-50 d-flex align-items-center text-left">
                                                         <span class="">
                                                             <img src="/theme/img/sub-totals-icon.png" width="25px" height="30">
                                                         </span>
@@ -737,7 +739,7 @@
                                                 @if(!empty($tax_class->name))
                                                 <div class="d-flex pb-3 mb-3" style="border-bottom:1px solid #dee2e6;">
                                                     
-                                                    <div class="w-100 d-flex align-items-center "><p class="sub-total-checkout-page  mt-0 mb-0 ml-0 text-dark mx-3 px-3">{{'Tax Class :' . $tax_class->name}}</p></div>
+                                                    <div class="w-100 d-flex align-items-center "><p class="sub-total-checkout-page  mt-0 mb-0 ml-0 text-dark ps-1">{{'Tax Class :' . $tax_class->name}}</p></div>
                                                     
                                                 </div> 
                                                 @endif

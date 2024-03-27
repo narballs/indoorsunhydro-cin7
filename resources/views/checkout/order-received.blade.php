@@ -345,7 +345,7 @@
 		}
 
 		.order-confirmation-page-second-row {
-			padding-top: 2rem !important;
+			padding-top: 1rem !important;
 		}
 		.order-confirmation-page-order-number-title {
 			font-weight: 400 !important;
@@ -562,11 +562,18 @@
 			top: 16%;
 		}
 	}
-	@media only screen and (max-width: 768px) and (min-width: 426px) {
+	@media only screen and (max-width: 768px) and (min-width: 600px) {
 		.confirmation_check {
 			position: absolute;
 			left: 6%;
 			top: 18%;
+		}
+	}
+	@media only screen and (max-width: 599px) and (min-width: 426px) {
+		.confirmation_check {
+			position: absolute;
+			left: 46%;
+			top: 10%;
 		}
 	}
 	.name_title {
@@ -930,7 +937,7 @@
 					{{-- for media mobile  end --}}
 					<div class="row for_mobile_spacing">
 						<div class="col-md-12">
-							<div class="row  ms-5 p-4 me-5 order-confirmation-page-second-row div_increase_mobile" style="padding-top: 5rem!important;">
+							<div class="row  ms-5 p-4 me-5 order-confirmation-page-second-row div_increase_mobile">
 								<div class="col-md-6">
 									<p class="order-confirmation-page-billing-address mobile-font">
 										Billing Address
@@ -1109,29 +1116,29 @@
 										Delivery Options
 									</h3>
 									<div class="d-flex">
-										@if($order->logisticsCarrier == 'Local Delivery')
-										<div class="w-50 local_order p-1 d-flex align-items-center justify-content-evenly">
-											<span class="radio_delievery radio_selected"></span>
+										@if($order->logisticsCarrier == 'Delivery')
+										<div class="local_order col-6 col-md-6 d-flex align-items-center ">
+											<span class="radio_delievery radio_selected mx-2"></span>
 											<span class="label_delievery">
-												Local Delievery
+												 Delievery
 											</span>
 										</div>
-										<div class="w-50 text-right p-1 d-flex align-items-center justify-content-evenly">
-											<span class="radio_delievery radio_not_selected"></span>
+										<div class="text-right  col-6 col-md-6 d-flex align-items-center justify-content-end">
+											<span class="radio_delievery radio_not_selected mx-2"></span>
 											<span class="label_delievery">
 												Pickup Order
 											</span>
 										</div>
 										@endif
 										@if($order->logisticsCarrier == 'Pickup Order')
-										<div class="w-50  p-1 d-flex align-items-center justify-content-evenly">
-											<span class="radio_delievery radio_not_selected"></span>
+										<div class="col-6 col-md-6 d-flex align-items-center">
+											<span class="radio_delievery radio_not_selected mx-2"></span>
 											<span class="label_delievery">
-												Local Delievery
+												 Delievery
 											</span>
 										</div>
-										<div class="w-50 text-right local_order p-1 d-flex align-items-center justify-content-evenly">
-											<span class="radio_delievery radio_selected"></span>
+										<div class="text-right local_order d-flex align-items-center justify-content-end">
+											<span class="radio_delievery radio_selected mx-2"></span>
 											<span class="label_delievery">
 												Pickup Order
 											</span>
