@@ -1115,30 +1115,30 @@
 									<h3 class="delievery_options_mbl mb-4">
 										Delivery Options
 									</h3>
-									<div class="d-flex">
+									<div class="row">
 										@if($order->logisticsCarrier == 'Delivery')
-										<div class="w-50 local_order p-1 d-flex align-items-center justify-content-evenly">
-											<span class="radio_delievery radio_selected"></span>
+										<div class="local_order col-6 col-md-6 d-flex align-items-center ">
+											<span class="radio_delievery radio_selected mx-2"></span>
 											<span class="label_delievery">
 												Local Delievery
 											</span>
 										</div>
-										<div class="w-50 text-right p-1 d-flex align-items-center justify-content-evenly">
-											<span class="radio_delievery radio_not_selected"></span>
+										<div class="text-right  col-6 col-md-6 d-flex align-items-center ">
+											<span class="radio_delievery radio_not_selected mx-2"></span>
 											<span class="label_delievery">
 												Pickup Order
 											</span>
 										</div>
 										@endif
 										@if($order->logisticsCarrier == 'Pickup Order')
-										<div class="w-50  p-1 d-flex align-items-center justify-content-evenly">
-											<span class="radio_delievery radio_not_selected"></span>
+										<div class="col-6 col-md-6 d-flex align-items-center">
+											<span class="radio_delievery radio_not_selected mx-2"></span>
 											<span class="label_delievery">
 												Local Delievery
 											</span>
 										</div>
-										<div class="w-50 text-right local_order p-1 d-flex align-items-center justify-content-evenly">
-											<span class="radio_delievery radio_selected"></span>
+										<div class="text-right local_order d-flex align-items-center ">
+											<span class="radio_delievery radio_selected mx-2"></span>
 											<span class="label_delievery">
 												Pickup Order
 											</span>
