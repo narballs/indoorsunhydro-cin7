@@ -537,10 +537,10 @@ $cart_price = 0;
                                                     $item_quantity = $item_quantity + $total_quatity;
                                                     $cart_total = $cart_total + $total_price;
                                                 ?>
-                                                <div class="row justify-content-center border-bottom custom-padding">
-                                                    <div class="col-md-8 col-8"><span class="checkout_product_title">{{ $cart['name'] }}</span></div>
-                                                    <div class="col-md-1 col-1"><span class="checkout_product_quantity">{{$total_quatity . 'x'}}</span></div>
-                                                    <div class="col-md-3 col-3 text-right"><span class="checkout_product_price ">${{ number_format($total_price, 2) }}</span></div>
+                                                <div class="row border-bottom custom-padding">
+                                                    <div class="col-xl-8 col-md-8 col-7"><span class="checkout_product_title">{{ $cart['name'] }}</span></div>
+                                                    <div class="col-xl-1 col-md-1 col-2"><span class="checkout_product_quantity">{{$total_quatity . 'x'}}</span></div>
+                                                    <div class="col-xl-3 col-md-3 col-3 text-right"><span class="checkout_product_price ">${{ number_format($total_price, 2) }}</span></div>
                                                 </div>
                                             @endforeach
                                         @endif
@@ -644,8 +644,8 @@ $cart_price = 0;
                                         @endif
                                         
                                         <div class="row justify-content-center border-bottom align-items-center py-2">
-                                            <div class="col-md-9 col-9"><span class="checkout_subtotal_heading">Subtotal</span></div>
-                                            <div class="col-md-3  col-3 text-right"><span class="checkout_subtotal_price">${{ number_format($cart_total, 2) }}</span></div>
+                                            <div class="col-md-9 col-8"><span class="checkout_subtotal_heading">Subtotal</span></div>
+                                            <div class="col-md-3  col-4 text-right"><span class="checkout_subtotal_price">${{ number_format($cart_total, 2) }}</span></div>
                                         </div>
                                         @if (!empty($enable_discount_setting) && strtolower($enable_discount_setting->option_value) === 'yes')
                                             @if (!empty($discount_code))
@@ -670,7 +670,7 @@ $cart_price = 0;
                                                         <div class="coupen_code_message text-info"></div>
                                                     </div>
                                                     <div class="row justify-content-center border-bottom align-items-center py-2 manuall_discount d-none">
-                                                        <div class="col-md-9 col-9">
+                                                        <div class="col-md-9 col-8">
                                                             <span class="checkout_discount_rate_heading_manuall">
                                                                 @if ($discount_code->discount_variation === 'percentage')
                                                                     Discount ({{$discount_code->discount_variation_value . '%'}})
@@ -681,7 +681,7 @@ $cart_price = 0;
                                                             <span class="coupen_code_name">(<label for="">Coupon Code : </label>{{!empty($discount_code) && !empty($discount_code->discount_code)  ? $discount_code->discount_code : ''}}</span>)
                                                             <span class="remove_coupen_code"><a href="{{url('/checkout')}}">Remove Code</a></span>
                                                         </div>
-                                                        <div class="col-md-3 col-3 text-right">
+                                                        <div class="col-md-3 col-4 text-right">
                                                             <span class="checkout_discount_rate_manuall">
                                                                 ${{ number_format($discount_amount, 2) }}
                                                             </span>
@@ -690,7 +690,7 @@ $cart_price = 0;
                                                 @else
                                                 <div class="row my-2 justify-content-center border-bottom align-items-center py-2">
                                                         <p for="" class="checkout_product_heading mb-2 ml-0">Enter Promo Code</p>
-                                                        <div class="col-md-9 col-9">
+                                                        <div class="col-md-9 col-8">
                                                             <span class="checkout_discount_rate_heading">
                                                                 @if ($discount_code->discount_variation === 'percentage')
                                                                     Discount ({{$discount_code->discount_variation_value . '%'}})
@@ -699,7 +699,7 @@ $cart_price = 0;
                                                                 @endif
                                                             </span>
                                                         </div>
-                                                        <div class="col-md-3 col-3 text-right">
+                                                        <div class="col-md-3 col-4 text-right">
                                                             <span class="checkout_discount_rate">
                                                                 ${{ number_format($discount_amount, 2) }}
                                                             </span>
@@ -709,12 +709,12 @@ $cart_price = 0;
                                             @endif
                                         @endif
                                         <div class="row justify-content-center border-bottom align-items-center py-2">
-                                            <div class="col-md-9 col-9">
+                                            <div class="col-md-9 col-8">
                                                 <span class="checkout_tax_rate_heading">
                                                     Tax Rate {{!empty($tax_class) ? '('.number_format($tax_class->rate  , 2).'%)' : '('. number_format(0  , 2) . ')'}}
                                                 </span>
                                             </div>
-                                            <div class="col-md-3 col-3 text-right">
+                                            <div class="col-md-3 col-4 text-right">
                                                 <span class="checkout_tax_rate">
                                                     ${{ number_format($tax, 2) }}
                                                 </span>
@@ -732,8 +732,8 @@ $cart_price = 0;
                                                 <input type="hidden" name="shipping_service_code" id="" value="{{$shipping_service_code}}">
                                                 <input type="hidden" name="shipment_cost_single" id="shipment_price_heavy_weight" value="{{count($shipstation_shipment_prices) > 0 ? number_format($shipstation_shipment_prices[0]->shipmentCost + $shipstation_shipment_prices[0]->otherCost , 2, '.', '')  : 0 }}">
                                                 <div class="row justify-content-center border-bottom align-items-center py-2">
-                                                    <div class="col-md-9 col-9"><span class="checkout_shipping_heading">Shipment Price</span></div>
-                                                    <div class="col-md-3 col-3 text-right"><span class="checkout_shipping_price">${{count($shipstation_shipment_prices) > 0 ? number_format($shipstation_shipment_prices[0]->shipmentCost + $shipstation_shipment_prices[0]->otherCost , 2)  : 0}}</span></div>
+                                                    <div class="col-md-9 col-8"><span class="checkout_shipping_heading">Shipment Price</span></div>
+                                                    <div class="col-md-3 col-4 text-right"><span class="checkout_shipping_price">${{count($shipstation_shipment_prices) > 0 ? number_format($shipstation_shipment_prices[0]->shipmentCost + $shipstation_shipment_prices[0]->otherCost , 2)  : 0}}</span></div>
                                                     {{-- <div class="col-md-3 col-3 text-right"><span class="checkout_shipping_price">${{number_format($shipment_price , 2)}}</span></div> --}}
                                                 </div>
                                             @else
@@ -765,11 +765,11 @@ $cart_price = 0;
                                                                 <input type="hidden" name="original_shipping_cost_from_shipstation" id="" value="{{ number_format($shipment_cost_without_surcharge , 2, '.', '')}}">
                                                                 <input type="hidden" name="shipping_carrier_code" id="" value="{{$shipping_carrier_code}}">
                                                                 <input type="radio" name="shipping_service_code" id="" class="d-none" value="{{$shipping_quote->serviceCode}}" checked>
-                                                                <div class="col-md-9 col-9">
+                                                                <div class="col-md-9 col-8">
                                                                     <input type="radio" name="shipping_multi_price" class="shipping_multi_price" id="single_shipping_quote" value="{{!empty($shipment_cost_with_surcharge) ? number_format($shipment_cost_with_surcharge , 2, '.', '') : number_format($shipment_cost_without_surcharge , 2, '.', '')}}" checked>
                                                                     <span class="checkout_shipping_heading">{{$shipping_quote->serviceName}}</span>
                                                                 </div>
-                                                                <div class="col-md-3 col-3 text-right">
+                                                                <div class="col-md-3 col-4 text-right">
                                                                     <span class="checkout_shipping_price">${{!empty($shipment_cost_with_surcharge) ? number_format($shipment_cost_with_surcharge , 2) : number_format($shipment_cost_without_surcharge , 2)}}</span>
                                                                 </div>
                                                                 <input type="hidden" name="shipment_cost_multiple" id="shipment_price_single" value="{{!empty($shipment_cost_with_surcharge) ? number_format($shipment_cost_with_surcharge , 2, '.', '') : number_format($shipment_cost_without_surcharge , 2, '.', '')}}">
@@ -787,22 +787,22 @@ $cart_price = 0;
                                                                     }
                                                                     $shipment_cost_with_surcharge = $shipment_cost_without_surcharge + $surcharge_value;
                                                                 @endphp
-                                                                <div class="col-md-9 col-9">
+                                                                <div class="col-md-9 col-8">
                                                                     <input type="hidden" name="original_shipping_cost_from_shipstation" id="" value="{{ number_format($shipment_cost_without_surcharge , 2, '.', '')}}">
                                                                     <input type="hidden" name="shipping_carrier_code" id="" value="{{$shipping_carrier_code}}">
                                                                     <input type="radio" name="shipping_service_code" id="" class="shipping_service_code d-none" value="{{$shipping_quote->serviceCode}}">
                                                                     <input type="radio" name="shipping_multi_price" class="shipping_multi_price" id="" value="{{!empty($shipment_cost_with_surcharge) ? number_format($shipment_cost_with_surcharge , 2, '.', '') : number_format($shipment_cost_without_surcharge , 2, '.', '')}}" onclick="assign_service_code(this)">
                                                                     <span class="checkout_shipping_heading">{{$shipping_quote->serviceName}}</span>
                                                                 </div>
-                                                                <div class="col-md-3 col-3 text-right">
+                                                                <div class="col-md-3 col-4 text-right">
                                                                     <span class="checkout_shipping_price">${{!empty($shipment_cost_with_surcharge) ? number_format($shipment_cost_with_surcharge , 2) : number_format($shipment_cost_without_surcharge , 2)}}</span>
                                                                 </div>
                                                                 <input type="hidden" name="shipment_cost_multiple" id="shipment_price_{{$shipping_quote->serviceCode}}" class="shipstation_multi_shipment_price" value="{{!empty($shipment_cost_with_surcharge) ? number_format($shipment_cost_with_surcharge , 2, '.', '') : number_format($shipment_cost_without_surcharge , 2, '.', '')}}">
                                                             @endforeach
                                                         @endif
                                                     @else
-                                                        <div class="col-md-9 col-9"><span class="checkout_shipping_heading">Shipment Price</span></div>
-                                                        <div class="col-md-3 col-3 text-right"><span class="checkout_shipping_price">${{number_format($shipment_price , 2)}}</span></div>
+                                                        <div class="col-md-9 col-8"><span class="checkout_shipping_heading">Shipment Price</span></div>
+                                                        <div class="col-md-3 col-4 text-right"><span class="checkout_shipping_price">${{number_format($shipment_price , 2)}}</span></div>
                                                     @endif
                                                 </div>
                                             @endif 
@@ -811,13 +811,13 @@ $cart_price = 0;
                                             <input type="hidden" name="shipping_carrier_code" id="" value="{{$shipping_carrier_code}}">
                                             <input type="hidden" name="shipping_service_code" id="" value="{{$shipping_service_code}}">
                                             <div class="row justify-content-center border-bottom align-items-center py-2">
-                                                <div class="col-md-9 col-9"><span class="checkout_shipping_heading">Shipment Price</span></div>
-                                                <div class="col-md-3 col-3 text-right"><span class="checkout_shipping_price">${{number_format($shipment_price , 2)}}</span></div>
+                                                <div class="col-md-9 col-8"><span class="checkout_shipping_heading">Shipment Price</span></div>
+                                                <div class="col-md-3 col-4 text-right"><span class="checkout_shipping_price">${{number_format($shipment_price , 2)}}</span></div>
                                             </div>
                                         @endif
                                         <div class="row justify-content-center  align-items-center py-2">
-                                            <div class="col-md-9 col-9"><span class="checkout_total_heading">Total</span></div>
-                                            <div class="col-md-3 col-3 text-right"><span class="checkout_total_price" id="checkout_order_total">${{ number_format($total_including_tax, 2) }}</span></div>
+                                            <div class="col-md-9 col-8"><span class="checkout_total_heading">Total</span></div>
+                                            <div class="col-md-3 col-4 text-right"><span class="checkout_total_price" id="checkout_order_total">${{ number_format($total_including_tax, 2) }}</span></div>
                                         </div>
                                     </div>
                                 </div>
@@ -838,12 +838,14 @@ $cart_price = 0;
                         {{-- <div class="row"> --}}
                             {{-- <div class="border m-0 rounded"> --}}
                                 <div class="row pb-2 pt-2 border m-0 rounded">
-                                    <div class="row align-items-center">
-                                        <div class="col-md-10 col-10">
-                                            <h6 class="checkout_main_sub_address mb-0">Billing Address</h6>
-                                        </div>
-                                        <div class="col-md-2 col-2">
-                                            <a data-bs-toggle="modal" href="#address_modal_id_billing" role="button" class="float-end" style="font-size:20px">Edit</a>
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-10 col-10">
+                                                <h6 class="checkout_main_sub_address mb-0">Billing Address</h6>
+                                            </div>
+                                            <div class="col-md-2 col-2">
+                                                <a data-bs-toggle="modal" href="#address_modal_id_billing" role="button" class="float-end" style="font-size:20px">Edit</a>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
@@ -875,12 +877,14 @@ $cart_price = 0;
                                             
                                         </div>
                                     </div>
-                                    <div class="row mt-5 align-items-center">
-                                        <div class="col-md-10 col-10">
-                                            <h6 class="checkout_main_sub_address mb-0">Shipping Address</h6>
-                                        </div>
-                                        <div class="col-md-2 col-2">
-                                            <a data-bs-toggle="modal" href="#address_modal_id_shipping" role="button" class="float-end" style="font-size:20px">Edit</a>
+                                    <div class="col-md-12">
+                                        <div class="row mt-3 align-items-center">
+                                            <div class="col-md-10 col-10">
+                                                <h6 class="checkout_main_sub_address mb-0">Shipping Address</h6>
+                                            </div>
+                                            <div class="col-md-2 col-2">
+                                                <a data-bs-toggle="modal" href="#address_modal_id_shipping" role="button" class="float-end" style="font-size:20px">Edit</a>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
