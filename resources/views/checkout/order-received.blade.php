@@ -1115,15 +1115,15 @@
 									<h3 class="delievery_options_mbl mb-4">
 										Delivery Options
 									</h3>
-									<div class="row">
+									<div class="d-flex">
 										@if($order->logisticsCarrier == 'Delivery')
 										<div class="local_order col-6 col-md-6 d-flex align-items-center ">
 											<span class="radio_delievery radio_selected mx-2"></span>
 											<span class="label_delievery">
-												Local Delievery
+												 Delievery
 											</span>
 										</div>
-										<div class="text-right  col-6 col-md-6 d-flex align-items-center ">
+										<div class="text-right  col-6 col-md-6 d-flex align-items-center justify-content-end">
 											<span class="radio_delievery radio_not_selected mx-2"></span>
 											<span class="label_delievery">
 												Pickup Order
@@ -1134,10 +1134,10 @@
 										<div class="col-6 col-md-6 d-flex align-items-center">
 											<span class="radio_delievery radio_not_selected mx-2"></span>
 											<span class="label_delievery">
-												Local Delievery
+												 Delievery
 											</span>
 										</div>
-										<div class="text-right local_order d-flex align-items-center ">
+										<div class="text-right local_order d-flex align-items-center justify-content-end">
 											<span class="radio_delievery radio_selected mx-2"></span>
 											<span class="label_delievery">
 												Pickup Order
