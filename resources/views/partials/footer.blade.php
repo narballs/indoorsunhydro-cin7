@@ -731,11 +731,13 @@
                             items:calculateItemsToShow(),
                             nav:false,
                             slideBy:1,
+                            dots:false,
                         },
                         600:{
                             items:calculateItemsToShow(),                    
                             nav:false,
                             slideBy:2,
+                            dots:false,
                         },
                         1000:{
                             items:calculateItemsToShow(),                    
