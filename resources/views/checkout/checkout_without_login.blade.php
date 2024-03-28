@@ -595,10 +595,10 @@ $cart_price = 0;
                                                     $item_quantity = $item_quantity + $total_quatity;
                                                     $cart_total = $cart_total + $total_price;
                                                 ?>
-                                                <div class="row justify-content-center border-bottom custom-padding">
-                                                    <div class="col-md-8 col-8"><span class="checkout_product_title">{{ $cart['name'] }}</span></div>
-                                                    <div class="col-md-1 col-1"><span class="checkout_product_quantity">{{$total_quatity . 'x'}}</span></div>
-                                                    <div class="col-md-3 col-3 text-right"><span class="checkout_product_price ">${{ number_format($total_price, 2) }}</span></div>
+                                                <div class="row border-bottom custom-padding">
+                                                    <div class="col-xl-8 col-md-8 col-7"><span class="checkout_product_title">{{ $cart['name'] }}</span></div>
+                                                    <div class="col-xl-1 col-md-1 col-2"><span class="checkout_product_quantity">{{$total_quatity . 'x'}}</span></div>
+                                                    <div class="col-xl-3 col-md-3 col-3 text-right"><span class="checkout_product_price ">${{ number_format($total_price, 2) }}</span></div>
                                                 </div>
                                             @endforeach
                                         @endif

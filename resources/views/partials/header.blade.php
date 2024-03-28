@@ -187,14 +187,24 @@
                 background: #F9F9F9  !important;
             }
         }
-        @media screen and (max-width: 550px) {
+        @media screen and (max-width: 550px) and (min-width: 426px) {
             .quantity_count_circle {
                 font-size: 12px;
                 height: 25.19px;
             }
             .top_header_banner {
-                padding: 0rem;
-                font-size: 15px !important;
+                /* padding: 0rem !important; */
+                font-size: 11px !important;
+            }
+        }
+        @media screen and (max-width: 425px) and (min-width: 280px) {
+            .quantity_count_circle {
+                font-size: 12px;
+                height: 25.19px;
+            }
+            .top_header_banner {
+                /* padding: 0rem !important; */
+                font-size: 8px !important;
             }
         }
 
