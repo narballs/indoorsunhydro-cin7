@@ -34,7 +34,7 @@ class UpdateLagsProducts extends Command
     public function handle()
     {
         $client = new Client(); // Instantiate Guzzle client outside the loop
-        $indoor_products = Product::with('options')->where('code', 'FS-25Lb')->get();
+        $indoor_products = Product::with('options')->get();
         if (count($indoor_products) > 0) {
             foreach ($indoor_products as $indoor_product) {
                 if (count($indoor_product['options']) > 0) {
