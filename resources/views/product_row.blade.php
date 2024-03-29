@@ -387,6 +387,9 @@
     }
     // end
     function updateCart(id, option_id) {
+        var initial_free_shipping_value = parseInt($('.initial_free_shipping_value').val());
+        var tax = 0;
+        var tax_rate = parseFloat($('#tax_rate_number').val());
         updateBodyClickEventStatus(false);
         $('#last_button_clicked').val(id);
 
@@ -477,6 +480,20 @@
                     // jQuery('.cart-total-number-' + id).html($('#swap_qty_number_' + id).val());
                     jQuery('.cart-total-number-' + id).html(response.actual_stock);
                     jQuery('.swap_qty_number_'+id).val(response.actual_stock);
+
+                    var grand_total = 0;
+                    var grand_total = parseFloat(cart_total);
+                    var tax = cart_total * (tax_rate / 100);
+                    var grand_total_include_tax = 0;
+                    grand_total_include_tax = (tax + grand_total).toFixed(2);
+                    if (grand_total <= initial_free_shipping_value) {
+                        $('.promotional_banner_div_congrats').addClass('d-none');
+                        $('.promotional_banner_div').removeClass('d-none');
+                        $('.promotional_banner_span').html('$' + (initial_free_shipping_value - grand_total_include_tax).toFixed(2));
+                    } else {
+                        $('.promotional_banner_div').addClass('d-none');
+                        $('.promotional_banner_div_congrats').removeClass('d-none');
+                    }
                     Swal.fire({
                         toast: true,
                         icon: 'success',

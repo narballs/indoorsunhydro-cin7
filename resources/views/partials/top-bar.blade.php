@@ -1,7 +1,77 @@
 @php
+    $cart_total = 0;
+    $subtotal = 0;
+    $tax = 0;
+    $free_shipping = 0;
+    $contact_id = session()->get('contact_id');
+    $cart_items = session()->get('cart');
+    $user_id = auth()->id();
+    $d_none = 'd-none'; 
+    $calculate_free_shipping = 0;
+    $enable_free_shipping_banner = App\Models\AdminSetting::where('option_name', 'enable_free_shipping_banner')->first();
+    $free_shipping_value  = App\Models\AdminSetting::where('option_name', 'free_shipping_value')->first();
     $announcement_banner = App\Models\AdminSetting::where('option_name' , 'enable_announcement_banner')->first();
     $announcement_banner_text = App\Models\AdminSetting::where('option_name' , 'announcement_banner_text')->first();
+   
+    
+    if (!empty($user_id) && !empty($contact_id)) {
+        $contact =  App\Models\Contact::where('user_id', $user_id)->where('contact_id', $contact_id)
+            ->orWhere('secondary_id', $contact_id)
+            ->first();
+        
+    } else {
+        $contact =  App\Models\Contact::where('user_id', $user_id)->first();
+    }
+    $tax_class =  App\Models\TaxClass::where('name', $contact->tax_class)->first();
+    if (!empty($cart_items)) {
+        foreach ($cart_items as $cart_item) {
+            $subtotal += $cart_item['price'] * $cart_item['quantity'];
+        }
+
+        if (!empty($tax_class)) {
+            $tax_rate = $subtotal * ($tax_class->rate / 100);
+            $tax = $tax_rate;
+        }
+
+        $cart_total = $subtotal + $tax;
+
+        if (!empty($free_shipping_value)) {
+            $free_shipping = $free_shipping_value->option_value;
+        } else {
+            $free_shipping = 0;
+        }
+        $calculate_free_shipping = $free_shipping - $cart_total;
+    }
+
+    if ($calculate_free_shipping <= intval($free_shipping) && $calculate_free_shipping >= 0) {
+        $d_none = '';
+    } else {
+        $d_none = 'd-none';
+    }
+
+    if ($cart_total >= intval($free_shipping) && $cart_total >= 0) {
+        $congrats_div_dnone = '';
+    } else {
+        $congrats_div_dnone = 'd-none';
+    }
+
 @endphp
+@if (!empty($enable_free_shipping_banner) && (strtolower($enable_free_shipping_banner->option_value) == 'yes'))
+    <div class="w-100 promotional_banner_div {{$d_none}}" id="promotional_banner_div" style="">
+        <p class="text-center promotional_banner_text mb-0">
+            {{-- <i class="fas fa-shipping-fast"></i>  --}}
+            <img src="{{asset('theme/bootstrap5/images/shipping_truck_updated.gif')}}" alt="" class="mr-2" style="max-height: 40px;">
+            Only <span class="promotional_banner_span">@if($calculate_free_shipping <= intval($free_shipping)) {{'$' . number_format($calculate_free_shipping , 2)}} @endif</span> left to get free shipping in California
+        </p>
+    </div>
+    <div class="w-100 promotional_banner_div_congrats {{$congrats_div_dnone}}" id="promotional_banner_div_congrats" style="">
+        <p class="text-center promotional_banner_text_congrats mb-0">
+            {{-- <i class="fas fa-shipping-fast"></i>  --}}
+            <img src="{{asset('theme/bootstrap5/images/shipping_truck_updated.gif')}}" alt="" class="mr-2" style="max-height: 40px;">
+             <span class="promotional_banner_span_congrats">Good news, your cart qualifies for free shipping</span> 
+        </p>
+    </div>
+@endif
 @if (!empty($announcement_banner) && strtolower($announcement_banner->option_value) == 'yes')
 <div class="row bg-dark">
     <h6 class="text-white text-center top_header_banner mb-0">
@@ -9,6 +79,12 @@
     </h6>
 </div>
 @endif
+@if(!empty($tax_class->rate))
+    <input type="hidden" value="{{$tax_class->rate}}" id="tax_rate_number" class="tax_rate_number">
+@else
+    <input type="hidden" value="0" id="tax_rate_number" class="tax_rate_number">
+@endif
+<input type="hidden" name="" id="initial_free_shipping_value" class="initial_free_shipping_value" value="{{$free_shipping}}">
 <header class="bg-white  text-white top-bar-height w-100 header-top">
     <div class="container-fluid my-1">
         <div class="row justify-content-center">

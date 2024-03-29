@@ -1,25 +1,9 @@
 
-@if (!empty($enable_free_shipping_banner) && (strtolower($enable_free_shipping_banner->option_value) == 'yes'))
-    <div class="w-100 promotional_banner_div {{$d_none}}" id="promotional_banner_div" style="">
-        <p class="text-center promotional_banner_text mb-0">
-            {{-- <i class="fas fa-shipping-fast"></i>  --}}
-            <img src="{{asset('theme/bootstrap5/images/shipping_truck_updated.gif')}}" alt="" class="mr-2" style="max-height: 40px;">
-            Only <span class="promotional_banner_span">@if($calculate_free_shipping <= intval($free_shipping)) {{'$' . number_format($calculate_free_shipping , 2)}} @endif</span> left to get free shipping in California
-        </p>
-    </div>
-    <div class="w-100 promotional_banner_div_congrats {{$congrats_div_dnone}}" id="promotional_banner_div_congrats" style="">
-        <p class="text-center promotional_banner_text_congrats mb-0">
-            {{-- <i class="fas fa-shipping-fast"></i>  --}}
-            <img src="{{asset('theme/bootstrap5/images/shipping_truck_updated.gif')}}" alt="" class="mr-2" style="max-height: 40px;">
-             <span class="promotional_banner_span_congrats">Good news, your cart qualifies for free shipping</span> 
-        </p>
-    </div>
-@endif
 @include('partials.header')
 @include('partials.top-bar')
 @include('partials.search-bar')
 
-<input type="hidden" name="" id="initial_free_shipping_value" class="initial_free_shipping_value" value="{{$free_shipping}}">
+{{-- <input type="hidden" name="" id="initial_free_shipping_value" class="initial_free_shipping_value" value="{{$free_shipping}}"> --}}
 <div class="row desktop-view cart-title mt-4">
     <p style="line-height: 95px;"
         class=" fs-2 product-btn my-auto border-0 text-white text-center align-middle cart-title">
