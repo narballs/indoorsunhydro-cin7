@@ -56,7 +56,7 @@
     }
 
 @endphp
-@if (!empty($enable_free_shipping_banner) && (strtolower($enable_free_shipping_banner->option_value) == 'yes'))
+@if (!empty($enable_free_shipping_banner) && (strtolower($enable_free_shipping_banner->option_value) == 'yes' && Floatval($cart_total) > 0))
     <div class="w-100 promotional_banner_div {{$d_none}}" id="promotional_banner_div" style="">
         <p class="text-center promotional_banner_text mb-0">
             {{-- <i class="fas fa-shipping-fast"></i>  --}}
