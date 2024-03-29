@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\UserHelper;
 use App\Models\AdminSetting;
 use App\Models\ApiOrderItem;
 use App\Models\Category;
@@ -33,6 +34,7 @@ class HomeController extends Controller
        //  $cart = session::get('cart');
        
        //   exit;
+       $cart_items = UserHelper::switch_price_tier($request);
         $contact_id = null;
         $contact_id = session()->get('contact_id');
         $categories = Category::orderBy('name', 'ASC')
@@ -84,7 +86,7 @@ class HomeController extends Controller
 
 
         $notify_user_about_product_stock = AdminSetting::where('option_name', 'notify_user_about_product_stock')->first();
-        return view('index', compact('categories' , 'product_views','best_selling_products','lists','user_buy_list_options' , 'contact_id' , 'notify_user_about_product_stock'));
+        return view('index', compact('categories','cart_items', 'product_views','best_selling_products','lists','user_buy_list_options' , 'contact_id' , 'notify_user_about_product_stock'));
     }
 
     public function show_page($slug) {
