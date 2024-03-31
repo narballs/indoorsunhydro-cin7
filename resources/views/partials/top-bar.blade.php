@@ -30,7 +30,11 @@
             if (!empty($product) && !empty($product->categories) && $product->category_id != 0) {
                 if (strtolower($product->categories->name) === 'grow medium') {
                     $shipment_for_selected_category = true;
-                } else {
+                }
+                elseif (!empty($product->categories->parent) && !empty($product->categories->parent->name) && strtolower($product->categories->parent->name) === 'grow medium') {
+                    $shipment_for_selected_category = true;
+                }
+                else {
                     $shipment_for_selected_category = false;
                 }
             } else {

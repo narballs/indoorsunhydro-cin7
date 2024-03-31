@@ -229,7 +229,11 @@ class CheckoutController extends Controller
                 if (!empty($product) && !empty($product->categories) && $product->category_id != 0) {
                     if (strtolower($product->categories->name) === 'grow medium') {
                         $shipment_for_selected_category = true;
-                    } else {
+                    }
+                    elseif (!empty($product->categories->parent) && !empty($product->categories->parent->name) && strtolower($product->categories->parent->name) === 'grow medium')  {
+                        $shipment_for_selected_category = true;
+                    }
+                    else {
                         $shipment_for_selected_category = false;
                     }
                 } else {
@@ -267,7 +271,11 @@ class CheckoutController extends Controller
             if (!empty($product) && !empty($product->categories) && $product->category_id != 0) {
                 if (strtolower($product->categories->name) === 'grow medium') {
                     $shipment_for_selected_category = true;
-                } else {
+                }
+                elseif (!empty($product->categories->parent) && !empty($product->categories->parent->name) && strtolower($product->categories->parent->name) === 'grow medium')  {
+                    $shipment_for_selected_category = true;
+                } 
+                else {
                     $shipment_for_selected_category = false;
                 }
             } else {
@@ -282,7 +290,6 @@ class CheckoutController extends Controller
         if ($contact) {
             $isApproved = $contact->contact_id;
         }
-
         $zip_code_is_valid = true;
 
         if (Auth::check() && (!empty($contact->contact_id) || !empty($contact->secondary_id)) && $contact->status == 1) {
@@ -347,7 +354,7 @@ class CheckoutController extends Controller
             $free_shipping_state = AdminSetting::where('option_name', 'free_shipping_state')->first();
             if ($shipment_for_selected_category == true) {
                 $shipping_free_over_1000 = 0;
-            }
+            } 
             else {
                 if (!empty($free_shipping_state)) {
                     if ($free_shipping_state->option_value == $user_address->state || $user_address->state == 'CA') {
