@@ -34,9 +34,15 @@
             </div>
             {{-- product detail --}}
             <div class="col-md-12 col-sm-12 col-xl-9 col-xxl-9 col-lg-8 col-xs-12 col-12 order-md-1 order-lg-2 order-xl-2 order-xs-1 order-1">
-                
+                @if (!empty($productOption->products) && !empty($productOption->products->categories) && $productOption->products->category_id != 0 && strtolower($productOption->products->categories->name) === 'grow medium')
+                    <p class="text-dark bg-warning text-md-center border m-0 font-weight-bold">
+                        This product is excluded from california free shipping promotion
+                    </p>   
+                @endif
                 <div class="card py-3">
+                    
                     <div class="row ms-0">
+                        
                         <div class="col-xl-4 col-lg-3 col-md-12 col-sm-12 col-xs-12">
                             <div class="images">
                                 @if ($productOption->products->images)
