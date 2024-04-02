@@ -34,6 +34,14 @@
             </div>
             {{-- product detail --}}
             <div class="col-md-12 col-sm-12 col-xl-9 col-xxl-9 col-lg-8 col-xs-12 col-12 order-md-1 order-lg-2 order-xl-2 order-xs-1 order-1">
+                @if ($customer_demand_inventory_number === 1)
+                <div class="alert alert-success alert-dismissible mb-0 unprocess_alert p-1 rounded-0">
+                    <div class="d-flex justify-content-between">
+                        <span class="text-dark">Stock has been updated</span>
+                        <a href="#" class="close p-1" data-dismiss="alert" aria-label="close">&times;</a>
+                    </div>
+                </div>
+                @endif
                 @if (!empty($productOption->products) && !empty($productOption->products->categories) && $productOption->products->category_id != 0 && strtolower($productOption->products->categories->name) === 'grow medium')
                     <p class="text-dark bg-warning text-md-center border m-0 font-weight-bold">
                         This product is excluded from california free shipping promotion
@@ -424,6 +432,16 @@
 {{-- mobile view start --}}
 <div class="row bg-light mobile-view w-100">
     <div class="container">
+        @if ($customer_demand_inventory_number === 1)
+            <div class="w-100 ml-3">
+                <div class="alert alert-success alert-dismissible mb-0 unprocess_alert p-1 rounded-0">
+                    <div class="d-flex justify-content-between">
+                        <span class="text-dark">Stock has been updated</span>
+                        <a href="#" class="close p-1" data-dismiss="alert" aria-label="close">&times;</a>
+                    </div>
+                </div>
+            </div>
+        @endif
         <div class="w-100 ml-3">
             @if (!empty($productOption->products) && !empty($productOption->products->categories) && $productOption->products->category_id != 0 && strtolower($productOption->products->categories->name) === 'grow medium')
                 <p class="text-dark bg-warning text-center border m-0" style="font-size: 12px; font-weight:500;">
