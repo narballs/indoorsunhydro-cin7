@@ -12,7 +12,7 @@
     $free_shipping_value  = App\Models\AdminSetting::where('option_name', 'free_shipping_value')->first();
     $announcement_banner = App\Models\AdminSetting::where('option_name' , 'enable_announcement_banner')->first();
     $announcement_banner_text = App\Models\AdminSetting::where('option_name' , 'announcement_banner_text')->first();
-   
+    $shipment_for_selected_category  = false;
     
     if (!empty($user_id) && !empty($contact_id)) {
         $contact =  App\Models\Contact::where('user_id', $user_id)->where('contact_id', $contact_id)
@@ -24,7 +24,22 @@
     }
     $tax_class =  App\Models\TaxClass::where('name', $contact->tax_class)->first();
     if (!empty($cart_items)) {
+       
         foreach ($cart_items as $cart_item) {
+            $product = App\Models\Product::where('product_id' , $cart_item['product_id'])->first();
+            if (!empty($product) && !empty($product->categories) && $product->category_id != 0) {
+                if (strtolower($product->categories->name) === 'grow medium') {
+                    $shipment_for_selected_category = true;
+                }
+                elseif (!empty($product->categories->parent) && !empty($product->categories->parent->name) && strtolower($product->categories->parent->name) === 'grow medium') {
+                    $shipment_for_selected_category = true;
+                }
+                else {
+                    $shipment_for_selected_category = false;
+                }
+            } else {
+                $shipment_for_selected_category = false;
+            }
             $subtotal += $cart_item['price'] * $cart_item['quantity'];
         }
 
@@ -42,17 +57,22 @@
         }
         $calculate_free_shipping = $free_shipping - $cart_total;
     }
-
-    if ($calculate_free_shipping <= intval($free_shipping) && $calculate_free_shipping >= 0) {
-        $d_none = '';
-    } else {
+    if ($shipment_for_selected_category == true) {
         $d_none = 'd-none';
-    }
-
-    if ($cart_total >= intval($free_shipping) && $cart_total >= 0) {
-        $congrats_div_dnone = '';
-    } else {
         $congrats_div_dnone = 'd-none';
+    }
+    else {
+        if ($calculate_free_shipping <= intval($free_shipping) && $calculate_free_shipping >= 0) {
+            $d_none = '';
+        } else {
+            $d_none = 'd-none';
+        }
+
+        if ($cart_total >= intval($free_shipping) && $cart_total >= 0) {
+            $congrats_div_dnone = '';
+        } else {
+            $congrats_div_dnone = 'd-none';
+        }
     }
 
 @endphp

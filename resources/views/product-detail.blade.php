@@ -34,9 +34,19 @@
             </div>
             {{-- product detail --}}
             <div class="col-md-12 col-sm-12 col-xl-9 col-xxl-9 col-lg-8 col-xs-12 col-12 order-md-1 order-lg-2 order-xl-2 order-xs-1 order-1">
-                
+                @if (!empty($productOption->products) && !empty($productOption->products->categories) && $productOption->products->category_id != 0 && strtolower($productOption->products->categories->name) === 'grow medium')
+                    <p class="text-dark bg-warning text-md-center border m-0 font-weight-bold">
+                        This product is excluded from california free shipping promotion
+                    </p>
+                @elseif (!empty($productOption->products->categories->parent) && !empty($productOption->products->categories->parent->name) && strtolower($productOption->products->categories->parent->name) === 'grow medium')   
+                    <p class="text-dark bg-warning text-md-center border m-0 font-weight-bold">
+                        This product is excluded from california free shipping promotion
+                    </p>
+                @endif
                 <div class="card py-3">
+                    
                     <div class="row ms-0">
+                        
                         <div class="col-xl-4 col-lg-3 col-md-12 col-sm-12 col-xs-12">
                             <div class="images">
                                 @if ($productOption->products->images)
@@ -414,6 +424,17 @@
 {{-- mobile view start --}}
 <div class="row bg-light mobile-view w-100">
     <div class="container">
+        <div class="w-100 ml-3">
+            @if (!empty($productOption->products) && !empty($productOption->products->categories) && $productOption->products->category_id != 0 && strtolower($productOption->products->categories->name) === 'grow medium')
+                <p class="text-dark bg-warning text-center border m-0" style="font-size: 12px; font-weight:500;">
+                    This product is excluded from california free shipping promotion
+                </p>
+            @elseif (!empty($productOption->products->categories->parent) && !empty($productOption->products->categories->parent->name) && strtolower($productOption->products->categories->parent->name) === 'grow medium')   
+                <p class="text-dark bg-warning text-center border m-0" style="font-size: 12px; font-weight:500;">
+                    This product is excluded from california free shipping promotion
+                </p>
+            @endif
+        </div>
         <div class="row bg-white justify-content-center">
             <div class="d-flex align-items-center justify-content-center mx-1 ml-4 p_detail_image_row">
                 @if($productOption->image)

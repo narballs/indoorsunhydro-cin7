@@ -222,8 +222,23 @@ class CheckoutController extends Controller
         $cart_items = UserHelper::switch_price_tier($request);
         $cart_total = 0;
         $charge_shipment_to_customer = 0;
+        $shipment_for_selected_category  = false;
         if (!empty($cart_items)) {
             foreach ($cart_items as $cart_item) {
+                $product = Product::where('product_id' , $cart_item['product_id'])->first();
+                if (!empty($product) && !empty($product->categories) && $product->category_id != 0) {
+                    if (strtolower($product->categories->name) === 'grow medium') {
+                        $shipment_for_selected_category = true;
+                    }
+                    elseif (!empty($product->categories->parent) && !empty($product->categories->parent->name) && strtolower($product->categories->parent->name) === 'grow medium')  {
+                        $shipment_for_selected_category = true;
+                    }
+                    else {
+                        $shipment_for_selected_category = false;
+                    }
+                } else {
+                    $shipment_for_selected_category = false;
+                }
                 $row_price = $cart_item['quantity'] * $cart_item['price'];
                 $cart_total = $row_price + $cart_total;
             }
@@ -252,6 +267,20 @@ class CheckoutController extends Controller
         $products_weight = 0;
         $sub_total_of_cart = 0;
         foreach ($cart_items as $cart_item) {
+            $product = Product::where('product_id' , $cart_item['product_id'])->first();
+            if (!empty($product) && !empty($product->categories) && $product->category_id != 0) {
+                if (strtolower($product->categories->name) === 'grow medium') {
+                    $shipment_for_selected_category = true;
+                }
+                elseif (!empty($product->categories->parent) && !empty($product->categories->parent->name) && strtolower($product->categories->parent->name) === 'grow medium')  {
+                    $shipment_for_selected_category = true;
+                } 
+                else {
+                    $shipment_for_selected_category = false;
+                }
+            } else {
+                $shipment_for_selected_category = false;
+            }
             $sub_total_of_cart += $cart_item['quantity'] * $cart_item['price'];
             $product_options = ProductOption::where('product_id', $cart_item['product_id'])->where('option_id' , $cart_item['option_id'])->get();
             foreach ($product_options as $product_option) {
@@ -261,7 +290,6 @@ class CheckoutController extends Controller
         if ($contact) {
             $isApproved = $contact->contact_id;
         }
-
         $zip_code_is_valid = true;
 
         if (Auth::check() && (!empty($contact->contact_id) || !empty($contact->secondary_id)) && $contact->status == 1) {
@@ -324,20 +352,24 @@ class CheckoutController extends Controller
             $shipping_free_over_1000 = 0;
             $sub_total_of_cart = $sub_total_of_cart + ($sub_total_of_cart * $get_tax_rate / 100);
             $free_shipping_state = AdminSetting::where('option_name', 'free_shipping_state')->first();
-            if (!empty($free_shipping_state)) {
-                if ($free_shipping_state->option_value == $user_address->state || $user_address->state == 'CA') {
-                    if ($sub_total_of_cart >= 1000) {
-                        $shipping_free_over_1000 = 1;
+            if ($shipment_for_selected_category == true) {
+                $shipping_free_over_1000 = 0;
+            } 
+            else {
+                if (!empty($free_shipping_state)) {
+                    if ($free_shipping_state->option_value == $user_address->state || $user_address->state == 'CA') {
+                        if ($sub_total_of_cart >= 1000) {
+                            $shipping_free_over_1000 = 1;
+                        } else {
+                            $shipping_free_over_1000 = 0;
+                        }
                     } else {
                         $shipping_free_over_1000 = 0;
                     }
                 } else {
                     $shipping_free_over_1000 = 0;
                 }
-            } else {
-                $shipping_free_over_1000 = 0;
             }
-
             $admin_selected_shipping_quote = [];
             $shipstation_shipment_prices = [];
             $surcharge_value = 0;
