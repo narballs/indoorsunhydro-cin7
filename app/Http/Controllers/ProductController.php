@@ -495,9 +495,11 @@ class ProductController extends Controller
     public function showProductDetail(Request $request ,$id, $option_id)
     {
         $similar_products = null;
+       
         $product = Product::with('categories' , 'brand')
         ->where('id', $id)
         ->where('status', '!=', 'Inactive')->first();
+        $stock_updation_by_visiting_detail = UtilHelper::updateProductStock($product, $option_id);
         if (empty($product)) {
             session()->flash('error', 'This product is not available! Please search another product.');
             return redirect('/products');
