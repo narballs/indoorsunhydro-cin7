@@ -64,6 +64,9 @@ class UpdateLagsProducts extends Command
                 }
             }
         }
+
+        $this->info('Products Updated Successfully');
+
     }
 }
 
