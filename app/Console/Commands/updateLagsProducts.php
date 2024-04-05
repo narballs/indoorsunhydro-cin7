@@ -42,7 +42,7 @@ class UpdateLagsProducts extends Command
                 if (count($indoor_product['options']) > 0) {
                     foreach($indoor_product['options'] as $option) {
                     // Assuming $api_product is defined somewhere in your code
-                    if ($option->status != 'Diasbled')   { 
+                    if ($option->status != 'Disabled')   { 
                         $api_product = [
                                 'id' => $indoor_product->id,
                                 'name' => $indoor_product->name,
