@@ -3,6 +3,8 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use GuzzleHttp\Client;
 use App\Models\Product;
+use App\Models\ProductOption;
+
 class UpdateLagsProducts extends Command
 {
     /**
@@ -40,22 +42,24 @@ class UpdateLagsProducts extends Command
                 if (count($indoor_product['options']) > 0) {
                     foreach($indoor_product['options'] as $option) {
                     // Assuming $api_product is defined somewhere in your code
+                    if ($option->status != 'Diasbled')   { 
                         $api_product = [
-                            'id' => $indoor_product->id,
-                            'name' => $indoor_product->name,
-                            'code' => $indoor_product->code,
-                            'description' => !empty($indoor_product->description) ? $indoor_product->description : '',
-                            'optionWeight' => $option->optionWeight,
-                            'images' => $indoor_product->images,
-                            'option1' => $option->option1,
-                            'option2' => $option->option2,
-                            'option3' => $option->option3,
-                            'size' => $option->size,
-                        ];
-                        $url = 'https://qstage.lagardensupply.com/api/product-webhook';
-                        $response = $client->post($url, [
-                            'form_params' => $api_product
-                        ]);
+                                'id' => $indoor_product->id,
+                                'name' => $indoor_product->name,
+                                'code' => $option->code,
+                                'description' => !empty($indoor_product->description) ? $indoor_product->description : '',
+                                'optionWeight' => $option->optionWeight,
+                                'images' => $indoor_product->images,
+                                'option1' => $option->option1,
+                                'option2' => $option->option2,
+                                'option3' => $option->option3,
+                                'size' => $option->size,
+                            ];
+                            $url = 'https://qstage.lagardensupply.com/api/product-webhook';
+                            $response = $client->post($url, [
+                                'form_params' => $api_product
+                            ]);
+                        }
                     }
                 }
             }
