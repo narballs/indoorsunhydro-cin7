@@ -730,10 +730,10 @@ $cart_price = 0;
                                             @if (!empty($products_weight) && $products_weight > 150)
                                                 <input type="hidden" name="shipping_carrier_code" id="" value="{{$shipping_carrier_code}}">
                                                 <input type="hidden" name="shipping_service_code" id="" value="{{$shipping_service_code}}">
-                                                <input type="hidden" name="shipment_cost_single" id="shipment_price_heavy_weight" value="{{count($shipstation_shipment_prices) > 0 ? number_format($shipstation_shipment_prices[0]->shipmentCost + $shipstation_shipment_prices[0]->otherCost , 2, '.', '')  : 0 }}">
+                                                <input type="hidden" name="shipment_cost_single" id="shipment_price_heavy_weight" value="{{!empty($shipstation_shipment_prices) && ($shipstation_shipment_prices > 0) ? number_format($shipstation_shipment_prices[0]->shipmentCost + $shipstation_shipment_prices[0]->otherCost , 2, '.', '')  : 0 }}">
                                                 <div class="row justify-content-center border-bottom align-items-center py-2">
                                                     <div class="col-md-9 col-8"><span class="checkout_shipping_heading">Shipment Price</span></div>
-                                                    <div class="col-md-3 col-4 text-right"><span class="checkout_shipping_price">${{count($shipstation_shipment_prices) > 0 ? number_format($shipstation_shipment_prices[0]->shipmentCost + $shipstation_shipment_prices[0]->otherCost , 2)  : 0}}</span></div>
+                                                    <div class="col-md-3 col-4 text-right"><span class="checkout_shipping_price">${{!empty($shipstation_shipment_prices) && ($shipstation_shipment_prices > 0) ? number_format($shipstation_shipment_prices[0]->shipmentCost + $shipstation_shipment_prices[0]->otherCost , 2)  : 0}}</span></div>
                                                     {{-- <div class="col-md-3 col-3 text-right"><span class="checkout_shipping_price">${{number_format($shipment_price , 2)}}</span></div> --}}
                                                 </div>
                                             @else
