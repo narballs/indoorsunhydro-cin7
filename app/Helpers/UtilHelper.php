@@ -133,12 +133,6 @@ class UtilHelper
                 if (in_array($location_inventory->branchId, $skip_branches)) {
                     continue;
                 }
-                $branch_with_stocks[] = [
-                    'branch_id' => $location_inventory->branchId,
-                    'branch_name' => $location_inventory->branchName,
-                    'available' => $location_inventory->available
-                ];
-
                 
                 $product_stock = ProductStock::where('branch_id' , $location_inventory->branchId)
                     ->where('product_id' ,  $product->product_id)
@@ -147,11 +141,11 @@ class UtilHelper
 
                    
                 
+                $branch_ids[] = $location_inventory->branchId;
                 if (!empty($product_stock)) {
                     $product_stock->available_stock = $location_inventory->available >=0 ? $location_inventory->available : 0;
                     $product_stock->save();
                     
-                    $branch_ids[] = $location_inventory->branchId;
                     if (!in_array($location_inventory->branchId, $skip_branches)) {
                         $total_stock += $location_inventory->available >=0 ? $location_inventory->available : 0;
                     }
@@ -170,7 +164,11 @@ class UtilHelper
                     // $total_stock += $product_stock->available_stock;
                 }
 
-                
+                $branch_with_stocks[] = [
+                    'branch_id' => $location_inventory->branchId,
+                    'branch_name' => $location_inventory->branchName,
+                    'available' => $location_inventory->available
+                ];
 
                 $stock_updated = true;
             }

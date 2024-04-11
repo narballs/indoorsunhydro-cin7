@@ -543,7 +543,60 @@ class ProductController extends Controller
 
         
         // Fetch stock from API
-        if ($customer_demand_inventory_number === 1) {
+        if ($stock_updation_by_visiting_detail != null ) {
+            $stock_updated = $stock_updation_by_visiting_detail['stock_updated'];
+            $stock_with_branches = $stock_updation_by_visiting_detail['branch_with_stocks'];
+            if (!empty($stock_with_branches)) {
+                $product_stock = ProductStock::where('product_id' ,  $product->product_id)
+                    ->where('option_id' , $option_id)
+                    ->get();
+                if (count($product_stock) > 0) {
+                    foreach ($stock_with_branches as $branch_stock) {
+                        $stock_found = false;
+                    
+                        foreach ($product_stock as $stock) {
+                            if ($branch_stock['branch_id'] == $stock->branch_id) {
+                                $stock->available_stock = $branch_stock['available'];
+                                $stock->save();
+                                $stock_found = true;
+                                break; // Exit the inner loop since we found a matching stock
+                            }
+                        }
+                    
+                        if (!$stock_found) {
+                            // Create a new product stock if no matching stock found for the current branch
+                            ProductStock::create([
+                                'available_stock' => $branch_stock['available'],
+                                'branch_id' => $branch_stock['branch_id'],
+                                'product_id' => $product->product_id,
+                                'branch_name' => $branch_stock['branch_name'],
+                                'option_id' => $option_id
+                            ]);
+                        }
+                    }
+                    
+                    // Delete any product stocks that are not in $stock_with_branches
+                    $product_stock_ids = collect($stock_with_branches)->pluck('branch_id');
+                    foreach ($product_stock as $stock) {
+                        if (!$product_stock_ids->contains($stock->branch_id)) {
+                            $stock->delete();
+                        }
+                    }
+                } else {
+                    foreach ($stock_with_branches as $branch_stock) {
+                        ProductStock::create([
+                            'available_stock' => $branch_stock['available'],
+                            'branch_id' => $branch_stock['branch_id'],
+                            'product_id' => $product->product_id,
+                            'branch_name' => $branch_stock['branch_name'],
+                            'option_id' => $option_id
+                        ]);
+                    }
+                }
+                
+            }   
+        }
+        elseif ($customer_demand_inventory_number === 1) {
             // Check if a record exists
             if (!empty($product_option)) {
                 $last_update_time = $product_option->inventory_update_time;
@@ -618,7 +671,8 @@ class ProductController extends Controller
                         }
                         
                     }
-                } else {
+                } 
+                else {
                     $stock_updated = false;
                 }
             } else {
@@ -638,6 +692,7 @@ class ProductController extends Controller
                 $stock_updated = false;
             }
         }
+        
         else {
             $get_stock_with_branches = ProductStock::where('product_id' ,  $product->product_id)
                 ->where('option_id' , $option_id)
@@ -713,15 +768,28 @@ class ProductController extends Controller
             ->with('list_products')
             ->get();
         $total_stock = 0;
+
         if ($stock_updated) {
-            if (!empty($stock_updated_helper['total_stock'])) {
-                $total_stock = $stock_updated_helper['total_stock'] >= 0 ? $stock_updated_helper['total_stock'] : 0;
+            if ($customer_demand_inventory_number == 1) {
+                if (!empty($stock_updated_helper['total_stock'])) {
+                    $total_stock = $stock_updated_helper['total_stock'] >= 0 ? $stock_updated_helper['total_stock'] : 0;
+                }
+            } else {
+                if (!empty($stock_updation_by_visiting_detail['total_stock'])) {
+                    $total_stock = $stock_updation_by_visiting_detail['total_stock'] >= 0 ? $stock_updation_by_visiting_detail['total_stock'] : 0;
+                }
             }
         } 
         // else {
         //     $total_stock = $productOption->stockAvailable;
         // }
-        if ($customer_demand_inventory_number == 1) {
+        if ($stock_updation_by_visiting_detail != null) {
+            if (!empty($stock_updation_by_visiting_detail['branch_with_stocks'])) {
+                $locations = $stock_updation_by_visiting_detail['branch_with_stocks'];
+            }
+
+        }
+        elseif ($customer_demand_inventory_number == 1) {
             if ($inventory_update_time_flag == false) {
                 $locations = $branch_locations;
             }
