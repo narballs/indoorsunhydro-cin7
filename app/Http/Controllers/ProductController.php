@@ -783,7 +783,13 @@ class ProductController extends Controller
         // else {
         //     $total_stock = $productOption->stockAvailable;
         // }
-        if ($customer_demand_inventory_number == 1) {
+        if ($stock_updation_by_visiting_detail != null) {
+            if (!empty($stock_updation_by_visiting_detail['branch_with_stocks'])) {
+                $locations = $stock_updation_by_visiting_detail['branch_with_stocks'];
+            }
+
+        }
+        elseif ($customer_demand_inventory_number == 1) {
             if ($inventory_update_time_flag == false) {
                 $locations = $branch_locations;
             }
