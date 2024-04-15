@@ -90,11 +90,10 @@
                                                         <span class="cart-total">Quantity</span>
         
                                                     </th>
-                                                    <th scope="col" class="th-lg" class="table-head-items">
+                                                    <th scope="col" class="th-lg text-center" class="table-head-items">
                                                         <span>
                                                             <img class=" cart-icons-cart " src="/theme/img/pricing_tag.png">
                                                         </span>
-        
                                                         <span class=" cart-total">Total</span>
         
                                                     </th>
@@ -171,7 +170,7 @@
                                                                     </div>
                                                                 </div>
                                                             </td>
-                                                            <td class="align-middle pl-0">
+                                                            <td class="align-middle text-center">
                                                                 <div class="row align-items-center text-center">
                                                                     <span class="mb-0 text-danger ps-2  cart-page-items">
                                                                         <span
