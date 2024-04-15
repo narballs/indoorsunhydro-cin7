@@ -71,6 +71,29 @@
                     <p class="card-text  sm-4-footer ms-5 mb-1">
                         <a href="{{ url('contact-us') }}" class="text-white">Customer Support</a>
                     </p>
+                    <p class="card-text  sm-4-footer ms-5 mb-1">
+                        @php
+                            $enable_wholesale_registration = App\Models\AdminSetting::where('option_name', 'enable_wholesale_registration')->first();
+                        @endphp
+                        @if (auth()->user())
+                            @php
+                            $wholesale_application_status = App\Models\WholesaleApplicationInformation::where('email' , Auth::user()->email)->first();
+                            @endphp 
+                            @if(strtolower($enable_wholesale_registration->option_value) == 'yes')
+                                @if (!empty($wholesale_application_status) && ($wholesale_application_status->status == 0)) 
+                                    <a href="{{route('create_wholesale_account')}}" class="text-white" title="Continue Wholesale Application" >Continue Wholesale Application</a>
+                                @elseif (!empty($wholesale_application_status) && ($wholesale_application_status->status == 1))
+                                    <a href="{{route('view_wholesale_account' , $wholesale_application_status->id)}}" class="text-white" title="View Wholesale Application" >View Wholesale Application</a>
+                                @elseif (empty($wholesale_application_status))
+                                    <a href="{{route('create_wholesale_account')}}" class="text-white" title="Apply for Wholesale Account" >Apply for Wholesale Account</a>
+                                @endif
+                            @endif
+                        @else
+                            @if(strtolower($enable_wholesale_registration->option_value) == 'yes')
+                                <a href="{{route('create_wholesale_account')}}" class="text-white" >Apply for Wholesale Account</a>
+                            @endif
+                        @endif
+                    </p>
                     {{-- <p class="card-text  sm-4-footer ms-5">
                         
                         <a href="{{url('/page/hydro-guide-and-tips')}}" class="text-white">Hydro Guide and Tips</a>
