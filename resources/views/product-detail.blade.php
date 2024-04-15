@@ -1828,8 +1828,8 @@
             } else {
                 imageUrl = '/theme/img/image_not_available.png';
             }
-            return '            <div class="col-md-4 image-div image-div-account d-flex justify-content-center">' +
-                '                <img src="' + imageUrl + '" alt="Product Image" class="buy_again_product_image">' +
+            return '            <div class="col-md-4 image-div image-div-account">' +
+                '                <img src="' + imageUrl + '" alt="Product Image" class="img-fluid">' +
                 '            </div>';
         }
 
