@@ -109,11 +109,11 @@
     <div class="container-fluid my-1">
         <div class="row justify-content-center">
             
-            <div class="col-md-2 col-lg-5 col-xl-5"></div>
-            <div class="col-md-10 col-lg-7 col-xl-7">
+            <div class="col-md-2 col-lg-3 col-xl-5"></div>
+            <div class="col-md-10 col-lg-9 col-xl-7">
                 <div class="col-md-12 col-xl-12 col-lg-12">
                     <div class="row mx-1">
-                        <div class="col-md-5 col-xl-3 col-lg-3 d-flex justify-content-around">
+                        <div class="col-md-5 col-xl-4 col-lg-5 d-flex justify-content-around">
                             <div class="mt-2">
                                 @if (session('logged_in_as_another_user'))
                                     <a href="{{ url('admin/go-back') }}" class="top-bar-logout mt-3 top-header-items">Go
@@ -131,7 +131,7 @@
                         @php
                             $enable_wholesale_registration = App\Models\AdminSetting::where('option_name', 'enable_wholesale_registration')->first();
                         @endphp
-                        <div class="col-md-7 col-xl-9 col-lg-9 mx-auto">
+                        <div class="col-md-7 col-xl-8 col-lg-7 mx-auto">
                             <a href="{{ '/user/' }}" class="text-white d-flex align-items-end">
                                 @if (Auth::user())
                                     <div>
@@ -253,7 +253,7 @@
                                                                     <span>Logout</span>
                                                                 </a>
                                                             </li>
-                                                            <li class="d_menu_company">
+                                                            {{-- <li class="d_menu_company">
                                                                 @if(strtolower($enable_wholesale_registration->option_value) == 'yes')
                                                                     @if (!empty($wholesale_application_status) && ($wholesale_application_status->status == 0)) 
                                                                         <a href="{{route('create_wholesale_account')}}" class="login-in-register top-header-items" title="Continue Wholesale Application" >{!! \Illuminate\Support\Str::limit('Continue Wholesale Application', 14) !!}</a>
@@ -263,7 +263,7 @@
                                                                         <a href="{{route('create_wholesale_account')}}" class="login-in-register top-header-items" title="Apply for Wholesale Account" >{!! \Illuminate\Support\Str::limit('Apply for Wholesale Account', 14) !!}</a>
                                                                     @endif
                                                                 @endif
-                                                            </li>
+                                                            </li> --}}
                                                         </div>
                                                     </div>
                                                 </ul>
@@ -274,9 +274,9 @@
                                     <div class="register-counter-details login_link d-flex">
                                         <p class="mb-0 p-2 login-in-register top-header-items ">Login or Register</p>
                                         
-                                        @if(strtolower($enable_wholesale_registration->option_value) == 'yes')
+                                        {{-- @if(strtolower($enable_wholesale_registration->option_value) == 'yes')
                                             <a href="{{route('create_wholesale_account')}}" class="mb-0 p-2 login-in-register top-header-items" >Apply for Wholesale Account</a>
-                                        @endif
+                                        @endif --}}
                                     </div>
                                 @endif
                             </a>
