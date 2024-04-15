@@ -1116,8 +1116,8 @@ class OrderController extends Controller
         }
         $data = [
             'orderId' => $order->shipstation_orderId,
-            'carrierCode' => $carrier_code->option_value,
-            'serviceCode' => $service_code->option_value,
+            'carrierCode' => !empty($order->shipping_carrier_code) ? $order->shipping_carrier_code : null,
+            'serviceCode' =>  !empty($order->shipping_service_code) ? $order->shipping_service_code : null,
             'packageCode' => $shipping_package->option_value,
             "confirmation" => "delivery",
             // 'shipFrom' => [
