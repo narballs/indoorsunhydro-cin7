@@ -1837,7 +1837,7 @@
             var column = $('#get_column').val();
             var stock_label = '';  
             var text_class = '';  
-            var retail_price = 0.00;
+            retail_price = 0;
             for (var i = 0; i < productData.options.length; i++) {
                 if (productData.options[i].stockAvailable > 0) {
                     stock_label = 'In Stock';
@@ -1846,7 +1846,7 @@
                     stock_label = 'Out of Stock';
                     text_class = 'text-danger';
                 }
-                var retail_price = productData.options[i].default_price[column] == null || productData.options[i].default_price[column] == '' ? 0.00 : productData.options[i].default_price[column];
+                retail_price = productData.options[i].default_price[column];
 
                 var dataHtml = '            <div class="col-md-8 data-div data-div-account">';
                 dataHtml += '                <div class="row">';
