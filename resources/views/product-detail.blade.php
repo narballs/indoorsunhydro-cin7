@@ -1837,7 +1837,7 @@
             var column = $('#get_column').val();
             var stock_label = '';  
             var text_class = '';  
-            var retail_price = 0;
+            retail_price = 0;
             for (var i = 0; i < productData.options.length; i++) {
                 if (productData.options[i].stockAvailable > 0) {
                     stock_label = 'In Stock';
