@@ -389,21 +389,37 @@ class CheckoutController extends Controller
                         if ($products_weight > 150) {
                             $shipping_carrier_code = $carrier_code_2->option_value;
                             $shipping_service_code = $service_code_2->option_value;
+                            $get_shipping_rates_greater = $this->get_shipping_rate_greater($products_weight, $user_address , $selected_shipment_quotes ,$shipping_quotes, $shipment_prices, $shipment_price);
+                            // dd($get_shipping_rates_greater);
+                            if (($get_shipping_rates_greater['shipment_prices'] == null) && $get_shipping_rates_greater['shipment_price'] == 0) {
+                                $shipment_price = 250.00;
+                                $shipping_carrier_code = $get_shipping_rates_greater['shipping_carrier_code'];
+                                // $shipstation_shipment_prices = 250.00;
+                            } else {
+                                $shipment_price = $get_shipping_rates_greater['shipment_price'];
+                                $shipping_carrier_code = $get_shipping_rates_greater['shipping_carrier_code'];
+                                $shipstation_shipment_prices = $get_shipping_rates_greater['shipment_prices'];
+                            }
+                            
                         }
                         else {
                             $shipping_carrier_code = null;
                             $shipping_service_code = null;
+                            $get_shipping_rates = $this->get_shipping_rate($products_weight, $user_address , $selected_shipment_quotes ,$shipping_quotes, $shipment_prices, $shipment_price);
+                            $shipment_price = $get_shipping_rates['shipment_price'];
+                            $shipping_carrier_code = $get_shipping_rates['shipping_carrier_code'];
+                            $shipstation_shipment_prices = $get_shipping_rates['shipment_prices'];
                         }
-                        $get_shipping_rates = $this->get_shipping_rate($products_weight, $user_address , $selected_shipment_quotes ,$shipping_quotes, $shipment_prices, $shipment_price);
-                        $shipment_price = $get_shipping_rates['shipment_price'];
-                        $shipping_carrier_code = $get_shipping_rates['shipping_carrier_code'];
+                        // $get_shipping_rates = $this->get_shipping_rate($products_weight, $user_address , $selected_shipment_quotes ,$shipping_quotes, $shipment_prices, $shipment_price);
+                        // $shipment_price = $get_shipping_rates['shipment_price'];
+                        // $shipping_carrier_code = $get_shipping_rates['shipping_carrier_code'];
                         // if (!empty($surcharge_settings) && $surcharge_settings->surcharge_type === 'fixed') {
                         //     $surcharge_value = $surcharge_settings->surcharge_value;
                         // } else {
                         //     $surcharge_value = $surcharge_settings->surcharge_value * $get_shipping_rates['shipment_price'] / 100;
                         // }
                         // $shipment_price = $get_shipping_rates['shipment_price'] + $surcharge_value;
-                        $shipstation_shipment_prices = $get_shipping_rates['shipment_prices'];
+                        
                         if (count($selected_shipment_quotes) > 0) {
                             foreach ($selected_shipment_quotes as $selected_shipment_quote) {
                                 if (!empty($selected_shipment_quote->shipping_quote)) {
@@ -1359,6 +1375,58 @@ class CheckoutController extends Controller
             'shipment_price' => $shipment_price,
             'shipping_carrier_code' => $products_weight > 150 ? $carrier_code_2->option_value : $shipping_carrier_code,    
         ];
+    }
+
+    public function get_shipping_rate_greater($products_weight, $user_address , $selected_shipment_quotes ,$shipping_quotes, $shipment_prices, $shipment_price) {
+        $client = new \GuzzleHttp\Client();
+        $ship_station_host_url = config('services.shipstation.host_url');
+        $ship_station_api_key = config('services.shipstation.key');
+        $ship_station_api_secret = config('services.shipstation.secret');
+        $carrier_code_2 = AdminSetting::where('option_name', 'shipping_carrier_code_2')->first();
+        $service_code_2 = AdminSetting::where('option_name', 'shipping_service_code_2')->first();
+        $shipping_carrier_code = $carrier_code_2->option_value;
+        $data = [
+            'carrierCode' => $carrier_code_2->option_value,
+            'serviceCode' => $service_code_2->option_value,
+            'fromPostalCode' => '95826',
+            'toCountry' => 'US',
+            'toPostalCode' => $user_address->postCode ? $user_address->postCode : $user_address->postalPostCode,
+            'weight' => [
+                'value' => $products_weight,
+                'units' => 'pounds'
+            ],
+        ];
+
+        $headers = [
+            'Authorization' => 'Basic ' . base64_encode($ship_station_api_key . ':' . $ship_station_api_secret),
+            'Content-Type' => 'application/json',
+        ];
+
+        try {
+            $response = $client->post($ship_station_host_url, [
+                'headers' => $headers,
+                'json' => $data,
+            ]);
+
+            $statusCode = $response->getStatusCode();
+            $responseBody = $response->getBody()->getContents();
+            $shipping_response = json_decode($responseBody);
+            $shipment_prices[] = $shipping_response;
+            $shipment_price = $shipping_response->shipmentCost + $shipping_response->otherCost;
+            return [
+                'shipment_prices' => !empty($shipment_prices) ? $shipment_prices[0] : null,
+                'shipment_price' => $shipment_price,
+                'shipping_carrier_code' => $carrier_code_2->option_value,    
+            ];
+        } catch (\Exception $e) {
+            $e->getMessage();
+            return [
+                'shipment_prices' => null,
+                'shipment_price' => 0,
+                'shipping_carrier_code' => $carrier_code_2->option_value,    
+            ];
+        }
+        
     }
 
     public function refund_webhook(Request $request)
