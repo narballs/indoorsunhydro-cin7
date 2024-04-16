@@ -1846,7 +1846,7 @@
                     stock_label = 'Out of Stock';
                     text_class = 'text-danger';
                 }
-                retail_price = productData.options[i].default_price[column]
+                var retail_price = productData.options[i].default_price[column] == null || productData.options[i].default_price[column] == '' ? 0.00 : productData.options[i].default_price[column];
 
                 var dataHtml = '            <div class="col-md-8 data-div data-div-account">';
                 dataHtml += '                <div class="row">';
