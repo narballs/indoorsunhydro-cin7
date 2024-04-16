@@ -903,14 +903,84 @@
                 if(response.status == 'success') {
                     if(response.order_items != null) {
                         var ordered_products = [];
-                        response.order_items.api_order_item.forEach(function(item) {
-                            console.log(item);
-                            ordered_products.push({
-                                product_id: item.product.id,
-                                option_id: item.option_id,
-                                quantity: item.quantity
+                        if (response.order_items.api_order_item.length > 0 && response.order_items.api_order_item.length > 1) {
+                            response.order_items.api_order_item.forEach(function(item) {
+                                item.product.options.forEach(element => {
+                                    if (element.stockAvailable > 0) {
+                                        if (item.product.status != 'Inactive') {
+                                            ordered_products.push({
+                                                product_id: item.product.id,
+                                                option_id: item.option_id,
+                                                quantity: item.quantity
+                                            });
+                                        }
+                                        else {
+                                            Swal.fire({
+                                                toast: true,
+                                                icon: 'error',
+                                                title: 'Products are inactive',
+                                                timer: 2000,
+                                                showConfirmButton: false,
+                                                position: 'top',
+                                                timerProgressBar: true
+                                            });
+                                        }
+                                    } 
+                                    else {
+                                        Swal.fire({
+                                            toast: true,
+                                            icon: 'error',
+                                            title: 'Product is out of stock',
+                                            timer: 2000,
+                                            showConfirmButton: false,
+                                            position: 'top',
+                                            timerProgressBar: true
+                                        });
+                                    }
+                                });
+                                
+                                
                             });
-                        });
+                        }
+
+                        if (response.order_items.api_order_item.length == 1) {
+                            response.order_items.api_order_item.forEach(function(item) {
+                                item.product.options.forEach(element => {
+                                    if (element.stockAvailable > 0) {
+                                        if (item.product.status != 'Inactive') {
+                                            ordered_products.push({
+                                                product_id: item.product.id,
+                                                option_id: item.option_id,
+                                                quantity: item.quantity
+                                            });
+                                        } 
+                                        else {
+                                            Swal.fire({
+                                                toast: true,
+                                                icon: 'error',
+                                                title: 'Product is inactive',
+                                                timer: 2000,
+                                                showConfirmButton: false,
+                                                position: 'top',
+                                                timerProgressBar: true
+                                            });
+                                        }
+                                    }
+                                    else {
+                                        Swal.fire({
+                                            toast: true,
+                                            icon: 'error',
+                                            title: 'Product is out of stock',
+                                            timer: 2000,
+                                            showConfirmButton: false,
+                                            position: 'top',
+                                            timerProgressBar: true
+                                        });
+                                    }
+                                });
+                            });
+                        }
+                        
                         buy_items_again(ordered_products);
                     } else {
                         Swal.fire({

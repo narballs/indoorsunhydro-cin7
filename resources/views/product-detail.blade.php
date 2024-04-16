@@ -1828,8 +1828,8 @@
             } else {
                 imageUrl = '/theme/img/image_not_available.png';
             }
-            return '            <div class="col-md-4 image-div image-div-account d-flex justify-content-center">' +
-                '                <img src="' + imageUrl + '" alt="Product Image" class="buy_again_product_image">' +
+            return '            <div class="col-md-4 image-div image-div-account">' +
+                '                <img src="' + imageUrl + '" alt="Product Image" class="img-fluid">' +
                 '            </div>';
         }
 
@@ -1837,7 +1837,7 @@
             var column = $('#get_column').val();
             var stock_label = '';  
             var text_class = '';  
-            retail_price = 0;
+            var retail_price = 0;
             for (var i = 0; i < productData.options.length; i++) {
                 if (productData.options[i].stockAvailable > 0) {
                     stock_label = 'In Stock';

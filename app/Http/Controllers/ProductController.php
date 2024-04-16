@@ -2118,7 +2118,7 @@ class ProductController extends Controller
 
     // order buyed items again 
     public function order_items(Request $request , $id) {
-        $order_items = ApiOrder::with('apiOrderItem' , 'apiOrderItem.product')->where('id' , $id)->first();
+        $order_items = ApiOrder::with('apiOrderItem' , 'apiOrderItem.product' , 'apiOrderItem.product.options')->where('id' , $id)->first();
         return response()->json([
             'status' => 'success',
             'order_items' => $order_items
