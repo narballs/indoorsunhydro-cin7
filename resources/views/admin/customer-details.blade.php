@@ -58,7 +58,13 @@
                                             </div>
                                         </div>
                                     @endif
-                                    @if( $customer->contact_id == null || $customer->contact_id == '')
+                                    @if( $customer->contact_id == null && $customer->is_parent == 1)
+                                        <div class="col-md-2">
+                                            <button class="btn btn-primary" type="button"
+                                                onclick="updateContact()">Activate</button>
+                                        </div>
+                                    @endif
+                                    @if( $customer->secondary_id == null && $customer->is_parent == 0)
                                         <div class="col-md-2">
                                             <button class="btn btn-primary" type="button"
                                                 onclick="updateContact()">Activate</button>
