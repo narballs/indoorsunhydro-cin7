@@ -44,11 +44,7 @@
                                         <span style="height: 40px;width: 40px;display: flex;background: #BEBEBE;border-radius: 25px;margin-left: 270px;">
                                             <span style="margin-left: 11px;margin-top: 2px;color: #fff;font-size: 25px;">X</span>
                                         </span>
-                                    @else
-                                        <img class="img-fluid " src="{{ asset('/theme/img/email/approve_email_icon.png') }}">
                                     @endif
-                                @else
-                                    <img class="img-fluid " src="{{ asset('/theme/img/email/approve_email_icon.png') }}">
                                 @endif
                             </td>
                         </tr>
@@ -61,13 +57,7 @@
                                 </tr>
                                 <tr>
                                     <td align="" style="text-align: center;color:#000000;font-color:#000000;font-size: 12px;font-weight:400;">
-                                        Your cancellation request  #{{ $addresses['reference'] }} has been successfully processed.
-                                    </td>
-                                </tr>
-                           
-                                <tr>
-                                    <td align="" style="text-align: center;color:#000000;font-color:#000000;font-size: 16px;font-weight:bold;">
-                                        Your order #{{ $addresses['order_id'] }} status has been updated.
+                                        Your order  #{{ $addresses['reference'] }} has been ancelled.
                                     </td>
                                 </tr>
                                 <tr>
