@@ -128,6 +128,7 @@ class CancelOrder extends Command
                 if (!empty($email)) {
                     $data['subject'] = 'Your Indoorsun Hydro order' .'#'.$reference. ' ' .'status has been Cancelled';
                     $data['email'] = $email;
+                    $data['reference'] = $reference;
                     MailHelper::sendMailNotification('emails.cancel_order_new_email_template', $data);
                 }    
                 // if (!empty($users_with_role_admin)) {
