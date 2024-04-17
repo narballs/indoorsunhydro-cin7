@@ -107,6 +107,7 @@ class CancelOrder extends Command
                     'delievery_method' => $currentOrder->logisticsCarrier,
                     'new_order_status' =>'Cancelled',
                     'previous_order_status' => 'Cancelled',
+                    'reference' => $currentOrder->reference,
                 ];
                 $name = $customer->contact->firstName;
                 $email =  $customer->contact->email;
