@@ -101,7 +101,6 @@ class CancelOrder extends Command
                     'user_email' =>   $customer->contact->email,
                     'currentOrder' => $currentOrder,
                     'count' => $count,
-                    'reference' => $currentOrder->reference,
                     'order_id' => $pending_order->order_id,
                     'company' => $currentOrder->contact->company, 
                     'order_status' => 'updated',
@@ -127,9 +126,8 @@ class CancelOrder extends Command
                     'from' => SettingHelper::getSetting('noreply_email_address')
                 ];
                 if (!empty($email)) {
-                    $data['subject'] = 'Your Indoorsun Hydro order' .'#'.$reference. ' ' .'status has been Cancelled';
+                    $data['subject'] = 'Your Indoorsun Hydro order' .'#'.$currentOrder->id. ' ' .'status has been Cancelled';
                     $data['email'] = $email;
-                    $data['reference'] = $reference;
                     MailHelper::sendMailNotification('emails.cancel_order_new_email_template', $data);
                 }    
                 // if (!empty($users_with_role_admin)) {
