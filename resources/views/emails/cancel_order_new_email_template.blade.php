@@ -61,7 +61,24 @@
                                 </tr>
                                 <tr>
                                     <td align="" style="text-align: center;color:#000000;font-color:#000000;font-size: 12px;font-weight:400;">
-                                        Your order  #{{ $addresses['reference'] }} has been cancelled.
+                                        Your cancellation request  #{{ $addresses['order_id'] }} has been successfully processed.
+                                    </td>
+                                </tr>
+                            @elseif (!empty($addresses['new_order_status']) && !empty($addresses['previous_order_status']))
+                                <tr>
+                                    <td align="" style="text-align: center;color:#000000;font-color:#000000;font-size: 16px;font-weight:bold;">
+                                        Your order #{{ $addresses['order_id'] }} status has been updated from <b>{{$addresses['previous_order_status']}}</b> to <b>{{$addresses['new_order_status']}}</b>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="" style="text-align: center;color:#000000;font-color:#000000;font-size: 12px;font-weight:400;">
+                                        Suggestions , Comments and website feature requests . <a href="{{url('/contact-us')}}">Please click here to contact us</a>
+                                    </td>
+                                </tr>
+                            @else
+                                <tr>
+                                    <td align="" style="text-align: center;color:#000000;font-color:#000000;font-size: 16px;font-weight:bold;">
+                                        Your order #{{ $addresses['order_id'] }} status has been updated.
                                     </td>
                                 </tr>
                                 <tr>
@@ -70,6 +87,17 @@
                                     </td>
                                 </tr>
                             @endif
+                        @else
+                            <tr>
+                                <td align="" style="text-align: center;color:#000000;font-color:#000000;font-size: 16px;font-weight:bold;">
+                                    Your order #{{ $addresses['order_id'] }} status has been updated.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="" style="text-align: center;color:#000000;font-color:#000000;font-size: 12px;font-weight:400;">
+                                    Suggestions , Comments and website feature requests . <a href="{{url('/contact-us')}}">Please click here to contact us</a>
+                                </td>
+                            </tr>
                         @endif
                         
                     </table>
@@ -405,7 +433,6 @@
                     </table>
                 </td>
             </tr>
-            
             <tr>
                 <td align="center">
                     <?php $email_logo_name = \App\Helpers\SettingHelper::getSetting('email_logo_name'); ?>
