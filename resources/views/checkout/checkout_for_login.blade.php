@@ -233,11 +233,12 @@
     }
     
     .stripe-radio-label {
-        background-image: url('/theme/bootstrap5/images/stripe_logo.svg');
+        background-image: url('/theme/bootstrap5/images/stripe_logo_new.png');
         background-repeat: no-repeat;
         background-position: center;
         width: 100%;
         height: 60px;
+        background-size: contain;
     }
     .square-radio-label {
         background-image: url('/theme/bootstrap5/images/square_payment_logo.png');
@@ -927,7 +928,7 @@ $cart_price = 0;
                             <div class="col-md-12">
                                 {{-- <div class="row"> --}}
                                     @if (!empty($user_address->paymentTerms) && strtolower($user_address->paymentTerms) == 'pay in advanced')
-                                    <div id="stripe_payment" class="col-md-3 d-flex border justify-content-center align-items-center m-0 payment-custom-radio py-1 mt-2 selected">
+                                    <div id="stripe_payment" class="d-flex col-md-6 border  m-0 payment-custom-radio py-1 mt-2 selected">
                                         <input type="radio" name="checkout_payment_type" class="radio_check_payment payment-hidden-radio border-0" value="stripe" id="stripe" >
                                         <span class="stripe-radio-label"></span>
                                     </div>
