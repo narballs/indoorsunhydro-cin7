@@ -57,7 +57,7 @@
                                 </tr>
                                 <tr>
                                     <td align="" style="text-align: center;color:#000000;font-color:#000000;font-size: 12px;font-weight:400;">
-                                        Your order  #{{ $addresses['reference'] }} has been ancelled.
+                                        Your order  #{{ $addresses['reference'] }} has been cancelled.
                                     </td>
                                 </tr>
                                 <tr>
