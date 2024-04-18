@@ -270,7 +270,7 @@ class UserHelper
             "taxAmount" => number_format($currentOrder->tax_rate, 2),
             'shipTo' => [
                 "name" => $order_contact->firstName .' '. $order_contact->lastName,
-                "company" => $order_contact->company,
+                // "company" => $order_contact->company,
                 "street1" => $order_contact->address1 ? $order_contact->address1 : $order_contact->postalAddress1,
                 "street2" => $order_contact->address2 ? $order_contact->address2 : $order_contact->postalAddress2,
                 "city" => $order_contact->city ? $order_contact->city : $order_contact->postalCity,
