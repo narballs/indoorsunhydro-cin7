@@ -45,7 +45,7 @@ class UpdateLagsProducts extends Command
                     if ($option->status != 'Disabled')   { 
                         $api_product = [
                                 'id' => $indoor_product->id,
-                                'name' => $indoor_product->name,
+                                'name' => !empty($indoor_product->name) ? $indoor_product->name : '',
                                 'code' => $option->code,
                                 'description' => !empty($indoor_product->description) ? $indoor_product->description : '',
                                 'optionWeight' => $option->optionWeight,
