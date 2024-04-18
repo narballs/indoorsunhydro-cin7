@@ -55,7 +55,7 @@ class UpdateLagsProducts extends Command
                                 'option3' => $option->option3,
                                 'size' => $option->size,
                             ];
-                            $url = 'https://qstage.lagardensupply.com/api/product-webhook';
+                            $url = 'https://lagardensupply.com/api/product-webhook';
                             $response = $client->post($url, [
                                 'form_params' => $api_product
                             ]);
