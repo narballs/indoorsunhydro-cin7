@@ -1716,8 +1716,11 @@ class ProductController extends Controller
                 $query->where('code', 'LIKE', '%' . $searchvalue . '%')
                 ->where('status', '!=', 'Inactive');
             })
-            ->orWhereHas('options',function (Builder $query) use ($searchvalue) {
-                $query->where('code', 'LIKE', '%' . $searchvalue . '%')
+            ->orWhereExists(function ($q) use ($searchvalue) {
+                $q->select(DB::raw(1))
+                ->from('product_options')
+                ->whereColumn('products.product_id', 'product_options.product_id')
+                ->where('code',  $searchvalue )
                 ->where('status', '!=', 'Disabled');
             })
             ->where('status', '!=', 'Inactive')
@@ -1729,9 +1732,6 @@ class ProductController extends Controller
             $main_query = Product::with(['product_views','apiorderItem' , 'options' => function ($q) {
                 $q->where('status', '!=', 'Disabled');
             }])
-            // ->whereHas('options.defaultPrice', function ($q) {
-            //     $q->where('retailUSD', '!=', 0);
-            // })
             ->where(function (Builder $query) use ($explode_search_value) {
                 foreach ($explode_search_value as $searchvalue) {
                     $query->where('name', 'LIKE', '%' . $searchvalue . '%')
@@ -1742,8 +1742,11 @@ class ProductController extends Controller
                 $query->where('code', 'LIKE', '%' . $searchvalue . '%')
                 ->where('status', '!=', 'Inactive');
             })
-            ->orWhereHas('options',function (Builder $query) use ($searchvalue) {
-                $query->where('code', 'LIKE', '%' . $searchvalue . '%')
+            ->orWhereExists(function ($q) use ($searchvalue) {
+                $q->select(DB::raw(1))
+                ->from('product_options')
+                ->whereColumn('products.product_id', 'product_options.product_id')
+                ->where('code',  $searchvalue )
                 ->where('status', '!=', 'Disabled');
             })
             ->where('status', '!=', 'Inactive')
@@ -1756,9 +1759,6 @@ class ProductController extends Controller
             $main_query = Product::with(['product_views','apiorderItem' , 'options' => function ($q) {
                 $q->where('status', '!=', 'Disabled');
             }])
-            // ->whereHas('options.defaultPrice', function ($q) {
-            //     $q->where('retailUSD', '!=', 0);
-            // })
             ->where(function (Builder $query) use ($explode_search_value) {
                 foreach ($explode_search_value as $searchvalue) {
                     $query->where('description', 'LIKE', '%' . $searchvalue . '%')
@@ -1769,8 +1769,11 @@ class ProductController extends Controller
                 $query->where('code', 'LIKE', '%' . $searchvalue . '%')
                 ->where('status', '!=', 'Inactive');
             })
-            ->orWhereHas('options',function (Builder $query) use ($searchvalue) {
-                $query->where('code', 'LIKE', '%' . $searchvalue . '%')
+            ->orWhereExists(function ($q) use ($searchvalue) {
+                $q->select(DB::raw(1))
+                ->from('product_options')
+                ->whereColumn('products.product_id', 'product_options.product_id')
+                ->where('code',  $searchvalue )
                 ->where('status', '!=', 'Disabled');
             })
             ->where('status', '!=', 'Inactive')
