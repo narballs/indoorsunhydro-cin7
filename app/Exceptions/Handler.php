@@ -56,7 +56,7 @@ class Handler extends ExceptionHandler
                     'trace' => $e->getTraceAsString(),
                 ];
             }
-             Log::channel('slack')->error($e->getMessage(), $errorLog);
+            Log::channel('slack')->error($e->getMessage(), $errorLog);
         });
     }
 
