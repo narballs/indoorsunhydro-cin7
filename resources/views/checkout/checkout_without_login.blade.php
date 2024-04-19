@@ -754,6 +754,7 @@ $cart_price = 0;
             var postal_city= $('.postalCity').val();
             var postal_zip_code= $('.postalpostCode').val();
             var different_shipping_address = $('.ship_to_different_address').is(':checked') ? 1 : 0;
+            $('.address_validator').html('');
             if (email != '' && password != '') {
                 $('.update_checkout_loader').removeClass('d-none');
                 $.ajax({
