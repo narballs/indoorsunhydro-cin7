@@ -817,11 +817,11 @@ $cart_price = 0;
                         }
                     },
                     error: function(response) {
-                        console.log(response);
-                        if (response.responseJSON.address_validator == false) {
-                            $('.update_checkout_loader').addClass('d-none');
-                            $('.address_validator').html(response.responseJSON.validator_message);
-                        }
+                        // console.log(response);
+                        // if (response.responseJSON.address_validator == false) {
+                        //     $('.update_checkout_loader').addClass('d-none');
+                        //     $('.address_validator').html(response.responseJSON.validator_message);
+                        // }
                         $('.update_checkout_loader').addClass('d-none');
                         var errors = response.responseJSON.errors;
                         if (errors) {

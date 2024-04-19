@@ -854,10 +854,10 @@
                     
                 }
                 else{
-                    if (response.address_validator == false) {
-                        $('#sign_up_loader').addClass('d-none');
-                        $('.row_error').html(response.address_validation_message);
-                    }
+                    // if (response.address_validator == false) {
+                    //     $('#sign_up_loader').addClass('d-none');
+                    //     $('.row_error').html(response.address_validation_message);
+                    // }
                     var error_message = response.responseJSON;
                     var error_text = '';
                     if (typeof error_message.errors.street_address != 'undefined') {
@@ -901,10 +901,10 @@
 
             },
             error: function(response) {
-                if (response.address_validation_flag == false) {
-                    $('#sign_up_loader').addClass('d-none');
-                    $('.row_error').html(response.validatedAddress_message);
-                }
+                // if (response.address_validation_flag == false) {
+                //     $('#sign_up_loader').addClass('d-none');
+                //     $('.row_error').html(response.validatedAddress_message);
+                // }
                 var error_message = response.responseJSON;
                 var error_text = '';
                 if (typeof error_message.errors.street_address != 'undefined') {
