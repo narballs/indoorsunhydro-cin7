@@ -410,7 +410,8 @@
                 <div class="row white-panel bg-light d-none" id="business-row">
                     <div class="mt-4 margin-adjust-mbl">
                         <h2 class="text-center login-title" style="color: #393939;">Address info</h2>
-                    
+                        
+                        <div class="row_error text-danger"></div>
                         <div class="row company-address justify-content-center" id="address-form-section">
                             <div class="col-md-10">
                                 <div class="row">
@@ -851,8 +852,12 @@
                     $('#company_info_sidebar').addClass('d-none');
                     $('#address_info_sidebar').addClass('d-none');
                     
-                }else{
-                    $('#sign_up_loader').addClass('d-none');
+                }
+                else{
+                    // if (response.address_validator == false) {
+                    //     $('#sign_up_loader').addClass('d-none');
+                    //     $('.row_error').html(response.address_validation_message);
+                    // }
                     var error_message = response.responseJSON;
                     var error_text = '';
                     if (typeof error_message.errors.street_address != 'undefined') {
@@ -896,7 +901,10 @@
 
             },
             error: function(response) {
-                $('#sign_up_loader').addClass('d-none');
+                // if (response.address_validation_flag == false) {
+                //     $('#sign_up_loader').addClass('d-none');
+                //     $('.row_error').html(response.validatedAddress_message);
+                // }
                 var error_message = response.responseJSON;
                 var error_text = '';
                 if (typeof error_message.errors.street_address != 'undefined') {

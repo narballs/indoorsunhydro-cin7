@@ -874,6 +874,7 @@ class CheckoutController extends Controller
         $already_in_cin7 = false; 
         $registration_status = false;
         $auto_approved = false;
+        $address_validator = true;
         $content = null;
         if (auth()->attempt($credentials)) {
             if (auth()->user()->allow_access == 0) {
@@ -1030,6 +1031,12 @@ class CheckoutController extends Controller
                     $postalState = $state_name;
                     $postalPostCode =$postCode;
                 }
+                // $validatedAddress = UserHelper::validateAddress($address1, $state_name);
+                // dd($validatedAddress);
+                // if($validatedAddress != 'OK') {
+                //     $address_validator = false;
+                //     return response()->json(['status' => 'error', 'address_validator' => $address_validator ,'validator_message' => 'Invalid address. Please enter a valid address.'],400);
+                // }
                 try {
                     $price_column = null;
                     $default_price_column = AdminSetting::where('option_name', 'default_price_column')->first();
