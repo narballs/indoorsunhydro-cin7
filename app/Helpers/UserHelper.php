@@ -356,4 +356,19 @@ class UserHelper
 
         return $cart_items;
     }
+
+    public static function validateAddress($address)
+    {
+        $client = new \GuzzleHttp\Client();
+        $address_validator_key = config('services.google_address_validator.address_validator_google_key');
+        $response = $client->get('https://maps.googleapis.com/maps/api/geocode/json', [
+            'query' => [
+                'address' => $address,
+                'key' => $address_validator_key,
+            ]
+        ]);
+        $data = json_decode($response->getBody(), true);
+
+        return $data['status'];
+    }
 }
