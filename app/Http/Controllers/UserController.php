@@ -683,19 +683,19 @@ class UserController extends Controller
             ] 
                 
         );
-        $states = UsState::where('id', $request->state_id)->first();
-        $state_name = $states->state_name;
-        $cities = UsCity::where('id', $request->city_id)->first();
-        $city_name = $cities->city;
-        $validatedAddress = UserHelper::validateAddress($request->input('street_address'), $state_name);
-        if ($validatedAddress !== 'OK') {
-            $address_validation_flag = false;
-            $created = false;
-            $validatedAddress_message = 'Address is not valid. Please enter a valid address.';
-            $success = false;
-        }
+        // $states = UsState::where('id', $request->state_id)->first();
+        // $state_name = $states->state_name;
+        // $cities = UsCity::where('id', $request->city_id)->first();
+        // $city_name = $cities->city;
+        // $validatedAddress = UserHelper::validateAddress($request->input('street_address'), $state_name);
+        // if ($validatedAddress !== 'OK') {
+        //     $address_validation_flag = false;
+        //     $created = false;
+        //     $validatedAddress_message = 'Address is not valid. Please enter a valid address.';
+        //     $success = false;
+        // }
 
-        if ($address_validation_flag == true) {
+        // if ($address_validation_flag == true) {
             
             $contacts = Contact::where('email', $request->email)->first();
             if (!empty($contacts)) {
@@ -731,10 +731,10 @@ class UserController extends Controller
                 }
             }
             else {
-                // $states = UsState::where('id', $request->state_id)->first();
-                // $state_name = $states->state_name;
-                // $cities = UsCity::where('id', $request->city_id)->first();
-                // $city_name = $cities->city;
+                $states = UsState::where('id', $request->state_id)->first();
+                $state_name = $states->state_name;
+                $cities = UsCity::where('id', $request->city_id)->first();
+                $city_name = $cities->city;
                 $user = User::create([
                     'email' => strtolower($request->get('email')),
                     "first_name" => $request->get('first_name'),
@@ -894,14 +894,14 @@ class UserController extends Controller
             }
             
             
-        }
+        // }
 
         return response()->json([
-            'address_validator' => $address_validation_flag,
+            // 'address_validator' => $address_validation_flag,
             'success' => $success,
             'created' => $created,
             'msg' => $content,
-            'address_validation_message' => $validatedAddress_message
+            // 'address_validation_message' => $validatedAddress_message
         ]);
         
     }
@@ -925,7 +925,8 @@ class UserController extends Controller
 
             $frequent_products = $this->buy_again_products($request);
             
-            $user_orders_query = ApiOrder::with(['createdby'])->whereIn('memberId', $contact_ids)
+            $user_orders_query = ApiOrder::with(['createdby'])
+                // ->whereIn('memberId', $contact_ids)
                 ->with('contact' , function($query) {
                     $query->orderBy('company');
                 })
@@ -935,15 +936,15 @@ class UserController extends Controller
                 $sort_by = $request->sort_by;
                 if ($sort_by == 'recent') {
 
-                    $user_orders = $user_orders_query->orderBy('created_at' , 'Desc')->paginate(10);
+                    $user_orders = $user_orders_query->whereIn('memberId', $contact_ids)->orderBy('created_at' , 'Desc')->paginate(10);
                 }
                 if ($sort_by == 'amount') {
 
-                    $user_orders = $user_orders_query->orderBy('total' , 'Desc')->paginate(10);
+                    $user_orders = $user_orders_query->whereIn('memberId', $contact_ids)->orderBy('total' , 'Desc')->paginate(10);
                 }
 
             } else {
-                $user_orders = $user_orders_query->orderBy('created_at' , 'Desc')->paginate(10);
+                $user_orders = $user_orders_query->whereIn('memberId', $contact_ids)->orderBy('created_at' , 'Desc')->paginate(10);
             }
             // main order search
             $search = $request->search;
@@ -954,6 +955,7 @@ class UserController extends Controller
                     $query->where('code' , 'like' , '%'.$search.'%')
                     ->orWhere('name' , 'like' , '%'.$search.'%');
                 })
+                ->whereIn('memberId', $contact_ids)
                 ->paginate(10);
             }
 
@@ -977,6 +979,7 @@ class UserController extends Controller
                 
                 if ($date_filter == 'last-month') {
                     $user_orders = $user_orders_query
+                    ->whereIn('memberId', $contact_ids)
                     ->whereBetween('created_at', $last_month)
                     ->orderBy('created_at' , 'Desc')
                     ->paginate(10);
@@ -984,6 +987,7 @@ class UserController extends Controller
 
                 if ($date_filter == 'last-3-months') {
                     $user_orders = $user_orders_query
+                    ->whereIn('memberId', $contact_ids)
                     ->whereBetween('created_at', $last_3_months)
                     ->orderBy('created_at' , 'Desc')
                     ->paginate(10);
@@ -991,6 +995,7 @@ class UserController extends Controller
                 
                 if ($date_filter == 'last-5-months') {
                     $user_orders = $user_orders_query
+                    ->whereIn('memberId', $contact_ids)
                     ->whereBetween('created_at', $last_5_months)
                     ->orderBy('created_at' , 'Desc')
                     ->paginate(10);
@@ -998,12 +1003,14 @@ class UserController extends Controller
                 
                 if($date_filter == 'last-year') {
                     $user_orders = $user_orders_query
+                    ->whereIn('memberId', $contact_ids)
                     ->whereBetween('created_at', $past_year)
                     ->orderBy('created_at' , 'Desc')
                     ->paginate(10);
                 }
             }   else {
                 $user_orders = $user_orders_query
+                ->whereIn('memberId', $contact_ids)
                 ->whereBetween('created_at', $last_3_months)
                 ->orderBy('created_at' , 'Desc')
                 ->paginate(10);
@@ -1022,7 +1029,9 @@ class UserController extends Controller
                 })
                 ->with('apiOrderItem.product')
                 ->where('primaryId' , $submitter_filter)
-                ->orWhere('secondaryId' , $submitter_filter)->paginate(10);
+                ->orWhere('secondaryId' , $submitter_filter)
+                ->whereIn('memberId', $contact_ids)
+                ->paginate(10);
             }
             if (empty($submitter_filter)) {
                 $submitter_filter = 'all';
