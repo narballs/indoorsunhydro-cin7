@@ -46,6 +46,9 @@ return [
     'cin7' => [
         'get_contact_url' => env('Cin7_GET_CONTACT_URL'),
     ],
+    'google_address_validator' => [
+        'address_validator_google_key' => env('Address_validator_api_key'),
+    ],
     'google' => [
         'api_key' => env('GOOGLE_API_KEY'),
         'client_id' => env('GOOGLE_OAUTH_CLIENT_ID'),

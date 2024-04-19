@@ -335,6 +335,9 @@ $cart_price = 0;
                                 <span class="update_checkout_have_account">Have an account? </span> <a href="{{url('/user')}}" class="update_checkout_login">Log in</a>
                                 </span>
                             </div>
+                            <div class="col-md-12">
+                                <div class="error_text address_validator"></div>
+                            </div>
                         </div>
                         <div class="row">
                             <div class="col-md-12">
@@ -778,6 +781,7 @@ $cart_price = 0;
                         _token: '{{ csrf_token() }}'
                     },
                     success: function(response) {
+                        
                         if (response.status == 'success') {
                             if (response.access === true) {
                                 if (response.auto_approved == true) {
@@ -812,6 +816,11 @@ $cart_price = 0;
                         }
                     },
                     error: function(response) {
+                        console.log(response);
+                        if (response.responseJSON.address_validator == false) {
+                            $('.update_checkout_loader').addClass('d-none');
+                            $('.address_validator').html(response.responseJSON.validator_message);
+                        }
                         $('.update_checkout_loader').addClass('d-none');
                         var errors = response.responseJSON.errors;
                         if (errors) {
