@@ -103,7 +103,7 @@ class OrderHelper {
                 "trackingCode" => "",
                 "internalComments" => $orderSubmiterDetail,
                 "productTotal" => 100,
-                "freightTotal" => null,
+                "freightTotal" => !empty($order->shipment_price) ? $order->shipment_price : 0.00,
                 "freightDescription" => null,
                 "surcharge" => null,
                 "surchargeDescription" => null,
