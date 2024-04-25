@@ -218,6 +218,7 @@ class CheckoutController extends Controller
     
     public function new_checkout(Request $request)
     {
+        $shipment_error = 0;
         $states = UsState::all();
         $cart_items = UserHelper::switch_price_tier($request);
         $cart_total = 0;
@@ -392,7 +393,7 @@ class CheckoutController extends Controller
                             $get_shipping_rates_greater = $this->get_shipping_rate_greater($products_weight, $user_address , $selected_shipment_quotes ,$shipping_quotes, $shipment_prices, $shipment_price);
                             // dd($get_shipping_rates_greater);
                             if (($get_shipping_rates_greater['shipment_prices'] == null) && $get_shipping_rates_greater['shipment_price'] == 0) {
-                                $shipment_price = 250.00;
+                                $shipment_error = 1;
                                 $shipping_carrier_code = $get_shipping_rates_greater['shipping_carrier_code'];
                                 // $shipstation_shipment_prices = 250.00;
                             } else {
@@ -420,7 +421,7 @@ class CheckoutController extends Controller
                         // }
                         // $shipment_price = $get_shipping_rates['shipment_price'] + $surcharge_value;
                         
-                        if (count($selected_shipment_quotes) > 0) {
+                        if (count($selected_shipment_quotes) > 0 && $products_weight < 151) {
                             foreach ($selected_shipment_quotes as $selected_shipment_quote) {
                                 if (!empty($selected_shipment_quote->shipping_quote)) {
                                     if (!empty($shipstation_shipment_prices)) {
@@ -549,7 +550,7 @@ class CheckoutController extends Controller
                 'products_weight',
                 'shipping_quotes' , 
                 'admin_selected_shipping_quote','surcharge_settings',
-                'shipping_carrier_code' , 'shipping_service_code', 'shipstation_shipment_prices' , 'charge_shipment_to_customer', 'shipping_free_over_1000'
+                'shipping_carrier_code' , 'shipping_service_code', 'shipstation_shipment_prices' , 'charge_shipment_to_customer', 'shipping_free_over_1000','shipment_error'
                 
             ));
         } else {
@@ -1418,10 +1419,10 @@ class CheckoutController extends Controller
             $statusCode = $response->getStatusCode();
             $responseBody = $response->getBody()->getContents();
             $shipping_response = json_decode($responseBody);
-            $shipment_prices[] = $shipping_response;
-            $shipment_price = $shipping_response->shipmentCost + $shipping_response->otherCost;
+            $shipment_prices = !empty($shipping_response) ? $shipping_response : null;
+            $shipment_price = !empty($shipment_prices) ? $shipment_prices[0]->shipmentCost + $shipment_prices[0]->otherCost : 0;
             return [
-                'shipment_prices' => !empty($shipment_prices) ? $shipment_prices[0] : null,
+                'shipment_prices' => !empty($shipment_prices) ? $shipment_prices : null,
                 'shipment_price' => $shipment_price,
                 'shipping_carrier_code' => $carrier_code_2->option_value,    
             ];
