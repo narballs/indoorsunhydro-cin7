@@ -54,6 +54,10 @@ class OrderController extends Controller
                 'method_name' => 'required',
             ]
         );
+        $shipment_error = $request->shipment_error;
+        if ($shipment_error == 1) {
+            return back()->with('error', 'There was an issue getting a freight quote, please try again later');
+        }
         $shipping_service_code = null;
         $shipping_carrier_code = null;
         $actual_shipping_price = 0;
