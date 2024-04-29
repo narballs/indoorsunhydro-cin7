@@ -37,7 +37,7 @@
             <tr>
                 <td>
                     <table width="80%" border="0" align="center">
-                        <tr>
+                        {{-- <tr>
                             <td align="" style="text-align:center">
                                 @if (!empty($addresses['order_status']) && $addresses['order_status'] === 'updated')
                                     @if(!empty($addresses['new_order_status']) && $addresses['new_order_status'] == 'Cancelled')
@@ -51,7 +51,7 @@
                                     <img class="img-fluid " src="{{ asset('/theme/img/email/approve_email_icon.png') }}">
                                 @endif
                             </td>
-                        </tr>
+                        </tr> --}}
                         @if (!empty($addresses['order_status']) && $addresses['order_status'] === 'updated')
                             @if(!empty($addresses['new_order_status']) && $addresses['new_order_status'] == 'Cancelled')
                                 <tr>
