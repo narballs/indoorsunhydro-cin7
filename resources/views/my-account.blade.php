@@ -729,13 +729,13 @@
             } else {
                 imageUrl = '/theme/img/image_not_available.png';
             }
-            return '<div class="col-md-4 image-div image-div-account d-flex justify-content-center">' +
-                '<img src="' + imageUrl  + '" alt="Product Image" class="buy_again_product_image">' +
+            return '<div class="col-md-4 col-xl-5 col-lg-4 image-div image-div-account d-flex justify-content-center">' +
+                '<img src="' + imageUrl  + '" alt="Product Image" class="img-fluid">' +
                 '</div>';
         }
 
         function buildDataColumn(productData) {
-            var dataHtml = '            <div class="col-md-8 data-div data-div-account">';
+            var dataHtml = '            <div class="col-md-8 col-xl-7 col-lg-8 data-div data-div-account">';
                 dataHtml += '                <div class="row">';
                 dataHtml += '                    <div class="col-md-10">';
                 dataHtml += '                        <p class="product_name mb-1">';
@@ -743,7 +743,7 @@
                 dataHtml += '                        </p>';
                 dataHtml += '                    </div>';
                 dataHtml += '                    <div class="col-md-10">';
-                dataHtml += '                        <p class="product_price mb-1">$' + productData.retail_price + '</p>';
+                dataHtml += '                        <p class="product_price mb-1">$' + productData.retail_price.toFixed(2) + '</p>';
                 dataHtml += '                    </div>';
                 dataHtml += '                    <div class="col-md-10">';
                 dataHtml += '                        <p class="category_name mb-1">Category:';
