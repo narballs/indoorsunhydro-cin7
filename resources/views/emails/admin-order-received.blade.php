@@ -280,7 +280,14 @@
                                     <tbody>
                                         <tr>
                                             <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
-                                                {{ !empty($addresses['delievery_method']) ? $addresses['delievery_method'] : '' }}
+                                                @if (!empty($addresses['delievery_method']) && $addresses['delievery_method'] == 'pickup order')
+                                                    {{ !empty($addresses['delievery_method']) ? $addresses['delievery_method'] : '' }}
+                                                    <span class="" style="margin-left: 10px;">
+                                                        (Monday - Friday 9:00 AM - 5:00 PM only)
+                                                    </span>
+                                                @else
+                                                    {{ !empty($addresses['delievery_method']) ? $addresses['delievery_method'] : '' }}
+                                                @endif
                                             </td>
                                         </tr>
                                     </tbody>

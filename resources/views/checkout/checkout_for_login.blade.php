@@ -565,7 +565,14 @@ $cart_price = 0;
                                                                     name="method_option"{{ $payment_option->option_name == 'Delivery' ? 'checked' : '' }}
                                                                     value="{{ $payment_option->option_name }}" style="background: #008BD3;">
                                                                 <label for="local_delivery payment-option-label"
-                                                                    class="checkout_product_heading ml-2 mb-0">{{ $payment_option->option_name }}</label>
+                                                                    class="checkout_product_heading ml-2 mb-0">{{ $payment_option->option_name }}
+                                                                
+                                                                </label>
+                                                                @if (strtolower($payment_option->option_name) == 'pickup order')
+                                                                    <span class="mx-2">
+                                                                        (Monday - Friday 9:00 AM - 5:00 PM only)
+                                                                    </span>
+                                                                @endif
                                                             </div>
                                                         @endforeach
                                                     @endforeach
