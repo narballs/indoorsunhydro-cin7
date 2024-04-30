@@ -411,7 +411,7 @@ return [
             'url'  => 'admin/contact-logs',
         ],
         [
-            'text'    => 'Notify Users',
+            'text'    => 'Out of stock Notifications',
             'url'  => 'admin/notify-users',
         ],
         [
