@@ -62,6 +62,7 @@ class GoogleContent extends Command
         // Check if access token is retrieved successfully
         if (isset($token['access_token'])) {
             // Insert products to Google Merchant Center
+            $this->delete_inactive_products($client, $token);
             $result = $this->insertProducts($client, $token);
 
             if ($result) {
@@ -263,4 +264,42 @@ class GoogleContent extends Command
             return false;
         }
     }
+
+    private function delete_inactive_products($client, $token) {
+        $client->setAccessToken($token['access_token']); // Use the stored access token
+    
+        $service = new ShoppingContent($client);
+    
+        $pageToken = null;
+        do {
+            // Fetch products from GMC with pagination
+            $productsGMC = $service->products->listProducts(config('services.google.merchant_center_id'), [
+                'maxResults' => 250,
+                'pageToken' => $pageToken,
+            ]);
+    
+            foreach ($productsGMC->getResources() as $productGMC) {
+                $productIdGMC = $productGMC['id'];
+                $mpnGMC = $productGMC['mpn'];
+    
+                // Check if the product in GMC exists in your database and is inactive
+                $inactiveProduct = Product::where('code', $mpnGMC)->where('status', 'Inactive')->first();
+    
+                // If the product exists in your database and is inactive, delete it from GMC
+                if ($inactiveProduct) {
+                    try {
+                        $service->products->delete(config('services.google.merchant_center_id'), $productIdGMC);
+                        $this->info('Product with MPN ' . $mpnGMC . ' deleted from Google Merchant Center.');
+                    } catch (\Google\Service\Exception $e) {
+                        report($e);
+                        $this->error('Failed to delete product with MPN ' . $mpnGMC . ' from Google Merchant Center.');
+                    }
+                }
+            }
+    
+            // Get the next page token for pagination
+            $pageToken = $productsGMC->getNextPageToken();
+        } while (!empty($pageToken));
+    }
+    
 }
