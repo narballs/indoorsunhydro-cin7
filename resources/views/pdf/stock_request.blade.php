@@ -28,6 +28,9 @@
     <table>
         <thead>
             <tr>
+                <th>
+                    S.No
+                </th>
                 <th>Product Name</th>
                 <th>Sku</th>
                 <th>Email</th>
@@ -36,6 +39,7 @@
         <tbody>
             @foreach($notifications as $notification)
             <tr>
+                <td>{{$loop->iteration}}</td>
                 <td>{{$notification['product']['name']}}</td>
                 <td>{{$notification['product']['code']}}</td>
                 <td>{{$notification['email']}}</td>
