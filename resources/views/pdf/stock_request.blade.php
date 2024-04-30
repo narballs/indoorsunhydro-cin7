@@ -30,17 +30,15 @@
             <tr>
                 <th>Product Name</th>
                 <th>Sku</th>
-                <th>User</th>
                 <th>Email</th>
             </tr>
         </thead>
         <tbody>
             @foreach($notifications as $notification)
             <tr>
-                <td>{{'test'}}</td>
-                <td>{{'test'}}</td>
-                <td>{{'test'}}</td>
-                <td>{{'test'}}</td>
+                <td>{{$notification['product']['name']}}</td>
+                <td>{{$notification['product']['code']}}</td>
+                <td>{{$notification['email']}}</td>
             </tr>
             @endforeach
         </tbody>
