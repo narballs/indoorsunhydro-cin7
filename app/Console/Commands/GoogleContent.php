@@ -179,7 +179,7 @@ class GoogleContent extends Command
                 $isDuplicate = false;
 
                 foreach ($productStatusList as $existingProduct) {
-                    if ($add_product['code'] === $existingProduct['mpn']) {
+                    if ($add_product['code'] === $existingProduct['mpn']  || $add_product['title'] === $existingProduct['title']) {
                         $isDuplicate = true;
                         break;
                     }
